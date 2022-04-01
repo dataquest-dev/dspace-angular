@@ -1,0 +1,18 @@
+# DSpace Docker image build for hub.docker.com
+name: Update project table
+
+#
+on:
+  issues:
+    types: [opened]
+jobs:
+  createCard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create or Update Project Card
+        uses: peter-evans/create-or-update-project-card@v2
+        with:
+          token: ${{ secrets.PAT }}
+          project-location: dataquest-dev
+          project-name: dspace-project
+          column-name: To do
