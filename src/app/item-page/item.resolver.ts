@@ -52,9 +52,18 @@ export class ItemResolver implements Resolve<RemoteData<Item>> {
     );
 
     itemRD$.subscribe((itemRD: RemoteData<Item>) => {
+      // if (itemRD.payload.metadata['dc.local.approximateDate'] != null) {
+      //   copy = _.cloneDeep(itemRD.payload);
+      //   copy.metadata['dc.date.issued'][0].value = 'fff';
+      // }
+      // console.log(copy);
       this.store.dispatch(new ResolvedAction(state.url, itemRD.payload));
     });
 
+    // let copy: Observable<RemoteData<Item>>;
+
+
+    // console.log('returnung');
     return itemRD$;
   }
 }
