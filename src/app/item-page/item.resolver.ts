@@ -54,6 +54,7 @@ export class ItemResolver implements Resolve<RemoteData<Item>> {
     itemRD$.subscribe((itemRD: RemoteData<Item>) => {
       this.store.dispatch(new ResolvedAction(state.url, itemRD.payload));
     });
+
     return itemRD$;
   }
 }
