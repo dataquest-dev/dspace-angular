@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { RemoteData } from '../core/data/remote-data';
 import { ItemDataService } from '../core/data/item-data.service';
@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { hasValue } from '../shared/empty.util';
 import { getItemPageRoute } from './item-page-routing-paths';
 import { ItemResolver } from './item.resolver';
+import * as _ from 'lodash';
 
 /**
  * This class represents a resolver that requests a specific item before the route is activated and will redirect to the
@@ -43,7 +44,13 @@ export class ItemPageResolver extends ItemResolver {
             this.router.navigateByUrl(itemRoute + subRoute);
           }
         }
-        return rd;
+
+        const copiedRd = _.cloneDeep(rd);
+        if (copiedRd.payload.metadata['local.approximateDate.issued'] != null) {
+          copiedRd.payload.metadata['dc.date.issued'][0].value =
+            copiedRd.payload.metadata['local.approximateDate.issued'][0].value;
+        }
+        return copiedRd;
       })
     );
   }
