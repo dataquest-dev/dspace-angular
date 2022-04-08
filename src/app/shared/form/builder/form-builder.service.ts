@@ -32,6 +32,7 @@ import { dateToString, isNgbDateStruct } from '../../date.util';
 import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './ds-dynamic-form-ui/ds-dynamic-form-constants';
 import { CONCAT_GROUP_SUFFIX, DynamicConcatModel } from './ds-dynamic-form-ui/models/ds-dynamic-concat.model';
 import { VIRTUAL_METADATA_PREFIX } from '../../../core/shared/metadata.models';
+import * as _ from 'lodash/fp';
 
 @Injectable()
 export class FormBuilderService extends DynamicFormService {
@@ -226,9 +227,14 @@ export class FormBuilderService extends DynamicFormService {
   modelFromConfiguration(submissionId: string, json: string | SubmissionFormsModel, scopeUUID: string, sectionData: any = {}, submissionScope?: string, readOnly = false): DynamicFormControlModel[] | never {
     let rows: DynamicFormControlModel[] = [];
     const rawData = typeof json === 'string' ? JSON.parse(json, parseReviver) : json;
-
     if (rawData.rows && !isEmpty(rawData.rows)) {
-      rawData.rows.forEach((currentRow) => {
+      rawData.rows.forEach(currentRow => {
+        currentRow.fields.forEach((field,index) => {
+          if (field.typeBind.length !== 0) {
+            currentRow = this.removeFieldWithTypeBind(currentRow,index);
+          }
+        });
+
         const rowParsed = this.rowParser.parse(submissionId, currentRow, scopeUUID, sectionData, submissionScope, readOnly);
         if (isNotNull(rowParsed)) {
           if (Array.isArray(rowParsed)) {
@@ -400,4 +406,17 @@ export class FormBuilderService extends DynamicFormService {
     return Object.keys(result);
   }
 
+  /**
+   * From the row configuration remove field which has initialized type-bind.
+   * Input field with the type-bind is not rendered in the submission view, because type-bind
+   * is rendered based on the item type and it is undefined in the initialization.
+   * @param currentRow row where is initialized type-bind.
+   * @param index index of the field in the row where is initialized type-bind.
+   * @return copy row configuration with removed input field which has initialized type-bind
+   */
+  private removeFieldWithTypeBind(currentRow, index) {
+    const copy = _.cloneDeep(currentRow);
+    copy.fields.splice(index,1);
+    return copy;
+  }
 }
