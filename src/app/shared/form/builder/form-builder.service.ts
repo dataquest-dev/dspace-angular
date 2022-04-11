@@ -230,12 +230,16 @@ export class FormBuilderService extends DynamicFormService {
     if (rawData.rows && !isEmpty(rawData.rows)) {
       rawData.rows.forEach(currentRow => {
         currentRow.fields.forEach((field,index) => {
-          if (field.typeBind.length !== 0) {
-            currentRow = this.removeFieldWithTypeBind(currentRow,index);
+          if (field.typeBind != null && field.typeBind.length !== 0) {
+            // currentRow = this.removeFieldWithTypeBind(currentRow,index);
+            const rowParsed2 = this.rowParser.parse(submissionId, currentRow, scopeUUID, sectionData, submissionScope, readOnly);
+            // console.log('RIGHT')
+            // console.log(rowParsed2)
           }
         });
 
         const rowParsed = this.rowParser.parse(submissionId, currentRow, scopeUUID, sectionData, submissionScope, readOnly);
+
         if (isNotNull(rowParsed)) {
           if (Array.isArray(rowParsed)) {
             rows = rows.concat(rowParsed);
@@ -414,7 +418,7 @@ export class FormBuilderService extends DynamicFormService {
    * @param index index of the field in the row where is initialized type-bind.
    * @return copy row configuration with removed input field which has initialized type-bind
    */
-  private removeFieldWithTypeBind(currentRow, index) {
+  removeFieldWithTypeBind(currentRow, index) {
     const copy = _.cloneDeep(currentRow);
     copy.fields.splice(index,1);
     return copy;

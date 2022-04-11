@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
-import { DynamicFormControlEvent, DynamicFormControlModel } from '@ng-dynamic-forms/core';
+import {DynamicFormControlEvent, DynamicFormControlModel, parseReviver} from '@ng-dynamic-forms/core';
 
 import { combineLatest as observableCombineLatest, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, find, map, mergeMap, take, tap } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { FormComponent } from '../../../shared/form/form.component';
 import { FormService } from '../../../shared/form/form.service';
 import { SectionModelComponent } from '../models/section.model';
 import { SubmissionFormsConfigService } from '../../../core/config/submission-forms-config.service';
-import { hasValue, isEmpty, isNotEmpty, isUndefined } from '../../../shared/empty.util';
+import {hasValue, isEmpty, isNotEmpty, isNotNull, isUndefined} from '../../../shared/empty.util';
 import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { SubmissionFormsModel } from '../../../core/config/models/config-submission-forms.model';
 import { SubmissionSectionError, SubmissionSectionObject } from '../../objects/submission-objects.reducer';
@@ -34,6 +34,7 @@ import { followLink } from '../../../shared/utils/follow-link-config.model';
 import { environment } from '../../../../environments/environment';
 import { ConfigObject } from '../../../core/config/models/config.model';
 import { RemoteData } from '../../../core/data/remote-data';
+import {RowParser} from '../../../shared/form/builder/parsers/row-parser';
 
 /**
  * This component represents a section that contains a Form.
@@ -149,6 +150,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
               protected submissionObjectService: SubmissionObjectDataService,
               protected objectCache: ObjectCacheService,
               protected requestService: RequestService,
+              protected rowParser: RowParser,
               @Inject('collectionIdProvider') public injectedCollectionId: string,
               @Inject('sectionDataProvider') public injectedSectionData: SectionDataObject,
               @Inject('submissionIdProvider') public injectedSubmissionId: string) {
@@ -284,7 +286,6 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    *    the section errors retrieved from the server
    */
   updateForm(sectionData: WorkspaceitemSectionFormObject, errors: SubmissionSectionError[]): void {
-
     if (isNotEmpty(sectionData) && !isEqual(sectionData, this.sectionData.data)) {
       this.sectionData.data = sectionData;
       if (this.hasMetadataEnrichment(sectionData)) {
@@ -358,6 +359,74 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    *    the [[DynamicFormControlEvent]] emitted
    */
   onChange(event: DynamicFormControlEvent): void {
+    // console.log('Change!!!')
+    // let fff = this.formModel.pop();
+    // this.formModel.push(fff)
+    // this.formModel.push(fff)
+    // this.formModel.push(fff)
+    // console.log(fff)
+    // this.formModel = this.formBuilderService.modelFromConfiguration(
+    //   this.submissionId,
+    //   this.formConfig,
+    //   this.collectionId,
+    //   this.sectionData.data,
+    //   this.submissionService.getSubmissionScope()
+    // );
+
+    //
+    //
+
+    // ak sa zmeni type
+    if (event.model.name === 'dc.type') {
+      const rawData = typeof this.formConfig === 'string' ? JSON.parse(this.formConfig, parseReviver) : this.formConfig;
+      rawData.rows.forEach(currentRow => {
+        currentRow.fields.forEach((field,index) => {
+          let typeBindInField = false;
+          if (field.typeBind.length !== 0) {
+            field.typeBind.forEach((typeBind) => {
+              // moze byt pridat ze v row bude field, ktory bude mat iny type-bind
+              // ak vo fielde nie je ziadny type bind k typu, tak ho vymaz
+              // console.log('value')
+              // console.log('model')
+              // console.log(event.$event.value)
+              if ('Article' === event.$event.value) {
+                typeBindInField = true;
+              }
+              // console.log('typeBind')
+              // console.log(typeBind)
+            });
+
+            if (!typeBindInField) {
+              this.formBuilderService.removeFieldWithTypeBind(currentRow, index);
+            }
+            // currentRow = this.removeFieldWithTypeBind(currentRow,index);
+          }
+          const rowParsed: DynamicFormControlModel[] = [];
+          if (typeBindInField) {
+            // console.log('Wrong')
+            // console.log(this.rowParser.parse(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope(), false))
+            rowParsed.push(this.rowParser.parse(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope(), false)) ;
+            this.formModel.push(rowParsed.pop());
+            const sectionMetadata = this.sectionService.computeSectionConfiguredMetadata(this.formConfig);
+            this.sectionService.updateSectionData(this.submissionId, this.sectionData.id, this.sectionData.data, this.sectionData.errorsToShow, this.sectionData.serverValidationErrors, sectionMetadata);
+          }
+          // console.log('ss')
+        });
+
+
+
+        //
+        // if (isNotNull(rowParsed)) {
+        //   if (Array.isArray(rowParsed)) {
+        //     rows = rows.concat(rowParsed);
+        //   } else {
+        //     rows.push(rowParsed);
+        //   }
+        // }
+      });
+      // console.log('changed dc_type')
+    }
+      // vytvor novy input field z konfiguracie
     this.formOperationsService.dispatchOperationsFromEvent(
       this.pathCombiner,
       event,
