@@ -231,8 +231,8 @@ export class FormBuilderService extends DynamicFormService {
       rawData.rows.forEach(currentRow => {
         currentRow.fields.forEach((field,index) => {
           if (field.typeBind != null && field.typeBind.length !== 0) {
-            // currentRow = this.removeFieldWithTypeBind(currentRow,index);
-            const rowParsed2 = this.rowParser.parse(submissionId, currentRow, scopeUUID, sectionData, submissionScope, readOnly);
+            currentRow = this.removeFieldWithTypeBind(currentRow,index);
+            // const rowParsed2 = this.rowParser.parse(submissionId, currentRow, scopeUUID, sectionData, submissionScope, readOnly);
             // console.log('RIGHT')
             // console.log(rowParsed2)
           }

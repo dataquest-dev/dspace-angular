@@ -35,6 +35,7 @@ import { environment } from '../../../../environments/environment';
 import { ConfigObject } from '../../../core/config/models/config.model';
 import { RemoteData } from '../../../core/data/remote-data';
 import {RowParser} from '../../../shared/form/builder/parsers/row-parser';
+import * as _ from 'lodash';
 
 /**
  * This component represents a section that contains a Form.
@@ -359,74 +360,40 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    *    the [[DynamicFormControlEvent]] emitted
    */
   onChange(event: DynamicFormControlEvent): void {
-    // console.log('Change!!!')
-    // let fff = this.formModel.pop();
-    // this.formModel.push(fff)
-    // this.formModel.push(fff)
-    // this.formModel.push(fff)
-    // console.log(fff)
-    // this.formModel = this.formBuilderService.modelFromConfiguration(
-    //   this.submissionId,
-    //   this.formConfig,
-    //   this.collectionId,
-    //   this.sectionData.data,
-    //   this.submissionService.getSubmissionScope()
-    // );
-
-    //
-    //
-
-    // ak sa zmeni type
     if (event.model.name === 'dc.type') {
       const rawData = typeof this.formConfig === 'string' ? JSON.parse(this.formConfig, parseReviver) : this.formConfig;
       rawData.rows.forEach(currentRow => {
+        let typeBindInField = false;
         currentRow.fields.forEach((field,index) => {
-          let typeBindInField = false;
-          if (field.typeBind.length !== 0) {
+          if (field.typeBind != null && field.typeBind.length !== 0) {
             field.typeBind.forEach((typeBind) => {
-              // moze byt pridat ze v row bude field, ktory bude mat iny type-bind
-              // ak vo fielde nie je ziadny type bind k typu, tak ho vymaz
-              // console.log('value')
-              // console.log('model')
-              // console.log(event.$event.value)
-              if ('Article' === event.$event.value) {
+              if (typeBind.includes(event.$event.value)) {
                 typeBindInField = true;
+              } else {
+                currentRow = this.formBuilderService.removeFieldWithTypeBind(currentRow, index);
               }
-              // console.log('typeBind')
-              // console.log(typeBind)
             });
-
-            if (!typeBindInField) {
-              this.formBuilderService.removeFieldWithTypeBind(currentRow, index);
-            }
-            // currentRow = this.removeFieldWithTypeBind(currentRow,index);
           }
-          const rowParsed: DynamicFormControlModel[] = [];
-          if (typeBindInField) {
-            // console.log('Wrong')
-            // console.log(this.rowParser.parse(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope(), false))
-            rowParsed.push(this.rowParser.parse(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope(), false)) ;
-            this.formModel.push(rowParsed.pop());
-            const sectionMetadata = this.sectionService.computeSectionConfiguredMetadata(this.formConfig);
-            this.sectionService.updateSectionData(this.submissionId, this.sectionData.id, this.sectionData.data, this.sectionData.errorsToShow, this.sectionData.serverValidationErrors, sectionMetadata);
+          if (!typeBindInField) {
+            currentRow = this.formBuilderService.removeFieldWithTypeBind(currentRow, index);
           }
-          // console.log('ss')
         });
+        const rowParsed: DynamicFormControlModel[] = [];
+        if (typeBindInField) {
+          rowParsed.push(this.rowParser.parse(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope(), false)) ;
+          const parsedRow = rowParsed.pop();
 
-
-
-        //
-        // if (isNotNull(rowParsed)) {
-        //   if (Array.isArray(rowParsed)) {
-        //     rows = rows.concat(rowParsed);
-        //   } else {
-        //     rows.push(rowParsed);
-        //   }
-        // }
+          const olfFormModel = _.cloneDeep(this.formModel);
+          this.isUpdating = true;
+          this.formModel = null;
+          this.cdr.detectChanges();
+          this.formModel = olfFormModel;
+          this.formModel.push(parsedRow);
+          this.isUpdating = false;
+          this.cdr.detectChanges();
+        }
       });
-      // console.log('changed dc_type')
     }
-      // vytvor novy input field z konfiguracie
     this.formOperationsService.dispatchOperationsFromEvent(
       this.pathCombiner,
       event,
