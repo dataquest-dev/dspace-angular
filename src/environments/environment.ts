@@ -13,7 +13,7 @@ export const environment: Partial<AppConfig> = {
     preboot: true,
     async: true,
     time: false
-  },
+  }
 };
 
 /*
