@@ -9,29 +9,29 @@ import { Item } from '../../../../core/shared/item.model';
  */
 
 @Component({
-  templateUrl: './item-page-field.component.html'
+    templateUrl: './item-page-field.component.html'
 })
 export class ItemPageFieldComponent {
 
-  /**
-   * The item to display metadata for
-   */
-  @Input() item: Item;
+    /**
+     * The item to display metadata for
+     */
+    @Input() item: Item;
 
-  /**
-   * Fields (schema.element.qualifier) used to render their values.
-   */
-  fields: string[];
+    /**
+     * Fields (schema.element.qualifier) used to render their values.
+     */
+    fields: string[];
 
-  /**
-   * Label i18n key for the rendered metadata
-   */
-  label: string;
+    /**
+     * Label i18n key for the rendered metadata
+     */
+    label: string;
 
-  /**
-   * Separator string between multiple values of the metadata fields defined
-   * @type {string}
-   */
-  separator = '<br/>';
+    /**
+     * Separator string between multiple values of the metadata fields defined
+     * @type {string}
+     */
+    separator = '<br/>';
 
 }
