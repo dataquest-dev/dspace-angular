@@ -352,6 +352,58 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     );
   }
 
+  initFormWithValues(formConfig) {
+    formConfig.rows.forEach((currentRow, indexRow) => {
+      currentRow.fields.forEach((field, indexField) => {
+        if (isNotEmpty(field.typeBind)) {
+          currentRow = this.formBuilderService.removeFieldFromRow(currentRow, indexField);
+          const parsedRow = this.parseFormRow(currentRow);
+          const oldFormModel = _.cloneDeep(this.formModel);
+          this.isUpdating = true;
+          this.formModel = null;
+          this.cdr.detectChanges();
+          this.formModel = oldFormModel;
+          if (currentRow.fields.length !== 0) {
+            this.formModel[indexRow] = parsedRow;
+          } else {
+            this.formModel.splice(indexRow, 1);
+          }
+          this.isUpdating = false;
+          this.cdr.detectChanges();
+        }
+      });
+    });
+  }
+
+  updateFormBaseOnTypeBind(event, formConfig) {
+    formConfig.rows.forEach((currentRow, indexRow) => {
+      let isTypeBindInRow = false;
+      currentRow.fields.forEach((field,indexField) => {
+        if (isNotEmpty(field.typeBind)) {
+          isTypeBindInRow = true;
+          if (!field.typeBind.includes(event.$event.value)) {
+            currentRow = this.formBuilderService.removeFieldFromRow(currentRow, indexField);
+          }
+        }
+      });
+      if (isTypeBindInRow) {
+        const parsedRow = this.parseFormRow(currentRow);
+        const oldFormModel = _.cloneDeep(this.formModel);
+        this.isUpdating = true;
+        this.formModel = null;
+        this.cdr.detectChanges();
+        this.formModel = oldFormModel;
+        this.formModel[indexRow] = parsedRow;
+        this.isUpdating = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  parseFormRow(formRow) {
+    return this.rowParser.parse(this.submissionId, formRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope(), false);
+  }
+
   /**
    * Method called when a form dfChange event is fired.
    * Dispatch form operations based on changes.
@@ -362,37 +414,8 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
   onChange(event: DynamicFormControlEvent): void {
     if (event.model.name === 'dc.type') {
       const rawData = typeof this.formConfig === 'string' ? JSON.parse(this.formConfig, parseReviver) : this.formConfig;
-      rawData.rows.forEach(currentRow => {
-        let typeBindInField = false;
-        currentRow.fields.forEach((field,index) => {
-          if (field.typeBind != null && field.typeBind.length !== 0) {
-            field.typeBind.forEach((typeBind) => {
-              if (typeBind.includes(event.$event.value)) {
-                typeBindInField = true;
-              } else {
-                currentRow = this.formBuilderService.removeFieldWithTypeBind(currentRow, index);
-              }
-            });
-          }
-          if (!typeBindInField) {
-            currentRow = this.formBuilderService.removeFieldWithTypeBind(currentRow, index);
-          }
-        });
-        const rowParsed: DynamicFormControlModel[] = [];
-        if (typeBindInField) {
-          rowParsed.push(this.rowParser.parse(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope(), false)) ;
-          const parsedRow = rowParsed.pop();
-
-          const olfFormModel = _.cloneDeep(this.formModel);
-          this.isUpdating = true;
-          this.formModel = null;
-          this.cdr.detectChanges();
-          this.formModel = olfFormModel;
-          this.formModel.push(parsedRow);
-          this.isUpdating = false;
-          this.cdr.detectChanges();
-        }
-      });
+      this.initFormWithValues(rawData);
+      this.updateFormBaseOnTypeBind(event, rawData);
     }
     this.formOperationsService.dispatchOperationsFromEvent(
       this.pathCombiner,
