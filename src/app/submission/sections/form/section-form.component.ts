@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
-import {DynamicFormControlEvent, DynamicFormControlModel, parseReviver} from '@ng-dynamic-forms/core';
+import { DynamicFormControlEvent, DynamicFormControlModel, parseReviver } from '@ng-dynamic-forms/core';
 
 import { combineLatest as observableCombineLatest, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, find, map, mergeMap, take, tap } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { FormComponent } from '../../../shared/form/form.component';
 import { FormService } from '../../../shared/form/form.service';
 import { SectionModelComponent } from '../models/section.model';
 import { SubmissionFormsConfigService } from '../../../core/config/submission-forms-config.service';
-import {hasValue, isEmpty, isNotEmpty, isNotNull, isUndefined} from '../../../shared/empty.util';
+import { hasValue, isEmpty, isNotEmpty, isUndefined } from '../../../shared/empty.util';
 import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { SubmissionFormsModel } from '../../../core/config/models/config-submission-forms.model';
 import { SubmissionSectionError, SubmissionSectionObject } from '../../objects/submission-objects.reducer';
@@ -34,8 +34,8 @@ import { followLink } from '../../../shared/utils/follow-link-config.model';
 import { environment } from '../../../../environments/environment';
 import { ConfigObject } from '../../../core/config/models/config.model';
 import { RemoteData } from '../../../core/data/remote-data';
-import {RowParser} from '../../../shared/form/builder/parsers/row-parser';
-import * as _ from 'lodash';
+import { RowParser } from '../../../shared/form/builder/parsers/row-parser';
+import { cloneDeep } from 'lodash';
 
 /**
  * This component represents a section that contains a Form.
@@ -287,6 +287,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    *    the section errors retrieved from the server
    */
   updateForm(sectionData: WorkspaceitemSectionFormObject, errors: SubmissionSectionError[]): void {
+
     if (isNotEmpty(sectionData) && !isEqual(sectionData, this.sectionData.data)) {
       this.sectionData.data = sectionData;
       if (this.hasMetadataEnrichment(sectionData)) {
@@ -361,7 +362,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         if (isNotEmpty(field.typeBind)) {
           currentRow = this.formBuilderService.removeFieldFromRow(currentRow, indexField);
           const parsedRow = this.formBuilderService.parseFormRow(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope());
-          const oldFormModel = _.cloneDeep(this.formModel);
+          const oldFormModel = cloneDeep(this.formModel);
           this.isUpdating = true;
           this.formModel = null;
           this.cdr.detectChanges();
@@ -394,7 +395,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       });
       if (isTypeBindInRow) {
         const parsedRow = this.formBuilderService.parseFormRow(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope());
-        const oldFormModel = _.cloneDeep(this.formModel);
+        const oldFormModel = cloneDeep(this.formModel);
         this.isUpdating = true;
         this.formModel = null;
         this.cdr.detectChanges();

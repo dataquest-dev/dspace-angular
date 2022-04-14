@@ -32,7 +32,7 @@ import { dateToString, isNgbDateStruct } from '../../date.util';
 import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './ds-dynamic-form-ui/ds-dynamic-form-constants';
 import { CONCAT_GROUP_SUFFIX, DynamicConcatModel } from './ds-dynamic-form-ui/models/ds-dynamic-concat.model';
 import { VIRTUAL_METADATA_PREFIX } from '../../../core/shared/metadata.models';
-import * as _ from 'lodash/fp';
+import { cloneDeep } from 'lodash';
 
 @Injectable()
 export class FormBuilderService extends DynamicFormService {
@@ -227,6 +227,7 @@ export class FormBuilderService extends DynamicFormService {
   modelFromConfiguration(submissionId: string, json: string | SubmissionFormsModel, scopeUUID: string, sectionData: any = {}, submissionScope?: string, readOnly = false): DynamicFormControlModel[] | never {
     let rows: DynamicFormControlModel[] = [];
     const rawData = typeof json === 'string' ? JSON.parse(json, parseReviver) : json;
+
     if (rawData.rows && !isEmpty(rawData.rows)) {
       rawData.rows.forEach(currentRow => {
         currentRow.fields.forEach((field,index) => {
@@ -236,7 +237,6 @@ export class FormBuilderService extends DynamicFormService {
         });
 
         const rowParsed = this.rowParser.parse(submissionId, currentRow, scopeUUID, sectionData, submissionScope, readOnly);
-
         if (isNotNull(rowParsed)) {
           if (Array.isArray(rowParsed)) {
             rows = rows.concat(rowParsed);
@@ -416,7 +416,7 @@ export class FormBuilderService extends DynamicFormService {
    * @return copy row configuration with removed input field which has initialized type-bind
    */
   removeFieldFromRow(currentRow, index) {
-    const copy = _.cloneDeep(currentRow);
+    const copy = cloneDeep(currentRow);
     copy.fields.splice(index,1);
     return copy;
   }

@@ -504,7 +504,7 @@ describe('FormBuilderService test suite', () => {
     expect(service.findById('testFormRowArrayGroupInput', testModel, 2) instanceof DynamicFormControlModel).toBe(true);
   });
 
-  it('should not init all fields to the comp.formModel because one has type-bind.', () => {
+  it('should not init all fields to the formModel because one has type-bind.', () => {
     const formModel = service.modelFromConfiguration(submissionId, testFormConfigurationWithTypeBind, 'testScopeUUID');
 
     expect(formModel.length).toEqual(1);
