@@ -53,6 +53,7 @@ describe('FormBuilderService test suite', () => {
 
   let testModel: DynamicFormControlModel[];
   let testFormConfiguration: SubmissionFormsModel;
+  let testFormConfigurationWithTypeBind: SubmissionFormsModel;
   let service: FormBuilderService;
 
   const submissionId = '1234';
@@ -309,6 +310,55 @@ describe('FormBuilderService test suite', () => {
       ),
     ];
 
+    testFormConfigurationWithTypeBind = {
+      name: 'testFormConfigurationWithTypeBind',
+      rows: [
+        {
+          fields: [
+            {
+              input: {
+                type: 'onebox'
+              },
+              label: 'Title',
+              mandatory: 'true',
+              repeatable: false,
+              hints: ' Enter Title.',
+              typeBind: ['Article'],
+              selectableMetadata: [
+                {
+                  metadata: 'dc.title'
+                }
+              ],
+              languageCodes: []
+            } as FormFieldModel
+          ]
+        } as FormRowModel,
+        {
+          fields: [
+            {
+              input: {
+                type: 'onebox'
+              },
+              label: 'Author',
+              mandatory: 'false',
+              repeatable: false,
+              hints: ' Enter Author.',
+              selectableMetadata: [
+                {
+                  metadata: 'dc.contributor'
+                }
+              ],
+              languageCodes: []
+            } as FormFieldModel
+          ]
+        } as FormRowModel,
+      ],
+      _links: {
+        self: {
+          href: 'testFormConfiguration.url'
+        }
+      }
+    } as any;
     testFormConfiguration = {
       name: 'testFormConfiguration',
       rows: [
@@ -452,6 +502,14 @@ describe('FormBuilderService test suite', () => {
     expect(service.findById('nestedTestInput', testModel) instanceof DynamicFormControlModel).toBe(true);
     expect(service.findById('testFormRowArrayGroupInput', testModel) instanceof DynamicFormControlModel).toBe(true);
     expect(service.findById('testFormRowArrayGroupInput', testModel, 2) instanceof DynamicFormControlModel).toBe(true);
+  });
+
+  it('should not init all fields to the comp.formModel because one has type-bind.', () => {
+    const formModel = service.modelFromConfiguration(submissionId, testFormConfigurationWithTypeBind, 'testScopeUUID');
+
+    expect(formModel.length).toEqual(1);
+    // @ts-ignore
+    expect(formModel[0].group[0].name).toEqual('dc.contributor');
   });
 
   it('should create an array of form models', () => {

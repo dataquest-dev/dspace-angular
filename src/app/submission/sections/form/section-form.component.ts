@@ -399,7 +399,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         this.formModel = null;
         this.cdr.detectChanges();
         this.formModel = oldFormModel;
-        this.formModel[indexRow] = parsedRow;
+        this.formModel.splice(indexRow, 0, parsedRow);
         this.isUpdating = false;
         this.cdr.detectChanges();
       }

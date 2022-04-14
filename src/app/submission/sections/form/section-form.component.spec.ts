@@ -46,6 +46,7 @@ import { RequestService } from '../../../core/data/request.service';
 import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
 import { cold } from 'jasmine-marbles';
 import * as _ from 'lodash';
+import value from '*.json';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -487,41 +488,75 @@ describe('SubmissionSectionFormComponent test suite', () => {
 
     });
 
-    it('should call methods initFormWithValues and updateFormBaseOnTypeBind onChange event', () => {
-      formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
-      const sectionData = {};
+    describe('test type-bind', () => {
+      beforeEach(() => {
+        formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
+        const sectionData = {};
 
-      comp.initForm(sectionData);
+        comp.initForm(sectionData);
+      });
 
-      spyOn(comp,'initFormWithValues');
-      spyOn(comp,'updateFormBaseOnTypeBind');
+      it('should not init all fields to the comp.formModel because one has type-bind.', () => {
 
-      comp.onChange(onChangeFormControlEvent);
+        // formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
+        // const sectionData = {};
+        //
+        // comp.initForm(sectionData);
+        expect(comp.formModel.length).toEqual(1);
+        expect(comp.formModel[0].id).toEqual('df-row-group-config-2');
+      });
 
-      expect(comp.initFormWithValues).toHaveBeenCalledWith(undefined);
-      expect(comp.updateFormBaseOnTypeBind).toHaveBeenCalledWith(onChangeFormControlEvent, undefined);
-    });
+      it('should call methods initFormWithValues and updateFormBaseOnTypeBind onChange event', () => {
+        spyOn(comp,'initFormWithValues');
+        spyOn(comp,'updateFormBaseOnTypeBind');
 
-    it('should remove fields with type-bind in initFormWithValues method', () => {
-      formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
-      const sectionData = {};
+        comp.onChange(onChangeFormControlEvent);
 
-      comp.initForm(sectionData);
-      // test 1 - musi sa initializovat bez type-bind
-      // test 2 - po zmene typu sa musi zobrazit type-bind field
-      // test 3 - ak je v row type-bind vo setkych fieldoch a zmenim typ, mal by zmiznut cely row
-      const testFormConfWithoutTypeBind = _.cloneDeep(testFormConfiguration);
-      testFormConfWithoutTypeBind.rows[0].fields.splice(0,1);
-      formBuilderService.removeFieldFromRow.and.returnValue(testFormConfWithoutTypeBind.rows[0]);
-      formBuilderService.parseFormRow.and.returnValue(comp.formModel[0]);
-      comp.initFormWithValues(testFormConfiguration);
-      //
-      // comp.onChange()
-      // expect(comp.initFormWithValues).toHaveBeenCalledWith(testFormConfiguration);
-      expect(comp.formModel).not.toEqual(testFormModel);
-      expect(comp.formModel.length).toEqual(1);
-      expect(comp.formModel[0].id).toEqual('df-row-group-config-2');
-    });
+        expect(comp.initFormWithValues).toHaveBeenCalledWith(undefined);
+        expect(comp.updateFormBaseOnTypeBind).toHaveBeenCalledWith(onChangeFormControlEvent, undefined);
+      });
+
+      it('should remove fields with type-bind from the form model by initFormWithValues method', () => {
+        const testFormConfWithoutTypeBind = _.cloneDeep(testFormConfiguration);
+        testFormConfWithoutTypeBind.rows[0].fields.splice(0,1);
+        formBuilderService.removeFieldFromRow.and.returnValue(testFormConfWithoutTypeBind.rows[0]);
+        formBuilderService.parseFormRow.and.returnValue(comp.formModel[0]);
+        comp.initFormWithValues(testFormConfiguration);
+
+        expect(comp.formModel).not.toEqual(testFormModel);
+        expect(comp.formModel.length).toEqual(1);
+        expect(comp.formModel[0].id).toEqual('df-row-group-config-2');
+      });
+
+      it('should add fields with type-bind to the form model by updateFormBaseOnTypeBind method', () => {
+        // formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
+        // const sectionData = {};
+        //
+        // comp.initForm(sectionData);
+        /**
+         * Remove type-bind fields from the formModel
+         */
+        const testFormConfWithoutTypeBind = _.cloneDeep(testFormConfiguration);
+        testFormConfWithoutTypeBind.rows[0].fields.splice(0,1);
+        formBuilderService.removeFieldFromRow.and.returnValue(testFormConfWithoutTypeBind.rows[0]);
+        formBuilderService.parseFormRow.and.returnValue(comp.formModel[0]);
+        comp.initFormWithValues(testFormConfiguration);
+
+        /**
+         * Add fields with type-bind to the formModel
+         */
+        formBuilderService.removeFieldFromRow.and.returnValue(testFormConfiguration.rows[0]);
+        onChangeFormControlEvent.$event.value = 'Article';
+        comp.updateFormBaseOnTypeBind(onChangeFormControlEvent, testFormConfiguration);
+
+        expect(comp.formModel).toEqual(testFormModel);
+        expect(comp.formModel.length).toEqual(2);
+        expect(comp.formModel[0].id).toEqual('df-row-group-config-1');
+      });
+
+
+    }),
+
 
     it('should set previousValue on form focus event', () => {
       formBuilderService.hasMappedGroupValue.and.returnValue(false);
