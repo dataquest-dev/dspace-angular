@@ -36,7 +36,7 @@ import { FormFieldMetadataValueObject } from '../../../shared/form/builder/model
 import { DynamicRowGroupModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-row-group-model';
 import { DsDynamicInputModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-input.model';
 import { SubmissionSectionError } from '../../objects/submission-objects.reducer';
-import {DynamicFormControlEvent, DynamicFormControlEventType, parseReviver} from '@ng-dynamic-forms/core';
+import { DynamicFormControlEvent, DynamicFormControlEventType } from '@ng-dynamic-forms/core';
 import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
 import { WorkspaceItem } from '../../../core/submission/models/workspaceitem.model';
@@ -45,8 +45,7 @@ import { ObjectCacheService } from '../../../core/cache/object-cache.service';
 import { RequestService } from '../../../core/data/request.service';
 import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
 import { cold } from 'jasmine-marbles';
-import * as _ from 'lodash';
-import value from '*.json';
+import { cloneDeep } from 'lodash';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -496,16 +495,6 @@ describe('SubmissionSectionFormComponent test suite', () => {
         comp.initForm(sectionData);
       });
 
-      it('should not init all fields to the comp.formModel because one has type-bind.', () => {
-
-        // formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
-        // const sectionData = {};
-        //
-        // comp.initForm(sectionData);
-        expect(comp.formModel.length).toEqual(1);
-        expect(comp.formModel[0].id).toEqual('df-row-group-config-2');
-      });
-
       it('should call methods initFormWithValues and updateFormBaseOnTypeBind onChange event', () => {
         spyOn(comp,'initFormWithValues');
         spyOn(comp,'updateFormBaseOnTypeBind');
@@ -517,10 +506,12 @@ describe('SubmissionSectionFormComponent test suite', () => {
       });
 
       it('should remove fields with type-bind from the form model by initFormWithValues method', () => {
-        const testFormConfWithoutTypeBind = _.cloneDeep(testFormConfiguration);
+        const testFormConfWithoutTypeBind = cloneDeep(testFormConfiguration);
+
         testFormConfWithoutTypeBind.rows[0].fields.splice(0,1);
         formBuilderService.removeFieldFromRow.and.returnValue(testFormConfWithoutTypeBind.rows[0]);
         formBuilderService.parseFormRow.and.returnValue(comp.formModel[0]);
+
         comp.initFormWithValues(testFormConfiguration);
 
         expect(comp.formModel).not.toEqual(testFormModel);
@@ -529,14 +520,10 @@ describe('SubmissionSectionFormComponent test suite', () => {
       });
 
       it('should add fields with type-bind to the form model by updateFormBaseOnTypeBind method', () => {
-        // formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
-        // const sectionData = {};
-        //
-        // comp.initForm(sectionData);
         /**
          * Remove type-bind fields from the formModel
          */
-        const testFormConfWithoutTypeBind = _.cloneDeep(testFormConfiguration);
+        const testFormConfWithoutTypeBind = cloneDeep(testFormConfiguration);
         testFormConfWithoutTypeBind.rows[0].fields.splice(0,1);
         formBuilderService.removeFieldFromRow.and.returnValue(testFormConfWithoutTypeBind.rows[0]);
         formBuilderService.parseFormRow.and.returnValue(comp.formModel[0]);
@@ -547,16 +534,14 @@ describe('SubmissionSectionFormComponent test suite', () => {
          */
         formBuilderService.removeFieldFromRow.and.returnValue(testFormConfiguration.rows[0]);
         onChangeFormControlEvent.$event.value = 'Article';
+
         comp.updateFormBaseOnTypeBind(onChangeFormControlEvent, testFormConfiguration);
 
         expect(comp.formModel).toEqual(testFormModel);
         expect(comp.formModel.length).toEqual(2);
         expect(comp.formModel[0].id).toEqual('df-row-group-config-1');
       });
-
-
-    }),
-
+    });
 
     it('should set previousValue on form focus event', () => {
       formBuilderService.hasMappedGroupValue.and.returnValue(false);
