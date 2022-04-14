@@ -355,9 +355,12 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
   initFormWithValues(formConfig) {
     formConfig.rows.forEach((currentRow, indexRow) => {
       currentRow.fields.forEach((field, indexField) => {
+        /**
+         * Remove a field with the type-bind
+         */
         if (isNotEmpty(field.typeBind)) {
           currentRow = this.formBuilderService.removeFieldFromRow(currentRow, indexField);
-          const parsedRow = this.parseFormRow(currentRow);
+          const parsedRow = this.formBuilderService.parseFormRow(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope());
           const oldFormModel = _.cloneDeep(this.formModel);
           this.isUpdating = true;
           this.formModel = null;
@@ -366,6 +369,9 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
           if (currentRow.fields.length !== 0) {
             this.formModel[indexRow] = parsedRow;
           } else {
+            /**
+             * All fields from row was removed -> remove empty row
+             */
             this.formModel.splice(indexRow, 1);
           }
           this.isUpdating = false;
@@ -387,7 +393,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         }
       });
       if (isTypeBindInRow) {
-        const parsedRow = this.parseFormRow(currentRow);
+        const parsedRow = this.formBuilderService.parseFormRow(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope());
         const oldFormModel = _.cloneDeep(this.formModel);
         this.isUpdating = true;
         this.formModel = null;
@@ -400,7 +406,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     });
   }
 
-  parseFormRow(formRow) {
+  parseFormRow(submissionId, formRow, collectionId, sectionData, submissionScope) {
     return this.rowParser.parse(this.submissionId, formRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope(), false);
   }
 

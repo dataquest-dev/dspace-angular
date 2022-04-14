@@ -71,6 +71,12 @@ export class FormFieldModel {
   repeatable: boolean;
 
   /**
+   * blablabla
+   */
+  @autoserialize
+  typeBind: string[];
+
+  /**
    * Containing additional properties for this metadata field
    */
   @autoserialize

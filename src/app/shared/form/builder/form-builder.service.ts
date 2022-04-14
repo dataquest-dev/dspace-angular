@@ -423,4 +423,8 @@ export class FormBuilderService extends DynamicFormService {
     copy.fields.splice(index,1);
     return copy;
   }
+
+  parseFormRow(submissionId, formRow, collectionId, sectionData, submissionScope) {
+    return this.rowParser.parse(submissionId, formRow, collectionId, sectionData, submissionScope, false);
+  }
 }

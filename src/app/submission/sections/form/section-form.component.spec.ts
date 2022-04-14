@@ -36,7 +36,7 @@ import { FormFieldMetadataValueObject } from '../../../shared/form/builder/model
 import { DynamicRowGroupModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-row-group-model';
 import { DsDynamicInputModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-input.model';
 import { SubmissionSectionError } from '../../objects/submission-objects.reducer';
-import { DynamicFormControlEvent, DynamicFormControlEventType } from '@ng-dynamic-forms/core';
+import {DynamicFormControlEvent, DynamicFormControlEventType, parseReviver} from '@ng-dynamic-forms/core';
 import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
 import { WorkspaceItem } from '../../../core/submission/models/workspaceitem.model';
@@ -45,6 +45,7 @@ import { ObjectCacheService } from '../../../core/cache/object-cache.service';
 import { RequestService } from '../../../core/data/request.service';
 import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
 import { cold } from 'jasmine-marbles';
+import * as _ from 'lodash';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -80,6 +81,7 @@ const testFormConfiguration = {
           mandatory: 'true',
           repeatable: false,
           hints: ' Enter Title.',
+          typeBind: ['Article'],
           selectableMetadata: [
             {
               metadata: 'dc.title'
@@ -125,7 +127,14 @@ const testFormModel = [
   new DynamicRowGroupModel({
     id: 'df-row-group-config-2',
     group: [new DsDynamicInputModel({ id: 'dc.contributor', metadataFields: [], repeatable: false, submissionId: '1234', hasSelectableMetadata: false })],
-  })
+  }),
+];
+
+const testOnChangeFormModel = [
+  new DynamicRowGroupModel({
+    id: 'df-row-group-config-3',
+    group: [new DsDynamicInputModel({ id: 'dc.type', value: 'Article', metadataFields: [], repeatable: false, submissionId: '1234', hasSelectableMetadata: false })],
+  }),
 ];
 
 const dynamicFormControlEvent: DynamicFormControlEvent = {
@@ -134,6 +143,15 @@ const dynamicFormControlEvent: DynamicFormControlEvent = {
   control: null,
   group: testFormModel[0] as any,
   model: testFormModel[0].group[0],
+  type: DynamicFormControlEventType.Change
+};
+
+const onChangeFormControlEvent: DynamicFormControlEvent = {
+  $event: new Event('change'),
+  context: null,
+  control: null,
+  group: testOnChangeFormModel[0] as any,
+  model: testOnChangeFormModel[0].group[0],
   type: DynamicFormControlEventType.Change
 };
 
@@ -467,6 +485,42 @@ describe('SubmissionSectionFormComponent test suite', () => {
       expect(formOperationsService.getFieldValueFromChangeEvent).toHaveBeenCalledWith(dynamicFormControlEvent);
       expect(submissionServiceStub.dispatchSave).toHaveBeenCalledWith(submissionId);
 
+    });
+
+    it('should call methods initFormWithValues and updateFormBaseOnTypeBind onChange event', () => {
+      formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
+      const sectionData = {};
+
+      comp.initForm(sectionData);
+
+      spyOn(comp,'initFormWithValues');
+      spyOn(comp,'updateFormBaseOnTypeBind');
+
+      comp.onChange(onChangeFormControlEvent);
+
+      expect(comp.initFormWithValues).toHaveBeenCalledWith(undefined);
+      expect(comp.updateFormBaseOnTypeBind).toHaveBeenCalledWith(onChangeFormControlEvent, undefined);
+    });
+
+    it('should remove fields with type-bind in initFormWithValues method', () => {
+      formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
+      const sectionData = {};
+
+      comp.initForm(sectionData);
+      // test 1 - musi sa initializovat bez type-bind
+      // test 2 - po zmene typu sa musi zobrazit type-bind field
+      // test 3 - ak je v row type-bind vo setkych fieldoch a zmenim typ, mal by zmiznut cely row
+      const testFormConfWithoutTypeBind = _.cloneDeep(testFormConfiguration);
+      testFormConfWithoutTypeBind.rows[0].fields.splice(0,1);
+      formBuilderService.removeFieldFromRow.and.returnValue(testFormConfWithoutTypeBind.rows[0]);
+      formBuilderService.parseFormRow.and.returnValue(comp.formModel[0]);
+      comp.initFormWithValues(testFormConfiguration);
+      //
+      // comp.onChange()
+      // expect(comp.initFormWithValues).toHaveBeenCalledWith(testFormConfiguration);
+      expect(comp.formModel).not.toEqual(testFormModel);
+      expect(comp.formModel.length).toEqual(1);
+      expect(comp.formModel[0].id).toEqual('df-row-group-config-2');
     });
 
     it('should set previousValue on form focus event', () => {
