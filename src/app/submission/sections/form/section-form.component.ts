@@ -114,6 +114,13 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    */
   protected subs: Subscription[] = [];
 
+  /**
+   * Some input fields are not rendered because actual submission type doesn't equals to type-bind definition.
+   * Save index of every field that is not rendered but is removed from the form.
+   * @type {Array}
+   */
+  protected removedRowsIndex: number[] = [];
+
   protected workspaceItem: WorkspaceItem;
   /**
    * The FormComponent reference
@@ -378,6 +385,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
              * All fields from row was removed -> remove empty row
              */
             this.formModel.splice(indexRow, 1);
+            this.removedRowsIndex.push(indexRow);
           }
           this.isUpdating = false;
           this.cdr.detectChanges();
@@ -409,7 +417,11 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         this.formModel = null;
         this.cdr.detectChanges();
         this.formModel = oldFormModel;
-        this.formModel.splice(indexRow, 0, parsedRow);
+        if (this.removedRowsIndex.includes(indexRow)) {
+          this.formModel.splice(indexRow, 0, parsedRow);
+        } else {
+          this.formModel[indexRow] = parsedRow;
+        }
         this.isUpdating = false;
         this.cdr.detectChanges();
       }
