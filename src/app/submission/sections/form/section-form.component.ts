@@ -353,6 +353,10 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     );
   }
 
+  /**
+   * Copy actual form with filled values and remove all fields with the type-bind property.
+   * @param formConfig configuration of the form, it is loaded from the server.
+   */
   initFormWithValues(formConfig) {
     formConfig.rows.forEach((currentRow, indexRow) => {
       currentRow.fields.forEach((field, indexField) => {
@@ -382,6 +386,11 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     });
   }
 
+  /**
+   * Add only fields with the type-bind to the form which type-bind values equals with submission type.
+   * @param event onChange event, if was changed dc.type metadata update the form.
+   * @param formConfig configuration of the form, it is loaded from the server.
+   */
   updateFormBaseOnTypeBind(event, formConfig) {
     formConfig.rows.forEach((currentRow, indexRow) => {
       let isTypeBindInRow = false;
@@ -405,10 +414,6 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         this.cdr.detectChanges();
       }
     });
-  }
-
-  parseFormRow(submissionId, formRow, collectionId, sectionData, submissionScope) {
-    return this.rowParser.parse(this.submissionId, formRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope(), false);
   }
 
   /**

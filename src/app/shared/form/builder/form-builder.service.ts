@@ -421,6 +421,16 @@ export class FormBuilderService extends DynamicFormService {
     return copy;
   }
 
+  /**
+   * Parse row from the form configuration to the DynamicRowGroupModel. DynamicRowGroupModel is used
+   * in the formModel.
+   * @param submissionId
+   * @param formRow row to be parsed.
+   * @param collectionId
+   * @param sectionData
+   * @param submissionScope
+   * @return DynamicRowGroupModel
+   */
   parseFormRow(submissionId, formRow, collectionId, sectionData, submissionScope) {
     return this.rowParser.parse(submissionId, formRow, collectionId, sectionData, submissionScope, false);
   }

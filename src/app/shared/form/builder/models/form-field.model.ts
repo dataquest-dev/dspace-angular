@@ -71,7 +71,7 @@ export class FormFieldModel {
   repeatable: boolean;
 
   /**
-   * blablabla
+   * Representing if this field will be rendered based on the submission type
    */
   @autoserialize
   typeBind: string[];
