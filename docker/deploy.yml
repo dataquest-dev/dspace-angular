@@ -28,9 +28,6 @@ services:
       DSPACE_REST_PORT: 8080
       DSPACE_REST_NAMESPACE: /server
     image: dataquest/dspace-angular:dspace-7_x
-    build:
-      context: ..
-      dockerfile: Dockerfile
     networks:
       dspacenet:
     ports:
@@ -147,5 +144,3 @@ volumes:
   solr_data:
   # Special volume used to share Solr configs from 'dspace' to 'dspacesolr' container (see above)
   solr_configs:
-
-  
