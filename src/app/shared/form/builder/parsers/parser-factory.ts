@@ -19,6 +19,7 @@ import { SeriesFieldParser } from './series-field-parser';
 import { TagFieldParser } from './tag-field-parser';
 import { TextareaFieldParser } from './textarea-field-parser';
 import { DisabledFieldParser } from './disabled-field-parser';
+import { ComplexFieldParser } from './complex-field-parser';
 
 const fieldParserDeps = [
   SUBMISSION_ID,
@@ -107,6 +108,13 @@ export class ParserFactory {
         return {
           provide: FieldParser,
           useClass: TextareaFieldParser,
+          deps: [...fieldParserDeps]
+        };
+      }
+      case ParserType.Complex: {
+        return {
+          provide: FieldParser,
+          useClass: ComplexFieldParser,
           deps: [...fieldParserDeps]
         };
       }
