@@ -58,7 +58,7 @@ services:
       # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests 
       # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
       proxies__P__trusted__P__ipranges: '172.23.0'
-    image: dataquest/dspace:dspace-7_x-test
+    image: dataquest/dspace:dspace-7_x
     depends_on:
     - dspacedb
     networks:
