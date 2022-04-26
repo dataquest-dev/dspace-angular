@@ -42,9 +42,15 @@ export class ComplexFieldParser extends FieldParser {
     let clsInput: DynamicFormControlLayout;
     const id: string = this.configData.selectableMetadata[0].metadata;
 
+    clsGroup = {
+      element: {
+        control: 'form-row',
+      }
+    };
+
     clsInput = {
       grid: {
-        host: 'col-sm-6'
+        host: 'col-sm-12'
       }
     };
 
@@ -56,10 +62,11 @@ export class ComplexFieldParser extends FieldParser {
 
     let inputConfigs: DynamicInputModelConfig[] = [];
 
-    const configDataComplex = ['one', 'two', 'three'];
-    configDataComplex.forEach(() => {
+    const complexDefinitionJSON = JSON.parse(this.configData.complexDefinition);
+
+    Object.keys(complexDefinitionJSON).forEach((input, index) => {
       inputConfigs.push(this.initModel(
-        id + COMPLEX_INPUT_SUFFIX,
+        id + COMPLEX_INPUT_SUFFIX + index,
         false,
         true,
         true,
@@ -67,62 +74,43 @@ export class ComplexFieldParser extends FieldParser {
       ));
     });
 
-
-    // const input1ModelConfig: DynamicInputModelConfig = this.initModel(
-    //   id + COMPLEX_INPUT_SUFFIX,
-    //   false,
-    //   true,
-    //   true,
-    //   false
-    // );
-    // const input2ModelConfig: DynamicInputModelConfig = thvbg is.initModel(
-    //   id + COMPLEX_INPUT_SUFFIX,
-    //   false,
-    //   true,
-    //   true,
-    //   false
-    // );
-
-    // if (hasNoValue(concatGroup.hint) && hasValue(input1ModelConfig.hint) && hasNoValue(input2ModelConfig.hint)) {
-    //   concatGroup.hint = input1ModelConfig.hint;
-    //   input1ModelConfig.hint = undefined;
-    // }
-
     if (this.configData.mandatory) {
       concatGroup.required = true;
-      // input1ModelConfig.required = true;
     }
 
-    // @TODO set placeholders
-    // if (isNotEmpty(this.firstPlaceholder)) {
-    //   input1ModelConfig.placeholder = this.firstPlaceholder;
-    // }
-    //
-    // if (isNotEmpty(this.secondPlaceholder)) {
-    //   input2ModelConfig.placeholder = this.secondPlaceholder;
-    // }
+    inputConfigs.forEach((inputConfig, index) => {
+      const complexDefinitionInput = complexDefinitionJSON[Object.keys(complexDefinitionJSON)[index]];
 
-    // Split placeholder if is like 'placeholder1/placeholder2'
-    const placeholder = this.configData.label.split('/');
-    // if (placeholder.length === 2) {
-    //   input1ModelConfig.placeholder = placeholder[0];
-    //   input2ModelConfig.placeholder = placeholder[1];
-    // }
+      if (hasValue(complexDefinitionInput.label)) {
+        inputConfig.label = complexDefinitionInput.label;
+        inputConfig.placeholder = complexDefinitionInput.label;
+      }
 
-    inputConfigs.forEach((input) => {
-      concatGroup.group.push(new DynamicInputModel(input, clsInput));
+      if (hasValue(complexDefinitionInput.placeholder)) {
+        inputConfig.placeholder = complexDefinitionInput.placeholder;
+      }
+
+      if (hasValue(complexDefinitionInput.hint)) {
+        inputConfig.hint = complexDefinitionInput.hint;
+      }
+
+      if (hasValue(complexDefinitionInput.style)) {
+        clsInput = {
+          grid: {
+            host: complexDefinitionInput.style
+          }
+        };
+      }
+
+      if (this.configData.mandatory) {
+        if (hasValue(complexDefinitionInput.required)) {
+          inputConfig.required = complexDefinitionInput.required;
+        }
+      }
+
+      concatGroup.group.push(new DynamicInputModel(inputConfig, clsInput));
     });
 
-    // const model1 = new DynamicInputModel(input1ModelConfig, clsInput);
-    // const model2 = new DynamicInputModel(input2ModelConfig, clsInput);
-    // concatGroup.group.push(model1);
-    // concatGroup.group.push(model2);
-    //
-    clsGroup = {
-      element: {
-        control: 'form-row',
-      }
-    };
     const complexModel = new DynamicComplexModel(concatGroup, clsGroup);
     complexModel.name = this.getFieldId();
 

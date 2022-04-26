@@ -11,7 +11,7 @@ import {forEach} from 'lodash';
 import {DynamicConcatModel, DynamicConcatModelConfig} from './ds-dynamic-concat.model';
 
 export const COMPLEX_GROUP_SUFFIX = '_COMPLEX_GROUP';
-export const COMPLEX_INPUT_SUFFIX = '_COMPLEX_INPUT';
+export const COMPLEX_INPUT_SUFFIX = '_COMPLEX_INPUT_';
 
 export interface DynamicComplexModelConfig extends DynamicConcatModelConfig {}
 
@@ -19,6 +19,35 @@ export class DynamicComplexModel extends DynamicConcatModel {
 
   constructor(config: DynamicComplexModelConfig, layout?: DynamicFormControlLayout) {
     super(config, layout);
+    this.separator = ';';
+  }
+
+  get value() {
+    const formValues = this.group.map((inputModel: DsDynamicInputModel) =>
+      (typeof inputModel.value === 'string') ?
+        Object.assign(new FormFieldMetadataValueObject(), { value: inputModel.value, display: inputModel.value }) :
+        (inputModel.value as any));
+
+    let indexOfEmptyValues: number[] = [];
+    let value = '';
+    formValues.forEach((formValue, index) => {
+      if (isNotEmpty(formValue) && isNotEmpty(formValue.value)) {
+        value += formValue.value + this.separator;
+      } else {
+        indexOfEmptyValues.push(index);
+      }
+    });
+
+    value = value.slice(0, -1);
+
+    if (isNotEmpty(formValues)) {
+      const dumpArrayOfIndex = Array.from(Array(formValues.length).keys());
+      const indexesOfNonEmptyFormValues = dumpArrayOfIndex.filter(x => !indexOfEmptyValues.includes(x));
+      return Object.assign(new FormFieldMetadataValueObject(),
+        formValues[Object.keys(formValues)[indexesOfNonEmptyFormValues[0]]],{ value: value });
+    }
+    return null;
+
   }
 
   set value(value: string | FormFieldMetadataValueObject) {
@@ -43,16 +72,6 @@ export class DynamicComplexModel extends DynamicConcatModel {
         (this.get(index) as DsDynamicInputModel).value = undefined;
       }
     });
-    // if (values[0].value) {
-    //   (this.get(0) as DsDynamicInputModel).value = values[0];
-    // } else {
-    //   (this.get(0) as DsDynamicInputModel).value = undefined;
-    // }
-    // if (values[1].value) {
-    //   (this.get(1) as DsDynamicInputModel).value = values[1];
-    // } else {
-    //   (this.get(1) as DsDynamicInputModel).value = undefined;
-    // }
   }
 
 }
