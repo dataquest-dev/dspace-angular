@@ -13,7 +13,7 @@ import {
   DynamicComplexModelConfig,
 
 } from '../ds-dynamic-form-ui/models/ds-dynamic-complex.model';
-import { hasNoValue, hasValue, isNotEmpty } from '../../../empty.util';
+import { hasValue, isNotEmpty } from '../../../empty.util';
 import { ParserOptions } from './parser-options';
 import {
   CONFIG_DATA,
@@ -60,7 +60,8 @@ export class ComplexFieldParser extends FieldParser {
     concatGroup.group = [];
     concatGroup.separator = this.separator;
 
-    let inputConfigs: DynamicInputModelConfig[] = [];
+    let inputConfigs: DynamicInputModelConfig[];
+    inputConfigs = [];
 
     const complexDefinitionJSON = JSON.parse(this.configData.complexDefinition);
 

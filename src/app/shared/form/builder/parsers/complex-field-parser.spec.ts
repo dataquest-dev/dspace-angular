@@ -5,7 +5,7 @@ import {DynamicRowArrayModel} from '../ds-dynamic-form-ui/models/ds-dynamic-row-
 
 describe('ComplexFieldParser test suite', () => {
   let field: FormFieldModel;
-  let initFormValues: any = {};
+  const initFormValues: any = {};
 
   const submissionId = '1234';
   const parserOptions: ParserOptions = {

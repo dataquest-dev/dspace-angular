@@ -1,13 +1,8 @@
-import { DynamicFormControlLayout, DynamicFormGroupModel, DynamicFormGroupModelConfig, serializable } from '@ng-dynamic-forms/core';
-
-import { Subject } from 'rxjs';
+import { DynamicFormControlLayout } from '@ng-dynamic-forms/core';
 
 import { hasNoValue, isNotEmpty } from '../../../../empty.util';
 import { DsDynamicInputModel } from './ds-dynamic-input.model';
 import { FormFieldMetadataValueObject } from '../../models/form-field-metadata-value.model';
-import { RelationshipOptions } from '../../models/relationship-options.model';
-import { MetadataValue } from '../../../../../core/shared/metadata.models';
-import {forEach} from 'lodash';
 import {DynamicConcatModel, DynamicConcatModelConfig} from './ds-dynamic-concat.model';
 
 export const COMPLEX_GROUP_SUFFIX = '_COMPLEX_GROUP';
@@ -28,7 +23,8 @@ export class DynamicComplexModel extends DynamicConcatModel {
         Object.assign(new FormFieldMetadataValueObject(), { value: inputModel.value, display: inputModel.value }) :
         (inputModel.value as any));
 
-    let indexOfEmptyValues: number[] = [];
+    let indexOfEmptyValues: number[];
+    indexOfEmptyValues = [];
     let value = '';
     formValues.forEach((formValue, index) => {
       if (isNotEmpty(formValue) && isNotEmpty(formValue.value)) {
