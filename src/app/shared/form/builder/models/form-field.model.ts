@@ -118,4 +118,10 @@ export class FormFieldModel {
    */
   @autoserialize
   value: any;
+
+  /**
+   * Containing the definition of the complex input types - multiple inputs
+   */
+  @autoserialize
+  complexDefinition: string;
 }
