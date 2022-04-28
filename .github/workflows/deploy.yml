@@ -21,6 +21,9 @@ jobs:
       - name: change directory
         run: cd $GITHUB_WORKSPACE/build-scripts/deploy-scripts/
 
+      - name: show directory
+        run: pwd
+
       # Runs script for deploy
       - name: Deploy attempt
         run: deploy.sh
