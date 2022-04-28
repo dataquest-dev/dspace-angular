@@ -2,7 +2,7 @@ name: Deploy dspace
 
 on:
   push:
-  
+
   workflow_dispatch:
 
 jobs:
@@ -21,3 +21,7 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      # Runs script for deploy
+      - name: Deploy attempt
+        run: $GITHUB_WORKSPACE/build-scripts/deploy-scripts/deploy.bat
