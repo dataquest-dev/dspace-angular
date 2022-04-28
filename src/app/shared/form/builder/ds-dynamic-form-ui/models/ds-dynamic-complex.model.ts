@@ -25,16 +25,23 @@ export class DynamicComplexModel extends DynamicConcatModel {
 
     let indexOfEmptyValues: number[];
     indexOfEmptyValues = [];
+
     let value = '';
+    let areFormValuesEmpty = true;
     formValues.forEach((formValue, index) => {
       if (isNotEmpty(formValue) && isNotEmpty(formValue.value)) {
         value += formValue.value + this.separator;
+        areFormValuesEmpty = false;
       } else {
+        value += this.separator;
         indexOfEmptyValues.push(index);
       }
     });
-
     value = value.slice(0, -1);
+
+    if (areFormValuesEmpty) {
+      value = '';
+    }
 
     if (isNotEmpty(formValues)) {
       const dumpArrayOfIndex = Array.from(Array(formValues.length).keys());
