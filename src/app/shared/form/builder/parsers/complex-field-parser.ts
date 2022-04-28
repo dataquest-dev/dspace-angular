@@ -122,5 +122,4 @@ export class ComplexFieldParser extends FieldParser {
 
     return complexModel;
   }
-
 }

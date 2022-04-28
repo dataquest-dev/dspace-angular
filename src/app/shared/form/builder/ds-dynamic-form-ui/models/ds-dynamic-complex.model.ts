@@ -69,5 +69,4 @@ export class DynamicComplexModel extends DynamicConcatModel {
       }
     });
   }
-
 }
