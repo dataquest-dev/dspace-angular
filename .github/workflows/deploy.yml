@@ -16,21 +16,10 @@ jobs:
       - name: Ready script
         run: chmod u+x $GITHUB_WORKSPACE/build-scripts/deploy-scripts/deploy.sh
 
-      # change directory
-      ## THIS IS PROBABLY WRONG WAY BUT I WANNA AVOID MULTILINE COMMANDS
-      - name: change directory
-        run: cd $GITHUB_WORKSPACE/build-scripts/deploy-scripts/
+      - name: change, list and run
+        run: |
+          cd $GITHUB_WORKSPACE/build-scripts/deploy-scripts/
+          pwd
+          ls -lsa
+          deploy.sh
 
-      - name: show directory
-        run: pwd
-
-      - name: list files
-        run: ls -lsa
-
-
-      - name: list in deploy-scripts
-        run: ls $GITHUB_WORKSPACE/build-scripts/deploy-scripts/
-
-      # Runs script for deploy
-      - name: Deploy attempt
-        run: deploy.sh
