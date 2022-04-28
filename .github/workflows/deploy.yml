@@ -24,8 +24,8 @@ jobs:
 
       # Ready script
       - name: Ready script
-        run: chmod u+x $GITHUB_WORKSPACE/build-scripts/deploy-scripts/deploy.bat
+        run: chmod u+x $GITHUB_WORKSPACE/build-scripts/deploy-scripts/deploy.sh
 
       # Runs script for deploy
       - name: Deploy attempt
-        run: $GITHUB_WORKSPACE/build-scripts/deploy-scripts/deploy.bat
+        run: $GITHUB_WORKSPACE/build-scripts/deploy-scripts/deploy.sh
