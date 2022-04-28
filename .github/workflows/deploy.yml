@@ -24,6 +24,15 @@ jobs:
       - name: show directory
         run: pwd
 
+      - name: list files
+        run: ls -lsa
+
+      - name: tree
+        run: tree
+
+      - name: list in deploy-scripts
+        run: ls $GITHUB_WORKSPACE/build-scripts/deploy-scripts/
+
       # Runs script for deploy
       - name: Deploy attempt
         run: deploy.sh
