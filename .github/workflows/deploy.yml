@@ -24,7 +24,7 @@ jobs:
 
       # Ready script
       - name: Ready script
-        run: git update-index --chmod=+x $GITHUB_WORKSPACE/build-scripts/deploy-scripts/deploy.bat
+        run: chmod u+x $GITHUB_WORKSPACE/build-scripts/deploy-scripts/deploy.bat
 
       # Runs script for deploy
       - name: Deploy attempt
