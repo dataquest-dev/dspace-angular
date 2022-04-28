@@ -27,8 +27,6 @@ jobs:
       - name: list files
         run: ls -lsa
 
-      - name: tree
-        run: tree
 
       - name: list in deploy-scripts
         run: ls $GITHUB_WORKSPACE/build-scripts/deploy-scripts/
