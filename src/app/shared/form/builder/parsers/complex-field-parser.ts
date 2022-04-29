@@ -2,9 +2,11 @@ import { Inject } from '@angular/core';
 import { FormFieldModel } from '../models/form-field.model';
 import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
 import {
+  DsDynamicInputModel,
+  DsDynamicInputModelConfig
+} from '../ds-dynamic-form-ui/models/ds-dynamic-input.model';
+import {
   DynamicFormControlLayout,
-  DynamicInputModel,
-  DynamicInputModelConfig
 } from '@ng-dynamic-forms/core';
 import {
   COMPLEX_GROUP_SUFFIX,
@@ -60,7 +62,7 @@ export class ComplexFieldParser extends FieldParser {
     concatGroup.group = [];
     concatGroup.separator = this.separator;
 
-    let inputConfigs: DynamicInputModelConfig[];
+    let inputConfigs: DsDynamicInputModelConfig[];
     inputConfigs = [];
 
     const complexDefinitionJSON = JSON.parse(this.configData.complexDefinition);
@@ -104,12 +106,10 @@ export class ComplexFieldParser extends FieldParser {
       }
 
       if (this.configData.mandatory) {
-        if (hasValue(complexDefinitionInput.required)) {
-          inputConfig.required = complexDefinitionInput.required;
-        }
+        inputConfig.required = hasValue(complexDefinitionInput.required) && complexDefinitionInput.required === 'true';
       }
 
-      concatGroup.group.push(new DynamicInputModel(inputConfig, clsInput));
+      concatGroup.group.push(new DsDynamicInputModel(inputConfig, clsInput));
     });
 
     const complexModel = new DynamicComplexModel(concatGroup, clsGroup);

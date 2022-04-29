@@ -1,6 +1,6 @@
 import { DynamicFormControlLayout } from '@ng-dynamic-forms/core';
 
-import { hasNoValue, isNotEmpty } from '../../../../empty.util';
+import { hasNoValue, hasValue, isNotEmpty } from '../../../../empty.util';
 import { DsDynamicInputModel } from './ds-dynamic-input.model';
 import { FormFieldMetadataValueObject } from '../../models/form-field-metadata-value.model';
 import {DynamicConcatModel, DynamicConcatModelConfig} from './ds-dynamic-concat.model';
@@ -27,11 +27,11 @@ export class DynamicComplexModel extends DynamicConcatModel {
     indexOfEmptyValues = [];
 
     let value = '';
-    let areFormValuesEmpty = true;
+    let allFormValuesEmpty = true;
     formValues.forEach((formValue, index) => {
       if (isNotEmpty(formValue) && isNotEmpty(formValue.value)) {
         value += formValue.value + this.separator;
-        areFormValuesEmpty = false;
+        allFormValuesEmpty = false;
       } else {
         value += this.separator;
         indexOfEmptyValues.push(index);
@@ -39,7 +39,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
     });
     value = value.slice(0, -1);
 
-    if (areFormValuesEmpty) {
+    if (allFormValuesEmpty) {
       value = '';
     }
 
@@ -71,7 +71,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
     values.forEach((val, index) =>  {
       if (val.value) {
         (this.get(index) as DsDynamicInputModel).value = val;
-      } else {
+      } else if (hasValue((this.get(index) as DsDynamicInputModel))) {
         (this.get(index) as DsDynamicInputModel).value = undefined;
       }
     });
