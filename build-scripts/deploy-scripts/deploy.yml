@@ -20,7 +20,7 @@ services:
     container_name: dspace-angular
     environment:
       DSPACE_UI_SSL: 'false'
-      DSPACE_UI_HOST: dev-5.pc
+      DSPACE_UI_HOST: dspace-angular
       DSPACE_UI_PORT: '4000'
       DSPACE_UI_NAMESPACE: /
       DSPACE_REST_SSL: 'false'
