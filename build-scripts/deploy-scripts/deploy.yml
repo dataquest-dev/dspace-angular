@@ -21,7 +21,7 @@ services:
     environment:
       DSPACE_UI_SSL: 'false'
       DSPACE_UI_HOST: dev-5.pc
-      DSPACE_UI_PORT: '4050'
+      DSPACE_UI_PORT: '4000'
       DSPACE_UI_NAMESPACE: /
       DSPACE_REST_SSL: 'false'
       DSPACE_REST_HOST: dev-5.pc
@@ -31,8 +31,8 @@ services:
     networks:
       dspacenet:
     ports:
-    - published: 4050
-      target: 4050
+    - published: 4000
+      target: 4000
     - published: 9876
       target: 9876
     stdin_open: true
