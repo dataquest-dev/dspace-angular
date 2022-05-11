@@ -408,8 +408,10 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     let group = null;
     if (isNotNull(this.formModel[indexRow])) {
       if (this.formModel[indexRow] instanceof DynamicRowArrayModel) {
+        // @ts-ignore
         group = this.formModel[indexRow].groups;
       } else if (this.formModel[indexRow] instanceof DynamicRowGroupModel) {
+        // @ts-ignore
         group = this.formModel[indexRow].group;
       }
     }
