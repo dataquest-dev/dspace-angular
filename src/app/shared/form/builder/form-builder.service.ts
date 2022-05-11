@@ -231,7 +231,7 @@ export class FormBuilderService extends DynamicFormService {
     if (rawData.rows && !isEmpty(rawData.rows)) {
       rawData.rows.forEach(currentRow => {
         currentRow.fields.forEach((field,index) => {
-          if (field.typeBind != null && field.typeBind.length !== 0) {
+          if (isNotEmpty(field.typeBind)) {
             currentRow = this.removeFieldFromRow(currentRow,index);
           }
         });

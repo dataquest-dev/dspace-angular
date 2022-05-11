@@ -11,7 +11,7 @@ import { FormComponent } from '../../../shared/form/form.component';
 import { FormService } from '../../../shared/form/form.service';
 import { SectionModelComponent } from '../models/section.model';
 import { SubmissionFormsConfigService } from '../../../core/config/submission-forms-config.service';
-import { hasValue, isEmpty, isNotEmpty, isUndefined } from '../../../shared/empty.util';
+import { hasValue, isEmpty, isNotEmpty, isNotNull, isUndefined } from '../../../shared/empty.util';
 import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { SubmissionFormsModel } from '../../../core/config/models/config-submission-forms.model';
 import { SubmissionSectionError, SubmissionSectionObject } from '../../objects/submission-objects.reducer';
@@ -36,6 +36,8 @@ import { ConfigObject } from '../../../core/config/models/config.model';
 import { RemoteData } from '../../../core/data/remote-data';
 import { RowParser } from '../../../shared/form/builder/parsers/row-parser';
 import { cloneDeep } from 'lodash';
+import { DynamicRowArrayModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-row-array-model';
+import { DynamicRowGroupModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-row-group-model';
 
 /**
  * This component represents a section that contains a Form.
@@ -372,15 +374,17 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
          */
         if (isNotEmpty(field.typeBind)) {
           currentRow = this.formBuilderService.removeFieldFromRow(currentRow, indexField);
-          const parsedRow = this.formBuilderService.parseFormRow(this.submissionId, currentRow, this.collectionId, this.sectionData.data, this.submissionService.getSubmissionScope());
+          const parsedRow = this.formBuilderService.parseFormRow(this.submissionId, currentRow, this.collectionId,
+            this.sectionData.data, this.submissionService.getSubmissionScope());
           const oldFormModel = cloneDeep(this.formModel);
           this.isUpdating = true;
           this.formModel = null;
           this.cdr.detectChanges();
           this.formModel = oldFormModel;
-          if (currentRow.fields.length !== 0) {
+
+          if (isNotNull(parsedRow)) {
             this.formModel[indexRow] = parsedRow;
-          } else {
+          } else if (this.isTypeBindFieldRendered(indexRow, indexField, formConfig.rows[indexRow].fields[indexField])) {
             /**
              * All fields from row was removed -> remove empty row
              */
@@ -392,6 +396,29 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         }
       });
     });
+  }
+
+  /**
+   * Check if a row with type-bind from the formConfig is rendered in the Submission UI
+   * @param indexRow of the row from the formConfig
+   * @param indexField of the field of the row from the formConfig
+   * @param currentRow row from the formConfig with the only one type-bind field
+   */
+  isTypeBindFieldRendered(indexRow, indexField, currentRow) {
+    let group = null;
+    if (isNotNull(this.formModel[indexRow])) {
+      if (this.formModel[indexRow] instanceof DynamicRowArrayModel) {
+        group = this.formModel[indexRow].groups;
+      } else if (this.formModel[indexRow] instanceof DynamicRowGroupModel) {
+        group = this.formModel[indexRow].group;
+      }
+    }
+    if (isNotEmpty(currentRow.selectableMetadata) && isNotNull(group)) {
+      if (currentRow.selectableMetadata[0].metadata === group[indexField].name) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -417,10 +444,12 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         this.formModel = null;
         this.cdr.detectChanges();
         this.formModel = oldFormModel;
-        if (this.removedRowsIndex.includes(indexRow)) {
-          this.formModel.splice(indexRow, 0, parsedRow);
-        } else {
-          this.formModel[indexRow] = parsedRow;
+        if (isNotNull(parsedRow)) {
+          if (this.removedRowsIndex.includes(indexRow)) {
+            this.formModel.splice(indexRow, 0, parsedRow);
+          } else {
+            this.formModel[indexRow] = parsedRow;
+          }
         }
         this.isUpdating = false;
         this.cdr.detectChanges();
