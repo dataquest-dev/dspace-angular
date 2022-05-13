@@ -230,14 +230,22 @@ export class FormBuilderService extends DynamicFormService {
 
     if (rawData.rows && !isEmpty(rawData.rows)) {
       rawData.rows.forEach(currentRow => {
+        let wholeRowIsTypeBind = false;
         currentRow.fields.forEach((field,index) => {
           if (isNotEmpty(field.typeBind)) {
-            currentRow = this.removeFieldFromRow(currentRow,index);
+            if (currentRow.fields.length > 1) {
+              currentRow = this.removeFieldFromRow(currentRow,index);
+            } else {
+              wholeRowIsTypeBind = true;
+            }
           }
         });
 
         const rowParsed = this.rowParser.parse(submissionId, currentRow, scopeUUID, sectionData, submissionScope, readOnly);
         if (isNotNull(rowParsed)) {
+          if (wholeRowIsTypeBind) {
+            rowParsed.hidden = true;
+          }
           if (Array.isArray(rowParsed)) {
             rows = rows.concat(rowParsed);
           } else {
