@@ -22,7 +22,7 @@ services:
       DSPACE_UI_SSL: 'false'
       DSPACE_UI_HOST: dspace-angular
       DSPACE_UI_PORT: '4000'
-      DSPACE_UI_NAMESPACE: /dspace
+      DSPACE_UI_NAMESPACE: /dspace/
       DSPACE_REST_SSL: 'false'
       DSPACE_REST_HOST: dev-5.pc
       DSPACE_REST_PORT: 8080
