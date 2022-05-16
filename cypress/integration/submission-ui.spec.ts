@@ -47,7 +47,7 @@ const sideBarMenu = {
 
 const createCollectionProcess = {
   selectCommunity() {
-    cy.get('.modal-body .scrollable-menu button[title = "' + communityName + '"]').click();
+    cy.get('.modal-body .scrollable-menu button[title = "' + communityName + '"]').eq(0).click();
   },
   typeCollectionName() {
     cy.get('form input[id = "title"]').type(collectionName);
@@ -59,7 +59,7 @@ const createCollectionProcess = {
 
 const createItemProcess = {
   selectCollection() {
-    cy.get('.modal-body .list-group div button .content').contains(collectionName).click();
+    cy.get('.modal-body .list-group div button .content').contains(collectionName).eq(0).click();
   },
   checkInputFieldLabelVisibility(fieldName) {
     cy.get('#traditionalpageone form div[role = "group"] label[for = "' + fieldName + '"]').should('be.visible');
