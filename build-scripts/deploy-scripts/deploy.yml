@@ -25,7 +25,7 @@ services:
       DSPACE_UI_NAMESPACE: /
       DSPACE_REST_SSL: 'false'
       DSPACE_REST_HOST: dev-5.pc
-      DSPACE_REST_PORT: 80
+      DSPACE_REST_PORT: 8080
       DSPACE_REST_NAMESPACE: /server
     image: dataquest/dspace-angular:dspace-7_x
     networks:
@@ -48,7 +48,7 @@ services:
       # __D__ => "-" (e.g. google__D__metadata => google-metadata)
       # dspace.dir, dspace.server.url, dspace.ui.url and dspace.name
       dspace__P__dir: /dspace
-      dspace__P__server__P__url: http://dev-5.pc/server
+      dspace__P__server__P__url: http://dev-5.pc:8080/server
       dspace__P__ui__P__url: http://dev-5.pc/
       dspace__P__name: 'DSpace Started with Docker Compose'
       # db.url: Ensure we are using the 'dspacedb' image for our database
