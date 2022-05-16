@@ -54,6 +54,9 @@ const createCollectionProcess = {
   },
   submit() {
     cy.get('form div button[type = "submit"]').eq(0).click();
+  },
+  searchCommunity() {
+    cy.get('.modal-body input[type = "search"] ').type(communityName);
   }
 };
 
@@ -89,6 +92,9 @@ const createItemProcess = {
   },
   clickOnSave() {
     cy.get('.submission-form-footer button[id = "save"]').click();
+  },
+  searchCollection() {
+    cy.get('.modal-body input[type = "search"] ').type(collectionName);
   }
 };
 
@@ -112,6 +118,7 @@ describe('Create a new submission', () => {
     cy.visit('/');
     sideBarMenu.clickOnNewButton();
     sideBarMenu.clickOnNewCollectionButton();
+    createCollectionProcess.searchCommunity();
     createCollectionProcess.selectCommunity();
     createCollectionProcess.typeCollectionName();
     createCollectionProcess.submit();
@@ -120,6 +127,7 @@ describe('Create a new submission', () => {
     cy.visit('/');
     sideBarMenu.clickOnNewButton();
     sideBarMenu.clickOnNewItemButton();
+    createItemProcess.searchCollection();
     createItemProcess.selectCollection();
   });
 
