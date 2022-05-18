@@ -51,7 +51,7 @@ export class DsDynamicTagComponent extends DsDynamicVocabularyComponent implemen
   public pageInfo: PageInfo;
 
   constructor(protected vocabularyService: VocabularyService,
-              private cdr: ChangeDetectorRef,
+              protected cdr: ChangeDetectorRef,
               protected layoutService: DynamicFormLayoutService,
               protected validationService: DynamicFormValidationService
   ) {
@@ -96,6 +96,7 @@ export class DsDynamicTagComponent extends DsDynamicVocabularyComponent implemen
    * Initialize the component, setting up the init form value
    */
   ngOnInit() {
+    console.log('Init');
     this.hasAuthority = this.model.vocabularyOptions && hasValue(this.model.vocabularyOptions.name);
 
     this.chips = new Chips(
@@ -138,12 +139,12 @@ export class DsDynamicTagComponent extends DsDynamicVocabularyComponent implemen
    * Emits a blur event containing a given value and add all tags to chips.
    * @param event The value to emit.
    */
-  onBlur(event: Event) {
-    if (isNotEmpty(this.currentValue) && !this.instance.isPopupOpen()) {
-      this.addTagsToChips();
-    }
-    this.blur.emit(event);
-  }
+  // onBlur(event: Event) {
+  //   if (isNotEmpty(this.currentValue) && !this.instance.isPopupOpen()) {
+  //     this.addTagsToChips();
+  //   }
+  //   this.blur.emit(event);
+  // }
 
   /**
    * Updates model value with the selected value and add a new tag to chips.

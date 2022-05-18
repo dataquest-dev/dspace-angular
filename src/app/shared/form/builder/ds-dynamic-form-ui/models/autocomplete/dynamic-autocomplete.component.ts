@@ -23,7 +23,7 @@ import {DsDynamicTagComponent} from '../tag/dynamic-tag.component';
 @Component({
   selector: 'ds-autocomplete',
   styleUrls: ['../tag/dynamic-tag.component.scss'],
-  templateUrl: '../tag/dynamic-tag.component.html'
+  templateUrl: './dynamic-autocomplete.component.html'
 })
 export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implements OnInit {
 
@@ -47,13 +47,39 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
   public pageInfo: PageInfo;
 
   constructor(protected vocabularyService: VocabularyService,
-              cdr: ChangeDetectorRef,
+              protected cdr: ChangeDetectorRef,
               protected layoutService: DynamicFormLayoutService,
               protected validationService: DynamicFormValidationService
   ) {
     super(vocabularyService, cdr, layoutService, validationService);
   }
-  //
+
+  /**
+   * Updates model value with the selected value and add a new tag to chips.
+   * @param event The value to set.
+   */
+  onSelectItem(event: NgbTypeaheadSelectItemEvent) {
+    // this.chips.add(event.item);
+    // this.group.controls[this.model.id].setValue(this.model.value);
+    this.updateModel(event.item);
+    this.cdr.detectChanges();
+  }
+
+  updateModel(updateValue) {
+    /*    this.model.valueUpdates.next(this.chips.getChipsItems());
+        this.change.emit(event);*/
+    this.dispatchUpdate(updateValue);
+  }
+
+  /**
+   * Emits a change event and updates model value.
+   * @param updateValue
+   */
+  dispatchUpdate(updateValue: any) {
+    this.model.value = updateValue.display;
+    this.change.emit(updateValue);
+  }
+
   // /**
   //  * Converts a stream of text values from the `<input>` element to the stream of the array of items
   //  * to display in the typeahead popup.
