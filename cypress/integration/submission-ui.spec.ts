@@ -119,6 +119,7 @@ describe('Create a new submission', () => {
     sideBarMenu.clickOnNewButton();
     sideBarMenu.clickOnNewCollectionButton();
     createCollectionProcess.searchCommunity();
+    cy.wait(500);
     createCollectionProcess.selectCommunity();
     createCollectionProcess.typeCollectionName();
     createCollectionProcess.submit();
@@ -128,6 +129,7 @@ describe('Create a new submission', () => {
     sideBarMenu.clickOnNewButton();
     sideBarMenu.clickOnNewItemButton();
     createItemProcess.searchCollection();
+    cy.wait(500);
     createItemProcess.selectCollection();
   });
 
