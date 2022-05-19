@@ -63,6 +63,7 @@ import { RelationshipService } from './data/relationship.service';
 import { ResourcePolicyService } from './resource-policy/resource-policy.service';
 import { SearchResponseParsingService } from './data/search-response-parsing.service';
 import { SiteDataService } from './data/site-data.service';
+import { SiteDataService2 } from '../../app/shared/form/builder/ds-dynamic-form-ui/models/autocomplete/autocomplete.service';
 import { DspaceRestService } from './dspace-rest/dspace-rest.service';
 import { EPersonDataService } from './eperson/eperson-data.service';
 import { EPerson } from './eperson/models/eperson.model';
@@ -191,6 +192,7 @@ const PROVIDERS = [
   CommunityDataService,
   CollectionDataService,
   SiteDataService,
+  SiteDataService2,
   DSOResponseParsingService,
   { provide: MOCK_RESPONSE_MAP, useValue: mockResponseMap },
   { provide: DspaceRestService, useFactory: restServiceFactory, deps: [MOCK_RESPONSE_MAP, HttpClient] },

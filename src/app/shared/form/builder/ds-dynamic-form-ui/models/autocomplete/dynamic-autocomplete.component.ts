@@ -16,7 +16,9 @@ import {hasValue, isNotEmpty} from '../../../../../empty.util';
 import {environment} from '../../../../../../../environments/environment';
 import {isEqual} from 'lodash';
 import {DsDynamicTagComponent} from '../tag/dynamic-tag.component';
-
+// import {AutocompleteService} from './autocomplete.service';
+import {SiteDataService2} from './autocomplete.service';
+//
 /**
  * Component representing a tag input field
  */
@@ -42,14 +44,15 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   searching = false;
   searchFailed = false;
-  hideSearchingWhenUnsubscribed = new Observable(() => () => this.changeSearchingStatus(false));
+  // hideSearchingWhenUnsubscribed = new Observable(() => () => this.changeSearchingStatus(false));
   currentValue: any;
   public pageInfo: PageInfo;
 
   constructor(protected vocabularyService: VocabularyService,
               protected cdr: ChangeDetectorRef,
               protected layoutService: DynamicFormLayoutService,
-              protected validationService: DynamicFormValidationService
+              protected validationService: DynamicFormValidationService,
+              protected autocompleteService: SiteDataService2
   ) {
     super(vocabularyService, cdr, layoutService, validationService);
   }
@@ -59,15 +62,11 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
    * @param event The value to set.
    */
   onSelectItem(event: NgbTypeaheadSelectItemEvent) {
-    // this.chips.add(event.item);
-    // this.group.controls[this.model.id].setValue(this.model.value);
     this.updateModel(event.item);
     this.cdr.detectChanges();
   }
 
   updateModel(updateValue) {
-    /*    this.model.valueUpdates.next(this.chips.getChipsItems());
-        this.change.emit(event);*/
     this.dispatchUpdate(updateValue);
   }
 
@@ -80,35 +79,43 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     this.change.emit(updateValue);
   }
 
-  // /**
-  //  * Converts a stream of text values from the `<input>` element to the stream of the array of items
-  //  * to display in the typeahead popup.
-  //  */
-  // search = (text$: Observable<string>) =>
-  //   text$.pipe(
-  //     debounceTime(300),
-  //     distinctUntilChanged(),
-  //     tap(() => this.changeSearchingStatus(true)),
-  //     switchMap((term) => {
-  //       if (term === '' || term.length < this.model.minChars) {
-  //         return observableOf({ list: [] });
-  //       } else {
-  //         return this.vocabularyService.getVocabularyEntriesByValue(term, false, this.model.vocabularyOptions, new PageInfo()).pipe(
-  //           getFirstSucceededRemoteDataPayload(),
-  //           tap(() => this.searchFailed = false),
-  //           catchError(() => {
-  //             this.searchFailed = true;
-  //             return observableOf(buildPaginatedList(
-  //               new PageInfo(),
-  //               []
-  //             ));
-  //           }));
-  //       }
-  //     }),
-  //     map((list: PaginatedList<VocabularyEntry>) => list.page),
-  //     tap(() => this.changeSearchingStatus(false)),
-  //     merge(this.hideSearchingWhenUnsubscribed))
-  //
+  ngOnInit(): void {
+    console.log('INIT');
+  }
+
+  setCurrentValue(value: any, init?: boolean) {
+    console.log('setCurrentValue');
+  }
+
+  /**
+   * Converts a stream of text values from the `<input>` element to the stream of the array of items
+   * to display in the typeahead popup.
+   */
+  search = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      tap(() => this.changeSearchingStatus(true)),
+      switchMap((term) => {
+        if (term === '' || term.length < this.model.minChars) {
+          return observableOf({ list: [] });
+        } else {
+          return this.autocompleteService.find().pipe(
+            tap(() => this.searchFailed = false),
+            catchError((error) => {
+              console.log(error);
+              this.searchFailed = true;
+              return observableOf(buildPaginatedList(
+                new PageInfo(),
+                []
+              ));
+            }));
+        }
+      }),
+      map((list: PaginatedList<VocabularyEntry>) => list.page),
+      tap(() => this.changeSearchingStatus(false)),
+      merge(this.hideSearchingWhenUnsubscribed))
+
   // /**
   //  * Initialize the component, setting up the init form value
   //  */

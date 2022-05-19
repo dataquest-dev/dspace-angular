@@ -101,6 +101,24 @@ export abstract class DataService<T extends CacheableObject> implements UpdateDa
     return endpoint$.pipe(map((result: string) => this.buildHrefFromFindOptions(result, options, args, ...linksToFollow)));
   }
 
+  public myGetFindAllHref(options: FindListOptions = {}, linkPath?: string, ...linksToFollow: FollowLinkConfig<T>[]): Observable<string> {
+    let endpoint$: Observable<string>;
+    const args = [];
+
+    endpoint$ = this.getBrowseEndpoint(options).pipe(
+      filter((href: string) => isNotEmpty(href)),
+      map((href: string) => isNotEmpty(linkPath) ? `${href}/${linkPath}` : href),
+      distinctUntilChanged()
+    );
+
+    return endpoint$.pipe(map((result: string) => {
+      result = result.replace('{?metadataField', `?metadataField=dc.contributor.author`)
+        .replace(',','&')
+        .replace('searchValue}','searchValue=M');
+      return this.buildHrefFromFindOptions(result, {}, [], ...linksToFollow);
+    }));
+  }
+
   /**
    * Create the HREF for a specific object's search method with given options object
    *
@@ -272,6 +290,10 @@ export abstract class DataService<T extends CacheableObject> implements UpdateDa
    */
   findAll(options: FindListOptions = {}, useCachedVersionIfAvailable = true, reRequestOnStale = true, ...linksToFollow: FollowLinkConfig<T>[]): Observable<RemoteData<PaginatedList<T>>> {
     return this.findAllByHref(this.getFindAllHref(options), options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
+  }
+
+  myFindAll(options: FindListOptions = {}, useCachedVersionIfAvailable = true, reRequestOnStale = true, ...linksToFollow: FollowLinkConfig<T>[]): Observable<RemoteData<PaginatedList<T>>> {
+    return this.findAllByHref(this.myGetFindAllHref(options), options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
   }
 
   /**
