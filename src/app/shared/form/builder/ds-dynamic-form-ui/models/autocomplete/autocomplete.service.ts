@@ -23,7 +23,8 @@ import {DSpaceSerializer} from '../../../../../../core/dspace-rest/dspace.serial
 import {CreateRequest} from '../../../../../../core/data/request.models';
 import {NotificationOptions} from '../../../../../notifications/models/notification-options.model';
 import {RequestParam} from '../../../../../../core/cache/models/request-param.model';
-import {any} from 'codelyzer/util/function';
+import {MetadataValueSuggestion} from '../../../../../../core/shared/metadata-value-suggestion';
+import {MetadataValue} from '../../../../../../core/shared/metadata.models';
 
 export const linkName = 'suggestions';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -33,7 +34,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(AUTOCOMPLETE)
-export class SiteDataService2 extends DataService<Site> {
+export class SiteDataService2 extends DataService<MetadataValue> {
   protected linkPath = linkName;
 
   constructor(
@@ -44,12 +45,12 @@ export class SiteDataService2 extends DataService<Site> {
     protected halService: HALEndpointService,
     protected notificationsService: NotificationsService,
     protected http: HttpClient,
-    protected comparator: DSOChangeAnalyzer<Site>,
+    protected comparator: DSOChangeAnalyzer<MetadataValue>,
   ) {
     super();
   }
   //
-  // getIDHref(endpoint, resourceID, ...linksToFollow: FollowLinkConfig<any>[]): string {
+  // getIDHref(endpoint, resourceID, ...linksToFollow: FollowLinkConfig<Site>[]): string {
   //   // Supporting both identifier (pid) and uuid (dso) endpoints
   //   return this.buildHrefFromFindOptions( endpoint.replace(/\{\?metadataField\}/, `?metadataField=${resourceID}`)
   //       .replace(/\{\?searchValue\}/, `?searchValue=${resourceID}`),
@@ -58,16 +59,16 @@ export class SiteDataService2 extends DataService<Site> {
   /**
    * Retrieve the Site Object
    */
-  find(): Observable<any> {
+  find(): Observable<MetadataValue> {
     // const requestId = this.requestService.generateRequestId();
     //
     // const useCachedVersionIfAvailable = true;
     // const reRequestOnStale = true;
     // // let linksToFollow: FollowLinkConfig<Site>[];
     //
-    // const params: RequestParam[] = [];
+    const params: RequestParam[] = [];
     //
-    // // let linksToFollow = FollowLinkConfig<any> = [];
+    // // let linksToFollow = FollowLinkConfig<Site> = [];
     // const endpoint$ = this.getEndpoint().pipe(
     //   isNotEmptyOperator(),
     //   distinctUntilChanged(),
@@ -101,11 +102,18 @@ export class SiteDataService2 extends DataService<Site> {
 
     // return result$;
 
-    //
-    return this.myFindAll().pipe(
+    let extraArgs: string[] = [];
+    extraArgs.push('metadataField=dc.contributor.author');
+    extraArgs.push('searchValue=M');
+
+    let href = this.myGetFindAllHref({}, null, extraArgs);
+    let response = this.findAllByHref(href);
+
+
+    return response.pipe(
       getFirstSucceededRemoteData(),
-      map((remoteData: RemoteData<PaginatedList<any>>) => remoteData.payload),
-      map((list: PaginatedList<any>) => list.page[0])
+      map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => remoteData.payload),
+      map((list: PaginatedList<MetadataValue>) => list.page[0])
     );
   }
 }

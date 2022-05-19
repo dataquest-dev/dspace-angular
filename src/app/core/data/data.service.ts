@@ -101,7 +101,7 @@ export abstract class DataService<T extends CacheableObject> implements UpdateDa
     return endpoint$.pipe(map((result: string) => this.buildHrefFromFindOptions(result, options, args, ...linksToFollow)));
   }
 
-  public myGetFindAllHref(options: FindListOptions = {}, linkPath?: string, ...linksToFollow: FollowLinkConfig<T>[]): Observable<string> {
+  public myGetFindAllHref(options: FindListOptions = {}, linkPath?: string, extraArgs: string[] = [], ...linksToFollow: FollowLinkConfig<T>[]): Observable<string> {
     let endpoint$: Observable<string>;
     const args = [];
 
@@ -112,12 +112,11 @@ export abstract class DataService<T extends CacheableObject> implements UpdateDa
     );
 
     return endpoint$.pipe(map((result: string) => {
-      result = result.replace('{?metadataField', `?metadataField=dc.contributor.author`)
-        .replace(',','&')
-        .replace('searchValue}','searchValue=M');
-      return this.buildHrefFromFindOptions(result, {}, [], ...linksToFollow);
+      return this.buildHrefFromFindOptions(result, {}, extraArgs, ...linksToFollow);
     }));
   }
+
+
 
   /**
    * Create the HREF for a specific object's search method with given options object
