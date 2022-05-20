@@ -412,7 +412,9 @@ export abstract class DataService<T extends CacheableObject> implements UpdateDa
     const requestHref$ = href$.pipe(
       isNotEmptyOperator(),
       take(1),
-      map((href: string) => this.buildHrefFromFindOptions(href, findListOptions, [], ...linksToFollow))
+      map((href: string) => {
+        return this.buildHrefFromFindOptions(href, findListOptions, [], ...linksToFollow);
+      })
     );
 
     this.createAndSendGetRequest(requestHref$, useCachedVersionIfAvailable);

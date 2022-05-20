@@ -203,7 +203,10 @@ export class RemoteDataBuildService {
       href$ = observableOf(href$);
     }
 
-    href$ = href$.pipe(map((href: string) => getUrlWithoutEmbedParams(href)));
+    href$ = href$.pipe(map((href: string) => {
+     let resp = getUrlWithoutEmbedParams(href);
+     return resp;
+    }));
 
     const requestUUID$ = href$.pipe(
       switchMap((href: string) =>

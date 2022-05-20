@@ -8,32 +8,38 @@ import {CoreState} from '../../../../../../core/core.reducers';
 import {ObjectCacheService} from '../../../../../../core/cache/object-cache.service';
 import {HALEndpointService} from '../../../../../../core/shared/hal-endpoint.service';
 import {NotificationsService} from '../../../../../notifications/notifications.service';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DSOChangeAnalyzer} from '../../../../../../core/data/dso-change-analyzer.service';
 import {Site} from '../../../../../../core/shared/site.model';
 import {Observable, of as observableOf} from 'rxjs';
-import {getFirstSucceededRemoteData} from '../../../../../../core/shared/operators';
-import {distinctUntilChanged, map, skipWhile, take, takeWhile} from 'rxjs/operators';
+import {
+  getAllCompletedRemoteData,
+  getFirstSucceededRemoteData,
+  takeUntilCompletedRemoteData
+} from '../../../../../../core/shared/operators';
+import {distinctUntilChanged, find, map, skipWhile, take, takeWhile, tap} from 'rxjs/operators';
 import {RemoteData} from '../../../../../../core/data/remote-data';
 import {PaginatedList} from '../../../../../../core/data/paginated-list.model';
 import {DataService} from '../../../../../../core/data/data.service';
 import {FollowLinkConfig} from '../../../../../utils/follow-link-config.model';
 import {hasValue, isNotEmptyOperator} from '../../../../../empty.util';
 import {DSpaceSerializer} from '../../../../../../core/dspace-rest/dspace.serializer';
-import {CreateRequest} from '../../../../../../core/data/request.models';
+import {CreateRequest, GetRequest, PostRequest} from '../../../../../../core/data/request.models';
 import {NotificationOptions} from '../../../../../notifications/models/notification-options.model';
 import {RequestParam} from '../../../../../../core/cache/models/request-param.model';
 import {MetadataValueSuggestion} from '../../../../../../core/shared/metadata-value-suggestion';
-import {MetadataValue} from '../../../../../../core/shared/metadata.models';
+import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
+import {DefaultChangeAnalyzer} from '../../../../../../core/data/default-change-analyzer.service';
+import {HttpOptions} from '../../../../../../core/dspace-rest/dspace-rest.service';
 
-export const linkName = 'suggestions';
+export const linkName = 'metadatavaluewithfield';
 export const AUTOCOMPLETE = new ResourceType(linkName);
 
 /**
  * A service responsible for fetching/sending data from/to the REST API on the vocabularies endpoint
  */
 @Injectable()
-@dataService(AUTOCOMPLETE)
+@dataService(MetadataValue.type)
 export class SiteDataService2 extends DataService<MetadataValue> {
   protected linkPath = linkName;
 
@@ -45,7 +51,7 @@ export class SiteDataService2 extends DataService<MetadataValue> {
     protected halService: HALEndpointService,
     protected notificationsService: NotificationsService,
     protected http: HttpClient,
-    protected comparator: DSOChangeAnalyzer<MetadataValue>,
+    protected comparator: DefaultChangeAnalyzer<MetadataValue>,
   ) {
     super();
   }
@@ -67,6 +73,52 @@ export class SiteDataService2 extends DataService<MetadataValue> {
     // // let linksToFollow: FollowLinkConfig<Site>[];
     //
     const params: RequestParam[] = [];
+
+    // const options: HttpOptions = Object.create({});
+    // let headers = new HttpHeaders();
+    // headers = headers.append('Content-Type', 'text/uri-list');
+    // options.headers = headers;
+
+    const requestId = this.requestService.generateRequestId();
+    let extraArgs: string[] = [];
+    extraArgs.push('metadataField=dc.contributor.author');
+    extraArgs.push('searchValue=M');
+
+    let href$ = this.myGetFindAllHref({}, undefined, extraArgs);
+    // const href$ = this.halService.getEndpoint(this.linkPath).pipe(map((href) => {
+    //   let hh = `${href}?metadataField=dc.contributor.author&searchValue=M`;
+    //   return hh;
+    // }));
+
+    href$.pipe(
+      find((href: string) => hasValue(href)),
+      map((href: string) => {
+        const request = new GetRequest(requestId, href);
+        this.requestService.send(request);
+      })
+    ).subscribe();
+
+    let remoteData$ = this.rdbService.buildList<MetadataValue>(href$);
+    return remoteData$.pipe(
+      getAllCompletedRemoteData(),
+      map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => {
+            console.log('remoteData');
+            console.log(remoteData);
+            return remoteData.payload;
+          }),
+      map((list: PaginatedList<MetadataValue>) => {
+        return list.page[0];
+      })
+    );
+    // return null;
+
+    // return this.findAll().pipe(
+    //   takeUntilCompletedRemoteData(),
+    //   map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => {
+    //     return remoteData.payload;
+    //   }),
+    //   map((list: PaginatedList<MetadataValue>) => list.page[0])
+    // );
     //
     // // let linksToFollow = FollowLinkConfig<Site> = [];
     // const endpoint$ = this.getEndpoint().pipe(
@@ -101,19 +153,69 @@ export class SiteDataService2 extends DataService<MetadataValue> {
     // });
 
     // return result$;
+    //
+    // 2.
+    // let extraArgs: string[] = [];
+    // extraArgs.push('metadataField=dc.contributor.author');
+    // extraArgs.push('searchValue=M');
+    //
+    // let href = this.myGetFindAllHref({}, null, extraArgs);
+    // href.subscribe( hrf => {
+    //     console.log('hrf', hrf);
+    //   }
+    // );
+    // let response = this.findAllByHref(href);
+    // response.subscribe( hrf => {
+    //     console.log('Response', hrf);
+    //   }
+    // );
+    //
+    // response.pipe(
+    //   tap( res => console.log('HTTP response:', res)),
+    //   getFirstSucceededRemoteData(),
+    //   tap( res => console.log('HTTP response:', res)),
+    //   map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => {
+    //     console.log('remoteData');
+    //     console.log(remoteData);
+    //     return remoteData.payload;
+    //   }),
+    //   map((list: PaginatedList<MetadataValue>) => list.page[0])
+    // );
+    //
+    // return null;
 
-    let extraArgs: string[] = [];
-    extraArgs.push('metadataField=dc.contributor.author');
-    extraArgs.push('searchValue=M');
-
-    let href = this.myGetFindAllHref({}, null, extraArgs);
-    let response = this.findAllByHref(href);
-
-
-    return response.pipe(
-      getFirstSucceededRemoteData(),
-      map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => remoteData.payload),
-      map((list: PaginatedList<MetadataValue>) => list.page[0])
-    );
+    // 3.
+    // const requestId = this.requestService.generateRequestId();
+    // const endpoint$ = this.getEndpoint().pipe(
+    //   isNotEmptyOperator(),
+    //   distinctUntilChanged(),
+    //   map((endpoint: string) => this.buildHrefWithParams(endpoint, params))
+    // );
+    //
+    // const serializedObject = new DSpaceSerializer(getClassForType(object.type)).serialize(object);
+    //
+    // endpoint$.pipe(
+    //   take(1)
+    // ).subscribe((endpoint: string) => {
+    //   const request = new GetRequest(requestId, endpoint, JSON.stringify(serializedObject));
+    //   if (hasValue(this.responseMsToLive)) {
+    //     request.responseMsToLive = this.responseMsToLive;
+    //   }
+    //   this.requestService.send(request);
+    // });
+    //
+    // const result$ = this.rdbService.buildFromRequestUUID(requestId);
+    //
+    // // TODO a dataservice is not the best place to show a notification,
+    // // this should move up to the components that use this method
+    // result$.pipe(
+    //   takeWhile((rd: RemoteData<T>) => rd.isLoading, true)
+    // ).subscribe((rd: RemoteData<T>) => {
+    //   if (rd.hasFailed) {
+    //     this.notificationsService.error('Server Error:', rd.errorMessage, new NotificationOptions(-1));
+    //   }
+    // });
+    //
+    // return result$;
   }
 }

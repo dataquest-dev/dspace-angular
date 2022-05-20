@@ -13,6 +13,7 @@ import {MetadataSchema} from './metadata-schema.model';
 import {isNotEmpty} from '../../shared/empty.util';
 import {GenericConstructor} from '../shared/generic-constructor';
 import {METADATA_VALUE} from './metadata-value.resource-type';
+import {MetadataField} from './metadata-field.model';
 
 /**
  * Class the represents a metadata value
@@ -69,8 +70,16 @@ export class MetadataValue extends ListableObject implements HALResource {
    */
   @deserialize
   _links: {
-    self: HALLink
+    self: HALLink,
+    field: HALLink
   };
+
+  /**
+   * The MetadataField for this MetadataValue
+   * Will be undefined unless the schema {@link HALLink} has been resolved.
+   */
+  @link(METADATA_FIELD)
+  field?: Observable<RemoteData<MetadataField>>;
 
   /**
    * Method to print this metadata value as a string another attributes
