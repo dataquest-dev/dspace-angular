@@ -16,8 +16,6 @@ export class AutocompleteFieldParser extends FieldParser {
       this.setVocabularyOptions(autocompleteModelConfig);
     }
 
-    // get options from the server v componente, ked zacnem nieco pisat
-
     this.setValues(autocompleteModelConfig, fieldValue, null, true);
 
     const autocompleteModel = new DynamicAutocompleteModel(autocompleteModelConfig);
