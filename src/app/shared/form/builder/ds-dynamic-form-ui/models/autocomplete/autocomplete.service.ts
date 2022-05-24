@@ -31,6 +31,7 @@ import {MetadataValueSuggestion} from '../../../../../../core/shared/metadata-va
 import {DefaultChangeAnalyzer} from '../../../../../../core/data/default-change-analyzer.service';
 import {HttpOptions} from '../../../../../../core/dspace-rest/dspace-rest.service';
 import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
+import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 
 export const linkName = 'metadatavalues';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -66,7 +67,7 @@ export class SiteDataService2 extends DataService<MetadataValue> {
   /**
    * Retrieve the Site Object
    */
-  find(): Observable<MetadataValue> {
+  find(): Observable<PaginatedList<VocabularyEntry>> {
 
     const optionParams = Object.assign(new FindListOptions(), {}, {
       searchParams: [
@@ -115,6 +116,9 @@ export class SiteDataService2 extends DataService<MetadataValue> {
 
     // let remoteData$ = this.rdbService.buildList<MetadataValue>(href$);
 
+    // @ts-ignore
+    // @ts-ignore
+    // @ts-ignore
     return remoteData$.pipe(
       getAllCompletedRemoteData(),
       map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => {
@@ -123,9 +127,22 @@ export class SiteDataService2 extends DataService<MetadataValue> {
             return remoteData.payload;
           }),
       map((list: PaginatedList<MetadataValue>) => {
-        return list.page[0];
-      })
+        let page = list.page;
+        let vocabularyEntryList: VocabularyEntry[] = [];
+        for (const metadataValue of page) {
+          let voc: VocabularyEntry = new VocabularyEntry();
+          voc.display = metadataValue.value;
+          voc.value = metadataValue.value;
+          vocabularyEntryList.push(voc);
+        }
+
+        list.page = vocabularyEntryList;
+        return list;
+      }),
     );
+
+
+
     // return null;
 
     // return this.findAll().pipe(

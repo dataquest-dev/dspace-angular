@@ -12,12 +12,13 @@ import {catchError, debounceTime, distinctUntilChanged, map, merge, switchMap, t
 import {getFirstSucceededRemoteDataPayload} from '../../../../../../core/shared/operators';
 import {buildPaginatedList, PaginatedList} from '../../../../../../core/data/paginated-list.model';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
-import {hasValue, isNotEmpty} from '../../../../../empty.util';
+import {hasValue, isEmpty, isNotEmpty} from '../../../../../empty.util';
 import {environment} from '../../../../../../../environments/environment';
 import {isEqual} from 'lodash';
 import {DsDynamicTagComponent} from '../tag/dynamic-tag.component';
 // import {AutocompleteService} from './autocomplete.service';
 import {SiteDataService2} from './autocomplete.service';
+import {FormFieldMetadataValueObject} from '../../../models/form-field-metadata-value.model';
 //
 /**
  * Component representing a tag input field
@@ -80,11 +81,29 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
   }
 
   ngOnInit(): void {
-    console.log('INIT');
+    if (this.model.value) {
+      this.setCurrentValue(this.model.value, true);
+    }
   }
 
-  setCurrentValue(value: any, init?: boolean) {
-    console.log('setCurrentValue');
+  public setCurrentValue(value: any, init = false) {
+    let result: string;
+    if (init) {
+      this.getInitValueFromModel()
+        .subscribe((formValue: FormFieldMetadataValueObject) => {
+          this.currentValue = formValue;
+          this.cdr.detectChanges();
+        });
+    } else {
+      if (isEmpty(value)) {
+        result = '';
+      } else {
+        result = value.value;
+      }
+
+      this.currentValue = result;
+      this.cdr.detectChanges();
+    }
   }
 
   /**
@@ -112,13 +131,15 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
             }));
         }
       }),
-      map((list: PaginatedList<VocabularyEntry>) => list.page),
+      map((list: PaginatedList<VocabularyEntry>) => {
+        return list.page;
+      }),
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed))
 
-  // /**
-  //  * Initialize the component, setting up the init form value
-  //  */
+  /**
+   * Initialize the component, setting up the init form value
+   */
   // ngOnInit() {
   //   this.hasAuthority = this.model.vocabularyOptions && hasValue(this.model.vocabularyOptions.name);
   //
@@ -131,10 +152,10 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
   //   this.chips.chipsItems
   //     .subscribe((subItems: any[]) => {
   //       const items = this.chips.getChipsItems();
-  //       // Does not emit change if model value is equal to the current value
-  //       if (!isEqual(items, this.model.value)) {
-  //         this.dispatchUpdate(items);
-  //       }
-  //     });
+  //       Does not emit change if model value is equal to the current value
+        // if (!isEqual(items, this.model.value)) {
+        //   this.dispatchUpdate(items);
+        // }
+      // });
   // }
 }

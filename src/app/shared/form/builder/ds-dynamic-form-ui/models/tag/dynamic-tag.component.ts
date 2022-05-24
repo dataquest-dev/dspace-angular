@@ -88,7 +88,9 @@ export class DsDynamicTagComponent extends DsDynamicVocabularyComponent implemen
             }));
         }
       }),
-      map((list: PaginatedList<VocabularyEntry>) => list.page),
+      map((list: PaginatedList<VocabularyEntry>) => {
+        return list.page;
+      }),
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed))
 
