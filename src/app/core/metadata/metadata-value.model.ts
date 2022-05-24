@@ -6,11 +6,8 @@ import {excludeFromEquals} from '../utilities/equals.decorators';
 import {autoserialize, deserialize} from 'cerialize';
 import {ResourceType} from '../shared/resource-type';
 import {HALLink} from '../shared/hal-link.model';
-import {METADATA_SCHEMA} from './metadata-schema.resource-type';
 import {Observable} from 'rxjs';
 import {RemoteData} from '../data/remote-data';
-import {MetadataSchema} from './metadata-schema.model';
-import {isNotEmpty} from '../../shared/empty.util';
 import {GenericConstructor} from '../shared/generic-constructor';
 import {METADATA_VALUE} from './metadata-value.resource-type';
 import {MetadataField} from './metadata-field.model';
@@ -82,8 +79,7 @@ export class MetadataValue extends ListableObject implements HALResource {
   field?: Observable<RemoteData<MetadataField>>;
 
   /**
-   * Method to print this metadata value as a string another attributes
-   * @param separator The separator between value and language in the string
+   * Method to print this metadata value as a string
    */
   toString(): string {
     return `Value: ${this.value}`;
