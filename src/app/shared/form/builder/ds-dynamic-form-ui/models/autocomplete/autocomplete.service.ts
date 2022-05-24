@@ -24,15 +24,15 @@ import {DataService} from '../../../../../../core/data/data.service';
 import {FollowLinkConfig} from '../../../../../utils/follow-link-config.model';
 import {hasValue, isNotEmptyOperator} from '../../../../../empty.util';
 import {DSpaceSerializer} from '../../../../../../core/dspace-rest/dspace.serializer';
-import {CreateRequest, GetRequest, PostRequest} from '../../../../../../core/data/request.models';
+import {CreateRequest, FindListOptions, GetRequest, PostRequest} from '../../../../../../core/data/request.models';
 import {NotificationOptions} from '../../../../../notifications/models/notification-options.model';
 import {RequestParam} from '../../../../../../core/cache/models/request-param.model';
 import {MetadataValueSuggestion} from '../../../../../../core/shared/metadata-value-suggestion';
-import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
 import {DefaultChangeAnalyzer} from '../../../../../../core/data/default-change-analyzer.service';
 import {HttpOptions} from '../../../../../../core/dspace-rest/dspace-rest.service';
+import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
 
-export const linkName = 'metadatavaluewithfield';
+export const linkName = 'metadatavalues';
 export const AUTOCOMPLETE = new ResourceType(linkName);
 
 /**
@@ -62,43 +62,59 @@ export class SiteDataService2 extends DataService<MetadataValue> {
   //       .replace(/\{\?searchValue\}/, `?searchValue=${resourceID}`),
   //     {}, [], ...linksToFollow);
   // }
+
   /**
    * Retrieve the Site Object
    */
   find(): Observable<MetadataValue> {
+
+    const optionParams = Object.assign(new FindListOptions(), {}, {
+      searchParams: [
+        new RequestParam('schema', 'dc'),
+        new RequestParam('element', 'contributor'),
+        new RequestParam('qualifier', 'author'),
+        new RequestParam('searchValue', 'Med')
+      ]
+    });
+    const remoteData$ = this.searchBy('byValue', optionParams);
+
     // const requestId = this.requestService.generateRequestId();
     //
     // const useCachedVersionIfAvailable = true;
     // const reRequestOnStale = true;
     // // let linksToFollow: FollowLinkConfig<Site>[];
     //
-    const params: RequestParam[] = [];
+    // const params: RequestParam[] = [];
+    //
+    // // const options: HttpOptions = Object.create({});
+    // // let headers = new HttpHeaders();
+    // // headers = headers.append('Content-Type', 'text/uri-list');
+    // // options.headers = headers;
+    //
+    // const requestId = this.requestService.generateRequestId();
+    // let extraArgs: string[] = [];
+    // //schema=dc&element=contributor&qualifier=author&searchValue=Med
+    // extraArgs.push('schema=dc');
+    // extraArgs.push('element=contributor');
+    // extraArgs.push('qualifier=author');
+    // extraArgs.push('searchValue=Med');
+    //
+    // let href$ = this.myGetFindAllHref({}, undefined, extraArgs);
+    // // const href$ = this.halService.getEndpoint(this.linkPath).pipe(map((href) => {
+    // //   let hh = `${href}?metadataField=dc.contributor.author&searchValue=M`;
+    // //   return hh;
+    // // }));
+    //
+    // href$.pipe(
+    //   find((href: string) => hasValue(href)),
+    //   map((href: string) => {
+    //     const request = new GetRequest(requestId, href);
+    //     this.requestService.send(request);
+    //   })
+    // ).subscribe();
 
-    // const options: HttpOptions = Object.create({});
-    // let headers = new HttpHeaders();
-    // headers = headers.append('Content-Type', 'text/uri-list');
-    // options.headers = headers;
+    // let remoteData$ = this.rdbService.buildList<MetadataValue>(href$);
 
-    const requestId = this.requestService.generateRequestId();
-    let extraArgs: string[] = [];
-    extraArgs.push('metadataField=dc.contributor.author');
-    extraArgs.push('searchValue=M');
-
-    let href$ = this.myGetFindAllHref({}, undefined, extraArgs);
-    // const href$ = this.halService.getEndpoint(this.linkPath).pipe(map((href) => {
-    //   let hh = `${href}?metadataField=dc.contributor.author&searchValue=M`;
-    //   return hh;
-    // }));
-
-    href$.pipe(
-      find((href: string) => hasValue(href)),
-      map((href: string) => {
-        const request = new GetRequest(requestId, href);
-        this.requestService.send(request);
-      })
-    ).subscribe();
-
-    let remoteData$ = this.rdbService.buildList<MetadataValue>(href$);
     return remoteData$.pipe(
       getAllCompletedRemoteData(),
       map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => {

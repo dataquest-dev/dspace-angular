@@ -112,7 +112,7 @@ export abstract class DataService<T extends CacheableObject> implements UpdateDa
     );
 
     return endpoint$.pipe(map((result: string) => {
-      return this.buildHrefFromFindOptions(result, {}, extraArgs, ...linksToFollow);
+      return this.buildHrefFromFindOptions(result, options, extraArgs, ...linksToFollow);
     }));
   }
 
