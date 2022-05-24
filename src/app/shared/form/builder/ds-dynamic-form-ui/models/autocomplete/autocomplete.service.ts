@@ -41,7 +41,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(MetadataValue.type)
-export class SiteDataService2 extends DataService<MetadataValue> {
+export class AutocompleteService extends DataService<MetadataValue> {
   protected linkPath = linkName;
 
   constructor(
@@ -56,199 +56,37 @@ export class SiteDataService2 extends DataService<MetadataValue> {
   ) {
     super();
   }
-  //
-  // getIDHref(endpoint, resourceID, ...linksToFollow: FollowLinkConfig<Site>[]): string {
-  //   // Supporting both identifier (pid) and uuid (dso) endpoints
-  //   return this.buildHrefFromFindOptions( endpoint.replace(/\{\?metadataField\}/, `?metadataField=${resourceID}`)
-  //       .replace(/\{\?searchValue\}/, `?searchValue=${resourceID}`),
-  //     {}, [], ...linksToFollow);
-  // }
 
   /**
    * Retrieve the Site Object
    */
-  find(): Observable<PaginatedList<VocabularyEntry>> {
+  findByMetadataNameAndByValue(metadataName, term): Observable<PaginatedList<MetadataValue>> {
+      let metadataFields = metadataName.split('.');
+      const optionParams = Object.assign(new FindListOptions(), {}, {
+        searchParams: [
+          new RequestParam('schema', metadataFields[0]),
+          new RequestParam('element', metadataFields[1]),
+          new RequestParam('qualifier', metadataFields[2]),
+          new RequestParam('searchValue', term)
+        ]
+      });
+      const remoteData$ = this.searchBy('byValue', optionParams);
 
-    const optionParams = Object.assign(new FindListOptions(), {}, {
-      searchParams: [
-        new RequestParam('schema', 'dc'),
-        new RequestParam('element', 'contributor'),
-        new RequestParam('qualifier', 'author'),
-        new RequestParam('searchValue', 'Med')
-      ]
-    });
-    const remoteData$ = this.searchBy('byValue', optionParams);
-
-    // const requestId = this.requestService.generateRequestId();
-    //
-    // const useCachedVersionIfAvailable = true;
-    // const reRequestOnStale = true;
-    // // let linksToFollow: FollowLinkConfig<Site>[];
-    //
-    // const params: RequestParam[] = [];
-    //
-    // // const options: HttpOptions = Object.create({});
-    // // let headers = new HttpHeaders();
-    // // headers = headers.append('Content-Type', 'text/uri-list');
-    // // options.headers = headers;
-    //
-    // const requestId = this.requestService.generateRequestId();
-    // let extraArgs: string[] = [];
-    // //schema=dc&element=contributor&qualifier=author&searchValue=Med
-    // extraArgs.push('schema=dc');
-    // extraArgs.push('element=contributor');
-    // extraArgs.push('qualifier=author');
-    // extraArgs.push('searchValue=Med');
-    //
-    // let href$ = this.myGetFindAllHref({}, undefined, extraArgs);
-    // // const href$ = this.halService.getEndpoint(this.linkPath).pipe(map((href) => {
-    // //   let hh = `${href}?metadataField=dc.contributor.author&searchValue=M`;
-    // //   return hh;
-    // // }));
-    //
-    // href$.pipe(
-    //   find((href: string) => hasValue(href)),
-    //   map((href: string) => {
-    //     const request = new GetRequest(requestId, href);
-    //     this.requestService.send(request);
-    //   })
-    // ).subscribe();
-
-    // let remoteData$ = this.rdbService.buildList<MetadataValue>(href$);
-
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
-    return remoteData$.pipe(
-      getAllCompletedRemoteData(),
-      map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => {
-            console.log('remoteData');
-            console.log(remoteData);
-            return remoteData.payload;
-          }),
-      map((list: PaginatedList<MetadataValue>) => {
-        let page = list.page;
-        let vocabularyEntryList: VocabularyEntry[] = [];
-        for (const metadataValue of page) {
-          let voc: VocabularyEntry = new VocabularyEntry();
-          voc.display = metadataValue.value;
-          voc.value = metadataValue.value;
-          vocabularyEntryList.push(voc);
-        }
-
-        list.page = vocabularyEntryList;
-        return list;
-      }),
-    );
-
-
-
-    // return null;
-
-    // return this.findAll().pipe(
-    //   takeUntilCompletedRemoteData(),
-    //   map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => {
-    //     return remoteData.payload;
-    //   }),
-    //   map((list: PaginatedList<MetadataValue>) => list.page[0])
-    // );
-    //
-    // // let linksToFollow = FollowLinkConfig<Site> = [];
-    // const endpoint$ = this.getEndpoint().pipe(
-    //   isNotEmptyOperator(),
-    //   distinctUntilChanged(),
-    //   map((endpoint: string) => this.buildHrefFromFindOptions(endpoint.replace(/\{\?metadataField\}/, `?metadataField=dc.contributor.author`)
-    //     .replace(/\{\?searchValue\}/, `?searchValue=M`), {}, [], ...linksToFollow))
-    // );
-    //
-    // const serializedObject = new DSpaceSerializer(getClassForType(Site.type)).serialize(Site);
-    //
-    // endpoint$.pipe(
-    //   take(1)
-    // ).subscribe((endpoint: string) => {
-    //   const request = new CreateRequest(requestId, endpoint, JSON.stringify(serializedObject));
-    //   if (hasValue(this.responseMsToLive)) {
-    //     request.responseMsToLive = this.responseMsToLive;
-    //   }
-    //   this.requestService.send(request);
-    // });
-    //
-    // const result$ = this.rdbService.buildFromRequestUUID<Site>(requestId);
-    // return result$;
-    // TODO a dataservice is not the best place to show a notification,
-    // this should move up to the components that use this method
-    // result$.pipe(
-    //   takeWhile((rd: RemoteData<Site>) => rd.isLoading, true)
-    // ).subscribe((rd: RemoteData<Site>) => {
-    //   if (rd.hasFailed) {
-    //     this.notificationsService.error('Server Error:', rd.errorMessage, new NotificationOptions(-1));
-    //   }
-    // });
-
-    // return result$;
-    //
-    // 2.
-    // let extraArgs: string[] = [];
-    // extraArgs.push('metadataField=dc.contributor.author');
-    // extraArgs.push('searchValue=M');
-    //
-    // let href = this.myGetFindAllHref({}, null, extraArgs);
-    // href.subscribe( hrf => {
-    //     console.log('hrf', hrf);
-    //   }
-    // );
-    // let response = this.findAllByHref(href);
-    // response.subscribe( hrf => {
-    //     console.log('Response', hrf);
-    //   }
-    // );
-    //
-    // response.pipe(
-    //   tap( res => console.log('HTTP response:', res)),
-    //   getFirstSucceededRemoteData(),
-    //   tap( res => console.log('HTTP response:', res)),
-    //   map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => {
-    //     console.log('remoteData');
-    //     console.log(remoteData);
-    //     return remoteData.payload;
-    //   }),
-    //   map((list: PaginatedList<MetadataValue>) => list.page[0])
-    // );
-    //
-    // return null;
-
-    // 3.
-    // const requestId = this.requestService.generateRequestId();
-    // const endpoint$ = this.getEndpoint().pipe(
-    //   isNotEmptyOperator(),
-    //   distinctUntilChanged(),
-    //   map((endpoint: string) => this.buildHrefWithParams(endpoint, params))
-    // );
-    //
-    // const serializedObject = new DSpaceSerializer(getClassForType(object.type)).serialize(object);
-    //
-    // endpoint$.pipe(
-    //   take(1)
-    // ).subscribe((endpoint: string) => {
-    //   const request = new GetRequest(requestId, endpoint, JSON.stringify(serializedObject));
-    //   if (hasValue(this.responseMsToLive)) {
-    //     request.responseMsToLive = this.responseMsToLive;
-    //   }
-    //   this.requestService.send(request);
-    // });
-    //
-    // const result$ = this.rdbService.buildFromRequestUUID(requestId);
-    //
-    // // TODO a dataservice is not the best place to show a notification,
-    // // this should move up to the components that use this method
-    // result$.pipe(
-    //   takeWhile((rd: RemoteData<T>) => rd.isLoading, true)
-    // ).subscribe((rd: RemoteData<T>) => {
-    //   if (rd.hasFailed) {
-    //     this.notificationsService.error('Server Error:', rd.errorMessage, new NotificationOptions(-1));
-    //   }
-    // });
-    //
-    // return result$;
+      return remoteData$.pipe(
+        getAllCompletedRemoteData(),
+        map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => remoteData.payload),
+        map((list: PaginatedList<MetadataValue>) => {
+          let vocabularyEntryList: VocabularyEntry[] = [];
+          for (const metadataValue of list.page) {
+            let voc: VocabularyEntry = new VocabularyEntry();
+            voc.display = metadataValue.value;
+            voc.value = metadataValue.value;
+            vocabularyEntryList.push(voc);
+          }
+          // @ts-ignore
+          list.page = vocabularyEntryList;
+          return list;
+        })
+      );
   }
 }
