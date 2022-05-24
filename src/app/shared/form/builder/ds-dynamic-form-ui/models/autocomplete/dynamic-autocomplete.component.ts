@@ -124,7 +124,6 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
           return this.autocompleteService.findByMetadataNameAndByValue(this.model.name, term).pipe(
             tap(() => this.searchFailed = false),
             catchError((error) => {
-              console.log(error);
               this.searchFailed = true;
               return observableOf(buildPaginatedList(
                 new PageInfo(),

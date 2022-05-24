@@ -10,9 +10,8 @@ import {HALEndpointService} from '../../../../../../core/shared/hal-endpoint.ser
 import {NotificationsService} from '../../../../../notifications/notifications.service';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {getAllCompletedRemoteData} from '../../../../../../core/shared/operators';
+import {getFirstSucceededRemoteDataPayload} from '../../../../../../core/shared/operators';
 import {map} from 'rxjs/operators';
-import {RemoteData} from '../../../../../../core/data/remote-data';
 import {PaginatedList} from '../../../../../../core/data/paginated-list.model';
 import {DataService} from '../../../../../../core/data/data.service';
 import {FindListOptions} from '../../../../../../core/data/request.models';
@@ -61,8 +60,7 @@ export class AutocompleteService extends DataService<MetadataValue> {
       const remoteData$ = this.searchBy('byValue', optionParams);
 
       return remoteData$.pipe(
-        getAllCompletedRemoteData(),
-        map((remoteData: RemoteData<PaginatedList<MetadataValue>>) => remoteData.payload),
+        getFirstSucceededRemoteDataPayload(),
         map((list: PaginatedList<MetadataValue>) => {
           const vocabularyEntryList: VocabularyEntry[] = [];
           for (const metadataValue of list.page) {
