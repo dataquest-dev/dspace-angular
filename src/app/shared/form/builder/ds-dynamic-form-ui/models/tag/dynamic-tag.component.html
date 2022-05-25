@@ -8,18 +8,18 @@
             [showIcons]="model.hasAuthority"
             [wrapperClass]="'border-bottom border-light'">
 
-<!--  <input *ngIf="!model.hasAuthority"-->
-<!--         class="border-0 form-control-plaintext tag-input flex-grow-1 mt-1 mb-1"-->
-<!--         type="text"-->
-<!--         role="textbox"-->
-<!--         [class.pl-3]="chips.hasItems()"-->
-<!--         [placeholder]="model.placeholder"-->
-<!--         [readonly]="model.readOnly"-->
-<!--         [(ngModel)]="currentValue"-->
-<!--         (blur)="onBlur($event)"-->
-<!--         (keypress)="preventEventsPropagation($event)"-->
-<!--         (keydown)="preventEventsPropagation($event)"-->
-<!--         (keyup)="onKeyUp($event)" />-->
+  <input *ngIf="!model.hasAuthority"
+         class="border-0 form-control-plaintext tag-input flex-grow-1 mt-1 mb-1"
+         type="text"
+         role="textbox"
+         [class.pl-3]="chips.hasItems()"
+         [placeholder]="model.placeholder"
+         [readonly]="model.readOnly"
+         [(ngModel)]="currentValue"
+         (blur)="onBlur($event)"
+         (keypress)="preventEventsPropagation($event)"
+         (keydown)="preventEventsPropagation($event)"
+         (keyup)="onKeyUp($event)" />
 
   <div *ngIf="model.hasAuthority" class="position-relative right-addon">
     <i *ngIf="searching" class="fas fa-circle-notch fa-spin fa-2x fa-fw text-primary position-absolute mt-1 p-0" aria-hidden="true"></i>

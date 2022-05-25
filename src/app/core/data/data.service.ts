@@ -101,23 +101,6 @@ export abstract class DataService<T extends CacheableObject> implements UpdateDa
     return endpoint$.pipe(map((result: string) => this.buildHrefFromFindOptions(result, options, args, ...linksToFollow)));
   }
 
-  public myGetFindAllHref(options: FindListOptions = {}, linkPath?: string, extraArgs: string[] = [], ...linksToFollow: FollowLinkConfig<T>[]): Observable<string> {
-    let endpoint$: Observable<string>;
-    const args = [];
-
-    endpoint$ = this.getBrowseEndpoint(options).pipe(
-      filter((href: string) => isNotEmpty(href)),
-      map((href: string) => isNotEmpty(linkPath) ? `${href}/${linkPath}` : href),
-      distinctUntilChanged()
-    );
-
-    return endpoint$.pipe(map((result: string) => {
-      return this.buildHrefFromFindOptions(result, options, extraArgs, ...linksToFollow);
-    }));
-  }
-
-
-
   /**
    * Create the HREF for a specific object's search method with given options object
    *
@@ -291,10 +274,6 @@ export abstract class DataService<T extends CacheableObject> implements UpdateDa
     return this.findAllByHref(this.getFindAllHref(options), options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
   }
 
-  myFindAll(options: FindListOptions = {}, useCachedVersionIfAvailable = true, reRequestOnStale = true, ...linksToFollow: FollowLinkConfig<T>[]): Observable<RemoteData<PaginatedList<T>>> {
-    return this.findAllByHref(this.myGetFindAllHref(options), options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
-  }
-
   /**
    * Create the HREF for a specific object based on its identifier; with possible embed query params based on linksToFollow
    * @param endpoint The base endpoint for the type of object
@@ -412,9 +391,7 @@ export abstract class DataService<T extends CacheableObject> implements UpdateDa
     const requestHref$ = href$.pipe(
       isNotEmptyOperator(),
       take(1),
-      map((href: string) => {
-        return this.buildHrefFromFindOptions(href, findListOptions, [], ...linksToFollow);
-      })
+      map((href: string) => this.buildHrefFromFindOptions(href, findListOptions, [], ...linksToFollow))
     );
 
     this.createAndSendGetRequest(requestHref$, useCachedVersionIfAvailable);

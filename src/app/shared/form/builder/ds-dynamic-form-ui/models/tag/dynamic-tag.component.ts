@@ -88,9 +88,7 @@ export class DsDynamicTagComponent extends DsDynamicVocabularyComponent implemen
             }));
         }
       }),
-      map((list: PaginatedList<VocabularyEntry>) => {
-        return list.page;
-      }),
+      map((list: PaginatedList<VocabularyEntry>) => list.page),
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed))
 
@@ -140,12 +138,12 @@ export class DsDynamicTagComponent extends DsDynamicVocabularyComponent implemen
    * Emits a blur event containing a given value and add all tags to chips.
    * @param event The value to emit.
    */
-  // onBlur(event: Event) {
-  //   if (isNotEmpty(this.currentValue) && !this.instance.isPopupOpen()) {
-  //     this.addTagsToChips();
-  //   }
-  //   this.blur.emit(event);
-  // }
+  onBlur(event: Event) {
+    if (isNotEmpty(this.currentValue) && !this.instance.isPopupOpen()) {
+      this.addTagsToChips();
+    }
+    this.blur.emit(event);
+  }
 
   /**
    * Updates model value with the selected value and add a new tag to chips.
