@@ -19,7 +19,7 @@ import {MetadataValue} from '../../../../../../core/metadata/metadata-value.mode
  * Component representing a tag input field
  */
 @Component({
-  selector: 'ds-autocomplete',
+  selector: 'ds-dynamic-autocomplete',
   styleUrls: ['../tag/dynamic-tag.component.scss'],
   templateUrl: './dynamic-autocomplete.component.html'
 })
