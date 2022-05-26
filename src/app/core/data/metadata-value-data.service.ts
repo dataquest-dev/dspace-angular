@@ -35,11 +35,11 @@ export class MetadataValueDataService extends DataService<MetadataValue> {
     protected requestService: RequestService,
     protected rdbService: RemoteDataBuildService,
     protected store: Store<CoreState>,
-    protected objectCache: ObjectCacheService,
     protected halService: HALEndpointService,
-    protected notificationsService: NotificationsService,
-    protected http: HttpClient,
+    protected objectCache: ObjectCacheService,
     protected comparator: DefaultChangeAnalyzer<MetadataValue>,
+    protected http: HttpClient,
+    protected notificationsService: NotificationsService,
   ) {
     super();
   }
