@@ -1,24 +1,24 @@
 import {Injectable} from '@angular/core';
-import {dataService} from '../../../../../../core/cache/builders/build-decorators';
-import {ResourceType} from '../../../../../../core/shared/resource-type';
-import {RequestService} from '../../../../../../core/data/request.service';
-import {RemoteDataBuildService} from '../../../../../../core/cache/builders/remote-data-build.service';
+import {dataService} from '../cache/builders/build-decorators';
+import {ResourceType} from '../shared/resource-type';
+import {RequestService} from './request.service';
+import {RemoteDataBuildService} from '../cache/builders/remote-data-build.service';
 import {Store} from '@ngrx/store';
-import {CoreState} from '../../../../../../core/core.reducers';
-import {ObjectCacheService} from '../../../../../../core/cache/object-cache.service';
-import {HALEndpointService} from '../../../../../../core/shared/hal-endpoint.service';
-import {NotificationsService} from '../../../../../notifications/notifications.service';
+import {CoreState} from '../core.reducers';
+import {ObjectCacheService} from '../cache/object-cache.service';
+import {HALEndpointService} from '../shared/hal-endpoint.service';
+import {NotificationsService} from '../../shared/notifications/notifications.service';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {getFirstSucceededRemoteDataPayload} from '../../../../../../core/shared/operators';
+import {getFirstSucceededRemoteDataPayload} from '../shared/operators';
 import {map} from 'rxjs/operators';
-import {PaginatedList} from '../../../../../../core/data/paginated-list.model';
-import {DataService} from '../../../../../../core/data/data.service';
-import {FindListOptions} from '../../../../../../core/data/request.models';
-import {RequestParam} from '../../../../../../core/cache/models/request-param.model';
-import {DefaultChangeAnalyzer} from '../../../../../../core/data/default-change-analyzer.service';
-import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
-import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
+import {PaginatedList} from './paginated-list.model';
+import {DataService} from './data.service';
+import {FindListOptions} from './request.models';
+import {RequestParam} from '../cache/models/request-param.model';
+import {DefaultChangeAnalyzer} from './default-change-analyzer.service';
+import {MetadataValue} from '../metadata/metadata-value.model';
+import {VocabularyEntry} from '../submission/vocabularies/models/vocabulary-entry.model';
 
 export const linkName = 'metadatavalues';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -28,7 +28,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(MetadataValue.type)
-export class AutocompleteService extends DataService<MetadataValue> {
+export class MetadataValueDataService extends DataService<MetadataValue> {
   protected linkPath = linkName;
 
   constructor(

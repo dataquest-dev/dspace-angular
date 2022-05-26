@@ -11,7 +11,7 @@ import {catchError, debounceTime, distinctUntilChanged, map, merge, switchMap, t
 import {buildPaginatedList, PaginatedList} from '../../../../../../core/data/paginated-list.model';
 import {isEmpty} from '../../../../../empty.util';
 import {DsDynamicTagComponent} from '../tag/dynamic-tag.component';
-import {AutocompleteService} from './autocomplete.service';
+import {MetadataValueDataService} from '../../../../../../core/data/metadata-value-data.service';
 import {FormFieldMetadataValueObject} from '../../../models/form-field-metadata-value.model';
 import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
 
@@ -47,7 +47,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
               protected cdr: ChangeDetectorRef,
               protected layoutService: DynamicFormLayoutService,
               protected validationService: DynamicFormValidationService,
-              protected autocompleteService: AutocompleteService
+              protected metadataValueService: MetadataValueDataService
   ) {
     super(vocabularyService, cdr, layoutService, validationService);
   }
@@ -121,7 +121,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
         if (term === '' || term.length < this.model.minChars) {
           return observableOf({ list: [] });
         } else {
-          return this.autocompleteService.findByMetadataNameAndByValue(this.model.name, term).pipe(
+          return this.metadataValueService.findByMetadataNameAndByValue(this.model.name, term).pipe(
             tap(() => this.searchFailed = false),
             catchError((error) => {
               this.searchFailed = true;
@@ -137,5 +137,4 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       }),
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed))
-
 }
