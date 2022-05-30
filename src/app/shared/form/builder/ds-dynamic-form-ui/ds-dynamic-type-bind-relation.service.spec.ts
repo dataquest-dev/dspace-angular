@@ -22,6 +22,7 @@ import {Injector} from '@angular/core';
 describe('DSDynamicTypeBindRelationService test suite', () => {
   let service: DsDynamicTypeBindRelationService;
   let dynamicFormRelationService: DynamicFormRelationService;
+  // tslint:disable-next-line:prefer-const
   let injector: Injector;
 
   beforeEach(() => {
@@ -89,7 +90,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       testModel.typeBindRelations = getTypeBindRelations(['boundType']);
       const dcTypeControl = new FormControl();
       dcTypeControl.setValue('boundType');
-      let subscriptions = service.subscribeRelations(testModel, dcTypeControl);
+      const subscriptions = service.subscribeRelations(testModel, dcTypeControl);
       expect(subscriptions).toHaveSize(1);
     });
 

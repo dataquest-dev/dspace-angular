@@ -30,6 +30,7 @@ export class DynamicRowArrayModel extends DynamicFormArrayModel {
   @serializable() metadataKey: string;
   @serializable() metadataFields: string[];
   @serializable() hasSelectableMetadata: boolean;
+  @serializable() isDraggable: boolean;
   @serializable() showButtons = true;
   @serializable() typeBindRelations: DynamicFormControlRelation[];
   isRowArray = true;

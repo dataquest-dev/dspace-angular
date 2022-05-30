@@ -418,7 +418,7 @@ describe('RowParser test suite', () => {
     it('should be able to parse a group field', () => {
       const parser = new RowParser(undefined);
 
-      const rowModel = parser.parse(submissionId, row10, scopeUUID, initFormValues, submissionScope, readOnly, typeFieldy);
+      const rowModel = parser.parse(submissionId, row10, scopeUUID, initFormValues, submissionScope, readOnly, typeField);
 
       expect(rowModel).toBeDefined();
     });
