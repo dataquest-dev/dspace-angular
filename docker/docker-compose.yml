@@ -25,6 +25,8 @@ services:
       DSPACE_REST_PORT: 8080
       DSPACE_REST_NAMESPACE: /server
     image: dataquest/dspace-angular:dspace-7_x
+    entrypoint:
+      - yarn run start:dev --fwd="--forward-host all"
     build:
       context: ..
       dockerfile: Dockerfile
