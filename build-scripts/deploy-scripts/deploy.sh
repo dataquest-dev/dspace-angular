@@ -1,11 +1,4 @@
 #!/bin/bash
-
-DSPACE_REST_HOST=dev-5.pc
-REST_URL=http://dev-5.pc:8080/server
-UI_URL=http://dev-5.pc/
-DSPACE_REST_IMAGE=dataquest/dspace:dspace-7_x
-DOCKER_OWNER=dataquest
-
 docker-compose -f ../../docker/docker-compose.yml -f ../../docker/docker-compose-rest.yml pull
 
 # docker-compose.yml - frontend
