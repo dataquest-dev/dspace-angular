@@ -29,8 +29,8 @@ services:
       # __D__ => "-" (e.g. google__D__metadata => google-metadata)
       # dspace.dir, dspace.server.url, dspace.ui.url and dspace.name
       dspace__P__dir: /dspace
-      dspace__P__server__P__url: http://localhost:8080/server
-      dspace__P__ui__P__url: http://localhost:4000
+      dspace__P__server__P__url: ${REST_URL:-http://localhost:8080/server}
+      dspace__P__ui__P__url: ${UI_URL:-http://localhost:4000}
       dspace__P__name: 'DSpace Started with Docker Compose'
       # db.url: Ensure we are using the 'dspacedb' image for our database
       db__P__url: 'jdbc:postgresql://dspacedb:5432/dspace'
@@ -39,7 +39,7 @@ services:
       # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests 
       # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
       proxies__P__trusted__P__ipranges: '172.23.0'
-    image: dataquest/dspace:dspace-7_x-test
+    image: ${DSPACE_REST_IMAGE:-dataquest/dspace:dspace-7_x-test}
     depends_on:
     - dspacedb
     networks:
