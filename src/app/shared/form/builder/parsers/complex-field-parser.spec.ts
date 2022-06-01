@@ -30,11 +30,11 @@ describe('ComplexFieldParser test suite', () => {
         }
       ],
       languageCodes: [],
-      complexDefinition: '{"affiliation":{"name":"affiliation","input-type":"text","label":"Affiliation",' +
-        '"required":"true"},"givenname":{"name":"givenname","input-type":"text","label":"Given name",' +
-        '"required":"true"},"surname":{"name":"surname","input-type":"text","label":"Surname","required":"true"},' +
-        '"email":{"name":"email","regex":"[^@]+@[^\\\\.@]+\\\\.[^@]+","input-type":"text","label":"Email",' +
-        '"required":"true"}}'
+      complexDefinition: '[{"givenname":{"name":"givenname","input-type":"text","label":"Given name",' +
+        '"required":"true"}},{"surname":{"name":"surname","input-type":"text","label":"Surname",' +
+        '"required":"true"}},{"email":{"name":"email","regex":"[^@]+@[^\\\\.@]+\\\\.[^@]+","input-type":' +
+        '"text","label":"Email","required":"true"}},{"affiliation":{"name":"affiliation","input-type":' +
+        '"text","label":"Affiliation"}}]'
     } as FormFieldModel;
 
   });

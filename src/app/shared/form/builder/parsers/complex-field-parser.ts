@@ -82,7 +82,8 @@ export class ComplexFieldParser extends FieldParser {
     }
 
     inputConfigs.forEach((inputConfig, index) => {
-      const complexDefinitionInput = complexDefinitionJSON[Object.keys(complexDefinitionJSON)[index]];
+      let complexDefinitionInput = complexDefinitionJSON[index];
+      complexDefinitionInput = complexDefinitionInput[Object.keys(complexDefinitionInput)[0]];
 
       if (hasValue(complexDefinitionInput.label)) {
         inputConfig.label = complexDefinitionInput.label;
