@@ -1,0 +1,160 @@
+# DSpace Continuous Integration/Build via GitHub Actions
+# Concepts borrowed from
+# https://docs.github.com/en/free-pro-team@latest/actions/guides/building-and-testing-nodejs
+name: Build
+
+# Run this Build for pushes to our main and all PRs
+on: 
+  push:
+    branches:
+      - dtq-dev
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      # The ci step will test the dspace-angular code against DSpace REST.
+      # Direct that step to utilize a DSpace REST service that has been started in docker.
+      DSPACE_REST_HOST: localhost
+      DSPACE_REST_PORT: 8080
+      DSPACE_REST_NAMESPACE: '/server'
+      DSPACE_REST_SSL: false
+      DSPACE_CI_IMAGE: 'dataquest/dspace:dspace-7_x-test'
+      # When Chrome version is specified, we pin to a specific version of Chrome
+      # Comment this out to use the latest release
+      #CHROME_VERSION: "90.0.4430.212-1"
+    strategy:
+      # Create a matrix of Node versions to test against (in parallel)
+      matrix:
+        node-version: [12.x, 14.x]
+      # Do NOT exit immediately if one matrix job fails
+      fail-fast: false
+    # These are the actual CI steps to perform per job
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout codebase
+        uses: actions/checkout@v2
+
+      # https://github.com/actions/setup-node
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # If CHROME_VERSION env variable specified above, then pin to that version.
+      # Otherwise, just install latest version of Chrome.
+      - name: Install Chrome (for e2e tests)
+        run: |
+          if [[ -z "${CHROME_VERSION}" ]]
+          then
+             echo "Installing latest stable version"
+             sudo apt-get update
+             sudo apt-get --only-upgrade install google-chrome-stable -y
+          else
+             echo "Installing version ${CHROME_VERSION}"
+             wget -q "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb"
+             sudo dpkg -i "google-chrome-stable_${CHROME_VERSION}_amd64.deb"
+          fi
+          google-chrome --version
+
+      # https://github.com/actions/cache/blob/main/examples.md#node---yarn
+      - name: Get Yarn cache directory
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          # Cache entire Yarn cache directory (see previous step)
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          # Cache key is hash of yarn.lock. Therefore changes to yarn.lock will invalidate cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+
+      - name: Install Yarn dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run lint
+        run: yarn run lint
+
+      - name: Run build
+        run: yarn run build:prod
+
+      - name: Run specs (unit tests)
+        run: yarn run test:headless
+
+      # NOTE: Angular CLI only supports code coverage for specs. See https://github.com/angular/angular-cli/issues/6286
+      # Upload coverage reports to Codecov (for Node v12 only)
+      # https://github.com/codecov/codecov-action
+      - name: Upload coverage to Codecov.io
+        uses: codecov/codecov-action@v2
+        if: matrix.node-version == '12.x'
+
+      # Using docker-compose start backend using CI configuration
+      # and load assetstore from a cached copy
+      - name: Start DSpace REST Backend via Docker (for e2e tests)
+        run: |
+          docker-compose -f ./docker/docker-compose-ci.yml up -d
+          docker-compose -f ./docker/cli.yml -f ./docker/cli.assetstore.yml run --rm dspace-cli
+          docker container ls
+
+      # Run integration tests via Cypress.io
+      # https://github.com/cypress-io/github-action
+      # (NOTE: to run these e2e tests locally, just use 'ng e2e')
+      - name: Run e2e tests (integration tests)
+        uses: cypress-io/github-action@v2
+        with:
+          # Run tests in Chrome, headless mode
+          browser: chrome
+          headless: true
+          # Start app before running tests (will be stopped automatically after tests finish)
+          start: yarn run serve:ssr
+          # Wait for backend & frontend to be available
+          # NOTE: We use the 'sites' REST endpoint to also ensure the database is ready
+          wait-on: http://localhost:8080/server/api/core/sites, http://localhost:4000
+          # Wait for 2 mins max for everything to respond
+          wait-on-timeout: 120
+
+      # Cypress always creates a video of all e2e tests (whether they succeeded or failed)
+      # Save those in an Artifact
+      - name: Upload e2e test videos to Artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: e2e-test-videos
+          path: cypress/videos
+
+      # If e2e tests fail, Cypress creates a screenshot of what happened
+      # Save those in an Artifact
+      - name: Upload e2e test failure screenshots to Artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: e2e-test-screenshots
+          path: cypress/screenshots
+
+      # Start up the app with SSR enabled (run in background)
+      - name: Start app in SSR (server-side rendering) mode
+        run: |
+          nohup yarn run serve:ssr &
+          printf 'Waiting for app to start'
+          until curl --output /dev/null --silent --head --fail http://localhost:4000/home; do
+            printf '.'
+            sleep 2
+          done
+          echo "App started successfully."
+
+      # Get homepage and verify that the <meta name="title"> tag includes "DSpace".
+      # If it does, then SSR is working, as this tag is created by our MetadataService.
+      # This step also prints entire HTML of homepage for easier debugging if grep fails.
+      - name: Verify SSR (server-side rendering)
+        run: |
+          result=$(wget -O- -q http://localhost:4000/home)
+          echo "$result"
+          echo "$result" | grep -oE "<meta name=\"title\" [^>]*>" | grep DSpace
+
+      - name: Stop running app
+        run: kill -9 $(lsof -t -i:4000)
+
+      - name: Shutdown Docker containers
+        run: docker-compose -f ./docker/docker-compose-ci.yml down
