@@ -16,15 +16,16 @@ jobs:
 
       - name: deploy
         run: |
-          cd $GITHUB_WORKSPACE/build-scripts/deploy-scripts/
+          cd $GITHUB_WORKSPACE/build-scripts/run/
           pwd
 
-          touch .env || true
-          echo DSPACE_REST_HOST=dev-5.pc > .env
-          echo REST_URL=http://dev-5.pc:8080/server >> .env
-          echo UI_URL=http://dev-5.pc >> .env
-          echo DSPACE_REST_IMAGE=dataquest/dspace:dspace-7_x >> .env
-          echo DOCKER_OWNER=dataquest >> .env
-          echo NODE_ENV="development" >> .env
+          touch .env.dev-5 || true
+          echo DSPACE_REST_HOST=dev-5.pc > .env.dev-5
+          echo REST_URL=http://dev-5.pc:8080/server >> .env.dev-5
+          echo UI_URL=http://dev-5.pc >> .env.dev-5
+          echo DSPACE_REST_IMAGE=dataquest/dspace:dspace-7_x >> .env.dev-5
+          echo DOCKER_OWNER=dataquest >> .env.dev-5
+          echo NODE_ENV="development" >> .env.dev-5
 
-          ./deploy.sh
+          export ENVFILE=$pwd/.env.dev-5
+          ./start.sh
