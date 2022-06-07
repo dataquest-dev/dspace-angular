@@ -15,6 +15,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
   constructor(config: DynamicComplexModelConfig, layout?: DynamicFormControlLayout) {
     super(config, layout);
     this.separator = ';';
+
   }
 
   get value() {

@@ -10,11 +10,12 @@ import { DSpaceObject } from '../shared/dspace-object.model';
 import { RelationshipOptions } from '../../shared/form/builder/models/relationship-options.model';
 import { Item } from '../shared/item.model';
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
-import { getAllSucceededRemoteData, getRemoteDataPayload } from '../shared/operators';
+import {getAllSucceededRemoteData, getFirstSucceededRemoteDataPayload, getRemoteDataPayload} from '../shared/operators';
 import { Injectable } from '@angular/core';
 import { ExternalSource } from '../shared/external-source.model';
 import { ExternalSourceEntry } from '../shared/external-source-entry.model';
 import { RequestService } from './request.service';
+import {MetadataValue} from '../metadata/metadata-value.model';
 
 /**
  * A service for retrieving local and external entries information during a relation lookup
@@ -92,6 +93,19 @@ export class LookupRelationService {
       map((results: PaginatedList<ExternalSourceEntry>) => results.totalElements),
       startWith(0),
       distinctUntilChanged()
+    );
+  }
+
+  getExternalResults(externalSource: ExternalSource, searchOptions: PaginatedSearchOptions): Observable<PaginatedList<ExternalSourceEntry>> {
+    return this.externalSourceService.getExternalSourceEntries(externalSource.id, Object.assign(new PaginatedSearchOptions({}), searchOptions, { pagination: this.singleResultOptions })).pipe(
+      getAllSucceededRemoteData(),
+      getRemoteDataPayload(),
+      map((list: PaginatedList<ExternalSourceEntry>) => {
+        list.page.forEach(source => {
+          source.id = atob(source.id);
+        });
+        return list;
+      })
     );
   }
 

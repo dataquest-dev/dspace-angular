@@ -14,6 +14,21 @@ import {DsDynamicTagComponent} from '../tag/dynamic-tag.component';
 import {MetadataValueDataService} from '../../../../../../core/data/metadata-value-data.service';
 import {FormFieldMetadataValueObject} from '../../../models/form-field-metadata-value.model';
 import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
+import {ExternalSourceService} from '../../../../../../core/data/external-source.service';
+import {LookupRelationService} from '../../../../../../core/data/lookup-relation.service';
+import {ExternalSource} from '../../../../../../core/shared/external-source.model';
+import {
+  getAllSucceededRemoteData,
+  getFirstCompletedRemoteData,
+  getRemoteDataPayload
+} from '../../../../../../core/shared/operators';
+import {RemoteData} from '../../../../../../core/data/remote-data';
+import {ExternalSourceEntry} from '../../../../../../core/shared/external-source-entry.model';
+import {PaginatedSearchOptions} from '../../../../../search/models/paginated-search-options.model';
+import {SortDirection, SortOptions} from '../../../../../../core/cache/models/sort-options.model';
+import {PaginationComponentOptions} from '../../../../../pagination/pagination-component-options.model';
+import {SearchFilter} from '../../../../../search/models/search-filter.model';
+import {DSpaceObjectType} from '../../../../../../core/shared/dspace-object-type.model';
 
 /**
  * Component representing a tag input field
@@ -47,7 +62,9 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
               protected cdr: ChangeDetectorRef,
               protected layoutService: DynamicFormLayoutService,
               protected validationService: DynamicFormValidationService,
-              protected metadataValueService: MetadataValueDataService
+              protected metadataValueService: MetadataValueDataService,
+              private externalSourceService: ExternalSourceService,
+              private lookupRelationService: LookupRelationService
   ) {
     super(vocabularyService, cdr, layoutService, validationService);
   }
@@ -121,7 +138,19 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
         if (term === '' || term.length < this.model.minChars) {
           return observableOf({ list: [] });
         } else {
-          return this.metadataValueService.findByMetadataNameAndByValue(this.model.name, term).pipe(
+          const externalSource = Object.assign(new ExternalSource(), {
+            id: 'openAIREFunding',
+            name: 'openAIREFunding',
+            hierarchical: false
+          });
+          let options: PaginatedSearchOptions;
+          const pageOptions = Object.assign(new PaginationComponentOptions(), { pageSize: 40, page: 1 });
+          const query = 'mushroom';
+          options = new PaginatedSearchOptions({
+            pagination: pageOptions,
+            query: query,
+          });
+          return this.lookupRelationService.getExternalResults(externalSource, options).pipe(
             tap(() => this.searchFailed = false),
             catchError((error) => {
               this.searchFailed = true;
@@ -132,7 +161,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
             }));
         }
       }),
-      map((list: PaginatedList<MetadataValue>) => {
+      map((list: any) => {
         return list.page;
       }),
       tap(() => this.changeSearchingStatus(false)),

@@ -24,6 +24,10 @@ import {
   PARSER_OPTIONS,
   SUBMISSION_ID
 } from './field-parser';
+import {
+  DynamicAutocompleteModel,
+  DynamicAutocompleteModelConfig
+} from '../ds-dynamic-form-ui/models/autocomplete/dynamic-autocomplete.model';
 
 export class ComplexFieldParser extends FieldParser {
 
@@ -110,7 +114,7 @@ export class ComplexFieldParser extends FieldParser {
         inputConfig.required = hasValue(complexDefinitionInput.required) && complexDefinitionInput.required === 'true';
       }
 
-      concatGroup.group.push(new DsDynamicInputModel(inputConfig, clsInput));
+      concatGroup.group.push(new DynamicAutocompleteModel(inputConfig, clsInput));
     });
 
     const complexModel = new DynamicComplexModel(concatGroup, clsGroup);
