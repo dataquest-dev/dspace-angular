@@ -369,6 +369,8 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     if ((environment.submission.autosave.metadata.indexOf(metadata) !== -1 && isNotEmpty(value)) || this.hasRelatedCustomError(metadata)) {
       this.submissionService.dispatchSave(this.submissionId);
     }
+
+    this.updateForm(this.sectionData.data as WorkspaceitemSectionFormObject, this.sectionData.errorsToShow);
   }
 
   private hasRelatedCustomError(medatata): boolean {

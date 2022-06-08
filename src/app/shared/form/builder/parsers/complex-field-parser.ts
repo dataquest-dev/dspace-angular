@@ -28,6 +28,11 @@ import {
   DynamicAutocompleteModel,
   DynamicAutocompleteModelConfig
 } from '../ds-dynamic-form-ui/models/autocomplete/dynamic-autocomplete.model';
+import {ParserType} from './parser-type';
+import {
+  DynamicScrollableDropdownModel,
+  DynamicScrollableDropdownModelConfig
+} from '../ds-dynamic-form-ui/models/scrollable-dropdown/dynamic-scrollable-dropdown.model';
 
 export class ComplexFieldParser extends FieldParser {
 
@@ -110,11 +115,33 @@ export class ComplexFieldParser extends FieldParser {
         };
       }
 
+      if (hasValue(complexDefinitionInput.readonly) && complexDefinitionInput.readonly === 'true') {
+        inputConfig.readOnly = true;
+      }
+
       if (this.configData.mandatory) {
         inputConfig.required = hasValue(complexDefinitionInput.required) && complexDefinitionInput.required === 'true';
       }
 
-      concatGroup.group.push(new DynamicAutocompleteModel(inputConfig, clsInput));
+      let inputModel: DsDynamicInputModel;
+      switch (complexDefinitionInput['input-type']) {
+        case ParserType.Onebox:
+          inputModel = new DsDynamicInputModel(inputConfig, clsInput);
+          break;
+        case ParserType.Dropdown:
+          this.setVocabularyOptionsInComplexInput(inputConfig, complexDefinitionInput);
+          inputModel = new DynamicScrollableDropdownModel(inputConfig as DynamicScrollableDropdownModelConfig,
+            clsInput);
+          break;
+        case ParserType.Autocomplete:
+          inputModel = new DynamicAutocompleteModel(inputConfig, clsInput);
+          break;
+        default:
+          inputModel = new DsDynamicInputModel(inputConfig, clsInput);
+          break;
+      }
+
+      concatGroup.group.push(inputModel);
     });
 
     const complexModel = new DynamicComplexModel(concatGroup, clsGroup);
