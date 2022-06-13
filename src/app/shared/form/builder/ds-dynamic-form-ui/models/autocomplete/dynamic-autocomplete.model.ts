@@ -4,6 +4,7 @@ import {VocabularyOptions} from '../../../../../../core/submission/vocabularies/
 import {isEmpty} from '../../../../../empty.util';
 
 export const DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE = 'AUTOCOMPLETE';
+export const AUTOCOMPLETE_COMPLEX_PREFIX = 'autocomplete_in_complex_input';
 
 export interface DynamicAutocompleteModelConfig extends DsDynamicInputModelConfig {
   minChars?: number;

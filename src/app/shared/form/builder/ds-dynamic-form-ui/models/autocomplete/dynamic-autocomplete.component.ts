@@ -9,7 +9,7 @@ import {VocabularyService} from '../../../../../../core/submission/vocabularies/
 import {DynamicFormLayoutService, DynamicFormValidationService} from '@ng-dynamic-forms/core';
 import {catchError, debounceTime, distinctUntilChanged, map, merge, switchMap, tap} from 'rxjs/operators';
 import {buildPaginatedList, PaginatedList} from '../../../../../../core/data/paginated-list.model';
-import {isEmpty} from '../../../../../empty.util';
+import {isEmpty, isNotEmpty} from '../../../../../empty.util';
 import {DsDynamicTagComponent} from '../tag/dynamic-tag.component';
 import {MetadataValueDataService} from '../../../../../../core/data/metadata-value-data.service';
 import {FormFieldMetadataValueObject} from '../../../models/form-field-metadata-value.model';
@@ -29,6 +29,8 @@ import {SortDirection, SortOptions} from '../../../../../../core/cache/models/so
 import {PaginationComponentOptions} from '../../../../../pagination/pagination-component-options.model';
 import {SearchFilter} from '../../../../../search/models/search-filter.model';
 import {DSpaceObjectType} from '../../../../../../core/shared/dspace-object-type.model';
+import {AUTOCOMPLETE_COMPLEX_PREFIX} from './dynamic-autocomplete.model';
+import {ComplexFieldParser} from '../../../parsers/complex-field-parser';
 
 /**
  * Component representing a tag input field
@@ -52,6 +54,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   chips: Chips;
   hasAuthority: boolean;
+  isFundingInputType = false;
 
   searching = false;
   searchFailed = false;
@@ -73,8 +76,14 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
    * Initialize the component, setting up the init form value
    */
   ngOnInit(): void {
-    if (this.model.value) {
+    if (isNotEmpty(this.model.value)) {
+      if (this.model.value instanceof FormFieldMetadataValueObject && isNotEmpty(this.model.value.value)) {
+        this.model.value = this.model.value.value;
+      }
       this.setCurrentValue(this.model.value, true);
+    }
+    if (isNotEmpty(this.model.metadataFields[0])) {
+      this.isFundingInputType = this.model.metadataFields[0] === 'local.sponsor';
     }
   }
 
@@ -88,16 +97,33 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
   }
 
   updateModel(updateValue) {
-    this.dispatchUpdate(updateValue);
+    let newValue = updateValue.display;
+    if (this.isFundingInputType) {
+      // newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR;
+      // let fundingType = 'N/A';
+      // if (updateValue.id.startsWith('info:eu-repo')) {
+      //   fundingType = 'EU';
+      // }
+      // newValue += fundingType + SEPARATOR +
+      //   updateValue.metadata['oaire.awardNumber'][0].value + SEPARATOR +
+      //   updateValue.metadata['project.funder.name'][0].value + SEPARATOR +
+      //   updateValue.metadata['oaire.awardNumber'][0].value;
+      // if (updateValue.id.startsWith('info:eu-repo')) {
+      //   newValue += SEPARATOR + updateValue.metadata['dc.coverage.spatial'][0].id;
+      // }
+      // this.model = ComplexFieldParser.modelFactory(new FormFieldMetadataValueObject(), false);
+      // this.model = this.modelFactory(fieldValue, false);
+    }
+    this.dispatchUpdate(newValue);
   }
 
   /**
    * Emits a change event and updates model value.
    * @param updateValue
    */
-  dispatchUpdate(updateValue: any) {
-    this.model.value = updateValue.display;
-    this.change.emit(updateValue);
+  dispatchUpdate(newValue: any) {
+    this.model.value = newValue;
+    this.change.emit(newValue);
   }
 
   /**
@@ -125,6 +151,8 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     }
   }
 
+  formatter = (x: { display: string }) => x.display;
+
   /**
    * Converts a stream of text values from the `<input>` element to the stream of the array of items
    * to display in the typeahead popup.
@@ -135,22 +163,35 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       distinctUntilChanged(),
       tap(() => this.changeSearchingStatus(true)),
       switchMap((term) => {
+        // min 3 characters
         if (term === '' || term.length < this.model.minChars) {
           return observableOf({ list: [] });
         } else {
-          const externalSource = Object.assign(new ExternalSource(), {
-            id: 'openAIREFunding',
-            name: 'openAIREFunding',
-            hierarchical: false
-          });
-          let options: PaginatedSearchOptions;
-          const pageOptions = Object.assign(new PaginationComponentOptions(), { pageSize: 40, page: 1 });
-          const query = 'mushroom';
-          options = new PaginatedSearchOptions({
-            pagination: pageOptions,
-            query: query,
-          });
-          return this.lookupRelationService.getExternalResults(externalSource, options).pipe(
+          let response: Observable<PaginatedList<ExternalSourceEntry | MetadataValue>>;
+          if (this.isFundingInputType) {
+            // openAIRE request
+            const externalSource = Object.assign(new ExternalSource(), {
+              id: 'openAIREFunding',
+              name: 'openAIREFunding',
+              hierarchical: false
+            });
+            let options: PaginatedSearchOptions;
+            const pageOptions = Object.assign(new PaginationComponentOptions(), { pageSize: 20, page: 1 });
+            options = new PaginatedSearchOptions({
+              pagination: pageOptions,
+              query: term,
+            });
+            response = this.lookupRelationService.getExternalResults(externalSource, options);
+            let group = this.model.parent.group;
+            group[2].valueChanges.source._value.value = 'ss';
+            group[2].valueChanges.source._value.display = 'ss';
+            this.cdr.detectChanges();
+            console.log(group);
+          } else {
+            // metadataValue request
+            response = this.metadataValueService.findByMetadataNameAndByValue(this.model.name, term);
+          }
+          return response.pipe(
             tap(() => this.searchFailed = false),
             catchError((error) => {
               this.searchFailed = true;

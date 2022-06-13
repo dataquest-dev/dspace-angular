@@ -7,6 +7,7 @@ import {DynamicConcatModel, DynamicConcatModelConfig} from './ds-dynamic-concat.
 
 export const COMPLEX_GROUP_SUFFIX = '_COMPLEX_GROUP';
 export const COMPLEX_INPUT_SUFFIX = '_COMPLEX_INPUT_';
+export const SEPARATOR = ';';
 
 export interface DynamicComplexModelConfig extends DynamicConcatModelConfig {}
 
@@ -14,7 +15,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
 
   constructor(config: DynamicComplexModelConfig, layout?: DynamicFormControlLayout) {
     super(config, layout);
-    this.separator = ';';
+    this.separator = SEPARATOR;
 
   }
 
@@ -45,10 +46,9 @@ export class DynamicComplexModel extends DynamicConcatModel {
     }
 
     if (isNotEmpty(formValues)) {
-      const dumpArrayOfIndex = Array.from(Array(formValues.length).keys());
-      const indexesOfNonEmptyFormValues = dumpArrayOfIndex.filter(x => !indexOfEmptyValues.includes(x));
-      return Object.assign(new FormFieldMetadataValueObject(),
-        formValues[Object.keys(formValues)[indexesOfNonEmptyFormValues[0]]],{ value: value });
+      // const dumpArrayOfIndex = Array.from(Array(formValues.length).keys());
+      // const indexesOfNonEmptyFormValues = dumpArrayOfIndex.filter(x => !indexOfEmptyValues.includes(x));
+      return Object.assign(new FormFieldMetadataValueObject(),{ value: value });
     }
     return null;
 

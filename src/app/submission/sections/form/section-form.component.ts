@@ -34,6 +34,7 @@ import { followLink } from '../../../shared/utils/follow-link-config.model';
 import { environment } from '../../../../environments/environment';
 import { ConfigObject } from '../../../core/config/models/config.model';
 import { RemoteData } from '../../../core/data/remote-data';
+import {FormFieldMetadataValueObject} from '../../../shared/form/builder/models/form-field-metadata-value.model';
 
 /**
  * This component represents a section that contains a Form.
@@ -370,7 +371,11 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       this.submissionService.dispatchSave(this.submissionId);
     }
 
-    this.updateForm(this.sectionData.data as WorkspaceitemSectionFormObject, this.sectionData.errorsToShow);
+    if (metadata === 'local.sponsor') {
+      // const sectionData = _.cloneDeep(this.sectionData.data);
+      // sectionData['local.sponsor'] = Object.assign(new FormFieldMetadataValueObject(),{ value: value.value });
+      // this.updateForm(sectionData as WorkspaceitemSectionFormObject, this.sectionData.errorsToShow);
+    }
   }
 
   private hasRelatedCustomError(medatata): boolean {

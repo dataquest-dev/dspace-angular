@@ -16,7 +16,7 @@ export class AutocompleteFieldParser extends FieldParser {
       this.setVocabularyOptions(autocompleteModelConfig);
     }
 
-    this.setValues(autocompleteModelConfig, fieldValue, null, true);
+    this.setValues(autocompleteModelConfig, fieldValue);
 
     const autocompleteModel = new DynamicAutocompleteModel(autocompleteModelConfig);
 

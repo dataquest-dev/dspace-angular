@@ -123,6 +123,8 @@ export class ComplexFieldParser extends FieldParser {
         inputConfig.required = hasValue(complexDefinitionInput.required) && complexDefinitionInput.required === 'true';
       }
 
+      // this.setValues(inputConfig, fieldValue, null, true);
+
       let inputModel: DsDynamicInputModel;
       switch (complexDefinitionInput['input-type']) {
         case ParserType.Onebox:
