@@ -123,6 +123,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     index = id.indexOf('/');
     id = id.substr(index + 1);
 
+    // get projectCode
     index = id.indexOf('/');
     projectCode = id.substr(0, index);
 

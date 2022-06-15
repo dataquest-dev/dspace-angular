@@ -123,8 +123,6 @@ export class ComplexFieldParser extends FieldParser {
         inputConfig.required = hasValue(complexDefinitionInput.required) && complexDefinitionInput.required === 'true';
       }
 
-      // this.setValues(inputConfig, fieldValue, null, true);
-
       let inputModel: DsDynamicInputModel;
       switch (complexDefinitionInput['input-type']) {
         case ParserType.Onebox:
@@ -141,6 +139,10 @@ export class ComplexFieldParser extends FieldParser {
         default:
           inputModel = new DsDynamicInputModel(inputConfig, clsInput);
           break;
+      }
+
+      if (id === 'local.sponsor' && complexDefinitionInput.name === 'openaire_id') {
+        inputModel.hidden = true;
       }
 
       concatGroup.group.push(inputModel);

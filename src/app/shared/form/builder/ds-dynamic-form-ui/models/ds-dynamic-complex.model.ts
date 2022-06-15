@@ -45,7 +45,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
       formValues.forEach((formValue) => {
         if (isNotEmpty(formValue) && isNotEmpty(formValue.value) &&
           formValue.value.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {
-          value = formValue.value;
+          value = formValue.value.replace(AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR, '');
         }
       });
     }
@@ -72,7 +72,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
       tempValue = '';
     }
     values = [...tempValue.split(this.separator), null].map((v) => {
-        if (v === AUTOCOMPLETE_COMPLEX_PREFIX) { return; }
+        // if (v === AUTOCOMPLETE_COMPLEX_PREFIX) { return; }
         return Object.assign(new FormFieldMetadataValueObject(), value, { display: v, value: v });
     });
 
@@ -82,6 +82,13 @@ export class DynamicComplexModel extends DynamicConcatModel {
     values.forEach((val, index) =>  {
       if (val.value) {
         (this.get(index) as DsDynamicInputModel).value = val;
+        if (this.name === 'local.sponsor' && index === 4) {
+          if (val.value.includes('info:eu-repo')) {
+            (this.get(index) as DsDynamicInputModel).hidden = false;
+          } else {
+            (this.get(index) as DsDynamicInputModel).hidden = true;
+          }
+        }
       } else if (hasValue((this.get(index) as DsDynamicInputModel))) {
         (this.get(index) as DsDynamicInputModel).value = undefined;
       }
