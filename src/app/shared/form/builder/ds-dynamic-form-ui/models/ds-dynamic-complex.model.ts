@@ -4,6 +4,7 @@ import { hasNoValue, hasValue, isNotEmpty } from '../../../../empty.util';
 import { DsDynamicInputModel } from './ds-dynamic-input.model';
 import { FormFieldMetadataValueObject } from '../../models/form-field-metadata-value.model';
 import {DynamicConcatModel, DynamicConcatModelConfig} from './ds-dynamic-concat.model';
+import {AUTOCOMPLETE_COMPLEX_PREFIX} from './autocomplete/dynamic-autocomplete.model';
 
 export const COMPLEX_GROUP_SUFFIX = '_COMPLEX_GROUP';
 export const COMPLEX_INPUT_SUFFIX = '_COMPLEX_INPUT_';
@@ -40,14 +41,18 @@ export class DynamicComplexModel extends DynamicConcatModel {
       }
     });
     value = value.slice(0, -1);
-
+    if (this.name === 'local.sponsor') {
+      formValues.forEach((formValue) => {
+        if (isNotEmpty(formValue) && isNotEmpty(formValue.value) &&
+          formValue.value.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {
+          value = formValue.value;
+        }
+      });
+    }
     if (allFormValuesEmpty) {
       value = '';
     }
-
-    if (isNotEmpty(formValues)) {
-      // const dumpArrayOfIndex = Array.from(Array(formValues.length).keys());
-      // const indexesOfNonEmptyFormValues = dumpArrayOfIndex.filter(x => !indexOfEmptyValues.includes(x));
+     if (isNotEmpty(formValues)) {
       return Object.assign(new FormFieldMetadataValueObject(),{ value: value });
     }
     return null;
@@ -66,8 +71,13 @@ export class DynamicComplexModel extends DynamicConcatModel {
     if (hasNoValue(tempValue)) {
       tempValue = '';
     }
-    values = [...tempValue.split(this.separator), null].map((v) =>
-      Object.assign(new FormFieldMetadataValueObject(), value, { display: v, value: v }));
+    values = [...tempValue.split(this.separator), null].map((v) => {
+        if (v === AUTOCOMPLETE_COMPLEX_PREFIX) { return; }
+        return Object.assign(new FormFieldMetadataValueObject(), value, { display: v, value: v });
+    });
+
+    // remove undefined values
+    values = values.filter(v => v);
 
     values.forEach((val, index) =>  {
       if (val.value) {

@@ -114,6 +114,8 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
   protected subs: Subscription[] = [];
 
   protected workspaceItem: WorkspaceItem;
+
+  private updatingSponsor: boolean;
   /**
    * The FormComponent reference
    */
@@ -367,14 +369,19 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     const metadata = this.formOperationsService.getFieldPathSegmentedFromChangeEvent(event);
     const value = this.formOperationsService.getFieldValueFromChangeEvent(event);
 
-    if ((environment.submission.autosave.metadata.indexOf(metadata) !== -1 && isNotEmpty(value)) || this.hasRelatedCustomError(metadata)) {
+    if ((environment.submission.autosave.metadata.indexOf(metadata) !== -1 && isNotEmpty(value)) ||
+      this.hasRelatedCustomError(metadata)) {
       this.submissionService.dispatchSave(this.submissionId);
     }
 
     if (metadata === 'local.sponsor') {
-      // const sectionData = _.cloneDeep(this.sectionData.data);
-      // sectionData['local.sponsor'] = Object.assign(new FormFieldMetadataValueObject(),{ value: value.value });
-      // this.updateForm(sectionData as WorkspaceitemSectionFormObject, this.sectionData.errorsToShow);
+      this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
+      // this.updatingSponsor = true;
+      this.isUpdating = true;
+      this.formModel = undefined;
+      this.cdr.detectChanges();
+      this.isUpdating = false;
+      this.ngOnInit();
     }
   }
 

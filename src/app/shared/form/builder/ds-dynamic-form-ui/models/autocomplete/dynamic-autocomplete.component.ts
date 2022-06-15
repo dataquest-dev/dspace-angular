@@ -31,6 +31,8 @@ import {SearchFilter} from '../../../../../search/models/search-filter.model';
 import {DSpaceObjectType} from '../../../../../../core/shared/dspace-object-type.model';
 import {AUTOCOMPLETE_COMPLEX_PREFIX} from './dynamic-autocomplete.model';
 import {ComplexFieldParser} from '../../../parsers/complex-field-parser';
+import {SEPARATOR} from '../ds-dynamic-complex.model';
+import {lastIndexOf} from 'lodash';
 
 /**
  * Component representing a tag input field
@@ -96,23 +98,54 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     this.cdr.detectChanges();
   }
 
+  getProjectCodeFromId(id) {
+    let funderShortName = '';
+    let fundingName = '';
+    let projectCode = '';
+
+    // remove grantAgreement/
+    let index = id.indexOf('grantAgreement');
+    id = id.substr(index);
+    index = id.indexOf('/');
+    id = id.substr(index + 1);
+
+    // get funderName
+    index = id.indexOf('/');
+    funderShortName = id.substr(0, index);
+
+    index = id.indexOf('/');
+    id = id.substr(index + 1);
+
+    // get fundingName
+    index = id.indexOf('/');
+    fundingName = id.substr(0, index);
+
+    index = id.indexOf('/');
+    id = id.substr(index + 1);
+
+    index = id.indexOf('/');
+    projectCode = id.substr(0, index);
+
+    return funderShortName + '/' + fundingName + '/' + projectCode;
+  }
+
   updateModel(updateValue) {
     let newValue = updateValue.display;
     if (this.isFundingInputType) {
-      // newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR;
-      // let fundingType = 'N/A';
-      // if (updateValue.id.startsWith('info:eu-repo')) {
-      //   fundingType = 'EU';
-      // }
-      // newValue += fundingType + SEPARATOR +
-      //   updateValue.metadata['oaire.awardNumber'][0].value + SEPARATOR +
-      //   updateValue.metadata['project.funder.name'][0].value + SEPARATOR +
-      //   updateValue.metadata['oaire.awardNumber'][0].value;
-      // if (updateValue.id.startsWith('info:eu-repo')) {
-      //   newValue += SEPARATOR + updateValue.metadata['dc.coverage.spatial'][0].id;
-      // }
-      // this.model = ComplexFieldParser.modelFactory(new FormFieldMetadataValueObject(), false);
-      // this.model = this.modelFactory(fieldValue, false);
+      newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR;
+      let fundingType = 'N/A';
+      let fundingProjectCode = '';
+      if (updateValue.id.startsWith('info:eu-repo')) {
+        fundingType = 'EU';
+        fundingProjectCode = this.getProjectCodeFromId(updateValue.id);
+      }
+      newValue += fundingType + SEPARATOR +
+        fundingProjectCode + SEPARATOR +
+        updateValue.metadata['project.funder.name'][0].value + SEPARATOR +
+        updateValue.value;
+      if (updateValue.id.startsWith('info:eu-repo')) {
+        newValue += SEPARATOR + updateValue.id;
+      }
     }
     this.dispatchUpdate(newValue);
   }
@@ -182,11 +215,6 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
               query: term,
             });
             response = this.lookupRelationService.getExternalResults(externalSource, options);
-            let group = this.model.parent.group;
-            group[2].valueChanges.source._value.value = 'ss';
-            group[2].valueChanges.source._value.display = 'ss';
-            this.cdr.detectChanges();
-            console.log(group);
           } else {
             // metadataValue request
             response = this.metadataValueService.findByMetadataNameAndByValue(this.model.name, term);
