@@ -57,7 +57,6 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
               protected layoutService: DynamicFormLayoutService,
               protected validationService: DynamicFormValidationService,
               protected metadataValueService: MetadataValueDataService,
-              private externalSourceService: ExternalSourceService,
               private lookupRelationService: LookupRelationService
   ) {
     super(vocabularyService, cdr, layoutService, validationService);
@@ -73,7 +72,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       }
       this.setCurrentValue(this.model.value, true);
     }
-    if (isNotEmpty(this.model.metadataFields[0])) {
+    if (isNotEmpty(this.model.metadataFields) && isNotEmpty(this.model.metadataFields[0])) {
       this.isSponsorInputType = this.model.metadataFields[0] === SPONSOR_METADATA_NAME;
     }
   }

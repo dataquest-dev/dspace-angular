@@ -29,6 +29,8 @@ import {Runtime} from 'inspector';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 import {PageInfo} from '../../../../../../core/shared/page-info.model';
 import {MockMetadataValueService} from '../../../../../testing/metadata-value-data-service.mock';
+import {LookupRelationService} from '../../../../../../core/data/lookup-relation.service';
+import {MockLookupRelationService} from '../../../../../testing/lookup-relation-service.mock';
 
 let AUT_TEST_GROUP;
 let AUT_TEST_MODEL_CONFIG;
@@ -62,6 +64,7 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
   beforeEach(waitForAsync(() => {
     const mockMetadataValueService = new MockMetadataValueService();
     const vocabularyServiceStub = new VocabularyServiceStub();
+    const mockLookupRelationService = new MockLookupRelationService();
     init();
     TestBed.configureTestingModule({
       imports: [
@@ -81,7 +84,8 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
         { provide: MetadataValueDataService, useValue: mockMetadataValueService },
         { provide: VocabularyService, useValue: vocabularyServiceStub },
         { provide: DynamicFormLayoutService, useValue: mockDynamicFormLayoutService },
-        { provide: DynamicFormValidationService, useValue: mockDynamicFormValidationService }
+        { provide: DynamicFormValidationService, useValue: mockDynamicFormValidationService },
+        { provide: LookupRelationService, useValue: mockLookupRelationService}
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });
