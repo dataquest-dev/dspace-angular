@@ -34,7 +34,7 @@ import { followLink } from '../../../shared/utils/follow-link-config.model';
 import { environment } from '../../../../environments/environment';
 import { ConfigObject } from '../../../core/config/models/config.model';
 import { RemoteData } from '../../../core/data/remote-data';
-import {FormFieldMetadataValueObject} from '../../../shared/form/builder/models/form-field-metadata-value.model';
+import {SPONSOR_METADATA_NAME} from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 
 /**
  * This component represents a section that contains a Form.
@@ -115,7 +115,6 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
 
   protected workspaceItem: WorkspaceItem;
 
-  private updatingSponsor: boolean;
   /**
    * The FormComponent reference
    */
@@ -374,9 +373,8 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       this.submissionService.dispatchSave(this.submissionId);
     }
 
-    if (metadata === 'local.sponsor') {
+    if (metadata === SPONSOR_METADATA_NAME) {
       this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
-      // this.updatingSponsor = true;
       this.isUpdating = true;
       this.formModel = undefined;
       this.cdr.detectChanges();

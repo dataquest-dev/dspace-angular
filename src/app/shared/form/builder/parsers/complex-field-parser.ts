@@ -12,7 +12,7 @@ import {
   COMPLEX_GROUP_SUFFIX,
   COMPLEX_INPUT_SUFFIX,
   DynamicComplexModel,
-  DynamicComplexModelConfig,
+  DynamicComplexModelConfig, OPENAIRE_INPUT_NAME, SPONSOR_METADATA_NAME,
 
 } from '../ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 import { hasValue, isNotEmpty } from '../../../empty.util';
@@ -26,7 +26,6 @@ import {
 } from './field-parser';
 import {
   DynamicAutocompleteModel,
-  DynamicAutocompleteModelConfig
 } from '../ds-dynamic-form-ui/models/autocomplete/dynamic-autocomplete.model';
 import {ParserType} from './parser-type';
 import {
@@ -141,7 +140,7 @@ export class ComplexFieldParser extends FieldParser {
           break;
       }
 
-      if (id === 'local.sponsor' && complexDefinitionInput.name === 'openaire_id') {
+      if (id === SPONSOR_METADATA_NAME && complexDefinitionInput.name === OPENAIRE_INPUT_NAME) {
         inputModel.hidden = true;
       }
 

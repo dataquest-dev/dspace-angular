@@ -17,22 +17,11 @@ import {MetadataValue} from '../../../../../../core/metadata/metadata-value.mode
 import {ExternalSourceService} from '../../../../../../core/data/external-source.service';
 import {LookupRelationService} from '../../../../../../core/data/lookup-relation.service';
 import {ExternalSource} from '../../../../../../core/shared/external-source.model';
-import {
-  getAllSucceededRemoteData,
-  getFirstCompletedRemoteData,
-  getRemoteDataPayload
-} from '../../../../../../core/shared/operators';
-import {RemoteData} from '../../../../../../core/data/remote-data';
 import {ExternalSourceEntry} from '../../../../../../core/shared/external-source-entry.model';
 import {PaginatedSearchOptions} from '../../../../../search/models/paginated-search-options.model';
-import {SortDirection, SortOptions} from '../../../../../../core/cache/models/sort-options.model';
 import {PaginationComponentOptions} from '../../../../../pagination/pagination-component-options.model';
-import {SearchFilter} from '../../../../../search/models/search-filter.model';
-import {DSpaceObjectType} from '../../../../../../core/shared/dspace-object-type.model';
 import {AUTOCOMPLETE_COMPLEX_PREFIX} from './dynamic-autocomplete.model';
-import {ComplexFieldParser} from '../../../parsers/complex-field-parser';
-import {SEPARATOR} from '../ds-dynamic-complex.model';
-import {lastIndexOf} from 'lodash';
+import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic-complex.model';
 
 /**
  * Component representing a tag input field
@@ -56,7 +45,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   chips: Chips;
   hasAuthority: boolean;
-  isFundingInputType = false;
+  isSponsorInputType = false;
 
   searching = false;
   searchFailed = false;
@@ -85,7 +74,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       this.setCurrentValue(this.model.value, true);
     }
     if (isNotEmpty(this.model.metadataFields[0])) {
-      this.isFundingInputType = this.model.metadataFields[0] === 'local.sponsor';
+      this.isSponsorInputType = this.model.metadataFields[0] === SPONSOR_METADATA_NAME;
     }
   }
 
@@ -98,55 +87,10 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     this.cdr.detectChanges();
   }
 
-  getProjectCodeFromId(id) {
-    let funderShortName = '';
-    let fundingName = '';
-    let projectCode = '';
-
-    // remove grantAgreement/
-    let index = id.indexOf('grantAgreement');
-    id = id.substr(index);
-    index = id.indexOf('/');
-    id = id.substr(index + 1);
-
-    // get funderName
-    index = id.indexOf('/');
-    funderShortName = id.substr(0, index);
-
-    index = id.indexOf('/');
-    id = id.substr(index + 1);
-
-    // get fundingName
-    index = id.indexOf('/');
-    fundingName = id.substr(0, index);
-
-    index = id.indexOf('/');
-    id = id.substr(index + 1);
-
-    // get projectCode
-    index = id.indexOf('/');
-    projectCode = id.substr(0, index);
-
-    return funderShortName + '/' + fundingName + '/' + projectCode;
-  }
-
   updateModel(updateValue) {
     let newValue = updateValue.display;
-    if (this.isFundingInputType) {
-      newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR;
-      let fundingType = 'N/A';
-      let fundingProjectCode = '';
-      if (updateValue.id.startsWith('info:eu-repo')) {
-        fundingType = 'EU';
-        fundingProjectCode = this.getProjectCodeFromId(updateValue.id);
-      }
-      newValue += fundingType + SEPARATOR +
-        fundingProjectCode + SEPARATOR +
-        updateValue.metadata['project.funder.name'][0].value + SEPARATOR +
-        updateValue.value;
-      if (updateValue.id.startsWith('info:eu-repo')) {
-        newValue += SEPARATOR + updateValue.id;
-      }
+    if (this.isSponsorInputType) {
+      newValue = this.composeSponsorInput(updateValue);
     }
     this.dispatchUpdate(newValue);
   }
@@ -202,20 +146,10 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
           return observableOf({ list: [] });
         } else {
           let response: Observable<PaginatedList<ExternalSourceEntry | MetadataValue>>;
-          if (this.isFundingInputType) {
+          if (this.isSponsorInputType) {
             // openAIRE request
-            const externalSource = Object.assign(new ExternalSource(), {
-              id: 'openAIREFunding',
-              name: 'openAIREFunding',
-              hierarchical: false
-            });
-            let options: PaginatedSearchOptions;
-            const pageOptions = Object.assign(new PaginationComponentOptions(), { pageSize: 20, page: 1 });
-            options = new PaginatedSearchOptions({
-              pagination: pageOptions,
-              query: term,
-            });
-            response = this.lookupRelationService.getExternalResults(externalSource, options);
+            response = this.lookupRelationService.getExternalResults(
+              this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
           } else {
             // metadataValue request
             response = this.metadataValueService.findByMetadataNameAndByValue(this.model.name, term);
@@ -236,4 +170,86 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       }),
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed))
+
+  /**
+   * Only for the local.sponsor complex input type
+   * zoberiem external funding a narvem ho do jedneho input fieldu, ktory zparsujem v complex.model.ts v metode set
+   * @param updateValue external funding from the openAIRE
+   */
+  composeSponsorInput(updateValue) {
+    // set prefix to distinguish composed complex input in the complex.model.ts - get method
+    let newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR;
+    let fundingType = 'N/A';
+    let fundingProjectCode = '';
+
+    if (updateValue.id.startsWith(EU_PROJECT_PREFIX)) {
+      fundingType = 'EU';
+      fundingProjectCode = this.getProjectCodeFromId(updateValue.id);
+    }
+    newValue += fundingType + SEPARATOR +
+      fundingProjectCode + SEPARATOR +
+      updateValue.metadata['project.funder.name'][0].value + SEPARATOR +
+      updateValue.value;
+    if (updateValue.id.startsWith(EU_PROJECT_PREFIX)) {
+      newValue += SEPARATOR + updateValue.id;
+    }
+
+    return newValue;
+  }
+
+  /**
+   * Only for the local.sponsor complex input type
+   * If the project type is EU, the second input field must be in the format `Funder/FundingProgram/ProjectID`
+   * but in the response the Funder information is not in the right format. The right format is only in the
+   * `id` which is in the format: `info:eu-repo/grantAgreement/Funder/FundingProgram/ProjectID/`.
+   * `Funder/FundingProgram/ProjectID` is loaded from the `id` in this method
+   * @param id
+   * @return Funder/FundingProgram/ProjectID
+   */
+  getProjectCodeFromId(id) {
+    let funder = '';
+    let fundingProgram = '';
+    let projectID = '';
+
+    id = id.substr(id.indexOf('grantAgreement'));
+    id = id.substr(id.indexOf('/') + 1);
+    funder = id.substr(0, id.indexOf('/'));
+    id = id.substr(id.indexOf('/') + 1);
+    fundingProgram = id.substr(0, id.indexOf('/'));
+    id = id.substr(id.indexOf('/') + 1);
+    projectID = id.substr(0, id.indexOf('/'));
+
+    return funder + '/' + fundingProgram + '/' + projectID;
+  }
+
+  /**
+   * Only for the local.sponsor complex input type
+   * Request must contain externalSource definition.
+   * @return externalSource openAIREFunding
+   */
+  getOpenAireExternalSource() {
+    const externalSource = Object.assign(new ExternalSource(), {
+      id: 'openAIREFunding',
+      name: 'openAIREFunding',
+      hierarchical: false
+    });
+    return externalSource;
+  }
+
+  /**
+   * Only for the local.sponsor complex input type
+   * Just pagination options
+   * @param term searching value for funding
+   */
+  getFundingRequestOptions(term) {
+    let options: PaginatedSearchOptions;
+    const pageOptions = Object.assign(new PaginationComponentOptions(), { pageSize: 20, page: 1 });
+    options = new PaginatedSearchOptions({
+      pagination: pageOptions,
+      query: term,
+    });
+    return options;
+  }
 }
+
+

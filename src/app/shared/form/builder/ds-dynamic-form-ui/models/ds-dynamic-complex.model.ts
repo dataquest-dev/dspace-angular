@@ -9,6 +9,9 @@ import {AUTOCOMPLETE_COMPLEX_PREFIX} from './autocomplete/dynamic-autocomplete.m
 export const COMPLEX_GROUP_SUFFIX = '_COMPLEX_GROUP';
 export const COMPLEX_INPUT_SUFFIX = '_COMPLEX_INPUT_';
 export const SEPARATOR = ';';
+export const SPONSOR_METADATA_NAME = 'local.sponsor';
+export const EU_PROJECT_PREFIX = 'info:eu-repo';
+export const OPENAIRE_INPUT_NAME = 'openaire_id';
 
 export interface DynamicComplexModelConfig extends DynamicConcatModelConfig {}
 
@@ -26,9 +29,6 @@ export class DynamicComplexModel extends DynamicConcatModel {
         Object.assign(new FormFieldMetadataValueObject(), { value: inputModel.value, display: inputModel.value }) :
         (inputModel.value as any));
 
-    let indexOfEmptyValues: number[];
-    indexOfEmptyValues = [];
-
     let value = '';
     let allFormValuesEmpty = true;
     formValues.forEach((formValue, index) => {
@@ -37,14 +37,17 @@ export class DynamicComplexModel extends DynamicConcatModel {
         allFormValuesEmpty = false;
       } else {
         value += this.separator;
-        indexOfEmptyValues.push(index);
       }
     });
+    // remove last separator in the end of the value
     value = value.slice(0, -1);
-    if (this.name === 'local.sponsor') {
+
+    // local.sponsor input type has input value stored in one input field which starts with AUTOCOMPLETE_COMPLEX_PREFIX
+    if (this.name === SPONSOR_METADATA_NAME) {
       formValues.forEach((formValue) => {
         if (isNotEmpty(formValue) && isNotEmpty(formValue.value) &&
           formValue.value.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {
+          // remove AUTOCOMPLETE_COMPLEX_PREFIX from the value because it cannot be in the metadata value
           value = formValue.value.replace(AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR, '');
         }
       });
@@ -72,7 +75,6 @@ export class DynamicComplexModel extends DynamicConcatModel {
       tempValue = '';
     }
     values = [...tempValue.split(this.separator), null].map((v) => {
-        // if (v === AUTOCOMPLETE_COMPLEX_PREFIX) { return; }
         return Object.assign(new FormFieldMetadataValueObject(), value, { display: v, value: v });
     });
 
@@ -82,8 +84,9 @@ export class DynamicComplexModel extends DynamicConcatModel {
     values.forEach((val, index) =>  {
       if (val.value) {
         (this.get(index) as DsDynamicInputModel).value = val;
-        if (this.name === 'local.sponsor' && index === 4) {
-          if (val.value.includes('info:eu-repo')) {
+        // local.sponsor input type on the 4 index should be hidden if is empty or without EU_PROJECT_PREFIX
+        if (this.name === SPONSOR_METADATA_NAME && index === 4) {
+          if (val.value.includes(EU_PROJECT_PREFIX)) {
             (this.get(index) as DsDynamicInputModel).hidden = false;
           } else {
             (this.get(index) as DsDynamicInputModel).hidden = true;
