@@ -16,6 +16,7 @@ import { ExternalSource } from '../shared/external-source.model';
 import { ExternalSourceEntry } from '../shared/external-source-entry.model';
 import { RequestService } from './request.service';
 import {MetadataValue} from '../metadata/metadata-value.model';
+import {isNotEmpty} from '../../shared/empty.util';
 
 /**
  * A service for retrieving local and external entries information during a relation lookup
@@ -97,7 +98,8 @@ export class LookupRelationService {
   }
 
   getExternalResults(externalSource: ExternalSource, searchOptions: PaginatedSearchOptions): Observable<PaginatedList<ExternalSourceEntry>> {
-    return this.externalSourceService.getExternalSourceEntries(externalSource.id, Object.assign(new PaginatedSearchOptions({}), searchOptions, { pagination: this.singleResultOptions })).pipe(
+    const pagination = isNotEmpty(searchOptions.pagination) ? searchOptions.pagination : { pagination: this.singleResultOptions };
+    return this.externalSourceService.getExternalSourceEntries(externalSource.id, Object.assign(new PaginatedSearchOptions({}), searchOptions, pagination)).pipe(
       getAllSucceededRemoteData(),
       getRemoteDataPayload(),
       map((list: PaginatedList<ExternalSourceEntry>) => {
