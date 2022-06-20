@@ -22,6 +22,8 @@ import {PaginatedSearchOptions} from '../../../../../search/models/paginated-sea
 import {PaginationComponentOptions} from '../../../../../pagination/pagination-component-options.model';
 import {AUTOCOMPLETE_COMPLEX_PREFIX} from './dynamic-autocomplete.model';
 import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic-complex.model';
+import {update} from 'lodash';
+import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 
 /**
  * Component representing a tag input field
@@ -88,7 +90,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   updateModel(updateValue) {
     let newValue = updateValue.display;
-    if (this.isSponsorInputType) {
+    if (this.isSponsorInputType && !(updateValue instanceof VocabularyEntry)) {
       newValue = this.composeSponsorInput(updateValue);
     }
     this.dispatchUpdate(newValue);
@@ -147,8 +149,14 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
           let response: Observable<PaginatedList<ExternalSourceEntry | MetadataValue>>;
           if (this.isSponsorInputType) {
             // openAIRE request
-            response = this.lookupRelationService.getExternalResults(
-              this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
+            // if openAIRE
+            let fundingType = this.model.parent.group[0].value;
+            // if (fundingType === 'EU') {
+              response = this.lookupRelationService.getExternalResults(
+                this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
+            // } else {
+            //   response = this.metadataValueService.findByMetadataNameAndByValue(SPONSOR_METADATA_NAME, term);
+            // }
           } else {
             // metadataValue request
             response = this.metadataValueService.findByMetadataNameAndByValue(this.model.name, term);
