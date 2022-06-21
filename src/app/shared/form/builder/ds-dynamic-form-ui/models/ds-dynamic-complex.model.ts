@@ -5,6 +5,8 @@ import { DsDynamicInputModel } from './ds-dynamic-input.model';
 import { FormFieldMetadataValueObject } from '../../models/form-field-metadata-value.model';
 import {DynamicConcatModel, DynamicConcatModelConfig} from './ds-dynamic-concat.model';
 import {AUTOCOMPLETE_COMPLEX_PREFIX} from './autocomplete/dynamic-autocomplete.model';
+import {DsDynamicAutocompleteComponent} from './autocomplete/dynamic-autocomplete.component';
+import {DynamicAutocompleteService} from './autocomplete/dynamic-autocomplete.service';
 
 export const COMPLEX_GROUP_SUFFIX = '_COMPLEX_GROUP';
 export const COMPLEX_INPUT_SUFFIX = '_COMPLEX_INPUT_';
@@ -49,7 +51,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
         if (isNotEmpty(formValue) && isNotEmpty(formValue.value) &&
           formValue.value.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {
           // remove AUTOCOMPLETE_COMPLEX_PREFIX from the value because it cannot be in the metadata value
-          value = formValue.value.replace(AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR, '');
+          value = DynamicAutocompleteService.removeAutocompletePrefix(formValue);
         }
       });
     }

@@ -22,8 +22,10 @@ import {PaginatedSearchOptions} from '../../../../../search/models/paginated-sea
 import {PaginationComponentOptions} from '../../../../../pagination/pagination-component-options.model';
 import {AUTOCOMPLETE_COMPLEX_PREFIX} from './dynamic-autocomplete.model';
 import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic-complex.model';
-import {update} from 'lodash';
+import {startsWith, update} from 'lodash';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
+import {DynamicAutocompleteService} from './dynamic-autocomplete.service';
+import {BoldPipe} from '../../../../../utils/bold-pipe';
 
 /**
  * Component representing a tag input field
@@ -141,7 +143,25 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     }
   }
 
-  formatter = (x: { display: string }) => x.display;
+  formatter = (x: { display: string }) => {
+    return x.display;
+  }
+
+  suggestionFormatter = (x: { display: string }) => {
+    if (this.isSponsorInputType) {
+      if (x instanceof VocabularyEntry) {
+        let formattedValue = x.value;
+        if (formattedValue.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {
+          formattedValue = DynamicAutocompleteService.removeAutocompletePrefix(x);
+        }
+        let complexInputList = formattedValue.split(SEPARATOR);
+        formattedValue = 'Funding code: ' + complexInputList[1] + ' Project name: ' + complexInputList[2];
+        // formattedValue = new BoldPipe().transform(formattedValue);
+        return formattedValue;
+      }
+    }
+    return x.display;
+  }
 
   /**
    * Converts a stream of text values from the `<input>` element to the stream of the array of items
@@ -162,7 +182,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
             // openAIRE request
             // if openAIRE
             let fundingType = this.model.parent.group[0].value;
-            if (isNotEmpty(fundingType) && fundingType.value === 'euFunds') {
+            if (isNotEmpty(fundingType) && ['euFunds', 'EU'].includes(fundingType.value)) {
               response = this.lookupRelationService.getExternalResults(
                 this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
             } else {
