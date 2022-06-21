@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {DynamicTagModel} from '../tag/dynamic-tag.model';
 import {NgbTypeahead, NgbTypeaheadSelectItemEvent} from '@ng-bootstrap/ng-bootstrap';
@@ -147,7 +147,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     return x.display;
   }
 
-  suggestionFormatter = (x: { display: string }) => {
+  suggestionFormatter = (x: TemplateRef<any>) => {
     if (this.isSponsorInputType) {
       if (x instanceof VocabularyEntry) {
         let formattedValue = x.value;
@@ -155,12 +155,15 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
           formattedValue = DynamicAutocompleteService.removeAutocompletePrefix(x);
         }
         let complexInputList = formattedValue.split(SEPARATOR);
-        formattedValue = 'Funding code: ' + complexInputList[1] + ' Project name: ' + complexInputList[2];
-        // formattedValue = new BoldPipe().transform(formattedValue);
+        formattedValue = 'Funding code: '.bold() + complexInputList[1] + '<br> Project name: '.bold() + complexInputList[2];
         return formattedValue;
       }
     }
     return x.display;
+  }
+
+  updateValuee(aaa) {
+    return this.model.value + 'sss'.bold();
   }
 
   /**

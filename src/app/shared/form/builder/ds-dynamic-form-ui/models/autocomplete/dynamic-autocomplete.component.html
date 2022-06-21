@@ -1,9 +1,12 @@
 <!--<ng-template #rt let-r="result" let-t="term">-->
 <!--  {{ r.display }}-->
 <!--</ng-template>-->
-
+<ng-template #rt let-r="result" let-t="term">
+  <ngb-highlight [innerHTML]="suggestionFormatter(r)"></ngb-highlight>
+</ng-template>
+<!---->
   <div *ngIf="model.hasAuthority" class="position-relative right-addon">
-    <i *ngIf="searching" class="fas fa-circle-notch fa-spin fa-2x fa-fw text-primary position-absolute mt-1 p-0" aria-hidden="true"></i>
+    <label *ngIf="searching" class="fas fa-circle-notch fa-spin fa-2x fa-fw text-primary position-absolute mt-1 p-0" aria-hidden="true"></label>
     <input class="form-control"
            type="text"
            [attr.aria-labelledby]="'label_' + model.id"
@@ -14,7 +17,7 @@
            [name]="model.name"
            [ngbTypeahead]="search"
            [inputFormatter]="formatter"
-           [resultFormatter]="suggestionFormatter"
+           [resultTemplate]="rt"
            [placeholder]="model.placeholder"
            [readonly]="model.readOnly"
            [type]="model.inputType"
