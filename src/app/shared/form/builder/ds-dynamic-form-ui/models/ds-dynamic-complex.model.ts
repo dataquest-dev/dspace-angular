@@ -31,6 +31,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
 
     let value = '';
     let allFormValuesEmpty = true;
+
     formValues.forEach((formValue, index) => {
       if (isNotEmpty(formValue) && isNotEmpty(formValue.value)) {
         value += formValue.value + this.separator;

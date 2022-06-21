@@ -88,10 +88,21 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     this.cdr.detectChanges();
   }
 
+  onBlur(event: Event) {
+    let newValue = this.currentValue;
+    this.dispatchUpdate(newValue);
+    this.cdr.detectChanges();
+    console.log('something');
+  }
+
   updateModel(updateValue) {
     let newValue = updateValue.display;
-    if (this.isSponsorInputType && !(updateValue instanceof VocabularyEntry)) {
-      newValue = this.composeSponsorInput(updateValue);
+    if (this.isSponsorInputType) {
+      if (updateValue instanceof VocabularyEntry) {
+        newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR + updateValue.value;
+      } else {
+        newValue = this.composeSponsorInput(updateValue);
+      }
     }
     this.dispatchUpdate(newValue);
   }
@@ -151,12 +162,12 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
             // openAIRE request
             // if openAIRE
             let fundingType = this.model.parent.group[0].value;
-            // if (fundingType === 'EU') {
+            if (isNotEmpty(fundingType) && fundingType.value === 'euFunds') {
               response = this.lookupRelationService.getExternalResults(
                 this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
-            // } else {
-            //   response = this.metadataValueService.findByMetadataNameAndByValue(SPONSOR_METADATA_NAME, term);
-            // }
+            } else {
+              response = this.metadataValueService.findByMetadataNameAndByValue(SPONSOR_METADATA_NAME, term);
+            }
           } else {
             // metadataValue request
             response = this.metadataValueService.findByMetadataNameAndByValue(this.model.name, term);
