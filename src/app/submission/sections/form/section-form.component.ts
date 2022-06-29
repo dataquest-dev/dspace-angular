@@ -374,11 +374,11 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     }
 
     if (metadata === SPONSOR_METADATA_NAME) {
-      this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
       this.isUpdating = true;
       this.formModel = undefined;
       this.cdr.detectChanges();
       this.isUpdating = false;
+      this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
       this.ngOnInit();
     }
   }

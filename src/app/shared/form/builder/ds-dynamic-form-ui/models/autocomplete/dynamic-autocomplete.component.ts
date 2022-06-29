@@ -149,14 +149,18 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   suggestionFormatter = (x: TemplateRef<any>) => {
     if (this.isSponsorInputType) {
+      let formattedValue = '';
       if (x instanceof VocabularyEntry) {
-        let formattedValue = x.value;
+        formattedValue = x.value;
         if (formattedValue.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {
           formattedValue = DynamicAutocompleteService.removeAutocompletePrefix(x);
         }
         let complexInputList = formattedValue.split(SEPARATOR);
-        formattedValue = 'Funding code: '.bold() + complexInputList[1] + '<br> Project name: '.bold() + complexInputList[2];
-        return formattedValue;
+        return DynamicAutocompleteService.pretifyFundingSuggestion(complexInputList[1], complexInputList[2]);
+      } else if (x instanceof ExternalSourceEntry) {
+        let fundingProjectCode = this.getProjectCodeFromId(x.id);
+        let fundingName = x.metadata['project.funder.name'][0].value;
+        return DynamicAutocompleteService.pretifyFundingSuggestion(fundingProjectCode, fundingName);
       }
     }
     return x.display;

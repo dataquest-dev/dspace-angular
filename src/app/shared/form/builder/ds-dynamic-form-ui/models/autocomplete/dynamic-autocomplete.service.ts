@@ -5,4 +5,8 @@ export class DynamicAutocompleteService {
   static removeAutocompletePrefix(formValue) {
     return formValue.value.replace(AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR, '');
   }
+
+  static pretifyFundingSuggestion(fundingProjectCode, fundingName) {
+    return 'Funding code: '.bold() + fundingProjectCode + '<br> Project name: '.bold() + fundingName;
+  }
 }
