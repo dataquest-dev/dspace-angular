@@ -376,16 +376,23 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
 
     if (metadata === SPONSOR_METADATA_NAME) {
       this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
-
-      let counter = 0;
-      this.updateItemSponsor(value, counter);
+      this.updateItemSponsor(value);
     }
   }
 
-  private updateItemSponsor(value, counter) {
-    let sponsorMetadata = '';
+  /**
+   * This method updates `local.sponsor` input field and check if the `local.sponsor` was updated in the DB. When
+   * the metadata is updated in the DB refresh this `local.sponsor` input field.
+   * @param newSponsorValue sponsor added to the `local.sponsor` complex input field
+   */
+  private updateItemSponsor(newSponsorValue) {
+    let sponsorFromDB = '';
+    // Counter to count update request timeout (20s)
+    let counter = 0;
 
+    this.isUpdating = true;
     let interval = setInterval( () => {
+      // Load item from the DB
       this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')).pipe(
           getFirstSucceededRemoteData(),
           getRemoteDataPayload())
@@ -393,50 +400,30 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
             payload.item.subscribe( item => {
               console.log('Subscribed local.sponsor: ' + counter);
               if (isNotEmpty(item.payload) && isNotEmpty(item.payload.metadata['local.sponsor'])) {
-                sponsorMetadata = item.payload.metadata['local.sponsor'];
+                sponsorFromDB = item.payload.metadata['local.sponsor'];
               }
             });
           });
-      if (Array.isArray(sponsorMetadata) && isNotEmpty(sponsorMetadata)) {
-        sponsorMetadata.forEach((mv, index) => {
-          if (sponsorMetadata[index].value === value.value) {
-            this.isUpdating = true;
+      // Check if new value is refreshed in the DB
+      if (Array.isArray(sponsorFromDB) && isNotEmpty(sponsorFromDB)) {
+        sponsorFromDB.forEach((mv, index) => {
+          if (sponsorFromDB[index].value === newSponsorValue.value) {
+            // update form
             this.formModel = undefined;
             this.cdr.detectChanges();
             this.ngOnInit();
-            this.isUpdating = false;
             clearInterval(interval);
+            this.isUpdating = false;
           }
         });
       }
-        console.log('Counter: ' + counter);
+      // Clear interval after 20s timeout
+      if (counter === 80) {
+        clearInterval(interval);
+        this.isUpdating = false;
+      }
       counter++;
     }, 250 );
-
-    // let sponsorMetadata = '';
-    // setTimeout( () => {
-    //   this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')).pipe(
-    //     getFirstSucceededRemoteData(),
-    //     getRemoteDataPayload())
-    //     .subscribe((payload) => {
-    //       payload.item.subscribe( item => {
-    //         console.log('Subscribed local.sponsor: ' + counter);
-    //         sponsorMetadata = item.payload.metadata['local.sponsor'];
-    //       });
-    //     });
-    //   if (sponsorMetadata === value) {
-    //     this.isUpdating = true;
-    //     this.formModel = undefined;
-    //     this.cdr.detectChanges();
-    //     this.ngOnInit();
-    //     this.isUpdating = false;
-    // }, 500 );
-    // } else {
-    //   console.log('Calling updateitemS: ' + counter);
-    //   setTimeout(this.updateItemSponsor(value, counter), 500);
-    //   counter++;
-    // }
-
   }
 
   private hasRelatedCustomError(medatata): boolean {
