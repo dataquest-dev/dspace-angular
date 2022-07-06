@@ -391,7 +391,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     let counter = 0;
 
     this.isUpdating = true;
-    let interval = setInterval( () => {
+    const interval = setInterval( () => {
       // Load item from the DB
       this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')).pipe(
           getFirstSucceededRemoteData(),
