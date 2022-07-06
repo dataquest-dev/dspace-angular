@@ -35,6 +35,7 @@ import { environment } from '../../../../environments/environment';
 import { ConfigObject } from '../../../core/config/models/config.model';
 import { RemoteData } from '../../../core/data/remote-data';
 import {SPONSOR_METADATA_NAME} from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
+import {MetadataValue} from '../../../core/shared/metadata.models';
 
 /**
  * This component represents a section that contains a Form.
@@ -374,13 +375,68 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     }
 
     if (metadata === SPONSOR_METADATA_NAME) {
-      this.isUpdating = true;
-      this.formModel = undefined;
-      this.cdr.detectChanges();
-      this.isUpdating = false;
       this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
-      this.ngOnInit();
+
+      let counter = 0;
+      this.updateItemSponsor(value, counter);
     }
+  }
+
+  private updateItemSponsor(value, counter) {
+    let sponsorMetadata = '';
+
+    let interval = setInterval( () => {
+      this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')).pipe(
+          getFirstSucceededRemoteData(),
+          getRemoteDataPayload())
+          .subscribe((payload) => {
+            payload.item.subscribe( item => {
+              console.log('Subscribed local.sponsor: ' + counter);
+              if (isNotEmpty(item.payload) && isNotEmpty(item.payload.metadata['local.sponsor'])) {
+                sponsorMetadata = item.payload.metadata['local.sponsor'];
+              }
+            });
+          });
+      if (Array.isArray(sponsorMetadata) && isNotEmpty(sponsorMetadata)) {
+        sponsorMetadata.forEach((mv, index) => {
+          if (sponsorMetadata[index].value === value.value) {
+            this.isUpdating = true;
+            this.formModel = undefined;
+            this.cdr.detectChanges();
+            this.ngOnInit();
+            this.isUpdating = false;
+            clearInterval(interval);
+          }
+        });
+      }
+        console.log('Counter: ' + counter);
+      counter++;
+    }, 250 );
+
+    // let sponsorMetadata = '';
+    // setTimeout( () => {
+    //   this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')).pipe(
+    //     getFirstSucceededRemoteData(),
+    //     getRemoteDataPayload())
+    //     .subscribe((payload) => {
+    //       payload.item.subscribe( item => {
+    //         console.log('Subscribed local.sponsor: ' + counter);
+    //         sponsorMetadata = item.payload.metadata['local.sponsor'];
+    //       });
+    //     });
+    //   if (sponsorMetadata === value) {
+    //     this.isUpdating = true;
+    //     this.formModel = undefined;
+    //     this.cdr.detectChanges();
+    //     this.ngOnInit();
+    //     this.isUpdating = false;
+    // }, 500 );
+    // } else {
+    //   console.log('Calling updateitemS: ' + counter);
+    //   setTimeout(this.updateItemSponsor(value, counter), 500);
+    //   counter++;
+    // }
+
   }
 
   private hasRelatedCustomError(medatata): boolean {
