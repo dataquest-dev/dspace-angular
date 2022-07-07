@@ -117,6 +117,12 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
   protected workspaceItem: WorkspaceItem;
 
   /**
+   * The timeout for checking if the sponsor was uploaded in the database
+   * The timeout is set to 20 seconds by default.
+   */
+  public sponsorRefreshTimeout = 20;
+
+  /**
    * The FormComponent reference
    */
   @ViewChild('formRef') private formRef: FormComponent;
@@ -398,7 +404,6 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
           getRemoteDataPayload())
           .subscribe((payload) => {
             payload.item.subscribe( item => {
-              console.log('Subscribed local.sponsor: ' + counter);
               if (isNotEmpty(item.payload) && isNotEmpty(item.payload.metadata['local.sponsor'])) {
                 sponsorFromDB = item.payload.metadata['local.sponsor'];
               }
@@ -407,6 +412,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       // Check if new value is refreshed in the DB
       if (Array.isArray(sponsorFromDB) && isNotEmpty(sponsorFromDB)) {
         sponsorFromDB.forEach((mv, index) => {
+          // @ts-ignore
           if (sponsorFromDB[index].value === newSponsorValue.value) {
             // update form
             this.formModel = undefined;
@@ -418,7 +424,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         });
       }
       // Clear interval after 20s timeout
-      if (counter === 80) {
+      if (counter === ( this.sponsorRefreshTimeout * 1000 ) / 250) {
         clearInterval(interval);
         this.isUpdating = false;
       }

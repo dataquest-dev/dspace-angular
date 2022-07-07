@@ -25,7 +25,6 @@ import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic
 import {startsWith, update} from 'lodash';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 import {DynamicAutocompleteService} from './dynamic-autocomplete.service';
-import {BoldPipe} from '../../../../../utils/bold-pipe';
 
 /**
  * Component representing a tag input field
@@ -163,6 +162,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
         return DynamicAutocompleteService.pretifyFundingSuggestion(fundingProjectCode, fundingName);
       }
     }
+    // @ts-ignore
     return x.display;
   }
 
@@ -188,6 +188,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
           if (this.isSponsorInputType) {
             // openAIRE request
             // if openAIRE
+            // @ts-ignore
             let fundingType = this.model.parent.group[0].value;
             if (isNotEmpty(fundingType) && ['euFunds', 'EU'].includes(fundingType.value)) {
               response = this.lookupRelationService.getExternalResults(

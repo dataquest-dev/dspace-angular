@@ -23,8 +23,9 @@ import { SubmissionFormsConfigService } from '../../../core/config/submission-fo
 import { SectionDataObject } from '../models/section-data.model';
 import { SectionsType } from '../sections-type';
 import {
+  mockSectionsData,
   mockSubmissionCollectionId,
-  mockSubmissionId,
+  mockSubmissionId, mockSubmissionObject,
   mockUploadResponse1ParsedErrors
 } from '../../../shared/mocks/submission.mock';
 import { BrowserModule } from '@angular/platform-browser';
@@ -45,6 +46,14 @@ import { ObjectCacheService } from '../../../core/cache/object-cache.service';
 import { RequestService } from '../../../core/data/request.service';
 import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
 import { cold } from 'jasmine-marbles';
+import {ItemMock} from '../../../shared/mocks/item.mock';
+import {Item} from '../../../core/shared/item.model';
+import {MetadataValue} from '../../../core/shared/metadata.models';
+import {SubmissionObject} from '../../../core/submission/models/submission-object.model';
+import {mockItemWithMetadataFieldAndValue} from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
+import {followLink} from '../../../shared/utils/follow-link-config.model';
+import {getFirstSucceededRemoteData, getRemoteDataPayload} from '../../../core/shared/operators';
+import {isNotEmpty} from '../../../shared/empty.util';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -66,6 +75,8 @@ const sectionObject: SectionDataObject = {
   id: 'traditionalpageone',
   sectionType: SectionsType.SubmissionForm
 };
+
+const EU_SPONSOR = 'info:eu-repo/grantAgreement/TT/TTT-TTT/101035447/EU';
 
 const testFormConfiguration = {
   name: 'testFormConfiguration',
@@ -146,6 +157,8 @@ describe('SubmissionSectionFormComponent test suite', () => {
   let notificationsServiceStub: NotificationsServiceStub;
   let formService: any = getMockFormService();
 
+  let submissionObjectDataService: SubmissionObjectDataService;
+
   let formOperationsService: any;
   let formBuilderService: any;
   let translateService: any;
@@ -155,6 +168,11 @@ describe('SubmissionSectionFormComponent test suite', () => {
   const submissionId = mockSubmissionId;
   const collectionId = mockSubmissionCollectionId;
   const parsedSectionErrors: any = mockUploadResponse1ParsedErrors.traditionalpageone;
+
+  const submissionObjectDataServiceOverride = jasmine.createSpyObj('SubmissionObjectDataService', {
+    getHrefByID: () => observableOf('testUrl'),
+    findById: () => createSuccessfulRemoteDataObject$(new WorkspaceItem())
+  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -233,6 +251,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       formOperationsService = TestBed.inject(SectionFormOperationsService);
       translateService = TestBed.inject(TranslateService);
       notificationsServiceStub = TestBed.inject(NotificationsService as any);
+      submissionObjectDataService = TestBed.inject(SubmissionObjectDataService as any);
 
       translateService.get.and.returnValue(observableOf('test'));
       compAsAny.pathCombiner = new JsonPatchOperationPathCombiner('sections', sectionObject.id);
@@ -510,6 +529,56 @@ describe('SubmissionSectionFormComponent test suite', () => {
       expect(comp.hasStoredValue('dc.title', 0)).toBeTruthy();
       expect(comp.hasStoredValue('dc.title', 1)).toBeFalsy();
       expect(comp.hasStoredValue('title', 0)).toBeFalsy();
+
+      // TestBed.overrideProvider(SubmissionObjectDataService,{ useValue: { getHrefByID: () => observableOf('testUrl'), findById: () => createSuccessfulRemoteDataObject$(new WorkspaceItem()) } },)
+
+    });
+
+    // tslint:disable-next-line:no-shadowed-variable
+    const mockSectionsData = {
+      traditionalpageone: {
+        'local.sponsor': [
+          new FormFieldMetadataValueObject(EU_SPONSOR, null, null, EU_SPONSOR)
+        ]
+      },
+      license: {
+        url: null,
+        acceptanceDate: null,
+        granted: false
+      },
+      upload: {
+        files: []
+      }
+    };
+
+    it('onChange event should update `local.sponsor` complex input field', () => {
+      // if the `local.sponsor` input field is changed call this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
+      // then the this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')) should be called
+      // formModel should be updated
+
+      // spyOn this.submissionObjectService.findByI and return nonupdated data
+      // then this.submissionObjectService.findByI and return updated data
+
+      formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('local.sponsor');
+      formOperationsService.getFieldValueFromChangeEvent.and.returnValue({ value: EU_SPONSOR });
+
+      let wi = new WorkspaceItem();
+      wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldAndValue('local.sponsor', EU_SPONSOR));
+
+      spyOn(submissionObjectDataService, 'findById').and.returnValue(createSuccessfulRemoteDataObject$(wi));
+
+      comp.onChange(dynamicFormControlEvent);
+
+      expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
+
+      // timeout because in the method `updateItemSponsor()` is interval
+      setTimeout(() => {
+        expect(submissionObjectDataService.findById).toHaveBeenCalled();
+        // is called in the `onSectionInit()` method
+        expect(formConfigService.findByHref).toHaveBeenCalled();
+        // loading new input configuration
+        expect(formBuilderService.modelFromConfiguration).toHaveBeenCalled();
+      }, 250);
 
     });
   });
