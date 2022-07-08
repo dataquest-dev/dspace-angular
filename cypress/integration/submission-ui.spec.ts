@@ -1,5 +1,10 @@
+/**
+ * This IT will be never be pushed to the upstream because clicking testing DOM elements is antipattern because
+ * the tests on other machines could be failed.
+ */
+
 const password = 'admin';
-const email = 'test@edu.sk';
+const email = 'test@test.edu';
 const collectionName = 'Col';
 const communityName = 'Com';
 
@@ -252,9 +257,12 @@ function addEUSponsor(euSponsorOrder) {
   createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0', euSponsorOrder);
   createItemProcess.clickOnSelection('EU',euSponsorOrder);
   cy.wait(500);
+  // write suggestion for the eu sponsor
   createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true, euSponsorOrder);
+  // select suggestion
   createItemProcess.clickOnSuggestionSelection(euSponsorOrder + 1);
   cy.wait(250);
+  // EU input field should be visible
   createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4', false, euSponsorOrder);
 }
 

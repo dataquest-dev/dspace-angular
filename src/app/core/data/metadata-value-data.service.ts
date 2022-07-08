@@ -24,7 +24,7 @@ export const linkName = 'metadatavalues';
 export const AUTOCOMPLETE = new ResourceType(linkName);
 
 /**
- * A service responsible for fetching/sending data from/to the REST API on the vocabularies endpoint
+ * A service responsible for fetching/sending data from/to the REST API - vocabularies endpoint
  */
 @Injectable()
 @dataService(MetadataValue.type)
@@ -45,7 +45,7 @@ export class MetadataValueDataService extends DataService<MetadataValue> {
   }
 
   /**
-   * Retrieve the Site Object
+   * Retrieve the MetadataValue object inside Vocabulary object body
    */
   findByMetadataNameAndByValue(metadataName, term): Observable<PaginatedList<MetadataValue>> {
       const metadataFields = metadataName.split('.');

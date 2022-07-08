@@ -4,30 +4,18 @@ import {DynamicFormLayoutService, DynamicFormsCoreModule, DynamicFormValidationS
 import {DynamicFormsNGBootstrapUIModule} from '@ng-dynamic-forms/ui-ng-bootstrap';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModule, NgbTypeaheadSelectItemEvent} from '@ng-bootstrap/ng-bootstrap';
-import {DsDynamicTagComponent} from '../tag/dynamic-tag.component';
 import {ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {VocabularyService} from '../../../../../../core/submission/vocabularies/vocabulary.service';
 import {
   mockDynamicFormLayoutService,
   mockDynamicFormValidationService
 } from '../../../../../testing/dynamic-form-mock-services';
-import {VocabularyOptions} from '../../../../../../core/submission/vocabularies/models/vocabulary-options.model';
 import {createTestComponent} from '../../../../../testing/utils.test';
-import {Chips} from '../../../../../chips/models/chips.model';
 import {DsDynamicAutocompleteComponent} from './dynamic-autocomplete.component';
-import {DynamicTagModel} from '../tag/dynamic-tag.model';
 import {DynamicAutocompleteModel} from './dynamic-autocomplete.model';
 import {MetadataValueDataService} from '../../../../../../core/data/metadata-value-data.service';
-import {Item} from '../../../../../../core/shared/item.model';
-import {Observable, of as observableOf} from 'rxjs';
-import {RemoteData} from '../../../../../../core/data/remote-data';
-import {Bitstream} from '../../../../../../core/shared/bitstream.model';
-import {createSuccessfulRemoteDataObject$} from '../../../../../remote-data.utils';
-import {buildPaginatedList, PaginatedList} from '../../../../../../core/data/paginated-list.model';
-import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
-import {Runtime} from 'inspector';
+import {of as observableOf} from 'rxjs';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
-import {PageInfo} from '../../../../../../core/shared/page-info.model';
 import {MockMetadataValueService} from '../../../../../testing/metadata-value-data-service.mock';
 import {LookupRelationService} from '../../../../../../core/data/lookup-relation.service';
 import {MockLookupRelationService} from '../../../../../testing/lookup-relation-service.mock';
@@ -133,7 +121,7 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
     });
 
 
-    it('should search when 3+ characters typed', fakeAsync(() => {
+    it('should search when 3+ characters is typed', fakeAsync(() => {
       spyOn((autComp as any).metadataValueService, 'findByMetadataNameAndByValue').and.callThrough();
 
       autComp.search(observableOf('test')).subscribe(() => {

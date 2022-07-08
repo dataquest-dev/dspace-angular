@@ -13,7 +13,7 @@ import {METADATA_VALUE} from './metadata-value.resource-type';
 import {MetadataField} from './metadata-field.model';
 
 /**
- * Class the represents a metadata value
+ * Class that represents a metadata value
  */
 @typedObject
 export class MetadataValue extends ListableObject implements HALResource {
@@ -27,37 +27,37 @@ export class MetadataValue extends ListableObject implements HALResource {
   type: ResourceType;
 
   /**
-   * The identifier of this metadata field
+   * The identifier of this metadata value
    */
   @autoserialize
   id: number;
 
   /**
-   * The value of this metadata field
+   * The value of this metadata value object
    */
   @autoserialize
   value: string;
 
   /**
-   * The language of this metadata field
+   * The language of this metadata value
    */
   @autoserialize
   language: string;
 
   /**
-   * The authority of this metadata field
+   * The authority of this metadata value
    */
   @autoserialize
   authority: string;
 
   /**
-   * The confidence of this metadata field
+   * The confidence of this metadata value
    */
   @autoserialize
   confidence: string;
 
   /**
-   * The place of this metadata field
+   * The place of this metadata value
    */
   @autoserialize
   place: string;

@@ -2,7 +2,6 @@ import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Templ
 import {FormGroup} from '@angular/forms';
 import {DynamicTagModel} from '../tag/dynamic-tag.model';
 import {NgbTypeahead, NgbTypeaheadSelectItemEvent} from '@ng-bootstrap/ng-bootstrap';
-import {Chips} from '../../../../../chips/models/chips.model';
 import {Observable, of as observableOf} from 'rxjs';
 import {PageInfo} from '../../../../../../core/shared/page-info.model';
 import {VocabularyService} from '../../../../../../core/submission/vocabularies/vocabulary.service';
@@ -14,7 +13,6 @@ import {DsDynamicTagComponent} from '../tag/dynamic-tag.component';
 import {MetadataValueDataService} from '../../../../../../core/data/metadata-value-data.service';
 import {FormFieldMetadataValueObject} from '../../../models/form-field-metadata-value.model';
 import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
-import {ExternalSourceService} from '../../../../../../core/data/external-source.service';
 import {LookupRelationService} from '../../../../../../core/data/lookup-relation.service';
 import {ExternalSource} from '../../../../../../core/shared/external-source.model';
 import {ExternalSourceEntry} from '../../../../../../core/shared/external-source-entry.model';
@@ -22,13 +20,11 @@ import {PaginatedSearchOptions} from '../../../../../search/models/paginated-sea
 import {PaginationComponentOptions} from '../../../../../pagination/pagination-component-options.model';
 import {AUTOCOMPLETE_COMPLEX_PREFIX} from './dynamic-autocomplete.model';
 import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic-complex.model';
-import {startsWith, update} from 'lodash';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 import {DynamicAutocompleteService} from './dynamic-autocomplete.service';
-import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 
 /**
- * Component representing a tag input field
+ * Component representing a autocomplete input field
  */
 @Component({
   selector: 'ds-dynamic-autocomplete',
@@ -47,7 +43,6 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   @ViewChild('instance') instance: NgbTypeahead;
 
-  chips: Chips;
   hasAuthority: boolean;
   isSponsorInputType = false;
 
@@ -82,7 +77,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
   }
 
   /**
-   * Updates model value with the selected value and add a new tag to chips.
+   * Updates model value with the selected value
    * @param event The value to set.
    */
   onSelectItem(event: NgbTypeaheadSelectItemEvent) {
@@ -101,6 +96,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       if (updateValue instanceof VocabularyEntry) {
         newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR + updateValue.value;
       } else {
+        // special autocomplete sponsor input
         newValue = this.composeSponsorInput(updateValue);
       }
     }
@@ -109,7 +105,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   /**
    * Emits a change event and updates model value.
-   * @param updateValue
+   * @param newValue
    */
   dispatchUpdate(newValue: any) {
     this.model.value = newValue;
@@ -118,8 +114,8 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   /**
    * Sets the current value with the given value.
-   * @param value The value to set.
-   * @param init Representing if is init value or not.
+   * @param value given value.
+   * @param init is initial value or not.
    */
   public setCurrentValue(value: any, init = false) {
     let result: string;
@@ -145,33 +141,31 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     return x.display;
   }
 
-  suggestionFormatter = (x: TemplateRef<any>) => {
+  suggestionFormatter = (suggestion: TemplateRef<any>) => {
     if (this.isSponsorInputType) {
       let formattedValue = '';
-      if (x instanceof VocabularyEntry) {
-        formattedValue = x.value;
+      // normal MetadataValue suggestion
+      if (suggestion instanceof VocabularyEntry) {
+        formattedValue = suggestion.value;
         if (formattedValue.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {
-          formattedValue = DynamicAutocompleteService.removeAutocompletePrefix(x);
+          formattedValue = DynamicAutocompleteService.removeAutocompletePrefix(suggestion);
         }
         const complexInputList = formattedValue.split(SEPARATOR);
         return DynamicAutocompleteService.pretifyFundingSuggestion(complexInputList[1], complexInputList[2]);
-      } else if (x instanceof ExternalSourceEntry) {
-        const fundingProjectCode = this.getProjectCodeFromId(x.id);
-        const fundingName = x.metadata['project.funder.name'][0].value;
+      } else if (suggestion instanceof ExternalSourceEntry) {
+        // suggestion from the openAIRE
+        const fundingProjectCode = this.getProjectCodeFromId(suggestion.id);
+        const fundingName = suggestion.metadata['project.funder.name'][0].value;
         return DynamicAutocompleteService.pretifyFundingSuggestion(fundingProjectCode, fundingName);
       }
     }
     // @ts-ignore
-    return x.display;
-  }
-
-  updateValuee(aaa) {
-    return this.model.value + 'sss'.bold();
+    return suggestion.display;
   }
 
   /**
-   * Converts a stream of text values from the `<input>` element to the stream of the array of items
-   * to display in the typeahead popup.
+   * Converts a text values stream from the `<input>` element to the array stream of the items
+   * and display them in the typeahead popup.
    */
   search = (text$: Observable<string>) =>
     text$.pipe(
@@ -189,9 +183,11 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
             // @ts-ignore
             const fundingType = this.model.parent.group[0].value;
             if (isNotEmpty(fundingType) && ['euFunds', 'EU'].includes(fundingType.value)) {
+              // eu funding
               response = this.lookupRelationService.getExternalResults(
                 this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
             } else {
+              // non eu funding
               response = this.metadataValueService.findByMetadataNameAndByValue(SPONSOR_METADATA_NAME, term);
             }
           } else {
@@ -218,7 +214,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   /**
    * Only for the local.sponsor complex input type
-   * zoberiem external funding a narvem ho do jedneho input fieldu, ktory zparsujem v complex.model.ts v metode set
+   * The external funding is composed to the one complex input field
    * @param updateValue external funding from the openAIRE
    */
   composeSponsorInput(updateValue) {
