@@ -90,10 +90,8 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
   }
 
   onBlur(event: Event) {
-    let newValue = this.currentValue;
-    this.dispatchUpdate(newValue);
+    this.dispatchUpdate(this.currentValue);
     this.cdr.detectChanges();
-    console.log('something');
   }
 
   updateModel(updateValue) {
@@ -154,11 +152,11 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
         if (formattedValue.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {
           formattedValue = DynamicAutocompleteService.removeAutocompletePrefix(x);
         }
-        let complexInputList = formattedValue.split(SEPARATOR);
+        const complexInputList = formattedValue.split(SEPARATOR);
         return DynamicAutocompleteService.pretifyFundingSuggestion(complexInputList[1], complexInputList[2]);
       } else if (x instanceof ExternalSourceEntry) {
-        let fundingProjectCode = this.getProjectCodeFromId(x.id);
-        let fundingName = x.metadata['project.funder.name'][0].value;
+        const fundingProjectCode = this.getProjectCodeFromId(x.id);
+        const fundingName = x.metadata['project.funder.name'][0].value;
         return DynamicAutocompleteService.pretifyFundingSuggestion(fundingProjectCode, fundingName);
       }
     }
@@ -186,10 +184,9 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
         } else {
           let response: Observable<PaginatedList<ExternalSourceEntry | MetadataValue>>;
           if (this.isSponsorInputType) {
-            // openAIRE request
             // if openAIRE
             // @ts-ignore
-            let fundingType = this.model.parent.group[0].value;
+            const fundingType = this.model.parent.group[0].value;
             if (isNotEmpty(fundingType) && ['euFunds', 'EU'].includes(fundingType.value)) {
               response = this.lookupRelationService.getExternalResults(
                 this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));

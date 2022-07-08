@@ -46,14 +46,7 @@ import { ObjectCacheService } from '../../../core/cache/object-cache.service';
 import { RequestService } from '../../../core/data/request.service';
 import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
 import { cold } from 'jasmine-marbles';
-import {ItemMock} from '../../../shared/mocks/item.mock';
-import {Item} from '../../../core/shared/item.model';
-import {MetadataValue} from '../../../core/shared/metadata.models';
-import {SubmissionObject} from '../../../core/submission/models/submission-object.model';
 import {mockItemWithMetadataFieldAndValue} from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
-import {followLink} from '../../../shared/utils/follow-link-config.model';
-import {getFirstSucceededRemoteData, getRemoteDataPayload} from '../../../core/shared/operators';
-import {isNotEmpty} from '../../../shared/empty.util';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -551,18 +544,11 @@ describe('SubmissionSectionFormComponent test suite', () => {
       }
     };
 
-    it('onChange event should update `local.sponsor` complex input field', () => {
-      // if the `local.sponsor` input field is changed call this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
-      // then the this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')) should be called
-      // formModel should be updated
-
-      // spyOn this.submissionObjectService.findByI and return nonupdated data
-      // then this.submissionObjectService.findByI and return updated data
-
+    it('onChange on `local.sponsor` complex input field should refresh formModel', () => {
       formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('local.sponsor');
       formOperationsService.getFieldValueFromChangeEvent.and.returnValue({ value: EU_SPONSOR });
 
-      let wi = new WorkspaceItem();
+      const wi = new WorkspaceItem();
       wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldAndValue('local.sponsor', EU_SPONSOR));
 
       spyOn(submissionObjectDataService, 'findById').and.returnValue(createSuccessfulRemoteDataObject$(wi));
@@ -570,7 +556,6 @@ describe('SubmissionSectionFormComponent test suite', () => {
       comp.onChange(dynamicFormControlEvent);
 
       expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
-
       // timeout because in the method `updateItemSponsor()` is interval
       setTimeout(() => {
         expect(submissionObjectDataService.findById).toHaveBeenCalled();
