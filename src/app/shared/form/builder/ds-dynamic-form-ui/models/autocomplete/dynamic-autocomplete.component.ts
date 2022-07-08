@@ -25,6 +25,7 @@ import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic
 import {startsWith, update} from 'lodash';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 import {DynamicAutocompleteService} from './dynamic-autocomplete.service';
+import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 
 /**
  * Component representing a tag input field
@@ -213,6 +214,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       }),
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed))
+
 
   /**
    * Only for the local.sponsor complex input type

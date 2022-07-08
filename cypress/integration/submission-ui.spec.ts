@@ -1,5 +1,5 @@
 const password = 'admin';
-const email = 'test@test.edu';
+const email = 'test@edu.sk';
 const collectionName = 'Col';
 const communityName = 'Com';
 
@@ -64,12 +64,55 @@ const createItemProcess = {
   checkLocalHasCMDIVisibility() {
     cy.get('#traditionalpageone form div[role = "group"] label[for = "local_hasCMDI"]').should('be.visible');
   },
-  clickOnInput(inputName) {
-    cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]').click();
+  checkIsInputVisible(inputName, formatted = false, inputOrder = 0) {
+    let inputNameTag = 'input[';
+    inputNameTag += formatted ? 'ng-reflect-name' : 'name';
+    inputNameTag += ' = ';
+
+    cy.get('#traditionalpageone form div[role = "group"] ' + inputNameTag + '"' + inputName + '"]')
+      .eq(inputOrder).should('be.visible');
   },
+  checkIsNotInputVisible(inputName, formatted = false, inputOrder = 0) {
+    let inputNameTag = 'input[';
+    inputNameTag += formatted ? 'ng-reflect-name' : 'name';
+    inputNameTag += ' = ';
+
+    cy.get('#traditionalpageone form div[role = "group"] ' + inputNameTag + '"' + inputName + '"]')
+      .eq(inputOrder).should('not.be.visible');
+  },
+  clickOnSelectionInput(inputName, inputOrder = 0) {
+    cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]').eq(inputOrder).click();
+  },
+  clickOnInput(inputName, force = false) {
+    cy.get('#traditionalpageone form div[role = "group"] input[ng-reflect-name = "' + inputName + '"]')
+      .click(force ? {force: true} : {});
+  },
+  writeValueToInput(inputName, value, formatted = false, inputOrder = 0) {
+    if (formatted) {
+      cy.get('#traditionalpageone form div[role = "group"] input[ng-reflect-name = "' + inputName + '"]').eq(inputOrder).click({force: true}).type(value);
+    } else {
+      cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]').eq(inputOrder).click({force: true}).type(value);
+    }
+  },
+  blurInput(inputName, formatted) {
+    if (formatted) {
+      cy.get('#traditionalpageone form div[role = "group"] input[ng-reflect-name = "' + inputName + '"]').blur();
+    } else {
+      cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]').blur();
+    }
+  },
+
   clickOnTypeSelection(selectionName) {
     cy.get('#traditionalpageone form div[role = "group"] div[role = "listbox"]' +
       ' button[title = "' + selectionName + '"]').click();
+  },
+  clickOnSuggestionSelection(selectionNumber) {
+    cy.get('#traditionalpageone form div[role = "group"] ngb-typeahead-window[role = "listbox"]' +
+      ' button[type = "button"]').eq(selectionNumber).click();
+  },
+
+  clickOnDivById(id, force) {
+    cy.get('div[id = "' + id + '"]').click(force ? {force: true} : {});
   },
   checkInputValue(inputName, observedInputValue) {
     cy.get('#traditionalpageone form div[role = "group"] div[role = "combobox"] input[name = "' + inputName + '"]')
@@ -85,7 +128,15 @@ const createItemProcess = {
       .should(checkedCondition);
   },
   clickOnSave() {
-    cy.get('.submission-form-footer button[id = "save"]').click();
+    cy.get('.submission-form-footer button[id = "save"]').should('have.class', 'active').click({force: true});
+  },
+  clickOnSelection(nameOfSelection, optionNumber) {
+    cy.get('.dropdown-menu button[title="' + nameOfSelection + '"]').eq(optionNumber).click();
+  },
+
+  clickAddMore(inputFieldOrder) {
+    cy.get('#traditionalpageone form div[role = "group"] button[title = "Add more"]').eq(inputFieldOrder)
+      .click({force: true});
   }
 };
 
@@ -120,6 +171,58 @@ describe('Create a new submission', () => {
     createItemProcess.selectCollection();
   });
 
+  it('should add non EU sponsor without suggestion', () => {
+    // funding code
+    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'code', true);
+    // suggestion is popped up - must blur
+    createItemProcess.blurInput('local.sponsor_COMPLEX_INPUT_1', true);
+    cy.wait(250);
+    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_3', 'projectName', true);
+    // blur because after each click on input will send PATCH request and the input value is removed
+    cy.get('body').click(0,0);
+    cy.wait(250);
+    // select sponsor type
+    createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
+    createItemProcess.clickOnSelection('N/A',0);
+    cy.wait(250);
+    // sponsor organisation
+    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_2', 'organisation', false);
+  });
+
+  it('should load and add EU sponsor from suggestion', () => {
+    // select sponsor type
+    createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
+    createItemProcess.clickOnSelection('EU',0);
+    cy.wait(250);
+    // write suggestion for the eu sponsor
+    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
+    // select suggestion
+    createItemProcess.clickOnSuggestionSelection(0);
+    cy.wait(250);
+    // EU input field should be visible
+    createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4');
+
+  });
+
+  it('should add four EU sponsors', () => {
+    // select sponsor type
+    createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
+    createItemProcess.clickOnSelection('EU',0);
+    cy.wait(250);
+    // write suggestion for the eu sponsor
+    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
+    // select suggestion
+    createItemProcess.clickOnSuggestionSelection(0);
+    cy.wait(250);
+    // EU input field should be visible
+    createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4');
+
+    // add another sponsors
+    addEUSponsor(1);
+    addEUSponsor(2);
+    addEUSponsor(3);
+  });
+
   // @TODO Uncomment this tests when the ACL, Complex input field, Type-bind and CMDI will be merged
 
   // it('should be visible Has CMDI file input field because user is admin', () => {
@@ -127,13 +230,13 @@ describe('Create a new submission', () => {
   // });
 
   // it('should be showed chosen type value', () => {
-  //   createItemProcess.clickOnInput('dc.type');
+  //   createItemProcess.clickOnSelectionInput('dc.type');
   //   createItemProcess.clickOnTypeSelection('Article');
   //   createItemProcess.checkInputValue('dc.type', 'Article');
   // });
 
   // it('The local.hasCMDI value should be sent in the response after type change', () => {
-  //   createItemProcess.clickOnInput('dc.type');
+  //   createItemProcess.clickOnSelectionInput('dc.type');
   //   createItemProcess.clickOnTypeSelection('Article');
   //   createItemProcess.checkCheckbox('local_hasCMDI');
   //   createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
@@ -142,3 +245,16 @@ describe('Create a new submission', () => {
   //   createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
   // });
 });
+
+function addEUSponsor(euSponsorOrder) {
+  createItemProcess.clickAddMore(1);
+  // select sponsor type of second sponsor
+  createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0', euSponsorOrder);
+  createItemProcess.clickOnSelection('EU',euSponsorOrder);
+  cy.wait(500);
+  createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true, euSponsorOrder);
+  createItemProcess.clickOnSuggestionSelection(euSponsorOrder + 1);
+  cy.wait(250);
+  createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4', false, euSponsorOrder);
+}
+
