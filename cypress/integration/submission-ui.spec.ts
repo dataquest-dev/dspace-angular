@@ -106,7 +106,6 @@ const createItemProcess = {
       cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]').blur();
     }
   },
-
   clickOnTypeSelection(selectionName) {
     cy.get('#traditionalpageone form div[role = "group"] div[role = "listbox"]' +
       ' button[title = "' + selectionName + '"]').click();
@@ -133,12 +132,11 @@ const createItemProcess = {
       .should(checkedCondition);
   },
   clickOnSave() {
-    cy.get('.submission-form-footer button[id = "save"]').should('have.class', 'active').click({force: true});
+    cy.get('.submission-form-footer button[id = "save"]').click();
   },
   clickOnSelection(nameOfSelection, optionNumber) {
     cy.get('.dropdown-menu button[title="' + nameOfSelection + '"]').eq(optionNumber).click();
   },
-
   clickAddMore(inputFieldOrder) {
     cy.get('#traditionalpageone form div[role = "group"] button[title = "Add more"]').eq(inputFieldOrder)
       .click({force: true});
@@ -265,4 +263,3 @@ function addEUSponsor(euSponsorOrder) {
   // EU input field should be visible
   createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4', false, euSponsorOrder);
 }
-
