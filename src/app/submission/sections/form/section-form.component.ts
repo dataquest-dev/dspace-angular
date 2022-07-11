@@ -401,11 +401,13 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
           getFirstSucceededRemoteData(),
           getRemoteDataPayload())
           .subscribe((payload) => {
-            payload.item.subscribe( item => {
-              if (isNotEmpty(item.payload) && isNotEmpty(item.payload.metadata['local.sponsor'])) {
-                sponsorFromDB = item.payload.metadata['local.sponsor'];
-              }
-            });
+            if (isNotEmpty(payload.item)) {
+              payload.item.subscribe( item => {
+                if (isNotEmpty(item.payload) && isNotEmpty(item.payload.metadata['local.sponsor'])) {
+                  sponsorFromDB = item.payload.metadata['local.sponsor'];
+                }
+              });
+            }
           });
       // Check if new value is refreshed in the DB
       if (Array.isArray(sponsorFromDB) && isNotEmpty(sponsorFromDB)) {

@@ -57,6 +57,10 @@ function getMockSubmissionFormsConfigService(): SubmissionFormsConfigService {
   });
 }
 
+let submissionObjectDataServiceStub = jasmine.createSpyObj('SubmissionObjectDataService', {
+  findById: jasmine.createSpy('findById'),
+});
+
 const sectionObject: SectionDataObject = {
   config: 'https://dspace7.4science.it/or2018/api/config/submissionforms/traditionalpageone',
   mandatory: true,
@@ -149,8 +153,6 @@ describe('SubmissionSectionFormComponent test suite', () => {
   let notificationsServiceStub: NotificationsServiceStub;
   let formService: any = getMockFormService();
 
-  let submissionObjectDataService: SubmissionObjectDataService;
-
   let formOperationsService: any;
   let formBuilderService: any;
   let translateService: any;
@@ -160,11 +162,6 @@ describe('SubmissionSectionFormComponent test suite', () => {
   const submissionId = mockSubmissionId;
   const collectionId = mockSubmissionCollectionId;
   const parsedSectionErrors: any = mockUploadResponse1ParsedErrors.traditionalpageone;
-
-  const submissionObjectDataServiceOverride = jasmine.createSpyObj('SubmissionObjectDataService', {
-    getHrefByID: () => observableOf('testUrl'),
-    findById: () => createSuccessfulRemoteDataObject$(new WorkspaceItem())
-  });
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -243,7 +240,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       formOperationsService = TestBed.inject(SectionFormOperationsService);
       translateService = TestBed.inject(TranslateService);
       notificationsServiceStub = TestBed.inject(NotificationsService as any);
-      submissionObjectDataService = TestBed.inject(SubmissionObjectDataService as any);
+      submissionObjectDataServiceStub = TestBed.inject(SubmissionObjectDataService as any);
 
       translateService.get.and.returnValue(observableOf('test'));
       compAsAny.pathCombiner = new JsonPatchOperationPathCombiner('sections', sectionObject.id);
@@ -531,14 +528,14 @@ describe('SubmissionSectionFormComponent test suite', () => {
       const wi = new WorkspaceItem();
       wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldAndValue('local.sponsor', EU_SPONSOR));
 
-      spyOn(submissionObjectDataService, 'findById').and.returnValue(createSuccessfulRemoteDataObject$(wi));
+      spyOn(submissionObjectDataServiceStub, 'findById').and.returnValue(createSuccessfulRemoteDataObject$(wi));
 
       comp.onChange(dynamicFormControlEvent);
 
       expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
       // timeout because in the method `updateItemSponsor()` is interval
       setTimeout(() => {
-        expect(submissionObjectDataService.findById).toHaveBeenCalled();
+        expect(submissionObjectDataServiceStub.findById).toHaveBeenCalled();
         // is called in the `onSectionInit()` method
         expect(formConfigService.findByHref).toHaveBeenCalled();
         // loading new input configuration
