@@ -3,8 +3,8 @@
  * the tests on other machines could be failed.
  */
 
-const password = 'admin';
-const email = 'test@test.edu';
+const password = 'dspace';
+const email = 'dspacedemo+admin@gmail.com';
 const collectionName = 'Col';
 const communityName = 'Com';
 

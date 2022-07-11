@@ -58,7 +58,7 @@ function getMockSubmissionFormsConfigService(): SubmissionFormsConfigService {
   });
 }
 
-let submissionObjectDataServiceStub = jasmine.createSpyObj('SubmissionObjectDataService', {
+const submissionObjectDataServiceStub = jasmine.createSpyObj('SubmissionObjectDataService', {
   findById: jasmine.createSpy('findById'),
   getHrefByID: jasmine.createSpy('getHrefByID')
 });
@@ -154,7 +154,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
   let submissionServiceStub: SubmissionServiceStub;
   let notificationsServiceStub: NotificationsServiceStub;
   let formService: any = getMockFormService();
-  let submissionObjectDataService = submissionObjectDataServiceStub;
+  const submissionObjectDataService = submissionObjectDataServiceStub;
 
   let formOperationsService: any;
   let formBuilderService: any;
@@ -562,7 +562,10 @@ describe('SubmissionSectionFormComponent test suite', () => {
       comp.onChange(dynamicFormControlEvent);
 
       expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
+      // delay because in the method `updateItemSponsor()` is interval
+      wait(1000);
       expect(submissionObjectDataService.findById).toHaveBeenCalled();
+      // is called in the `onSectionInit()` method
       expect(formConfigService.findByHref).toHaveBeenCalled();
     });
   });
