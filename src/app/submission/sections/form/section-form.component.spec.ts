@@ -46,6 +46,7 @@ import { RequestService } from '../../../core/data/request.service';
 import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
 import { cold } from 'jasmine-marbles';
 import { mockItemWithMetadataFieldAndValue } from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
+import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -59,6 +60,7 @@ function getMockSubmissionFormsConfigService(): SubmissionFormsConfigService {
 
 let submissionObjectDataServiceStub = jasmine.createSpyObj('SubmissionObjectDataService', {
   findById: jasmine.createSpy('findById'),
+  getHrefByID: jasmine.createSpy('getHrefByID')
 });
 
 const sectionObject: SectionDataObject = {
@@ -152,6 +154,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
   let submissionServiceStub: SubmissionServiceStub;
   let notificationsServiceStub: NotificationsServiceStub;
   let formService: any = getMockFormService();
+  let submissionObjectDataService = submissionObjectDataServiceStub;
 
   let formOperationsService: any;
   let formBuilderService: any;
@@ -191,7 +194,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
         { provide: 'collectionIdProvider', useValue: collectionId },
         { provide: 'sectionDataProvider', useValue: Object.assign({}, sectionObject) },
         { provide: 'submissionIdProvider', useValue: submissionId },
-        { provide: SubmissionObjectDataService, useValue: { getHrefByID: () => observableOf('testUrl'), findById: () => createSuccessfulRemoteDataObject$(new WorkspaceItem()) } },
+        { provide: SubmissionObjectDataService, useValue: submissionObjectDataService },
         ChangeDetectorRef,
         SubmissionSectionFormComponent
       ],
@@ -210,8 +213,10 @@ describe('SubmissionSectionFormComponent test suite', () => {
       formConfigService.findByHref.and.returnValue(observableOf(testFormConfiguration));
       sectionsServiceStub.getSectionData.and.returnValue(observableOf(sectionData));
       sectionsServiceStub.getSectionServerErrors.and.returnValue(observableOf([]));
+      submissionObjectDataService.getHrefByID.and.returnValue(observableOf('testUrl'));
+      submissionObjectDataService.findById.and.returnValue(createSuccessfulRemoteDataObject$(new WorkspaceItem()));
 
-      const html = `
+    const html = `
         <ds-submission-section-form></ds-submission-section-form>`;
 
       testFixture = createTestComponent(html, TestComponent) as ComponentFixture<TestComponent>;
@@ -240,7 +245,8 @@ describe('SubmissionSectionFormComponent test suite', () => {
       formOperationsService = TestBed.inject(SectionFormOperationsService);
       translateService = TestBed.inject(TranslateService);
       notificationsServiceStub = TestBed.inject(NotificationsService as any);
-      submissionObjectDataServiceStub = TestBed.inject(SubmissionObjectDataService as any);
+      submissionObjectDataService.getHrefByID.and.returnValue(observableOf('testUrl'));
+      submissionObjectDataService.findById.and.returnValue(createSuccessfulRemoteDataObject$(new WorkspaceItem()));
 
       translateService.get.and.returnValue(observableOf('test'));
       compAsAny.pathCombiner = new JsonPatchOperationPathCombiner('sections', sectionObject.id);
@@ -520,6 +526,29 @@ describe('SubmissionSectionFormComponent test suite', () => {
       expect(comp.hasStoredValue('title', 0)).toBeFalsy();
 
     });
+  });
+
+  describe('test `local.sponsor` complex input type', () => {
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SubmissionSectionFormComponent);
+      comp = fixture.componentInstance;
+      compAsAny = comp;
+      submissionServiceStub = TestBed.inject(SubmissionService as any);
+      formBuilderService = TestBed.inject(FormBuilderService);
+      formOperationsService = TestBed.inject(SectionFormOperationsService);
+      translateService = TestBed.inject(TranslateService);
+      submissionObjectDataService.getHrefByID.and.returnValue(observableOf('testUrl'));
+      formConfigService.findByHref.and.returnValue(observableOf(testFormConfiguration));
+
+      translateService.get.and.returnValue(observableOf('test'));
+      compAsAny.pathCombiner = new JsonPatchOperationPathCombiner('sections', sectionObject.id);
+    });
+
+    afterEach(() => {
+      fixture.destroy();
+      comp = null;
+      compAsAny = null;
+    });
 
     it('onChange on `local.sponsor` complex input field should refresh formModel', () => {
       formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('local.sponsor');
@@ -528,19 +557,13 @@ describe('SubmissionSectionFormComponent test suite', () => {
       const wi = new WorkspaceItem();
       wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldAndValue('local.sponsor', EU_SPONSOR));
 
-      spyOn(submissionObjectDataServiceStub, 'findById').and.returnValue(createSuccessfulRemoteDataObject$(wi));
+      submissionObjectDataService.findById.and.returnValue(createSuccessfulRemoteDataObject$(wi));
 
       comp.onChange(dynamicFormControlEvent);
 
       expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
-      // timeout because in the method `updateItemSponsor()` is interval
-      setTimeout(() => {
-        expect(submissionObjectDataServiceStub.findById).toHaveBeenCalled();
-        // is called in the `onSectionInit()` method
-        expect(formConfigService.findByHref).toHaveBeenCalled();
-        // loading new input configuration
-        expect(formBuilderService.modelFromConfiguration).toHaveBeenCalled();
-      }, 250);
+      expect(submissionObjectDataService.findById).toHaveBeenCalled();
+      expect(formConfigService.findByHref).toHaveBeenCalled();
     });
   });
 });
