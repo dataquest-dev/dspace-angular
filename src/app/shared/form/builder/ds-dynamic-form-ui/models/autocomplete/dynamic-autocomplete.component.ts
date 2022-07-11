@@ -214,7 +214,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   /**
    * Only for the local.sponsor complex input type
-   * The external funding is composed to the one complex input field
+   * The external funding is composed as one complex input field
    * @param updateValue external funding from the openAIRE
    */
   composeSponsorInput(updateValue) {

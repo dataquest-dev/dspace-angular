@@ -34,8 +34,7 @@ import { followLink } from '../../../shared/utils/follow-link-config.model';
 import { environment } from '../../../../environments/environment';
 import { ConfigObject } from '../../../core/config/models/config.model';
 import { RemoteData } from '../../../core/data/remote-data';
-import {SPONSOR_METADATA_NAME} from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
-import {MetadataValue} from '../../../core/shared/metadata.models';
+import { SPONSOR_METADATA_NAME } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 
 /**
  * This component represents a section that contains a Form.
@@ -375,8 +374,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     const metadata = this.formOperationsService.getFieldPathSegmentedFromChangeEvent(event);
     const value = this.formOperationsService.getFieldValueFromChangeEvent(event);
 
-    if ((environment.submission.autosave.metadata.indexOf(metadata) !== -1 && isNotEmpty(value)) ||
-      this.hasRelatedCustomError(metadata)) {
+    if ((environment.submission.autosave.metadata.indexOf(metadata) !== -1 && isNotEmpty(value)) || this.hasRelatedCustomError(metadata)) {
       this.submissionService.dispatchSave(this.submissionId);
     }
 

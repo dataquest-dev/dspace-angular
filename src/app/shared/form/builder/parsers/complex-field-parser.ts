@@ -27,7 +27,7 @@ import {
 import {
   DynamicAutocompleteModel,
 } from '../ds-dynamic-form-ui/models/autocomplete/dynamic-autocomplete.model';
-import {ParserType} from './parser-type';
+import { ParserType } from './parser-type';
 import {
   DynamicScrollableDropdownModel,
   DynamicScrollableDropdownModelConfig

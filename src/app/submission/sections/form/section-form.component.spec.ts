@@ -23,9 +23,8 @@ import { SubmissionFormsConfigService } from '../../../core/config/submission-fo
 import { SectionDataObject } from '../models/section-data.model';
 import { SectionsType } from '../sections-type';
 import {
-  mockSectionsData,
   mockSubmissionCollectionId,
-  mockSubmissionId, mockSubmissionObject,
+  mockSubmissionId,
   mockUploadResponse1ParsedErrors
 } from '../../../shared/mocks/submission.mock';
 import { BrowserModule } from '@angular/platform-browser';
@@ -46,7 +45,7 @@ import { ObjectCacheService } from '../../../core/cache/object-cache.service';
 import { RequestService } from '../../../core/data/request.service';
 import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
 import { cold } from 'jasmine-marbles';
-import {mockItemWithMetadataFieldAndValue} from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
+import { mockItemWithMetadataFieldAndValue } from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -523,26 +522,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       expect(comp.hasStoredValue('dc.title', 1)).toBeFalsy();
       expect(comp.hasStoredValue('title', 0)).toBeFalsy();
 
-      // TestBed.overrideProvider(SubmissionObjectDataService,{ useValue: { getHrefByID: () => observableOf('testUrl'), findById: () => createSuccessfulRemoteDataObject$(new WorkspaceItem()) } },)
-
     });
-
-    // tslint:disable-next-line:no-shadowed-variable
-    const mockSectionsData = {
-      traditionalpageone: {
-        'local.sponsor': [
-          new FormFieldMetadataValueObject(EU_SPONSOR, null, null, EU_SPONSOR)
-        ]
-      },
-      license: {
-        url: null,
-        acceptanceDate: null,
-        granted: false
-      },
-      upload: {
-        files: []
-      }
-    };
 
     it('onChange on `local.sponsor` complex input field should refresh formModel', () => {
       formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('local.sponsor');
@@ -564,7 +544,6 @@ describe('SubmissionSectionFormComponent test suite', () => {
         // loading new input configuration
         expect(formBuilderService.modelFromConfiguration).toHaveBeenCalled();
       }, 250);
-
     });
   });
 });

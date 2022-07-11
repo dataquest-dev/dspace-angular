@@ -1,12 +1,11 @@
-import {VocabularyEntry} from '../../core/submission/vocabularies/models/vocabulary-entry.model';
-import {Observable} from 'rxjs';
-import {RemoteData} from '../../core/data/remote-data';
-import {buildPaginatedList, PaginatedList} from '../../core/data/paginated-list.model';
-import {createSuccessfulRemoteDataObject$} from '../remote-data.utils';
-import {PageInfo} from '../../core/shared/page-info.model';
-import {ExternalSource} from '../../core/shared/external-source.model';
-import {PaginatedSearchOptions} from '../search/models/paginated-search-options.model';
-import {ExternalSourceEntry} from '../../core/shared/external-source-entry.model';
+import { Observable } from 'rxjs';
+import { RemoteData } from '../../core/data/remote-data';
+import { buildPaginatedList , PaginatedList} from '../../core/data/paginated-list.model';
+import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
+import { PageInfo } from '../../core/shared/page-info.model';
+import { ExternalSource } from '../../core/shared/external-source.model';
+import { PaginatedSearchOptions } from '../search/models/paginated-search-options.model';
+import { ExternalSourceEntry } from '../../core/shared/external-source-entry.model';
 
 export class MockLookupRelationService {
   private _payload = [];

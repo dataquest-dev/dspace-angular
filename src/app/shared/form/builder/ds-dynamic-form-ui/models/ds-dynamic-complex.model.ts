@@ -3,10 +3,9 @@ import { DynamicFormControlLayout } from '@ng-dynamic-forms/core';
 import { hasNoValue, hasValue, isNotEmpty } from '../../../../empty.util';
 import { DsDynamicInputModel } from './ds-dynamic-input.model';
 import { FormFieldMetadataValueObject } from '../../models/form-field-metadata-value.model';
-import {DynamicConcatModel, DynamicConcatModelConfig} from './ds-dynamic-concat.model';
-import {AUTOCOMPLETE_COMPLEX_PREFIX} from './autocomplete/dynamic-autocomplete.model';
-import {DsDynamicAutocompleteComponent} from './autocomplete/dynamic-autocomplete.component';
-import {DynamicAutocompleteService} from './autocomplete/dynamic-autocomplete.service';
+import { DynamicConcatModel, DynamicConcatModelConfig } from './ds-dynamic-concat.model';
+import { AUTOCOMPLETE_COMPLEX_PREFIX } from './autocomplete/dynamic-autocomplete.model';
+import { DynamicAutocompleteService } from './autocomplete/dynamic-autocomplete.service';
 
 export const COMPLEX_GROUP_SUFFIX = '_COMPLEX_GROUP';
 export const COMPLEX_INPUT_SUFFIX = '_COMPLEX_INPUT_';
@@ -22,7 +21,6 @@ export class DynamicComplexModel extends DynamicConcatModel {
   constructor(config: DynamicComplexModelConfig, layout?: DynamicFormControlLayout) {
     super(config, layout);
     this.separator = SEPARATOR;
-
   }
 
   get value() {
@@ -45,7 +43,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
     // remove last separator in the end of the value
     value = value.slice(0, -1);
 
-    // local.sponsor input type has input value stored in one input field which starts with AUTOCOMPLETE_COMPLEX_PREFIX
+    // `local.sponsor` input type has input value stored in one input field which starts with AUTOCOMPLETE_COMPLEX_PREFIX
     if (this.name === SPONSOR_METADATA_NAME) {
       formValues.forEach((formValue) => {
         if (isNotEmpty(formValue) && isNotEmpty(formValue.value) &&
@@ -55,6 +53,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
         }
       });
     }
+    // set value as empty string otherwise value will be e.g. `;;;;` and it throws error
     if (allFormValuesEmpty) {
       value = '';
     }

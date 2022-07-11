@@ -1,7 +1,7 @@
-import {FormFieldModel} from '../models/form-field.model';
-import {ParserOptions} from './parser-options';
-import {ComplexFieldParser} from './complex-field-parser';
-import {DynamicRowArrayModel} from '../ds-dynamic-form-ui/models/ds-dynamic-row-array-model';
+import { FormFieldModel } from '../models/form-field.model';
+import { ParserOptions } from './parser-options';
+import { ComplexFieldParser } from './complex-field-parser';
+import { DynamicRowArrayModel } from '../ds-dynamic-form-ui/models/ds-dynamic-row-array-model';
 
 describe('ComplexFieldParser test suite', () => {
   let field: FormFieldModel;
