@@ -161,7 +161,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
   let translateService: any;
 
   const sectionsServiceStub: any = new SectionsServiceStub();
-  const formConfigService: any = getMockSubmissionFormsConfigService();
+  let formConfigService: any = getMockSubmissionFormsConfigService();
   const submissionId = mockSubmissionId;
   const collectionId = mockSubmissionCollectionId;
   const parsedSectionErrors: any = mockUploadResponse1ParsedErrors.traditionalpageone;
@@ -537,10 +537,8 @@ describe('SubmissionSectionFormComponent test suite', () => {
       formBuilderService = TestBed.inject(FormBuilderService);
       formOperationsService = TestBed.inject(SectionFormOperationsService);
       translateService = TestBed.inject(TranslateService);
-      submissionObjectDataService.getHrefByID.and.returnValue(observableOf('testUrl'));
-      formConfigService.findByHref.and.returnValue(observableOf(testFormConfiguration));
+      formConfigService = TestBed.inject(SubmissionFormsConfigService as any);
 
-      translateService.get.and.returnValue(observableOf('test'));
       compAsAny.pathCombiner = new JsonPatchOperationPathCombiner('sections', sectionObject.id);
     });
 
@@ -551,8 +549,16 @@ describe('SubmissionSectionFormComponent test suite', () => {
     });
 
     it('onChange on `local.sponsor` complex input field should refresh formModel', () => {
+      const sectionData = {};
       formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('local.sponsor');
       formOperationsService.getFieldValueFromChangeEvent.and.returnValue({ value: EU_SPONSOR });
+      formService.isValid.and.returnValue(observableOf(true));
+      submissionObjectDataService.getHrefByID.and.returnValue(observableOf('testUrl'));
+      formConfigService.findByHref.and.returnValue(observableOf(testFormConfiguration));
+      sectionsServiceStub.getSectionData.and.returnValue(observableOf(sectionData));
+      sectionsServiceStub.getSectionServerErrors.and.returnValue(observableOf([]));
+      translateService.get.and.returnValue(observableOf('test'));
+      formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
 
       const wi = new WorkspaceItem();
       wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldAndValue('local.sponsor', EU_SPONSOR));
@@ -563,10 +569,11 @@ describe('SubmissionSectionFormComponent test suite', () => {
 
       expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
       // delay because in the method `updateItemSponsor()` is interval
-      wait(1000);
-      expect(submissionObjectDataService.findById).toHaveBeenCalled();
+      wait(500);
       // is called in the `onSectionInit()` method
       expect(formConfigService.findByHref).toHaveBeenCalled();
+      expect(submissionObjectDataService.findById).toHaveBeenCalled();
+
     });
   });
 });
