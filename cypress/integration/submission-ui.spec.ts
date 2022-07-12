@@ -63,6 +63,9 @@ const createCollectionProcess = {
 };
 
 const createItemProcess = {
+  typeCollectionName() {
+    cy.get('.modal-body input[type = "search"]').type(collectionName);
+  },
   selectCollection() {
     cy.get('.modal-body .list-group div button .content').contains(collectionName).click();
   },
@@ -171,6 +174,7 @@ describe('Create a new submission', () => {
     cy.visit('/');
     sideBarMenu.clickOnNewButton();
     sideBarMenu.clickOnNewItemButton();
+    createItemProcess.typeCollectionName();
     createItemProcess.selectCollection();
   });
 
