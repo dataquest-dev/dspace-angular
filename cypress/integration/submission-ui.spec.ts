@@ -67,7 +67,7 @@ const createItemProcess = {
     cy.get('.modal-body input[type = "search"]').type(collectionName);
   },
   selectCollection() {
-    cy.get('.modal-body .list-group div button .content').contains(collectionName).click();
+    cy.get('.modal-body .scrollable-menu button[title = "' + collectionName + '"]').eq(0).click();
   },
   checkLocalHasCMDIVisibility() {
     cy.get('#traditionalpageone form div[role = "group"] label[for = "local_hasCMDI"]').should('be.visible');

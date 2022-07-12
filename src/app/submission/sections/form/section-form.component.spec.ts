@@ -552,13 +552,15 @@ describe('SubmissionSectionFormComponent test suite', () => {
       const sectionData = {};
       formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('local.sponsor');
       formOperationsService.getFieldValueFromChangeEvent.and.returnValue({ value: EU_SPONSOR });
-      formService.isValid.and.returnValue(observableOf(true));
       submissionObjectDataService.getHrefByID.and.returnValue(observableOf('testUrl'));
-      formConfigService.findByHref.and.returnValue(observableOf(testFormConfiguration));
       sectionsServiceStub.getSectionData.and.returnValue(observableOf(sectionData));
       sectionsServiceStub.getSectionServerErrors.and.returnValue(observableOf([]));
       translateService.get.and.returnValue(observableOf('test'));
       formBuilderService.modelFromConfiguration.and.returnValue(testFormModel);
+      formService.isValid.and.returnValue(observableOf(true));
+      formConfigService.findByHref.and.returnValue(createSuccessfulRemoteDataObject$(testFormConfiguration));
+      spyOn(comp, 'initForm');
+      spyOn(comp, 'subscriptions');
 
       const wi = new WorkspaceItem();
       wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldAndValue('local.sponsor', EU_SPONSOR));
@@ -566,13 +568,15 @@ describe('SubmissionSectionFormComponent test suite', () => {
       submissionObjectDataService.findById.and.returnValue(createSuccessfulRemoteDataObject$(wi));
 
       comp.onChange(dynamicFormControlEvent);
+      fixture.detectChanges();
 
       expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
       // delay because in the method `updateItemSponsor()` is interval
-      wait(500);
-      // is called in the `onSectionInit()` method
-      expect(formConfigService.findByHref).toHaveBeenCalled();
-      expect(submissionObjectDataService.findById).toHaveBeenCalled();
+      // wait(500);
+
+      expect(comp.initForm).toHaveBeenCalledWith(sectionData);
+      expect(comp.subscriptions).toHaveBeenCalled();
+
 
     });
   });
