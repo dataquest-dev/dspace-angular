@@ -539,6 +539,19 @@ export class AdminSidebarComponent extends MenuComponent implements OnInit {
           icon: 'user-check',
           index: 11
         },
+        /* Handle table */
+        {
+          id: 'handle_table',
+          active: false,
+          visible: authorized,
+          model: {
+            type: MenuItemType.LINK,
+            text: 'menu.section.handle',
+            link: '/admin/handles'
+          } as LinkMenuItemModel,
+          icon: 'table',
+          index: 12
+        },
       ];
 
       menuList.forEach((menuSection) => this.menuService.addSection(this.menuID, Object.assign(menuSection, {

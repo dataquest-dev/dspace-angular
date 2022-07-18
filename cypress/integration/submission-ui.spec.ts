@@ -1,9 +1,11 @@
-const password = 'admin';
-const email = 'test@test.edu';
+import { TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD } from '../support';
+
+const password = TEST_ADMIN_PASSWORD;
+const email = TEST_ADMIN_EMAIL;
 const collectionName = 'Col';
 const communityName = 'Com';
 
-const loginProcess = {
+export const loginProcess = {
   clickOnLoginDropdown() {
     cy.get('.navbar-container .dropdownLogin ').click();
   },
