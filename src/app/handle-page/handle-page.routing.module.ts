@@ -5,8 +5,8 @@ import { I18nBreadcrumbResolver } from '../core/breadcrumbs/i18n-breadcrumb.reso
 import {
   SiteAdministratorGuard
 } from '../core/data/feature-authorization/feature-authorization-guard/site-administrator.guard';
-import { HandleTablePageModule } from './handle-table-page.module';
-import {HandleTablePageComponent} from './handle-table-page/handle-table-page.component';
+import { HandlePageModule } from './handle-page.module';
+import {HandlePageComponent} from './handle-page.component';
 
 @NgModule({
   imports: [
@@ -19,11 +19,11 @@ import {HandleTablePageComponent} from './handle-table-page/handle-table-page.co
           title: 'home.top-level-communities.help',
         },
         canActivate: [SiteAdministratorGuard],
-        component: HandleTablePageComponent
+        component: HandlePageComponent
       }
     ])
   ]
 })
-export class HandleTablePageRoutingModule {
+export class HandlePageRoutingModule {
 
 }

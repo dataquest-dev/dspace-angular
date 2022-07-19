@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HandleTablePageComponent } from './handle-table-page.component';
+import { HandlePageComponent } from './handle-page.component';
 
 describe('HandleTableComponent', () => {
-  let component: HandleTablePageComponent;
-  let fixture: ComponentFixture<HandleTablePageComponent>;
+  let component: HandlePageComponent;
+  let fixture: ComponentFixture<HandlePageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HandleTablePageComponent ]
+      declarations: [ HandlePageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HandleTablePageComponent);
+    fixture = TestBed.createComponent(HandlePageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

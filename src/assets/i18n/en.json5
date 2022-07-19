@@ -1571,9 +1571,23 @@
   "home.top-level-communities.help": "Select a community to browse its collections.",
 
 
-  "handle-table.breadcrumbs": "Handle Table",
+  "handle-table.breadcrumbs": "Handles",
 
-  "handle-table-page.title": "Handle Table",
+  "handle-page.title": "Handles",
+
+  "handle-table.title": "Handle List",
+
+  "handle-table.table.handle": "Handle",
+
+  "handle-table.table.internal": "Internal",
+
+  "handle-table.table.url": "URL",
+
+  "handle-table.table.resource-type": "Resource type",
+
+  "handle-table.table.resource-id": "Resource id",
+
+  "handle-global-actions.title": "Global Actions",
 
 
   "info.end-user-agreement.accept": "I have read and I agree to the End User Agreement",
