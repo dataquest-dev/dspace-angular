@@ -1571,6 +1571,10 @@
   "home.top-level-communities.help": "Select a community to browse its collections.",
 
 
+  "handle-table.breadcrumbs": "Handle Table",
+
+  "handle-table-page.title": "Handle Table",
+
 
   "info.end-user-agreement.accept": "I have read and I agree to the End User Agreement",
 
@@ -4165,5 +4169,6 @@
 
   "idle-modal.log-out": "Log out",
 
-  "idle-modal.extend-session": "Extend session"
+  "idle-modal.extend-session": "Extend session",
+
 }
