@@ -30,7 +30,7 @@ import {EditHandlePageComponent} from './edit-handle-page/edit-handle-page.compo
         path: HANDLE_TABLE_NEW_HANDLE_PATH,
         resolve: { breadcrumb: I18nBreadcrumbResolver },
         data: {
-          breadcrumbKey: 'new-handle',
+          breadcrumbKey: 'handle-table.new-handle',
         },
         component: NewHandlePageComponent,
       },
@@ -38,7 +38,7 @@ import {EditHandlePageComponent} from './edit-handle-page/edit-handle-page.compo
         path: HANDLE_TABLE_EDIT_HANDLE_PATH,
         resolve: { breadcrumb: I18nBreadcrumbResolver },
         data: {
-          breadcrumbKey: 'edit-handle',
+          breadcrumbKey: 'handle-table.edit-handle',
         },
         component: EditHandlePageComponent,
       },

@@ -7,8 +7,7 @@
 
   <div *ngVar="(handlesRD$ | async)?.payload as handles">
     <div class="mb-2">
-      <ds-pagination
-                     (paginationChange)="onPageChange()"
+      <ds-pagination (paginationChange)="onPageChange()"
                      [hideGear]="true"
                      [hidePagerWhenSinglePage]="true"
                      [paginationOptions]="options"
@@ -51,9 +50,16 @@
         <ds-loading *ngIf="isLoading" class="text-center"></ds-loading>
       </ds-pagination>
       <div>
-        <button type="button" class="btn btn-success" [routerLink]="[handleRoute, newHandlePath]">{{'handle-table.button.new-handle' | translate}}</button>
-        <button type="button" class="btn btn-warning" [routerLink]="[handleRoute, editHandlePath]">{{'handle-table.button.edit-handle' | translate}}</button>
-        <button type="button" class="btn btn-danger" (click)="deleteHandles()">{{'handle-table.button.delete-handle' | translate}}</button>
+        <button type="button" class="btn btn-success"
+                [routerLink]="[handleRoute, newHandlePath]">
+          {{'handle-table.button.new-handle' | translate}}
+        </button>
+        <button type="button" class="btn btn-warning" (click)="redirectWithHandleAndURL()">
+          {{'handle-table.button.edit-handle' | translate}}
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteHandles()">
+          {{'handle-table.button.delete-handle' | translate}}
+        </button>
       </div>
     </div>
   </div>

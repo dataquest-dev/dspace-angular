@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'ds-edit-handle-page',
@@ -7,10 +8,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditHandlePageComponent implements OnInit {
 
-  constructor() { }
+  handle: string;
+
+  url: string;
+
+  archive = false;
+
+  constructor(private route: ActivatedRoute) {
+
+  }
 
   ngOnInit(): void {
-    console.log('INIT')
+    this.handle = this.route.snapshot.queryParams.handle;
+    this.url = this.route.snapshot.queryParams.url;
+  }
+
+  onClickSubmit(value) {
+    // edit handlegn
+    console.log('submit', value);
   }
 
 }

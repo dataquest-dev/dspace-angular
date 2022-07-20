@@ -22,6 +22,8 @@ import {ObjectSelectService} from '../../shared/object-select/object-select.serv
 import {AuthorizationDataService} from '../../core/data/feature-authorization/authorization-data.service';
 import {getHandleTableModulePath} from '../../app-routing-paths';
 import {HANDLE_TABLE_EDIT_HANDLE_PATH, HANDLE_TABLE_NEW_HANDLE_PATH} from '../handle-page-routing-paths';
+import {isEmpty} from '../../shared/empty.util';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'ds-handle-table',
@@ -33,7 +35,8 @@ export class HandleTableComponent extends ObjectSelectComponent<Handle> implemen
   constructor(private handleDataService: HandleDataService,
               private paginationService: PaginationService,
               protected objectSelectService: ObjectSelectService,
-              protected authorizationService: AuthorizationDataService) {
+              protected authorizationService: AuthorizationDataService,
+              public router: Router) {
     super(objectSelectService, authorizationService);
   }
 
@@ -120,6 +123,25 @@ export class HandleTableComponent extends ObjectSelectComponent<Handle> implemen
       selectedHandlesIds = sele;
     });
     return selectedHandlesIds;
+  }
+
+  redirectWithHandleAndURL() {
+    const lastIDOfSelectedHandle = this.getSelectedHandles().pop();
+
+    // check if is selected some handle
+    if (isEmpty(lastIDOfSelectedHandle)) {
+      return;
+    }
+
+    this.handlesRD$.subscribe((handleRD) => {
+      handleRD.payload.page.forEach(handle => {
+        if (handle.id.toString() === lastIDOfSelectedHandle) {
+          // @TODO add URL to the handle object
+          this.router.navigate([this.handleRoute, this.editHandlePath],
+            { queryParams: { handle: handle.handle, url: 'handle.url' } });
+        }
+      });
+    });
   }
 
   deleteHandles() {
