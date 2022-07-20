@@ -24,20 +24,22 @@ import {getHandleTableModulePath} from '../../app-routing-paths';
 import {HANDLE_TABLE_EDIT_HANDLE_PATH, HANDLE_TABLE_NEW_HANDLE_PATH} from '../handle-page-routing-paths';
 import {isEmpty} from '../../shared/empty.util';
 import {Router} from '@angular/router';
+import {Operation} from 'fast-json-patch';
+import {DeleteRequest, PatchRequest} from '../../core/data/request.models';
+import {RequestService} from '../../core/data/request.service';
 
 @Component({
   selector: 'ds-handle-table',
   templateUrl: './handle-table.component.html',
   styleUrls: ['./handle-table.component.scss']
 })
-export class HandleTableComponent extends ObjectSelectComponent<Handle> implements OnInit {
+export class HandleTableComponent implements OnInit {
 
   constructor(private handleDataService: HandleDataService,
               private paginationService: PaginationService,
-              protected objectSelectService: ObjectSelectService,
               protected authorizationService: AuthorizationDataService,
-              public router: Router) {
-    super(objectSelectService, authorizationService);
+              public router: Router,
+              private requestService: RequestService) {
   }
 
   /**
@@ -70,6 +72,8 @@ export class HandleTableComponent extends ObjectSelectComponent<Handle> implemen
   newHandlePath = HANDLE_TABLE_NEW_HANDLE_PATH;
 
   editHandlePath = HANDLE_TABLE_EDIT_HANDLE_PATH;
+
+  selectedHandle: number;
 
   ngOnInit(): void {
     this.getAllHandles(true);
@@ -116,17 +120,22 @@ export class HandleTableComponent extends ObjectSelectComponent<Handle> implemen
     }
   }
 
-  getSelectedHandles() {
-    let selectedHandlesIds = [];
+  getSelectedHandle() {
+    // let selectedHandleId = [];
 
-    this.objectSelectService.getAllSelected(this.key).subscribe(sele => {
-      selectedHandlesIds = sele;
-    });
-    return selectedHandlesIds;
+    // this.objectSelectService.getAllSelected(this.key).subscribe(sele => {
+    //   selectedHandlesIds = sele;
+    // });
+    // return selectedHandlesIds;
   }
 
-  redirectWithHandleAndURL() {
-    const lastIDOfSelectedHandle = this.getSelectedHandles().pop();
+  switchSelectedHandle(handleId) {
+    console.log('handleId:', handleId);
+    this.selectedHandle = handleId;
+  }
+
+  redirectWithHandleParams() {
+    const lastIDOfSelectedHandle = this.selectedHandle;
 
     // check if is selected some handle
     if (isEmpty(lastIDOfSelectedHandle)) {
@@ -135,22 +144,35 @@ export class HandleTableComponent extends ObjectSelectComponent<Handle> implemen
 
     this.handlesRD$.subscribe((handleRD) => {
       handleRD.payload.page.forEach(handle => {
-        if (handle.id.toString() === lastIDOfSelectedHandle) {
+        if (handle.id === lastIDOfSelectedHandle) {
           // @TODO add URL to the handle object
           this.router.navigate([this.handleRoute, this.editHandlePath],
-            { queryParams: { handle: handle.handle, url: 'handle.url' } });
+            { queryParams: { id: handle.id, _selflink: handle._links.self.href, handle: handle.handle, url: 'handle.url' } });
+        }
+      });
+    });
+
+    // @TODO add notification if none handle was selected
+  }
+
+  deleteHandles() {
+    const lastIDOfSelectedHandle = this.selectedHandle;
+
+    // check if is selected some handle
+    if (isEmpty(lastIDOfSelectedHandle)) {
+      return;
+    }
+
+    this.handlesRD$.subscribe((handleRD) => {
+      handleRD.payload.page.forEach(handle => {
+        if (handle.id === lastIDOfSelectedHandle) {
+          const requestId = this.requestService.generateRequestId();
+          const patchRequest = new DeleteRequest(requestId, handle._links.self.href);
+          // call patch request
+          return this.requestService.send(patchRequest);
         }
       });
     });
   }
-
-  deleteHandles() {
-    console.log('selected handles', this.getSelectedHandles());
-  }
-
-
-
-  // define table structure
-  // load init data from handle repository
 
 }

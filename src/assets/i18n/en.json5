@@ -1573,9 +1573,34 @@
 
   "handle-table.breadcrumbs": "Handles",
 
-  "new-handle.breadcrumbs": "New Handle",
 
-  "edit-handle.breadcrumbs": "Edit Handle",
+  "handle-table.new-handle.breadcrumbs": "New Handle",
+
+  "handle-table.new-handle.form-handle-input-text": "Handle",
+
+  "handle-table.new-handle.form-handle-input-placeholder": "Enter handle",
+
+  "handle-table.new-handle.form-url-input-text": "URL",
+
+  "handle-table.new-handle.form-url-input-placeholder": "Enter URL",
+
+  "handle-table.new-handle.form-button-submit": "Submit",
+
+
+  "handle-table.edit-handle.breadcrumbs": "Edit Handle",
+
+  "handle-table.edit-handle.form-handle-input-text": "Handle",
+
+  "handle-table.edit-handle.form-handle-input-placeholder": "Enter a new handle",
+
+  "handle-table.edit-handle.form-url-input-text": "URL",
+
+  "handle-table.edit-handle.form-url-input-placeholder": "Enter a new URL",
+
+  "handle-table.edit-handle.form-archive-input-check": "Archive old handle?",
+
+  "handle-table.edit-handle.form-button-submit": "Submit",
+
 
   "handle-page.title": "Handles",
 

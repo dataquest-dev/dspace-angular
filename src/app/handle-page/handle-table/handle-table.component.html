@@ -27,7 +27,7 @@
           </thead>
           <tbody>
           <tr *ngFor="let handle of handles?.page" [id]="'handle-row-' + handle.id">
-            <td><input class="collection-checkbox" [ngModel]="getSelected(handle.id) | async" (change)="switch(handle.id)" type="checkbox" name="{{handle.id}}"></td>
+            <td><input class="collection-checkbox" [ngModel]="selectedHandle === handle.id" (change)="switchSelectedHandle(handle.id)" type="checkbox" name="{{handle.id}}"></td>
             <td class="version-row-element-version">
               {{handle?.handle}}
             </td>
@@ -54,7 +54,7 @@
                 [routerLink]="[handleRoute, newHandlePath]">
           {{'handle-table.button.new-handle' | translate}}
         </button>
-        <button type="button" class="btn btn-warning" (click)="redirectWithHandleAndURL()">
+        <button type="button" class="btn btn-warning" (click)="redirectWithHandleParams()">
           {{'handle-table.button.edit-handle' | translate}}
         </button>
         <button type="button" class="btn btn-danger" (click)="deleteHandles()">
