@@ -51,31 +51,7 @@ export class Handle extends ListableObject implements HALResource {
   @deserialize
   _links: {
     self: HALLink,
-    dspaceObject: HALLink
   };
-
-  /**
-   * The MetadataSchema for this MetadataField
-   * Will be undefined unless the schema {@link HALLink} has been resolved.
-   */
-  @link(DSPACE_OBJECT)
-  public dspaceObject?: Observable<RemoteData<DSpaceObject>>;
-
-  // /**
-  //  * Method to print this metadata field as a string without the schema
-  //  * @param separator The separator between element and qualifier in the string
-  //  */
-  // toString(separator: string = '.'): string {
-  //   let key = this.;
-  //   if (isNotEmpty(this.qualifier)) {
-  //     key += separator + this.qualifier;
-  //   }
-  //   return key;
-  // }
-
-  toString(): string {
-    return 'fwefwe';
-  }
 
   /**
    * Method that returns as which type of object this object should be rendered
