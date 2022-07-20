@@ -12,23 +12,31 @@ import {PaginatedSearchOptions} from '../../shared/search/models/paginated-searc
 import {followLink} from '../../shared/utils/follow-link-config.model';
 import {
   getAllCompletedRemoteData,
-  getFirstCompletedRemoteData,
+  getFirstCompletedRemoteData, getFirstSucceededRemoteData,
   getFirstSucceededRemoteDataPayload, getPaginatedListPayload, getRemoteDataPayload
 } from '../../core/shared/operators';
 import {PaginationService} from '../../core/pagination/pagination.service';
+import {ObjectSelectComponent} from '../../shared/object-select/object-select/object-select.component';
+import {Collection} from '../../core/shared/collection.model';
+import {ObjectSelectService} from '../../shared/object-select/object-select.service';
+import {AuthorizationDataService} from '../../core/data/feature-authorization/authorization-data.service';
 
 @Component({
   selector: 'ds-handle-table',
   templateUrl: './handle-table.component.html',
   styleUrls: ['./handle-table.component.scss']
 })
-export class HandleTableComponent implements OnInit {
+export class HandleTableComponent extends ObjectSelectComponent<Handle> implements OnInit {
 
   constructor(private handleDataService: HandleDataService,
-              private paginationService: PaginationService) { }
+              private paginationService: PaginationService,
+              protected objectSelectService: ObjectSelectService,
+              protected authorizationService: AuthorizationDataService) {
+    super(objectSelectService, authorizationService);
+  }
 
   /**
-   * The list of Handle object as observable object
+   * The list of Handle object as BehaviorSubject object
    */
   handlesRD$: BehaviorSubject<RemoteData<PaginatedList<Handle>>> = new BehaviorSubject<RemoteData<PaginatedList<Handle>>>(null);
 
@@ -47,22 +55,27 @@ export class HandleTableComponent implements OnInit {
     pageSize: this.pageSize
   });
 
+  isLoading = false;
+
   ngOnInit(): void {
     this.getAllHandles();
   }
 
   getAllHandles() {
+    this.handlesRD$ = new BehaviorSubject<RemoteData<PaginatedList<Handle>>>(null);
+    this.isLoading = true;
     this.paginationService.getCurrentPagination(this.options.id, this.options).pipe(
       switchMap((currentPagination) => {
         return this.handleDataService.findAll( {
             currentPage: currentPagination.currentPage,
-            elementsPerPage: currentPagination.pageSize
+            elementsPerPage: currentPagination.pageSize,
           }
         );
       }),
-      getFirstCompletedRemoteData(),
+      getFirstSucceededRemoteData(),
     ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
       this.handlesRD$.next(res);
+      this.isLoading = false;
     });
   }
 
@@ -71,7 +84,21 @@ export class HandleTableComponent implements OnInit {
    */
   onPageChange() {
     this.getAllHandles();
+    // get selected handles
+    const selected = this.objectSelectService.getAllSelected(this.key).subscribe(sele => {
+      return sele;
+    });
+
+    if (!this.isLoading) {
+      this.handlesRD$.pipe(
+        getRemoteDataPayload()
+      ).subscribe(rm => {
+        return rm;
+      });
+    }
   }
+
+
 
   // define table structure
   // load init data from handle repository
