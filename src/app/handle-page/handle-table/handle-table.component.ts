@@ -20,6 +20,7 @@ import {ObjectSelectComponent} from '../../shared/object-select/object-select/ob
 import {Collection} from '../../core/shared/collection.model';
 import {ObjectSelectService} from '../../shared/object-select/object-select.service';
 import {AuthorizationDataService} from '../../core/data/feature-authorization/authorization-data.service';
+import {getHandleTableModulePath} from '../../app-routing-paths';
 
 @Component({
   selector: 'ds-handle-table',
@@ -55,10 +56,16 @@ export class HandleTableComponent extends ObjectSelectComponent<Handle> implemen
     pageSize: this.pageSize
   });
 
+  /**
+   * @TODO docs
+   */
   isLoading = false;
+
+  handleRoute: string;
 
   ngOnInit(): void {
     this.getAllHandles(true);
+    this.handleRoute = getHandleTableModulePath();
   }
 
   getAllHandles(init = false) {
@@ -91,10 +98,6 @@ export class HandleTableComponent extends ObjectSelectComponent<Handle> implemen
    */
   onPageChange() {
     this.getAllHandles();
-    // get selected handles
-    const selected = this.objectSelectService.getAllSelected(this.key).subscribe(sele => {
-      return sele;
-    });
 
     if (!this.isLoading) {
       this.handlesRD$.pipe(
@@ -103,6 +106,19 @@ export class HandleTableComponent extends ObjectSelectComponent<Handle> implemen
         return rm;
       });
     }
+  }
+
+  getSelectedHandles() {
+    let selectedHandlesIds = [];
+
+    this.objectSelectService.getAllSelected(this.key).subscribe(sele => {
+      selectedHandlesIds = sele;
+    });
+    return selectedHandlesIds;
+  }
+
+  deleteHandles() {
+    console.log('selected handles', this.getSelectedHandles());
   }
 
 

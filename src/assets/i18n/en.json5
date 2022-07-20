@@ -1587,6 +1587,12 @@
 
   "handle-table.table.resource-id": "Resource id",
 
+  "handle-table.button.new-handle": "New external handle",
+
+  "handle-table.button.edit-handle": "Edit handle",
+
+  "handle-table.button.delete-handle": "Delete handle",
+
   "handle-global-actions.title": "Global Actions",
 
 
