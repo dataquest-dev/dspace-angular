@@ -58,24 +58,31 @@ export class HandleTableComponent extends ObjectSelectComponent<Handle> implemen
   isLoading = false;
 
   ngOnInit(): void {
-    this.getAllHandles();
+    this.getAllHandles(true);
   }
 
-  getAllHandles() {
+  getAllHandles(init = false) {
     this.handlesRD$ = new BehaviorSubject<RemoteData<PaginatedList<Handle>>>(null);
     this.isLoading = true;
-    this.paginationService.getCurrentPagination(this.options.id, this.options).pipe(
-      switchMap((currentPagination) => {
-        return this.handleDataService.findAll( {
-            currentPage: currentPagination.currentPage,
-            elementsPerPage: currentPagination.pageSize,
-          }
-        );
-      }),
-      getFirstSucceededRemoteData(),
-    ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
-      this.handlesRD$.next(res);
-      this.isLoading = false;
+
+    const currentPagination$ = this.paginationService.getCurrentPagination(this.options.id, this.options);
+    currentPagination$.subscribe(currentPagination => {
+      // check if was changed options.currentPage because sometimes it send request with old pagination options
+      if (currentPagination.currentPage !== this.options.currentPage || init) {
+        this.paginationService.getCurrentPagination(currentPagination.id, currentPagination).pipe(
+          switchMap(() => {
+            return this.handleDataService.findAll( {
+                currentPage: currentPagination.currentPage,
+                elementsPerPage: currentPagination.pageSize,
+              }
+            );
+          }),
+          getFirstSucceededRemoteData(),
+        ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
+          this.handlesRD$.next(res);
+          this.isLoading = false;
+        });
+      }
     });
   }
 
