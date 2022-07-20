@@ -1573,6 +1573,10 @@
 
   "handle-table.breadcrumbs": "Handles",
 
+  "new-handle.breadcrumbs": "New Handle",
+
+  "edit-handle.breadcrumbs": "Edit Handle",
+
   "handle-page.title": "Handles",
 
   "handle-table.title": "Handle List",

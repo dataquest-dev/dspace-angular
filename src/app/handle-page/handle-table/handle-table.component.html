@@ -51,8 +51,8 @@
         <ds-loading *ngIf="isLoading" class="text-center"></ds-loading>
       </ds-pagination>
       <div>
-        <button type="button" class="btn btn-success" [routerLink]="[handleRoute, 'new-handle']">{{'handle-table.button.new-handle' | translate}}</button>
-        <button type="button" class="btn btn-warning" [routerLink]="[handleRoute, 'edit-handle']">{{'handle-table.button.edit-handle' | translate}}</button>
+        <button type="button" class="btn btn-success" [routerLink]="[handleRoute, newHandlePath]">{{'handle-table.button.new-handle' | translate}}</button>
+        <button type="button" class="btn btn-warning" [routerLink]="[handleRoute, editHandlePath]">{{'handle-table.button.edit-handle' | translate}}</button>
         <button type="button" class="btn btn-danger" (click)="deleteHandles()">{{'handle-table.button.delete-handle' | translate}}</button>
       </div>
     </div>

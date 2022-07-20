@@ -21,6 +21,7 @@ import {Collection} from '../../core/shared/collection.model';
 import {ObjectSelectService} from '../../shared/object-select/object-select.service';
 import {AuthorizationDataService} from '../../core/data/feature-authorization/authorization-data.service';
 import {getHandleTableModulePath} from '../../app-routing-paths';
+import {HANDLE_TABLE_EDIT_HANDLE_PATH, HANDLE_TABLE_NEW_HANDLE_PATH} from '../handle-page-routing-paths';
 
 @Component({
   selector: 'ds-handle-table',
@@ -62,6 +63,10 @@ export class HandleTableComponent extends ObjectSelectComponent<Handle> implemen
   isLoading = false;
 
   handleRoute: string;
+
+  newHandlePath = HANDLE_TABLE_NEW_HANDLE_PATH;
+
+  editHandlePath = HANDLE_TABLE_EDIT_HANDLE_PATH;
 
   ngOnInit(): void {
     this.getAllHandles(true);

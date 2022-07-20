@@ -9,6 +9,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';
 import { HandleTableComponent } from './handle-table/handle-table.component';
 import { HandleGlobalActionsComponent } from './handle-global-actions/handle-global-actions.component';
+import { NewHandlePageComponent } from './new-handle-page/new-handle-page.component';
+import { EditHandlePageComponent } from './edit-handle-page/edit-handle-page.component';
 
 @NgModule({
   imports: [
@@ -20,7 +22,9 @@ import { HandleGlobalActionsComponent } from './handle-global-actions/handle-glo
   declarations: [
     HandlePageComponent,
     HandleTableComponent,
-    HandleGlobalActionsComponent
+    HandleGlobalActionsComponent,
+    NewHandlePageComponent,
+    EditHandlePageComponent
   ]
 })
 /**

@@ -216,7 +216,8 @@ import { ServerCheckGuard } from './core/server-check/server-check.guard';
           },
           {
             path: HANDLE_TABLE_MODULE_PATH,
-            loadChildren: () => import('./handle-page/handle-page.module').then((m) => m.HandlePageModule)
+            loadChildren: () => import('./handle-page/handle-page.module').then((m) => m.HandlePageModule),
+            canActivate: [SiteAdministratorGuard],
           },
           { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent },
         ]
