@@ -54,10 +54,14 @@
                 [routerLink]="[handleRoute, newHandlePath]">
           {{'handle-table.button.new-handle' | translate}}
         </button>
-        <button type="button" class="btn btn-warning" (click)="redirectWithHandleParams()">
+        <button type="button" class="btn btn-warning"
+                (click)="redirectWithHandleParams()"
+                [disabled]="selectedHandle === null">
           {{'handle-table.button.edit-handle' | translate}}
         </button>
-        <button type="button" class="btn btn-danger" (click)="deleteHandles()">
+        <button type="button" class="btn btn-danger"
+                (click)="deleteHandles()"
+                [disabled]="selectedHandle === null">
           {{'handle-table.button.delete-handle' | translate}}
         </button>
       </div>

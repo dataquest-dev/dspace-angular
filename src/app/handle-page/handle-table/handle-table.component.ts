@@ -73,7 +73,7 @@ export class HandleTableComponent implements OnInit {
 
   editHandlePath = HANDLE_TABLE_EDIT_HANDLE_PATH;
 
-  selectedHandle: number;
+  selectedHandle = null;
 
   ngOnInit(): void {
     this.getAllHandles(true);
@@ -130,8 +130,11 @@ export class HandleTableComponent implements OnInit {
   }
 
   switchSelectedHandle(handleId) {
-    console.log('handleId:', handleId);
-    this.selectedHandle = handleId;
+    if (this.selectedHandle === handleId) {
+      this.selectedHandle = null;
+    } else {
+      this.selectedHandle = handleId;
+    }
   }
 
   redirectWithHandleParams() {
