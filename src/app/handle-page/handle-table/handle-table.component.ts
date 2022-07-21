@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {RemoteData} from '../../core/data/remote-data';
 import {PaginatedList} from '../../core/data/paginated-list.model';
@@ -20,13 +20,14 @@ import {ObjectSelectComponent} from '../../shared/object-select/object-select/ob
 import {Collection} from '../../core/shared/collection.model';
 import {ObjectSelectService} from '../../shared/object-select/object-select.service';
 import {AuthorizationDataService} from '../../core/data/feature-authorization/authorization-data.service';
-import {getHandleTableModulePath} from '../../app-routing-paths';
+import {getHandleTableModulePath, getPageNotFoundRoute} from '../../app-routing-paths';
 import {HANDLE_TABLE_EDIT_HANDLE_PATH, HANDLE_TABLE_NEW_HANDLE_PATH} from '../handle-page-routing-paths';
-import {isEmpty} from '../../shared/empty.util';
+import {isEmpty, isNotEmpty} from '../../shared/empty.util';
 import {Router} from '@angular/router';
 import {Operation} from 'fast-json-patch';
 import {DeleteRequest, PatchRequest} from '../../core/data/request.models';
 import {RequestService} from '../../core/data/request.service';
+import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 
 @Component({
   selector: 'ds-handle-table',
@@ -39,7 +40,8 @@ export class HandleTableComponent implements OnInit {
               private paginationService: PaginationService,
               protected authorizationService: AuthorizationDataService,
               public router: Router,
-              private requestService: RequestService) {
+              private requestService: RequestService,
+              private cdr: ChangeDetectorRef) {
   }
 
   /**
@@ -93,7 +95,7 @@ export class HandleTableComponent implements OnInit {
             return this.handleDataService.findAll( {
                 currentPage: currentPagination.currentPage,
                 elementsPerPage: currentPagination.pageSize,
-              }
+              }, false
             );
           }),
           getFirstSucceededRemoteData(),
@@ -110,23 +112,6 @@ export class HandleTableComponent implements OnInit {
    */
   onPageChange() {
     this.getAllHandles();
-
-    if (!this.isLoading) {
-      this.handlesRD$.pipe(
-        getRemoteDataPayload()
-      ).subscribe(rm => {
-        return rm;
-      });
-    }
-  }
-
-  getSelectedHandle() {
-    // let selectedHandleId = [];
-
-    // this.objectSelectService.getAllSelected(this.key).subscribe(sele => {
-    //   selectedHandlesIds = sele;
-    // });
-    // return selectedHandlesIds;
   }
 
   switchSelectedHandle(handleId) {
@@ -166,16 +151,61 @@ export class HandleTableComponent implements OnInit {
       return;
     }
 
+    // delete handle
     this.handlesRD$.subscribe((handleRD) => {
       handleRD.payload.page.forEach(handle => {
         if (handle.id === lastIDOfSelectedHandle) {
           const requestId = this.requestService.generateRequestId();
-          const patchRequest = new DeleteRequest(requestId, handle._links.self.href);
-          // call patch request
-          return this.requestService.send(patchRequest);
+          const deleteRequest = new DeleteRequest(requestId, handle._links.self.href);
+          // call delete request
+          this.requestService.send(deleteRequest);
+          // unselect deleted handle
+          this.refreshTableAfterDelete(handle.id);
         }
       });
     });
+  }
+
+  private refreshTableAfterDelete(deletedHandleId) {
+    let counter = 0;
+    // The timeout for checking if the handle was daleted in the database
+    // The timeout is set to 20 seconds by default.
+    const refreshTimeout = 20;
+
+    this.isLoading = true;
+    const interval = setInterval( () => {
+      let isHandleInTable = false;
+      // Load handle from the DB
+      this.handleDataService.findAll( {
+          currentPage: this.options.currentPage,
+          elementsPerPage: this.options.pageSize,
+        }, false
+      ).pipe(
+        getFirstSucceededRemoteData(),
+        getRemoteDataPayload()
+      ).subscribe(handles => {
+        // check if the handle is in the table data
+        if (handles.page.some(handle => handle.id === deletedHandleId)) {
+          isHandleInTable = true;
+        }
+
+        // reload table if the handle was removed from the database
+        if (!isHandleInTable) {
+          this.switchSelectedHandle(deletedHandleId);
+          this.getAllHandles(true);
+          this.cdr.detectChanges();
+          clearInterval(interval);
+        }
+      });
+
+      // Clear interval after 20s timeout
+      if (counter === ( refreshTimeout * 1000 ) / 250) {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+        clearInterval(interval);
+      }
+      counter++;
+    }, 250 );
   }
 
 }
