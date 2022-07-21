@@ -25,6 +25,7 @@ import {EditHandlePageComponent} from './edit-handle-page/edit-handle-page.compo
           breadcrumbKey: 'handle-table',
         },
         component: HandlePageComponent,
+        pathMatch: 'full'
       },
       {
         path: HANDLE_TABLE_NEW_HANDLE_PATH,

@@ -17,7 +17,6 @@ export class HandlePageComponent implements OnInit {
    * Initialize the component
    */
   ngOnInit(): void {
-    console.log('init');
   }
 
   ngAfterViewInit() {

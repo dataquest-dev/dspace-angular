@@ -28,6 +28,7 @@ import {Operation} from 'fast-json-patch';
 import {DeleteRequest, PatchRequest} from '../../core/data/request.models';
 import {RequestService} from '../../core/data/request.service';
 import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
+import {defaultPagination, paginationID} from './handle-table-pagination';
 
 @Component({
   selector: 'ds-handle-table',
@@ -58,11 +59,7 @@ export class HandleTableComponent implements OnInit {
    * The page options to use for fetching the versions
    * Start at page 1 and always use the set page size
    */
-  options = Object.assign(new PaginationComponentOptions(), {
-    id: 'hdl',
-    currentPage: 1,
-    pageSize: this.pageSize
-  });
+  options: PaginationComponentOptions;
 
   /**
    * @TODO docs
@@ -78,8 +75,18 @@ export class HandleTableComponent implements OnInit {
   selectedHandle = null;
 
   ngOnInit(): void {
-    this.getAllHandles(true);
+
     this.handleRoute = getHandleTableModulePath();
+    this.initializePaginationOptions();
+    // this.resetRoute();
+    this.getAllHandles(true);
+    // this.paginationService.clearPagination(paginationID);
+    // this.resetRoute();
+    this.cdr.detectChanges();
+  }
+
+  private initializePaginationOptions() {
+    this.options = defaultPagination;
   }
 
   getAllHandles(init = false) {
@@ -90,19 +97,32 @@ export class HandleTableComponent implements OnInit {
     currentPagination$.subscribe(currentPagination => {
       // check if was changed options.currentPage because sometimes it send request with old pagination options
       if (currentPagination.currentPage !== this.options.currentPage || init) {
-        this.paginationService.getCurrentPagination(currentPagination.id, currentPagination).pipe(
-          switchMap(() => {
-            return this.handleDataService.findAll( {
-                currentPage: currentPagination.currentPage,
-                elementsPerPage: currentPagination.pageSize,
-              }, false
-            );
-          }),
-          getFirstSucceededRemoteData(),
+        // this.paginationService.getCurrentPagination(currentPagination.id, currentPagination).pipe(
+        this.handleDataService.findAll( {
+            currentPage: currentPagination.currentPage,
+            elementsPerPage: currentPagination.pageSize,
+          }, false
+        ).pipe(
+          getFirstSucceededRemoteData()
         ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
           this.handlesRD$.next(res);
           this.isLoading = false;
+          this.paginationService.clearPagination(paginationID);
+          this.paginationService.updateRouteWithUrl(paginationID, [this.handleRoute], {
+            page: null,
+            pageSize: null
+          });
+          this.cdr.detectChanges();
         });
+          // switchMap(() => {
+          //   this.options.currentPage = currentPagination.currentPage;
+          //   return
+          // }),
+          // getFirstSucceededRemoteData(),
+        // ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
+        //   this.handlesRD$.next(res);
+        //   this.isLoading = false;
+        // });
       }
     });
   }
@@ -133,9 +153,36 @@ export class HandleTableComponent implements OnInit {
     this.handlesRD$.subscribe((handleRD) => {
       handleRD.payload.page.forEach(handle => {
         if (handle.id === lastIDOfSelectedHandle) {
+
+          // this.paginationService.updateRouteWithUrl(paginationID,[getHandleTableModulePath()], {
+          //   page: this.currentPage,
+          //   pageSize: 10
+          // }, {
+          //   handle: null,
+          //   url: null,
+          //   id: null,
+          //   _selflink: null,
+          //   currentPage: null
+          // });
+          this.paginationService.clearPagination(paginationID);
+          this.paginationService.updateRouteWithUrl(paginationID, [this.handleRoute, this.editHandlePath], {
+            page: this.options.currentPage,
+            pageSize: this.options.pageSize
+          }, {
+            id: handle.id, _selflink: handle._links.self.href, handle: handle.handle, url: 'handle.url', currentPage: this.options.currentPage
+          });
+
+          // this.paginationService.clearPagination(paginationID);
+          // this.paginationService.updateRouteWithUrl(paginationID, [this.handleRoute], {
+          //   page: null,
+          //   pageSize: null
+          // });
+          this.cdr.detectChanges();
           // @TODO add URL to the handle object
           this.router.navigate([this.handleRoute, this.editHandlePath],
-            { queryParams: { id: handle.id, _selflink: handle._links.self.href, handle: handle.handle, url: 'handle.url' } });
+            { queryParams: { id: handle.id, _selflink: handle._links.self.href, handle: handle.handle, url: 'handle.url', currentPage: this.options.currentPage } },
+            );
+          // this.cdr.detectChanges();
         }
       });
     });
@@ -206,6 +253,18 @@ export class HandleTableComponent implements OnInit {
       }
       counter++;
     }, 250 );
+  }
+
+  /**
+   * Method to reset the route when the tab is opened to make sure no strange pagination issues appears
+   */
+  resetRoute() {
+    // this.router.resetConfig()ngOnDestroy();
+    // this.router.resetConfig(this.router.config);
+    this.paginationService.updateRouteWithUrl(paginationID,[this.handleRoute], {
+      page: this.options.currentPage,
+      pageSize: this.pageSize
+    });
   }
 
 }
