@@ -42,14 +42,14 @@ export class EditHandlePageComponent implements OnInit {
     this._selflink = this.route.snapshot.queryParams._selflink;
     this.currentPage = this.route.snapshot.queryParams.currentPage;
 
-    this.paginationService.clearPagination(paginationID);
-    this.paginationService.updateRouteWithUrl(paginationID, ['handle-table', 'edit-handle'], {
-      page: null,
-      pageSize: null
-    }, {
-      id: this.id, _selflink: this._selflink, handle: this.handle, url: this.url, currentPage: this.currentPage
-    });
-    this.cdr.detectChanges();
+    // this.paginationService.clearPagination(paginationID);
+    // this.paginationService.updateRouteWithUrl(paginationID, ['handle-table', 'edit-handle'], {
+    //   page: null,
+    //   pageSize: null
+    // }, {
+    //   id: this.id, _selflink: this._selflink, handle: this.handle, url: this.url, currentPage: this.currentPage
+    // });
+    // this.cdr.detectChanges();
     console.log('edit');
   }
 
