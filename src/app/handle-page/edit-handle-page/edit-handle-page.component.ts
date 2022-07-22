@@ -75,22 +75,30 @@ export class EditHandlePageComponent implements OnInit {
     // call patch request
     this.requestService.send(patchRequest);
 
-
-    this.handle = this.route.snapshot.queryParams.handle;
-    this.url = this.route.snapshot.queryParams.url;
-    this.id = this.route.snapshot.queryParams.id;
-    this._selflink = this.route.snapshot.queryParams._selflink;
-    this.currentPage = this.route.snapshot.queryParams.currentPage;
-    // this.paginationService.updateRouteWithUrl(paginationID,[getHandleTableModulePath()], {
-    //   page: this.currentPage,
-    //   pageSize: 10
+    // this.router.navigate([getHandleTableModulePath()], {
+    //   queryParams: {
+    //     handle: null,
+    //     url: null,
+    //     id: null,
+    //     _selflink: null,
+    //     currentPage: null
+    //   }
     // });
-    // this.paginationService.clearPagination(paginationID);
-    // redirect to /handle-table
-    // for redirection use the paginationService because when the page is redirected to the /handle-table there
-    // is loaded paginationService with the `updateRouteWithUrl` method in the `ngOnInit` and then it redirects
-    // back to the /edit-handle page
-    console.log('submit');
+    // this.handle = this.route.snapshot.queryParams.handle;
+    // this.url = this.route.snapshot.queryParams.url;
+    // this.id = this.route.snapshot.queryParams.id;
+    // this._selflink = this.route.snapshot.queryParams._selflink;
+    // this.currentPage = this.route.snapshot.queryParams.currentPage;
+    // // this.paginationService.updateRouteWithUrl(paginationID,[getHandleTableModulePath()], {
+    // //   page: this.currentPage,
+    // //   pageSize: 10
+    // // });
+    // // this.paginationService.clearPagination(paginationID);
+    // // redirect to /handle-table
+    // // for redirection use the paginationService because when the page is redirected to the /handle-table there
+    // // is loaded paginationService with the `updateRouteWithUrl` method in the `ngOnInit` and then it redirects
+    // // back to the /edit-handle page
+    // console.log('submit');
     this.paginationService.updateRouteWithUrl(paginationID,[getHandleTableModulePath()], {
       page: this.currentPage,
       pageSize: 10
