@@ -6,7 +6,7 @@
       <div class="card-text alert alert-info" role="alert">
         {{ 'handle-global-actions.actions-list-message' | translate }}
       </div>
-      <button type="button" class="btn btn-info">
+      <button type="button" class="btn btn-info" [routerLink]="[globalActionsPath]">
         {{'handle-global-actions.button.change-prefix' | translate}}
       </button>
     </div>

@@ -11,6 +11,7 @@ import { HandleTableComponent } from './handle-table/handle-table.component';
 import { HandleGlobalActionsComponent } from './handle-global-actions/handle-global-actions.component';
 import { NewHandlePageComponent } from './new-handle-page/new-handle-page.component';
 import { EditHandlePageComponent } from './edit-handle-page/edit-handle-page.component';
+import { ChangeHandlePrefixPageComponent } from './change-handle-prefix-page/change-handle-prefix-page.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { EditHandlePageComponent } from './edit-handle-page/edit-handle-page.com
     HandleTableComponent,
     HandleGlobalActionsComponent,
     NewHandlePageComponent,
-    EditHandlePageComponent
+    EditHandlePageComponent,
+    ChangeHandlePrefixPageComponent
   ]
 })
 /**
