@@ -1587,7 +1587,7 @@
   "handle-table.new-handle.form-button-submit": "Submit",
 
 
-  "handle-table.new-handle.notify.error": "Server Error - Cannot create a new handle.",
+  "handle-table.new-handle.notify.error": "Server Error - Cannot create a new handle",
 
 
   "handle-table.new-handle.notify.successful": "The new handle was created!",
@@ -1627,7 +1627,12 @@
 
   "handle-table.button.delete-handle": "Delete handle",
 
+
   "handle-global-actions.title": "Global Actions",
+
+  "handle-global-actions.actions-list-message": "This is the list of available global actions.",
+
+  "handle-global-actions.button.change-prefix": "Change handle prefix",
 
 
   "info.end-user-agreement.accept": "I have read and I agree to the End User Agreement",

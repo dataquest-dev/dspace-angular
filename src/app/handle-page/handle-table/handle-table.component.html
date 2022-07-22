@@ -1,72 +1,139 @@
 <div class="container">
-  <div class="row">
-    <div class="col-12 pb-4">
-      <h3 id="header" class="pb-2">{{ 'handle-table.title' | translate }}</h3>
-    </div>
-  </div>
+  <div class="card">
+    <h5 class="card-header">{{ 'handle-table.title' | translate }}</h5>
+    <div class="card-body">
 
-  <div *ngVar="(handlesRD$ | async)?.payload as handles">
-    <div class="mb-2">
-      <ds-pagination (paginationChange)="onPageChange()"
-                     #paginationComponent
-                     [hideGear]="true"
-                     [hidePagerWhenSinglePage]="true"
-                     [paginationOptions]="options"
-                     [pageInfoState]="handles?.pageInfo"
-                     [collectionSize]="handles?.totalElements"
-                     [retainScrollPosition]="true">
-        <table class="table table-striped table-bordered align-middle my-2">
-          <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">{{"handle-table.table.handle" | translate}}</th>
-            <th scope="col">{{"handle-table.table.internal" | translate}}</th>
-            <th scope="col">{{"handle-table.table.url" | translate}}</th>
-            <th scope="col">{{"handle-table.table.resource-type" | translate}}</th>
-            <th scope="col">{{"handle-table.table.resource-id" | translate}}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let handle of handles?.page" [id]="'handle-row-' + handle.id">
-            <td><input class="collection-checkbox" [ngModel]="selectedHandle === handle.id" (change)="switchSelectedHandle(handle.id)" type="checkbox" name="{{handle.id}}"></td>
-            <td class="version-row-element-version">
-              {{handle?.handle}}
-            </td>
-            <td class="version-row-element-editor">
-<!--              {{handle?.internal}}-->
-              Yes
-            </td>
-            <td class="version-row-element-editor">
-              {{handle?.url}}
-            </td>
-            <td class="version-row-element-editor">
-              {{handle?.resourceTypeID}}
-            </td>
-            <td class="version-row-element-editor">
-              {{handle?.id}}
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <ds-loading *ngIf="isLoading" class="text-center"></ds-loading>
-      </ds-pagination>
-      <div>
-        <button type="button" class="btn btn-success"
-                [routerLink]="[handleRoute, newHandlePath]">
-          {{'handle-table.button.new-handle' | translate}}
-        </button>
-        <button type="button" class="btn btn-warning"
-                (click)="redirectWithHandleParams()"
-                [disabled]="selectedHandle === null">
-          {{'handle-table.button.edit-handle' | translate}}
-        </button>
-        <button type="button" class="btn btn-danger"
-                (click)="deleteHandles()"
-                [disabled]="selectedHandle === null">
-          {{'handle-table.button.delete-handle' | translate}}
-        </button>
+      <div *ngVar="(handlesRD$ | async)?.payload as handles">
+        <div class="mb-2">
+          <ds-pagination (paginationChange)="onPageChange()"
+                         [hideGear]="true"
+                         [hidePagerWhenSinglePage]="true"
+                         [paginationOptions]="options"
+                         [pageInfoState]="handles?.pageInfo"
+                         [collectionSize]="handles?.totalElements"
+                         [retainScrollPosition]="true">
+            <table class="table table-striped table-bordered align-middle my-2">
+              <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">{{"handle-table.table.handle" | translate}}</th>
+                <th scope="col">{{"handle-table.table.internal" | translate}}</th>
+                <th scope="col">{{"handle-table.table.url" | translate}}</th>
+                <th scope="col">{{"handle-table.table.resource-type" | translate}}</th>
+                <th scope="col">{{"handle-table.table.resource-id" | translate}}</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let handle of handles?.page" [id]="'handle-row-' + handle.id">
+                <td><input class="collection-checkbox" [ngModel]="selectedHandle === handle.id" (change)="switchSelectedHandle(handle.id)" type="checkbox" name="{{handle.id}}"></td>
+                <td class="version-row-element-version">
+                  {{handle?.handle}}
+                </td>
+                <td class="version-row-element-editor">
+                  <!--              {{handle?.internal}}-->
+                  Yes
+                </td>
+                <td class="version-row-element-editor">
+                  {{handle?.url}}
+                </td>
+                <td class="version-row-element-editor">
+                  {{handle?.resourceTypeID}}
+                </td>
+                <td class="version-row-element-editor">
+                  {{handle?.id}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <ds-loading *ngIf="isLoading" class="text-center"></ds-loading>
+          </ds-pagination>
+          <div>
+            <button type="button" class="btn btn-success"
+                    [routerLink]="[handleRoute, newHandlePath]">
+              {{'handle-table.button.new-handle' | translate}}
+            </button>
+            <button type="button" class="btn btn-warning"
+                    (click)="redirectWithHandleParams()"
+                    [disabled]="selectedHandle === null">
+              {{'handle-table.button.edit-handle' | translate}}
+            </button>
+            <button type="button" class="btn btn-danger"
+                    (click)="deleteHandles()"
+                    [disabled]="selectedHandle === null">
+              {{'handle-table.button.delete-handle' | translate}}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+<!--  <div class="row">-->
+<!--    <div class="col-12 pb-4">-->
+<!--      <h3 id="header" class="pb-2">{{ 'handle-table.title' | translate }}</h3>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div *ngVar="(handlesRD$ | async)?.payload as handles">-->
+<!--    <div class="mb-2">-->
+<!--      <ds-pagination (paginationChange)="onPageChange()"-->
+<!--                     [hideGear]="true"-->
+<!--                     [hidePagerWhenSinglePage]="true"-->
+<!--                     [paginationOptions]="options"-->
+<!--                     [pageInfoState]="handles?.pageInfo"-->
+<!--                     [collectionSize]="handles?.totalElements"-->
+<!--                     [retainScrollPosition]="true">-->
+<!--        <table class="table table-striped table-bordered align-middle my-2">-->
+<!--          <thead>-->
+<!--          <tr>-->
+<!--            <th scope="col"></th>-->
+<!--            <th scope="col">{{"handle-table.table.handle" | translate}}</th>-->
+<!--            <th scope="col">{{"handle-table.table.internal" | translate}}</th>-->
+<!--            <th scope="col">{{"handle-table.table.url" | translate}}</th>-->
+<!--            <th scope="col">{{"handle-table.table.resource-type" | translate}}</th>-->
+<!--            <th scope="col">{{"handle-table.table.resource-id" | translate}}</th>-->
+<!--          </tr>-->
+<!--          </thead>-->
+<!--          <tbody>-->
+<!--          <tr *ngFor="let handle of handles?.page" [id]="'handle-row-' + handle.id">-->
+<!--            <td><input class="collection-checkbox" [ngModel]="selectedHandle === handle.id" (change)="switchSelectedHandle(handle.id)" type="checkbox" name="{{handle.id}}"></td>-->
+<!--            <td class="version-row-element-version">-->
+<!--              {{handle?.handle}}-->
+<!--            </td>-->
+<!--            <td class="version-row-element-editor">-->
+<!--&lt;!&ndash;              {{handle?.internal}}&ndash;&gt;-->
+<!--              Yes-->
+<!--            </td>-->
+<!--            <td class="version-row-element-editor">-->
+<!--              {{handle?.url}}-->
+<!--            </td>-->
+<!--            <td class="version-row-element-editor">-->
+<!--              {{handle?.resourceTypeID}}-->
+<!--            </td>-->
+<!--            <td class="version-row-element-editor">-->
+<!--              {{handle?.id}}-->
+<!--            </td>-->
+<!--          </tr>-->
+<!--          </tbody>-->
+<!--        </table>-->
+<!--        <ds-loading *ngIf="isLoading" class="text-center"></ds-loading>-->
+<!--      </ds-pagination>-->
+<!--      <div>-->
+<!--        <button type="button" class="btn btn-success"-->
+<!--                [routerLink]="[handleRoute, newHandlePath]">-->
+<!--          {{'handle-table.button.new-handle' | translate}}-->
+<!--        </button>-->
+<!--        <button type="button" class="btn btn-warning"-->
+<!--                (click)="redirectWithHandleParams()"-->
+<!--                [disabled]="selectedHandle === null">-->
+<!--          {{'handle-table.button.edit-handle' | translate}}-->
+<!--        </button>-->
+<!--        <button type="button" class="btn btn-danger"-->
+<!--                (click)="deleteHandles()"-->
+<!--                [disabled]="selectedHandle === null">-->
+<!--          {{'handle-table.button.delete-handle' | translate}}-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 
 </div>
