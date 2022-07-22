@@ -1587,6 +1587,11 @@
   "handle-table.new-handle.form-button-submit": "Submit",
 
 
+  "handle-table.new-handle.notify.error": "Server Error - Cannot create a new handle.",
+
+
+  "handle-table.new-handle.notify.successful": "The new handle was created!",
+
   "handle-table.edit-handle.breadcrumbs": "Edit Handle",
 
   "handle-table.edit-handle.form-handle-input-text": "Handle",

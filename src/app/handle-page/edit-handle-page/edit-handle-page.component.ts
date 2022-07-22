@@ -41,16 +41,6 @@ export class EditHandlePageComponent implements OnInit {
     this.id = this.route.snapshot.queryParams.id;
     this._selflink = this.route.snapshot.queryParams._selflink;
     this.currentPage = this.route.snapshot.queryParams.currentPage;
-
-    // this.paginationService.clearPagination(paginationID);
-    // this.paginationService.updateRouteWithUrl(paginationID, ['handle-table', 'edit-handle'], {
-    //   page: null,
-    //   pageSize: null
-    // }, {
-    //   id: this.id, _selflink: this._selflink, handle: this.handle, url: this.url, currentPage: this.currentPage
-    // });
-    // this.cdr.detectChanges();
-    console.log('edit');
   }
 
   onClickSubmit(value) {
@@ -75,30 +65,7 @@ export class EditHandlePageComponent implements OnInit {
     // call patch request
     this.requestService.send(patchRequest);
 
-    // this.router.navigate([getHandleTableModulePath()], {
-    //   queryParams: {
-    //     handle: null,
-    //     url: null,
-    //     id: null,
-    //     _selflink: null,
-    //     currentPage: null
-    //   }
-    // });
-    // this.handle = this.route.snapshot.queryParams.handle;
-    // this.url = this.route.snapshot.queryParams.url;
-    // this.id = this.route.snapshot.queryParams.id;
-    // this._selflink = this.route.snapshot.queryParams._selflink;
-    // this.currentPage = this.route.snapshot.queryParams.currentPage;
-    // // this.paginationService.updateRouteWithUrl(paginationID,[getHandleTableModulePath()], {
-    // //   page: this.currentPage,
-    // //   pageSize: 10
-    // // });
-    // // this.paginationService.clearPagination(paginationID);
-    // // redirect to /handle-table
-    // // for redirection use the paginationService because when the page is redirected to the /handle-table there
-    // // is loaded paginationService with the `updateRouteWithUrl` method in the `ngOnInit` and then it redirects
-    // // back to the /edit-handle page
-    // console.log('submit');
+    // for redirection use the paginationService because it redirects with pagination options
     this.paginationService.updateRouteWithUrl(paginationID,[getHandleTableModulePath()], {
       page: this.currentPage,
       pageSize: 10
@@ -109,7 +76,6 @@ export class EditHandlePageComponent implements OnInit {
       _selflink: null,
       currentPage: null
     });
-
   }
 
 }
