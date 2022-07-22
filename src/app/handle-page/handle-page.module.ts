@@ -12,13 +12,15 @@ import { HandleGlobalActionsComponent } from './handle-global-actions/handle-glo
 import { NewHandlePageComponent } from './new-handle-page/new-handle-page.component';
 import { EditHandlePageComponent } from './edit-handle-page/edit-handle-page.component';
 import { ChangeHandlePrefixPageComponent } from './change-handle-prefix-page/change-handle-prefix-page.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   imports: [
     HandlePageRoutingModule,
     TranslateModule,
     SharedModule,
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ],
   declarations: [
     HandlePageComponent,

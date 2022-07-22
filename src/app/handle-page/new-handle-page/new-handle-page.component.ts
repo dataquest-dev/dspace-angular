@@ -53,7 +53,7 @@ export class NewHandlePageComponent {
           this.translateService.get('handle-table.new-handle.notify.error').pipe(
             take(1)
           ).subscribe( message => {
-            errorMessage = message + info.response.errorMessage;
+            errorMessage = message + ': ' + info.response.errorMessage;
           });
 
           this.notificationsService.error(null, errorMessage);

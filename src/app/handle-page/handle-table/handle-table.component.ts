@@ -39,6 +39,11 @@ import {RequestService} from '../../core/data/request.service';
 import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 import {defaultPagination, paginationID} from './handle-table-pagination';
 
+/**
+ * For changing prefix must be called patch request and patch request must have ID parameter.
+ */
+export  const DEFAULT_HANDLE_ID = '0';
+
 @Component({
   selector: 'ds-handle-table',
   templateUrl: './handle-table.component.html',

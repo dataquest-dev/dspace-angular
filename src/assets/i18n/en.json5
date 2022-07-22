@@ -1631,11 +1631,30 @@
   "handle-table.button.delete-handle": "Delete handle",
 
 
-  "handle-global-actions.title": "Global Actions",
+  "handle-table.global-actions.title": "Global Actions",
 
-  "handle-global-actions.actions-list-message": "This is the list of available global actions.",
+  "handle-table.global-actions.actions-list-message": "This is the list of available global actions.",
 
-  "handle-global-actions.button.change-prefix": "Change handle prefix",
+  "handle-table.global-actions.button.change-prefix": "Change handle prefix",
+
+  "handle-table.change-handle-prefix.form-old-prefix-input-text": "Old prefix",
+
+  "handle-table.change-handle-prefix.form-old-prefix-input-error": "A valid old prefix is required",
+
+  "handle-table.change-handle-prefix.form-old-prefix-input-placeholder": "Enter old prefix",
+
+  "handle-table.change-handle-prefix.form-new-prefix-input-text": "New prefix",
+
+  "handle-table.change-handle-prefix.form-new-prefix-input-placeholder": "Enter new prefix",
+
+  "handle-table.change-handle-prefix.form-new-prefix-input-error": "A valid new prefix is required",
+
+  "handle-table.change-handle-prefix.form-archive-input-check": "Archive old handles?",
+
+  "handle-table.change-handle-prefix.notify.successful": "The global prefix was changed!",
+
+  "handle-table.change-handle-prefix.notify.error": "Server Error - Cannot change the global prefix",
+
 
 
   "info.end-user-agreement.accept": "I have read and I agree to the End User Agreement",

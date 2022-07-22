@@ -44,5 +44,4 @@ export class HandleDataService extends DataService<Handle> {
   findAll(options: FindListOptions = {}, useCachedVersionIfAvailable: boolean = true, reRequestOnStale: boolean = true, ...linksToFollow): Observable<RemoteData<PaginatedList<Handle>>> {
     return super.findAll(options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
   }
-
 }
