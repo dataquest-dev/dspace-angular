@@ -118,7 +118,7 @@ import { FormBuilderService } from '../form-builder.service';
 import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './ds-dynamic-form-constants';
 import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
 import { DsDynamicAutocompleteComponent } from './models/autocomplete/dynamic-autocomplete.component';
-import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/dynamic-autocomplete.model';
+import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/ds-dynamic-autocomplete.model';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {

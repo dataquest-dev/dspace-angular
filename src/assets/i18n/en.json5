@@ -2582,6 +2582,13 @@
   "menu.section.workflow": "Administer Workflow",
 
 
+
+  "autocomplete.suggestion.funding-code": "Funding code",
+
+  "autocomplete.suggestion.project-name": "Project name",
+
+
+
   "mydspace.breadcrumbs": "MyDSpace",
 
   "mydspace.description": "",

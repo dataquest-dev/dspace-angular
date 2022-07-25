@@ -4,7 +4,7 @@ import { hasNoValue, hasValue, isNotEmpty } from '../../../../empty.util';
 import { DsDynamicInputModel } from './ds-dynamic-input.model';
 import { FormFieldMetadataValueObject } from '../../models/form-field-metadata-value.model';
 import { DynamicConcatModel, DynamicConcatModelConfig } from './ds-dynamic-concat.model';
-import { AUTOCOMPLETE_COMPLEX_PREFIX } from './autocomplete/dynamic-autocomplete.model';
+import { AUTOCOMPLETE_COMPLEX_PREFIX } from './autocomplete/ds-dynamic-autocomplete.model';
 import { DynamicAutocompleteService } from './autocomplete/dynamic-autocomplete.service';
 
 export const COMPLEX_GROUP_SUFFIX = '_COMPLEX_GROUP';

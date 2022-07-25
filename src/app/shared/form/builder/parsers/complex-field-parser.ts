@@ -12,7 +12,9 @@ import {
   COMPLEX_GROUP_SUFFIX,
   COMPLEX_INPUT_SUFFIX,
   DynamicComplexModel,
-  DynamicComplexModelConfig, OPENAIRE_INPUT_NAME, SPONSOR_METADATA_NAME,
+  DynamicComplexModelConfig,
+  OPENAIRE_INPUT_NAME,
+  SPONSOR_METADATA_NAME,
 
 } from '../ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 import { hasValue, isNotEmpty } from '../../../empty.util';
@@ -25,13 +27,15 @@ import {
   SUBMISSION_ID
 } from './field-parser';
 import {
-  DynamicAutocompleteModel,
-} from '../ds-dynamic-form-ui/models/autocomplete/dynamic-autocomplete.model';
+  DsDynamicAutocompleteModel,
+} from '../ds-dynamic-form-ui/models/autocomplete/ds-dynamic-autocomplete.model';
 import { ParserType } from './parser-type';
 import {
   DynamicScrollableDropdownModel,
   DynamicScrollableDropdownModelConfig
 } from '../ds-dynamic-form-ui/models/scrollable-dropdown/dynamic-scrollable-dropdown.model';
+import {DsDynamicSponsorAutocompleteComponent} from '../ds-dynamic-form-ui/models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
+import {DsDynamicSponsorAutocompleteModel} from '../ds-dynamic-form-ui/models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.model';
 
 export class ComplexFieldParser extends FieldParser {
 
@@ -133,15 +137,16 @@ export class ComplexFieldParser extends FieldParser {
             clsInput);
           break;
         case ParserType.Autocomplete:
-          inputModel = new DynamicAutocompleteModel(inputConfig, clsInput);
+          if (id === SPONSOR_METADATA_NAME) {
+            inputModel = new DsDynamicSponsorAutocompleteModel(inputConfig, clsInput);
+            inputModel.hidden = complexDefinitionInput.name === OPENAIRE_INPUT_NAME;
+          } else {
+            inputModel = new DsDynamicAutocompleteModel(inputConfig, clsInput);
+          }
           break;
         default:
           inputModel = new DsDynamicInputModel(inputConfig, clsInput);
           break;
-      }
-
-      if (id === SPONSOR_METADATA_NAME && complexDefinitionInput.name === OPENAIRE_INPUT_NAME) {
-        inputModel.hidden = true;
       }
 
       concatGroup.group.push(inputModel);

@@ -18,39 +18,21 @@ import {ExternalSource} from '../../../../../../core/shared/external-source.mode
 import {ExternalSourceEntry} from '../../../../../../core/shared/external-source-entry.model';
 import {PaginatedSearchOptions} from '../../../../../search/models/paginated-search-options.model';
 import {PaginationComponentOptions} from '../../../../../pagination/pagination-component-options.model';
-import {AUTOCOMPLETE_COMPLEX_PREFIX} from './ds-dynamic-autocomplete.model';
 import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic-complex.model';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
-import {DynamicAutocompleteService} from './dynamic-autocomplete.service';
 import {TranslateService} from '@ngx-translate/core';
+import {DsDynamicAutocompleteComponent} from '../autocomplete/dynamic-autocomplete.component';
+import {AUTOCOMPLETE_COMPLEX_PREFIX} from '../autocomplete/ds-dynamic-autocomplete.model';
+import {DynamicAutocompleteService} from '../autocomplete/dynamic-autocomplete.service';
 
 /**
  * Component representing a autocomplete input field
  */
 @Component({
-  selector: 'ds-dynamic-autocomplete',
-  styleUrls: ['../tag/dynamic-tag.component.scss'],
-  templateUrl: './dynamic-autocomplete.component.html'
+  selector: 'ds-dynamic-sponsor-autocomplete',
+  templateUrl: '../autocomplete/dynamic-autocomplete.component.html'
 })
-export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implements OnInit {
-
-  @Input() bindId = true;
-  @Input() group: FormGroup;
-  @Input() model: DynamicTagModel;
-
-  @Output() blur: EventEmitter<any> = new EventEmitter<any>();
-  @Output() change: EventEmitter<any> = new EventEmitter<any>();
-  @Output() focus: EventEmitter<any> = new EventEmitter<any>();
-
-  @ViewChild('instance') instance: NgbTypeahead;
-
-  hasAuthority: boolean;
-  isSponsorInputType = false;
-
-  searching = false;
-  searchFailed = false;
-  currentValue: any;
-  public pageInfo: PageInfo;
+export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocompleteComponent implements OnInit {
 
   constructor(protected vocabularyService: VocabularyService,
               protected cdr: ChangeDetectorRef,
@@ -60,110 +42,31 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
               protected lookupRelationService: LookupRelationService,
               protected translateService: TranslateService
   ) {
-    super(vocabularyService, cdr, layoutService, validationService);
+    super(vocabularyService, cdr, layoutService, validationService, metadataValueService,
+      lookupRelationService, translateService);
   }
 
-  /**
-   * Initialize the component, setting up the init form value
-   */
-  ngOnInit(): void {
-    if (isNotEmpty(this.model.value)) {
-      if (this.model.value instanceof FormFieldMetadataValueObject && isNotEmpty(this.model.value.value)) {
-        this.model.value = this.model.value.value;
-      }
-      this.setCurrentValue(this.model.value, true);
-    }
-    if (isNotEmpty(this.model.metadataFields) && isNotEmpty(this.model.metadataFields[0])) {
-      this.isSponsorInputType = this.model.metadataFields[0] === SPONSOR_METADATA_NAME;
-    }
-  }
-
-  /**
-   * Updates model value with the selected value
-   * @param event The value to set.
-   */
-  onSelectItem(event: NgbTypeaheadSelectItemEvent) {
-    this.updateModel(event.item);
-    this.cdr.detectChanges();
-  }
-
-  onBlur(event: Event) {
-    this.dispatchUpdate(this.currentValue);
-    this.cdr.detectChanges();
-  }
 
   updateModel(updateValue) {
     let newValue = updateValue.display;
-    if (this.isSponsorInputType) {
-      if (updateValue instanceof VocabularyEntry) {
-        newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR + updateValue.value;
-      } else {
-        // special autocomplete sponsor input
-        newValue = this.composeSponsorInput(updateValue);
-      }
+    if (updateValue instanceof VocabularyEntry) {
+      newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR + updateValue.value;
+    } else {
+      // special autocomplete sponsor input
+      newValue = this.composeSponsorInput(updateValue);
     }
     this.dispatchUpdate(newValue);
   }
 
-  /**
-   * Emits a change event and updates model value.
-   * @param newValue
-   */
-  dispatchUpdate(newValue: any) {
-    this.model.value = newValue;
-    this.change.emit(newValue);
-  }
-
-  /**
-   * Sets the current value with the given value.
-   * @param value given value.
-   * @param init is initial value or not.
-   */
-  public setCurrentValue(value: any, init = false) {
-    let result: string;
-    if (init) {
-      this.getInitValueFromModel()
-        .subscribe((formValue: FormFieldMetadataValueObject) => {
-          this.currentValue = formValue;
-          this.cdr.detectChanges();
-        });
-    } else {
-      if (isEmpty(value)) {
-        result = '';
-      } else {
-        result = value.value;
-      }
-
-      this.currentValue = result;
-      this.cdr.detectChanges();
-    }
-  }
-
-  formatter = (x: { display: string }) => {
-    return x.display;
-  }
-
   suggestionFormatter = (suggestion: TemplateRef<any>) => {
-    if (this.isSponsorInputType) {
-      let formattedValue = '';
-      // normal MetadataValue suggestion
-      if (suggestion instanceof VocabularyEntry) {
-        formattedValue = suggestion.value;
-        if (formattedValue.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {
-          formattedValue = DynamicAutocompleteService.removeAutocompletePrefix(suggestion);
-        }
-        const complexInputList = formattedValue.split(SEPARATOR);
-        return DynamicAutocompleteService.pretifySuggestion(complexInputList[1], complexInputList[2],
-          this.translateService);
-      } else if (suggestion instanceof ExternalSourceEntry) {
-        // suggestion from the openAIRE
-        const fundingProjectCode = this.getProjectCodeFromId(suggestion.id);
-        const fundingName = suggestion.metadata['project.funder.name'][0].value;
-        return DynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
-      }
+    if (suggestion instanceof ExternalSourceEntry) {
+      // suggestion from the openAIRE
+      const fundingProjectCode = this.getProjectCodeFromId(suggestion.id);
+      const fundingName = suggestion.metadata['project.funder.name'][0].value;
+      return DynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
+    } else {
+      return super.suggestionFormatter(suggestion);
     }
-    // @ts-ignore
-    return suggestion.display;
   }
 
   /**
@@ -180,22 +83,17 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
         if (term === '' || term.length < this.model.minChars) {
           return observableOf({ list: [] });
         } else {
-          let response: Observable<PaginatedList<ExternalSourceEntry | MetadataValue>>;
-          if (this.isSponsorInputType) {
-            // if openAIRE
-            // @ts-ignore
-            const fundingType = this.model.parent.group[0].value;
-            if (isNotEmpty(fundingType) && ['euFunds', 'EU'].includes(fundingType.value)) {
-              // eu funding
-              response = this.lookupRelationService.getExternalResults(
-                this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
-            } else {
-              // non eu funding
-              response = this.metadataValueService.findByMetadataNameAndByValue(SPONSOR_METADATA_NAME, term);
-            }
+        let response: Observable<PaginatedList<ExternalSourceEntry | MetadataValue>>;
+          // if openAIRE
+          // @ts-ignore
+          const fundingType = this.model.parent.group[0].value;
+          if (isNotEmpty(fundingType) && ['euFunds', 'EU'].includes(fundingType.value)) {
+            // eu funding
+            response = this.lookupRelationService.getExternalResults(
+              this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
           } else {
-            // metadataValue request
-            response = this.metadataValueService.findByMetadataNameAndByValue(this.model.name, term);
+            // non eu funding
+            response = this.metadataValueService.findByMetadataNameAndByValue(SPONSOR_METADATA_NAME, term);
           }
           return response.pipe(
             tap(() => this.searchFailed = false),

@@ -1,10 +1,10 @@
 /**
  * This IT will be never be pushed to the upstream because clicking testing DOM elements is antipattern because
- * the tests on other machines could be failed.
+ * the tests on other machines could fail.
  */
 
-const password = 'dspace';
-const email = 'dspacedemo+admin@gmail.com';
+const CLARIN_DSPACE_PASSWORD = 'dspace';
+const CLARIN_DSPACE_EMAIL = 'dspacedemo+admin@gmail.com';
 const collectionName = 'Col';
 const communityName = 'Com';
 
@@ -13,10 +13,10 @@ const loginProcess = {
     cy.get('.navbar-container .dropdownLogin ').click();
   },
   typeEmail() {
-    cy.get('.navbar-container form input[type = "email"] ').type(email);
+    cy.get('.navbar-container form input[type = "email"] ').type(CLARIN_DSPACE_EMAIL);
   },
   typePassword() {
-    cy.get('.navbar-container form input[type = "password"] ').type(password);
+    cy.get('.navbar-container form input[type = "password"] ').type(CLARIN_DSPACE_PASSWORD);
   },
   submit() {
     cy.get('.navbar-container form button[type = "submit"] ').click();

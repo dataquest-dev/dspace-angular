@@ -12,7 +12,7 @@ import {
 } from '../../../../../testing/dynamic-form-mock-services';
 import {createTestComponent} from '../../../../../testing/utils.test';
 import {DsDynamicAutocompleteComponent} from './dynamic-autocomplete.component';
-import {DynamicAutocompleteModel} from './dynamic-autocomplete.model';
+import {DsDynamicAutocompleteModel} from './ds-dynamic-autocomplete.model';
 import {MetadataValueDataService} from '../../../../../../core/data/metadata-value-data.service';
 import {of as observableOf} from 'rxjs';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
@@ -107,7 +107,7 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
       autFixture = TestBed.createComponent(DsDynamicAutocompleteComponent);
       autComp = autFixture.componentInstance; // FormComponent test instance
       autComp.group = AUT_TEST_GROUP;
-      autComp.model = new DynamicAutocompleteModel(AUT_TEST_MODEL_CONFIG);
+      autComp.model = new DsDynamicAutocompleteModel(AUT_TEST_MODEL_CONFIG);
       autFixture.detectChanges();
     });
 
@@ -160,7 +160,7 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
 })
 class TestComponent {
   group: FormGroup = AUT_TEST_GROUP;
-  model = new DynamicAutocompleteModel(AUT_TEST_MODEL_CONFIG);
+  model = new DsDynamicAutocompleteModel(AUT_TEST_MODEL_CONFIG);
   showErrorMessages = false;
 }
 
