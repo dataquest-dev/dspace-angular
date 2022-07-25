@@ -2,7 +2,7 @@ import {AUTOCOMPLETE_COMPLEX_PREFIX} from './ds-dynamic-autocomplete.model';
 import {SEPARATOR} from '../ds-dynamic-complex.model';
 import {take} from 'rxjs/operators';
 
-export class DynamicAutocompleteService {
+export class DsDynamicAutocompleteService {
   static removeAutocompletePrefix(formValue) {
     return formValue.value.replace(AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR, '');
   }

@@ -21,16 +21,17 @@ import {PaginationComponentOptions} from '../../../../../pagination/pagination-c
 import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic-complex.model';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 import {TranslateService} from '@ngx-translate/core';
-import {DsDynamicAutocompleteComponent} from '../autocomplete/dynamic-autocomplete.component';
+import {DsDynamicAutocompleteComponent} from '../autocomplete/ds-dynamic-autocomplete.component';
 import {AUTOCOMPLETE_COMPLEX_PREFIX} from '../autocomplete/ds-dynamic-autocomplete.model';
-import {DynamicAutocompleteService} from '../autocomplete/dynamic-autocomplete.service';
+import {DsDynamicAutocompleteService} from '../autocomplete/ds-dynamic-autocomplete.service';
 
 /**
  * Component representing a autocomplete input field
  */
 @Component({
   selector: 'ds-dynamic-sponsor-autocomplete',
-  templateUrl: '../autocomplete/dynamic-autocomplete.component.html'
+  styleUrls: ['../tag/dynamic-tag.component.scss'],
+  templateUrl: '../autocomplete/ds-dynamic-autocomplete.component.html'
 })
 export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocompleteComponent implements OnInit {
 
@@ -46,6 +47,14 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
       lookupRelationService, translateService);
   }
 
+  ngOnInit(): void {
+    if (isNotEmpty(this.model.value)) {
+      if (this.model.value instanceof FormFieldMetadataValueObject && isNotEmpty(this.model.value.value)) {
+        this.model.value = this.model.value.value;
+      }
+      this.setCurrentValue(this.model.value, true);
+    }
+  }
 
   updateModel(updateValue) {
     let newValue = updateValue.display;
@@ -63,7 +72,7 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
       // suggestion from the openAIRE
       const fundingProjectCode = this.getProjectCodeFromId(suggestion.id);
       const fundingName = suggestion.metadata['project.funder.name'][0].value;
-      return DynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
+      return DsDynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
     } else {
       return super.suggestionFormatter(suggestion);
     }

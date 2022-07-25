@@ -21,7 +21,7 @@ import {PaginationComponentOptions} from '../../../../../pagination/pagination-c
 import {AUTOCOMPLETE_COMPLEX_PREFIX} from './ds-dynamic-autocomplete.model';
 import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic-complex.model';
 import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
-import {DynamicAutocompleteService} from './dynamic-autocomplete.service';
+import {DsDynamicAutocompleteService} from './ds-dynamic-autocomplete.service';
 import {TranslateService} from '@ngx-translate/core';
 
 /**
@@ -30,7 +30,7 @@ import {TranslateService} from '@ngx-translate/core';
 @Component({
   selector: 'ds-dynamic-autocomplete',
   styleUrls: ['../tag/dynamic-tag.component.scss'],
-  templateUrl: './dynamic-autocomplete.component.html'
+  templateUrl: './ds-dynamic-autocomplete.component.html'
 })
 export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implements OnInit {
 
@@ -73,9 +73,6 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       }
       this.setCurrentValue(this.model.value, true);
     }
-    if (isNotEmpty(this.model.metadataFields) && isNotEmpty(this.model.metadataFields[0])) {
-      this.isSponsorInputType = this.model.metadataFields[0] === SPONSOR_METADATA_NAME;
-    }
   }
 
   /**
@@ -93,16 +90,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
   }
 
   updateModel(updateValue) {
-    let newValue = updateValue.display;
-    if (this.isSponsorInputType) {
-      if (updateValue instanceof VocabularyEntry) {
-        newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR + updateValue.value;
-      } else {
-        // special autocomplete sponsor input
-        newValue = this.composeSponsorInput(updateValue);
-      }
-    }
-    this.dispatchUpdate(newValue);
+    this.dispatchUpdate(updateValue.display);
   }
 
   /**
@@ -144,24 +132,6 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
   }
 
   suggestionFormatter = (suggestion: TemplateRef<any>) => {
-    if (this.isSponsorInputType) {
-      let formattedValue = '';
-      // normal MetadataValue suggestion
-      if (suggestion instanceof VocabularyEntry) {
-        formattedValue = suggestion.value;
-        if (formattedValue.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {
-          formattedValue = DynamicAutocompleteService.removeAutocompletePrefix(suggestion);
-        }
-        const complexInputList = formattedValue.split(SEPARATOR);
-        return DynamicAutocompleteService.pretifySuggestion(complexInputList[1], complexInputList[2],
-          this.translateService);
-      } else if (suggestion instanceof ExternalSourceEntry) {
-        // suggestion from the openAIRE
-        const fundingProjectCode = this.getProjectCodeFromId(suggestion.id);
-        const fundingName = suggestion.metadata['project.funder.name'][0].value;
-        return DynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
-      }
-    }
     // @ts-ignore
     return suggestion.display;
   }
@@ -180,23 +150,8 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
         if (term === '' || term.length < this.model.minChars) {
           return observableOf({ list: [] });
         } else {
-          let response: Observable<PaginatedList<ExternalSourceEntry | MetadataValue>>;
-          if (this.isSponsorInputType) {
-            // if openAIRE
-            // @ts-ignore
-            const fundingType = this.model.parent.group[0].value;
-            if (isNotEmpty(fundingType) && ['euFunds', 'EU'].includes(fundingType.value)) {
-              // eu funding
-              response = this.lookupRelationService.getExternalResults(
-                this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
-            } else {
-              // non eu funding
-              response = this.metadataValueService.findByMetadataNameAndByValue(SPONSOR_METADATA_NAME, term);
-            }
-          } else {
-            // metadataValue request
-            response = this.metadataValueService.findByMetadataNameAndByValue(this.model.name, term);
-          }
+          // metadataValue request
+          const response = this.metadataValueService.findByMetadataNameAndByValue(this.model.name, term);
           return response.pipe(
             tap(() => this.searchFailed = false),
             catchError((error) => {
@@ -214,78 +169,4 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed))
 
-
-  /**
-   * Only for the local.sponsor complex input type
-   * The external funding is composed as one complex input field
-   * @param updateValue external funding from the openAIRE
-   */
-  composeSponsorInput(updateValue) {
-    // set prefix to distinguish composed complex input in the complex.model.ts - get method
-    let newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR;
-    let fundingType = 'N/A';
-    let fundingProjectCode = '';
-
-    if (updateValue.id.startsWith(EU_PROJECT_PREFIX)) {
-      fundingType = 'EU';
-      fundingProjectCode = this.getProjectCodeFromId(updateValue.id);
-    }
-    newValue += fundingType + SEPARATOR +
-      fundingProjectCode + SEPARATOR +
-      updateValue.metadata['project.funder.name'][0].value + SEPARATOR +
-      updateValue.value;
-    if (updateValue.id.startsWith(EU_PROJECT_PREFIX)) {
-      newValue += SEPARATOR + updateValue.id;
-    }
-
-    return newValue;
-  }
-
-  /**
-   * Only for the local.sponsor complex input type
-   * If the project type is EU, the second input field must be in the format `Funder/FundingProgram/ProjectID`
-   * but in the response the Funder information is not in the right format. The right format is only in the
-   * `id` which is in the format: `info:eu-repo/grantAgreement/Funder/FundingProgram/ProjectID/`.
-   * `Funder/FundingProgram/ProjectID` is loaded from the `id` in this method
-   * @param id `info:eu-repo/grantAgreement/Funder/FundingProgram/ProjectID/`
-   * @return formatedID `Funder/FundingProgram/ProjectID/`
-   */
-  getProjectCodeFromId(id) {
-    const regex = '^info:eu-repo\\/grantAgreement\\/(.*)$';
-    const updatedId = id.match(regex);
-
-    // updated value is in the updatedId[1]
-    return isNotEmpty(updatedId[1]) ? updatedId[1] : id;
-  }
-
-  /**
-   * Only for the local.sponsor complex input type
-   * Request must contain externalSource definition.
-   * @return externalSource openAIREFunding
-   */
-  getOpenAireExternalSource() {
-    const externalSource = Object.assign(new ExternalSource(), {
-      id: 'openAIREFunding',
-      name: 'openAIREFunding',
-      hierarchical: false
-    });
-    return externalSource;
-  }
-
-  /**
-   * Only for the local.sponsor complex input type
-   * Just pagination options
-   * @param term searching value for funding
-   */
-  getFundingRequestOptions(term) {
-    let options: PaginatedSearchOptions;
-    const pageOptions = Object.assign(new PaginationComponentOptions(), { pageSize: 20, page: 1 });
-    options = new PaginatedSearchOptions({
-      pagination: pageOptions,
-      query: term,
-    });
-    return options;
-  }
 }
-
-
