@@ -13,11 +13,11 @@ export class DsDynamicAutocompleteService {
     let projectName = 'Project name';
 
     // fetch funding code message
-    translateService.get('autocomplete.suggestion.funding-code')
+    translateService.get('autocomplete.suggestion.sponsor.funding-code')
       .pipe(take(1))
       .subscribe( fc => { fundingCode = fc; });
     // fetch project name message
-    translateService.get('autocomplete.suggestion.project-name')
+    translateService.get('autocomplete.suggestion.sponsor.project-name')
       .pipe(take(1))
       .subscribe( pn => { projectName = pn; });
 

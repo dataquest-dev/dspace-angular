@@ -6,9 +6,9 @@ import {Observable, of as observableOf} from 'rxjs';
 import {PageInfo} from '../../../../../../core/shared/page-info.model';
 import {VocabularyService} from '../../../../../../core/submission/vocabularies/vocabulary.service';
 import {DynamicFormLayoutService, DynamicFormValidationService} from '@ng-dynamic-forms/core';
-import {catchError, debounceTime, distinctUntilChanged, map, merge, switchMap, tap} from 'rxjs/operators';
+import {catchError, debounceTime, distinctUntilChanged, map, merge, switchMap, take, tap} from 'rxjs/operators';
 import {buildPaginatedList, PaginatedList} from '../../../../../../core/data/paginated-list.model';
-import {isEmpty, isNotEmpty} from '../../../../../empty.util';
+import {hasValue, isEmpty, isNotEmpty} from '../../../../../empty.util';
 import {DsDynamicTagComponent} from '../tag/dynamic-tag.component';
 import {MetadataValueDataService} from '../../../../../../core/data/metadata-value-data.service';
 import {FormFieldMetadataValueObject} from '../../../models/form-field-metadata-value.model';
@@ -19,7 +19,6 @@ import {ExternalSourceEntry} from '../../../../../../core/shared/external-source
 import {PaginatedSearchOptions} from '../../../../../search/models/paginated-search-options.model';
 import {PaginationComponentOptions} from '../../../../../pagination/pagination-component-options.model';
 import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic-complex.model';
-import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 import {TranslateService} from '@ngx-translate/core';
 import {DsDynamicAutocompleteComponent} from '../autocomplete/ds-dynamic-autocomplete.component';
 import {AUTOCOMPLETE_COMPLEX_PREFIX} from '../autocomplete/ds-dynamic-autocomplete.model';
@@ -27,7 +26,7 @@ import {DsDynamicAutocompleteService} from '../autocomplete/ds-dynamic-autocompl
 import {DEFAULT_EU_FUNDING_TYPES} from './ds-dynamic-sponsor-autocomplete.model';
 
 /**
- * Component representing a autocomplete input field
+ * Component representing a sponsor autocomplete input field in the complex input type.
  */
 @Component({
   selector: 'ds-dynamic-sponsor-autocomplete',
@@ -48,22 +47,32 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
       lookupRelationService);
   }
 
+  /**
+   * From suggestion update model: 1. openAIRE -> compose input from suggestion value,
+   *                               2. metadata suggestion -> update as suggestion value.
+   * @param updateValue
+   */
   updateModel(updateValue) {
     let newValue;
-    if (updateValue instanceof VocabularyEntry) {
-      newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR + updateValue.value;
-    } else {
+    if (updateValue instanceof  ExternalSourceEntry) {
       // special autocomplete sponsor input
       newValue = this.composeSponsorInput(updateValue);
+    } else {
+      // VocabularyEntry
+      newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR + updateValue.value;
     }
     this.dispatchUpdate(newValue);
   }
 
+  /**
+   * Prettify suggestion
+   * @param suggestion raw suggestion value
+   */
   suggestionFormatter = (suggestion: TemplateRef<any>) => {
     if (suggestion instanceof ExternalSourceEntry) {
       // suggestion from the openAIRE
       const fundingProjectCode = this.getProjectCodeFromId(suggestion.id);
-      const fundingName = suggestion.metadata['project.funder.name'][0].value;
+      const fundingName = suggestion.metadata?.['project.funder.name']?.[0]?.value;
       return DsDynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
     } else {
       return super.suggestionFormatter(suggestion);
@@ -86,7 +95,7 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
         } else {
         let response: Observable<PaginatedList<ExternalSourceEntry | MetadataValue>>;
           // if openAIRE
-          if (this.isEUSponsor(this.model)) {
+          if (this.isEUSponsor()) {
             // eu funding
             response = this.lookupRelationService.getExternalResults(
               this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
@@ -114,22 +123,16 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed))
 
-  isEUSponsor(model) {
-    const fundingType = this.getFundingTypeFromComplexInput(this.model);
+  /**
+   * Check if in the complex input type is funding type selected as EU.
+   */
+  isEUSponsor() {
+    // @ts-ignore
+    const fundingType = this.model.parent?.group?.[0]?.value;
     if (isNotEmpty(fundingType) && DEFAULT_EU_FUNDING_TYPES.includes(fundingType.value)) {
       return true;
     }
     return false;
-  }
-
-  getFundingTypeFromComplexInput(model) {
-    if (isNotEmpty(this.model.parent) &&
-      // @ts-ignore
-      isNotEmpty(this.model.parent.group[0]) && isNotEmpty(this.model.parent.group[0].value)) {
-      // @ts-ignore
-      return this.model.parent.group[0].value;
-    }
-    return null;
   }
 
   /**
@@ -140,22 +143,43 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
   composeSponsorInput(updateValue) {
     // set prefix to distinguish composed complex input in the complex.model.ts - get method
     let newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR;
-    let fundingType = 'N/A';
+    let fundingType = this.loadNoneSponsorFundingType();
     let fundingProjectCode = '';
 
-    if (updateValue.id.startsWith(EU_PROJECT_PREFIX)) {
-      fundingType = 'EU';
-      fundingProjectCode = this.getProjectCodeFromId(updateValue.id);
+    if (updateValue?.id.startsWith(EU_PROJECT_PREFIX)) {
+      fundingType = this.loadEUFundingType();
+      fundingProjectCode = this.getProjectCodeFromId(updateValue?.id);
     }
     newValue += fundingType + SEPARATOR +
       fundingProjectCode + SEPARATOR +
-      updateValue.metadata['project.funder.name'][0].value + SEPARATOR +
-      updateValue.value;
-    if (updateValue.id.startsWith(EU_PROJECT_PREFIX)) {
-      newValue += SEPARATOR + updateValue.id;
+      updateValue?.metadata?.['project.funder.name']?.[0]?.value + SEPARATOR + updateValue?.value;
+    if (updateValue?.id.startsWith(EU_PROJECT_PREFIX)) {
+      newValue += SEPARATOR + updateValue?.id;
     }
 
     return newValue;
+  }
+
+  /**
+   * Load EU sponsor string e.g.`EU` from the `en.json5` messages file.
+   * @private
+   */
+  private loadEUFundingType() {
+    this.translateService.get('autocomplete.suggestion.sponsor.eu')
+      .pipe(take(1))
+      .subscribe( ft => { return ft; });
+    return null;
+  }
+
+  /**
+   * Load None sponsor string e.g.`N/A` from the `en.json5` messages file.
+   * @private
+   */
+  private loadNoneSponsorFundingType() {
+    this.translateService.get('autocomplete.suggestion.sponsor.empty')
+      .pipe(take(1))
+      .subscribe( ft => { return ft; });
+    return null;
   }
 
   /**
