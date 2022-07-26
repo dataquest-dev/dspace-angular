@@ -814,9 +814,7 @@ describe('SectionFormOperationsService test suite', () => {
           required: false,
           metadataKey: 'dc.contributor.author',
           metadataFields: ['dc.contributor.author'],
-          hasSelectableMetadata: true,
-          showButtons: true,
-          typeBindRelations: []
+          hasSelectableMetadata: true
         }
       );
       spyOn(serviceAsAny, 'getFieldPathSegmentedFromChangeEvent').and.returnValue('path');

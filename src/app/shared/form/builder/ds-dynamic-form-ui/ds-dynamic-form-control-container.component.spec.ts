@@ -25,7 +25,7 @@ import {
   DynamicSliderModel,
   DynamicSwitchModel,
   DynamicTextAreaModel,
-  DynamicTimePickerModel, MATCH_VISIBLE, OR_OPERATOR
+  DynamicTimePickerModel
 } from '@ng-dynamic-forms/core';
 import {
   DynamicNGBootstrapCalendarComponent,
@@ -65,7 +65,6 @@ import { DsDynamicFormArrayComponent } from './models/array-group/dynamic-form-a
 import { DsDynamicFormGroupComponent } from './models/form-group/dynamic-form-group.component';
 import { DsDynamicRelationGroupComponent } from './models/relation-group/dynamic-relation-group.components';
 import { DsDatePickerInlineComponent } from './models/date-picker-inline/dynamic-date-picker-inline.component';
-import { DsDynamicTypeBindRelationService } from './ds-dynamic-type-bind-relation.service';
 import { RelationshipService } from '../../../../core/data/relationship.service';
 import { SelectableListService } from '../../../object-list/selectable-list/selectable-list.service';
 import { ItemDataService } from '../../../../core/data/item-data.service';
@@ -78,14 +77,6 @@ import { createSuccessfulRemoteDataObject } from '../../../remote-data.utils';
 import { FormService } from '../../form.service';
 import { SubmissionService } from '../../../../submission/submission.service';
 import { FormBuilderService } from '../form-builder.service';
-
-function getMockDsDynamicTypeBindRelationService(): DsDynamicTypeBindRelationService {
-  return jasmine.createSpyObj('DsDynamicTypeBindRelationService', {
-    getRelatedFormModel: jasmine.createSpy('getRelatedFormModel'),
-    matchesCondition: jasmine.createSpy('matchesCondition'),
-    subscribeRelations: jasmine.createSpy('subscribeRelations')
-  });
-}
 
 describe('DsDynamicFormControlContainerComponent test suite', () => {
 
@@ -119,12 +110,7 @@ describe('DsDynamicFormControlContainerComponent test suite', () => {
       metadataFields: [],
       repeatable: false,
       submissionId: '1234',
-      hasSelectableMetadata: false,
-      typeBindRelations: [{
-        match: MATCH_VISIBLE,
-        operator: OR_OPERATOR,
-        when: [{id: 'dc.type', value: 'Book'}]
-      }]
+      hasSelectableMetadata: false
     }),
     new DynamicScrollableDropdownModel({
       id: 'scrollableDropdown',
@@ -213,7 +199,6 @@ describe('DsDynamicFormControlContainerComponent test suite', () => {
       providers: [
         DsDynamicFormControlContainerComponent,
         DynamicFormService,
-        { provide: DsDynamicTypeBindRelationService, useValue: getMockDsDynamicTypeBindRelationService() },
         { provide: RelationshipService, useValue: {} },
         { provide: SelectableListService, useValue: {} },
         { provide: ItemDataService, useValue: {} },
@@ -245,7 +230,7 @@ describe('DsDynamicFormControlContainerComponent test suite', () => {
     });
   }));
 
-  beforeEach(inject([DynamicFormService, FormBuilderService], (service: DynamicFormService, formBuilderService: FormBuilderService) => {
+  beforeEach(inject([DynamicFormService], (service: DynamicFormService) => {
 
     formGroup = service.createFormGroup(formModel);
 

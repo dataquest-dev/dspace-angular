@@ -12,8 +12,7 @@ describe('TextareaFieldParser test suite', () => {
   const parserOptions: ParserOptions = {
     readOnly: false,
     submissionScope: null,
-    collectionUUID: null,
-    typeField: 'dc_type'
+    collectionUUID: null
   };
 
   beforeEach(() => {

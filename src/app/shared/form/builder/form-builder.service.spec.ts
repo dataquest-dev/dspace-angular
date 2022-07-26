@@ -26,7 +26,7 @@ import {
   DynamicSliderModel,
   DynamicSwitchModel,
   DynamicTextAreaModel,
-  DynamicTimePickerModel,
+  DynamicTimePickerModel
 } from '@ng-dynamic-forms/core';
 import { DynamicTagModel } from './ds-dynamic-form-ui/models/tag/dynamic-tag.model';
 import { DynamicListCheckboxGroupModel } from './ds-dynamic-form-ui/models/list/dynamic-list-checkbox-group.model';
@@ -48,18 +48,12 @@ import { DynamicConcatModel } from './ds-dynamic-form-ui/models/ds-dynamic-conca
 import { DynamicLookupNameModel } from './ds-dynamic-form-ui/models/lookup/dynamic-lookup-name.model';
 import { DynamicRowArrayModel } from './ds-dynamic-form-ui/models/ds-dynamic-row-array-model';
 import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
-import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
-import {createSuccessfulRemoteDataObject$} from '../../remote-data.utils';
-import {ConfigurationProperty} from '../../../core/shared/configuration-property.model';
 
 describe('FormBuilderService test suite', () => {
 
   let testModel: DynamicFormControlModel[];
   let testFormConfiguration: SubmissionFormsModel;
   let service: FormBuilderService;
-  let configSpy: ConfigurationDataService;
-  const typeFieldProp = 'submit.type-bind.field';
-  const typeFieldTestValue = 'dc.type';
 
   const submissionId = '1234';
 
@@ -71,16 +65,7 @@ describe('FormBuilderService test suite', () => {
     return new Promise<boolean>((resolve) => setTimeout(() => resolve(true), 0));
   }
 
-  const createConfigSuccessSpy = (...values: string[]) => jasmine.createSpyObj('configurationDataService', {
-    findByPropertyName: createSuccessfulRemoteDataObject$({
-      ... new ConfigurationProperty(),
-      name: typeFieldProp,
-      values: values,
-    }),
-  });
-
   beforeEach(() => {
-    configSpy = createConfigSuccessSpy(typeFieldTestValue);
 
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
@@ -88,8 +73,7 @@ describe('FormBuilderService test suite', () => {
         { provide: FormBuilderService, useClass: FormBuilderService },
         { provide: DynamicFormValidationService, useValue: {} },
         { provide: NG_VALIDATORS, useValue: testValidator, multi: true },
-        { provide: NG_ASYNC_VALIDATORS, useValue: testAsyncValidator, multi: true },
-        { provide: ConfigurationDataService, useValue: configSpy }
+        { provide: NG_ASYNC_VALIDATORS, useValue: testAsyncValidator, multi: true }
       ]
     });
 
@@ -249,7 +233,6 @@ describe('FormBuilderService test suite', () => {
             hints: 'Enter the name of the author.',
             input: { type: 'onebox' },
             label: 'Authors',
-            typeBind: [],
             languageCodes: [],
             mandatory: 'true',
             mandatoryMessage: 'Required field!',
@@ -321,9 +304,7 @@ describe('FormBuilderService test suite', () => {
           required: false,
           metadataKey: 'dc.contributor.author',
           metadataFields: ['dc.contributor.author'],
-          hasSelectableMetadata: true,
-          showButtons: true,
-          typeBindRelations: [{ match: 'VISIBLE', operator: 'OR', when: [{id: 'dc.type', value: 'Book' }]}]
+          hasSelectableMetadata: true
         },
       ),
     ];
@@ -443,9 +424,7 @@ describe('FormBuilderService test suite', () => {
     } as any;
   });
 
-  beforeEach(inject([FormBuilderService], (formService: FormBuilderService) => {
-    service = formService;
-  }));
+  beforeEach(inject([FormBuilderService], (formService: FormBuilderService) => service = formService));
 
   it('should find a dynamic form control model by id', () => {
 
@@ -896,12 +875,4 @@ describe('FormBuilderService test suite', () => {
 
     expect(formArray.length === 0).toBe(true);
   });
-
-  it(`should request the ${typeFieldProp} property and set value "dc_type"`, () => {
-    const typeValue = service.getTypeField();
-    expect(configSpy.findByPropertyName).toHaveBeenCalledTimes(1);
-    expect(configSpy.findByPropertyName).toHaveBeenCalledWith(typeFieldProp);
-    expect(typeValue).toEqual('dc_type');
-  });
-
 });

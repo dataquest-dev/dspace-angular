@@ -14,8 +14,7 @@ describe('NameFieldParser test suite', () => {
   const parserOptions: ParserOptions = {
     readOnly: false,
     submissionScope: 'testScopeUUID',
-    collectionUUID: null,
-    typeField: 'dc_type'
+    collectionUUID: null
   };
 
   beforeEach(() => {
