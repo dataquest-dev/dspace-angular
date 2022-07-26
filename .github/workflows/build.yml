@@ -35,12 +35,6 @@ jobs:
       # https://github.com/actions/checkout
       - name: Checkout codebase
         uses: actions/checkout@v2
-        
-      - name: check parser-options.ts
-        run: cat src/app/shared/form/builder/parsers/parser-options.ts
-        
-      - name: check git branch
-        run: git status
 
       # https://github.com/actions/setup-node
       - name: Install Node.js ${{ matrix.node-version }}
