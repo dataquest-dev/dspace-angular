@@ -38,6 +38,9 @@ jobs:
         
       - name: check parser-options.ts
         run: cat src/app/shared/form/builder/parsers/parser-options.ts
+        
+      - name: check git branch
+        run: git status
 
       # https://github.com/actions/setup-node
       - name: Install Node.js ${{ matrix.node-version }}
