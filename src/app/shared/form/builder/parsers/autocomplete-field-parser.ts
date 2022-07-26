@@ -4,8 +4,11 @@ import {
   DsDynamicAutocompleteModel,
   DsDynamicAutocompleteModelConfig
 } from '../ds-dynamic-form-ui/models/autocomplete/ds-dynamic-autocomplete.model';
-import {isNotEmpty} from '../../../empty.util';
+import { isNotEmpty } from '../../../empty.util';
 
+/**
+ * The parser which parse DsDynamicAutocompleteModelConfig configuration to the DsDynamicAutocompleteModel.
+ */
 export class AutocompleteFieldParser extends FieldParser {
 
   public modelFactory(fieldValue?: FormFieldMetadataValueObject | any, label?: boolean): any {

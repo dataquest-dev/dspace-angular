@@ -10,13 +10,12 @@ import { DSpaceObject } from '../shared/dspace-object.model';
 import { RelationshipOptions } from '../../shared/form/builder/models/relationship-options.model';
 import { Item } from '../shared/item.model';
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
-import {getAllSucceededRemoteData, getFirstSucceededRemoteDataPayload, getRemoteDataPayload} from '../shared/operators';
+import { getAllSucceededRemoteData, getRemoteDataPayload } from '../shared/operators';
 import { Injectable } from '@angular/core';
 import { ExternalSource } from '../shared/external-source.model';
 import { ExternalSourceEntry } from '../shared/external-source-entry.model';
 import { RequestService } from './request.service';
-import {MetadataValue} from '../metadata/metadata-value.model';
-import {isNotEmpty} from '../../shared/empty.util';
+import { isNotEmpty } from '../../shared/empty.util';
 
 /**
  * A service for retrieving local and external entries information during a relation lookup

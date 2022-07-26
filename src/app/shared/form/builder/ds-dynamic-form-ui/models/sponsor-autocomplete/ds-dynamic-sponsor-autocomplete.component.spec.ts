@@ -1,37 +1,36 @@
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick, waitForAsync} from '@angular/core/testing';
-import {MockMetadataValueService} from '../../../../../testing/metadata-value-data-service.mock';
-import {VocabularyServiceStub} from '../../../../../testing/vocabulary-service.stub';
-import {MockLookupRelationService} from '../../../../../testing/lookup-relation-service.mock';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ComponentFixture, fakeAsync, flush, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { MockMetadataValueService } from '../../../../../testing/metadata-value-data-service.mock';
+import { VocabularyServiceStub } from '../../../../../testing/vocabulary-service.stub';
+import { MockLookupRelationService } from '../../../../../testing/lookup-relation-service.mock';
 import {
   DynamicFormLayoutService,
   DynamicFormsCoreModule,
   DynamicFormValidationService,
-  DynamicPathable
-} from '@ng-dynamic-forms/core';
-import {DynamicFormsNGBootstrapUIModule} from '@ng-dynamic-forms/ui-ng-bootstrap';
-import {NgbModule, NgbTypeaheadSelectItemEvent} from '@ng-bootstrap/ng-bootstrap';
-import {ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {MetadataValueDataService} from '../../../../../../core/data/metadata-value-data.service';
-import {VocabularyService} from '../../../../../../core/submission/vocabularies/vocabulary.service';
+ } from '@ng-dynamic-forms/core';
+import { DynamicFormsNGBootstrapUIModule } from '@ng-dynamic-forms/ui-ng-bootstrap';
+import { NgbModule, } from '@ng-bootstrap/ng-bootstrap';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MetadataValueDataService } from '../../../../../../core/data/metadata-value-data.service';
+import { VocabularyService } from '../../../../../../core/submission/vocabularies/vocabulary.service';
 import {
   mockDynamicFormLayoutService,
   mockDynamicFormValidationService
-} from '../../../../../testing/dynamic-form-mock-services';
-import {LookupRelationService} from '../../../../../../core/data/lookup-relation.service';
-import {createTestComponent} from '../../../../../testing/utils.test';
-import {TranslateService} from '@ngx-translate/core';
-import {getMockTranslateService} from '../../../../../mocks/translate.service.mock';
-import {DEFAULT_EU_FUNDING_TYPES, DsDynamicSponsorAutocompleteModel} from './ds-dynamic-sponsor-autocomplete.model';
-import {EMPTY, of as observableOf} from 'rxjs';
-import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
-import {DsDynamicSponsorAutocompleteComponent} from './ds-dynamic-sponsor-autocomplete.component';
-import {take} from 'rxjs/operators';
-import {DynamicComplexModel} from '../ds-dynamic-complex.model';
+ } from '../../../../../testing/dynamic-form-mock-services';
+import { LookupRelationService } from '../../../../../../core/data/lookup-relation.service';
+import { createTestComponent } from '../../../../../testing/utils.test';
+import { TranslateService } from '@ngx-translate/core';
+import { getMockTranslateService } from '../../../../../mocks/translate.service.mock';
+import { DsDynamicSponsorAutocompleteModel } from './ds-dynamic-sponsor-autocomplete.model';
+import { of as observableOf } from 'rxjs';
+import { DsDynamicSponsorAutocompleteComponent } from './ds-dynamic-sponsor-autocomplete.component';
 
 let AUT_TEST_GROUP;
 let AUT_TEST_MODEL_CONFIG;
 
+/**
+ * The test class for the DsDynamicSponsorAutocompleteComponent.
+ */
 function init() {
   AUT_TEST_GROUP = new FormGroup({
     autocomplete: new FormControl(),

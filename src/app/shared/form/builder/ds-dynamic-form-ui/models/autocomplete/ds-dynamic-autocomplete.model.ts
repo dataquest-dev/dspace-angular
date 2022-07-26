@@ -1,17 +1,23 @@
-import {DsDynamicInputModel, DsDynamicInputModelConfig} from '../ds-dynamic-input.model';
-import {AUTOCOMPLETE_OFF, DynamicFormControlLayout, serializable} from '@ng-dynamic-forms/core';
-import {VocabularyOptions} from '../../../../../../core/submission/vocabularies/models/vocabulary-options.model';
-import {isEmpty} from '../../../../../empty.util';
+import { DsDynamicInputModel, DsDynamicInputModelConfig } from '../ds-dynamic-input.model';
+import { AUTOCOMPLETE_OFF, DynamicFormControlLayout, serializable } from '@ng-dynamic-forms/core';
+import { VocabularyOptions } from '../../../../../../core/submission/vocabularies/models/vocabulary-options.model';
+import { isEmpty } from '../../../../../empty.util';
 
 export const DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE = 'AUTOCOMPLETE';
 export const AUTOCOMPLETE_COMPLEX_PREFIX = 'autocomplete_in_complex_input';
 export const DEFAULT_MIN_CHARS_TO_AUTOCOMPLETE = 3;
 
+/**
+ * Configuration for the DsDynamicAutocompleteModel.
+ */
 export interface DsDynamicAutocompleteModelConfig extends DsDynamicInputModelConfig {
   minChars?: number;
   value?: any;
 }
 
+/**
+ * The model for the Autocomplete input field.
+ */
 export class DsDynamicAutocompleteModel extends DsDynamicInputModel {
 
   @serializable() minChars: number;
@@ -30,5 +36,4 @@ export class DsDynamicAutocompleteModel extends DsDynamicInputModel {
     // if value is not defined in the configuration -> value is empty
     this.value = config.value || [];
   }
-
 }

@@ -3,6 +3,10 @@ import { ParserOptions } from './parser-options';
 import { ComplexFieldParser } from './complex-field-parser';
 import { DynamicRowArrayModel } from '../ds-dynamic-form-ui/models/ds-dynamic-row-array-model';
 
+/**
+ * The test class for the parser `complex-field-parser.ts`.
+ * Test if that Parser correctly parse DynamicComplexModelConfig to the DynamicComplexModel.
+ */
 describe('ComplexFieldParser test suite', () => {
   let field: FormFieldModel;
   const initFormValues: any = {};
@@ -54,5 +58,4 @@ describe('ComplexFieldParser test suite', () => {
     expect(fieldModel instanceof DynamicRowArrayModel).toBe(true);
     expect(fieldModel.label).toBe(expectedValue);
   });
-
 });

@@ -34,9 +34,11 @@ import {
   DynamicScrollableDropdownModel,
   DynamicScrollableDropdownModelConfig
 } from '../ds-dynamic-form-ui/models/scrollable-dropdown/dynamic-scrollable-dropdown.model';
-import {DsDynamicSponsorAutocompleteComponent} from '../ds-dynamic-form-ui/models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
-import {DsDynamicSponsorAutocompleteModel} from '../ds-dynamic-form-ui/models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.model';
+import { DsDynamicSponsorAutocompleteModel } from '../ds-dynamic-form-ui/models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.model';
 
+/**
+ * The parser which parse DynamicComplexModelConfig configuration to the DynamicComplexModel.
+ */
 export class ComplexFieldParser extends FieldParser {
 
   constructor(

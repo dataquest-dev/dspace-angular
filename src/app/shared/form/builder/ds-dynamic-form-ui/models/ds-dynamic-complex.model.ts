@@ -14,8 +14,14 @@ export const SPONSOR_METADATA_NAME = 'local.sponsor';
 export const EU_PROJECT_PREFIX = 'info:eu-repo';
 export const OPENAIRE_INPUT_NAME = 'openaire_id';
 
+/**
+ * Configuration for the DynamicComplexModel.
+ */
 export interface DynamicComplexModelConfig extends DynamicConcatModelConfig {}
 
+/**
+ * The model for the Complex input field which consist of multiple input fields.
+ */
 export class DynamicComplexModel extends DynamicConcatModel {
 
   constructor(config: DynamicComplexModelConfig, layout?: DynamicFormControlLayout) {

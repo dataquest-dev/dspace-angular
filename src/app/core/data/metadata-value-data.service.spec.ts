@@ -1,20 +1,24 @@
-import {Observable, of as observableOf} from 'rxjs';
-import {RestResponse} from '../cache/response.models';
-import {HALEndpointServiceStub} from '../../shared/testing/hal-endpoint-service.stub';
-import {createSuccessfulRemoteDataObject$} from '../../shared/remote-data.utils';
-import {RequestService} from './request.service';
-import {HALEndpointService} from '../shared/hal-endpoint.service';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
-import {RemoteDataBuildService} from '../cache/builders/remote-data-build.service';
-import {MetadataValueDataService} from './metadata-value-data.service';
-import {FindListOptions} from './request.models';
-import {RequestParam} from '../cache/models/request-param.model';
-import {buildPaginatedList, PaginatedList} from './paginated-list.model';
-import {MetadataValue} from '../metadata/metadata-value.model';
-import {join} from 'lodash';
-import {VocabularyEntry} from '../submission/vocabularies/models/vocabulary-entry.model';
-import {RemoteData} from './remote-data';
+import { Observable, of as observableOf } from 'rxjs';
+import { RestResponse } from '../cache/response.models';
+import { HALEndpointServiceStub } from '../../shared/testing/hal-endpoint-service.stub';
+import { createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
+import { RequestService } from './request.service';
+import { HALEndpointService } from '../shared/hal-endpoint.service';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { RemoteDataBuildService } from '../cache/builders/remote-data-build.service';
+import { MetadataValueDataService } from './metadata-value-data.service';
+import { FindListOptions } from './request.models';
+import { RequestParam } from '../cache/models/request-param.model';
+import { buildPaginatedList , PaginatedList} from './paginated-list.model';
+import { MetadataValue } from '../metadata/metadata-value.model';
+import { join } from 'lodash';
+import { VocabularyEntry } from '../submission/vocabularies/models/vocabulary-entry.model';
+import { RemoteData } from './remote-data';
 
+/**
+ * The test class for the `medatata-value-data.service.ts`.
+ * Check if the service properly process data for the server and from the server.
+ */
 let metadataValueService: MetadataValueDataService;
 let requestService: RequestService;
 let halService: HALEndpointService;
@@ -31,6 +35,9 @@ const ELEMENT = 'contributor';
 const QUALIFIER = 'author';
 const TERM = 'test';
 
+/**
+ * Prepare a test environment
+ */
 function init() {
   metadataName = join(Array.of(SCHEMA, ELEMENT, QUALIFIER), '.');
   metadataValue = Object.assign(new MetadataValue(), {

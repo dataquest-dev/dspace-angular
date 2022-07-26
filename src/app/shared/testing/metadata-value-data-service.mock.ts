@@ -5,6 +5,9 @@ import { buildPaginatedList , PaginatedList} from '../../core/data/paginated-lis
 import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
 import { PageInfo } from '../../core/shared/page-info.model';
 
+/**
+ * The MetadataValueServiceMock for the test purposes.
+ */
 export class MockMetadataValueService {
   private _payload = [
     Object.assign(new VocabularyEntry(), { display: 'one', value: 1 }),

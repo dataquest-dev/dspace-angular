@@ -7,6 +7,9 @@ import { ExternalSource } from '../../core/shared/external-source.model';
 import { PaginatedSearchOptions } from '../search/models/paginated-search-options.model';
 import { ExternalSourceEntry } from '../../core/shared/external-source-entry.model';
 
+/**
+ * The LookupRelationServiceMock for the test purposes.
+ */
 export class MockLookupRelationService {
   private _payload = [];
 

@@ -119,8 +119,8 @@ import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './ds-dynamic-form-cons
 import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
 import { DsDynamicAutocompleteComponent } from './models/autocomplete/ds-dynamic-autocomplete.component';
 import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/ds-dynamic-autocomplete.model';
-import {DsDynamicSponsorAutocompleteComponent} from './models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
-import {SPONSOR_METADATA_NAME} from './models/ds-dynamic-complex.model';
+import { DsDynamicSponsorAutocompleteComponent } from './models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
+import { SPONSOR_METADATA_NAME } from './models/ds-dynamic-complex.model';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {

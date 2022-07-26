@@ -1,16 +1,16 @@
-import {link, typedObject} from '../cache/builders/build-decorators';
-import {ListableObject} from '../../shared/object-collection/shared/listable-object.model';
-import {HALResource} from '../shared/hal-resource.model';
-import {METADATA_FIELD} from './metadata-field.resource-type';
-import {excludeFromEquals} from '../utilities/equals.decorators';
-import {autoserialize, deserialize} from 'cerialize';
-import {ResourceType} from '../shared/resource-type';
-import {HALLink} from '../shared/hal-link.model';
-import {Observable} from 'rxjs';
-import {RemoteData} from '../data/remote-data';
-import {GenericConstructor} from '../shared/generic-constructor';
-import {METADATA_VALUE} from './metadata-value.resource-type';
-import {MetadataField} from './metadata-field.model';
+import { link, typedObject } from '../cache/builders/build-decorators';
+import { ListableObject } from '../../shared/object-collection/shared/listable-object.model';
+import { HALResource } from '../shared/hal-resource.model';
+import { METADATA_FIELD } from './metadata-field.resource-type';
+import { excludeFromEquals } from '../utilities/equals.decorators';
+import { autoserialize, deserialize } from 'cerialize';
+import { ResourceType } from '../shared/resource-type';
+import { HALLink } from '../shared/hal-link.model';
+import { Observable } from 'rxjs';
+import { RemoteData } from '../data/remote-data';
+import { GenericConstructor } from '../shared/generic-constructor';
+import { METADATA_VALUE } from './metadata-value.resource-type';
+import { MetadataField } from './metadata-field.model';
 
 /**
  * Class that represents a metadata value

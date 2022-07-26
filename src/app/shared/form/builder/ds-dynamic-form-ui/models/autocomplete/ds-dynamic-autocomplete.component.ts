@@ -1,31 +1,21 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {DynamicTagModel} from '../tag/dynamic-tag.model';
-import {NgbTypeahead, NgbTypeaheadSelectItemEvent} from '@ng-bootstrap/ng-bootstrap';
-import {Observable, of as observableOf} from 'rxjs';
-import {PageInfo} from '../../../../../../core/shared/page-info.model';
-import {VocabularyService} from '../../../../../../core/submission/vocabularies/vocabulary.service';
-import {DynamicFormLayoutService, DynamicFormValidationService} from '@ng-dynamic-forms/core';
-import {catchError, debounceTime, distinctUntilChanged, map, merge, switchMap, tap} from 'rxjs/operators';
-import {buildPaginatedList, PaginatedList} from '../../../../../../core/data/paginated-list.model';
-import {isEmpty, isNotEmpty} from '../../../../../empty.util';
-import {DsDynamicTagComponent} from '../tag/dynamic-tag.component';
-import {MetadataValueDataService} from '../../../../../../core/data/metadata-value-data.service';
-import {FormFieldMetadataValueObject} from '../../../models/form-field-metadata-value.model';
-import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
-import {LookupRelationService} from '../../../../../../core/data/lookup-relation.service';
-import {ExternalSource} from '../../../../../../core/shared/external-source.model';
-import {ExternalSourceEntry} from '../../../../../../core/shared/external-source-entry.model';
-import {PaginatedSearchOptions} from '../../../../../search/models/paginated-search-options.model';
-import {PaginationComponentOptions} from '../../../../../pagination/pagination-component-options.model';
-import {AUTOCOMPLETE_COMPLEX_PREFIX} from './ds-dynamic-autocomplete.model';
-import {EU_PROJECT_PREFIX, SEPARATOR, SPONSOR_METADATA_NAME} from '../ds-dynamic-complex.model';
-import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
-import {DsDynamicAutocompleteService} from './ds-dynamic-autocomplete.service';
-import {TranslateService} from '@ngx-translate/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { DynamicTagModel } from '../tag/dynamic-tag.model';
+import { NgbTypeahead, NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, of as observableOf } from 'rxjs';
+import { PageInfo } from '../../../../../../core/shared/page-info.model';
+import { VocabularyService } from '../../../../../../core/submission/vocabularies/vocabulary.service';
+import { DynamicFormLayoutService, DynamicFormValidationService } from '@ng-dynamic-forms/core';
+import { catchError, debounceTime, distinctUntilChanged, map, merge, switchMap, tap } from 'rxjs/operators';
+import { buildPaginatedList, PaginatedList } from '../../../../../../core/data/paginated-list.model';
+import { isEmpty, isNotEmpty } from '../../../../../empty.util';
+import { DsDynamicTagComponent } from '../tag/dynamic-tag.component';
+import { MetadataValueDataService } from '../../../../../../core/data/metadata-value-data.service';
+import { FormFieldMetadataValueObject } from '../../../models/form-field-metadata-value.model';
+import { LookupRelationService } from '../../../../../../core/data/lookup-relation.service';
 
 /**
- * Component representing a autocomplete input field
+ * Component representing a autocomplete input field.
  */
 @Component({
   selector: 'ds-dynamic-autocomplete',
@@ -83,11 +73,19 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     this.cdr.detectChanges();
   }
 
+  /**
+   * Click outside.
+   * @param event
+   */
   onBlur(event: Event) {
     this.dispatchUpdate(this.currentValue);
     this.cdr.detectChanges();
   }
 
+  /**
+   * Update value from suggestion to the input field.
+   * @param updateValue raw suggestion.
+   */
   updateModel(updateValue) {
     this.dispatchUpdate(updateValue.display);
   }
@@ -126,10 +124,18 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     }
   }
 
+  /**
+   * Do not show whole suggestion object but just display value.
+   * @param x
+   */
   formatter = (x: { display: string }) => {
     return x.display;
   }
 
+  /**
+   * Pretify suggestion.
+   * @param suggestion
+   */
   suggestionFormatter = (suggestion: TemplateRef<any>) => {
     // @ts-ignore
     return suggestion.display;
