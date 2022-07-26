@@ -87,6 +87,7 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
       init();
       html = `
       <ds-dynamic-autocomplete [bindId]="bindId"
+                      [group]="group"
                       [model]="model"
                       (blur)="onBlur($event)"
                       (change)="onValueChange($event)"

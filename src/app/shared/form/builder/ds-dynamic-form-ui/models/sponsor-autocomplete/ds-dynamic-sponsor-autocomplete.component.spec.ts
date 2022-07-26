@@ -152,8 +152,8 @@ describe('DsDynamicSponsorAutocompleteComponent test suite', () => {
         spyOn((autComp as any).lookupRelationService, 'getExternalResults');
 
         autComp.search(observableOf('test')).subscribe(() => {
-          expect((autComp as any).lookupRelationService.getExternalResults).toHaveBeenCalled();
-          expect((autComp as any).metadataValueService.findByMetadataNameAndByValue).not.toHaveBeenCalled();
+          expect((autComp as any).lookupRelationService.getExternalResults).not.toHaveBeenCalled();
+          expect((autComp as any).metadataValueService.findByMetadataNameAndByValue).toHaveBeenCalled();
         });
 
         autFixture.detectChanges();
