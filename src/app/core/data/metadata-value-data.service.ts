@@ -81,12 +81,12 @@ export class MetadataValueDataService extends DataService<MetadataValue> {
         getFirstSucceededRemoteDataPayload(),
         map((list: PaginatedList<MetadataValue>) => {
           const vocabularyEntryList: VocabularyEntry[] = [];
-          for (const metadataValue of list.page) {
+          list.page.forEach((metadataValue: MetadataValue) => {
             const voc: VocabularyEntry = new VocabularyEntry();
             voc.display = metadataValue.value;
             voc.value = metadataValue.value;
             vocabularyEntryList.push(voc);
-          }
+          });
           // @ts-ignore
           list.page = vocabularyEntryList;
           return list;
