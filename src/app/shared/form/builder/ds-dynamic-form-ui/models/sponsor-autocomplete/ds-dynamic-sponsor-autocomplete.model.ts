@@ -4,8 +4,8 @@ import {VocabularyOptions} from '../../../../../../core/submission/vocabularies/
 import {isEmpty} from '../../../../../empty.util';
 
 export const DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE = 'AUTOCOMPLETE';
-export const AUTOCOMPLETE_COMPLEX_PREFIX = 'autocomplete_in_complex_input';
 export const DEFAULT_MIN_CHARS_TO_AUTOCOMPLETE = 3;
+export const DEFAULT_EU_FUNDING_TYPES = ['euFunds', 'EU'];
 
 export interface DsDynamicSponsorAutocompleteModelConfig extends DsDynamicInputModelConfig {
   minChars?: number;

@@ -24,6 +24,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {DsDynamicAutocompleteComponent} from '../autocomplete/ds-dynamic-autocomplete.component';
 import {AUTOCOMPLETE_COMPLEX_PREFIX} from '../autocomplete/ds-dynamic-autocomplete.model';
 import {DsDynamicAutocompleteService} from '../autocomplete/ds-dynamic-autocomplete.service';
+import {DEFAULT_EU_FUNDING_TYPES} from './ds-dynamic-sponsor-autocomplete.model';
 
 /**
  * Component representing a autocomplete input field
@@ -44,20 +45,11 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
               protected translateService: TranslateService
   ) {
     super(vocabularyService, cdr, layoutService, validationService, metadataValueService,
-      lookupRelationService, translateService);
-  }
-
-  ngOnInit(): void {
-    if (isNotEmpty(this.model.value)) {
-      if (this.model.value instanceof FormFieldMetadataValueObject && isNotEmpty(this.model.value.value)) {
-        this.model.value = this.model.value.value;
-      }
-      this.setCurrentValue(this.model.value, true);
-    }
+      lookupRelationService);
   }
 
   updateModel(updateValue) {
-    let newValue = updateValue.display;
+    let newValue;
     if (updateValue instanceof VocabularyEntry) {
       newValue = AUTOCOMPLETE_COMPLEX_PREFIX + SEPARATOR + updateValue.value;
     } else {
@@ -94,15 +86,16 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
         } else {
         let response: Observable<PaginatedList<ExternalSourceEntry | MetadataValue>>;
           // if openAIRE
-          // @ts-ignore
-          const fundingType = this.model.parent.group[0].value;
-          if (isNotEmpty(fundingType) && ['euFunds', 'EU'].includes(fundingType.value)) {
+          if (this.isEUSponsor(this.model)) {
             // eu funding
             response = this.lookupRelationService.getExternalResults(
               this.getOpenAireExternalSource(), this.getFundingRequestOptions(term));
           } else {
             // non eu funding
             response = this.metadataValueService.findByMetadataNameAndByValue(SPONSOR_METADATA_NAME, term);
+          }
+          if (isEmpty(response)) {
+            return observableOf({ list: [] });
           }
           return response.pipe(
             tap(() => this.searchFailed = false),
@@ -121,6 +114,23 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed))
 
+  isEUSponsor(model) {
+    const fundingType = this.getFundingTypeFromComplexInput(this.model);
+    if (isNotEmpty(fundingType) && DEFAULT_EU_FUNDING_TYPES.includes(fundingType.value)) {
+      return true;
+    }
+    return false;
+  }
+
+  getFundingTypeFromComplexInput(model) {
+    if (isNotEmpty(this.model.parent) &&
+      // @ts-ignore
+      isNotEmpty(this.model.parent.group[0]) && isNotEmpty(this.model.parent.group[0].value)) {
+      // @ts-ignore
+      return this.model.parent.group[0].value;
+    }
+    return null;
+  }
 
   /**
    * Only for the local.sponsor complex input type
@@ -194,5 +204,3 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
     return options;
   }
 }
-
-

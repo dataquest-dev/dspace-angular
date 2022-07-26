@@ -11,7 +11,7 @@ import {
   mockDynamicFormValidationService
 } from '../../../../../testing/dynamic-form-mock-services';
 import {createTestComponent} from '../../../../../testing/utils.test';
-import {DsDynamicAutocompleteComponent} from './dynamic-autocomplete.component';
+import {DsDynamicAutocompleteComponent} from './ds-dynamic-autocomplete.component';
 import {DsDynamicAutocompleteModel} from './ds-dynamic-autocomplete.model';
 import {MetadataValueDataService} from '../../../../../../core/data/metadata-value-data.service';
 import {of as observableOf} from 'rxjs';
@@ -81,9 +81,9 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
   describe('', () => {
     // synchronous beforeEach
     beforeEach(() => {
+      init();
       html = `
       <ds-dynamic-autocomplete [bindId]="bindId"
-                      [group]="group"
                       [model]="model"
                       (blur)="onBlur($event)"
                       (change)="onValueChange($event)"

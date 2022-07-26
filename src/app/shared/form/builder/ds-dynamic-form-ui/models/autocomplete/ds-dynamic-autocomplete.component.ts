@@ -57,8 +57,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
               protected layoutService: DynamicFormLayoutService,
               protected validationService: DynamicFormValidationService,
               protected metadataValueService: MetadataValueDataService,
-              protected lookupRelationService: LookupRelationService,
-              protected translateService: TranslateService
+              protected lookupRelationService: LookupRelationService
   ) {
     super(vocabularyService, cdr, layoutService, validationService);
   }
@@ -168,5 +167,4 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       }),
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed))
-
 }
