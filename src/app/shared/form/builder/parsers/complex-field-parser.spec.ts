@@ -1,7 +1,7 @@
 import { FormFieldModel } from '../models/form-field.model';
 import { ParserOptions } from './parser-options';
-import { ComplexFieldParser } from './complex-field-parser';
 import { DynamicRowArrayModel } from '../ds-dynamic-form-ui/models/ds-dynamic-row-array-model';
+import {ComplexFieldParser} from './complex-field-parser';
 
 /**
  * The test class for the parser `complex-field-parser.ts`.
@@ -15,7 +15,8 @@ describe('ComplexFieldParser test suite', () => {
   const parserOptions: ParserOptions = {
     readOnly: false,
     submissionScope: null,
-    collectionUUID: null
+    collectionUUID: null,
+    typeField: 'dc_type'
   };
   const separator = ';';
 
