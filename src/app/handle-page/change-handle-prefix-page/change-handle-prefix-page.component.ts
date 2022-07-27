@@ -74,12 +74,12 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
     this.requestService.getByUUID(requestId)
       .subscribe(info => {
         // if is empty
-        if (!isNotEmpty(info) || !isNotEmpty(info.response) || !isNotEmpty(info.response.statusCode) ||
-          !isNotEmpty(info.response.errorMessage)) {
+        if (!isNotEmpty(info) || !isNotEmpty(info.response) || !isNotEmpty(info.response.statusCode)) {
           // do nothing - in another subscription should be data
           return;
         }
 
+        // if the status code starts with 2 - the request was successful
         if (info.response.statusCode.toString().startsWith('2')) {
           this.notificationsService.success(null, this.translateService.get('handle-table.change-handle-prefix.notify.successful'));
         } else {

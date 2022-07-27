@@ -26,8 +26,6 @@ import {PaginatedList} from './paginated-list.model';
 @dataService(HANDLE)
 export class HandleDataService extends DataService<Handle> {
   protected linkPath = 'handles';
-  // protected searchBySchemaLinkPath = 'bySchema';
-  // protected searchByFieldNameLinkPath = 'byFieldName';
 
   constructor(
     protected requestService: RequestService,

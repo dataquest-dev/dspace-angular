@@ -1,7 +1,7 @@
 import { TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD } from '../support';
 
-const password = TEST_ADMIN_PASSWORD;
-const email = TEST_ADMIN_EMAIL;
+export const password = TEST_ADMIN_PASSWORD;
+export const email = TEST_ADMIN_EMAIL;
 const collectionName = 'Col';
 const communityName = 'Com';
 
