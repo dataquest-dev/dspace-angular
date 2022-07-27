@@ -17,5 +17,11 @@ describe('Handle Page', () => {
 
     // <ds-handle-page> tag must be loaded
     cy.get('ds-handle-page').should('exist');
+
+    // <ds-handle-table> tag must be loaded
+    cy.get('ds-handle-table').should('exist');
+
+    // <ds-handle-global-actions> tag must be loaded
+    cy.get('ds-handle-global-actions').should('exist');
   });
 });

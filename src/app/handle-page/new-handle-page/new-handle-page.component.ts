@@ -38,8 +38,7 @@ export class NewHandlePageComponent {
     this.requestService.getByUUID(requestId)
       .subscribe(info => {
         // if is empty
-        if (!isNotEmpty(info) || !isNotEmpty(info.response) || !isNotEmpty(info.response.statusCode) ||
-            !isNotEmpty(info.response.errorMessage)) {
+        if (!isNotEmpty(info) || !isNotEmpty(info.response) || !isNotEmpty(info.response.statusCode)) {
           // do nothing - in another subscription should be data
           return;
         }
