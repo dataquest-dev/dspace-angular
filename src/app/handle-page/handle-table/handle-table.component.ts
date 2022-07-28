@@ -53,7 +53,6 @@ export class HandleTableComponent implements OnInit {
 
   constructor(private handleDataService: HandleDataService,
               private paginationService: PaginationService,
-              protected authorizationService: AuthorizationDataService,
               public router: Router,
               private requestService: RequestService,
               private cdr: ChangeDetectorRef) {
@@ -195,7 +194,7 @@ export class HandleTableComponent implements OnInit {
     });
   }
 
-  private refreshTableAfterDelete(deletedHandleId) {
+  public refreshTableAfterDelete(deletedHandleId) {
     let counter = 0;
     // The timeout for checking if the handle was daleted in the database
     // The timeout is set to 20 seconds by default.
