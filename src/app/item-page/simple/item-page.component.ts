@@ -1,4 +1,4 @@
-import { map } from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -12,7 +12,8 @@ import { fadeInOut } from '../../shared/animations/fade';
 import { getAllSucceededRemoteDataPayload, redirectOn4xx } from '../../core/shared/operators';
 import { ViewMode } from '../../core/shared/view-mode.model';
 import { AuthService } from '../../core/auth/auth.service';
-import { getItemPageRoute } from '../item-page-routing-paths';
+import {getItemPageRoute, getItemTombstoneRoute, ITEM_EDIT_PATH} from '../item-page-routing-paths';
+import {isNotEmpty} from '../../shared/empty.util';
 
 /**
  * This component renders a simple item page.
@@ -67,5 +68,29 @@ export class ItemPageComponent implements OnInit {
       getAllSucceededRemoteDataPayload(),
       map((item) => getItemPageRoute(item))
     );
+
+    let isWithdrawn = false;
+    let newDestination = '';
+    let reasonOfWithdrawal = '';
+
+    this.itemRD$.pipe(
+      take(1),
+      getAllSucceededRemoteDataPayload())
+    .subscribe(item => {
+      isWithdrawn = item.isWithdrawn;
+      newDestination = item.metadata['dc.relation.isreplacedby']?.[0]?.value;
+      const lastIndexOfProvenance = item.metadata['dc.description.provenance'].length - 1;
+      reasonOfWithdrawal = item.metadata['dc.description.provenance']?.[lastIndexOfProvenance]?.value;
+    });
+
+    if (isWithdrawn && isNotEmpty(newDestination)) {
+      this.itemRD$.pipe(
+        take(1),
+        getAllSucceededRemoteDataPayload())
+        .subscribe(item => {
+          // navigate to the custom tombstone
+          this.router.navigate([getItemTombstoneRoute(item)]);
+        });
+    }
   }
 }
