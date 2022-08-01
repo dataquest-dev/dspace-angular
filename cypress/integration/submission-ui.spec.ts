@@ -178,69 +178,66 @@ describe('Create a new submission', () => {
     createItemProcess.selectCollection();
   });
 
-  // @TODO uncomment this tests when the openAIRE will be merged
-  // it('should add non EU sponsor without suggestion', () => {
-  //   // funding code
-  //   createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'code', true);
-  //   // suggestion is popped up - must blur
-  //   createItemProcess.blurInput('local.sponsor_COMPLEX_INPUT_1', true);
-  //   cy.wait(250);
-  //   createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_3', 'projectName', true);
-  //   // blur because after each click on input will send PATCH request and the input value is removed
-  //   cy.get('body').click(0,0);
-  //   cy.wait(250);
-  //   // select sponsor type
-  //   createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
-  //   createItemProcess.clickOnSelection('N/A',0);
-  //   cy.wait(250);
-  //   // sponsor organisation
-  //   createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_2', 'organisation', false);
-  // });
-  //
-  // it('should load and add EU sponsor from suggestion', () => {
-  //   // select sponsor type
-  //   createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
-  //   createItemProcess.clickOnSelection('EU',0);
-  //   cy.wait(250);
-  //   // write suggestion for the eu sponsor
-  //   createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
-  //   // select suggestion
-  //   createItemProcess.clickOnSuggestionSelection(0);
-  //   cy.wait(250);
-  //   // EU input field should be visible
-  //   createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4');
-  //
-  // });
-  //
-  // it('should add four EU sponsors', () => {
-  //   // select sponsor type
-  //   createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
-  //   createItemProcess.clickOnSelection('EU',0);
-  //   cy.wait(250);
-  //   // write suggestion for the eu sponsor
-  //   createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
-  //   // select suggestion
-  //   createItemProcess.clickOnSuggestionSelection(0);
-  //   cy.wait(250);
-  //   // EU input field should be visible
-  //   createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4');
-  //
-  //   // add another sponsors
-  //   addEUSponsor(1);
-  //   addEUSponsor(2);
-  //   addEUSponsor(3);
-  // });
+  it('should add non EU sponsor without suggestion', () => {
+    // funding code
+    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'code', true);
+    // suggestion is popped up - must blur
+    createItemProcess.blurInput('local.sponsor_COMPLEX_INPUT_1', true);
+    cy.wait(250);
+    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_3', 'projectName', true);
+    // blur because after each click on input will send PATCH request and the input value is removed
+    cy.get('body').click(0,0);
+    cy.wait(250);
+    // select sponsor type
+    createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
+    createItemProcess.clickOnSelection('N/A',0);
+    cy.wait(250);
+    // sponsor organisation
+    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_2', 'organisation', false);
+  });
+
+  it('should load and add EU sponsor from suggestion', () => {
+    // select sponsor type
+    createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
+    createItemProcess.clickOnSelection('EU',0);
+    cy.wait(250);
+    // write suggestion for the eu sponsor
+    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
+    // select suggestion
+    createItemProcess.clickOnSuggestionSelection(0);
+    cy.wait(250);
+    // EU input field should be visible
+    createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4');
+
+  });
+
+  it('should add four EU sponsors', () => {
+    // select sponsor type
+    createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
+    createItemProcess.clickOnSelection('EU',0);
+    cy.wait(250);
+    // write suggestion for the eu sponsor
+    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
+    // select suggestion
+    createItemProcess.clickOnSuggestionSelection(0);
+    cy.wait(250);
+    // EU input field should be visible
+    createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4');
+
+    // add another sponsors
+    addEUSponsor(1);
+    addEUSponsor(2);
+    addEUSponsor(3);
+  });
+
+  it('should be showed chosen type value', () => {
+    createItemProcess.clickOnSelectionInput('dc.type');
+    createItemProcess.clickOnTypeSelection('Article');
+  });
 
   // @TODO Uncomment this tests when the ACL, Complex input field, Type-bind and CMDI will be merged
-
   // it('should be visible Has CMDI file input field because user is admin', () => {
   //   createItemProcess.checkLocalHasCMDIVisibility();
-  // });
-
-  // it('should be showed chosen type value', () => {
-  //   createItemProcess.clickOnSelectionInput('dc.type');
-  //   createItemProcess.clickOnTypeSelection('Article');
-  //   createItemProcess.checkInputValue('dc.type', 'Article');
   // });
 
   // it('The local.hasCMDI value should be sent in the response after type change', () => {
