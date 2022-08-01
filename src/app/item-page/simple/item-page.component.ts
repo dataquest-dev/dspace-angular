@@ -2,7 +2,7 @@ import {map, take} from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import { ItemDataService } from '../../core/data/item-data.service';
 import { RemoteData } from '../../core/data/remote-data';
 
@@ -14,6 +14,8 @@ import { ViewMode } from '../../core/shared/view-mode.model';
 import { AuthService } from '../../core/auth/auth.service';
 import {getItemPageRoute, getItemTombstoneRoute, ITEM_EDIT_PATH} from '../item-page-routing-paths';
 import {isNotEmpty} from '../../shared/empty.util';
+import {FeatureID} from '../../core/data/feature-authorization/feature-id';
+import {AuthorizationDataService} from '../../core/data/feature-authorization/authorization-data.service';
 
 /**
  * This component renders a simple item page.
@@ -49,11 +51,22 @@ export class ItemPageComponent implements OnInit {
    */
   itemPageRoute$: Observable<string>;
 
+  /**
+   * Whether the current user is an admin or not
+   */
+  isAdmin$: Observable<boolean>;
+
+  /**
+   * If item is withdrawn and has new destination show custom tombstone page
+   */
+  showTombstone = false;
+
   constructor(
     protected route: ActivatedRoute,
     private router: Router,
     private items: ItemDataService,
     private authService: AuthService,
+    private authorizationService: AuthorizationDataService,
   ) { }
 
   /**
@@ -79,7 +92,7 @@ export class ItemPageComponent implements OnInit {
     .subscribe(item => {
       isWithdrawn = item.isWithdrawn;
       newDestination = item.metadata['dc.relation.isreplacedby']?.[0]?.value;
-      const lastIndexOfProvenance = item.metadata['dc.description.provenance'].length - 1;
+      const lastIndexOfProvenance = item.metadata['dc.description.provenance']?.length - 1;
       reasonOfWithdrawal = item.metadata['dc.description.provenance']?.[lastIndexOfProvenance]?.value;
     });
 
@@ -88,8 +101,11 @@ export class ItemPageComponent implements OnInit {
         take(1),
         getAllSucceededRemoteDataPayload())
         .subscribe(item => {
-          // navigate to the custom tombstone
-          this.router.navigate([getItemTombstoneRoute(item)]);
+          // for users navigate to the custom tombstone
+          // for admin stay on the item page with tombstone flag
+          this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
+          this.showTombstone = true;
+          // this.router.navigate([getItemTombstoneRoute(item)]);
         });
     }
   }

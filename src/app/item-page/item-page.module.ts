@@ -68,6 +68,7 @@ const DECLARATIONS = [
   MediaViewerImageComponent,
   MiradorViewerComponent,
   VersionPageComponent,
+  TombstoneComponent
 ];
 
 @NgModule({
@@ -83,8 +84,7 @@ const DECLARATIONS = [
   ],
   declarations: [
     ...DECLARATIONS,
-    VersionedItemComponent,
-    TombstoneComponent
+    VersionedItemComponent
   ],
   exports: [
     ...DECLARATIONS

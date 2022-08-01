@@ -2261,6 +2261,17 @@
   "item.version.edit.notification.failure" : "The summary of version number {{version}} has not been changed",
 
 
+  "item.tombstone.withdrawn.message": "This item is withdrawn",
+
+  "item.tombstone.no.available.message": "The selected item is withdrawn and is no longer available.",
+
+  "item.tombstone.withdrawal.reason.message": "The reason for withdrawal:",
+
+  "item.tombstone.withdrawal.reason.default.value": "The reason wasn't specified.",
+
+  "item.tombstone.restricted.contact.help": "Your user account does not have the credentials to view this item. Please contact the Help Desk if you have any questions.",
+
+
 
   "journal.listelement.badge": "Journal",
 
