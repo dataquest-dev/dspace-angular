@@ -3,10 +3,8 @@
  * the tests on other machines could fail.
  */
 
-// const CLARIN_DSPACE_PASSWORD = 'dspace';
-// const CLARIN_DSPACE_EMAIL = 'dspacedemo+admin@gmail.com';
-const CLARIN_DSPACE_PASSWORD = 'admin';
-const CLARIN_DSPACE_EMAIL = 'test@edu.sk';
+const CLARIN_DSPACE_PASSWORD = 'dspace';
+const CLARIN_DSPACE_EMAIL = 'dspacedemo+admin@gmail.com';
 
 const collectionName = 'Col';
 const communityName = 'Com';
