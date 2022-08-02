@@ -3,8 +3,11 @@
  * the tests on other machines could fail.
  */
 
-const CLARIN_DSPACE_PASSWORD = 'dspace';
-const CLARIN_DSPACE_EMAIL = 'dspacedemo+admin@gmail.com';
+// const CLARIN_DSPACE_PASSWORD = 'dspace';
+// const CLARIN_DSPACE_EMAIL = 'dspacedemo+admin@gmail.com';
+const CLARIN_DSPACE_PASSWORD = 'admin';
+const CLARIN_DSPACE_EMAIL = 'test@edu.sk';
+
 const collectionName = 'Col';
 const communityName = 'Com';
 
@@ -181,11 +184,14 @@ describe('Create a new submission', () => {
   // Test openAIRE
   it('should add non EU sponsor without suggestion', () => {
     // funding code
-    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'code', true);
+    // createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'code', true);
+    cy.get('ds-dynamic-sponsor-autocomplete').eq(0).click({force: true}).type('code');
     // suggestion is popped up - must blur
-    createItemProcess.blurInput('local.sponsor_COMPLEX_INPUT_1', true);
+    // createItemProcess.blurInput('local.sponsor_COMPLEX_INPUT_1', true);
+    cy.get('body').click(0,0);
     cy.wait(250);
-    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_3', 'projectName', true);
+    // createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_3', 'projectName', true);
+    cy.get('ds-dynamic-sponsor-autocomplete').eq(1).click({force: true}).type('projectName');
     // blur because after each click on input will send PATCH request and the input value is removed
     cy.get('body').click(0,0);
     cy.wait(250);
@@ -203,7 +209,8 @@ describe('Create a new submission', () => {
     createItemProcess.clickOnSelection('EU',0);
     cy.wait(250);
     // write suggestion for the eu sponsor
-    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
+    // createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
+    cy.get('ds-dynamic-sponsor-autocomplete').eq(0).click({force: true}).type('eve');
     // select suggestion
     createItemProcess.clickOnSuggestionSelection(0);
     cy.wait(250);
@@ -218,13 +225,12 @@ describe('Create a new submission', () => {
     createItemProcess.clickOnSelection('EU',0);
     cy.wait(250);
     // write suggestion for the eu sponsor
-    // createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
+    cy.get('ds-dynamic-sponsor-autocomplete').eq(0).click({force: true}).type('eve');
     // select suggestion
-    // createItemProcess.clickOnSuggestionSelection(0);
+    createItemProcess.clickOnSuggestionSelection(0);
     cy.wait(250);
     // EU input field should be visible
     createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4');
-    createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_1', true);
 
     // add another sponsors
     addEUSponsor(1);
@@ -261,9 +267,11 @@ function addEUSponsor(euSponsorOrder) {
   createItemProcess.clickOnSelection('EU',euSponsorOrder);
   cy.wait(500);
   // write suggestion for the eu sponsor
-  createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true, euSponsorOrder);
+  // createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true, euSponsorOrder);
+  // euSponsorOrder * 2 because sponsor complex type has two ds-dynamic-sponsor-autocomplete inputs
+  cy.get('ds-dynamic-sponsor-autocomplete').eq(euSponsorOrder * 2).click({force: true}).type('eve');
   // select suggestion
-  createItemProcess.clickOnSuggestionSelection(euSponsorOrder + 1);
+  createItemProcess.clickOnSuggestionSelection(euSponsorOrder * 2);
   cy.wait(250);
   // EU input field should be visible
   createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4', false, euSponsorOrder);
