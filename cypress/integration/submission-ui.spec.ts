@@ -178,6 +178,7 @@ describe('Create a new submission', () => {
     createItemProcess.selectCollection();
   });
 
+  // Test openAIRE
   it('should add non EU sponsor without suggestion', () => {
     // funding code
     createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'code', true);
@@ -230,25 +231,26 @@ describe('Create a new submission', () => {
     addEUSponsor(3);
   });
 
+  // Test type-bind
   it('should be showed chosen type value', () => {
     createItemProcess.clickOnSelectionInput('dc.type');
     createItemProcess.clickOnTypeSelection('Article');
   });
 
-  // @TODO Uncomment this tests when the ACL, Complex input field, Type-bind and CMDI will be merged
-  // it('should be visible Has CMDI file input field because user is admin', () => {
-  //   createItemProcess.checkLocalHasCMDIVisibility();
-  // });
+  // Test CMDI input field
+  it('should be visible Has CMDI file input field because user is admin', () => {
+    createItemProcess.checkLocalHasCMDIVisibility();
+  });
 
-  // it('The local.hasCMDI value should be sent in the response after type change', () => {
-  //   createItemProcess.clickOnSelectionInput('dc.type');
-  //   createItemProcess.clickOnTypeSelection('Article');
-  //   createItemProcess.checkCheckbox('local_hasCMDI');
-  //   createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
-  //   createItemProcess.clickOnSave();
-  //   cy.reload();
-  //   createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
-  // });
+  it('The local.hasCMDI value should be sent in the response after type change', () => {
+    createItemProcess.clickOnSelectionInput('dc.type');
+    createItemProcess.clickOnTypeSelection('Article');
+    createItemProcess.checkCheckbox('local_hasCMDI');
+    createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
+    createItemProcess.clickOnSave();
+    cy.reload();
+    createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
+  });
 });
 
 function addEUSponsor(euSponsorOrder) {
