@@ -224,7 +224,7 @@ describe('Create a new submission', () => {
     cy.wait(250);
     // EU input field should be visible
     createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4');
-    createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_1');
+    createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_1', true);
 
     // add another sponsors
     addEUSponsor(1);
