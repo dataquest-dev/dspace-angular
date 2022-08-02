@@ -162,7 +162,7 @@ export class HandleTableComponent implements OnInit {
           this.switchSelectedHandle(this.selectedHandle);
           // @TODO add URL to the handle object
           this.router.navigate([this.handleRoute, this.editHandlePath],
-            { queryParams: { id: handle.id, _selflink: handle._links.self.href, handle: handle.handle, url: 'handle.url', currentPage: this.options.currentPage } },
+            { queryParams: { id: handle.id, _selflink: handle._links.self.href, handle: handle.handle, url: handle.url, currentPage: this.options.currentPage } },
           );
         }
       });

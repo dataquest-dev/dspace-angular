@@ -49,12 +49,14 @@ export class EditHandlePageComponent implements OnInit {
     // create a Handle object with updated body
     // @TODO add URL to the Handle object
     // url:
-    const handleObj = Object.assign(new Handle(), {
+    const handleObj = {
       handle: this.handle,
+      url: value.url,
+      archive: value.archive,
       _links: {
-        self: { href: this._selflink }
+        self: {href: this._selflink}
       }
-    });
+    };
 
     const patchOperation = {
       op: 'replace', path: '/replaceHandle', value: handleObj

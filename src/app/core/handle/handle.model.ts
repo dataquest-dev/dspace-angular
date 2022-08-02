@@ -40,6 +40,12 @@ export class Handle extends ListableObject implements HALResource {
   handle: string;
 
   /**
+   * The url of this metadata field
+   */
+  @autoserialize
+  url: string;
+
+  /**
    * The element of this metadata field
    */
   @autoserialize
