@@ -180,7 +180,12 @@ describe('Create a new submission', () => {
   });
 
   // Test openAIRE
-  it('should add non EU sponsor without suggestion', () => {
+  it('should add non EU sponsor without suggestion', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+  },() => {
     // funding code
     // createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'code', true);
     cy.get('ds-dynamic-sponsor-autocomplete').eq(0).click({force: true}).type('code');
@@ -201,7 +206,12 @@ describe('Create a new submission', () => {
     createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_2', 'organisation', false);
   });
 
-  it('should load and add EU sponsor from suggestion', () => {
+  it('should load and add EU sponsor from suggestion',{
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+  }, () => {
     // select sponsor type
     createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
     createItemProcess.clickOnSelection('EU',0);
@@ -214,10 +224,14 @@ describe('Create a new submission', () => {
     cy.wait(250);
     // EU input field should be visible
     createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4');
-
   });
 
-  it('should add four EU sponsors', () => {
+  it('should add four EU sponsors', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+  },() => {
     // select sponsor type
     createItemProcess.clickOnSelectionInput('local.sponsor_COMPLEX_INPUT_0');
     createItemProcess.clickOnSelection('EU',0);
