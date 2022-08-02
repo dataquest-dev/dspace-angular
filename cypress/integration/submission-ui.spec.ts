@@ -89,7 +89,7 @@ const createItemProcess = {
       .eq(inputOrder).should('not.be.visible');
   },
   clickOnSelectionInput(inputName, inputOrder = 0) {
-    cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]', { timeout: 15000 }).eq(inputOrder).click();
+    cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]').eq(inputOrder).click();
   },
   clickOnInput(inputName, force = false) {
     cy.get('#traditionalpageone form div[role = "group"] input[ng-reflect-name = "' + inputName + '"]')
@@ -97,9 +97,9 @@ const createItemProcess = {
   },
   writeValueToInput(inputName, value, formatted = false, inputOrder = 0) {
     if (formatted) {
-      cy.get('#traditionalpageone form div[role = "group"] input[ng-reflect-name = "' + inputName + '"]', { timeout: 15000 }).eq(inputOrder).click({force: true}).type(value);
+      cy.get('#traditionalpageone form div[role = "group"] input[ng-reflect-name = "' + inputName + '"]').eq(inputOrder).click({force: true}).type(value);
     } else {
-      cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]', { timeout: 15000 }).eq(inputOrder).click({force: true}).type(value);
+      cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]').eq(inputOrder).click({force: true}).type(value);
     }
   },
   blurInput(inputName, formatted) {
@@ -218,12 +218,13 @@ describe('Create a new submission', () => {
     createItemProcess.clickOnSelection('EU',0);
     cy.wait(250);
     // write suggestion for the eu sponsor
-    createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
+    // createItemProcess.writeValueToInput('local.sponsor_COMPLEX_INPUT_1', 'eve', true);
     // select suggestion
-    createItemProcess.clickOnSuggestionSelection(0);
+    // createItemProcess.clickOnSuggestionSelection(0);
     cy.wait(250);
     // EU input field should be visible
     createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_4');
+    createItemProcess.checkIsInputVisible('local.sponsor_COMPLEX_INPUT_1');
 
     // add another sponsors
     addEUSponsor(1);
