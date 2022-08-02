@@ -89,7 +89,7 @@ const createItemProcess = {
       .eq(inputOrder).should('not.be.visible');
   },
   clickOnSelectionInput(inputName, inputOrder = 0) {
-    cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]').eq(inputOrder).click();
+    cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]', { timeout: 15000 }).eq(inputOrder).click();
   },
   clickOnInput(inputName, force = false) {
     cy.get('#traditionalpageone form div[role = "group"] input[ng-reflect-name = "' + inputName + '"]')
@@ -97,9 +97,9 @@ const createItemProcess = {
   },
   writeValueToInput(inputName, value, formatted = false, inputOrder = 0) {
     if (formatted) {
-      cy.get('#traditionalpageone form div[role = "group"] input[ng-reflect-name = "' + inputName + '"]').eq(inputOrder).click({force: true}).type(value);
+      cy.get('#traditionalpageone form div[role = "group"] input[ng-reflect-name = "' + inputName + '"]', { timeout: 15000 }).eq(inputOrder).click({force: true}).type(value);
     } else {
-      cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]').eq(inputOrder).click({force: true}).type(value);
+      cy.get('#traditionalpageone form div[role = "group"] input[name = "' + inputName + '"]', { timeout: 15000 }).eq(inputOrder).click({force: true}).type(value);
     }
   },
   blurInput(inputName, formatted) {
