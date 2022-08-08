@@ -18,6 +18,7 @@ import { hasValue, isNotEmpty, isNotNull, isNull } from '../empty.util';
 import { FormService } from './form.service';
 import { FormEntry, FormError } from './form.reducer';
 import { FormFieldMetadataValueObject } from './builder/models/form-field-metadata-value.model';
+import {DsDynamicInputModel} from './builder/ds-dynamic-form-ui/models/ds-dynamic-input.model';
 
 /**
  * The default form component.
@@ -191,9 +192,19 @@ export class FormComponent implements OnDestroy, OnInit {
 
               if (field) {
                 const model: DynamicFormControlModel = this.formBuilderService.findById(fieldId, formModel);
-                this.formService.addErrorToField(field, model, error.message);
+                // For input field with more input fields e.g. DynamicComplexModel add error for every input field
+                if (field instanceof FormGroup && isNotEmpty(field?.controls)) {
+                  Object.keys(field.controls).forEach((inputName, inputIndex) => {
+                    const nestedInputField = (model as DynamicFormGroupModel).group?.[inputIndex];
+                    const nestedInputFieldInForm = formGroup.get(this.formBuilderService.getPath(nestedInputField));
+                    if (nestedInputField instanceof DsDynamicInputModel && nestedInputField.required) {
+                      this.formService.addErrorToField(nestedInputFieldInForm, nestedInputField, error.message);
+                    }
+                  });
+                } else {
+                  this.formService.addErrorToField(field, model, error.message);
+                }
                 this.changeDetectorRef.detectChanges();
-
               }
             });
 
