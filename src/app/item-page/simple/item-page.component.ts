@@ -96,7 +96,8 @@ export class ItemPageComponent implements OnInit {
       reasonOfWithdrawal = item.metadata['dc.description.provenance']?.[lastIndexOfProvenance]?.value;
     });
 
-    if (isWithdrawn && isNotEmpty(newDestination)) {
+    // isNotEmpty(newDestination)
+    if (isWithdrawn) {
       this.itemRD$.pipe(
         take(1),
         getAllSucceededRemoteDataPayload())
@@ -104,7 +105,15 @@ export class ItemPageComponent implements OnInit {
           // for users navigate to the custom tombstone
           // for admin stay on the item page with tombstone flag
           this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
-          this.showTombstone = true;
+          this.isAdmin$.pipe(
+            take(1)
+          ).subscribe(isAdmin => {
+            // do not show tombstone for admin but show it for users
+            // this.showTombstone = !isAdmin;
+            // @TODO uncomment code higher
+            this.showTombstone = true;
+            console.log('this.showTombstone',this.showTombstone);
+          });
           // this.router.navigate([getItemTombstoneRoute(item)]);
         });
     }
