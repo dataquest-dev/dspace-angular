@@ -1,5 +1,3 @@
-import { AUTOCOMPLETE_COMPLEX_PREFIX } from './ds-dynamic-autocomplete.model';
-import { SEPARATOR } from '../ds-dynamic-complex.model';
 import { take } from 'rxjs/operators';
 
 /**

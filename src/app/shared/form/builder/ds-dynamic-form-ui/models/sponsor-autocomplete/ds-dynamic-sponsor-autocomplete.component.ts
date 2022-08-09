@@ -70,7 +70,8 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
       const fundingName = suggestion.metadata?.['project.funder.name']?.[0]?.value;
       return DsDynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
     } else {
-      return super.suggestionFormatter(suggestion);
+      // @ts-ignore
+      return suggestion.display;
     }
   }
 
