@@ -23,10 +23,10 @@ export class WithdrawnTombstoneComponent implements OnInit {
   constructor(private translateService: TranslateService) { }
 
   ngOnInit(): void {
-    // If the reason of withdrawal is empty load default value
-    if (!isNotEmpty(this.reasonOfWithdrawal)) {
-      this.reasonOfWithdrawal = this.translateService.instant('item.tombstone.withdrawal.reason.default.value');
-    }
+    // // If the reason of withdrawal is empty load default value
+    // if (!isNotEmpty(this.reasonOfWithdrawal)) {
+    //   this.reasonOfWithdrawal = this.translateService.instant('item.tombstone.withdrawal.reason.default.value');
+    // }
   }
 
 }

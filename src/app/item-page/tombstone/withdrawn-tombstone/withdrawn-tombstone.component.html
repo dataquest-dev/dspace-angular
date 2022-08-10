@@ -4,11 +4,15 @@
       <h3 class="card-title">{{itemName}}</h3>
       <h5 class="card-title">{{'item.tombstone.withdrawn.message' | translate}}</h5>
       <p class="card-text">{{'item.tombstone.no.available.message' | translate}}</p>
-      <p class="card-text">{{'item.tombstone.withdrawal.reason.message' | translate}}</p>
-      <p class="card-text">{{reasonOfWithdrawal}}</p>
+      <div *ngIf="reasonOfWithdrawal != null">
+        <p class="card-text">
+          {{'item.tombstone.withdrawal.reason.message' | translate}}
+        </p>
+        <p class="card-text">{{reasonOfWithdrawal}}</p>
+      </div>
       <p class="card-text">
         <span>{{'item.tombstone.restricted.contact.help.0' | translate}}</span>
-        <a href="/HELP DESK">{{'item.tombstone.restricted.contact.help.1' | translate}}</a>
+        <a href="mailto:milan.majchrak1@gmail.com">{{'item.tombstone.restricted.contact.help.1' | translate}}</a>
         <span>{{'item.tombstone.restricted.contact.help.2' | translate}}</span>
       </p>
       <div class="danger-icon">

@@ -59,7 +59,12 @@ export class ItemPageComponent implements OnInit {
   /**
    * If item is withdrawn and has new destination show custom tombstone page
    */
-  showTombstone = false;
+  replacedTombstone = false;
+
+  /**
+   * If item is withdrawn and has/doesn't has reason of withdrawal show custom tombstone page
+   */
+  withdrawnTombstone = false;
 
   constructor(
     protected route: ActivatedRoute,
@@ -82,40 +87,44 @@ export class ItemPageComponent implements OnInit {
       map((item) => getItemPageRoute(item))
     );
 
+    this.showTombstone();
+  }
+
+  showTombstone() {
+    // if the item is withdrawn
     let isWithdrawn = false;
-    let newDestination = '';
+    // metadata value from `dc.relation.isreplacedby`
+    let isReplaced = '';
+    // metadata value from `local.withdrawn.reason`
     let reasonOfWithdrawal = '';
 
+    // load values from item
     this.itemRD$.pipe(
       take(1),
       getAllSucceededRemoteDataPayload())
-    .subscribe(item => {
-      isWithdrawn = item.isWithdrawn;
-      newDestination = item.metadata['dc.relation.isreplacedby']?.[0]?.value;
-      const lastIndexOfProvenance = item.metadata['dc.description.provenance']?.length - 1;
-      reasonOfWithdrawal = item.metadata['dc.description.provenance']?.[lastIndexOfProvenance]?.value;
-    });
+      .subscribe(item => {
+        isWithdrawn = item.isWithdrawn;
+      });
 
-    // isNotEmpty(newDestination)
     if (isWithdrawn) {
-      this.itemRD$.pipe(
-        take(1),
-        getAllSucceededRemoteDataPayload())
-        .subscribe(item => {
-          // for users navigate to the custom tombstone
-          // for admin stay on the item page with tombstone flag
-          this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
-          this.isAdmin$.pipe(
-            take(1)
-          ).subscribe(isAdmin => {
-            // do not show tombstone for admin but show it for users
-            // this.showTombstone = !isAdmin;
-            // @TODO uncomment code higher
-            this.showTombstone = true;
-            console.log('this.showTombstone',this.showTombstone);
-          });
-          // this.router.navigate([getItemTombstoneRoute(item)]);
-        });
+      // for users navigate to the custom tombstone
+      // for admin stay on the item page with tombstone flag
+      this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
+      this.isAdmin$.pipe(
+        take(1)
+      ).subscribe(isAdmin => {
+        // do not show tombstone for admin but show it for users
+        if (isAdmin) {
+          // @TODO uncomment
+          // return;
+        }
+
+        if (isNotEmpty(isReplaced)) {
+          this.replacedTombstone = true;
+        } else {
+          this.withdrawnTombstone = true;
+        }
+      });
     }
   }
 }

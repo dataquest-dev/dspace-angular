@@ -10,7 +10,7 @@ export class ReplacedTombstoneComponent implements OnInit {
   /**
    * The Item to get reason or destination for Tombstone
    */
-  @Input() newDestination: string;
+  @Input() isReplaced: string;
 
   /**
    * The Item to get reason or destination for Tombstone
@@ -25,7 +25,7 @@ export class ReplacedTombstoneComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.newDestination = 'some URL';
+    this.isReplaced = 'some URL';
   }
 
 }

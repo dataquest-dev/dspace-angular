@@ -10,6 +10,7 @@ import {AuthService} from '../../core/auth/auth.service';
 import {Observable} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {isNotEmpty} from '../../shared/empty.util';
+import {HelpDeskService} from '../../core/shared/help-desk.service';
 
 @Component({
   selector: 'ds-tombstone',
@@ -23,11 +24,6 @@ export class TombstoneComponent implements OnInit {
    */
   @Input() item: Item;
 
-  // /**
-  //  * The item wrapped in a remote-data object
-  //  */
-  // itemRD$: Observable<RemoteData<Item>>;
-
   /**
    * The reason of withdrawal of the item.
    * Default value is loaded from the `item.tombstone.withdrawal.reason.default.value`
@@ -38,42 +34,32 @@ export class TombstoneComponent implements OnInit {
    * The reason of withdrawal of the item.
    * Default value is loaded from the `item.tombstone.withdrawal.reason.default.value`
    */
-  newDestination: string;
+  isReplaced: string;
 
 
   authors: string[];
 
   constructor(protected route: ActivatedRoute,
+                private helpDeskService: HelpDeskService,
                 private router: Router,
                 private items: ItemDataService,
                 private translateService: TranslateService,
                 private authService: AuthService) { }
 
   ngOnInit(): void {
-    // this.itemRD$ = this.route.data.pipe(
-    //   map((data) => data.dso as RemoteData<Item>),
-    //   redirectOn4xx(this.router, this.authService)
-    // );
-    //
-    // this.itemRD$.pipe(
-    //   take(1),
-    //   getAllSucceededRemoteDataPayload())
-    //   .subscribe(item => {
-    //     const lastIndexOfProvenance = item.metadata['dc.description.provenance'].length - 1;
-    //     this.reasonOfWithdrawal = item.metadata['dc.description.provenance']?.[lastIndexOfProvenance]?.value;
-    //   });
-
-    // Load the reason of withdrawal from metadata
-    const lastIndexOfProvenance = this.item.metadata['dc.description.provenance'].length - 1;
-    this.reasonOfWithdrawal = this.item.metadata['dc.description.provenance']?.[lastIndexOfProvenance]?.value;
 
     // Load the new destination from metadata
-    this.newDestination = this.item.metadata['dc.relation.isreplacedby']?.[0].value;
+    this.isReplaced = this.item.metadata['dc.relation.isreplacedby']?.[0]?.value;
+
+    // Load the reason of withdrawal from metadata
+    this.reasonOfWithdrawal = this.item.metadata['local.withdrawn.reason']?.[0]?.value;
 
     // Load authors
     this.item.metadata['dc.contributor.author']?.forEach(value => {
       this.authors.push(value.value);
     });
+
+    this.helpDeskService.getHelpDeskMail();
   }
 
 }
