@@ -1,8 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {HelpDeskService} from '../../../core/shared/help-desk.service';
-import {Observable} from 'rxjs';
-import {RemoteData} from '../../../core/data/remote-data';
-import {HelpDesk} from '../../../core/shared/help-desk';
+import { Component, Input, OnInit } from '@angular/core';
+import { HelpDeskService } from '../../../core/shared/help-desk.service';
+import { Observable } from 'rxjs';
+import { RemoteData } from '../../../core/data/remote-data';
+import { HelpDesk } from '../../../core/shared/help-desk';
 
 @Component({
   selector: 'ds-replaced-tombstone',
@@ -12,17 +12,17 @@ import {HelpDesk} from '../../../core/shared/help-desk';
 export class ReplacedTombstoneComponent implements OnInit {
 
   /**
-   * The Item to get reason or destination for Tombstone
+   * The new destination of the Item
    */
   @Input() isReplaced: string;
 
   /**
-   * The Item to get reason or destination for Tombstone
+   * The name of the Item
    */
   @Input() itemName: string;
 
   /**
-   * The Item to get reason or destination for Tombstone
+   * The authors of the item is loaded from the metadata: `dc.contributor.author` and `dc.dontributor.others`
    */
   @Input() authors: string[];
 

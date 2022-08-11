@@ -3,7 +3,7 @@ const email = 'test@test.edu';
 const collectionName = 'Col';
 const communityName = 'Com';
 
-const loginProcess = {
+export const loginProcess = {
   clickOnLoginDropdown() {
     cy.get('.navbar-container .dropdownLogin ').click();
   },

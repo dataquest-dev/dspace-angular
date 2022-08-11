@@ -2,14 +2,15 @@
   <div class="card">
     <div class="card-body">
       <h3 class="card-title">{{itemName}}</h3>
+      <p class="card-text">{{authors.join(', ')}}</p>
       <h5 class="card-title">{{'item.tombstone.withdrawn.message' | translate}}</h5>
       <p class="card-text">{{'item.tombstone.no.available.message' | translate}}</p>
-      <div *ngIf="reasonOfWithdrawal != null">
-        <p class="card-text">
+      <p *ngIf="reasonOfWithdrawal != null">
+        <span class="card-text">
           {{'item.tombstone.withdrawal.reason.message' | translate}}
-        </p>
-        <p class="card-text">{{reasonOfWithdrawal}}</p>
-      </div>
+        </span>
+        <span class="card-text">{{reasonOfWithdrawal}}</span>
+      </p>
       <p class="card-text">
         <span>{{'item.tombstone.restricted.contact.help.0' | translate}}</span>
         <a [href]="'mailto:'+(helpDesk$ | async)?.payload?.mail">{{'item.tombstone.restricted.contact.help.1' | translate}}</a>
