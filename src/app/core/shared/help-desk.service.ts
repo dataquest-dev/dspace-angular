@@ -17,6 +17,10 @@ import {take, takeWhile} from 'rxjs/operators';
 import {RemoteData} from '../data/remote-data';
 import {NotificationOptions} from '../../shared/notifications/models/notification-options.model';
 import {getAllSucceededRemoteDataPayload} from './operators';
+import {Simulate} from 'react-dom/test-utils';
+import waiting = Simulate.waiting;
+import {HelpDesk} from './help-desk';
+import {Observable} from 'rxjs';
 
 /**
  * Service that performs all general actions that have to do with the search page
@@ -29,26 +33,15 @@ export class HelpDeskService {
               protected requestService: RequestService,
   ) { }
 
-  getHelpDeskMail() {
+  getHelpDeskMail(): Observable<RemoteData<HelpDesk>> {
     const requestId = this.requestService.generateRequestId();
     const request = new GetRequest(requestId, 'http://localhost:8080/server/api/help-desk');
-    Object.assign(request, {
-      getResponseParser(): GenericConstructor<ResponseParsingService> {
-        return RegistrationResponseParsingService;
-      }
-    });
 
+    // send GET request
     this.requestService.send(request, true);
 
-    const result$ = this.rdbService.buildFromRequestUUID(requestId);
-
-    // TODO a dataservice is not the best place to show a notification,
-    // this should move up to the components that use this method
-    result$.pipe(
-      getAllSucceededRemoteDataPayload()
-    ).subscribe(res => {
-      console.log('res', res);
-    });
+    // load and return the response from the request based on the requestId
+    return this.rdbService.buildFromRequestUUID<HelpDesk>(requestId);
   }
 
 }

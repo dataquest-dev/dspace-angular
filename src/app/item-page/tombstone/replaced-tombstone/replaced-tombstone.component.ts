@@ -1,4 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {HelpDeskService} from '../../../core/shared/help-desk.service';
+import {Observable} from 'rxjs';
+import {RemoteData} from '../../../core/data/remote-data';
+import {HelpDesk} from '../../../core/shared/help-desk';
 
 @Component({
   selector: 'ds-replaced-tombstone',
@@ -22,10 +26,15 @@ export class ReplacedTombstoneComponent implements OnInit {
    */
   @Input() authors: string[];
 
-  constructor() { }
+  /**
+   * The mail for the help desk is loaded from the server.
+   */
+  helpDesk$: Observable<RemoteData<HelpDesk>>;
+
+  constructor(private helpDeskService: HelpDeskService) { }
 
   ngOnInit(): void {
-    this.isReplaced = 'some URL';
+    this.helpDesk$ = this.helpDeskService.getHelpDeskMail();
   }
 
 }

@@ -2,6 +2,11 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Item} from '../../../core/shared/item.model';
 import {isNotEmpty} from '../../../shared/empty.util';
 import {TranslateService} from '@ngx-translate/core';
+import {HelpDeskService} from '../../../core/shared/help-desk.service';
+import {getAllSucceededRemoteDataPayload} from '../../../core/shared/operators';
+import {HelpDesk} from '../../../core/shared/help-desk';
+import {Observable} from 'rxjs';
+import {RemoteData} from '../../../core/data/remote-data';
 
 @Component({
   selector: 'ds-withdrawn-tombstone',
@@ -20,13 +25,15 @@ export class WithdrawnTombstoneComponent implements OnInit {
    */
   @Input() itemName: string;
 
-  constructor(private translateService: TranslateService) { }
+  /**
+   * The mail for the help desk is loaded from the server.
+   */
+  helpDesk$: Observable<RemoteData<HelpDesk>>;
+
+  constructor(private helpDeskService: HelpDeskService) { }
 
   ngOnInit(): void {
-    // // If the reason of withdrawal is empty load default value
-    // if (!isNotEmpty(this.reasonOfWithdrawal)) {
-    //   this.reasonOfWithdrawal = this.translateService.instant('item.tombstone.withdrawal.reason.default.value');
-    // }
+    this.helpDesk$ = this.helpDeskService.getHelpDeskMail();
   }
 
 }

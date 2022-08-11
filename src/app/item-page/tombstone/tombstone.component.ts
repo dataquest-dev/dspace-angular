@@ -36,30 +36,38 @@ export class TombstoneComponent implements OnInit {
    */
   isReplaced: string;
 
-
+  /**
+   * Authors of the item loaded from `dc.contributor.author` and `dc.contributor.other` metadata
+   */
   authors: string[];
 
   constructor(protected route: ActivatedRoute,
-                private helpDeskService: HelpDeskService,
                 private router: Router,
                 private items: ItemDataService,
                 private translateService: TranslateService,
                 private authService: AuthService) { }
 
   ngOnInit(): void {
-
     // Load the new destination from metadata
-    this.isReplaced = this.item.metadata['dc.relation.isreplacedby']?.[0]?.value;
+    this.isReplaced = this.item?.metadata['dc.relation.isreplacedby']?.[0]?.value;
 
     // Load the reason of withdrawal from metadata
-    this.reasonOfWithdrawal = this.item.metadata['local.withdrawn.reason']?.[0]?.value;
+    this.reasonOfWithdrawal = this.item?.metadata['local.withdrawn.reason']?.[0]?.value;
 
     // Load authors
-    this.item.metadata['dc.contributor.author']?.forEach(value => {
+    this.addAuthorsFromMetadata('dc.contributor.author');
+    this.addAuthorsFromMetadata('dc.contributor.other');
+  }
+
+  /**
+   * From the metadata field load value and add it to the `this.authors` list
+   * @param metadataField where are authors
+   * @private
+   */
+  private addAuthorsFromMetadata(metadataField) {
+    this.item?.metadata[metadataField]?.forEach(value => {
       this.authors.push(value.value);
     });
-
-    this.helpDeskService.getHelpDeskMail();
   }
 
 }
