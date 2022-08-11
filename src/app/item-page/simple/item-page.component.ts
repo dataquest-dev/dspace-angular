@@ -95,8 +95,6 @@ export class ItemPageComponent implements OnInit {
     let isWithdrawn = false;
     // metadata value from `dc.relation.isreplacedby`
     let isReplaced = '';
-    // metadata value from `local.withdrawn.reason`
-    let reasonOfWithdrawal = '';
 
     // load values from item
     this.itemRD$.pipe(
@@ -106,25 +104,23 @@ export class ItemPageComponent implements OnInit {
         isWithdrawn = item.isWithdrawn;
       });
 
-    if (isWithdrawn) {
-      // for users navigate to the custom tombstone
-      // for admin stay on the item page with tombstone flag
-      this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
-      this.isAdmin$.pipe(
-        take(1)
-      ).subscribe(isAdmin => {
-        // do not show tombstone for admin but show it for users
-        if (isAdmin) {
-          // @TODO uncomment
-          // return;
-        }
+    // do not show tombstone for non withdrawn items
+    if (!isWithdrawn) {
+      return;
+    }
 
+    // for users navigate to the custom tombstone
+    // for admin stay on the item page with tombstone flag
+    this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
+    this.isAdmin$.subscribe(isAdmin => {
+      // do not show tombstone for admin but show it for users
+      if (!isAdmin) {
         if (isNotEmpty(isReplaced)) {
           this.replacedTombstone = true;
         } else {
           this.withdrawnTombstone = true;
         }
-      });
-    }
+      }
+    });
   }
 }

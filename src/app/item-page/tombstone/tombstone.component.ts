@@ -36,6 +36,8 @@ export class TombstoneComponent implements OnInit {
    */
   isReplaced: string;
 
+  isAdmin$: Observable<boolean>;
+
   /**
    * Authors of the item loaded from `dc.contributor.author` and `dc.contributor.other` metadata
    */
