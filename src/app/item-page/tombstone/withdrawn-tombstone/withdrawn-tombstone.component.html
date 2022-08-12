@@ -13,7 +13,7 @@
       </p>
       <p class="card-text">
         <span>{{'item.tombstone.restricted.contact.help.0' | translate}}</span>
-        <a [href]="'mailto:'+(helpDesk$ | async)?.payload?.mail">{{'item.tombstone.restricted.contact.help.1' | translate}}</a>
+        <a [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">{{'item.tombstone.restricted.contact.help.1' | translate}}</a>
         <span>{{'item.tombstone.restricted.contact.help.2' | translate}}</span>
       </p>
       <div class="danger-icon">

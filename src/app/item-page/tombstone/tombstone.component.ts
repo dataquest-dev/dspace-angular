@@ -2,6 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../core/shared/item.model';
 import { ActivatedRoute } from '@angular/router';
 
+// Property for the configuration service to get help-desk mail property from the server
+export const HELP_DESK_PROPERTY = 'lr.help.mail';
+
 @Component({
   selector: 'ds-tombstone',
   templateUrl: './tombstone.component.html',

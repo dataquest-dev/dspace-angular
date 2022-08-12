@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { HelpDeskService } from '../../../core/shared/help-desk.service';
-import { HelpDesk } from '../../../core/shared/help-desk';
 import { Observable } from 'rxjs';
 import { RemoteData } from '../../../core/data/remote-data';
+import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
+import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
+import { HELP_DESK_PROPERTY } from '../tombstone.component';
 
 @Component({
   selector: 'ds-withdrawn-tombstone',
@@ -29,12 +30,12 @@ export class WithdrawnTombstoneComponent implements OnInit {
   /**
    * The mail for the help desk is loaded from the server.
    */
-  helpDesk$: Observable<RemoteData<HelpDesk>>;
+  helpDesk$: Observable<RemoteData<ConfigurationProperty>>;
 
-  constructor(private helpDeskService: HelpDeskService) { }
+  constructor(private configurationDataService: ConfigurationDataService) { }
 
   ngOnInit(): void {
-    this.helpDesk$ = this.helpDeskService.getHelpDeskMail();
+    this.helpDesk$ = this.configurationDataService.findByPropertyName(HELP_DESK_PROPERTY);
   }
 
 }
