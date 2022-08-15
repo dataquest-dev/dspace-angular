@@ -47,7 +47,6 @@ export class TombstoneComponent implements OnInit {
 
     // Load the reason of withdrawal from metadata
     this.reasonOfWithdrawal = this.item?.metadata['local.withdrawn.reason']?.[0]?.value;
-    console.log('reason', this.reasonOfWithdrawal);
 
     // Load authors
     this.addAuthorsFromMetadata('dc.contributor.author');
