@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../core/shared/item.model';
 import { ActivatedRoute } from '@angular/router';
+import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 
 // Property for the configuration service to get help-desk mail property from the server
 export const HELP_DESK_PROPERTY = 'lr.help.mail';
@@ -32,7 +33,13 @@ export class TombstoneComponent implements OnInit {
    */
   authors = [];
 
-  constructor(protected route: ActivatedRoute) { }
+  /**
+   * The name of the item loaded from the dsoService
+   */
+  itemName: string;
+
+  constructor(protected route: ActivatedRoute,
+              private dsoNameService: DSONameService) { }
 
   ngOnInit(): void {
     // Load the new destination from metadata
@@ -45,6 +52,9 @@ export class TombstoneComponent implements OnInit {
     // Load authors
     this.addAuthorsFromMetadata('dc.contributor.author');
     this.addAuthorsFromMetadata('dc.contributor.other');
+
+    // Get name of the Item
+    this.itemName = this.dsoNameService.getName(this.item);
   }
 
   /**

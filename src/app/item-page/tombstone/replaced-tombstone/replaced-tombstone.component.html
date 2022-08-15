@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-body">
       <h3 class="card-title">{{itemName}}</h3>
-      <p class="card-text">{{authors.join(', ')}}</p>
+      <p class="card-text">{{authors && authors.join(', ')}}</p>
       <h4 class="card-title">{{'item.tombstone.replaced.another-repository.message' | translate}}</h4>
       <p class="card-text">{{'item.tombstone.replaced.locations.message' | translate}}</p>
       <p><a class="card-text" [href]="isReplaced">{{isReplaced}}</a></p>

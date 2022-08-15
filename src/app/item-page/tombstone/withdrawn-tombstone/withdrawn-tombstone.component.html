@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-body">
       <h3 class="card-title">{{itemName}}</h3>
-      <p class="card-text">{{authors.join(', ')}}</p>
+      <p class="card-text">{{authors && authors.join(', ')}}</p>
       <h5 class="card-title">{{'item.tombstone.withdrawn.message' | translate}}</h5>
       <p class="card-text">{{'item.tombstone.no.available.message' | translate}}</p>
       <p *ngIf="reasonOfWithdrawal != null">
