@@ -264,8 +264,9 @@ export class MetadataService {
       this.addMetaTag('citation_dissertation_institution', value);
     } else if (this.isTechReport()) {
       this.addMetaTag('citation_technical_report_institution', value);
+    } else {
+      this.addMetaTag('citation_publisher', value);
     }
-    this.addMetaTag('citation_publisher', value);
   }
 
   /**
