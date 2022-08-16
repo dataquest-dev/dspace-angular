@@ -1,31 +1,29 @@
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {VocabularyOptions} from '../../../../../../core/submission/vocabularies/models/vocabulary-options.model';
-import {ComponentFixture, inject, TestBed, waitForAsync} from '@angular/core/testing';
-import {VocabularyServiceStub} from '../../../../../testing/vocabulary-service.stub';
-import {DynamicFormLayoutService, DynamicFormsCoreModule, DynamicFormValidationService} from '@ng-dynamic-forms/core';
-import {DynamicFormsNGBootstrapUIModule} from '@ng-dynamic-forms/ui-ng-bootstrap';
-import {InfiniteScrollModule} from 'ngx-infinite-scroll';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {TranslateModule} from '@ngx-translate/core';
-import {ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {VocabularyService} from '../../../../../../core/submission/vocabularies/vocabulary.service';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { VocabularyOptions } from '../../../../../../core/submission/vocabularies/models/vocabulary-options.model';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { VocabularyServiceStub } from '../../../../../testing/vocabulary-service.stub';
+import { DynamicFormLayoutService, DynamicFormsCoreModule, DynamicFormValidationService } from '@ng-dynamic-forms/core';
+import { DynamicFormsNGBootstrapUIModule } from '@ng-dynamic-forms/ui-ng-bootstrap';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { VocabularyService } from '../../../../../../core/submission/vocabularies/vocabulary.service';
 import {
   mockDynamicFormLayoutService,
   mockDynamicFormValidationService
-} from '../../../../../testing/dynamic-form-mock-services';
-import {createTestComponent} from '../../../../../testing/utils.test';
-import {DynamicScrollableDropdownModel} from '../scrollable-dropdown/dynamic-scrollable-dropdown.model';
-import {DsDynamicSponsorScrollableDropdownComponent} from './dynamic-sponsor-scrollable-dropdown.component';
-import {DsDynamicScrollableDropdownComponent} from '../scrollable-dropdown/dynamic-scrollable-dropdown.component';
-import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
-import {EU_PROJECT_PREFIX, SEPARATOR} from '../ds-dynamic-complex.model';
+ } from '../../../../../testing/dynamic-form-mock-services';
+import { createTestComponent } from '../../../../../testing/utils.test';
+import { DynamicScrollableDropdownModel } from '../scrollable-dropdown/dynamic-scrollable-dropdown.model';
+import { DsDynamicSponsorScrollableDropdownComponent } from './dynamic-sponsor-scrollable-dropdown.component';
+import { VocabularyEntry } from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 import {
   DEFAULT_EU_DISPLAY_VALUE,
   DEFAULT_EU_STORAGE_VALUE
-} from '../sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.model';
-import {take} from 'rxjs/operators';
-import {Observable} from 'rxjs';
-import {isNotEmpty} from '../../../../../empty.util';
+ } from '../sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.model';
+import { take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { isNotEmpty } from '../../../../../empty.util';
 
 export const SD_TEST_GROUP = new FormGroup({
   dropdown: new FormControl(),
