@@ -266,7 +266,6 @@ describe('Create a new submission', () => {
     createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
     createItemProcess.clickOnSave();
     cy.reload();
-    cy.wait(10000);
     createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
   });
 });
