@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { FormGroup } from '@angular/forms';
 
 import { Observable, of as observableOf } from 'rxjs';
-import { catchError, distinctUntilChanged, map, tap } from 'rxjs/operators';
+import {catchError, distinctUntilChanged, map, take, tap} from 'rxjs/operators';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicFormLayoutService, DynamicFormValidationService } from '@ng-dynamic-forms/core';
 
@@ -17,15 +17,23 @@ import {
 } from '../../../../../../core/data/paginated-list.model';
 import { FormFieldMetadataValueObject } from '../../../models/form-field-metadata-value.model';
 import {DsDynamicScrollableDropdownComponent} from '../scrollable-dropdown/dynamic-scrollable-dropdown.component';
-import { DynamicScrollableDropdownModel } from '../scrollable-dropdown/dynamic-scrollable-dropdown.model';
+import {
+  DYNAMIC_FORM_CONTROL_TYPE_SCROLLABLE_DROPDOWN,
+  DynamicScrollableDropdownModel
+} from '../scrollable-dropdown/dynamic-scrollable-dropdown.model';
 import {
   DEFAULT_EU_DISPLAY_VALUE,
-  DEFAULT_EU_FUNDING_TYPES
+  DEFAULT_EU_FUNDING_TYPES, DsDynamicSponsorAutocompleteModel
 } from '../sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.model';
-import {SEPARATOR} from '../ds-dynamic-complex.model';
+import {DynamicComplexModel, EU_IDENTIFIER_INDEX, EU_PROJECT_PREFIX, SEPARATOR} from '../ds-dynamic-complex.model';
+import {DsDynamicInputModel} from '../ds-dynamic-input.model';
+import {DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE} from '../autocomplete/ds-dynamic-autocomplete.model';
+import {isEqual, startsWith} from 'lodash';
 
 // The default value for the EU sponsor in the complex input type looks like `EU;;;;`
 const EU_TYPE_DEFAULT_VALUE = DEFAULT_EU_DISPLAY_VALUE + SEPARATOR.repeat(4);
+
+const DYNAMIC_INPUT_TYPE = 'INPUT';
 
 /**
  * Component representing a dropdown input field
@@ -58,6 +66,16 @@ export class DsDynamicSponsorScrollableDropdownComponent extends DsDynamicScroll
   }
 
   /**
+   * Emits a change event and set the current value with the given value.
+   * @param event The value to emit.
+   */
+  onSelect(event) {
+    this.group.markAsDirty();
+    this.dispatchUpdate(event);
+    this.setCurrentValue(event);
+  }
+
+  /**
    * Sets the current value with the given value.
    * @param value The value to set.
    * @param init Representing if is init value or not.
@@ -79,7 +97,69 @@ export class DsDynamicSponsorScrollableDropdownComponent extends DsDynamicScroll
       }
     }
 
+    // tslint:disable-next-line:no-shadowed-variable
+    result.pipe(take(1)).subscribe(value => {
+      if (!this.shouldCleanInputs(value, this.model.parent)) {
+        return;
+      }
+      this.cleanSponsorInputs(value, this.model.parent);
+    });
+
     this.currentValue = result;
+  }
+
+  /**
+   * Clean all input in the sponsor complex input field
+   * @private
+   */
+  private cleanSponsorInputs(fundingTypeValue, complexInputField: any) {
+    // the parent must be a complex input field
+    if (!(complexInputField instanceof DynamicComplexModel)) {
+      return;
+    }
+
+    if (!this.shouldCleanInputs(fundingTypeValue, complexInputField)) {
+      return;
+    }
+
+    // clean inputs
+    complexInputField.group.forEach(input => {
+      switch (input.type) {
+        case DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE:
+          (input as DsDynamicSponsorAutocompleteModel).value = '';
+          break;
+        case DYNAMIC_INPUT_TYPE:
+          (input as DsDynamicInputModel).value = '';
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  /**
+   * The inputs shouldn't be cleaned after every funding type change.
+   * Change the funding type if the funding type is EU and the complex input field doesn't have EU identifier
+   * `info:eu..`
+   * or the if the funding type is Non EU and the complex input field has EU identifier `info:eu..`
+   * @param fundingTypeValue
+   * @param complexInputField
+   * @private
+   */
+  private shouldCleanInputs(fundingTypeValue, complexInputField) {
+    const euIdentifierValue = (complexInputField.group[EU_IDENTIFIER_INDEX] as DsDynamicInputModel).value;
+
+    // if the funding type is EU and doesn't have EU identifier `info:eu..` -> clean inputs
+    if (isEqual(fundingTypeValue, DEFAULT_EU_DISPLAY_VALUE) && isEmpty(euIdentifierValue)) {
+      return true;
+    }
+
+    // if the funding type is Non EU and has EU identifier `info:eu..` -> clean inputs
+    if (!isEqual(fundingTypeValue, DEFAULT_EU_DISPLAY_VALUE) && !isEmpty(euIdentifierValue)) {
+      return true;
+    }
+
+    return false;
   }
 
 }

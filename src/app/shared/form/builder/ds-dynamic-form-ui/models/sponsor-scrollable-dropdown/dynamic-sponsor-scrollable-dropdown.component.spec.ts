@@ -1,25 +1,31 @@
-// Load the implementations that should be tested
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ComponentFixture, fakeAsync, inject, TestBed, tick, waitForAsync, } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule } from '@ngx-translate/core';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { DynamicFormLayoutService, DynamicFormsCoreModule, DynamicFormValidationService } from '@ng-dynamic-forms/core';
-import { DynamicFormsNGBootstrapUIModule } from '@ng-dynamic-forms/ui-ng-bootstrap';
-
-import { VocabularyOptions } from '../../../../../../core/submission/vocabularies/models/vocabulary-options.model';
-import { VocabularyService } from '../../../../../../core/submission/vocabularies/vocabulary.service';
-import { VocabularyServiceStub } from '../../../../../testing/vocabulary-service.stub';
-import { DsDynamicScrollableDropdownComponent } from './dynamic-scrollable-dropdown.component';
-import { DynamicScrollableDropdownModel } from './dynamic-scrollable-dropdown.model';
-import { VocabularyEntry } from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
-import { createTestComponent, hasClass } from '../../../../../testing/utils.test';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {VocabularyOptions} from '../../../../../../core/submission/vocabularies/models/vocabulary-options.model';
+import {ComponentFixture, inject, TestBed, waitForAsync} from '@angular/core/testing';
+import {VocabularyServiceStub} from '../../../../../testing/vocabulary-service.stub';
+import {DynamicFormLayoutService, DynamicFormsCoreModule, DynamicFormValidationService} from '@ng-dynamic-forms/core';
+import {DynamicFormsNGBootstrapUIModule} from '@ng-dynamic-forms/ui-ng-bootstrap';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {TranslateModule} from '@ngx-translate/core';
+import {ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {VocabularyService} from '../../../../../../core/submission/vocabularies/vocabulary.service';
 import {
   mockDynamicFormLayoutService,
   mockDynamicFormValidationService
 } from '../../../../../testing/dynamic-form-mock-services';
+import {createTestComponent} from '../../../../../testing/utils.test';
+import {DynamicScrollableDropdownModel} from '../scrollable-dropdown/dynamic-scrollable-dropdown.model';
+import {DsDynamicSponsorScrollableDropdownComponent} from './dynamic-sponsor-scrollable-dropdown.component';
+import {DsDynamicScrollableDropdownComponent} from '../scrollable-dropdown/dynamic-scrollable-dropdown.component';
+import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
+import {EU_PROJECT_PREFIX, SEPARATOR} from '../ds-dynamic-complex.model';
+import {
+  DEFAULT_EU_DISPLAY_VALUE,
+  DEFAULT_EU_STORAGE_VALUE
+} from '../sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.model';
+import {take} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {isNotEmpty} from '../../../../../empty.util';
 
 export const SD_TEST_GROUP = new FormGroup({
   dropdown: new FormControl(),
@@ -46,16 +52,24 @@ export const SD_TEST_MODEL_CONFIG = {
   hasSelectableMetadata: false
 };
 
-describe('Dynamic Dynamic Scrollable Dropdown component', () => {
+export const OWN_FUNDS_VALUE = 'Own funds';
+
+export const FUNDING_TYPE_OPTIONS = [
+  Object.assign(new VocabularyEntry(), { authority: 1, display: 'N/A', value: null }),
+  Object.assign(new VocabularyEntry(), { authority: 2, display: DEFAULT_EU_DISPLAY_VALUE, value: DEFAULT_EU_STORAGE_VALUE }),
+  Object.assign(new VocabularyEntry(), { authority: 2, display: OWN_FUNDS_VALUE, value: 'ownFunds' }),
+];
+
+describe('Dynamic Dynamic Sponsor Scrollable Dropdown component', () => {
 
   let testComp: TestComponent;
-  let scrollableDropdownComp: DsDynamicScrollableDropdownComponent;
+  let scrollableDropdownComp: DsDynamicSponsorScrollableDropdownComponent;
   let testFixture: ComponentFixture<TestComponent>;
-  let scrollableDropdownFixture: ComponentFixture<DsDynamicScrollableDropdownComponent>;
+  let scrollableDropdownFixture: ComponentFixture<DsDynamicSponsorScrollableDropdownComponent>;
   let html;
-  let modelValue;
 
   const vocabularyServiceStub = new VocabularyServiceStub();
+  vocabularyServiceStub.setNewPayload(FUNDING_TYPE_OPTIONS);
 
   // waitForAsync beforeEach
   beforeEach(waitForAsync(() => {
@@ -71,15 +85,15 @@ describe('Dynamic Dynamic Scrollable Dropdown component', () => {
         TranslateModule.forRoot()
       ],
       declarations: [
-        DsDynamicScrollableDropdownComponent,
+        DsDynamicSponsorScrollableDropdownComponent,
         TestComponent,
       ], // declare the test component
       providers: [
         ChangeDetectorRef,
-        DsDynamicScrollableDropdownComponent,
+        DsDynamicSponsorScrollableDropdownComponent,
         { provide: VocabularyService, useValue: vocabularyServiceStub },
         { provide: DynamicFormLayoutService, useValue: mockDynamicFormLayoutService },
-        { provide: DynamicFormValidationService, useValue: mockDynamicFormValidationService }
+        { provide: DynamicFormValidationService, useValue: mockDynamicFormValidationService },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });
@@ -90,127 +104,72 @@ describe('Dynamic Dynamic Scrollable Dropdown component', () => {
     // synchronous beforeEach
     beforeEach(() => {
       html = `
-      <ds-dynamic-scrollable-dropdown [bindId]="bindId"
+      <ds-dynamic-sponsor-scrollable-dropdown [bindId]="bindId"
                                       [group]="group"
                                       [model]="model"
                                       (blur)="onBlur($event)"
                                       (change)="onValueChange($event)"
-                                      (focus)="onFocus($event)"></ds-dynamic-scrollable-dropdown>`;
+                                      (focus)="onFocus($event)"></ds-dynamic-sponsor-scrollable-dropdown>`;
 
       testFixture = createTestComponent(html, TestComponent) as ComponentFixture<TestComponent>;
       testComp = testFixture.componentInstance;
     });
 
-    it('should create DsDynamicScrollableDropdownComponent', inject([DsDynamicScrollableDropdownComponent], (app: DsDynamicScrollableDropdownComponent) => {
+    it('should create DsDynamicSponsorScrollableDropdownComponent', inject([DsDynamicSponsorScrollableDropdownComponent], (app: DsDynamicSponsorScrollableDropdownComponent) => {
 
       expect(app).toBeDefined();
     }));
   });
 
-  describe('', () => {
-    describe('when init model value is empty', () => {
-      beforeEach(() => {
+  describe('when init model value is empty', () => {
+    beforeEach(() => {
 
-        scrollableDropdownFixture = TestBed.createComponent(DsDynamicScrollableDropdownComponent);
-        scrollableDropdownComp = scrollableDropdownFixture.componentInstance; // FormComponent test instance
-        scrollableDropdownComp.group = SD_TEST_GROUP;
-        scrollableDropdownComp.model = new DynamicScrollableDropdownModel(SD_TEST_MODEL_CONFIG);
-        scrollableDropdownFixture.detectChanges();
-      });
-
-      afterEach(() => {
-        scrollableDropdownFixture.destroy();
-        scrollableDropdownComp = null;
-      });
-
-      it('should init component properly', () => {
-        expect(scrollableDropdownComp.optionsList).toBeDefined();
-        expect(scrollableDropdownComp.optionsList).toEqual(vocabularyServiceStub.getList());
-      });
-
-      it('should display dropdown menu entries', () => {
-        const de = scrollableDropdownFixture.debugElement.query(By.css('input.form-control'));
-        const btnEl = de.nativeElement;
-
-        const deMenu = scrollableDropdownFixture.debugElement.query(By.css('div.scrollable-dropdown-menu'));
-        const menuEl = deMenu.nativeElement;
-
-        btnEl.click();
-        scrollableDropdownFixture.detectChanges();
-
-        expect(hasClass(menuEl, 'show')).toBeTruthy();
-      });
-
-      it('should fetch the next set of results when the user scroll to the end of the list', fakeAsync(() => {
-        scrollableDropdownComp.pageInfo.currentPage = 1;
-        scrollableDropdownComp.pageInfo.totalPages = 2;
-
-        scrollableDropdownFixture.detectChanges();
-
-        scrollableDropdownComp.onScroll();
-        tick();
-
-        expect(scrollableDropdownComp.optionsList.length).toBe(4);
-      }));
-
-      it('should select a results entry properly', fakeAsync(() => {
-        const selectedValue = Object.assign(new VocabularyEntry(), { authority: 1, display: 'one', value: 1 });
-
-        let de: any = scrollableDropdownFixture.debugElement.query(By.css('input.form-control'));
-        let btnEl = de.nativeElement;
-
-        btnEl.click();
-        scrollableDropdownFixture.detectChanges();
-
-        de = scrollableDropdownFixture.debugElement.queryAll(By.css('button.dropdown-item'));
-        btnEl = de[0].nativeElement;
-
-        btnEl.click();
-
-        scrollableDropdownFixture.detectChanges();
-
-        expect((scrollableDropdownComp.model as any).value).toEqual(selectedValue);
-      }));
-
-      it('should emit blur Event onBlur', () => {
-        spyOn(scrollableDropdownComp.blur, 'emit');
-        scrollableDropdownComp.onBlur(new Event('blur'));
-        expect(scrollableDropdownComp.blur.emit).toHaveBeenCalled();
-      });
-
-      it('should emit focus Event onFocus', () => {
-        spyOn(scrollableDropdownComp.focus, 'emit');
-        scrollableDropdownComp.onFocus(new Event('focus'));
-        expect(scrollableDropdownComp.focus.emit).toHaveBeenCalled();
-      });
-
+      scrollableDropdownFixture = TestBed.createComponent(DsDynamicSponsorScrollableDropdownComponent);
+      scrollableDropdownComp = scrollableDropdownFixture.componentInstance; // FormComponent test instance
+      scrollableDropdownComp.group = SD_TEST_GROUP;
+      scrollableDropdownComp.model = new DynamicScrollableDropdownModel(SD_TEST_MODEL_CONFIG);
+      scrollableDropdownFixture.detectChanges();
     });
 
-    describe('when init model value is not empty', () => {
-      beforeEach(() => {
+    afterEach(() => {
+      scrollableDropdownFixture.destroy();
+      scrollableDropdownComp = null;
+    });
 
-        scrollableDropdownFixture = TestBed.createComponent(DsDynamicScrollableDropdownComponent);
-        scrollableDropdownComp = scrollableDropdownFixture.componentInstance; // FormComponent test instance
-        scrollableDropdownComp.group = SD_TEST_GROUP;
-        modelValue = Object.assign(new VocabularyEntry(), { authority: 1, display: 'one', value: 1 });
-        scrollableDropdownComp.model = new DynamicScrollableDropdownModel(SD_TEST_MODEL_CONFIG);
-        scrollableDropdownComp.model.value = modelValue;
-        scrollableDropdownFixture.detectChanges();
-      });
+    it('should init component properly', () => {
+      expect(scrollableDropdownComp.optionsList).toBeDefined();
+      expect(scrollableDropdownComp.optionsList).toEqual(FUNDING_TYPE_OPTIONS);
+    });
 
-      afterEach(() => {
-        scrollableDropdownFixture.destroy();
-        scrollableDropdownComp = null;
-      });
+    it('should set value to EU fund after EU select', () => {
+      scrollableDropdownComp.setCurrentValue(DEFAULT_EU_DISPLAY_VALUE);
 
-      it('should init component properly', () => {
-        expect(scrollableDropdownComp.optionsList).toBeDefined();
-        expect(scrollableDropdownComp.optionsList).toEqual(vocabularyServiceStub.getList());
-        expect(scrollableDropdownComp.model.value).toEqual(modelValue);
-      });
+      expect(loadCurrentValueAsString(scrollableDropdownComp.currentValue)).toEqual(DEFAULT_EU_DISPLAY_VALUE);
+    });
+
+    it('should set value to Own fund after Own fund select', () => {
+      scrollableDropdownComp.setCurrentValue(OWN_FUNDS_VALUE);
+
+      expect(loadCurrentValueAsString(scrollableDropdownComp.currentValue)).toEqual(OWN_FUNDS_VALUE);
     });
   });
+
 });
+
+
+/**
+ * Load the component current value because currentValue in the component is observable object
+ * @param currentValue$ in the SponsorScrollableComponent
+ */
+export function loadCurrentValueAsString(currentValue$: Observable<string>) {
+  let currentValue = '';
+  if (isNotEmpty(currentValue$)) {
+    currentValue$.pipe(take(1)).subscribe( value => {
+      currentValue = value;
+    });
+  }
+  return currentValue;
+}
 
 // declare a test component
 @Component({
