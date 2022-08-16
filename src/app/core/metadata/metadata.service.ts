@@ -241,7 +241,7 @@ export class MetadataService {
    * Add <meta name="citation_language" ... >  to the <head>
    */
   private setCitationLanguageTag(): void {
-    const value = this.getMetaTagValue('dc.language.iso');
+    const value = this.getFirstMetaTagValue(['dc.language.iso', 'dc.language']);
     this.addMetaTag('citation_language', value);
   }
 
@@ -249,8 +249,10 @@ export class MetadataService {
    * Add <meta name="citation_dissertation_name" ... >  to the <head>
    */
   private setCitationDissertationNameTag(): void {
-    const value = this.getMetaTagValue('dc.title');
-    this.addMetaTag('citation_dissertation_name', value);
+    if (this.isDissertation()) {
+      const value = this.getMetaTagValue('dc.title');
+      this.addMetaTag('citation_dissertation_name', value);
+    }
   }
 
   /**
@@ -258,18 +260,20 @@ export class MetadataService {
    */
   private setCitationPublisherTag(): void {
     const value = this.getMetaTagValue('dc.publisher');
+    if (this.isDissertation()) {
       this.addMetaTag('citation_dissertation_institution', value);
+    } else if (this.isTechReport()) {
       this.addMetaTag('citation_technical_report_institution', value);
-      this.addMetaTag('citation_publisher', value);
     }
-
+    this.addMetaTag('citation_publisher', value);
+  }
 
   /**
    * Add <meta name="citation_keywords" ... >  to the <head>
    */
   private setCitationKeywordsTag(): void {
-    const value: string[] = this.getMetaTagValues(['dc.subject', 'dc.type']);
-    this.addMetaTags('citation_keywords', value);
+    const value = this.getMetaTagValues(['dc.subject', 'dc.type']).join('; ');
+    this.addMetaTag('citation_keywords', value);
   }
 
   /**
@@ -300,6 +304,8 @@ export class MetadataService {
         this.addMetaTag('dataset_license', value);
   }
 
+
+
   private setDatasetUrlTag(): void {
         const value = this.getMetaTagValue('dc.identifier.uri');
         this.addMetaTag('dataset_url', value);
@@ -310,10 +316,12 @@ export class MetadataService {
         this.addMetaTag('dataset_citation', value);
   }
 
+
   private setDatasetIdentifierTag(): void {
         const value = this.getMetaTagValue('dc.identifier.uri');
         this.addMetaTag('dataset_identifier', value);
   }
+
 
   private setDatasetCreatorTag(): void {
         const value = this.getMetaTagValue('dc.contributor.author');
