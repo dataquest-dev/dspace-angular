@@ -3,7 +3,7 @@ import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {RemoteData} from '../../core/data/remote-data';
 import {PaginatedList} from '../../core/data/paginated-list.model';
 import {Version} from '../../core/shared/version.model';
-import {Handle} from '../../core/handle/handle.model';
+import {Handle, SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
 import {HandleDataService} from '../../core/data/handle-data.service';
 import {PaginationComponentOptions} from '../../shared/pagination/pagination-component-options.model';
 import {
@@ -37,7 +37,9 @@ import {Operation} from 'fast-json-patch';
 import {DeleteRequest, PatchRequest} from '../../core/data/request.models';
 import {RequestService} from '../../core/data/request.service';
 import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
-import {defaultPagination, paginationID} from './handle-table-pagination';
+import {defaultPagination, paginationID, redirectBackWithPaginationOption} from './handle-table-pagination';
+import {TranslateService} from '@ngx-translate/core';
+import {NotificationsService} from '../../shared/notifications/notifications.service';
 
 /**
  * For changing prefix must be called patch request and patch request must have ID parameter.
@@ -55,7 +57,9 @@ export class HandleTableComponent implements OnInit {
               private paginationService: PaginationService,
               public router: Router,
               private requestService: RequestService,
-              private cdr: ChangeDetectorRef) {
+              private cdr: ChangeDetectorRef,
+              private translateService: TranslateService,
+              private notificationsService: NotificationsService) {
   }
 
   /**
@@ -146,6 +150,12 @@ export class HandleTableComponent implements OnInit {
     }
   }
 
+  redirectWithCurrentPage() {
+    this.router.navigate([this.handleRoute, this.newHandlePath],
+      { queryParams: { currentPage: this.options.currentPage } },
+    );
+  }
+
   redirectWithHandleParams() {
     // check if is selected some handle
     if (isEmpty(this.selectedHandle)) {
@@ -175,6 +185,7 @@ export class HandleTableComponent implements OnInit {
       return;
     }
 
+    let requestId = '';
     // delete handle
     this.handlesRD$.pipe(
       // take just one value from subscription because if is the subscription active this code runs after every
@@ -183,7 +194,7 @@ export class HandleTableComponent implements OnInit {
     ).subscribe((handleRD) => {
       handleRD.payload.page.forEach(handle => {
         if (handle.id === this.selectedHandle) {
-          const requestId = this.requestService.generateRequestId();
+          requestId = this.requestService.generateRequestId();
           const deleteRequest = new DeleteRequest(requestId, handle._links.self.href);
           // call delete request
           this.requestService.send(deleteRequest);
@@ -192,6 +203,31 @@ export class HandleTableComponent implements OnInit {
         }
       });
     });
+
+    // check response
+    this.requestService.getByUUID(requestId)
+      .subscribe(info => {
+        // if is empty
+        if (!isNotEmpty(info) || !isNotEmpty(info.response) || !isNotEmpty(info.response.statusCode)) {
+          // do nothing - in another subscription should be data
+          return;
+        }
+
+        if (info.response.statusCode.toString().startsWith(SUCCESSFUL_RESPONSE_START_CHAR)) {
+          this.notificationsService.success(null, this.translateService.get('handle-table.delete-handle.notify.successful'));
+        } else {
+          // write error in the notification
+          // compose error message with message definition and server error
+          let errorMessage = '';
+          this.translateService.get('handle-table.delete-handle.notify.error').pipe(
+            take(1)
+          ).subscribe( message => {
+            errorMessage = message + ': ' + info.response.errorMessage;
+          });
+
+          this.notificationsService.error(null, errorMessage);
+        }
+      });
   }
 
   public refreshTableAfterDelete(deletedHandleId) {

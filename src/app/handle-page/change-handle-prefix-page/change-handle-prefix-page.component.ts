@@ -11,6 +11,9 @@ import {isNotEmpty} from '../../shared/empty.util';
 import {NotificationsService} from '../../shared/notifications/notifications.service';
 import {TranslateService} from '@ngx-translate/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
+import {redirectBackWithPaginationOption} from '../handle-table/handle-table-pagination';
+import {PaginationService} from '../../core/pagination/pagination.service';
 
 
 
@@ -23,6 +26,7 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
 
   constructor(
     private notificationsService: NotificationsService,
+    private paginationService: PaginationService,
     private requestService: RequestService,
     private translateService: TranslateService,
     private handleDataService: HandleDataService,
@@ -46,6 +50,7 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
   }
 
   onClickSubmit(handlePrefixConfig) {
+    console.log('submitted');
     // Show validation errors after submit
     this.changePrefix.markAllAsTouched();
 
@@ -70,6 +75,9 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
     // call patch request
     this.requestService.send(patchRequest);
 
+    // notification the prefix changing has started
+    this.notificationsService.warning(null, this.translateService.get('handle-table.change-handle-prefix.notify.started'));
+
     // check response
     this.requestService.getByUUID(requestId)
       .subscribe(info => {
@@ -80,8 +88,9 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
         }
 
         // if the status code starts with 2 - the request was successful
-        if (info.response.statusCode.toString().startsWith('2')) {
+        if (info.response.statusCode.toString().startsWith(SUCCESSFUL_RESPONSE_START_CHAR)) {
           this.notificationsService.success(null, this.translateService.get('handle-table.change-handle-prefix.notify.successful'));
+          redirectBackWithPaginationOption(this.paginationService);
         } else {
           // write error in the notification
           // compose error message with message definition and server error

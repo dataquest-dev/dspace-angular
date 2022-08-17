@@ -8,23 +8,36 @@ import {isNotEmpty} from '../../shared/empty.util';
 import {NotificationsService} from '../../shared/notifications/notifications.service';
 import {TranslateService} from '@ngx-translate/core';
 import {take} from 'rxjs/operators';
+import {paginationID, redirectBackWithPaginationOption} from '../handle-table/handle-table-pagination';
+import {getHandleTableModulePath} from '../../app-routing-paths';
+import {PaginationService} from '../../core/pagination/pagination.service';
+import {ActivatedRoute} from '@angular/router';
+import {SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
 
 @Component({
   selector: 'ds-new-handle-page',
   templateUrl: './new-handle-page.component.html',
   styleUrls: ['./new-handle-page.component.scss']
 })
-export class NewHandlePageComponent {
+export class NewHandlePageComponent implements OnInit {
 
   handle: string;
 
   url: string;
 
+  currentPage: number;
+
   constructor(
     private notificationsService: NotificationsService,
+    private route: ActivatedRoute,
     private requestService: RequestService,
+    private paginationService: PaginationService,
     private translateService: TranslateService
   ) { }
+
+  ngOnInit(): void {
+    this.currentPage = this.route.snapshot.queryParams.currentPage;
+  }
 
   onClickSubmit(value) {
     // prepare request
@@ -43,8 +56,9 @@ export class NewHandlePageComponent {
           return;
         }
 
-        if (info.response.statusCode.toString().startsWith('2')) {
+        if (info.response.statusCode.toString().startsWith(SUCCESSFUL_RESPONSE_START_CHAR)) {
           this.notificationsService.success(null, this.translateService.get('handle-table.new-handle.notify.successful'));
+          redirectBackWithPaginationOption(this.paginationService, this.currentPage);
         } else {
           // write error in the notification
           // compose error message with message definition and server error

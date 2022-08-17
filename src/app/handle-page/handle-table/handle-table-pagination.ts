@@ -1,4 +1,5 @@
 import {PaginationComponentOptions} from '../../shared/pagination/pagination-component-options.model';
+import {getHandleTableModulePath} from '../../app-routing-paths';
 
 export const paginationID = 'hdl';
 
@@ -7,3 +8,17 @@ export const defaultPagination = Object.assign(new PaginationComponentOptions(),
     currentPage: 1,
     pageSize: 10
   });
+
+export function redirectBackWithPaginationOption(paginationService, currentPage = 0) {
+  // for redirection use the paginationService because it redirects with pagination options
+  paginationService.updateRouteWithUrl(paginationID,[getHandleTableModulePath()], {
+    page: currentPage,
+    pageSize: 10
+  }, {
+    handle: null,
+    url: null,
+    id: null,
+    _selflink: null,
+    currentPage: null
+  });
+}

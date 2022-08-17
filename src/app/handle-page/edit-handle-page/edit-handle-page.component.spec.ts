@@ -107,7 +107,7 @@ describe('EditHandlePageComponent', () => {
 
   it('should send request after click on Submit', () => {
     const patchOperation = {
-      op: 'replace', path: '/replaceHandle', value: handleObj
+      op: 'replace', path: '/updateHandle', value: handleObj
     } as Operation;
     const patchRequest = new PatchRequest(requestId, paramSelflinkValue, [patchOperation]);
 

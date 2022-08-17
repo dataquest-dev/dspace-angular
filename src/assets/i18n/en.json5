@@ -1596,6 +1596,16 @@
   "handle-table.new-handle.notify.successful": "The new handle was created!",
 
 
+  "handle-table.edit-handle.notify.error": "Server Error - Cannot edit this handle",
+
+  "handle-table.edit-handle.notify.successful": "The handle was edited!",
+
+
+  "handle-table.delete-handle.notify.error": "Server Error - Cannot delete this handle",
+
+  "handle-table.delete-handle.notify.successful": "The handle was deleted!",
+
+
 
   "handle-table.edit-handle.form-handle-input-text": "Handle",
 
@@ -1650,6 +1660,8 @@
   "handle-table.change-handle-prefix.form-new-prefix-input-error": "A valid new prefix is required",
 
   "handle-table.change-handle-prefix.form-archive-input-check": "Archive old handles?",
+
+  "handle-table.change-handle-prefix.notify.started": "Changing of the prefix has been started, it will take some time.",
 
   "handle-table.change-handle-prefix.notify.successful": "The global prefix was changed!",
 

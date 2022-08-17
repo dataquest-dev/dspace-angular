@@ -13,6 +13,8 @@ import {DSPACE_OBJECT} from '../shared/dspace-object.resource-type';
 import {DSpaceObject} from '../shared/dspace-object.model';
 import {isNotEmpty} from '../../shared/empty.util';
 
+export const SUCCESSFUL_RESPONSE_START_CHAR = '2';
+
 /**
  * Class the represents a metadata field
  */

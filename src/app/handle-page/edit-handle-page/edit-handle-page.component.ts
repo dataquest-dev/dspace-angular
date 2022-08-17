@@ -2,11 +2,19 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Operation} from 'fast-json-patch';
 import {RequestService} from '../../core/data/request.service';
-import {Handle} from '../../core/handle/handle.model';
+import {Handle, SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
 import {PatchRequest} from '../../core/data/request.models';
 import {getHandleTableModulePath} from '../../app-routing-paths';
 import {PaginationService} from '../../core/pagination/pagination.service';
-import {defaultPagination, paginationID} from '../handle-table/handle-table-pagination';
+import {
+  defaultPagination,
+  paginationID,
+  redirectBackWithPaginationOption
+} from '../handle-table/handle-table-pagination';
+import {isNotEmpty} from '../../shared/empty.util';
+import {take} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {NotificationsService} from '../../shared/notifications/notifications.service';
 
 @Component({
   selector: 'ds-edit-handle-page',
@@ -31,7 +39,9 @@ export class EditHandlePageComponent implements OnInit {
               public router: Router,
               private cdr: ChangeDetectorRef,
               private paginationService: PaginationService,
-              private requestService: RequestService) {
+              private requestService: RequestService,
+              private translateService: TranslateService,
+              private notificationsService: NotificationsService) {
   }
 
   ngOnInit(): void {
@@ -45,10 +55,7 @@ export class EditHandlePageComponent implements OnInit {
 
   onClickSubmit(value) {
     // edit handle
-
     // create a Handle object with updated body
-    // @TODO add URL to the Handle object
-    // url:
     const handleObj = {
       handle: this.handle,
       url: value.url,
@@ -59,7 +66,7 @@ export class EditHandlePageComponent implements OnInit {
     };
 
     const patchOperation = {
-      op: 'replace', path: '/replaceHandle', value: handleObj
+      op: 'replace', path: '/updateHandle', value: handleObj
     } as Operation;
 
     const requestId = this.requestService.generateRequestId();
@@ -67,17 +74,33 @@ export class EditHandlePageComponent implements OnInit {
     // call patch request
     this.requestService.send(patchRequest);
 
-    // for redirection use the paginationService because it redirects with pagination options
-    this.paginationService.updateRouteWithUrl(paginationID,[getHandleTableModulePath()], {
-      page: this.currentPage,
-      pageSize: 10
-    }, {
-      handle: null,
-      url: null,
-      id: null,
-      _selflink: null,
-      currentPage: null
-    });
+    // check response
+    this.requestService.getByUUID(requestId)
+      .subscribe(info => {
+        // if is empty
+        if (!isNotEmpty(info) || !isNotEmpty(info.response) || !isNotEmpty(info.response.statusCode)) {
+          // do nothing - in another subscription should be data
+          return;
+        }
+
+        if (info.response.statusCode.toString().startsWith(SUCCESSFUL_RESPONSE_START_CHAR)) {
+          this.notificationsService.success(null, this.translateService.get('handle-table.edit-handle.notify.successful'));
+          // for redirection use the paginationService because it redirects with pagination options
+          redirectBackWithPaginationOption(this.paginationService, this.currentPage);
+        } else {
+          // write error in the notification
+          // compose error message with message definition and server error
+          let errorMessage = '';
+          this.translateService.get('handle-table.edit-handle.notify.error').pipe(
+            take(1)
+          ).subscribe( message => {
+            errorMessage = message + ': ' + info.response.errorMessage;
+          });
+
+          this.notificationsService.error(null, errorMessage);
+        }
+      });
+
   }
 
 }
