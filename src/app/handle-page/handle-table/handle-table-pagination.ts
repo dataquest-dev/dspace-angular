@@ -1,5 +1,6 @@
 import {PaginationComponentOptions} from '../../shared/pagination/pagination-component-options.model';
 import {getHandleTableModulePath} from '../../app-routing-paths';
+import {SortDirection, SortOptions} from '../../core/cache/models/sort-options.model';
 
 export const paginationID = 'hdl';
 
@@ -8,6 +9,8 @@ export const defaultPagination = Object.assign(new PaginationComponentOptions(),
     currentPage: 1,
     pageSize: 10
   });
+
+export const defaultSortConfiguration = new SortOptions('handle', SortDirection.DESC);
 
 export function redirectBackWithPaginationOption(paginationService, currentPage = 0) {
   // for redirection use the paginationService because it redirects with pagination options
@@ -18,6 +21,8 @@ export function redirectBackWithPaginationOption(paginationService, currentPage 
     handle: null,
     url: null,
     id: null,
+    resourceType: null,
+    resourceId: null,
     _selflink: null,
     currentPage: null
   });

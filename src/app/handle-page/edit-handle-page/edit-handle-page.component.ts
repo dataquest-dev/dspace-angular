@@ -31,6 +31,10 @@ export class EditHandlePageComponent implements OnInit {
 
   _selflink: string;
 
+  resourceType: string;
+
+  resourceId: string;
+
   archive = false;
 
   currentPage: number;
@@ -49,6 +53,8 @@ export class EditHandlePageComponent implements OnInit {
     this.handle = this.route.snapshot.queryParams.handle;
     this.url = this.route.snapshot.queryParams.url;
     this.id = this.route.snapshot.queryParams.id;
+    this.resourceType = this.route.snapshot.queryParams.resourceType;
+    this.resourceId = this.route.snapshot.queryParams.resourceId;
     this._selflink = this.route.snapshot.queryParams._selflink;
     this.currentPage = this.route.snapshot.queryParams.currentPage;
   }

@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest as observableCombineLatest, combineLatest, Observable} from 'rxjs';
 import {RemoteData} from '../../core/data/remote-data';
 import {PaginatedList} from '../../core/data/paginated-list.model';
 import {Version} from '../../core/shared/version.model';
@@ -11,7 +11,7 @@ import {
   distinctUntilKeyChanged,
   first,
   last,
-  map,
+  map, startWith,
   switchMap, take,
   takeLast,
   takeUntil
@@ -22,7 +22,7 @@ import {followLink} from '../../shared/utils/follow-link-config.model';
 import {
   getAllCompletedRemoteData,
   getFirstCompletedRemoteData, getFirstSucceededRemoteData,
-  getFirstSucceededRemoteDataPayload, getPaginatedListPayload, getRemoteDataPayload
+  getFirstSucceededRemoteDataPayload, getPaginatedListPayload, getRemoteDataPayload, toDSpaceObjectListRD
 } from '../../core/shared/operators';
 import {PaginationService} from '../../core/pagination/pagination.service';
 import {ObjectSelectComponent} from '../../shared/object-select/object-select/object-select.component';
@@ -37,9 +37,17 @@ import {Operation} from 'fast-json-patch';
 import {DeleteRequest, PatchRequest} from '../../core/data/request.models';
 import {RequestService} from '../../core/data/request.service';
 import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
-import {defaultPagination, paginationID, redirectBackWithPaginationOption} from './handle-table-pagination';
+import {
+  defaultPagination,
+  defaultSortConfiguration,
+  paginationID,
+  redirectBackWithPaginationOption
+} from './handle-table-pagination';
 import {TranslateService} from '@ngx-translate/core';
 import {NotificationsService} from '../../shared/notifications/notifications.service';
+import {DSpaceObjectType} from '../../core/shared/dspace-object-type.model';
+import {Item} from '../../core/shared/item.model';
+import {SortOptions} from '../../core/cache/models/sort-options.model';
 
 /**
  * For changing prefix must be called patch request and patch request must have ID parameter.
@@ -78,6 +86,8 @@ export class HandleTableComponent implements OnInit {
    */
   options: PaginationComponentOptions;
 
+  sortConfiguration: SortOptions;
+
   /**
    * @TODO docs
    */
@@ -94,6 +104,7 @@ export class HandleTableComponent implements OnInit {
   ngOnInit(): void {
     this.handleRoute = getHandleTableModulePath();
     this.initializePaginationOptions();
+    this.sortConfiguration = defaultSortConfiguration;
     this.getAllHandles(true);
   }
 
@@ -106,33 +117,52 @@ export class HandleTableComponent implements OnInit {
     this.isLoading = true;
 
     const currentPagination$ = this.paginationService.getCurrentPagination(this.options.id, this.options);
-    const currentPagination = Object.assign(new PaginationComponentOptions(), {
-      currentPage: null,
-      pageSize: null
-    });
+    // const currentPagination = Object.assign(new PaginationComponentOptions(), {
+    //   currentPage: null,
+    //   pageSize: null
+    // });
 
-    currentPagination$.subscribe(pagination => {
-      currentPagination.currentPage = pagination.currentPage;
-      currentPagination.pageSize = pagination.pageSize;
+    const currentSort$ = this.paginationService.getCurrentSort(this.options.id, this.sortConfiguration);
 
-      if (isEmpty(currentPagination.currentPage) || isEmpty(this.options.currentPage)) {
-        return;
-      }
-
-      if (currentPagination.currentPage !== this.options.currentPage || init) {
-        this.options.currentPage = currentPagination.currentPage;
-        this.handleDataService.findAll({
+    observableCombineLatest([currentPagination$, currentSort$]).pipe(
+      switchMap(([currentPagination, currentSort]) => {
+        return this.handleDataService.findAll({
             currentPage: currentPagination.currentPage,
             elementsPerPage: currentPagination.pageSize,
+            sort: {field: currentSort.field, direction: currentSort.direction}
           }, false
-        ).pipe(
-          getFirstSucceededRemoteData()
-        ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
-          this.handlesRD$.next(res);
-          this.isLoading = false;
-        });
-      }
+        );
+      }),
+      getFirstSucceededRemoteData()
+    ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
+      this.handlesRD$.next(res);
+      this.isLoading = false;
     });
+
+
+
+    // currentPagination$.subscribe(pagination => {
+    //   currentPagination.currentPage = pagination.currentPage;
+    //   currentPagination.pageSize = pagination.pageSize;
+    //
+    //   if (isEmpty(currentPagination.currentPage) || isEmpty(this.options.currentPage)) {
+    //     return;
+    //   }
+    //
+    //   if (currentPagination.currentPage !== this.options.currentPage || init) {
+    //     this.options.currentPage = currentPagination.currentPage;
+    //     this.handleDataService.findAll({
+    //         currentPage: currentPagination.currentPage,
+    //         elementsPerPage: currentPagination.pageSize,
+    //       }, false
+    //     ).pipe(
+    //       getFirstSucceededRemoteData()
+    //     ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
+    //       this.handlesRD$.next(res);
+    //       this.isLoading = false;
+    //     });
+    //   }
+    // });
   }
 
   /**
@@ -170,9 +200,10 @@ export class HandleTableComponent implements OnInit {
       handleRD.payload.page.forEach(handle => {
         if (handle.id === this.selectedHandle) {
           this.switchSelectedHandle(this.selectedHandle);
-          // @TODO add URL to the handle object
           this.router.navigate([this.handleRoute, this.editHandlePath],
-            { queryParams: { id: handle.id, _selflink: handle._links.self.href, handle: handle.handle, url: handle.url, currentPage: this.options.currentPage } },
+            { queryParams: { id: handle.id, _selflink: handle._links.self.href, handle: handle.handle,
+                url: handle.url, resourceType: handle.resourceTypeID, resourceId: handle.id,
+                currentPage: this.options.currentPage } },
           );
         }
       });

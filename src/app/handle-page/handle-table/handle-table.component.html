@@ -6,6 +6,7 @@
       <div *ngVar="(handlesRD$ | async)?.payload as handles">
         <div class="mb-2">
           <ds-pagination (paginationChange)="onPageChange()"
+                         [sortOptions]="sortConfiguration"
                          [hideGear]="true"
                          [hidePagerWhenSinglePage]="true"
                          [paginationOptions]="options"
