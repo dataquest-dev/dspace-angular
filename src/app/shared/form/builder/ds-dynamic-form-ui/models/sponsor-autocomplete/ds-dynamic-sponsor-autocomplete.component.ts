@@ -69,13 +69,13 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
     let fundingName = '';
     if (suggestion instanceof ExternalSourceEntry) {
       // suggestion from the openAIRE
-      fundingProjectCode = this.getProjectCodeFromId(suggestion.id);
+      fundingProjectCode = this.getProjectCodeFromId(suggestion?.id);
       fundingName = suggestion.metadata?.['project.funder.name']?.[0]?.value;
     } else if (suggestion instanceof  VocabularyEntry) {
-      // the value is in the format: `<FUNDING_TYPE>;<PROJECT_CODE>;<FUND_ORGANIZATION>;<PROJECT_NAME>;`
-      const fundingFields = suggestion.value.split(SEPARATOR);
-      fundingProjectCode = fundingFields[1];
-      fundingName = fundingFields[3];
+      // the value is in the format: `<FUNDING_TYPE>;<PROJECT_CODE>;<FUND_ORGANIZATION>;<FUNDING_NAME>;`
+      const fundingFields = suggestion.value?.split(SEPARATOR);
+      fundingProjectCode = fundingFields?.[1];
+      fundingName = fundingFields?.[3];
     }
     return DsDynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
   }
@@ -203,7 +203,7 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
     const updatedId = id.match(regex);
 
     // updated value is in the updatedId[1]
-    return isNotEmpty(updatedId[1]) ? updatedId[1] : id;
+    return isNotEmpty(updatedId?.[1]) ? updatedId?.[1] : id;
   }
 
   /**
