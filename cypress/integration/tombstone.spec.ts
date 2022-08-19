@@ -68,7 +68,13 @@ describe('Admin Tombstone  Page', () => {
     loginProcess.submit();
   });
 
-  it('the admin should see ds-item-page', () => {
+  it('the admin should see ds-item-page',{
+      retries: {
+        runMode: 6,
+        openMode: 6,
+      },
+      defaultCommandTimeout: 10000
+    }, () => {
     cy.visit(ITEMPAGE_WITHDRAWN);
     cy.get('ds-item-page').should('exist');
   });
@@ -78,6 +84,7 @@ describe('Admin Tombstone  Page', () => {
         runMode: 6,
         openMode: 6,
       },
+    defaultCommandTimeout: 10000
     }, () => {
     cy.visit(ITEMPAGE_WITHDRAWN_REASON);
     cy.get('ds-item-page').contains(TOMBSTONED_ITEM_MESSAGE);
@@ -88,6 +95,7 @@ describe('Admin Tombstone  Page', () => {
         runMode: 6,
         openMode: 6,
       },
+    defaultCommandTimeout: 10000
     }, () => {
     cy.visit(ITEMPAGE_WITHDRAWN_REPLACED);
     cy.get('ds-item-page').contains(TOMBSTONED_ITEM_MESSAGE);
