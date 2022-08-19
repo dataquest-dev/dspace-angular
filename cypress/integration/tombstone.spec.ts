@@ -68,17 +68,27 @@ describe('Admin Tombstone  Page', () => {
     loginProcess.submit();
   });
 
-  it('the admin should not see withdrawn tombstone but should see the item with the tombstone message', () => {
+  it('the admin should see ds-item-page', () => {
     cy.visit(ITEMPAGE_WITHDRAWN);
     cy.get('ds-item-page').should('exist');
   });
 
-  it('the admin should not see withdrawn tombstone but should see the item with the tombstone message', () => {
+  it('the admin should see the withdrawn message on the withdrawn item', {
+      retries: {
+        runMode: 6,
+        openMode: 6,
+      },
+    }, () => {
     cy.visit(ITEMPAGE_WITHDRAWN_REASON);
     cy.get('ds-item-page').contains(TOMBSTONED_ITEM_MESSAGE);
   });
 
-  it('the admin should not see withdrawn tombstone but should see the item with the tombstone message', () => {
+  it('the admin should see the withdrawn message on the replaced item', {
+      retries: {
+        runMode: 6,
+        openMode: 6,
+      },
+    }, () => {
     cy.visit(ITEMPAGE_WITHDRAWN_REPLACED);
     cy.get('ds-item-page').contains(TOMBSTONED_ITEM_MESSAGE);
   });
