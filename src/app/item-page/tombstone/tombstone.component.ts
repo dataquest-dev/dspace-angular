@@ -62,7 +62,7 @@ export class TombstoneComponent implements OnInit {
    * @private
    */
   private addAuthorsFromMetadata(metadataField) {
-    this.item?.metadata[metadataField]?.forEach(value => {
+    this.item?.metadata?.[metadataField]?.forEach(value => {
       this.authors.push(value?.value);
     });
   }

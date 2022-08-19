@@ -71,8 +71,6 @@ describe('Admin Tombstone  Page', () => {
   it('the admin should not see withdrawn tombstone but should see the item with the tombstone message', () => {
     cy.visit(ITEMPAGE_WITHDRAWN);
     cy.get('ds-item-page').should('exist');
-    cy.get('ds-replaced-tombstone').should('not.exist');
-    cy.get('ds-withdrawn-tombstone').should('not.exist');
   });
 
   it('the admin should not see withdrawn tombstone but should see the item with the tombstone message', () => {
