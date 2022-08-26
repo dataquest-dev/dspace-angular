@@ -105,23 +105,18 @@ export class HandleTableComponent implements OnInit {
     this.handleRoute = getHandleTableModulePath();
     this.initializePaginationOptions();
     this.sortConfiguration = defaultSortConfiguration;
-    this.getAllHandles(true);
+    this.getAllHandles();
   }
 
   private initializePaginationOptions() {
     this.options = defaultPagination;
   }
 
-  getAllHandles(init = false) {
+  getAllHandles() {
     this.handlesRD$ = new BehaviorSubject<RemoteData<PaginatedList<Handle>>>(null);
     this.isLoading = true;
 
     const currentPagination$ = this.paginationService.getCurrentPagination(this.options.id, this.options);
-    // const currentPagination = Object.assign(new PaginationComponentOptions(), {
-    //   currentPage: null,
-    //   pageSize: null
-    // });
-
     const currentSort$ = this.paginationService.getCurrentSort(this.options.id, this.sortConfiguration);
 
     observableCombineLatest([currentPagination$, currentSort$]).pipe(
@@ -135,34 +130,16 @@ export class HandleTableComponent implements OnInit {
       }),
       getFirstSucceededRemoteData()
     ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
+      // parse Handle Resource type
+      res.payload.page.forEach(handle => {
+        if (handle.resourceTypeID === '2') {
+          handle.resourceTypeID = 'Item';
+        }
+      });
+
       this.handlesRD$.next(res);
       this.isLoading = false;
     });
-
-
-
-    // currentPagination$.subscribe(pagination => {
-    //   currentPagination.currentPage = pagination.currentPage;
-    //   currentPagination.pageSize = pagination.pageSize;
-    //
-    //   if (isEmpty(currentPagination.currentPage) || isEmpty(this.options.currentPage)) {
-    //     return;
-    //   }
-    //
-    //   if (currentPagination.currentPage !== this.options.currentPage || init) {
-    //     this.options.currentPage = currentPagination.currentPage;
-    //     this.handleDataService.findAll({
-    //         currentPage: currentPagination.currentPage,
-    //         elementsPerPage: currentPagination.pageSize,
-    //       }, false
-    //     ).pipe(
-    //       getFirstSucceededRemoteData()
-    //     ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
-    //       this.handlesRD$.next(res);
-    //       this.isLoading = false;
-    //     });
-    //   }
-    // });
   }
 
   /**
@@ -287,7 +264,7 @@ export class HandleTableComponent implements OnInit {
         // reload table if the handle was removed from the database
         if (!isHandleInTable) {
           this.switchSelectedHandle(deletedHandleId);
-          this.getAllHandles(true);
+          this.getAllHandles();
           this.cdr.detectChanges();
           clearInterval(interval);
         }

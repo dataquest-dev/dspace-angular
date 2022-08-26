@@ -31,8 +31,12 @@
                   {{handle?.handle}}
                 </td>
                 <td class="version-row-element-editor">
-                  <!--              {{handle?.internal}}-->
-                  Yes
+                  <span *ngIf="handle?.resourceTypeID == null">
+                    {{ 'handle-table.table.not-internal' | translate }}
+                  </span>
+                  <span *ngIf="handle?.resourceTypeID != null">
+                    {{ 'handle-table.table.is-internal' | translate }}
+                  </span>
                 </td>
                 <td class="version-row-element-editor">
                   {{handle?.url}}

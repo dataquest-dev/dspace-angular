@@ -7,13 +7,26 @@ import {HandleDataService} from '../../core/data/handle-data.service';
 import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
 import {connectableObservableDescriptor} from 'rxjs/internal/observable/ConnectableObservable';
 import {DEFAULT_HANDLE_ID} from '../handle-table/handle-table.component';
-import {isNotEmpty} from '../../shared/empty.util';
+import {isEmpty, isNotEmpty} from '../../shared/empty.util';
 import {NotificationsService} from '../../shared/notifications/notifications.service';
 import {TranslateService} from '@ngx-translate/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
+import {Handle, SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
 import {redirectBackWithPaginationOption} from '../handle-table/handle-table-pagination';
 import {PaginationService} from '../../core/pagination/pagination.service';
+import {
+  getFirstCompletedRemoteData,
+  getFirstSucceededRemoteData,
+  getFirstSucceededRemoteDataPayload
+} from '../../core/shared/operators';
+import {PaginatedList} from '../../core/data/paginated-list.model';
+import {BrowseDefinition} from '../../core/shared/browse-definition.model';
+import {Observable, Subject} from 'rxjs';
+import {subscribeToPromise} from 'rxjs/internal-compatibility';
+import {log} from 'util';
+import {RemoteData} from '../../core/data/remote-data';
+import {ConfigurationDataService} from '../../core/data/configuration-data.service';
+import {computeStartOfLinePositions} from '@angular/compiler-cli/src/ngtsc/sourcemaps/src/source_file';
 
 
 
@@ -31,6 +44,7 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
     private translateService: TranslateService,
     private handleDataService: HandleDataService,
     private halService: HALEndpointService,
+    private configurationService: ConfigurationDataService,
     private fb: FormBuilder
   ) { }
 
@@ -49,8 +63,16 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
     });
   }
 
-  onClickSubmit(handlePrefixConfig) {
-    console.log('submitted');
+  async getExistingHandle(): Promise<PaginatedList<Handle>> {
+    return this.handleDataService.findAll()
+      .pipe(
+        getFirstSucceededRemoteDataPayload<PaginatedList<Handle>>()
+      ).toPromise();
+  }
+
+
+
+  async onClickSubmit(handlePrefixConfig) {
     // Show validation errors after submit
     this.changePrefix.markAllAsTouched();
 
@@ -66,12 +88,24 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
     // load handles endpoint
     this.halService.getEndpoint(this.handleDataService.getLinkPath()).pipe(
       take(1)
-    ).subscribe( endpoint => {
+    ).subscribe(endpoint => {
       handleHref = endpoint;
     });
 
+    // Patch request must contain some existing Handle ID
+    // If the Handle table is empty - there is no Handle - do not send Patch request but throw error
+    let existingHandleId = null;
+    await this.getExistingHandle().then(paginatedList => {
+      existingHandleId = paginatedList.page.pop().id;
+    });
+
+    if (isEmpty(existingHandleId)) {
+      this.showErrorNotification('handle-table.change-handle-prefix.notify.error.empty-table');
+      return;
+    }
+
     const requestId = this.requestService.generateRequestId();
-    const patchRequest = new PatchRequest(requestId, handleHref + '/' + DEFAULT_HANDLE_ID, [patchOperation]);
+    const patchRequest = new PatchRequest(requestId, handleHref + '/' + existingHandleId, [patchOperation]);
     // call patch request
     this.requestService.send(patchRequest);
 
@@ -94,15 +128,20 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
         } else {
           // write error in the notification
           // compose error message with message definition and server error
-          let errorMessage = '';
-          this.translateService.get('handle-table.change-handle-prefix.notify.error').pipe(
-            take(1)
-          ).subscribe( message => {
-            errorMessage = message + ': ' + info.response.errorMessage;
-          });
-
-          this.notificationsService.error(null, errorMessage);
+          this.showErrorNotification('handle-table.change-handle-prefix.notify.error',
+            info?.response?.errorMessage);
         }
       });
+  }
+
+  showErrorNotification(messageKey, reasonMessage = null) {
+    let errorMessage;
+    this.translateService.get(messageKey).pipe(
+      take(1)
+    ).subscribe(message => {
+      errorMessage = message + (isNotEmpty(reasonMessage) ? ': ' + reasonMessage : '');
+    });
+
+    this.notificationsService.error(null, errorMessage);
   }
 }

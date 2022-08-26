@@ -1628,6 +1628,10 @@
 
   "handle-table.table.internal": "Internal",
 
+  "handle-table.table.is-internal": "Yes",
+
+  "handle-table.table.not-internal": "No",
+
   "handle-table.table.url": "URL",
 
   "handle-table.table.resource-type": "Resource type",
@@ -1666,6 +1670,8 @@
   "handle-table.change-handle-prefix.notify.successful": "The global prefix was changed!",
 
   "handle-table.change-handle-prefix.notify.error": "Server Error - Cannot change the global prefix",
+
+  "handle-table.change-handle-prefix.notify.error.empty-table": "Server Error - Cannot change the global prefix because no Handle exist.",
 
 
 
