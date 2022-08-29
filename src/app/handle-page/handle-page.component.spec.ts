@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { HandlePageComponent } from './handle-page.component';
 
+/**
+ * The test class for the HandleTableComponent.
+ */
 describe('HandleTableComponent', () => {
   let component: HandlePageComponent;
   let fixture: ComponentFixture<HandlePageComponent>;

@@ -1,35 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import {Operation} from 'fast-json-patch';
-import {PatchRequest} from '../../core/data/request.models';
-import {RequestService} from '../../core/data/request.service';
-import {map, take} from 'rxjs/operators';
-import {HandleDataService} from '../../core/data/handle-data.service';
-import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
-import {connectableObservableDescriptor} from 'rxjs/internal/observable/ConnectableObservable';
-import {DEFAULT_HANDLE_ID} from '../handle-table/handle-table.component';
-import {isEmpty, isNotEmpty} from '../../shared/empty.util';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
-import {TranslateService} from '@ngx-translate/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Handle, SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
-import {redirectBackWithPaginationOption} from '../handle-table/handle-table-pagination';
-import {PaginationService} from '../../core/pagination/pagination.service';
-import {
-  getFirstCompletedRemoteData,
-  getFirstSucceededRemoteData,
-  getFirstSucceededRemoteDataPayload
-} from '../../core/shared/operators';
-import {PaginatedList} from '../../core/data/paginated-list.model';
-import {BrowseDefinition} from '../../core/shared/browse-definition.model';
-import {Observable, Subject} from 'rxjs';
-import {subscribeToPromise} from 'rxjs/internal-compatibility';
-import {log} from 'util';
-import {RemoteData} from '../../core/data/remote-data';
-import {ConfigurationDataService} from '../../core/data/configuration-data.service';
-import {computeStartOfLinePositions} from '@angular/compiler-cli/src/ngtsc/sourcemaps/src/source_file';
+import { Operation } from 'fast-json-patch';
+import { PatchRequest } from '../../core/data/request.models';
+import { RequestService } from '../../core/data/request.service';
+import { take } from 'rxjs/operators';
+import { HandleDataService } from '../../core/data/handle-data.service';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { isEmpty, isNotEmpty } from '../../shared/empty.util';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { TranslateService } from '@ngx-translate/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Handle } from '../../core/handle/handle.model';
+import { redirectBackWithPaginationOption } from '../handle-table/handle-table-pagination';
+import { PaginationService } from '../../core/pagination/pagination.service';
+import { getFirstSucceededRemoteDataPayload } from '../../core/shared/operators';
+import { PaginatedList } from '../../core/data/paginated-list.model';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { SUCCESSFUL_RESPONSE_START_CHAR } from '../../core/handle/handle.resource-type';
 
-
-
+/**
+ * The component where is changing the global handle prefix.
+ */
 @Component({
   selector: 'ds-change-handle-prefix-page',
   templateUrl: './change-handle-prefix-page.component.html',
@@ -48,13 +38,18 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
     private fb: FormBuilder
   ) { }
 
-
+  /**
+   * The form inputs
+   */
   changePrefix: FormGroup;
 
   ngOnInit(): void {
     this.createForm();
   }
 
+  /**
+   * Set up the form input with default values and validators.
+   */
   createForm() {
     this.changePrefix = this.fb.group({
       oldPrefix: ['', Validators.required ],
@@ -63,13 +58,20 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
     });
   }
 
-  async getExistingHandle(): Promise<PaginatedList<Handle>> {
+  /**
+   * Return all handles
+   */
+  async getExistingHandles(): Promise<PaginatedList<Handle>> {
     return this.handleDataService.findAll()
       .pipe(
         getFirstSucceededRemoteDataPayload<PaginatedList<Handle>>()
       ).toPromise();
   }
 
+  /**
+   * Send the request with updated prefix to the server.
+   * @param handlePrefixConfig the form inputs values
+   */
   async onClickSubmit(handlePrefixConfig) {
     // Show validation errors after submit
     this.changePrefix.markAllAsTouched();
@@ -78,6 +80,7 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
       return;
     }
 
+    // create patch request operation
     const patchOperation = {
       op: 'replace', path: '/setPrefix', value: handlePrefixConfig
     } as Operation;
@@ -90,18 +93,20 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
       handleHref = endpoint;
     });
 
-    // Patch request must contain some existing Handle ID
+    // Patch request must contain some existing Handle ID because the server throws the error
     // If the Handle table is empty - there is no Handle - do not send Patch request but throw error
     let existingHandleId = null;
-    await this.getExistingHandle().then(paginatedList => {
+    await this.getExistingHandles().then(paginatedList => {
       existingHandleId = paginatedList.page.pop().id;
     });
 
+    // There is no handle in the DSpace
     if (isEmpty(existingHandleId)) {
       this.showErrorNotification('handle-table.change-handle-prefix.notify.error.empty-table');
       return;
     }
 
+    // Generate the request ID and send the request
     const requestId = this.requestService.generateRequestId();
     const patchRequest = new PatchRequest(requestId, handleHref + '/' + existingHandleId, [patchOperation]);
     // call patch request
@@ -132,6 +137,11 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
       });
   }
 
+  /**
+   * Show error notification with spexific message definition
+   * @param messageKey from `en.json5`
+   * @param reasonMessage reason
+   */
   showErrorNotification(messageKey, reasonMessage = null) {
     let errorMessage;
     this.translateService.get(messageKey).pipe(

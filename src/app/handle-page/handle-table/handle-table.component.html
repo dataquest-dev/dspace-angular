@@ -3,6 +3,7 @@
     <h5 class="card-header">{{ 'handle-table.title' | translate }}</h5>
     <div class="card-body">
 
+      <!-- The search panel -->
       <div class="input-group mb-3">
       <div ngbDropdown class="input-group-prepend">
         <button id="resultdropdown" type="button"
@@ -11,7 +12,7 @@
                 data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
           <span *ngIf="searchOption != null" [ngModel]="searchOption" name="searchOption" ngDefaultControl>{{searchOption}}</span>
-          <span *ngIf="searchOption == null" >Search option</span>
+          <span *ngIf="searchOption == null" >{{'handle-table.dropdown.search-option' | translate}}</span>
         </button>
         <div ngbDropdownMenu aria-labelledby="resultdropdown">
           <button class="dropdown-item" (click)="setSearchOption($event)">{{"handle-table.table.handle" | translate}}</button>
@@ -22,10 +23,10 @@
         <input type="text" class="form-control" aria-label="Text input with dropdown button"
                [value]="searchQuery"
                (input)="setSearchQuery()"
-               #searchInput
-               >
+               #searchInput>
       </div>
 
+      <!-- The table with pagination -->
       <div *ngVar="(handlesRD$ | async)?.payload as handles">
         <div class="mb-2">
           <ds-pagination (paginationChange)="onPageChange()"

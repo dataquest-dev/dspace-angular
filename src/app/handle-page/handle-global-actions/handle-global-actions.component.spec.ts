@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { HandleGlobalActionsComponent } from './handle-global-actions.component';
 
+/**
+ * The test class for testing the HandleGlobalActionsComponent.
+ */
 describe('HandleGlobalActionsComponent', () => {
   let component: HandleGlobalActionsComponent;
   let fixture: ComponentFixture<HandleGlobalActionsComponent>;

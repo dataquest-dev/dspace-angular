@@ -1,10 +1,13 @@
-import {UNDEFINED_NAME} from '../../shared/mocks/dso-name.service.mock';
-import {COLLECTION, COMMUNITY, ITEM} from './handle.model';
+import { UNDEFINED_NAME } from '../../shared/mocks/dso-name.service.mock';
+import { COLLECTION, COMMUNITY, ITEM } from './handle.resource-type';
 
+/**
+ * The ResourceTypeId of the Handle is number in the database but in the Handle table the user
+ * must see meaningful information. This serializer convert that number to the string information and vice versa e.g.
+ * resourceTypeId: 2 -> resourceTypeId: Item.
+ */
 export const HandleResourceTypeIdSerializer = {
   Serialize(resourceTypeId: string): number {
-
-
     switch (resourceTypeId) {
       case ITEM:
         return 2;

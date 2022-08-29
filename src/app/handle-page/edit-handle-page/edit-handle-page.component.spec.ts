@@ -1,20 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditHandlePageComponent } from './edit-handle-page.component';
-import {ActivatedRoute, convertToParamMap, Params, Router} from '@angular/router';
-import {PaginationService} from '../../core/pagination/pagination.service';
-import {RequestService} from '../../core/data/request.service';
-import {SharedModule} from '../../shared/shared.module';
-import {CommonModule} from '@angular/common';
-import {ReactiveFormsModule} from '@angular/forms';
-import {TranslateModule} from '@ngx-translate/core';
-import {RouterTestingModule} from '@angular/router/testing';
-import {of as observableOf} from 'rxjs';
-import {RouterStub} from '../../shared/testing/router.stub';
-import {PaginationServiceStub} from '../../shared/testing/pagination-service.stub';
-import {Handle} from '../../core/handle/handle.model';
-import {PatchRequest} from '../../core/data/request.models';
-import {Operation} from 'fast-json-patch';
+import { ActivatedRoute, convertToParamMap, Params, Router } from '@angular/router';
+import { PaginationService } from '../../core/pagination/pagination.service';
+import { RequestService } from '../../core/data/request.service';
+import { SharedModule } from '../../shared/shared.module';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { of as observableOf } from 'rxjs';
+import { RouterStub } from '../../shared/testing/router.stub';
+import { PaginationServiceStub } from '../../shared/testing/pagination-service.stub';
+import { Handle } from '../../core/handle/handle.model';
+import { PatchRequest } from '../../core/data/request.models';
+import { Operation } from 'fast-json-patch';
 
+/**
+ * The test class for the EditHandlePageComponent which edit the Handle.
+ */
 describe('EditHandlePageComponent', () => {
   let component: EditHandlePageComponent;
   let fixture: ComponentFixture<EditHandlePageComponent>;

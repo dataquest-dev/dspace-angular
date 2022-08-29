@@ -12,7 +12,7 @@ import {paginationID, redirectBackWithPaginationOption} from '../handle-table/ha
 import {getHandleTableModulePath} from '../../app-routing-paths';
 import {PaginationService} from '../../core/pagination/pagination.service';
 import {ActivatedRoute} from '@angular/router';
-import {SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
+import {SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.resource-type';
 
 @Component({
   selector: 'ds-new-handle-page',

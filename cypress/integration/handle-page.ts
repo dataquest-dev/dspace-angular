@@ -1,4 +1,4 @@
-import {loginProcess} from './submission-ui.spec';
+import { loginProcess } from './submission-ui.spec';
 
 /**
  * Test for checking if the handle page is loaded after redirecting.

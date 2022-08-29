@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {GLOBAL_ACTIONS_PATH} from '../handle-page-routing-paths';
+import { GLOBAL_ACTIONS_PATH } from '../handle-page-routing-paths';
 
 @Component({
   selector: 'ds-handle-global-actions',
@@ -8,8 +8,12 @@ import {GLOBAL_ACTIONS_PATH} from '../handle-page-routing-paths';
 })
 export class HandleGlobalActionsComponent implements OnInit {
 
+  // tslint:disable-next-line:no-empty
   constructor() { }
 
+  /**
+   * The redirection path.
+   */
   globalActionsPath: string;
 
   ngOnInit(): void {

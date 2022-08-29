@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {ChangeHandlePrefixPageComponent} from './change-handle-prefix-page.component';
-import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {RequestService} from '../../core/data/request.service';
-import {of as observableOf} from 'rxjs';
-import {SharedModule} from '../../shared/shared.module';
-import {RouterTestingModule} from '@angular/router/testing';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {CommonModule} from '@angular/common';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
-import {NotificationsServiceStub} from '../../shared/testing/notifications-service.stub';
-import {HandleDataService} from '../../core/data/handle-data.service';
+import { ChangeHandlePrefixPageComponent } from './change-handle-prefix-page.component';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RequestService } from '../../core/data/request.service';
+import { of as observableOf } from 'rxjs';
+import { SharedModule } from '../../shared/shared.module';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
+import { HandleDataService } from '../../core/data/handle-data.service';
 import { createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
-import {createPaginatedList} from '../../shared/testing/utils.test';
-import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
-import {cold} from 'jasmine-marbles';
-import {getMockTranslateService} from '../../shared/mocks/translate.service.mock';
+import { createPaginatedList } from '../../shared/testing/utils.test';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { cold } from 'jasmine-marbles';
+import { getMockTranslateService } from '../../shared/mocks/translate.service.mock';
 
 /**
  * The test for the ChangeHandlePrefixPageComponent. Test changing of the handle prefix.

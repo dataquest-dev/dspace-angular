@@ -1,21 +1,19 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Operation} from 'fast-json-patch';
-import {RequestService} from '../../core/data/request.service';
-import {Handle, SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
-import {PatchRequest} from '../../core/data/request.models';
-import {getHandleTableModulePath} from '../../app-routing-paths';
-import {PaginationService} from '../../core/pagination/pagination.service';
-import {
-  defaultPagination,
-  paginationID,
-  redirectBackWithPaginationOption
-} from '../handle-table/handle-table-pagination';
-import {isNotEmpty} from '../../shared/empty.util';
-import {take} from 'rxjs/operators';
-import {TranslateService} from '@ngx-translate/core';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Operation } from 'fast-json-patch';
+import { RequestService } from '../../core/data/request.service';
+import { PatchRequest } from '../../core/data/request.models';
+import { PaginationService } from '../../core/pagination/pagination.service';
+import { redirectBackWithPaginationOption } from '../handle-table/handle-table-pagination';
+import { isNotEmpty } from '../../shared/empty.util';
+import { take } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { SUCCESSFUL_RESPONSE_START_CHAR } from '../../core/handle/handle.resource-type';
 
+/**
+ * The component for editing the Handle object.
+ */
 @Component({
   selector: 'ds-edit-handle-page',
   templateUrl: './edit-handle-page.component.html',
@@ -23,20 +21,44 @@ import {NotificationsService} from '../../shared/notifications/notifications.ser
 })
 export class EditHandlePageComponent implements OnInit {
 
+  /**
+   * The id of the editing handle received from the URL.
+   */
   id: number;
 
+  /**
+   * The handle of the editing handle received from the URL.
+   */
   handle: string;
 
+  /**
+   * The url of the editing handle received from the URL.
+   */
   url: string;
 
+  /**
+   * The _selflink of the editing handle received from the URL.
+   */
   _selflink: string;
 
+  /**
+   * The resourceType of the editing handle received from the URL.
+   */
   resourceType: string;
 
+  /**
+   * The resourceId of the editing handle received from the URL.
+   */
   resourceId: string;
 
+  /**
+   * The archive checkbox value.
+   */
   archive = false;
 
+  /**
+   * The currentPage of the editing handle received from the URL.
+   */
   currentPage: number;
 
   constructor(private route: ActivatedRoute,
@@ -59,6 +81,10 @@ export class EditHandlePageComponent implements OnInit {
     this.currentPage = this.route.snapshot.queryParams.currentPage;
   }
 
+  /**
+   * Send the updated handle values to the server and redirect to the Handle table with actual pagination option.
+   * @param value from the inputs form.
+   */
   onClickSubmit(value) {
     // edit handle
     // create a Handle object with updated body
@@ -71,6 +97,7 @@ export class EditHandlePageComponent implements OnInit {
       }
     };
 
+    // create request with the updated Handle
     const patchOperation = {
       op: 'replace', path: '/updateHandle', value: handleObj
     } as Operation;
@@ -89,6 +116,7 @@ export class EditHandlePageComponent implements OnInit {
           return;
         }
 
+        // If the response doesn't start with `2**` it will throw error notification.
         if (info.response.statusCode.toString().startsWith(SUCCESSFUL_RESPONSE_START_CHAR)) {
           this.notificationsService.success(null, this.translateService.get('handle-table.edit-handle.notify.successful'));
           // for redirection use the paginationService because it redirects with pagination options
@@ -102,11 +130,8 @@ export class EditHandlePageComponent implements OnInit {
           ).subscribe( message => {
             errorMessage = message + ': ' + info.response.errorMessage;
           });
-
           this.notificationsService.error(null, errorMessage);
         }
       });
-
   }
-
 }

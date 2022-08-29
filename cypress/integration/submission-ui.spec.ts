@@ -1,4 +1,3 @@
-// @ts-ignore
 import { TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD } from '../support';
 
 export const password = TEST_ADMIN_PASSWORD;

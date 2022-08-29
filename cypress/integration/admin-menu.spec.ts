@@ -1,5 +1,4 @@
-import {TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD, TEST_COMMUNITY} from '../support';
-import {testA11y} from '../support/utils';
+import { TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD } from '../support';
 
 describe('Community Page', () => {
 
