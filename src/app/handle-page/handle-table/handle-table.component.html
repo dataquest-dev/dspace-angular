@@ -3,6 +3,29 @@
     <h5 class="card-header">{{ 'handle-table.title' | translate }}</h5>
     <div class="card-body">
 
+      <div class="input-group mb-3">
+      <div ngbDropdown class="input-group-prepend">
+        <button id="resultdropdown" type="button"
+                ngbDropdownToggle
+                class="btn btn-outline-secondary dropdown-toggle"
+                data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+          <span *ngIf="searchOption != null" [ngModel]="searchOption" name="searchOption" ngDefaultControl>{{searchOption}}</span>
+          <span *ngIf="searchOption == null" >Search option</span>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="resultdropdown">
+          <button class="dropdown-item" (click)="setSearchOption($event)">{{"handle-table.table.handle" | translate}}</button>
+          <button class="dropdown-item" (click)="setSearchOption($event)">{{"handle-table.table.internal" | translate}}</button>
+          <button class="dropdown-item" (click)="setSearchOption($event)">{{"handle-table.table.resource-type" | translate}}</button>
+        </div>
+      </div>
+        <input type="text" class="form-control" aria-label="Text input with dropdown button"
+               [value]="searchQuery"
+               (input)="setSearchQuery()"
+               #searchInput
+               >
+      </div>
+
       <div *ngVar="(handlesRD$ | async)?.payload as handles">
         <div class="mb-2">
           <ds-pagination (paginationChange)="onPageChange()"
@@ -45,7 +68,9 @@
                   {{handle?.resourceTypeID}}
                 </td>
                 <td class="version-row-element-editor">
-                  {{handle?.id}}
+                  <span *ngIf="handle?.resourceTypeID != null">
+                     {{handle?.id}}
+                  </span>
                 </td>
               </tr>
               </tbody>

@@ -10,7 +10,7 @@ export const defaultPagination = Object.assign(new PaginationComponentOptions(),
     pageSize: 10
   });
 
-export const defaultSortConfiguration = new SortOptions('handle', SortDirection.DESC);
+export const defaultSortConfiguration = new SortOptions('', SortDirection.DESC);
 
 export function redirectBackWithPaginationOption(paginationService, currentPage = 0) {
   // for redirection use the paginationService because it redirects with pagination options

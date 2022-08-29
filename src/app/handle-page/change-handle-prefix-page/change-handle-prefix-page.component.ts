@@ -70,8 +70,6 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
       ).toPromise();
   }
 
-
-
   async onClickSubmit(handlePrefixConfig) {
     // Show validation errors after submit
     this.changePrefix.markAllAsTouched();

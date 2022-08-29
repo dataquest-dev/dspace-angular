@@ -1,12 +1,13 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {BehaviorSubject, combineLatest as observableCombineLatest, combineLatest, Observable} from 'rxjs';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {BehaviorSubject, combineLatest as observableCombineLatest, combineLatest, fromEvent, Observable} from 'rxjs';
 import {RemoteData} from '../../core/data/remote-data';
 import {PaginatedList} from '../../core/data/paginated-list.model';
 import {Version} from '../../core/shared/version.model';
-import {Handle, SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
+import {COLLECTION, COMMUNITY, Handle, ITEM, SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.model';
 import {HandleDataService} from '../../core/data/handle-data.service';
 import {PaginationComponentOptions} from '../../shared/pagination/pagination-component-options.model';
 import {
+  debounceTime,
   distinctUntilChanged,
   distinctUntilKeyChanged,
   first,
@@ -14,7 +15,7 @@ import {
   map, startWith,
   switchMap, take,
   takeLast,
-  takeUntil
+  takeUntil, tap
 } from 'rxjs/operators';
 import {VersionHistory} from '../../core/shared/version-history.model';
 import {PaginatedSearchOptions} from '../../shared/search/models/paginated-search-options.model';
@@ -49,10 +50,11 @@ import {DSpaceObjectType} from '../../core/shared/dspace-object-type.model';
 import {Item} from '../../core/shared/item.model';
 import {SortOptions} from '../../core/cache/models/sort-options.model';
 
-/**
- * For changing prefix must be called patch request and patch request must have ID parameter.
- */
-export  const DEFAULT_HANDLE_ID = '0';
+export const HANDLE_SEARCH_OPTION = 'handle';
+export const INTERNAL_SEARCH_OPTION = 'internal';
+export const URL_SEARCH_OPTION = 'url';
+export const RESOURCE_TYPE_SEARCH_OPTION = 'resourceTypeId';
+
 
 @Component({
   selector: 'ds-handle-table',
@@ -67,8 +69,10 @@ export class HandleTableComponent implements OnInit {
               private requestService: RequestService,
               private cdr: ChangeDetectorRef,
               private translateService: TranslateService,
-              private notificationsService: NotificationsService) {
+              private notificationsService: NotificationsService,) {
   }
+
+  @ViewChild('searchInput', {static: true}) searchInput: ElementRef;
 
   /**
    * The list of Handle object as BehaviorSubject object
@@ -88,6 +92,10 @@ export class HandleTableComponent implements OnInit {
 
   sortConfiguration: SortOptions;
 
+  searchQuery = '';
+
+  searchOption: string;
+
   /**
    * @TODO docs
    */
@@ -101,11 +109,21 @@ export class HandleTableComponent implements OnInit {
 
   selectedHandle = null;
 
+  handleOption: string;
+
+  internalOption: string;
+
+  resourceTypeOption: string;
+
   ngOnInit(): void {
     this.handleRoute = getHandleTableModulePath();
     this.initializePaginationOptions();
     this.sortConfiguration = defaultSortConfiguration;
     this.getAllHandles();
+
+    this.handleOption = this.translateService.instant('handle-table.table.handle');
+    this.internalOption = this.translateService.instant('handle-table.table.internal');
+    this.resourceTypeOption = this.translateService.instant('handle-table.table.resource-type');
   }
 
   private initializePaginationOptions() {
@@ -130,13 +148,6 @@ export class HandleTableComponent implements OnInit {
       }),
       getFirstSucceededRemoteData()
     ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
-      // parse Handle Resource type
-      res.payload.page.forEach(handle => {
-        if (handle.resourceTypeID === '2') {
-          handle.resourceTypeID = 'Item';
-        }
-      });
-
       this.handlesRD$.next(res);
       this.isLoading = false;
     });
@@ -278,6 +289,73 @@ export class HandleTableComponent implements OnInit {
       }
       counter++;
     }, 250 );
+  }
+
+  setSearchQuery() {
+    if (isEmpty(this.searchOption)) {
+      return;
+    }
+
+    fromEvent(this.searchInput.nativeElement,'keyup')
+      .pipe(
+        debounceTime(150),
+        distinctUntilChanged()
+      )
+      .subscribe( cc => {
+        this.searchHandles(this.searchInput.nativeElement.value);
+      });
+  }
+
+  setSearchOption(event) {
+    this.searchOption = event?.target?.innerHTML;
+    this.searchInput.nativeElement.value = '';
+    this.searchHandles('');
+  }
+
+  searchHandles(searchQuery = '') {
+    if (isEmpty(this.searchOption)) {
+      return;
+    }
+
+    // parse searchQuery for the server request
+    // the new sorting query is in the format e.g. `handle:123456`, `resourceTypeId:2`, `url:internal`
+    let parsedSearchOption = '';
+    let parsedSearchQuery = searchQuery;
+    switch (this.searchOption) {
+      case this.handleOption:
+        parsedSearchOption = HANDLE_SEARCH_OPTION;
+        break;
+      case this.internalOption:
+        // if the handle doesn't have the URL - is internal, if it does - is external
+        parsedSearchOption = URL_SEARCH_OPTION;
+        if (searchQuery === 'Yes' || searchQuery === 'yes') {
+          parsedSearchQuery = 'internal';
+        } else if (searchQuery === 'No' || searchQuery === 'no') {
+          parsedSearchQuery = 'external';
+        }
+        break;
+      case this.resourceTypeOption:
+        parsedSearchOption = RESOURCE_TYPE_SEARCH_OPTION;
+        // parse resourceType from string to the number because the resourceType is integer on the server
+        switch (searchQuery) {
+          case ITEM:
+            parsedSearchQuery = '' + 2;
+            break;
+          case COLLECTION:
+            parsedSearchQuery = '' + 3;
+            break;
+          case COMMUNITY:
+            parsedSearchQuery = '' + 4;
+            break;
+        }
+        break;
+      default:
+        parsedSearchOption = '';
+        break;
+    }
+
+    this.sortConfiguration.field = parsedSearchOption + ':' + parsedSearchQuery;
+    this.getAllHandles();
   }
 
 }
