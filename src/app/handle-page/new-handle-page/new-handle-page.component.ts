@@ -1,19 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {CreateRequest, PatchRequest} from '../../core/data/request.models';
-import {RequestService} from '../../core/data/request.service';
-import {GenericConstructor} from '../../core/shared/generic-constructor';
-import {ResponseParsingService} from '../../core/data/parsing.service';
-import {StatusCodeOnlyResponseParsingService} from '../../core/data/status-code-only-response-parsing.service';
-import {isNotEmpty} from '../../shared/empty.util';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
-import {TranslateService} from '@ngx-translate/core';
-import {take} from 'rxjs/operators';
-import {paginationID, redirectBackWithPaginationOption} from '../handle-table/handle-table-pagination';
-import {getHandleTableModulePath} from '../../app-routing-paths';
-import {PaginationService} from '../../core/pagination/pagination.service';
-import {ActivatedRoute} from '@angular/router';
-import {SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.resource-type';
+import { CreateRequest } from '../../core/data/request.models';
+import { RequestService } from '../../core/data/request.service';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { TranslateService } from '@ngx-translate/core';
+import { take } from 'rxjs/operators';
+import { redirectBackWithPaginationOption } from '../handle-table/handle-table-pagination';
+import { PaginationService } from '../../core/pagination/pagination.service';
+import { ActivatedRoute } from '@angular/router';
+import { SUCCESSFUL_RESPONSE_START_CHAR } from '../../core/handle/handle.resource-type';
 
+/**
+ * The component where is creating the new external handle.
+ */
 @Component({
   selector: 'ds-new-handle-page',
   templateUrl: './new-handle-page.component.html',
@@ -21,10 +19,19 @@ import {SUCCESSFUL_RESPONSE_START_CHAR} from '../../core/handle/handle.resource-
 })
 export class NewHandlePageComponent implements OnInit {
 
+  /**
+   * The handle input value from the form.
+   */
   handle: string;
 
+  /**
+   * The url input value from the form.
+   */
   url: string;
 
+  /**
+   * The current page pagination option to redirect back with the same pagination.
+   */
   currentPage: number;
 
   constructor(
@@ -39,6 +46,10 @@ export class NewHandlePageComponent implements OnInit {
     this.currentPage = this.route.snapshot.queryParams.currentPage;
   }
 
+  /**
+   * Send the request with the new external handle object.
+   * @param value from the inputs form
+   */
   onClickSubmit(value) {
     // prepare request
     const requestId = this.requestService.generateRequestId();
@@ -50,13 +61,7 @@ export class NewHandlePageComponent implements OnInit {
     // check response
     this.requestService.getByUUID(requestId)
       .subscribe(info => {
-        // if is empty
-        if (!isNotEmpty(info) || !isNotEmpty(info.response) || !isNotEmpty(info.response.statusCode)) {
-          // do nothing - in another subscription should be data
-          return;
-        }
-
-        if (info.response.statusCode.toString().startsWith(SUCCESSFUL_RESPONSE_START_CHAR)) {
+        if (info?.response?.statusCode?.toString().startsWith(SUCCESSFUL_RESPONSE_START_CHAR)) {
           this.notificationsService.success(null, this.translateService.get('handle-table.new-handle.notify.successful'));
           redirectBackWithPaginationOption(this.paginationService, this.currentPage);
         } else {
@@ -66,12 +71,11 @@ export class NewHandlePageComponent implements OnInit {
           this.translateService.get('handle-table.new-handle.notify.error').pipe(
             take(1)
           ).subscribe( message => {
-            errorMessage = message + ': ' + info.response.errorMessage;
+            errorMessage = message + ': ' + info?.response?.errorMessage;
           });
 
           this.notificationsService.error(null, errorMessage);
         }
     });
   }
-
 }

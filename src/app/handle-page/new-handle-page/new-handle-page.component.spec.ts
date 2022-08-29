@@ -1,17 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { NewHandlePageComponent } from './new-handle-page.component';
-import {NotificationsServiceStub} from '../../shared/testing/notifications-service.stub';
-import {of as observableOf} from 'rxjs';
-import {SharedModule} from '../../shared/shared.module';
-import {CommonModule} from '@angular/common';
-import {ReactiveFormsModule} from '@angular/forms';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {RouterTestingModule} from '@angular/router/testing';
-import {RequestService} from '../../core/data/request.service';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
-import {getMockTranslateService} from '../../shared/mocks/translate.service.mock';
+import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
+import { of as observableOf } from 'rxjs';
+import { SharedModule } from '../../shared/shared.module';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { RequestService } from '../../core/data/request.service';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { getMockTranslateService } from '../../shared/mocks/translate.service.mock';
 
+/**
+ * The test class for the NewHandlePageComponent.
+ */
 describe('NewHandlePageComponent', () => {
   let component: NewHandlePageComponent;
   let fixture: ComponentFixture<NewHandlePageComponent>;
