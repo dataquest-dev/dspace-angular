@@ -1,18 +1,16 @@
-import { TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD } from '../support';
+import { loginProcess } from './submission-ui.spec';
 
 describe('Community Page', () => {
 
   it('should pass accessibility tests', () => {
+    // Login as admin
     cy.visit('/');
-    // click on login dropdown
-    cy.get('.navbar-container .dropdownLogin ').click();
-    // type email
-    cy.get('.navbar-container form input[type = "email"] ').type(TEST_ADMIN_EMAIL);
-    // type password
-    cy.get('.navbar-container form input[type = "password"] ').type(TEST_ADMIN_PASSWORD);
-    // submit
-    cy.get('.navbar-container form button[type = "submit"] ').click();
+    loginProcess.clickOnLoginDropdown();
+    loginProcess.typeEmail();
+    loginProcess.typePassword();
+    loginProcess.submit();
+
     // check handles redirect url in the <a> tag
-    cy.get('.sidebar-top-level-items a[href = "/admin/handles"]').scrollIntoView().should('be.visible');
+    cy.get('.sidebar-top-level-items a[href = "/handle-table"]').scrollIntoView().should('be.visible');
   });
 });
