@@ -114,8 +114,20 @@ export class FormFieldModel {
   style: string;
 
   /**
+   * Containing types to bind for this field
+   */
+  @autoserialize
+  typeBind: string[];
+
+  /**
    * Containing the value for this metadata field
    */
   @autoserialize
   value: any;
+
+  /**
+   * Containing the definition of the complex input types - multiple inputs in one row
+   */
+  @autoserialize
+  complexDefinition: string;
 }
