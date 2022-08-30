@@ -19,6 +19,8 @@ import { defaultPagination } from './handle-table-pagination';
 import { buildPaginatedList } from '../../core/data/paginated-list.model';
 import { PageInfo } from '../../core/shared/page-info.model';
 import { HANDLE_TABLE_EDIT_HANDLE_PATH } from '../handle-page-routing-paths';
+import {NotificationsServiceStub} from '../../shared/testing/notifications-service.stub';
+import {NotificationsService} from '../../shared/notifications/notifications.service';
 
 /**
  * The test for testing HandleTableComponent.
@@ -29,6 +31,8 @@ describe('HandleTableComponent', () => {
 
   let handleDataService: HandleDataService;
   let requestService: RequestService;
+  let notificationService: NotificationsServiceStub;
+  // let endUserAgreementService: EndUserAgreementService;
 
   const selectedHandleId = 1;
   const successfulResponse = {
@@ -39,6 +43,7 @@ describe('HandleTableComponent', () => {
     id: selectedHandleId,
     handle: '123456',
     resourceTypeID: 0,
+    url: 'handle.url',
     _links: {
       self: {
         href: 'url.123456'
@@ -49,6 +54,11 @@ describe('HandleTableComponent', () => {
   const mockHandleRD$ = createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [mockHandle]));
 
   beforeEach(async () => {
+    notificationService = new NotificationsServiceStub();
+    // endUserAgreementService = jasmine.createSpyObj('endUserAgreementService', {
+    //   hasCurrentUserOrCookieAcceptedAgreement: observableOf(false),
+    //   setUserAcceptedAgreement: observableOf(true)
+    // });
     handleDataService = jasmine.createSpyObj('handleDataService', {
       findAll: mockHandleRD$,
       getLinkPath: observableOf('')
@@ -72,7 +82,8 @@ describe('HandleTableComponent', () => {
         { provide: RequestService, useValue: requestService },
         { provide: HandleDataService, useValue: handleDataService },
         { provide: Router, useValue: new RouterStub() },
-        { provide: PaginationService, useValue: new PaginationServiceStub() }
+        { provide: PaginationService, useValue: new PaginationServiceStub() },
+        { provide: NotificationsService, useValue: notificationService }
       ],
     })
     .compileComponents();
@@ -137,15 +148,17 @@ describe('HandleTableComponent', () => {
     (component as HandleTableComponent).redirectWithHandleParams();
 
     const handleRoute = (component as HandleTableComponent).handleRoute;
-    const routingParamObject = jasmine.objectContaining({
+    const routingParamObject = {
       queryParams: {
         id: selectedHandleId,
         _selflink: mockHandle._links.self.href,
         handle: mockHandle.handle,
-        url: 'handle.url',
-        currentPage: (component as any).options.currentPage
+        url: mockHandle.url,
+        currentPage: (component as any).options.currentPage,
+        resourceType: mockHandle.resourceTypeID,
+        resourceId: mockHandle.id
       }
-    });
+    };
     // should unselect
     expect((component as any).router.navigate).toHaveBeenCalledWith([handleRoute, HANDLE_TABLE_EDIT_HANDLE_PATH],
       routingParamObject);

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import { EditHandlePageComponent } from './edit-handle-page.component';
 import { ActivatedRoute, convertToParamMap, Params, Router } from '@angular/router';
 import { PaginationService } from '../../core/pagination/pagination.service';
@@ -14,6 +14,12 @@ import { PaginationServiceStub } from '../../shared/testing/pagination-service.s
 import { Handle } from '../../core/handle/handle.model';
 import { PatchRequest } from '../../core/data/request.models';
 import { Operation } from 'fast-json-patch';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
+import {Store} from '@ngrx/store';
+import {cold} from 'jasmine-marbles';
+import {RequestEntry} from '../../core/data/request.reducer';
+import {RestResponse} from '../../core/cache/response.models';
 
 /**
  * The test class for the EditHandlePageComponent which edit the Handle.
@@ -26,6 +32,7 @@ describe('EditHandlePageComponent', () => {
   let routerStub: RouterStub;
   let paginationServiceStub: PaginationServiceStub;
   let requestService: RequestService;
+  let notificationServiceStub: NotificationsServiceStub;
 
   const paramHandle = 'handle';
   const paramHandleValue = '123456';
@@ -58,6 +65,9 @@ describe('EditHandlePageComponent', () => {
     archive: false
   };
 
+  const responseCacheEntry = new RequestEntry();
+  responseCacheEntry.response = new RestResponse(true, 200, 'Success');
+
   beforeEach(async () => {
     const paramObject: Params = {};
     paramObject[paramHandle] = paramHandleValue;
@@ -75,9 +85,14 @@ describe('EditHandlePageComponent', () => {
     };
     routerStub = new RouterStub();
     paginationServiceStub = new PaginationServiceStub();
+    notificationServiceStub = new NotificationsServiceStub();
+
     requestService = jasmine.createSpyObj('requestService', {
       send: observableOf('response'),
+      getByHref: observableOf(responseCacheEntry),
+      getByUUID: cold('a', { a: responseCacheEntry }),
       generateRequestId: requestId,
+      removeByHrefSubstring: {}
     });
 
     await TestBed.configureTestingModule({
@@ -94,6 +109,14 @@ describe('EditHandlePageComponent', () => {
         { provide: ActivatedRoute, useValue: routeStub },
         { provide: Router, useValue: routerStub },
         { provide: PaginationService, useValue: paginationServiceStub },
+        { provide: NotificationsService, useValue: notificationServiceStub },
+        {
+          provide: Store, useValue: {
+            // tslint:disable-next-line:no-empty
+            dispatch: () => {
+            }
+          }
+        },
       ],
     })
     .compileComponents();
@@ -109,8 +132,16 @@ describe('EditHandlePageComponent', () => {
   });
 
   it('should send request after click on Submit', () => {
+    // request body should have the `archive` attribute which the Handle object doesn't have
+    const handleRequestObj = {
+      handle: handleObj.handle,
+      url: handleObj.url,
+      archive: formValue.archive,
+      _links: handleObj._links
+    };
+
     const patchOperation = {
-      op: 'replace', path: '/updateHandle', value: handleObj
+      op: 'replace', path: '/updateHandle', value: handleRequestObj
     } as Operation;
     const patchRequest = new PatchRequest(requestId, paramSelflinkValue, [patchOperation]);
 
@@ -125,6 +156,9 @@ describe('EditHandlePageComponent', () => {
     (component as EditHandlePageComponent).ngOnInit();
     (component as EditHandlePageComponent).onClickSubmit(formValue);
 
-    expect((component as any).paginationService.updateRouteWithUrl).toHaveBeenCalled();
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect((component as any).paginationService.updateRouteWithUrl).toHaveBeenCalled();
+    });
   });
 });

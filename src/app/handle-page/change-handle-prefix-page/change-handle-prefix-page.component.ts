@@ -34,7 +34,6 @@ export class ChangeHandlePrefixPageComponent implements OnInit {
     private translateService: TranslateService,
     private handleDataService: HandleDataService,
     private halService: HALEndpointService,
-    private configurationService: ConfigurationDataService,
     private fb: FormBuilder
   ) { }
 

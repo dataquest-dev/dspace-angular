@@ -10,6 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RequestService } from '../../core/data/request.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { getMockTranslateService } from '../../shared/mocks/translate.service.mock';
+import { Store } from '@ngrx/store';
 
 /**
  * The test class for the NewHandlePageComponent.
@@ -47,6 +48,13 @@ describe('NewHandlePageComponent', () => {
         { provide: RequestService, useValue: requestService },
         { provide: NotificationsService, useValue: notificationService },
         { provide: TranslateService, useValue: getMockTranslateService() },
+        {
+          provide: Store, useValue: {
+            // tslint:disable-next-line:no-empty
+            dispatch: () => {
+            }
+          }
+        },
       ],
     })
     .compileComponents();

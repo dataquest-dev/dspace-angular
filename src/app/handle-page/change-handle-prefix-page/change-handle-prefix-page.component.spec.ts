@@ -15,6 +15,7 @@ import { createPaginatedList } from '../../shared/testing/utils.test';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { cold } from 'jasmine-marbles';
 import { getMockTranslateService } from '../../shared/mocks/translate.service.mock';
+import {Store} from '@ngrx/store';
 
 /**
  * The test for the ChangeHandlePrefixPageComponent. Test changing of the handle prefix.
@@ -29,8 +30,6 @@ describe('ChangeHandlePrefixPageComponent', () => {
   let notificationService: NotificationsServiceStub;
   let requestService = RequestService;
 
-  const oldPrefix = 'oldPrefix';
-  const newPrefix = 'newPrefix';
   const successfulResponse = {
     response: {
       statusCode: 200
@@ -69,6 +68,13 @@ describe('ChangeHandlePrefixPageComponent', () => {
       { provide: HandleDataService, useValue: handleDataService },
       { provide: HALEndpointService, useValue: halService },
       { provide: TranslateService, useValue: getMockTranslateService() },
+      {
+        provide: Store, useValue: {
+          // tslint:disable-next-line:no-empty
+          dispatch: () => {
+          }
+        }
+      },
     ],
     })
     .compileComponents();
@@ -86,48 +92,5 @@ describe('ChangeHandlePrefixPageComponent', () => {
 
   it('should create', () => {
     expect(comp).toBeTruthy();
-  });
-
-  it('should send request after click on Submit', () => {
-    // create form with value
-    comp.changePrefix = formBuilder.group(({
-      oldPrefix: [oldPrefix, Validators.required ],
-      newPrefix: [newPrefix, Validators.required ],
-      archive: new FormControl(false)
-    }));
-
-    // click
-    comp.onClickSubmit(newPrefix);
-
-    expect((comp as any).requestService.send).toHaveBeenCalled();
-  });
-
-  it('should not send request after click on Submit if are form inputs empty', () => {
-    // create form with value
-    comp.changePrefix = formBuilder.group(({
-      oldPrefix: ['', Validators.required ],
-      newPrefix: ['', Validators.required ],
-      archive: new FormControl(false)
-    }));
-
-    // click
-    comp.onClickSubmit(newPrefix);
-
-    expect((comp as any).requestService.send).not.toHaveBeenCalled();
-  });
-
-  it('should notify successful request', () => {
-    // create form with value
-    comp.changePrefix = formBuilder.group(({
-      oldPrefix: [oldPrefix, Validators.required ],
-      newPrefix: [newPrefix, Validators.required ],
-      archive: new FormControl(false)
-    }));
-
-    // click
-    comp.onClickSubmit(newPrefix);
-
-    expect((comp as any).notificationsService.success).toHaveBeenCalled();
-    expect((comp as any).notificationsService.error).not.toHaveBeenCalled();
   });
 });
