@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { EndUserAgreementService } from '../core/end-user-agreement/end-user-agreement.service';
 
 /**
  * The component which contains the handle-table and the change-global-prefix section.
@@ -11,8 +10,7 @@ import { EndUserAgreementService } from '../core/end-user-agreement/end-user-agr
 })
 export class HandlePageComponent implements OnInit {
 
-  constructor(protected endUserAgreementService: EndUserAgreementService,
-              private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef) {
   }
 
   /**

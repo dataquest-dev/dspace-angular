@@ -19,8 +19,8 @@ import { defaultPagination } from './handle-table-pagination';
 import { buildPaginatedList } from '../../core/data/paginated-list.model';
 import { PageInfo } from '../../core/shared/page-info.model';
 import { HANDLE_TABLE_EDIT_HANDLE_PATH } from '../handle-page-routing-paths';
-import {NotificationsServiceStub} from '../../shared/testing/notifications-service.stub';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
+import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
 
 /**
  * The test for testing HandleTableComponent.
@@ -32,7 +32,6 @@ describe('HandleTableComponent', () => {
   let handleDataService: HandleDataService;
   let requestService: RequestService;
   let notificationService: NotificationsServiceStub;
-  // let endUserAgreementService: EndUserAgreementService;
 
   const selectedHandleId = 1;
   const successfulResponse = {
@@ -55,10 +54,6 @@ describe('HandleTableComponent', () => {
 
   beforeEach(async () => {
     notificationService = new NotificationsServiceStub();
-    // endUserAgreementService = jasmine.createSpyObj('endUserAgreementService', {
-    //   hasCurrentUserOrCookieAcceptedAgreement: observableOf(false),
-    //   setUserAcceptedAgreement: observableOf(true)
-    // });
     handleDataService = jasmine.createSpyObj('handleDataService', {
       findAll: mockHandleRD$,
       getLinkPath: observableOf('')
