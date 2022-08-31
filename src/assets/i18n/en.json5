@@ -1591,7 +1591,7 @@
   "handle-table.new-handle.form-button-submit": "Submit",
 
 
-  "handle-table.new-handle.notify.error": "Server Error - Cannot create a new handle",
+  "handle-table.new-handle.notify.error": "Server Error - Cannot create new handle",
 
   "handle-table.new-handle.notify.successful": "The new handle was created!",
 
@@ -1609,11 +1609,11 @@
 
   "handle-table.edit-handle.form-handle-input-text": "Handle",
 
-  "handle-table.edit-handle.form-handle-input-placeholder": "Enter a new handle",
+  "handle-table.edit-handle.form-handle-input-placeholder": "Enter new handle",
 
   "handle-table.edit-handle.form-url-input-text": "URL",
 
-  "handle-table.edit-handle.form-url-input-placeholder": "Enter a new URL",
+  "handle-table.edit-handle.form-url-input-placeholder": "Enter new URL",
 
   "handle-table.edit-handle.form-archive-input-check": "Archive old handle?",
 
@@ -1656,7 +1656,7 @@
 
   "handle-table.change-handle-prefix.form-old-prefix-input-text": "Old prefix",
 
-  "handle-table.change-handle-prefix.form-old-prefix-input-error": "A valid old prefix is required",
+  "handle-table.change-handle-prefix.form-old-prefix-input-error": "Valid old prefix is required",
 
   "handle-table.change-handle-prefix.form-old-prefix-input-placeholder": "Enter old prefix",
 
@@ -1664,7 +1664,7 @@
 
   "handle-table.change-handle-prefix.form-new-prefix-input-placeholder": "Enter new prefix",
 
-  "handle-table.change-handle-prefix.form-new-prefix-input-error": "A valid new prefix is required",
+  "handle-table.change-handle-prefix.form-new-prefix-input-error": "Valid new prefix is required",
 
   "handle-table.change-handle-prefix.form-archive-input-check": "Archive old handles?",
 
@@ -2707,6 +2707,7 @@
   "menu.section.workflow": "Administer Workflow",
 
   "menu.section.handle": "Manage Handles",
+
 
   "autocomplete.suggestion.sponsor.funding-code": "Funding code",
 
@@ -4298,5 +4299,4 @@
   "idle-modal.log-out": "Log out",
 
   "idle-modal.extend-session": "Extend session"
-
 }
