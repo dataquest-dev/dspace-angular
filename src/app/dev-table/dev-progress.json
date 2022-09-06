@@ -1,0 +1,98 @@
+{
+  "se": {
+    "inside test" : {
+      "name": "test of additional inside",
+      "percentage" : 100,
+      "status": "done",
+      "item in" : 13,
+      "another item in": 12,
+      "last level tested" : {
+        "percentage": 100,
+        "this": {
+          "status": "done"
+        },
+        "is": {
+          "status": "waiting"
+        },
+        "sparta": {
+          "status": "not-done"
+        },
+        "or is it": {
+
+        }
+      }
+    },
+    "name": "Submission Extensions",
+    "percentage": "96",
+    "status": "done",
+    "Different fields for different types of submission": {
+      "percentage" : 11,
+      "status": "not-done"
+    },
+    "Retrieve information on complex fields": 93,
+    "Hints, examples, suggestions": 93,
+    "Handling of the unknown date or date range of an item": 93,
+    "OpenAIRE": 93,
+    "Sanity checks": 93,
+    "Admin only fields": 93,
+    "Upload CMDI file": 93,
+    "User friendly settings": 93,
+    "Support files over 2GB": 93
+  },
+  "Dissemination extensions": {
+    "status": "not-done",
+    "percentage": 92,
+    "Harvestable metadata via OAI-PMH": 95,
+    "TombStone": 95,
+    "Item is hidden from search, harvestable only for oai": 95,
+    "Harvest CMDI metadata format": 95,
+    "Harvest OLAC metadata format": 95,
+    "Google scholar mapping metadata": 95
+  },
+  "PIDs": {
+    "status": "waiting",
+    "PIDs associat. to metadata records": 94,
+    "HTTP-accept header for content negotiation": 94,
+    "Return directly cmdi": 94,
+    "Config handle prefix for communities": 94,
+    "Manage handle table": 94,
+    "Support DOIs": 94
+  },
+  "Statistics": {
+    "Bitstream downloads": 93,
+    "Stat based on Matomo Analytics": 93
+  },
+  "Licensing Framework": {
+    "Item view - show item license": 97,
+    "Technical support for restricted items": 97,
+    "Choose license in submission process": 97,
+    "License administrator": 97,
+    "Attach/dettach license to/from item": 97,
+    "New search filter option in search page - Licenses": 97
+  },
+  "Look&Feel": {
+    "Support Ref Table citations - CMDI, bib": 98,
+    "After DB update, OAI gets updated": 98,
+    "Item view shows versioning": 98,
+    "Create new version of item": 98
+  },
+  "Data downloads": {
+    "Resumable downloads, restrictive": 96
+  },
+  "AAI using Shibboleth": {
+    "Federated SSO, authorization via Shibboleth": {
+      "percentage" : 11,
+      "status": "not-done"
+    },
+    "Page with a list of released attributes (from IdP)": 86,
+    "Item deposit by registered users only": 86,
+    "Is it possible to hide item?": 86,
+    "Implement GÉANT.. - DP-CoC": 86,
+    "Login - select federated login": 86
+  },
+  "Unicode Support": {
+    "status" : "not-done",
+    "DSpace should support UTF-8": 91,
+    "Multilingual Support": 91
+  }
+}

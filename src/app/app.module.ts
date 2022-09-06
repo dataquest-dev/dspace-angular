@@ -59,6 +59,12 @@ import { PageInternalServerErrorComponent } from './page-internal-server-error/p
 import { DtqTestExampleComponent } from './dtq-test-example/dtq-test-example.component';
 
 import { APP_CONFIG, AppConfig } from '../config/app-config.interface';
+import { DevTableComponent } from './dev-table/dev-table.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatTreeModule} from "@angular/material/tree";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {ScrollingModule} from "@angular/cdk/scrolling";
 
 export function getConfig() {
   return environment;
@@ -195,19 +201,26 @@ const EXPORTS = [
 
 @NgModule({
   imports: [
-    BrowserModule.withServerTransition({ appId: 'dspace-angular' }),
-    ...IMPORTS
+    BrowserModule.withServerTransition({appId: 'dspace-angular'}),
+    ...IMPORTS,
+    MatTableModule,
+    MatTreeModule,
+    MatIconModule,
+    MatButtonModule,
+    ScrollingModule,
   ],
   providers: [
     ...PROVIDERS
   ],
   declarations: [
     ...DECLARATIONS,
+    DevTableComponent,
   ],
-  exports: [
-    ...EXPORTS,
-    ...DECLARATIONS,
-  ]
+    exports: [
+        ...EXPORTS,
+        ...DECLARATIONS,
+        DevTableComponent,
+    ]
 })
 export class AppModule {
 

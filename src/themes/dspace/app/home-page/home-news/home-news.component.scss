@@ -6,7 +6,11 @@
     color: white;
     background-color: var(--bs-info);
     position: relative;
-    background-image: url('/assets/dspace/images/banner.jpg');
+    //background-image: url('/assets/dspace/images/banner.jpg');
+    //background-image: url('/assets/dspace/images/kitten.jpg');
+    //background-image: url('/assets/dspace/images/keyboard.png');
+    background-image: url('/assets/dspace/images/table.png');
+    background-position: center;
     background-size: cover;
 
     .container {

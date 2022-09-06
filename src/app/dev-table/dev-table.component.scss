@@ -1,0 +1,54 @@
+table {
+  border: 1px solid black;
+  width: 100%;
+}
+
+#scroll-dev-table {
+  height: 45vh;
+  overflow-y: auto;
+}
+
+.example-tree-invisible {
+  display: none;
+}
+
+.done {
+  color: rgb(0, 128, 55);
+}
+
+.waiting {
+color: rgb(243, 156, 18);
+}
+
+.not-done {
+color: rgb(255, 0, 0);
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.mat-icon-button {
+  background: #ffff0000;
+}
+
+
+
+tr {
+  border: 1px solid black;
+}
+
+td {
+  border: 1px solid black;
+}
+
+th {
+  border: 1px solid black;
+}
+
+button:focus {
+  outline: none;
+}
