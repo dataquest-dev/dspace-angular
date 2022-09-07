@@ -60,11 +60,11 @@ import { DtqTestExampleComponent } from './dtq-test-example/dtq-test-example.com
 
 import { APP_CONFIG, AppConfig } from '../config/app-config.interface';
 import { DevTableComponent } from './dev-table/dev-table.component';
-import {MatTableModule} from "@angular/material/table";
-import {MatTreeModule} from "@angular/material/tree";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {ScrollingModule} from "@angular/cdk/scrolling";
+import {MatTableModule} from '@angular/material/table';
+import {MatTreeModule} from '@angular/material/tree';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 export function getConfig() {
   return environment;
