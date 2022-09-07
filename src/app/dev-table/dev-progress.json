@@ -1,4 +1,14 @@
 {
+  "very long": {
+    "name": "this is so very long text it can never fit in anything. certainly not in this wonderful awesome page I have created for this perfect project",
+    "percentage": 100,
+    "status": "done",
+    "and": 3,
+    "it": 4,
+    "seems": 5,
+    "to": 4,
+    "work": 23
+  },
   "se": {
     "inside test" : {
       "name": "test of additional inside",

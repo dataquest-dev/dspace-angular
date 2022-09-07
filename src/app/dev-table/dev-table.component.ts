@@ -21,8 +21,7 @@ export class FileNode {
   children: FileNode[];
   taskName: string;
   donePercentage: any;
-  status: any;
-  statusLess: boolean = false;
+  status: any = "unspecified";
 
   getParsedPercentage() {
     let ret: string = "";
@@ -92,15 +91,12 @@ export class FileDatabase {
           }
           if (value.status != null) {
             node.status = value.status;
-          } else {
-            node.statusLess = true;
           }
           if (value.percentage != null) {
             node.donePercentage = value.percentage;
           }
         } else {
           node.donePercentage = value;
-          node.statusLess = true;
         }
       }
 

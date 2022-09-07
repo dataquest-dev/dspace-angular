@@ -7,6 +7,11 @@
   }
 }
 
+.clarin-logo {
+  height: var(--ds-login-logo-height);
+  width: var(--ds-login-logo-width);
+}
+
 .navbar-brand img {
   @media screen and (max-width: map-get($grid-breakpoints, md)) {
     height: var(--ds-header-logo-height-xs);
