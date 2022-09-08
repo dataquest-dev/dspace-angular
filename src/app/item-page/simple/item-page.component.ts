@@ -16,6 +16,7 @@ import { getItemPageRoute } from '../item-page-routing-paths';
 import { isNotEmpty } from '../../shared/empty.util';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
 
 /**
  * This component renders a simple item page.
@@ -86,7 +87,6 @@ export class ItemPageComponent implements OnInit {
       getAllSucceededRemoteDataPayload(),
       map((item) => getItemPageRoute(item))
     );
-
     this.showTombstone();
   }
 

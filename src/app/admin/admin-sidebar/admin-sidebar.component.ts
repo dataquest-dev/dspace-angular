@@ -307,6 +307,19 @@ export class AdminSidebarComponent extends MenuComponent implements OnInit {
           icon: 'terminal',
           index: 10
         },
+        /* License administration */
+        {
+          id: 'licenses',
+          active: false,
+          visible: true,
+          model: {
+            type: MenuItemType.LINK,
+            text: 'menu.section.licenses',
+            link: '/licenses'
+          } as LinkMenuItemModel,
+          icon: 'scroll',
+          index: 13
+        },
       ];
       menuList.forEach((menuSection) => this.menuService.addSection(this.menuID, Object.assign(menuSection, {
         shouldPersistOnRouteChange: true

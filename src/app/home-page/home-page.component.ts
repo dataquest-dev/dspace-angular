@@ -3,6 +3,8 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Site } from '../core/shared/site.model';
+import {getAllSucceededRemoteDataPayload} from '../core/shared/operators';
+import {ClarinLicenseDataService} from '../core/data/clarin/clarin-license-data.service';
 
 @Component({
   selector: 'ds-home-page',
@@ -15,6 +17,7 @@ export class HomePageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private clarinLicenseService: ClarinLicenseDataService
   ) {
   }
 
@@ -22,5 +25,15 @@ export class HomePageComponent implements OnInit {
     this.site$ = this.route.data.pipe(
       map((data) => data.site as Site),
     );
+
+    this.loadLicenses();
+  }
+
+  loadLicenses() {
+    this.clarinLicenseService.findAll().pipe(
+      getAllSucceededRemoteDataPayload()
+    ).subscribe(value => {
+      console.log('license', value);
+    });
   }
 }
