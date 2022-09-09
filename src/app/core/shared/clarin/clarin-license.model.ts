@@ -39,6 +39,12 @@ export class ClarinLicense extends ListableObject implements HALResource {
    * The value of this metadata value object
    */
   @autoserialize
+  name: string;
+
+  /**
+   * The value of this metadata value object
+   */
+  @autoserialize
   definition: string;
 
   /**
@@ -54,7 +60,13 @@ export class ClarinLicense extends ListableObject implements HALResource {
   requiredInfo: string;
 
   @autoserialize
-  clarinLicenseLabels: ClarinLicenseLabel[];
+  clarinLicenseLabel: ClarinLicenseLabel;
+
+  @autoserialize
+  extendedClarinLicenseLabels: ClarinLicenseLabel[];
+
+  @autoserialize
+  bitstreams: number;
 
   /**
    * The {@link HALLink}s for this MetadataValue

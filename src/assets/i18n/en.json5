@@ -3221,6 +3221,23 @@
 
 
 
+  "clarin-license.table.name": "License Name",
+
+  "clarin-license.table.definition": "Definition (URL)",
+
+  "clarin-license.table.confirmation": "Confirmation",
+
+  "clarin-license.table.required-user-info": "Required user info",
+
+  "clarin-license.table.label": "License Label",
+
+  "clarin-license.table.extended-labels": "Extended Labels",
+
+  "clarin-license.table.bitstreams": "Used by Bitstream",
+
+
+
+
   "search.description": "",
 
   "search.switch-configuration.title": "Show",
