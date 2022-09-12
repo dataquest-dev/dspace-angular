@@ -12,12 +12,12 @@ import { ClarinLicenseTableComponent } from './clarin-license-table/clarin-licen
     ClarinLicensePageComponent,
     ClarinLicenseTableComponent
   ],
-  imports: [
-    CommonModule,
-    ClarinLicenseRoutingModule,
-    TranslateModule,
-    SharedModule,
-    ReactiveFormsModule
-  ]
+    imports: [
+        CommonModule,
+        ClarinLicenseRoutingModule,
+        TranslateModule,
+        SharedModule,
+        ReactiveFormsModule,
+    ]
 })
 export class ClarinLicenseModule { }

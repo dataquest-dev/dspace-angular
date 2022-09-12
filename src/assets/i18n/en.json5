@@ -3236,6 +3236,16 @@
 
   "clarin-license.table.bitstreams": "Used by Bitstreams",
 
+  "clarin-license.button.define": "Define",
+
+  "clarin-license.button.define-license": "Define License",
+
+  "clarin-license.button.define-license-label": "Define License Label",
+
+  "clarin-license.button.edit-license": "Edit License",
+
+  "clarin-license.button.delete-license": "Delete License",
+
 
 
 
