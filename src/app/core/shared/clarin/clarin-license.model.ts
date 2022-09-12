@@ -14,6 +14,7 @@ import {GenericConstructor} from '../generic-constructor';
 import {CLARIN_LICENSE} from './clarin-license.resource-type';
 import {CLARIN_LICENSE_LABEL} from './clarin-license-label.resource-type';
 import {ClarinLicenseLabel} from './clarin-license-label.model';
+import {ClarinLicenseConfirmationSerializer} from './clarin-license-confirmation-serializer';
 
 /**
  * Class that represents a metadata value
@@ -50,8 +51,8 @@ export class ClarinLicense extends ListableObject implements HALResource {
   /**
    * The language of this metadata value
    */
-  @autoserialize
-  confirmation: number;
+  @autoserializeAs(ClarinLicenseConfirmationSerializer)
+  confirmation: string;
 
   /**
    * The authority of this metadata value

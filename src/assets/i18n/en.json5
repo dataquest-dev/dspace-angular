@@ -3220,6 +3220,7 @@
   "resource-policies.table.headers.title.for.collection": "Policies for Collection",
 
 
+  "clarin-license-table.title": "License Administration",
 
   "clarin-license.table.name": "License Name",
 
@@ -3233,7 +3234,7 @@
 
   "clarin-license.table.extended-labels": "Extended Labels",
 
-  "clarin-license.table.bitstreams": "Used by Bitstream",
+  "clarin-license.table.bitstreams": "Used by Bitstreams",
 
 
 

@@ -7,3 +7,5 @@
 import {ResourceType} from '../resource-type';
 
 export const CLARIN_LICENSE = new ResourceType('clarinlicense');
+
+export const CLARIN_LICENSE_CONFIRMATION = ['Not required', 'Ask only once', 'Ask always', 'Allow anonymous'];

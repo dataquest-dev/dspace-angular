@@ -1,6 +1,6 @@
 <div class="container">
   <!-- The table with pagination -->
-  <div *ngVar="(cLicenseRD$ | async)?.payload as cLicenses">
+  <div *ngVar="(licensesRD$ | async)?.payload as cLicenses">
     <div class="mb-2">
       <ds-pagination (paginationChange)="onPageChange()"
                      [hideGear]="true"
@@ -24,7 +24,7 @@
           </thead>
           <tbody>
           <tr *ngFor="let cLicense of cLicenses?.page" [id]="'clarin-license-row-' + cLicense.id">
-            <td><input class="collection-checkbox" [ngModel]="selectedHandle === cLicense.id" (change)="switchSelectedHandle(cLicense.id)" type="checkbox" name="{{cLicense.id}}"></td>
+            <td><input class="collection-checkbox" [ngModel]="selectedLicense === cLicense.id" (change)="switchSelectedHandle(cLicense.id)" type="checkbox" name="{{cLicense.id}}"></td>
             <td class="version-row-element-version">
               {{cLicense?.name}}
             </td>
@@ -38,10 +38,10 @@
               {{cLicense?.requiredUserInfo}}
             </td>
             <td class="version-row-element-version">
-              {{cLicense?.clarinLicenseLabel}}
+              {{cLicense?.clarinLicenseLabel?.label}}
             </td>
             <td class="version-row-element-version">
-              {{cLicense?.extendedClarinLicenseLabels}}
+              {{cLicense?.extendedClarinLicenseLabels | dsExtendedCLicense}}
             </td>
             <td class="version-row-element-version">
               {{cLicense?.bitstreams}}
