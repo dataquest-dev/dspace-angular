@@ -51,7 +51,7 @@ export class ClarinLicenseLabel extends ListableObject implements HALResource {
    * The authority of this metadata value
    */
   @autoserialize
-  isExtended: boolean;
+  extended: boolean;
 
   /**
    * The {@link HALLink}s for this MetadataValue

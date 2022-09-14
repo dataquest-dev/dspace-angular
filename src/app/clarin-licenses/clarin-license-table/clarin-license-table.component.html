@@ -63,22 +63,24 @@
               {{"clarin-license.button.define" | translate}}
             </button>
             <div ngbDropdownMenu aria-labelledby="resultdropdown">
-              <button class="dropdown-item">{{"clarin-license.button.define-license" | translate}}</button>
-              <button class="dropdown-item">{{"clarin-license.button.define-license-label" | translate}}</button>
+              <button class="dropdown-item" (click)="openDefineLicenseForm()">{{"clarin-license.button.define-license" | translate}}</button>
+              <button class="dropdown-item" (click)="openDefineLicenseLabelForm()">{{"clarin-license.button.define-license-label" | translate}}</button>
             </div>
           </div>
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-warning" [disabled]="selectedLicense == null">
+          <button type="button" class="btn btn-warning" [disabled]="selectedLicense == null" (click)="openEditLicenseForm()">
             {{'clarin-license.button.edit-license' | translate}}
           </button>
         </div>
         <div class="btn-group">
-          <button type="button" class="btn btn-danger" [disabled]="selectedLicense == null">
+          <button type="button" class="btn btn-danger" [disabled]="selectedLicense == null" (click)="deleteLicense()">
             {{'clarin-license.button.delete-license' | translate}}
           </button>
         </div>
       </div>
     </div>
   </div>
+<!--  <button (click)="openFormModal()">Open Modal</button>-->
+
 </div>

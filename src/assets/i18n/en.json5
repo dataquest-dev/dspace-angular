@@ -3247,6 +3247,19 @@
   "clarin-license.button.delete-license": "Delete License",
 
 
+  "clarin-license.define-license-form.input-name": "License name",
+
+  "clarin-license.define-license-form.input-definition-url": "License Definition URL",
+
+  "clarin-license.define-license-form.input-confirmation": "License requires confirmation",
+
+  "clarin-license.define-license-form.license-labels": "License Labels",
+
+  "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
+
+
+
+
 
 
   "search.description": "",

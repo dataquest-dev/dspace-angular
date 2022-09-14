@@ -10,6 +10,12 @@ import {PaginationService} from '../../core/pagination/pagination.service';
 import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
 import {SortDirection, SortOptions} from '../../core/cache/models/sort-options.model';
 import {defaultPagination, defaultSortConfiguration} from '../clarin-license-table-pagination';
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {FormModalComponent} from './form-modal.component';
+import {DefineLicenseFormComponent} from './modal/define-license-form/define-license-form.component';
+import {DefineLicenseLabelFormComponent} from './modal/define-license-label-form/define-license-label-form.component';
+import {EditLicenseFormComponent} from './modal/edit-license-form/edit-license-form.component';
+import {EditLicenseLabelFormComponent} from './modal/edit-license-label-form/edit-license-label-form.component';
 
 @Component({
   selector: 'ds-clarin-license-table',
@@ -20,7 +26,9 @@ export class ClarinLicenseTableComponent implements OnInit {
 
   // tslint:disable-next-line:no-empty
   constructor(private paginationService: PaginationService,
-              private clarinLicenseService: ClarinLicenseDataService) { }
+              private clarinLicenseService: ClarinLicenseDataService,
+              private modalService: NgbModal,
+              public activeModal: NgbActiveModal) { }
 
   /**
    * The list of Handle object as BehaviorSubject object
@@ -61,11 +69,69 @@ export class ClarinLicenseTableComponent implements OnInit {
     this.sortConfiguration = defaultSortConfiguration;
   }
 
+  openDefineLicenseForm() {
+    const defineLicenseModalRef = this.modalService.open(DefineLicenseFormComponent);
+
+    defineLicenseModalRef.result.then((result) => {
+      console.log('result',result);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  openDefineLicenseLabelForm() {
+    const defineLicenseLabelModalRef = this.modalService.open(DefineLicenseLabelFormComponent);
+
+    defineLicenseLabelModalRef.result.then((result) => {
+      console.log('result',result);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  openEditLicenseForm() {
+    const editLicenseModalRef = this.modalService.open(EditLicenseFormComponent);
+
+    editLicenseModalRef.result.then((result) => {
+      console.log('result',result);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  openEditLicenseLabelForm() {
+    const editLicenseModalRef = this.modalService.open(EditLicenseLabelFormComponent);
+
+    editLicenseModalRef.result.then((result) => {
+      console.log('result',result);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  deleteLicense() {
+    console.log('delete license');
+  }
+
+  // openFormModal() {
+  //   const modalRef = this.modalService.open(FormModalComponent);
+  //
+  //   modalRef.result.then((result) => {
+  //     console.log('result',result);
+  //   }).catch((error) => {
+  //     console.log(error);
+  //   });
+  // }
+
   /**
    * Updates the page
    */
   onPageChange() {
     this.getAllLicenses();
+  }
+
+  closeModal() {
+    this.activeModal.close('Modal Closed');
   }
 
   getAllLicenses() {
@@ -87,6 +153,7 @@ export class ClarinLicenseTableComponent implements OnInit {
       }),
       getFirstSucceededRemoteData()
     ).subscribe((res: RemoteData<PaginatedList<ClarinLicense>>) => {
+      console.log('licenses', res);
       this.licensesRD$.next(res);
       this.isLoading = false;
     });
