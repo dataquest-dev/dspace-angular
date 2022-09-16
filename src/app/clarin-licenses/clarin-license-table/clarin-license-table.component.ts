@@ -112,7 +112,7 @@ export class ClarinLicenseTableComponent implements OnInit {
 
     editLicenseModalRef.result.then((result: ClarinLicense) => {
       this.editLicense(result);
-      console.log('result',result);
+      console.log('edit result',result);
     }).catch((error) => {
       console.log(error);
     });
@@ -129,7 +129,7 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   editLicense(clarinLicense: ClarinLicense) {
-    console.log('editClarinLicense', clarinLicense);
+    // console.log('editClarinLicense', clarinLicense);
   }
 
   defineNewLicense(clarinLicense: ClarinLicense) {

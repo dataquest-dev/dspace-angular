@@ -179,6 +179,8 @@ import { DsSelectComponent } from './ds-select/ds-select.component';
 import { LogInOidcComponent } from './log-in/methods/oidc/log-in-oidc.component';
 import {ClarinExtendedLicensePipe} from './utils/clarin-extended-license.pipe';
 import {ClarinLicenseLabelCheckedPipe} from './utils/clarin-license-label-checked.pipe';
+import {ClarinLicenseLabelRadioValuePipe} from './utils/clarin-license-label-radio-value.pipe';
+import {ClarinLicenseLabelCheckedValuePipe} from './utils/clarin-license-label-checked-value.pipe';
 
 const MODULES = [
   // Do NOT include UniversalModule, HttpModule, or JsonpModule here
@@ -224,7 +226,9 @@ const PIPES = [
   ConsolePipe,
   ObjNgFor,
   ClarinExtendedLicensePipe,
-  ClarinLicenseLabelCheckedPipe
+  ClarinLicenseLabelCheckedPipe,
+  ClarinLicenseLabelRadioValuePipe,
+  ClarinLicenseLabelCheckedValuePipe
 ];
 
 const COMPONENTS = [
