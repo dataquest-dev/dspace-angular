@@ -3,17 +3,13 @@ import {hasValue, isNotEmpty} from '../empty.util';
 import {ClarinLicenseLabel} from '../../core/shared/clarin/clarin-license-label.model';
 
 /**
- * Pipe to truncate a value in Angular. (Take a substring, starting at 0)
- * Default value: 10
+ * Pipe to join Extended Clarin License Label value with ','
  */
 @Pipe({
   name: 'dsExtendedCLicense'
 })
 export class ClarinExtendedLicensePipe implements PipeTransform {
 
-  /**
-   *
-   */
   transform(value: ClarinLicenseLabel[]): string {
     if (isNotEmpty(value)) {
       const titles = [];
@@ -25,5 +21,4 @@ export class ClarinExtendedLicensePipe implements PipeTransform {
       return '';
     }
   }
-
 }

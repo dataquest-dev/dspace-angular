@@ -21,6 +21,7 @@ import {getBitstreamFormatsModuleRoute} from '../../admin/admin-registries/admin
 import {NotificationsService} from '../../shared/notifications/notifications.service';
 import {TranslateService} from '@ngx-translate/core';
 import {BitstreamFormat} from '../../core/shared/bitstream-format.model';
+import {isNull} from '../../shared/empty.util';
 
 @Component({
   selector: 'ds-clarin-license-table',
@@ -53,7 +54,7 @@ export class ClarinLicenseTableComponent implements OnInit {
    */
   sortConfiguration: SortOptions;
 
-  selectedLicense: number;
+  selectedLicense: ClarinLicense;
 
   /**
    * If the request isn't processed show to loading bar.
@@ -81,9 +82,6 @@ export class ClarinLicenseTableComponent implements OnInit {
 
     defineLicenseModalRef.result.then((result: ClarinLicense) => {
       this.defineNewLicense(result);
-      // console.log('result',result);
-    }).catch((error) => {
-      console.log(error);
     });
   }
 
@@ -98,9 +96,22 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   openEditLicenseForm() {
-    const editLicenseModalRef = this.modalService.open(EditLicenseFormComponent);
+    if (isNull(this.selectedLicense)) {
+      return;
+    }
+    const editLicenseModalRef = this.modalService.open(DefineLicenseFormComponent);
+    editLicenseModalRef.componentInstance.name = this.selectedLicense.name;
+    editLicenseModalRef.componentInstance.definition = this.selectedLicense.definition;
+    editLicenseModalRef.componentInstance.confirmation = this.selectedLicense.confirmation;
+    editLicenseModalRef.componentInstance.requiredInfo = this.selectedLicense.requiredInfo;
+    console.log('To edit form ecll', this.selectedLicense.extendedClarinLicenseLabels);
+    editLicenseModalRef.componentInstance.extendedClarinLicenseLabels =
+      this.selectedLicense.extendedClarinLicenseLabels;
+    editLicenseModalRef.componentInstance.clarinLicenseLabel =
+      this.selectedLicense.clarinLicenseLabel;
 
-    editLicenseModalRef.result.then((result) => {
+    editLicenseModalRef.result.then((result: ClarinLicense) => {
+      this.editLicense(result);
       console.log('result',result);
     }).catch((error) => {
       console.log(error);
@@ -117,7 +128,12 @@ export class ClarinLicenseTableComponent implements OnInit {
     });
   }
 
+  editLicense(clarinLicense: ClarinLicense) {
+    console.log('editClarinLicense', clarinLicense);
+  }
+
   defineNewLicense(clarinLicense: ClarinLicense) {
+    // convert string value from the form to the number
     clarinLicense.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
     this.clarinLicenseService.create(clarinLicense)
       .pipe(getFirstCompletedRemoteData())
@@ -131,7 +147,17 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   deleteLicense() {
-    console.log('delete license');
+    if (isNull(this.selectedLicense?.id)) {
+      return;
+    }
+    this.clarinLicenseService.delete(String(this.selectedLicense.id))
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe(response => {
+        const successfulMessageContentDef = 'clarin-license.delete-license.notification.successful-content';
+        const errorMessageContentDef = 'clarin-license.delete-license.notification.error-content';
+        this.notifyOperationStatus(response, successfulMessageContentDef, errorMessageContentDef);
+        this.loadAllLicenses();
+      });
   }
 
   notifyOperationStatus(response, sucContent, errContent) {
@@ -191,13 +217,17 @@ export class ClarinLicenseTableComponent implements OnInit {
 
   /**
    * Mark the handle as selected or unselect if it is already clicked.
-   * @param handleId id of the selected handle
+   * @param clarinLicense
    */
-  switchSelectedHandle(licenseId) {
-    if (this.selectedLicense === licenseId) {
+  switchSelectedHandle(clarinLicense: ClarinLicense) {
+    if (isNull(clarinLicense)) {
+      return;
+    }
+
+    if (this.selectedLicense?.id === clarinLicense?.id) {
       this.selectedLicense = null;
     } else {
-      this.selectedLicense = licenseId;
+      this.selectedLicense = clarinLicense;
     }
   }
 

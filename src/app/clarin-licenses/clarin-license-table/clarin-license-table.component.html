@@ -24,7 +24,11 @@
           </thead>
           <tbody>
           <tr *ngFor="let cLicense of cLicenses?.page" [id]="'clarin-license-row-' + cLicense.id">
-            <td><input class="collection-checkbox" [ngModel]="selectedLicense === cLicense.id" (change)="switchSelectedHandle(cLicense.id)" type="checkbox" name="{{cLicense.id}}"></td>
+            <td><input class="collection-checkbox"
+                       [ngModel]="selectedLicense?.id === cLicense.id"
+                       (change)="switchSelectedHandle(cLicense)"
+                       type="checkbox"
+                       name="{{cLicense.id}}"></td>
             <td class="version-row-element-version">
               {{cLicense?.name}}
             </td>

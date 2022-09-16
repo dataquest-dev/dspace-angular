@@ -6,7 +6,6 @@ import {CLARIN_LICENSE_CONFIRMATION} from '../../../../core/shared/clarin/clarin
 import {ClarinLicenseLabelDataService} from '../../../../core/data/clarin/clarin-license-label-data.service';
 import {getFirstSucceededRemoteListPayload} from '../../../../core/shared/operators';
 import {validateExtendedLicenseLabels, validateLicenseLabel} from './define-license-form-validator';
-import {MapType} from '@angular/compiler';
 
 @Component({
   selector: 'ds-define-license-form',
@@ -19,11 +18,26 @@ export class DefineLicenseFormComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,
     private clarinLicenseLabelService: ClarinLicenseLabelDataService
-  ) {
-    this.createForm();
-  }
+  ) { }
 
-  @Input()id: number;
+  @Input()
+  name = '';
+
+  @Input()
+  definition = '';
+
+  @Input()
+  confirmation = '';
+
+  @Input()
+  requiredInfo = '';
+
+  @Input()
+  extendedClarinLicenseLabels = [];
+
+  @Input()
+  clarinLicenseLabel: ClarinLicenseLabel = null;
+
   clarinLicenseForm: FormGroup;
   confirmationOptions: any[] = CLARIN_LICENSE_CONFIRMATION;
   clarinLicenseLabelOptions: ClarinLicenseLabel[] = [];
@@ -31,18 +45,30 @@ export class DefineLicenseFormComponent implements OnInit {
 
   // tslint:disable-next-line:no-empty
   ngOnInit(): void {
+    console.log('ngOnInit name', this.name);
+    this.createForm();
     // load clarin license labels
    this.loadAndAssignClarinLicenseLabels();
   }
 
   private createForm() {
+    console.log('createForm name', this.name);
     this.clarinLicenseForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      definition: ['', Validators.required],
-      confirmation: '',
-      clarinLicenseLabel: [new FormControl(false), validateLicenseLabel()],
-      extendedClarinLicenseLabels: new FormArray([], validateExtendedLicenseLabels())
+      name: [this.name, Validators.required],
+      definition: [this.definition, Validators.required],
+      confirmation: [this.confirmation, Validators.required],
+      clarinLicenseLabel: [this.clarinLicenseLabel, validateLicenseLabel()],
+      extendedClarinLicenseLabels: new FormArray([])
     });
+
+    const extendedClarinLicenseLabelsForm =
+      (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
+    this.extendedClarinLicenseLabels.forEach(extendedClarinLicenseLabel => {
+      const form = new FormControl(extendedClarinLicenseLabel);
+      extendedClarinLicenseLabelsForm.push(form);
+    });
+
+    console.log('this.clarinLicenseForm.controls.clarinLicenseLabel', this.clarinLicenseForm.controls.clarinLicenseLabel);
   }
 
   submitForm() {
@@ -51,13 +77,13 @@ export class DefineLicenseFormComponent implements OnInit {
 
   // add or remove extended clarin license label based on the checkbox selection
   changeExtendedClarinLicenseLabels(event: any, extendedClarinLicenseLabel) {
-    const selectedCountries = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
+    const extendedClarinLicenseLabels = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
     if (event.target.checked) {
-      selectedCountries.push(extendedClarinLicenseLabel);
+      extendedClarinLicenseLabels.push(extendedClarinLicenseLabel);
     } else {
-      selectedCountries.forEach((ell: ClarinLicenseLabel, index)  => {
+      extendedClarinLicenseLabels.forEach((ell: ClarinLicenseLabel, index)  => {
         if (ell.id === extendedClarinLicenseLabel.id) {
-          selectedCountries.splice(index, 1);
+          extendedClarinLicenseLabels.splice(index, 1);
         }
       });
     }

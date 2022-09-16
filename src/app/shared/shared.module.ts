@@ -178,6 +178,7 @@ import { BitstreamRequestACopyPageComponent } from './bitstream-request-a-copy-p
 import { DsSelectComponent } from './ds-select/ds-select.component';
 import { LogInOidcComponent } from './log-in/methods/oidc/log-in-oidc.component';
 import {ClarinExtendedLicensePipe} from './utils/clarin-extended-license.pipe';
+import {ClarinLicenseLabelCheckedPipe} from './utils/clarin-license-label-checked.pipe';
 
 const MODULES = [
   // Do NOT include UniversalModule, HttpModule, or JsonpModule here
@@ -222,7 +223,8 @@ const PIPES = [
   ObjectValuesPipe,
   ConsolePipe,
   ObjNgFor,
-  ClarinExtendedLicensePipe
+  ClarinExtendedLicensePipe,
+  ClarinLicenseLabelCheckedPipe
 ];
 
 const COMPONENTS = [
