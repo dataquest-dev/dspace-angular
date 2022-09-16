@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest as observableCombineLatest, fromEvent } 
 import {RemoteData} from '../../core/data/remote-data';
 import {PaginatedList} from '../../core/data/paginated-list.model';
 import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
-import {getFirstSucceededRemoteData} from '../../core/shared/operators';
+import {getFirstCompletedRemoteData, getFirstSucceededRemoteData} from '../../core/shared/operators';
 import {switchMap} from 'rxjs/operators';
 import {PaginationService} from '../../core/pagination/pagination.service';
 import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
@@ -16,6 +16,11 @@ import {DefineLicenseFormComponent} from './modal/define-license-form/define-lic
 import {DefineLicenseLabelFormComponent} from './modal/define-license-label-form/define-license-label-form.component';
 import {EditLicenseFormComponent} from './modal/edit-license-form/edit-license-form.component';
 import {EditLicenseLabelFormComponent} from './modal/edit-license-label-form/edit-license-label-form.component';
+import {ClarinLicenseConfirmationSerializer} from '../../core/shared/clarin/clarin-license-confirmation-serializer';
+import {getBitstreamFormatsModuleRoute} from '../../admin/admin-registries/admin-registries-routing-paths';
+import {NotificationsService} from '../../shared/notifications/notifications.service';
+import {TranslateService} from '@ngx-translate/core';
+import {BitstreamFormat} from '../../core/shared/bitstream-format.model';
 
 @Component({
   selector: 'ds-clarin-license-table',
@@ -28,7 +33,9 @@ export class ClarinLicenseTableComponent implements OnInit {
   constructor(private paginationService: PaginationService,
               private clarinLicenseService: ClarinLicenseDataService,
               private modalService: NgbModal,
-              public activeModal: NgbActiveModal) { }
+              public activeModal: NgbActiveModal,
+              private notificationService: NotificationsService,
+              private translateService: TranslateService,) { }
 
   /**
    * The list of Handle object as BehaviorSubject object
@@ -58,7 +65,7 @@ export class ClarinLicenseTableComponent implements OnInit {
   ngOnInit(): void {
     this.initializePaginationOptions();
     this.initializeSortingOptions();
-    this.getAllLicenses();
+    this.loadAllLicenses();
   }
 
   private initializePaginationOptions() {
@@ -72,8 +79,9 @@ export class ClarinLicenseTableComponent implements OnInit {
   openDefineLicenseForm() {
     const defineLicenseModalRef = this.modalService.open(DefineLicenseFormComponent);
 
-    defineLicenseModalRef.result.then((result) => {
-      console.log('result',result);
+    defineLicenseModalRef.result.then((result: ClarinLicense) => {
+      this.defineNewLicense(result);
+      // console.log('result',result);
     }).catch((error) => {
       console.log(error);
     });
@@ -102,15 +110,38 @@ export class ClarinLicenseTableComponent implements OnInit {
   openEditLicenseLabelForm() {
     const editLicenseModalRef = this.modalService.open(EditLicenseLabelFormComponent);
 
-    editLicenseModalRef.result.then((result) => {
+    editLicenseModalRef.result.then((result: ClarinLicense) => {
       console.log('result',result);
     }).catch((error) => {
       console.log(error);
     });
   }
 
+  defineNewLicense(clarinLicense: ClarinLicense) {
+    clarinLicense.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
+    this.clarinLicenseService.create(clarinLicense)
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe((response: RemoteData<ClarinLicense>) => {
+        // check payload and show error or successful
+        const successfulMessageContentDef = 'clarin-license.define-license.notification.successful-content';
+        const errorMessageContentDef = 'clarin-license.define-license.notification.error-content';
+        this.notifyOperationStatus(response, successfulMessageContentDef, errorMessageContentDef);
+        this.loadAllLicenses();
+      });
+  }
+
   deleteLicense() {
     console.log('delete license');
+  }
+
+  notifyOperationStatus(response, sucContent, errContent) {
+    if (response.hasSucceeded) {
+      this.notificationService.success('',
+        this.translateService.get(sucContent));
+    } else if (response.isError) {
+      this.notificationService.error('',
+        this.translateService.get(errContent));
+    }
   }
 
   // openFormModal() {
@@ -127,14 +158,14 @@ export class ClarinLicenseTableComponent implements OnInit {
    * Updates the page
    */
   onPageChange() {
-    this.getAllLicenses();
+    this.loadAllLicenses();
   }
 
   closeModal() {
     this.activeModal.close('Modal Closed');
   }
 
-  getAllLicenses() {
+  loadAllLicenses() {
     this.licensesRD$ = new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
     this.isLoading = true;
 
@@ -153,7 +184,6 @@ export class ClarinLicenseTableComponent implements OnInit {
       }),
       getFirstSucceededRemoteData()
     ).subscribe((res: RemoteData<PaginatedList<ClarinLicense>>) => {
-      console.log('licenses', res);
       this.licensesRD$.next(res);
       this.isLoading = false;
     });

@@ -6,6 +6,7 @@ import {CLARIN_LICENSE_CONFIRMATION} from '../../../../core/shared/clarin/clarin
 import {ClarinLicenseLabelDataService} from '../../../../core/data/clarin/clarin-license-label-data.service';
 import {getFirstSucceededRemoteListPayload} from '../../../../core/shared/operators';
 import {validateExtendedLicenseLabels, validateLicenseLabel} from './define-license-form-validator';
+import {MapType} from '@angular/compiler';
 
 @Component({
   selector: 'ds-define-license-form',
@@ -32,11 +33,40 @@ export class DefineLicenseFormComponent implements OnInit {
   ngOnInit(): void {
     // load clarin license labels
    this.loadAndAssignClarinLicenseLabels();
-
-    // this.lls[0].label = 'test';
-    // this.lls[1].label = 'test2';
   }
 
+  private createForm() {
+    this.clarinLicenseForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      definition: ['', Validators.required],
+      confirmation: '',
+      clarinLicenseLabel: [new FormControl(false), validateLicenseLabel()],
+      extendedClarinLicenseLabels: new FormArray([], validateExtendedLicenseLabels())
+    });
+  }
+
+  submitForm() {
+    this.activeModal.close(this.clarinLicenseForm.value);
+  }
+
+  // add or remove extended clarin license label based on the checkbox selection
+  changeExtendedClarinLicenseLabels(event: any, extendedClarinLicenseLabel) {
+    const selectedCountries = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
+    if (event.target.checked) {
+      selectedCountries.push(extendedClarinLicenseLabel);
+    } else {
+      selectedCountries.forEach((ell: ClarinLicenseLabel, index)  => {
+        if (ell.id === extendedClarinLicenseLabel.id) {
+          selectedCountries.splice(index, 1);
+        }
+      });
+    }
+  }
+
+  /**
+   * Load all ClarinLicenseLabels and divide them based on the extended property.
+   * @private
+   */
   private loadAndAssignClarinLicenseLabels() {
     this.clarinLicenseLabelService.findAll()
       .pipe(getFirstSucceededRemoteListPayload())
@@ -51,37 +81,4 @@ export class DefineLicenseFormComponent implements OnInit {
       });
   }
 
-  private createForm() {
-    this.clarinLicenseForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      definitionURL: ['', Validators.required],
-      confirmation: ['', Validators.required],
-      licenseLabel: [new FormControl(false), validateLicenseLabel()],
-      // myCheckboxGroup: new FormGroup({
-      //   myCheckbox1: new FormControl(false),
-      //   myCheckbox2: new FormControl(false),
-      //   myCheckbox3: new FormControl(false),
-      // }, requireCheckboxesToBeCheckedValidator()),
-      extendedLicenseLabels: new FormArray([], validateExtendedLicenseLabels())
-      // requiredInfo: [[], Validators.required],
-    });
-  }
-
-  private submitForm() {
-    this.activeModal.close(this.clarinLicenseForm.value);
-  }
-
-  onCheckboxChange(event: any, extendedClarinLicenseLabel) {
-    const selectedCountries = (this.clarinLicenseForm.controls.extendedLicenseLabels).value as any[];
-    console.log(event);
-    if (event.target.checked) {
-      selectedCountries.push(extendedClarinLicenseLabel);
-    } else {
-      selectedCountries.forEach((ell: ClarinLicenseLabel, index)  => {
-        if (ell.id === extendedClarinLicenseLabel.id) {
-          selectedCountries.splice(index, 1);
-        }
-      });
-    }
-  }
 }

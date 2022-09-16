@@ -3,7 +3,7 @@ import {ListableObject} from '../../../shared/object-collection/shared/listable-
 import {HALResource} from '../hal-resource.model';
 import {METADATA_VALUE} from '../../metadata/metadata-value.resource-type';
 import {excludeFromEquals} from '../../utilities/equals.decorators';
-import {autoserialize, autoserializeAs, deserialize} from 'cerialize';
+import {autoserialize, autoserializeAs, deserialize, deserializeAs, serializeAs} from 'cerialize';
 import {ResourceType} from '../resource-type';
 import {HALLink} from '../hal-link.model';
 import {METADATA_FIELD} from '../../metadata/metadata-field.resource-type';
@@ -52,7 +52,7 @@ export class ClarinLicense extends ListableObject implements HALResource {
    * The language of this metadata value
    */
   @autoserializeAs(ClarinLicenseConfirmationSerializer)
-  confirmation: string;
+  confirmation: number;
 
   /**
    * The authority of this metadata value

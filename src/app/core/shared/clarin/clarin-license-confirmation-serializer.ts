@@ -2,7 +2,7 @@ import {CLARIN_LICENSE_CONFIRMATION} from './clarin-license.resource-type';
 
 export const ClarinLicenseConfirmationSerializer = {
 
-  Serialize(confirmationMessage: string): number {
+  Serialize(confirmationMessage: any): number {
     switch (confirmationMessage) {
       case CLARIN_LICENSE_CONFIRMATION[1]:
         return 1;
@@ -15,7 +15,7 @@ export const ClarinLicenseConfirmationSerializer = {
     }
   },
 
-  Deserialize(confirmationId: number): string {
+  Deserialize(confirmationId: any): string {
     return CLARIN_LICENSE_CONFIRMATION[confirmationId];
   }
 };

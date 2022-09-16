@@ -3247,6 +3247,8 @@
   "clarin-license.button.delete-license": "Delete License",
 
 
+  "clarin-license.define-license-form.form-name": "Define new license",
+
   "clarin-license.define-license-form.input-name": "License name",
 
   "clarin-license.define-license-form.input-definition-url": "License Definition URL",
@@ -3256,6 +3258,12 @@
   "clarin-license.define-license-form.license-labels": "License Labels",
 
   "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
+
+  "clarin-license.define-license-form.submit-button": "Save",
+
+  "clarin-license.define-license.notification.successful-content": "License was defined successfully",
+
+  "clarin-license.define-license.notification.error-content": "Error: cannot define new License",
 
 
 
