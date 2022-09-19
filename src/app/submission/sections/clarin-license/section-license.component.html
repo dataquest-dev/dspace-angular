@@ -1,0 +1,678 @@
+<button id="secret-change-button" type="button" (click)="change()" style="display: none">
+</button>
+<div class="container">
+  <div class="well well-white">
+    <div class="unstyled">
+      <div id="aspect_submission_StepTransformer_item_head" class="form-group distribution_licnese_head">
+        <div>
+          <span class="">Read and accept the </span>
+          <span class="">
+            <a href="/repository/xmlui/page/contract" class="target_blank"
+               target="_blank">Distribution License Agreement</a>
+          </span>
+        </div>
+      </div>
+      <span class="license-decision-checkbox">
+        <div>
+          <ng-toggle class="btn-dark"
+                     [onColor]="model.onColor"
+                     [onText]="model.onText"
+                     [offColor]="model.offColor"
+                     [offText]="model.offText"
+                     [size]="model.size"
+                     on-change="change()"
+                     (valueChange)="change()"
+                     [(ngModel)]="model.value"
+          >
+          </ng-toggle>
+        </div>
+      </span>
+      <span class="license-decision-message">By checking this box, you agree to the Distribution License
+                        Agreement for this repository to reproduce, translate and distribute your submissions
+                        worldwide.</span>
+      <div class="well-sm alert">
+        <div>
+          <i class="fas fa-exclamation-triangle"></i>
+          <span class="">If you have questions regarding this licence please contact the
+              <a class="helpdesk-tolink" href="mailto:lindat-help@ufal.mff.cuni.cz">Help Desk</a>.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="well well-white">
+    <span class="distribution_licnese_head">Select the resource license</span>
+    <div class="unstyled">
+      <div id="aspect_submission_StepTransformer_item_" class="form-group alert alert-info">
+        <div id="placeholder">
+          <i class="fa fa-3x fa-crosshairs  pull-left"> </i>
+          <span>
+                              The License Selector will provide you
+                                visual assistance to select the most appropriate license for your data or
+                                software.</span>
+          <span>For the list of all supported licenses and their details visit </span>
+          <span>
+                                <a href="/repository/xmlui/page/licenses" class="target_blank alert-link"
+                                   target="_blank">License List Page</a>
+                            </span>
+          <span class="">.</span>
+          <a id="button-holder" (click)="clickLicense()"
+             class="btn btn-repository licenseselector bold btn-block btn-lg">
+            <a>OPEN License Selector</a>
+          </a>
+        </div>
+      </div>
+      <li class="form-group text-center">
+        <div>- OR -</div>
+      </li>
+      <li class="form-group">
+        <div>
+                            <span class="license-resource-text">If you already know under which license you want to
+                                distribute your work, please select from the dropdown below.</span>
+        </div>
+      </li>
+      <li id="aspect_submission_StepTransformer_item_license-not-supported-message"
+          class="form-group alert alert-danger alert-dismissible fade in hidden">
+        <div>The selected license is not supported at the moment. Please follow the procedure described
+          under section "None of these licenses suits your needs".
+        </div>
+      </li>
+      <li class="form-group">
+        <div>
+          <select (change)="change()" #abc id="aspect_submission_StepTransformer_field_license"
+                  class="form-control" name="license" tabindex="-1" title="">
+            <option value="" selected="selected">Select a License ...</option>
+            <option value="85">Licence Universal Dependencies v2.10</option>
+            <option value="84">Universal Segmentations 1.0 License Terms</option>
+            <option value="83">Licence CorefUD v0.2</option>
+            <option value="82">Licence Universal Dependencies v2.9</option>
+            <option value="81">Universal Derivations v1.1 License Agreement</option>
+            <option value="80">Licence Universal Dependencies v2.8</option>
+            <option value="79">Licence CorefUD v0.1</option>
+            <option value="78">Deep Sequoia Licence</option>
+            <option value="77">Licence Universal Dependencies v2.7</option>
+            <option value="76">PARSEME Shared Task Raw Corpus Data (v. 1.2) Agreement</option>
+            <option value="75">PARSEME Shared Task Data (v. 1.2) Agreement</option>
+            <option value="74">Universal Derivations v1.0 License Agreement</option>
+            <option value="73">Licence Universal Dependencies v2.6</option>
+            <option value="72">Licence Universal Dependencies v2.5</option>
+            <option value="71">Universal Derivations v0.5 License Agreement</option>
+            <option value="70">Licence Universal Dependencies v2.4</option>
+            <option value="69">License agreement for The Multilingual corpus of literal occurrences
+              of multiword expressions
+            </option>
+            <option value="67">Licence Universal Dependencies v2.3</option>
+            <option value="66">PARSEME Shared Task Data (v. 1.1) Agreement</option>
+            <option value="65">Licence Universal Dependencies v2.2</option>
+            <option value="64">Licence Universal Dependencies v2.1</option>
+            <option value="63">PARSEME Shared Task Data (v. 1.0) Agreement</option>
+            <option value="62">Licence Universal Dependencies v2.0</option>
+            <option value="60">Licence Universal Dependencies v1.4</option>
+            <option value="59">Licence Universal Dependencies v1.3</option>
+            <option value="58">AGREEMENT ON THE USE OF DATA IN QT21 APE Task</option>
+            <option value="57">AGREEMENT ON THE USE OF DATA IN QT21</option>
+            <option value="56">Licence Universal Dependencies v1.2</option>
+            <option value="55">HamleDT 3.0 License Terms</option>
+            <option value="54">Licence Universal Dependencies v1.1</option>
+            <option value="53">Creative Commons - Attribution-NonCommercial-NoDerivatives 4.0
+              International (CC BY-NC-ND 4.0)
+            </option>
+            <option value="52">Creative Commons - Attribution-NonCommercial-ShareAlike 4.0
+              International (CC BY-NC-SA 4.0)
+            </option>
+            <option value="51">Creative Commons - Attribution-NonCommercial 4.0 International (CC
+              BY-NC 4.0)
+            </option>
+            <option value="50">Creative Commons - Attribution-NoDerivatives 4.0 International (CC
+              BY-ND 4.0)
+            </option>
+            <option value="49">Creative Commons - Attribution-ShareAlike 4.0 International (CC BY-SA
+              4.0)
+            </option>
+            <option value="48">Creative Commons - Attribution 4.0 International (CC BY 4.0)</option>
+            <option value="47">Universal Dependencies 1.0 License Set</option>
+            <option value="46">Public Domain Mark (PD)</option>
+            <option value="45">Open Data Commons Public Domain Dedication and License (PDDL)
+            </option>
+            <option value="44">Open Data Commons Open Database License (ODbL)</option>
+            <option value="43">Open Data Commons Attribution License (ODC-By)</option>
+            <option value="42">Mozilla Public License 2.0</option>
+            <option value="41">GNU Library or "Lesser" General Public License 3.0 (LGPL-3.0)
+            </option>
+            <option value="40">GNU Library or "Lesser" General Public License 2.1 or later
+              (LGPL-2.1)
+            </option>
+            <option value="39">GNU Library or "Lesser" General Public License 2.1 (LGPL-2.1)
+            </option>
+            <option value="38">GNU General Public License 2 or later (GPL-2.0)</option>
+            <option value="37">Eclipse Public License 1.0 (EPL-1.0)</option>
+            <option value="36">Common Development and Distribution License (CDDL-1.0)</option>
+            <option value="35">Affero General Public License 3 (AGPL-3.0)</option>
+            <option value="34">Affero General Public License 1 (AGPL-1.0)</option>
+            <option value="20">Apache License 2.0</option>
+            <option value="18">Artistic License 2.0</option>
+            <option value="17">Artistic License (Perl) 1.0</option>
+            <option value="16">GNU General Public Licence, version 3</option>
+            <option value="15">BSD 2-Clause "Simplified" or "FreeBSD" license</option>
+            <option value="14">BSD 3-Clause "New" or "Revised" license</option>
+            <option value="12">Public Domain Dedication (CC Zero)</option>
+            <option value="11">The MIT License (MIT)</option>
+            <option value="8">Creative Commons - Attribution 3.0 Unported (CC BY 3.0)</option>
+            <option value="6">Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)</option>
+            <option value="5">Attribution-NoDerivs 3.0 Unported (CC BY-ND 3.0)</option>
+            <option value="4">Attribution-NonCommercial-NoDerivs 3.0 Unported (CC BY-NC-ND 3.0)
+            </option>
+            <option value="3">GNU General Public License, version 2</option>
+            <option value="2">Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)
+            </option>
+            <option value="1">Attribution-NonCommercial 3.0 Unported (CC BY-NC 3.0)</option>
+            <option value="86">Dictionary of Medieval Latin in the Czech Lands - digital version 2.2
+              License Agreement
+            </option>
+            <option value="61">License Agreement for Czech National Corpus Data</option>
+            <option value="33">NLP Centre Web Corpus License</option>
+            <option value="27">HamleDT 2.0 Licence Agreement</option>
+            <option value="23">HamleDT 1.0 Licence Agreement</option>
+            <option value="22">PDTSL</option>
+            <option value="21">Czech National Corpus (Shuffled Corpus Data)</option>
+            <option value="7">PDT 2.0 License</option>
+            <option value="68">PAWS License</option>
+            <option value="19">CC-BY-NC-SA + LDC99T42</option>
+          </select>
+        </div>
+      </li>
+      <div id="aspect_submission_StepTransformer_list_accordion_lic" class="accordion">
+        <div id="aspect_submission_StepTransformer_list_accordion-group_lic_1"
+             class="accordion-group hidden">
+          <div class="accordion-heading">
+            <a href="#aspect_submission_StepTransformer_list_accordion-body_lic_1"
+               data-toggle="collapse"
+               data-parent="#aspect_submission_StepTransformer_list_accordion_lic">
+              <span class="bold">See more details for the licenses</span>
+            </a>
+          </div>
+          <div id="aspect_submission_StepTransformer_list_accordion-body_lic_1"
+               class="accordion-body collapse">
+            <div class="accordion-inner">
+              <ul id="aspect_submission_StepTransformer_list_license-list" class="">
+                <li>
+                  <a name="license_85" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-ud-2.10"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.10</a>
+                </li>
+                <li>
+                  <a name="license_84" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-unisegs-1.0"
+                     license-label="PUB" license-label-text="Publicly Available">Universal
+                    Segmentations 1.0 License Terms</a>
+                </li>
+                <li>
+                  <a name="license_83" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-corefud-0.2"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    CorefUD v0.2</a>
+                </li>
+                <li>
+                  <a name="license_82" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-ud-2.9"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.9</a>
+                </li>
+                <li>
+                  <a name="license_81" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UDer-1.1"
+                     license-label="PUB" license-label-text="Publicly Available">Universal
+                    Derivations v1.1 License Agreement</a>
+                </li>
+                <li>
+                  <a name="license_80" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-ud-2.8"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.8</a>
+                </li>
+                <li>
+                  <a name="license_79" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-corefud-0.1"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    CorefUD v0.1</a>
+                </li>
+                <li>
+                  <a name="license_78" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/deep-sequoia-licence"
+                     license-label="PUB" license-label-text="Publicly Available">Deep Sequoia
+                    Licence</a>
+                </li>
+                <li>
+                  <a name="license_77" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-ud-2.7"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.7</a>
+                </li>
+                <li>
+                  <a name="license_76" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-mwe-1.2-raw"
+                     license-label="PUB" license-label-text="Publicly Available">PARSEME
+                    Shared Task Raw Corpus Data (v. 1.2) Agreement</a>
+                </li>
+                <li>
+                  <a name="license_75" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-mwe-1.2"
+                     license-label="PUB" license-label-text="Publicly Available">PARSEME
+                    Shared Task Data (v. 1.2) Agreement</a>
+                </li>
+                <li>
+                  <a name="license_74" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UDer-1.0"
+                     license-label="PUB" license-label-text="Publicly Available">Universal
+                    Derivations v1.0 License Agreement</a>
+                </li>
+                <li>
+                  <a name="license_73" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-ud-2.6"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.6</a>
+                </li>
+                <li>
+                  <a name="license_72" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-2.5"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.5</a>
+                </li>
+                <li>
+                  <a name="license_71" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UDer-0.5"
+                     license-label="PUB" license-label-text="Publicly Available">Universal
+                    Derivations v0.5 License Agreement</a>
+                </li>
+                <li>
+                  <a name="license_70" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-2.4"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.4</a>
+                </li>
+                <li>
+                  <a name="license_69" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-mwe-literal"
+                     license-label="PUB" license-label-text="Publicly Available">License
+                    agreement for The Multilingual corpus of literal occurrences of
+                    multiword expressions</a>
+                </li>
+                <li>
+                  <a name="license_67" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-2.3"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.3</a>
+                </li>
+                <li>
+                  <a name="license_66" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-mwe-1.1"
+                     license-label="PUB" license-label-text="Publicly Available">PARSEME
+                    Shared Task Data (v. 1.1) Agreement</a>
+                </li>
+                <li>
+                  <a name="license_65" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-2.2"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.2</a>
+                </li>
+                <li>
+                  <a name="license_64" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-2.1"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.1</a>
+                </li>
+                <li>
+                  <a name="license_63" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-mwe-1.0"
+                     license-label="PUB" license-label-text="Publicly Available">PARSEME
+                    Shared Task Data (v. 1.0) Agreement</a>
+                </li>
+                <li>
+                  <a name="license_62" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-2.0"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v2.0</a>
+                </li>
+                <li>
+                  <a name="license_60" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-1.4"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v1.4</a>
+                </li>
+                <li>
+                  <a name="license_59" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-1.3"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v1.3</a>
+                </li>
+                <li>
+                  <a name="license_58" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-TAUS_QT21"
+                     license-label="PUB" license-label-text="Publicly Available">AGREEMENT ON
+                    THE USE OF DATA IN QT21 APE Task</a>
+                </li>
+                <li>
+                  <a name="license_57" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-TAUS_QT21"
+                     license-label="PUB" license-label-text="Publicly Available">AGREEMENT ON
+                    THE USE OF DATA IN QT21</a>
+                </li>
+                <li>
+                  <a name="license_56" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-1.2"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v1.2</a>
+                </li>
+                <li>
+                  <a name="license_55" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-hamledt-3.0"
+                     license-label="PUB" license-label-text="Publicly Available">HamleDT 3.0
+                    License Terms</a>
+                </li>
+                <li>
+                  <a name="license_54" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-UD-1.1"
+                     license-label="PUB" license-label-text="Publicly Available">Licence
+                    Universal Dependencies v1.1</a>
+                </li>
+                <li>
+                  <a name="license_53" target=""
+                     href="http://creativecommons.org/licenses/by-nc-nd/4.0/"
+                     license-label="PUB" license-label-text="Publicly Available">Creative
+                    Commons - Attribution-NonCommercial-NoDerivatives 4.0 International (CC
+                    BY-NC-ND 4.0)</a>
+                </li>
+                <li>
+                  <a name="license_52" target=""
+                     href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
+                     license-label="PUB" license-label-text="Publicly Available">Creative
+                    Commons - Attribution-NonCommercial-ShareAlike 4.0 International (CC
+                    BY-NC-SA 4.0)</a>
+                </li>
+                <li>
+                  <a name="license_51" target=""
+                     href="http://creativecommons.org/licenses/by-nc/4.0/"
+                     license-label="PUB" license-label-text="Publicly Available">Creative
+                    Commons - Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)</a>
+                </li>
+                <li>
+                  <a name="license_50" target=""
+                     href="http://creativecommons.org/licenses/by-nd/4.0/"
+                     license-label="PUB" license-label-text="Publicly Available">Creative
+                    Commons - Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)</a>
+                </li>
+                <li>
+                  <a name="license_49" target=""
+                     href="http://creativecommons.org/licenses/by-sa/4.0/"
+                     license-label="PUB" license-label-text="Publicly Available">Creative
+                    Commons - Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)</a>
+                </li>
+                <li>
+                  <a name="license_48" target=""
+                     href="http://creativecommons.org/licenses/by/4.0/" license-label="PUB"
+                     license-label-text="Publicly Available">Creative Commons - Attribution
+                    4.0 International (CC BY 4.0)</a>
+                </li>
+                <li>
+                  <a name="license_47" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-ud-1.0"
+                     license-label="PUB" license-label-text="Publicly Available">Universal
+                    Dependencies 1.0 License Set</a>
+                </li>
+                <li>
+                  <a name="license_46" target=""
+                     href="http://creativecommons.org/publicdomain/mark/1.0/"
+                     license-label="PUB" license-label-text="Publicly Available">Public
+                    Domain Mark (PD)</a>
+                </li>
+                <li>
+                  <a name="license_45" target=""
+                     href="http://opendatacommons.org/licenses/pddl/summary/"
+                     license-label="PUB" license-label-text="Publicly Available">Open Data
+                    Commons Public Domain Dedication and License (PDDL)</a>
+                </li>
+                <li>
+                  <a name="license_44" target=""
+                     href="http://opendatacommons.org/licenses/odbl/summary/"
+                     license-label="PUB" license-label-text="Publicly Available">Open Data
+                    Commons Open Database License (ODbL)</a>
+                </li>
+                <li>
+                  <a name="license_43" target=""
+                     href="http://opendatacommons.org/licenses/by/summary/"
+                     license-label="PUB" license-label-text="Publicly Available">Open Data
+                    Commons Attribution License (ODC-By)</a>
+                </li>
+                <li>
+                  <a name="license_42" target="" href="http://opensource.org/licenses/MPL-2.0"
+                     license-label="PUB" license-label-text="Publicly Available">Mozilla
+                    Public License 2.0</a>
+                </li>
+                <li>
+                  <a name="license_41" target=""
+                     href="http://opensource.org/licenses/LGPL-3.0" license-label="PUB"
+                     license-label-text="Publicly Available">GNU Library or "Lesser" General
+                    Public License 3.0 (LGPL-3.0)</a>
+                </li>
+                <li>
+                  <a name="license_40" target=""
+                     href="http://opensource.org/licenses/LGPL-2.1" license-label="PUB"
+                     license-label-text="Publicly Available">GNU Library or "Lesser" General
+                    Public License 2.1 or later (LGPL-2.1)</a>
+                </li>
+                <li>
+                  <a name="license_39" target=""
+                     href="http://opensource.org/licenses/LGPL-2.1" license-label="PUB"
+                     license-label-text="Publicly Available">GNU Library or "Lesser" General
+                    Public License 2.1 (LGPL-2.1)</a>
+                </li>
+                <li>
+                  <a name="license_38" target="" href="http://opensource.org/licenses/GPL-2.0"
+                     license-label="PUB" license-label-text="Publicly Available">GNU General
+                    Public License 2 or later (GPL-2.0)</a>
+                </li>
+                <li>
+                  <a name="license_37" target="" href="http://opensource.org/licenses/EPL-1.0"
+                     license-label="PUB" license-label-text="Publicly Available">Eclipse
+                    Public License 1.0 (EPL-1.0)</a>
+                </li>
+                <li>
+                  <a name="license_36" target=""
+                     href="http://opensource.org/licenses/CDDL-1.0" license-label="PUB"
+                     license-label-text="Publicly Available">Common Development and
+                    Distribution License (CDDL-1.0)</a>
+                </li>
+                <li>
+                  <a name="license_35" target=""
+                     href="http://opensource.org/licenses/AGPL-3.0" license-label="PUB"
+                     license-label-text="Publicly Available">Affero General Public License 3
+                    (AGPL-3.0)</a>
+                </li>
+                <li>
+                  <a name="license_34" target="" href="http://www.affero.org/oagpl.html"
+                     license-label="PUB" license-label-text="Publicly Available">Affero
+                    General Public License 1 (AGPL-1.0)</a>
+                </li>
+                <li>
+                  <a name="license_20" target=""
+                     href="http://opensource.org/licenses/Apache-2.0" license-label="PUB"
+                     license-label-text="Publicly Available">Apache License 2.0</a>
+                </li>
+                <li>
+                  <a name="license_18" target=""
+                     href="http://opensource.org/licenses/Artistic-2.0" license-label="PUB"
+                     license-label-text="Publicly Available">Artistic License 2.0</a>
+                </li>
+                <li>
+                  <a name="license_17" target=""
+                     href="http://opensource.org/licenses/Artistic-Perl-1.0"
+                     license-label="PUB" license-label-text="Publicly Available">Artistic
+                    License (Perl) 1.0</a>
+                </li>
+                <li>
+                  <a name="license_16" target="" href="http://opensource.org/licenses/GPL-3.0"
+                     license-label="PUB" license-label-text="Publicly Available">GNU General
+                    Public Licence, version 3</a>
+                </li>
+                <li>
+                  <a name="license_15" target=""
+                     href="http://opensource.org/licenses/BSD-2-Clause" license-label="PUB"
+                     license-label-text="Publicly Available">BSD 2-Clause "Simplified" or
+                    "FreeBSD" license</a>
+                </li>
+                <li>
+                  <a name="license_14" target=""
+                     href="http://opensource.org/licenses/BSD-3-Clause" license-label="PUB"
+                     license-label-text="Publicly Available">BSD 3-Clause "New" or "Revised"
+                    license</a>
+                </li>
+                <li>
+                  <a name="license_12" target=""
+                     href="http://creativecommons.org/publicdomain/zero/1.0/"
+                     license-label="PUB" license-label-text="Publicly Available">Public
+                    Domain Dedication (CC Zero)</a>
+                </li>
+                <li>
+                  <a name="license_11" target=""
+                     href="http://opensource.org/licenses/mit-license.php"
+                     license-label="PUB" license-label-text="Publicly Available">The MIT
+                    License (MIT)</a>
+                </li>
+                <li>
+                  <a name="license_8" target=""
+                     href="http://creativecommons.org/licenses/by/3.0/" license-label="PUB"
+                     license-label-text="Publicly Available">Creative Commons - Attribution
+                    3.0 Unported (CC BY 3.0)</a>
+                </li>
+                <li>
+                  <a name="license_6" target=""
+                     href="http://creativecommons.org/licenses/by-sa/3.0/"
+                     license-label="PUB"
+                     license-label-text="Publicly Available">Attribution-ShareAlike 3.0
+                    Unported (CC BY-SA 3.0)</a>
+                </li>
+                <li>
+                  <a name="license_5" target=""
+                     href="http://creativecommons.org/licenses/by-nd/3.0/"
+                     license-label="PUB"
+                     license-label-text="Publicly Available">Attribution-NoDerivs 3.0
+                    Unported (CC BY-ND 3.0)</a>
+                </li>
+                <li>
+                  <a name="license_4" target=""
+                     href="http://creativecommons.org/licenses/by-nc-nd/3.0/"
+                     license-label="PUB"
+                     license-label-text="Publicly Available">Attribution-NonCommercial-NoDerivs
+                    3.0 Unported (CC BY-NC-ND 3.0)</a>
+                </li>
+                <li>
+                  <a name="license_3" target=""
+                     href="http://www.gnu.org/licenses/gpl-2.0.html" license-label="PUB"
+                     license-label-text="Publicly Available">GNU General Public License,
+                    version 2</a>
+                </li>
+                <li>
+                  <a name="license_2" target=""
+                     href="http://creativecommons.org/licenses/by-nc-sa/3.0/"
+                     license-label="PUB"
+                     license-label-text="Publicly Available">Attribution-NonCommercial-ShareAlike
+                    3.0 Unported (CC BY-NC-SA 3.0)</a>
+                </li>
+                <li>
+                  <a name="license_1" target=""
+                     href="http://creativecommons.org/licenses/by-nc/3.0/"
+                     license-label="PUB"
+                     license-label-text="Publicly Available">Attribution-NonCommercial 3.0
+                    Unported (CC BY-NC 3.0)</a>
+                </li>
+                <li>
+                  <a name="license_86" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-lb"
+                     license-label="ACA" license-label-text="Academic Use">Dictionary of
+                    Medieval Latin in the Czech Lands - digital version 2.2 License
+                    Agreement</a>
+                </li>
+                <li>
+                  <a name="license_61" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-cnc-data"
+                     license-label="ACA" license-label-text="Academic Use">License Agreement
+                    for Czech National Corpus Data</a>
+                </li>
+                <li>
+                  <a name="license_33" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-NLPC-WeC"
+                     license-label="ACA" license-label-text="Academic Use">NLP Centre Web
+                    Corpus License</a>
+                </li>
+                <li>
+                  <a name="license_27" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-hamledt-2.0"
+                     license-label="ACA" license-label-text="Academic Use">HamleDT 2.0
+                    Licence Agreement</a>
+                </li>
+                <li>
+                  <a name="license_23" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-hamledt"
+                     license-label="ACA" license-label-text="Academic Use">HamleDT 1.0
+                    Licence Agreement</a>
+                </li>
+                <li>
+                  <a name="license_22" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/licence-pdtsl"
+                     license-label="ACA" license-label-text="Academic Use">PDTSL</a>
+                </li>
+                <li>
+                  <a name="license_21" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-cnc"
+                     license-label="ACA" license-label-text="Academic Use">Czech National
+                    Corpus (Shuffled Corpus Data)</a>
+                </li>
+                <li>
+                  <a name="license_7" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-pdt2"
+                     license-label="ACA" license-label-text="Academic Use">PDT 2.0
+                    License</a>
+                </li>
+                <li>
+                  <a name="license_68" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-PAWS"
+                     license-label="RES" license-label-text="Restricted Use">PAWS License</a>
+                </li>
+                <li>
+                  <a name="license_19" target=""
+                     href="https://lindat.mff.cuni.cz/repository/xmlui/page/license-pcedt2"
+                     license-label="RES" license-label-text="Restricted Use">CC-BY-NC-SA +
+                    LDC99T42</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="well-sm alert well-white">
+      <div class="unstyled">
+        <div id="aspect_submission_StepTransformer_item_x" class="form-group bold">
+          <div>None of these licenses suits your needs</div>
+        </div>
+        <div class="form-group">
+          <div>If you need to use a license we currently do not offer, proceed as follows:
+          </div>
+        </div>
+        <ul id="aspect_submission_StepTransformer_list_steps" class="ds-bulleted-list">
+          <li>Obtain a link (or a copy) to the license.</li>
+          <li>Send an email to
+            <a href="mailto:lindat-help@ufal.mff.cuni.cz">Help Desk</a> with the license
+            details.
+          </li>
+          <li>Save the unfinished submission and wait. We will add the license to the
+            selection list and contact you.
+          </li>
+          <li>
+            You will be able to continue the submission afterwards.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
