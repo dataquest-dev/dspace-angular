@@ -3274,6 +3274,19 @@
   "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
 
 
+  "clarin-license-label.define-license-label.input-label": "Short Label",
+
+  "clarin-license-label.define-license-label.input-title": "Label Title",
+
+  "clarin-license-label.define-license-label.input-is-extended": "Is extended",
+
+  "clarin-license-label.define-license-label.input-icon": "Icon",
+
+  "clarin-license-label.define-license-label.notification.successful-content": "License Label was defined successfully",
+
+  "clarin-license-label.define-license-label.notification.error-content": "Error: cannot define new License Label",
+
+
 
 
 

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {PaginationComponentOptions} from '../../shared/pagination/pagination-component-options.model';
-import { BehaviorSubject, combineLatest as observableCombineLatest, fromEvent } from 'rxjs';
+import {BehaviorSubject, combineLatest as observableCombineLatest} from 'rxjs';
 import {RemoteData} from '../../core/data/remote-data';
 import {PaginatedList} from '../../core/data/paginated-list.model';
 import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
@@ -8,20 +8,19 @@ import {getFirstCompletedRemoteData, getFirstSucceededRemoteData} from '../../co
 import {switchMap} from 'rxjs/operators';
 import {PaginationService} from '../../core/pagination/pagination.service';
 import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
-import {SortDirection, SortOptions} from '../../core/cache/models/sort-options.model';
+import {SortOptions} from '../../core/cache/models/sort-options.model';
 import {defaultPagination, defaultSortConfiguration} from '../clarin-license-table-pagination';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormModalComponent} from './form-modal.component';
 import {DefineLicenseFormComponent} from './modal/define-license-form/define-license-form.component';
 import {DefineLicenseLabelFormComponent} from './modal/define-license-label-form/define-license-label-form.component';
 import {EditLicenseLabelFormComponent} from './modal/edit-license-label-form/edit-license-label-form.component';
 import {ClarinLicenseConfirmationSerializer} from '../../core/shared/clarin/clarin-license-confirmation-serializer';
-import {getBitstreamFormatsModuleRoute} from '../../admin/admin-registries/admin-registries-routing-paths';
 import {NotificationsService} from '../../shared/notifications/notifications.service';
 import {TranslateService} from '@ngx-translate/core';
-import {BitstreamFormat} from '../../core/shared/bitstream-format.model';
 import {isNull} from '../../shared/empty.util';
-import {response} from 'express';
+import {ClarinLicenseLabel} from '../../core/shared/clarin/clarin-license-label.model';
+import {ClarinLicenseLabelDataService} from '../../core/data/clarin/clarin-license-label-data.service';
+import {ClarinLicenseLabelExtendedSerializer} from '../../core/shared/clarin/clarin-license-label-extended-serializer';
 
 @Component({
   selector: 'ds-clarin-license-table',
@@ -33,6 +32,7 @@ export class ClarinLicenseTableComponent implements OnInit {
   // tslint:disable-next-line:no-empty
   constructor(private paginationService: PaginationService,
               private clarinLicenseService: ClarinLicenseDataService,
+              private clarinLicenseLabelService: ClarinLicenseLabelDataService,
               private modalService: NgbModal,
               public activeModal: NgbActiveModal,
               private notificationService: NotificationsService,
@@ -88,11 +88,54 @@ export class ClarinLicenseTableComponent implements OnInit {
   openDefineLicenseLabelForm() {
     const defineLicenseLabelModalRef = this.modalService.open(DefineLicenseLabelFormComponent);
 
-    defineLicenseLabelModalRef.result.then((result) => {
-      console.log('result',result);
+    defineLicenseLabelModalRef.result.then((result: ClarinLicenseLabel) => {
+      this.defineLicenseLabel(result);
     }).catch((error) => {
       console.log(error);
     });
+  }
+
+  getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file[0]);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+
+  defineLicenseLabel(clarinLicenseLabel: ClarinLicenseLabel) {
+    const successfulMessageContentDef = 'clarin-license-label.define-license-label.notification.successful-content';
+    const errorMessageContentDef = 'clarin-license-label.define-license-label.notification.error-content';
+    if (isNull(clarinLicenseLabel)) {
+      this.notifyOperationStatus(clarinLicenseLabel, successfulMessageContentDef, errorMessageContentDef);
+    }
+
+    // convert string value from the form to the boolean
+    clarinLicenseLabel.extended = ClarinLicenseLabelExtendedSerializer.Serialize(clarinLicenseLabel.extended);
+
+    const reader = new FileReader();
+    const fileByteArray = [];
+    reader.readAsArrayBuffer(clarinLicenseLabel.icon[0]);
+    reader.onloadend = (evt) => {
+      if (evt.target.readyState === FileReader.DONE) {
+        const arrayBuffer = evt.target.result;
+        // @ts-ignore
+        const array = new Uint8Array(arrayBuffer);
+        for (const item of array) {
+          fileByteArray.push(item);
+        }
+        clarinLicenseLabel.icon = fileByteArray;
+        this.clarinLicenseLabelService.create(clarinLicenseLabel)
+          .pipe(getFirstCompletedRemoteData())
+          .subscribe((defineLicenseLabelResponse: RemoteData<ClarinLicenseLabel>) => {
+            // check payload and show error or successful
+            this.notifyOperationStatus(defineLicenseLabelResponse, successfulMessageContentDef, errorMessageContentDef);
+            this.loadAllLicenses();
+          });
+      }
+    };
   }
 
   openEditLicenseForm() {
