@@ -10,7 +10,6 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { DefineLicenseFormComponent } from './clarin-license-table/modal/define-license-form/define-license-form.component';
 import { DefineLicenseLabelFormComponent } from './clarin-license-table/modal/define-license-label-form/define-license-label-form.component';
 import { EditLicenseLabelFormComponent } from './clarin-license-table/modal/edit-license-label-form/edit-license-label-form.component';
-import { EditLicenseFormComponent } from './clarin-license-table/modal/edit-license-form/edit-license-form.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +18,6 @@ import { EditLicenseFormComponent } from './clarin-license-table/modal/edit-lice
     DefineLicenseFormComponent,
     DefineLicenseLabelFormComponent,
     EditLicenseLabelFormComponent,
-    EditLicenseFormComponent
   ],
     imports: [
         CommonModule,

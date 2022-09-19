@@ -14,7 +14,6 @@ import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormModalComponent} from './form-modal.component';
 import {DefineLicenseFormComponent} from './modal/define-license-form/define-license-form.component';
 import {DefineLicenseLabelFormComponent} from './modal/define-license-label-form/define-license-label-form.component';
-import {EditLicenseFormComponent} from './modal/edit-license-form/edit-license-form.component';
 import {EditLicenseLabelFormComponent} from './modal/edit-license-label-form/edit-license-label-form.component';
 import {ClarinLicenseConfirmationSerializer} from '../../core/shared/clarin/clarin-license-confirmation-serializer';
 import {getBitstreamFormatsModuleRoute} from '../../admin/admin-registries/admin-registries-routing-paths';
@@ -22,6 +21,7 @@ import {NotificationsService} from '../../shared/notifications/notifications.ser
 import {TranslateService} from '@ngx-translate/core';
 import {BitstreamFormat} from '../../core/shared/bitstream-format.model';
 import {isNull} from '../../shared/empty.util';
+import {response} from 'express';
 
 @Component({
   selector: 'ds-clarin-license-table',
@@ -99,12 +99,13 @@ export class ClarinLicenseTableComponent implements OnInit {
     if (isNull(this.selectedLicense)) {
       return;
     }
+
+    // pass the actual clarin license values to the define-clarin-license modal
     const editLicenseModalRef = this.modalService.open(DefineLicenseFormComponent);
     editLicenseModalRef.componentInstance.name = this.selectedLicense.name;
     editLicenseModalRef.componentInstance.definition = this.selectedLicense.definition;
     editLicenseModalRef.componentInstance.confirmation = this.selectedLicense.confirmation;
     editLicenseModalRef.componentInstance.requiredInfo = this.selectedLicense.requiredInfo;
-    console.log('To edit form ecll', this.selectedLicense.extendedClarinLicenseLabels);
     editLicenseModalRef.componentInstance.extendedClarinLicenseLabels =
       this.selectedLicense.extendedClarinLicenseLabels;
     editLicenseModalRef.componentInstance.clarinLicenseLabel =
@@ -112,9 +113,6 @@ export class ClarinLicenseTableComponent implements OnInit {
 
     editLicenseModalRef.result.then((result: ClarinLicense) => {
       this.editLicense(result);
-      console.log('edit result',result);
-    }).catch((error) => {
-      console.log(error);
     });
   }
 
@@ -129,19 +127,47 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   editLicense(clarinLicense: ClarinLicense) {
-    // console.log('editClarinLicense', clarinLicense);
+    const successfulMessageContentDef = 'clarin-license.edit-license.notification.successful-content';
+    const errorMessageContentDef = 'clarin-license.edit-license.notification.error-content';
+    if (isNull(clarinLicense)) {
+      this.notifyOperationStatus(clarinLicense, successfulMessageContentDef, errorMessageContentDef);
+    }
+
+    const clarinLicenseObj = new ClarinLicense();
+    clarinLicenseObj.name = clarinLicense.name;
+    clarinLicenseObj.clarinLicenseLabel = clarinLicense.clarinLicenseLabel;
+    clarinLicenseObj.extendedClarinLicenseLabels = clarinLicense.extendedClarinLicenseLabels;
+    clarinLicenseObj._links = this.selectedLicense._links;
+    clarinLicenseObj.id = clarinLicense.id;
+    clarinLicenseObj.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
+    clarinLicenseObj.definition = clarinLicense.definition;
+    clarinLicenseObj.bitstreams = clarinLicense.bitstreams;
+    clarinLicenseObj.type = clarinLicense.type;
+    clarinLicenseObj.requiredInfo = clarinLicense.requiredInfo;
+
+    this.clarinLicenseService.put(clarinLicenseObj)
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe((editResponse: RemoteData<ClarinLicense>) => {
+        // check payload and show error or successful
+        this.notifyOperationStatus(editResponse, successfulMessageContentDef, errorMessageContentDef);
+        this.loadAllLicenses();
+    });
   }
 
   defineNewLicense(clarinLicense: ClarinLicense) {
+    const successfulMessageContentDef = 'clarin-license.define-license.notification.successful-content';
+    const errorMessageContentDef = 'clarin-license.define-license.notification.error-content';
+    if (isNull(clarinLicense)) {
+      this.notifyOperationStatus(clarinLicense, successfulMessageContentDef, errorMessageContentDef);
+    }
+
     // convert string value from the form to the number
     clarinLicense.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
     this.clarinLicenseService.create(clarinLicense)
       .pipe(getFirstCompletedRemoteData())
-      .subscribe((response: RemoteData<ClarinLicense>) => {
+      .subscribe((defineLicenseResponse: RemoteData<ClarinLicense>) => {
         // check payload and show error or successful
-        const successfulMessageContentDef = 'clarin-license.define-license.notification.successful-content';
-        const errorMessageContentDef = 'clarin-license.define-license.notification.error-content';
-        this.notifyOperationStatus(response, successfulMessageContentDef, errorMessageContentDef);
+        this.notifyOperationStatus(defineLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
         this.loadAllLicenses();
       });
   }
@@ -152,19 +178,24 @@ export class ClarinLicenseTableComponent implements OnInit {
     }
     this.clarinLicenseService.delete(String(this.selectedLicense.id))
       .pipe(getFirstCompletedRemoteData())
-      .subscribe(response => {
+      .subscribe(deleteLicenseResponse => {
         const successfulMessageContentDef = 'clarin-license.delete-license.notification.successful-content';
         const errorMessageContentDef = 'clarin-license.delete-license.notification.error-content';
-        this.notifyOperationStatus(response, successfulMessageContentDef, errorMessageContentDef);
+        this.notifyOperationStatus(deleteLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
         this.loadAllLicenses();
       });
   }
 
-  notifyOperationStatus(response, sucContent, errContent) {
-    if (response.hasSucceeded) {
+  notifyOperationStatus(operationResponse, sucContent, errContent) {
+    if (isNull(operationResponse)) {
+      this.notificationService.error('',
+        this.translateService.get(errContent));
+    }
+
+    if (operationResponse.hasSucceeded) {
       this.notificationService.success('',
         this.translateService.get(sucContent));
-    } else if (response.isError) {
+    } else if (operationResponse.isError) {
       this.notificationService.error('',
         this.translateService.get(errContent));
     }
@@ -192,6 +223,8 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   loadAllLicenses() {
+    this.selectedLicense = null;
+
     this.licensesRD$ = new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
     this.isLoading = true;
 

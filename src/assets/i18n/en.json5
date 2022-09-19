@@ -3265,6 +3265,10 @@
 
   "clarin-license.define-license.notification.error-content": "Error: cannot define new License",
 
+  "clarin-license.edit-license.notification.successful-content": "License was updated successfully",
+
+  "clarin-license.edit-license.notification.error-content": "Error: cannot edit the License",
+
   "clarin-license.delete-license.notification.successful-content": "License was deleted successfully",
 
   "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",

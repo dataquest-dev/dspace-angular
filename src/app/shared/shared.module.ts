@@ -181,6 +181,7 @@ import {ClarinExtendedLicensePipe} from './utils/clarin-extended-license.pipe';
 import {ClarinLicenseLabelCheckedPipe} from './utils/clarin-license-label-checked.pipe';
 import {ClarinLicenseLabelRadioValuePipe} from './utils/clarin-license-label-radio-value.pipe';
 import {ClarinLicenseLabelCheckedValuePipe} from './utils/clarin-license-label-checked-value.pipe';
+import {CharToEndPipe} from './utils/char-to-end.pipe';
 
 const MODULES = [
   // Do NOT include UniversalModule, HttpModule, or JsonpModule here
@@ -228,7 +229,8 @@ const PIPES = [
   ClarinExtendedLicensePipe,
   ClarinLicenseLabelCheckedPipe,
   ClarinLicenseLabelRadioValuePipe,
-  ClarinLicenseLabelCheckedValuePipe
+  ClarinLicenseLabelCheckedValuePipe,
+  CharToEndPipe
 ];
 
 const COMPONENTS = [

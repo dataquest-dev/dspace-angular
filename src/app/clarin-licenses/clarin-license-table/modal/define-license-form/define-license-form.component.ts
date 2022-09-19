@@ -5,8 +5,7 @@ import {ClarinLicenseLabel} from '../../../../core/shared/clarin/clarin-license-
 import {CLARIN_LICENSE_CONFIRMATION} from '../../../../core/shared/clarin/clarin-license.resource-type';
 import {ClarinLicenseLabelDataService} from '../../../../core/data/clarin/clarin-license-label-data.service';
 import {getFirstSucceededRemoteListPayload} from '../../../../core/shared/operators';
-import {validateExtendedLicenseLabels, validateLicenseLabel} from './define-license-form-validator';
-import {isNull} from '../../../../shared/empty.util';
+import {validateLicenseLabel} from './define-license-form-validator';
 import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 
 @Component({
@@ -21,7 +20,6 @@ export class DefineLicenseFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private clarinLicenseLabelService: ClarinLicenseLabelDataService
   ) {
-
   }
 
   @Input()
