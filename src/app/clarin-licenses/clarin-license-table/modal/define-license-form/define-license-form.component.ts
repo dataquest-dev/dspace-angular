@@ -7,6 +7,7 @@ import {ClarinLicenseLabelDataService} from '../../../../core/data/clarin/clarin
 import {getFirstSucceededRemoteListPayload} from '../../../../core/shared/operators';
 import {validateExtendedLicenseLabels, validateLicenseLabel} from './define-license-form-validator';
 import {isNull} from '../../../../shared/empty.util';
+import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 
 @Component({
   selector: 'ds-define-license-form',
@@ -54,58 +55,46 @@ export class DefineLicenseFormComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.loadForm();
+    // wait because the form is not loaded immediately after init - do not know why
+    wait(500).then(r => {
+      this.loadForm();
+    });
   }
 
   private createForm() {
-    console.log('createForm name', this.name);
     this.clarinLicenseForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      definition: ['', Validators.required],
-      confirmation: '',
-      clarinLicenseLabel: ['', validateLicenseLabel()],
+      name: [this.name, Validators.required],
+      definition: [this.definition, Validators.required],
+      confirmation: this.confirmation,
+      clarinLicenseLabel: [this.clarinLicenseLabel, validateLicenseLabel()],
       extendedClarinLicenseLabels: new FormArray([])
     });
   }
 
   private loadForm() {
-    // add passed extendedClarinLicenseLabels to the form
+    // add passed extendedClarinLicenseLabels to the form because add them to the form in the init is a problem
     const extendedClarinLicenseLabels = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
     this.extendedClarinLicenseLabels.forEach(extendedClarinLicenseLabel => {
-      // const form = new FormControl(extendedClarinLicenseLabel);
       extendedClarinLicenseLabels.push(extendedClarinLicenseLabel);
     });
-    console.log('extendedClarinLicenseLabelsForm', (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value);
   }
 
   submitForm() {
-    // const extendedClarinLicenseLabels = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
-    // if (isNull(extendedClarinLicenseLabels)) {
-    //
-    // }
     this.activeModal.close(this.clarinLicenseForm.value);
-    console.log('extendedClarinLicenseLabelsForm after', (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value);
   }
 
   // add or remove extended clarin license label based on the checkbox selection
-  changeExtendedClarinLicenseLabels(event: any, extendedClarainLicenseLabel) {
-    // const extendedClarinLicenseLabelsForm = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
-
+  changeExtendedClarinLicenseLabels(event: any, extendedClarinLicenseLabel) {
     const extendedClarinLicenseLabels = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
-    // this.extendedClarinLicenseLabels.forEach(extendedClarinLicenseLabel => {
-    //   // const form = new FormControl(extendedClarinLicenseLabel);
-    //   extendedClarinLicenseLabels.push(extendedClarinLicenseLabel);
-    // });
-    // const extendedClarinLicenseLabels = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
-    // if (event.target.checked) {
-    //   extendedClarinLicenseLabels.push(extendedClarinLicenseLabel);
-    // } else {
-    //   extendedClarinLicenseLabels.forEach((ell: ClarinLicenseLabel, index)  => {
-    //     if (ell.id === extendedClarinLicenseLabel.id) {
-    //       extendedClarinLicenseLabels.splice(index, 1);
-    //     }
-    //   });
-    // }
+    if (event.target.checked) {
+      extendedClarinLicenseLabels.push(extendedClarinLicenseLabel);
+    } else {
+      extendedClarinLicenseLabels.forEach((ell: ClarinLicenseLabel, index)  => {
+        if (ell.id === extendedClarinLicenseLabel.id) {
+          extendedClarinLicenseLabels.splice(index, 1);
+        }
+      });
+    }
 
   }
 
@@ -126,5 +115,4 @@ export class DefineLicenseFormComponent implements OnInit {
         });
       });
   }
-
 }
