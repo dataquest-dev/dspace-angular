@@ -7,6 +7,7 @@ import {ClarinLicenseLabelDataService} from '../../../../core/data/clarin/clarin
 import {getFirstSucceededRemoteListPayload} from '../../../../core/shared/operators';
 import {validateLicenseLabel} from './define-license-form-validator';
 import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'ds-define-license-form',
@@ -18,7 +19,8 @@ export class DefineLicenseFormComponent implements OnInit {
   constructor(
     public activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,
-    private clarinLicenseLabelService: ClarinLicenseLabelDataService
+    private clarinLicenseLabelService: ClarinLicenseLabelDataService,
+    private sanitizer: DomSanitizer
   ) {
   }
 
@@ -77,6 +79,11 @@ export class DefineLicenseFormComponent implements OnInit {
     });
   }
 
+  secureImageData(imageByteArray) {
+    const objectURL = 'data:image/png;base64,' + imageByteArray;
+    return this.sanitizer.bypassSecurityTrustUrl(objectURL);
+  }
+
   submitForm() {
     this.activeModal.close(this.clarinLicenseForm.value);
   }
@@ -101,7 +108,7 @@ export class DefineLicenseFormComponent implements OnInit {
    * @private
    */
   private loadAndAssignClarinLicenseLabels() {
-    this.clarinLicenseLabelService.findAll()
+    this.clarinLicenseLabelService.findAll({}, false)
       .pipe(getFirstSucceededRemoteListPayload())
       .subscribe(res => {
         res.forEach(clarinLicenseLabel => {

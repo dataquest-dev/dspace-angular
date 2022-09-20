@@ -112,21 +112,25 @@ export class ClarinLicenseTableComponent implements OnInit {
       this.notifyOperationStatus(clarinLicenseLabel, successfulMessageContentDef, errorMessageContentDef);
     }
 
-    // convert string value from the form to the boolean
-    clarinLicenseLabel.extended = ClarinLicenseLabelExtendedSerializer.Serialize(clarinLicenseLabel.extended);
-
+    // convert file to the byte array
     const reader = new FileReader();
     const fileByteArray = [];
+
     reader.readAsArrayBuffer(clarinLicenseLabel.icon[0]);
     reader.onloadend = (evt) => {
       if (evt.target.readyState === FileReader.DONE) {
         const arrayBuffer = evt.target.result;
-        // @ts-ignore
-        const array = new Uint8Array(arrayBuffer);
-        for (const item of array) {
-          fileByteArray.push(item);
+        if (arrayBuffer instanceof ArrayBuffer) {
+          const array = new Uint8Array(arrayBuffer);
+          for (const item of array) {
+            fileByteArray.push(item);
+          }
         }
         clarinLicenseLabel.icon = fileByteArray;
+        // convert string value from the form to the boolean
+        clarinLicenseLabel.extended = ClarinLicenseLabelExtendedSerializer.Serialize(clarinLicenseLabel.extended);
+
+        // create
         this.clarinLicenseLabelService.create(clarinLicenseLabel)
           .pipe(getFirstCompletedRemoteData())
           .subscribe((defineLicenseLabelResponse: RemoteData<ClarinLicenseLabel>) => {
