@@ -113,6 +113,7 @@ export class DefineLicenseFormComponent implements OnInit {
       .subscribe(res => {
         res.forEach(clarinLicenseLabel => {
           if (clarinLicenseLabel.extended) {
+            console.log('extended', clarinLicenseLabel.extended);
             this.extendedClarinLicenseLabelOptions.push(clarinLicenseLabel);
           } else {
             this.clarinLicenseLabelOptions.push(clarinLicenseLabel);

@@ -28,7 +28,8 @@
               <label id="clarinLicenseLabel" for="clarinLicenseLabel">{{'clarin-license.define-license-form.license-labels' | translate | dsAddChar: '*'}}</label>
               <div *ngFor="let cll of clarinLicenseLabelOptions">
                 <input type="radio" formControlName="clarinLicenseLabel" [value]="cll | dsRadioLicenseLabelValue: clarinLicenseLabel"/>
-                {{ cll.title }}
+                {{ cll.label }} ({{cll.title}})
+<!--                <img [src]="secureImageData(cll.icon)" alt="" width="16px">-->
               </div>
             </div>
             <div class="form-group">
@@ -38,8 +39,8 @@
                        [checked]="extendedClarinLicenseLabel | dsCheckedLicenseLabel: extendedClarinLicenseLabels"
                        (change)="changeExtendedClarinLicenseLabels($event, extendedClarinLicenseLabel)"
                 />
-                {{ extendedClarinLicenseLabel.title }}
-                <img [src]="secureImageData(extendedClarinLicenseLabel.icon)" alt="" width="16px">
+                {{ extendedClarinLicenseLabel.label }} ({{extendedClarinLicenseLabel.title}})
+<!--                <img [src]="secureImageData(extendedClarinLicenseLabel.icon)" alt="" width="16px">-->
               </div>
             </div>
           </div>

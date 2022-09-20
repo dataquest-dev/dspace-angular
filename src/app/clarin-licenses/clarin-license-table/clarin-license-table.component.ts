@@ -82,6 +82,8 @@ export class ClarinLicenseTableComponent implements OnInit {
 
     defineLicenseModalRef.result.then((result: ClarinLicense) => {
       this.defineNewLicense(result);
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
@@ -94,16 +96,6 @@ export class ClarinLicenseTableComponent implements OnInit {
       console.log(error);
     });
   }
-
-  getBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file[0]);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  }
-
 
   defineLicenseLabel(clarinLicenseLabel: ClarinLicenseLabel) {
     const successfulMessageContentDef = 'clarin-license-label.define-license-label.notification.successful-content';

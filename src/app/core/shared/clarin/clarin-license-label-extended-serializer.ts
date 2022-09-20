@@ -5,8 +5,4 @@ export const ClarinLicenseLabelExtendedSerializer = {
   Serialize(extended: any): boolean {
     return extended === 'Yes';
   },
-
-  Deserialize(extended: any): string {
-    return extended ? 'Yes' : 'No';
-  }
 };

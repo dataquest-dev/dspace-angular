@@ -38,7 +38,7 @@ export class DefineLicenseLabelFormComponent implements OnInit {
 
   private createForm() {
     this.clarinLicenseLabelForm = this.formBuilder.group({
-      label: [this.label, Validators.required],
+      label: [this.label, [Validators.required, Validators.maxLength(5)]],
       title: [this.title, Validators.required],
       extended: isNotEmpty(this.extended) ? this.extended : this.extendedOptions[0],
       icon: [this.icon, validateLicenseLabel()],
