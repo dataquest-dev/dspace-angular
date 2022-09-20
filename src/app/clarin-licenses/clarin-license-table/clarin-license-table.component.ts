@@ -29,7 +29,6 @@ import {ClarinLicenseLabelExtendedSerializer} from '../../core/shared/clarin/cla
 })
 export class ClarinLicenseTableComponent implements OnInit {
 
-  // tslint:disable-next-line:no-empty
   constructor(private paginationService: PaginationService,
               private clarinLicenseService: ClarinLicenseDataService,
               private clarinLicenseLabelService: ClarinLicenseLabelDataService,
@@ -61,22 +60,13 @@ export class ClarinLicenseTableComponent implements OnInit {
    */
   isLoading = false;
 
-
-  // tslint:disable-next-line:no-empty
   ngOnInit(): void {
     this.initializePaginationOptions();
     this.initializeSortingOptions();
     this.loadAllLicenses();
   }
 
-  private initializePaginationOptions() {
-    this.options = defaultPagination;
-  }
-
-  private initializeSortingOptions() {
-    this.sortConfiguration = defaultSortConfiguration;
-  }
-
+  // define license
   openDefineLicenseForm() {
     const defineLicenseModalRef = this.modalService.open(DefineLicenseFormComponent);
 
@@ -87,53 +77,25 @@ export class ClarinLicenseTableComponent implements OnInit {
     });
   }
 
-  openDefineLicenseLabelForm() {
-    const defineLicenseLabelModalRef = this.modalService.open(DefineLicenseLabelFormComponent);
-
-    defineLicenseLabelModalRef.result.then((result: ClarinLicenseLabel) => {
-      this.defineLicenseLabel(result);
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
-
-  defineLicenseLabel(clarinLicenseLabel: ClarinLicenseLabel) {
-    const successfulMessageContentDef = 'clarin-license-label.define-license-label.notification.successful-content';
-    const errorMessageContentDef = 'clarin-license-label.define-license-label.notification.error-content';
-    if (isNull(clarinLicenseLabel)) {
-      this.notifyOperationStatus(clarinLicenseLabel, successfulMessageContentDef, errorMessageContentDef);
+  defineNewLicense(clarinLicense: ClarinLicense) {
+    const successfulMessageContentDef = 'clarin-license.define-license.notification.successful-content';
+    const errorMessageContentDef = 'clarin-license.define-license.notification.error-content';
+    if (isNull(clarinLicense)) {
+      this.notifyOperationStatus(clarinLicense, successfulMessageContentDef, errorMessageContentDef);
     }
 
-    // convert file to the byte array
-    const reader = new FileReader();
-    const fileByteArray = [];
-
-    reader.readAsArrayBuffer(clarinLicenseLabel.icon[0]);
-    reader.onloadend = (evt) => {
-      if (evt.target.readyState === FileReader.DONE) {
-        const arrayBuffer = evt.target.result;
-        if (arrayBuffer instanceof ArrayBuffer) {
-          const array = new Uint8Array(arrayBuffer);
-          for (const item of array) {
-            fileByteArray.push(item);
-          }
-        }
-        clarinLicenseLabel.icon = fileByteArray;
-        // convert string value from the form to the boolean
-        clarinLicenseLabel.extended = ClarinLicenseLabelExtendedSerializer.Serialize(clarinLicenseLabel.extended);
-
-        // create
-        this.clarinLicenseLabelService.create(clarinLicenseLabel)
-          .pipe(getFirstCompletedRemoteData())
-          .subscribe((defineLicenseLabelResponse: RemoteData<ClarinLicenseLabel>) => {
-            // check payload and show error or successful
-            this.notifyOperationStatus(defineLicenseLabelResponse, successfulMessageContentDef, errorMessageContentDef);
-            this.loadAllLicenses();
-          });
-      }
-    };
+    // convert string value from the form to the number
+    clarinLicense.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
+    this.clarinLicenseService.create(clarinLicense)
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe((defineLicenseResponse: RemoteData<ClarinLicense>) => {
+        // check payload and show error or successful
+        this.notifyOperationStatus(defineLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
+        this.loadAllLicenses();
+      });
   }
 
+  // edit license
   openEditLicenseForm() {
     if (isNull(this.selectedLicense)) {
       return;
@@ -152,16 +114,6 @@ export class ClarinLicenseTableComponent implements OnInit {
 
     editLicenseModalRef.result.then((result: ClarinLicense) => {
       this.editLicense(result);
-    });
-  }
-
-  openEditLicenseLabelForm() {
-    const editLicenseModalRef = this.modalService.open(EditLicenseLabelFormComponent);
-
-    editLicenseModalRef.result.then((result: ClarinLicense) => {
-      console.log('result',result);
-    }).catch((error) => {
-      console.log(error);
     });
   }
 
@@ -190,27 +142,66 @@ export class ClarinLicenseTableComponent implements OnInit {
         // check payload and show error or successful
         this.notifyOperationStatus(editResponse, successfulMessageContentDef, errorMessageContentDef);
         this.loadAllLicenses();
-    });
-  }
-
-  defineNewLicense(clarinLicense: ClarinLicense) {
-    const successfulMessageContentDef = 'clarin-license.define-license.notification.successful-content';
-    const errorMessageContentDef = 'clarin-license.define-license.notification.error-content';
-    if (isNull(clarinLicense)) {
-      this.notifyOperationStatus(clarinLicense, successfulMessageContentDef, errorMessageContentDef);
-    }
-
-    // convert string value from the form to the number
-    clarinLicense.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
-    this.clarinLicenseService.create(clarinLicense)
-      .pipe(getFirstCompletedRemoteData())
-      .subscribe((defineLicenseResponse: RemoteData<ClarinLicense>) => {
-        // check payload and show error or successful
-        this.notifyOperationStatus(defineLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
-        this.loadAllLicenses();
       });
   }
 
+  // define license label
+  openDefineLicenseLabelForm() {
+    const defineLicenseLabelModalRef = this.modalService.open(DefineLicenseLabelFormComponent);
+
+    defineLicenseLabelModalRef.result.then((result: ClarinLicenseLabel) => {
+      this.defineLicenseLabel(result);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  defineLicenseLabel(clarinLicenseLabel: ClarinLicenseLabel) {
+    const successfulMessageContentDef = 'clarin-license-label.define-license-label.notification.successful-content';
+    const errorMessageContentDef = 'clarin-license-label.define-license-label.notification.error-content';
+    if (isNull(clarinLicenseLabel)) {
+      this.notifyOperationStatus(clarinLicenseLabel, successfulMessageContentDef, errorMessageContentDef);
+    }
+
+    // convert file to the byte array
+    const reader = new FileReader();
+    const fileByteArray = [];
+
+    try {
+      reader.readAsArrayBuffer(clarinLicenseLabel.icon?.[0]);
+    } catch (error) {
+      this.notifyOperationStatus(null, successfulMessageContentDef, errorMessageContentDef);
+    }
+
+    reader.onerror = (evt) => {
+      this.notifyOperationStatus(null, successfulMessageContentDef, errorMessageContentDef);
+    };
+    reader.onloadend = (evt) => {
+      if (evt.target.readyState === FileReader.DONE) {
+        const arrayBuffer = evt.target.result;
+        if (arrayBuffer instanceof ArrayBuffer) {
+          const array = new Uint8Array(arrayBuffer);
+          for (const item of array) {
+            fileByteArray.push(item);
+          }
+        }
+        clarinLicenseLabel.icon = fileByteArray;
+        // convert string value from the form to the boolean
+        clarinLicenseLabel.extended = ClarinLicenseLabelExtendedSerializer.Serialize(clarinLicenseLabel.extended);
+
+        // create
+        this.clarinLicenseLabelService.create(clarinLicenseLabel)
+          .pipe(getFirstCompletedRemoteData())
+          .subscribe((defineLicenseLabelResponse: RemoteData<ClarinLicenseLabel>) => {
+            // check payload and show error or successful
+            this.notifyOperationStatus(defineLicenseLabelResponse, successfulMessageContentDef, errorMessageContentDef);
+            this.loadAllLicenses();
+          });
+      }
+    };
+  }
+
+  // delete license
   deleteLicense() {
     if (isNull(this.selectedLicense?.id)) {
       return;
@@ -225,10 +216,20 @@ export class ClarinLicenseTableComponent implements OnInit {
       });
   }
 
+  // openEditLicenseLabelForm() {
+  //   const editLicenseModalRef = this.modalService.open(EditLicenseLabelFormComponent);
+  //
+  //   editLicenseModalRef.result.then((result: ClarinLicense) => {
+  //     console.log('result',result);
+  //   }).catch((error) => {
+  //     console.log(error);
+  //   });
+  // }
+
   notifyOperationStatus(operationResponse, sucContent, errContent) {
     if (isNull(operationResponse)) {
-      this.notificationService.error('',
-        this.translateService.get(errContent));
+      this.notificationService.error('', this.translateService.get(errContent));
+      return;
     }
 
     if (operationResponse.hasSucceeded) {
@@ -239,16 +240,6 @@ export class ClarinLicenseTableComponent implements OnInit {
         this.translateService.get(errContent));
     }
   }
-
-  // openFormModal() {
-  //   const modalRef = this.modalService.open(FormModalComponent);
-  //
-  //   modalRef.result.then((result) => {
-  //     console.log('result',result);
-  //   }).catch((error) => {
-  //     console.log(error);
-  //   });
-  // }
 
   /**
    * Updates the page
@@ -301,6 +292,14 @@ export class ClarinLicenseTableComponent implements OnInit {
     } else {
       this.selectedLicense = clarinLicense;
     }
+  }
+
+  private initializePaginationOptions() {
+    this.options = defaultPagination;
+  }
+
+  private initializeSortingOptions() {
+    this.sortConfiguration = defaultSortConfiguration;
   }
 
 }
