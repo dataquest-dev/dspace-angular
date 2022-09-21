@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 
 import { ClarinLicenseTableComponent } from './clarin-license-table.component';
 import {ClarinLicenseLabel} from '../../core/shared/clarin/clarin-license-label.model';
@@ -9,7 +9,7 @@ import {PageInfo} from '../../core/shared/page-info.model';
 import {NotificationsServiceStub} from '../../shared/testing/notifications-service.stub';
 import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
 import {RequestService} from '../../core/data/request.service';
-import { of as observableOf } from 'rxjs';
+import {of as observableOf} from 'rxjs';
 import {SharedModule} from '../../shared/shared.module';
 import {CommonModule} from '@angular/common';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -23,7 +23,6 @@ import {ClarinLicenseLabelDataService} from '../../core/data/clarin/clarin-licen
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {HostWindowService} from '../../shared/host-window.service';
 import {HostWindowServiceStub} from '../../shared/testing/host-window-service.stub';
-import {cloneDeep} from 'lodash';
 
 describe('ClarinLicenseTableComponent', () => {
   let component: ClarinLicenseTableComponent;
@@ -94,6 +93,7 @@ describe('ClarinLicenseTableComponent', () => {
     clarinLicenseDataService = jasmine.createSpyObj('clarinLicenseService', {
       findAll: mockLicenseRD$,
       create: createdLicenseRD$,
+      put: createdLicenseRD$,
       getLinkPath: observableOf('')
     });
     clarinLicenseLabelDataService = jasmine.createSpyObj('clarinLicenseLabelService', {
@@ -134,6 +134,10 @@ describe('ClarinLicenseTableComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    fixture.destroy();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -165,18 +169,30 @@ describe('ClarinLicenseTableComponent', () => {
     expect((component as any).notificationService.error).toHaveBeenCalled();
   });
 
-  it('should create new clarin license label and load table data', () => {
+  it('should create new clarin license label and load table data', fakeAsync(() => {
     // extended ll has icon
     (component as ClarinLicenseTableComponent).defineLicenseLabel(mockExtendedLicenseLabel);
-    expect((component as any).clarinLicenseLabelService.create).toHaveBeenCalled();
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect((component as any).clarinLicenseLabelService.create).toHaveBeenCalled();
+      // notificate successful response
+      expect((component as any).notificationService.success).toHaveBeenCalled();
+      // load table data
+      expect((component as any).clarinLicenseService.findAll).toHaveBeenCalled();
+      expect((component as ClarinLicenseTableComponent).licensesRD$).not.toBeNull();
+    });
+  }));
+
+  it('should successful edit clarin license', () => {
+    // some license must be selected
+    (component as ClarinLicenseTableComponent).selectedLicense = mockLicense;
+    // non extended ll has no icon
+    (component as ClarinLicenseTableComponent).editLicense(mockLicense);
+    expect((component as any).clarinLicenseService.put).toHaveBeenCalled();
     // notificate successful response
     expect((component as any).notificationService.success).toHaveBeenCalled();
     // load table data
     expect((component as any).clarinLicenseService.findAll).toHaveBeenCalled();
     expect((component as ClarinLicenseTableComponent).licensesRD$).not.toBeNull();
   });
-
-  // define license label: 1. open modal, check result, call service
-  // edit license: 1. open modal with values, check result, call service
-  // load all licenses
 });
