@@ -13,8 +13,7 @@ import {isNotEmpty} from '../../../../shared/empty.util';
 export class DefineLicenseLabelFormComponent implements OnInit {
 
   constructor(public activeModal: NgbActiveModal,
-              private formBuilder: FormBuilder,
-              private clarinLicenseLabelService: ClarinLicenseLabelDataService) { }
+              private formBuilder: FormBuilder) { }
 
   @Input()
   label = '';

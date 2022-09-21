@@ -13,7 +13,6 @@ import {defaultPagination, defaultSortConfiguration} from '../clarin-license-tab
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {DefineLicenseFormComponent} from './modal/define-license-form/define-license-form.component';
 import {DefineLicenseLabelFormComponent} from './modal/define-license-label-form/define-license-label-form.component';
-import {EditLicenseLabelFormComponent} from './modal/edit-license-label-form/edit-license-label-form.component';
 import {ClarinLicenseConfirmationSerializer} from '../../core/shared/clarin/clarin-license-confirmation-serializer';
 import {NotificationsService} from '../../shared/notifications/notifications.service';
 import {TranslateService} from '@ngx-translate/core';

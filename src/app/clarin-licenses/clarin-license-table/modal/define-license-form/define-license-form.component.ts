@@ -42,7 +42,7 @@ export class DefineLicenseFormComponent implements OnInit {
   @Input()
   clarinLicenseLabel: ClarinLicenseLabel = null;
 
-  clarinLicenseForm: FormGroup;
+  clarinLicenseForm: FormGroup = null;
   confirmationOptions: any[] = CLARIN_LICENSE_CONFIRMATION;
   clarinLicenseLabelOptions: ClarinLicenseLabel[] = [];
   extendedClarinLicenseLabelOptions: ClarinLicenseLabel[] = [];
@@ -113,7 +113,6 @@ export class DefineLicenseFormComponent implements OnInit {
       .subscribe(res => {
         res.forEach(clarinLicenseLabel => {
           if (clarinLicenseLabel.extended) {
-            console.log('extended', clarinLicenseLabel.extended);
             this.extendedClarinLicenseLabelOptions.push(clarinLicenseLabel);
           } else {
             this.clarinLicenseLabelOptions.push(clarinLicenseLabel);

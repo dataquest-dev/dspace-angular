@@ -1,8 +1,6 @@
 import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 
 import { ClarinLicenseTableComponent } from './clarin-license-table.component';
-import {ClarinLicenseLabel} from '../../core/shared/clarin/clarin-license-label.model';
-import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
 import {createSuccessfulRemoteDataObject$} from '../../shared/remote-data.utils';
 import {buildPaginatedList} from '../../core/data/paginated-list.model';
 import {PageInfo} from '../../core/shared/page-info.model';
@@ -23,6 +21,13 @@ import {ClarinLicenseLabelDataService} from '../../core/data/clarin/clarin-licen
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {HostWindowService} from '../../shared/host-window.service';
 import {HostWindowServiceStub} from '../../shared/testing/host-window-service.stub';
+import {
+  createdLicenseLabelRD$,
+  createdLicenseRD$,
+  mockExtendedLicenseLabel,
+  mockLicense, mockLicenseRD$,
+  mockNonExtendedLicenseLabel, successfulResponse
+} from '../../shared/testing/clarin-license-mock';
 
 describe('ClarinLicenseTableComponent', () => {
   let component: ClarinLicenseTableComponent;
@@ -35,58 +40,6 @@ describe('ClarinLicenseTableComponent', () => {
   let modalStub: NgbActiveModal;
 
 
-
-  const mockExtendedLicenseLabel = Object.assign(new ClarinLicenseLabel(), {
-    id: 1,
-    label: 'exLL',
-    title: 'exTTL',
-    extended: true,
-    icon: [new Blob(['blob string'], {
-      type: 'text/plain'
-    })],
-    _links: {
-      self: {
-        href: 'url.ex.1'
-      }
-    }
-  });
-
-  const mockNonExtendedLicenseLabel = Object.assign(new ClarinLicenseLabel(), {
-    id: 2,
-    label: 'LLL',
-    title: 'licenseLTTL',
-    extended: false,
-    icon: null,
-    _links: {
-      self: {
-        href: 'url.ex.1'
-      }
-    }
-  });
-
-  const mockLicense = Object.assign(new ClarinLicense(), {
-    id: 1,
-    name: 'test license',
-    definition: 'test definition',
-    confirmation: 0,
-    requiredInfo: 'test info',
-    clarinLicenseLabel: mockNonExtendedLicenseLabel,
-    extendedClarinLicenseLabels: [mockExtendedLicenseLabel],
-    bitstreams: 0,
-    _links: {
-      self: {
-        href: 'url.license.1'
-      }
-    }
-  });
-
-  const mockLicenseRD$ = createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [mockLicense]));
-  const createdLicenseRD$ = createSuccessfulRemoteDataObject$(mockLicense);
-  const createdLicenseLabelRD$ = createSuccessfulRemoteDataObject$(mockExtendedLicenseLabel);
-  const successfulResponse = {
-    response: {
-      statusCode: 200
-    }};
 
   beforeEach(async () => {
     notificationService = new NotificationsServiceStub();
