@@ -1,14 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {ClarinLicenseLabel} from '../../../../core/shared/clarin/clarin-license-label.model';
-import {CLARIN_LICENSE_CONFIRMATION} from '../../../../core/shared/clarin/clarin-license.resource-type';
-import {ClarinLicenseLabelDataService} from '../../../../core/data/clarin/clarin-license-label-data.service';
-import {getFirstSucceededRemoteListPayload} from '../../../../core/shared/operators';
-import {validateLicenseLabel} from './define-license-form-validator';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ClarinLicenseLabel } from '../../../../core/shared/clarin/clarin-license-label.model';
+import { CLARIN_LICENSE_CONFIRMATION } from '../../../../core/shared/clarin/clarin-license.resource-type';
+import { ClarinLicenseLabelDataService } from '../../../../core/data/clarin/clarin-license-label-data.service';
+import { getFirstSucceededRemoteListPayload } from '../../../../core/shared/operators';
+import { validateLicenseLabel } from './define-license-form-validator';
 import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
-import {DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
+/**
+ * The component for defining and editing the Clarin License
+ */
 @Component({
   selector: 'ds-define-license-form',
   templateUrl: './define-license-form.component.html',

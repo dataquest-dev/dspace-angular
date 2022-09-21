@@ -1,10 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ClarinLicenseLabelDataService} from '../../../../core/data/clarin/clarin-license-label-data.service';
-import {validateLicenseLabel} from '../define-license-form/define-license-form-validator';
-import {isNotEmpty} from '../../../../shared/empty.util';
+import { Component, Input, OnInit } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { validateLicenseLabel } from '../define-license-form/define-license-form-validator';
+import { isNotEmpty } from '../../../../shared/empty.util';
 
+/**
+ * The component for defining the Clarin License Label
+ */
 @Component({
   selector: 'ds-define-license-label-form',
   templateUrl: './define-license-label-form.component.html',
@@ -15,20 +17,38 @@ export class DefineLicenseLabelFormComponent implements OnInit {
   constructor(public activeModal: NgbActiveModal,
               private formBuilder: FormBuilder) { }
 
+  /**
+   * The `label` of the Clarin License Label. That's the shortcut which is max 5 characters long.
+   */
   @Input()
   label = '';
 
+  /**
+   * The `title` of the Clarin License Label.
+   */
   @Input()
   title = '';
 
+  /**
+   * The `extended` boolean of the Clarin License Label.
+   */
   @Input()
   extended = '';
 
+  /**
+   * The `icon` of the Clarin License Label. This value is converted to the byte array.
+   */
   @Input()
   icon = '';
 
+  /**
+   * The form with the Clarin License Label input fields
+   */
   clarinLicenseLabelForm: FormGroup;
 
+  /**
+   * Is the Clarin License Label extended or no options.
+   */
   extendedOptions = ['Yes', 'No'];
 
   ngOnInit(): void {
@@ -44,8 +64,10 @@ export class DefineLicenseLabelFormComponent implements OnInit {
     });
   }
 
+  /**
+   * Send form value to the clarin-license-table component where it will be processed
+   */
   submitForm() {
     this.activeModal.close(this.clarinLicenseLabelForm.value);
   }
-
 }

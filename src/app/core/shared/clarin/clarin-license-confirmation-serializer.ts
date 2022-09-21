@@ -1,5 +1,9 @@
-import {CLARIN_LICENSE_CONFIRMATION} from './clarin-license.resource-type';
+import { CLARIN_LICENSE_CONFIRMATION } from './clarin-license.resource-type';
 
+/**
+ * The Clarin License REST/API returns license.confirmation as number and this serializer converts it to the
+ * appropriate string message and vice versa.
+ */
 export const ClarinLicenseConfirmationSerializer = {
 
   Serialize(confirmationMessage: any): number {

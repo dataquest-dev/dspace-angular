@@ -1,24 +1,23 @@
-import {ResourceType} from '../../shared/resource-type';
-import {Injectable} from '@angular/core';
-import {dataService} from '../../cache/builders/build-decorators';
-import {MetadataValue} from '../../metadata/metadata-value.model';
-import {DataService} from '../data.service';
-import {RequestService} from '../request.service';
-import {RemoteDataBuildService} from '../../cache/builders/remote-data-build.service';
-import {Store} from '@ngrx/store';
-import {CoreState} from '../../core.reducers';
-import {HALEndpointService} from '../../shared/hal-endpoint.service';
-import {ObjectCacheService} from '../../cache/object-cache.service';
-import {DefaultChangeAnalyzer} from '../default-change-analyzer.service';
-import {HttpClient} from '@angular/common/http';
-import {NotificationsService} from '../../../shared/notifications/notifications.service';
-import {ClarinLicense} from '../../shared/clarin/clarin-license.model';
+import { ResourceType } from '../../shared/resource-type';
+import { Injectable } from '@angular/core';
+import { dataService } from '../../cache/builders/build-decorators';
+import { DataService } from '../data.service';
+import { RequestService } from '../request.service';
+import { RemoteDataBuildService } from '../../cache/builders/remote-data-build.service';
+import { Store } from '@ngrx/store';
+import { CoreState } from '../../core.reducers';
+import { HALEndpointService } from '../../shared/hal-endpoint.service';
+import { ObjectCacheService } from '../../cache/object-cache.service';
+import { DefaultChangeAnalyzer } from '../default-change-analyzer.service';
+import { HttpClient } from '@angular/common/http';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
+import { ClarinLicense } from '../../shared/clarin/clarin-license.model';
 
 export const linkName = 'clarinlicenses';
 export const AUTOCOMPLETE = new ResourceType(linkName);
 
 /**
- * A service responsible for fetching/sending data from/to the REST API - vocabularies endpoint
+ * A service responsible for fetching/sending license data from/to the Clarin License REST API
  */
 @Injectable()
 @dataService(ClarinLicense.type)
