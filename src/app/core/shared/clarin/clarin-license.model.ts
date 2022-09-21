@@ -17,10 +17,13 @@ import {ClarinLicenseLabel} from './clarin-license-label.model';
 import {ClarinLicenseConfirmationSerializer} from './clarin-license-confirmation-serializer';
 
 /**
- * Class that represents a metadata value
+ * Class that represents a Clarin License
  */
 @typedObject
 export class ClarinLicense extends ListableObject implements HALResource {
+  /**
+   * The `clarinlicense` object type.
+   */
   static type = CLARIN_LICENSE;
 
   /**
@@ -31,46 +34,58 @@ export class ClarinLicense extends ListableObject implements HALResource {
   type: ResourceType;
 
   /**
-   * The identifier of this metadata value
+   * The identifier of this Clarin License
    */
   @autoserialize
   id: number;
 
   /**
-   * The value of this metadata value object
+   * The name of this Clarin License object
    */
   @autoserialize
   name: string;
 
   /**
-   * The value of this metadata value object
+   * The definition of this Clarin License object
    */
   @autoserialize
   definition: string;
 
   /**
-   * The language of this metadata value
+   * The confirmation of this Clarin License object. Number value is converted to the appropriate message by the
+   * `ClarinLicenseConfirmationSerializer`.
    */
   @autoserializeAs(ClarinLicenseConfirmationSerializer)
   confirmation: number;
 
   /**
-   * The authority of this metadata value
+   * The requiredInfo of this Clarin License object
    */
   @autoserialize
   requiredInfo: string;
 
+  /**
+   * The non extended clarinLicenseLabel of this Clarin License object. Clarin License could have only one
+   * non extended clarinLicenseLabel.
+   */
   @autoserialize
   clarinLicenseLabel: ClarinLicenseLabel;
 
+  /**
+   * The extended clarinLicenseLabel of this Clarin License object. Clarin License could have multiple
+   * extended clarinLicenseLabel.
+   */
   @autoserialize
   extendedClarinLicenseLabels: ClarinLicenseLabel[];
 
+  /**
+   * The number value of how many bitstreams are used by this Clarin License.
+   */
   @autoserialize
   bitstreams: number;
 
   /**
-   * The {@link HALLink}s for this MetadataValue
+   * The {@link HALLink}s for this Clarin License
    */
   @deserialize
   _links: {

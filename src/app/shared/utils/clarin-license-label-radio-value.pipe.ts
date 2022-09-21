@@ -1,9 +1,9 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {ClarinLicenseLabel} from '../../core/shared/clarin/clarin-license-label.model';
-import {isEmpty, isNotEmpty, isNull} from '../empty.util';
+import { Pipe, PipeTransform } from '@angular/core';
+import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
+import { isNull } from '../empty.util';
 
 /**
- * Pipe to mark radio input to true/false based on the input form data.
+ * Pipe to mark the radio button to true/false if the Clarin License Label value is passed from @Input.
  * This Pipe is used for editing Non Extended Clarin License Labels.
  */
 @Pipe({
@@ -12,7 +12,7 @@ import {isEmpty, isNotEmpty, isNull} from '../empty.util';
 export class ClarinLicenseLabelRadioValuePipe implements PipeTransform {
 
   /**
-   *
+   * If the passedClarinLicenseLabel is not null and is checked - mark the radio button as checked.
    * @param checkedClarinLicenseLabel Clicked non extended Clarin License Label
    * @param passedClarinLicenseLabel The non extended Clarin License Label passed from selected Clarin License.
    */

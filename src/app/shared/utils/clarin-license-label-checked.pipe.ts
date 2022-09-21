@@ -1,9 +1,9 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {ClarinLicenseLabel} from '../../core/shared/clarin/clarin-license-label.model';
-import {isEmpty, isNotEmpty} from '../empty.util';
+import { Pipe, PipeTransform } from '@angular/core';
+import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
+import { isEmpty } from '../empty.util';
 
 /**
- * Pipe to mark checkbox or radio input to true/false based on the input form data.
+ * Pipe to mark checkbox or input to true/false based on the input form data.
  * This Pipe is used for editing Clarin Licenses.
  */
 @Pipe({

@@ -1,8 +1,12 @@
-import {ClarinLicenseLabel} from '../../core/shared/clarin/clarin-license-label.model';
-import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
-import {createSuccessfulRemoteDataObject$} from '../remote-data.utils';
-import {buildPaginatedList} from '../../core/data/paginated-list.model';
-import {PageInfo} from '../../core/shared/page-info.model';
+import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
+import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
+import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
+import { buildPaginatedList } from '../../core/data/paginated-list.model';
+import { PageInfo } from '../../core/shared/page-info.model';
+
+/**
+ * The mocked Clarin License and Clarin License Label objects for testing.
+ */
 
 export const mockExtendedLicenseLabel = Object.assign(new ClarinLicenseLabel(), {
   id: 1,

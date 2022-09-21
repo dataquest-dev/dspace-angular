@@ -1,27 +1,22 @@
-import {link, typedObject} from '../../cache/builders/build-decorators';
-import {ListableObject} from '../../../shared/object-collection/shared/listable-object.model';
-import {HALResource} from '../hal-resource.model';
-import {METADATA_VALUE} from '../../metadata/metadata-value.resource-type';
-import {excludeFromEquals} from '../../utilities/equals.decorators';
-import {autoserialize, autoserializeAs, deserialize} from 'cerialize';
-import {ResourceType} from '../resource-type';
-import {HALLink} from '../hal-link.model';
-import {METADATA_FIELD} from '../../metadata/metadata-field.resource-type';
-import {Observable} from 'rxjs';
-import {RemoteData} from '../../data/remote-data';
-import {MetadataField} from '../../metadata/metadata-field.model';
-import {GenericConstructor} from '../generic-constructor';
-import {CLARIN_LICENSE} from './clarin-license.resource-type';
-import {CLARIN_LICENSE_LABEL} from './clarin-license-label.resource-type';
-import {MetadataMapInterface, MetadataValueInterface} from '../metadata.models';
-import {ClarinLicenseConfirmationSerializer} from './clarin-license-confirmation-serializer';
-import {ClarinLicenseLabelExtendedSerializer} from './clarin-license-label-extended-serializer';
+import { typedObject } from '../../cache/builders/build-decorators';
+import { ListableObject } from '../../../shared/object-collection/shared/listable-object.model';
+import { HALResource } from '../hal-resource.model';
+import { excludeFromEquals } from '../../utilities/equals.decorators';
+import { autoserialize , autoserializeAs, deserialize} from 'cerialize';
+import { ResourceType } from '../resource-type';
+import { HALLink } from '../hal-link.model';
+import { GenericConstructor } from '../generic-constructor';
+import { CLARIN_LICENSE_LABEL } from './clarin-license-label.resource-type';
+import { ClarinLicenseLabelExtendedSerializer } from './clarin-license-label-extended-serializer';
 
 /**
- * Class that represents a metadata value
+ * Class that represents a Clarin License Label
  */
 @typedObject
 export class ClarinLicenseLabel extends ListableObject implements HALResource {
+  /**
+   * The `clarinlicenselabel` object type.
+   */
   static type = CLARIN_LICENSE_LABEL;
 
   /**
@@ -32,37 +27,37 @@ export class ClarinLicenseLabel extends ListableObject implements HALResource {
   type: ResourceType;
 
   /**
-   * The identifier of this metadata value
+   * The identifier of the Clarin License Label
    */
   @autoserialize
   id: number;
 
   /**
-   * The value of this metadata value object
+   * The label of the Clarin License Label. It is a shortcut value, it could be max 5 characters long.
    */
   @autoserialize
   label: string;
 
   /**
-   * The language of this metadata value
+   * The title of the Clarin License Label.
    */
   @autoserialize
   title: string;
 
   /**
-   * The authority of this metadata value
+   * The extended value of the Clarin License Label.
    */
   @autoserializeAs(ClarinLicenseLabelExtendedSerializer)
   extended: boolean;
 
   /**
-   * The authority of this metadata value
+   * The icon of the Clarin License Label. It is converted to the byte array.
    */
   @autoserialize
   icon: any;
 
   /**
-   * The {@link HALLink}s for this MetadataValue
+   * The {@link HALLink}s for this Clarin License Label
    */
   @deserialize
   _links: {
@@ -76,6 +71,3 @@ export class ClarinLicenseLabel extends ListableObject implements HALResource {
     return [this.constructor as GenericConstructor<ListableObject>];
   }
 }
-
-/** A map of metadata keys to an ordered list of MetadataValue objects. */
-

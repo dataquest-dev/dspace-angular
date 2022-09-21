@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {hasValue, isNotEmpty} from '../empty.util';
-import {ClarinLicenseLabel} from '../../core/shared/clarin/clarin-license-label.model';
+import { isNotEmpty } from '../empty.util';
+import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
 
 /**
  * Pipe to join Extended Clarin License Label value with ','

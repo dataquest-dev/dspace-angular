@@ -1,11 +1,11 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'dsAddChar'
 })
 
 /**
- * Pipe for adding specific char to the end
+ * Pipe for adding specific char to end of the value rendered in the html.
  */
 export class CharToEndPipe implements PipeTransform {
   /**
