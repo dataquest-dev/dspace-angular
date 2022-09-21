@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+/**
+ * Component which wraps clarin license table into the container
+ */
 @Component({
   selector: 'ds-clarin-license-page',
   templateUrl: './clarin-license-page.component.html',

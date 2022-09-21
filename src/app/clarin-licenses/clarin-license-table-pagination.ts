@@ -1,5 +1,8 @@
 import {PaginationComponentOptions} from '../shared/pagination/pagination-component-options.model';
 import {SortDirection, SortOptions} from '../core/cache/models/sort-options.model';
+/**
+ * Pagination constants for the license table
+ */
 
 export const paginationID = 'cLicense';
 

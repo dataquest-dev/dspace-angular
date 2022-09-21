@@ -1,26 +1,29 @@
-import {Component, OnInit} from '@angular/core';
-import {PaginationComponentOptions} from '../../shared/pagination/pagination-component-options.model';
-import {BehaviorSubject, combineLatest as observableCombineLatest} from 'rxjs';
-import {RemoteData} from '../../core/data/remote-data';
-import {PaginatedList} from '../../core/data/paginated-list.model';
-import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
-import {getFirstCompletedRemoteData, getFirstSucceededRemoteData} from '../../core/shared/operators';
-import {switchMap} from 'rxjs/operators';
-import {PaginationService} from '../../core/pagination/pagination.service';
-import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
-import {SortOptions} from '../../core/cache/models/sort-options.model';
-import {defaultPagination, defaultSortConfiguration} from '../clarin-license-table-pagination';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {DefineLicenseFormComponent} from './modal/define-license-form/define-license-form.component';
-import {DefineLicenseLabelFormComponent} from './modal/define-license-label-form/define-license-label-form.component';
-import {ClarinLicenseConfirmationSerializer} from '../../core/shared/clarin/clarin-license-confirmation-serializer';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
-import {TranslateService} from '@ngx-translate/core';
-import {isNull} from '../../shared/empty.util';
-import {ClarinLicenseLabel} from '../../core/shared/clarin/clarin-license-label.model';
-import {ClarinLicenseLabelDataService} from '../../core/data/clarin/clarin-license-label-data.service';
-import {ClarinLicenseLabelExtendedSerializer} from '../../core/shared/clarin/clarin-license-label-extended-serializer';
+import { Component, OnInit } from '@angular/core';
+import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
+import { BehaviorSubject, combineLatest as observableCombineLatest } from 'rxjs';
+import { RemoteData } from '../../core/data/remote-data';
+import { PaginatedList } from '../../core/data/paginated-list.model';
+import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
+import { getFirstCompletedRemoteData, getFirstSucceededRemoteData } from '../../core/shared/operators';
+import { switchMap } from 'rxjs/operators';
+import { PaginationService } from '../../core/pagination/pagination.service';
+import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
+import { SortOptions } from '../../core/cache/models/sort-options.model';
+import { defaultPagination, defaultSortConfiguration } from '../clarin-license-table-pagination';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DefineLicenseFormComponent } from './modal/define-license-form/define-license-form.component';
+import { DefineLicenseLabelFormComponent } from './modal/define-license-label-form/define-license-label-form.component';
+import { ClarinLicenseConfirmationSerializer } from '../../core/shared/clarin/clarin-license-confirmation-serializer';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { TranslateService } from '@ngx-translate/core';
+import { isNull } from '../../shared/empty.util';
+import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
+import { ClarinLicenseLabelDataService } from '../../core/data/clarin/clarin-license-label-data.service';
+import { ClarinLicenseLabelExtendedSerializer } from '../../core/shared/clarin/clarin-license-label-extended-serializer';
 
+/**
+ * Component for managing clarin licenses and defining clarin license labels
+ */
 @Component({
   selector: 'ds-clarin-license-table',
   templateUrl: './clarin-license-table.component.html',
@@ -37,12 +40,12 @@ export class ClarinLicenseTableComponent implements OnInit {
               private translateService: TranslateService,) { }
 
   /**
-   * The list of Handle object as BehaviorSubject object
+   * The list of License object as BehaviorSubject object
    */
   licensesRD$: BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>> = new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
 
   /**
-   * The page options to use for fetching the versions
+   * The pagination options
    * Start at page 1 and always use the set page size
    */
   options: PaginationComponentOptions;
@@ -52,10 +55,13 @@ export class ClarinLicenseTableComponent implements OnInit {
    */
   sortConfiguration: SortOptions;
 
+  /**
+   * The license which is currently selected, only one license could be selected
+   */
   selectedLicense: ClarinLicense;
 
   /**
-   * If the request isn't processed show to loading bar.
+   * If the request isn't processed show the loading bar.
    */
   isLoading = false;
 
@@ -215,16 +221,6 @@ export class ClarinLicenseTableComponent implements OnInit {
       });
   }
 
-  // openEditLicenseLabelForm() {
-  //   const editLicenseModalRef = this.modalService.open(EditLicenseLabelFormComponent);
-  //
-  //   editLicenseModalRef.result.then((result: ClarinLicense) => {
-  //     console.log('result',result);
-  //   }).catch((error) => {
-  //     console.log(error);
-  //   });
-  // }
-
   notifyOperationStatus(operationResponse, sucContent, errContent) {
     if (isNull(operationResponse)) {
       this.notificationService.error('', this.translateService.get(errContent));
@@ -241,14 +237,10 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   /**
-   * Updates the page
+   * Update the page
    */
   onPageChange() {
     this.loadAllLicenses();
-  }
-
-  closeModal() {
-    this.activeModal.close('Modal Closed');
   }
 
   loadAllLicenses() {
@@ -278,10 +270,10 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   /**
-   * Mark the handle as selected or unselect if it is already clicked.
+   * Mark the license as selected or unselect if it is already clicked.
    * @param clarinLicense
    */
-  switchSelectedHandle(clarinLicense: ClarinLicense) {
+  switchSelectedLicense(clarinLicense: ClarinLicense) {
     if (isNull(clarinLicense)) {
       return;
     }
@@ -300,5 +292,4 @@ export class ClarinLicenseTableComponent implements OnInit {
   private initializeSortingOptions() {
     this.sortConfiguration = defaultSortConfiguration;
   }
-
 }

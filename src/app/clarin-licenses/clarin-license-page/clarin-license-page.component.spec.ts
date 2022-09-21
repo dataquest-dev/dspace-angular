@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ClarinLicensePageComponent } from './clarin-license-page.component';
 
 describe('ClarinLicensePageComponent', () => {
