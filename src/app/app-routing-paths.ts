@@ -121,3 +121,8 @@ export const LICENSES_MODULE_PATH = 'licenses';
 export function getLicensesModulePath() {
   return `/${LICENSES_MODULE_PATH}`;
 }
+
+export const HANDLE_TABLE_MODULE_PATH = 'handle-table';
+export function getHandleTableModulePath() {
+  return `/${HANDLE_TABLE_MODULE_PATH}`;
+}

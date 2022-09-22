@@ -4,7 +4,6 @@ import { loginProcess } from './submission-ui.spec';
  * Test menu options for admin
  */
 describe('Admin Menu Page', () => {
-
   it('should pass accessibility tests', () => {
     // Login as admin
     cy.visit('/');

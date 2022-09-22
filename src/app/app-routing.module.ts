@@ -10,6 +10,7 @@ import {
   BITSTREAM_MODULE_PATH,
   FORBIDDEN_PATH,
   FORGOT_PASSWORD_PATH,
+  HANDLE_TABLE_MODULE_PATH,
   INFO_MODULE_PATH,
   INTERNAL_SERVER_ERROR,
   LEGACY_BITSTREAM_MODULE_PATH, LICENSES_MODULE_PATH,
@@ -216,6 +217,11 @@ import { ServerCheckGuard } from './core/server-check/server-check.guard';
           {
             path: LICENSES_MODULE_PATH,
             loadChildren: () => import('./clarin-licenses/clarin-license.module').then((m) => m.ClarinLicenseModule),
+            canActivate: [SiteAdministratorGuard],
+          },
+          {
+            path: HANDLE_TABLE_MODULE_PATH,
+            loadChildren: () => import('./handle-page/handle-page.module').then((m) => m.HandlePageModule),
             canActivate: [SiteAdministratorGuard],
           },
           { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent },

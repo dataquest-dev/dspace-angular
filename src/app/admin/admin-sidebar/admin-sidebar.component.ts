@@ -307,6 +307,21 @@ export class AdminSidebarComponent extends MenuComponent implements OnInit {
           icon: 'terminal',
           index: 10
         },
+        
+        /* Handle table */
+        {
+          id: 'handle_table',
+          active: false,
+          visible: true,
+          model: {
+            type: MenuItemType.LINK,
+            text: 'menu.section.handle',
+            link: '/handle-table'
+          } as LinkMenuItemModel,
+          icon: 'table',
+          index: 12
+        },
+        
         /* License administration */
         {
           id: 'licenses',
@@ -552,6 +567,7 @@ export class AdminSidebarComponent extends MenuComponent implements OnInit {
           icon: 'user-check',
           index: 11
         },
+
       ];
 
       menuList.forEach((menuSection) => this.menuService.addSection(this.menuID, Object.assign(menuSection, {
