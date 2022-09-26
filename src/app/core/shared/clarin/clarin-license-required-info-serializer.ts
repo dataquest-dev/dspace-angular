@@ -38,13 +38,16 @@ export const ClarinLicenseRequiredInfoSerializer = {
 
     const clarinLicenseRequiredInfo = [];
     requiredInfoArray.forEach(requiredInfo => {
-     clarinLicenseRequiredInfo.push(
+      if (isEmpty(requiredInfo)) {
+        return;
+      }
+      clarinLicenseRequiredInfo.push(
        Object.assign(new ClarinLicenseRequiredInfo(), {
          id: clarinLicenseRequiredInfo.length,
          value: CLARIN_LICENSE_REQUIRED_INFO[requiredInfo],
          name: requiredInfo
        })
-     );
+      );
     });
     return clarinLicenseRequiredInfo;
   }
