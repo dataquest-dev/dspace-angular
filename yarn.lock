@@ -1829,6 +1829,13 @@
     node-gyp "^7.1.0"
     read-package-json-fast "^2.0.1"
 
+"@nth-cloud/ng-toggle@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@nth-cloud/ng-toggle/-/ng-toggle-7.0.0.tgz#f8be7da2526f9a84db8850a95908ecaacdbf1d69"
+  integrity sha512-+7VzS8ghcCdt/d9P/rWWrI9M4BmKS3OPAilvntYJp7JsZDiuETNmzTFaQD3krzI/ZdcGOPAwYe2+xwGP6FyGWg==
+  dependencies:
+    tslib "^2.0.0"
+
 "@polka/url@^1.0.0-next.20":
   version "1.0.0-next.21"
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
@@ -8005,6 +8012,11 @@ jest-worker@^25.4.0:
   dependencies:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
+
+jquery@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.1.tgz#fab0408f8b45fc19f956205773b62b292c147a16"
+  integrity sha512-opJeO4nCucVnsjiXOE+/PcCgYw9Gwpvs/a6B1LL/lQhwWwpbVEVYDZ1FokFr8PRc7ghYlrFPuyHuiiDNTQxmcw==
 
 js-cookie@2.2.1:
   version "2.2.1"
