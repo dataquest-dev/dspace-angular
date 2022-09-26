@@ -15,6 +15,7 @@ import {CLARIN_LICENSE} from './clarin-license.resource-type';
 import {CLARIN_LICENSE_LABEL} from './clarin-license-label.resource-type';
 import {ClarinLicenseLabel} from './clarin-license-label.model';
 import {ClarinLicenseConfirmationSerializer} from './clarin-license-confirmation-serializer';
+import {ClarinLicenseRequiredInfoSerializer} from './clarin-license-required-info-serializer';
 
 /**
  * Class that represents a Clarin License
@@ -61,7 +62,7 @@ export class ClarinLicense extends ListableObject implements HALResource {
   /**
    * The requiredInfo of this Clarin License object
    */
-  @autoserialize
+  @autoserializeAs(ClarinLicenseRequiredInfoSerializer)
   requiredInfo: string;
 
   /**

@@ -20,6 +20,8 @@ import { isNull } from '../../shared/empty.util';
 import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
 import { ClarinLicenseLabelDataService } from '../../core/data/clarin/clarin-license-label-data.service';
 import { ClarinLicenseLabelExtendedSerializer } from '../../core/shared/clarin/clarin-license-label-extended-serializer';
+import {ClarinLicenseRequiredInfoSerializer} from '../../core/shared/clarin/clarin-license-required-info-serializer';
+import {cloneDeep} from 'lodash';
 
 /**
  * Component for managing clarin licenses and defining clarin license labels
@@ -76,6 +78,7 @@ export class ClarinLicenseTableComponent implements OnInit {
     const defineLicenseModalRef = this.modalService.open(DefineLicenseFormComponent);
 
     defineLicenseModalRef.result.then((result: ClarinLicense) => {
+      console.log('this.defineNewLicense(result);', result);
       this.defineNewLicense(result);
     }).catch((error) => {
       console.log(error);
@@ -91,6 +94,11 @@ export class ClarinLicenseTableComponent implements OnInit {
 
     // convert string value from the form to the number
     clarinLicense.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
+    // convert ClarinLicenseUserInfo.short the string value
+    if (Array.isArray(clarinLicense.requiredInfo)) {
+      clarinLicense.requiredInfo = ClarinLicenseRequiredInfoSerializer.Serialize(clarinLicense.requiredInfo);
+    }
+
     this.clarinLicenseService.create(clarinLicense)
       .pipe(getFirstCompletedRemoteData())
       .subscribe((defineLicenseResponse: RemoteData<ClarinLicense>) => {
@@ -131,15 +139,20 @@ export class ClarinLicenseTableComponent implements OnInit {
 
     const clarinLicenseObj = new ClarinLicense();
     clarinLicenseObj.name = clarinLicense.name;
-    clarinLicenseObj.clarinLicenseLabel = clarinLicense.clarinLicenseLabel;
-    clarinLicenseObj.extendedClarinLicenseLabels = clarinLicense.extendedClarinLicenseLabels;
+    // @ts-ignore
+    clarinLicenseObj.clarinLicenseLabel = this.ignoreIcon(clarinLicense.clarinLicenseLabel);
+    // @ts-ignore
+    clarinLicenseObj.extendedClarinLicenseLabels = this.ignoreIcon(clarinLicense.extendedClarinLicenseLabels);
     clarinLicenseObj._links = this.selectedLicense._links;
     clarinLicenseObj.id = clarinLicense.id;
     clarinLicenseObj.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
+    // convert ClarinLicenseUserInfo.short the string value
+    if (Array.isArray(clarinLicense.requiredInfo)) {
+      clarinLicenseObj.requiredInfo = ClarinLicenseRequiredInfoSerializer.Serialize(clarinLicense.requiredInfo);
+    }
     clarinLicenseObj.definition = clarinLicense.definition;
     clarinLicenseObj.bitstreams = clarinLicense.bitstreams;
     clarinLicenseObj.type = clarinLicense.type;
-    clarinLicenseObj.requiredInfo = clarinLicense.requiredInfo;
 
     this.clarinLicenseService.put(clarinLicenseObj)
       .pipe(getFirstCompletedRemoteData())
@@ -148,6 +161,24 @@ export class ClarinLicenseTableComponent implements OnInit {
         this.notifyOperationStatus(editResponse, successfulMessageContentDef, errorMessageContentDef);
         this.loadAllLicenses();
       });
+  }
+
+  /**
+   * When the Clarin License is editing ignore the Clarin License Label Icons - it throws error on BE, because the icon
+   * is send as string not as byte array.
+   * @param clarinLicenses
+   */
+  ignoreIcon(clarinLicenses: ClarinLicenseLabel | ClarinLicenseLabel[]) {
+    const clarinLicenseUpdatable = cloneDeep(clarinLicenses);
+
+    if (Array.isArray(clarinLicenseUpdatable)) {
+      clarinLicenseUpdatable.forEach(clarinLicense => {
+        clarinLicense.icon = [];
+      });
+    } else {
+      clarinLicenseUpdatable.icon = [];
+    }
+    return clarinLicenseUpdatable;
   }
 
   // define license label
@@ -274,6 +305,7 @@ export class ClarinLicenseTableComponent implements OnInit {
    * @param clarinLicense
    */
   switchSelectedLicense(clarinLicense: ClarinLicense) {
+    console.log('sciwth', clarinLicense);
     if (isNull(clarinLicense)) {
       return;
     }

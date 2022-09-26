@@ -3365,6 +3365,8 @@
 
   "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
 
+  "clarin-license.define-license-form.required-info": "Additional required user info",
+
   "clarin-license.define-license-form.submit-button": "Save",
 
   "clarin-license.define-license.notification.successful-content": "License was defined successfully",
@@ -3378,6 +3380,7 @@
   "clarin-license.delete-license.notification.successful-content": "License was deleted successfully",
 
   "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
+
 
 
   "clarin-license-label.define-license-label.input-label": "Short Label (max 5. chars)",

@@ -178,9 +178,10 @@ import { BitstreamRequestACopyPageComponent } from './bitstream-request-a-copy-p
 import { DsSelectComponent } from './ds-select/ds-select.component';
 import { LogInOidcComponent } from './log-in/methods/oidc/log-in-oidc.component';
 import { ClarinExtendedLicensePipe } from './utils/clarin-extended-license.pipe';
-import { ClarinLicenseLabelCheckedPipe } from './utils/clarin-license-label-checked.pipe';
+import { ClarinLicenseCheckedPipe } from './utils/clarin-license-checked.pipe';
 import { ClarinLicenseLabelRadioValuePipe } from './utils/clarin-license-label-radio-value.pipe';
 import { CharToEndPipe } from './utils/char-to-end.pipe';
+import {ClarinLicenseRequiredInfoPipe} from './utils/clarin-license-required-info.pipe';
 
 const MODULES = [
   // Do NOT include UniversalModule, HttpModule, or JsonpModule here
@@ -226,8 +227,9 @@ const PIPES = [
   ConsolePipe,
   ObjNgFor,
   ClarinExtendedLicensePipe,
-  ClarinLicenseLabelCheckedPipe,
+  ClarinLicenseCheckedPipe,
   ClarinLicenseLabelRadioValuePipe,
+  ClarinLicenseRequiredInfoPipe,
   CharToEndPipe
 ];
 

@@ -36,11 +36,21 @@
               <label id="extendedClarinLicenseLabels" for="extendedClarinLicenseLabels">{{'clarin-license.define-license-form.extended-license-labels' | translate}}</label>
               <div *ngFor="let extendedClarinLicenseLabel of extendedClarinLicenseLabelOptions">
                 <input type="checkbox" formArrayName="extendedClarinLicenseLabels" [value]="extendedClarinLicenseLabel"
-                       [checked]="extendedClarinLicenseLabel | dsCheckedLicenseLabel: extendedClarinLicenseLabels"
-                       (change)="changeExtendedClarinLicenseLabels($event, extendedClarinLicenseLabel)"
+                       [checked]="extendedClarinLicenseLabel | dsCheckedLicense: extendedClarinLicenseLabels"
+                       (change)="changeCheckboxValue($event,'extendedClarinLicenseLabels', extendedClarinLicenseLabel)"
                 />
                 {{ extendedClarinLicenseLabel.label }} ({{extendedClarinLicenseLabel.title}})
-<!--                <img [src]="secureImageData(extendedClarinLicenseLabel.icon)" alt="" width="16px">-->
+                <!--                <img [src]="secureImageData(extendedClarinLicenseLabel.icon)" alt="" width="16px">-->
+              </div>
+            </div>
+            <div class="form-group">
+              <label id="requiredInfo" for="requiredInfo">{{'clarin-license.define-license-form.required-info' | translate}}</label>
+              <div *ngFor="let ri of requiredInfoOptions">
+                <input type="checkbox" formArrayName="requiredInfo" [value]="ri"
+                     [checked]="ri | dsCheckedLicense: requiredInfo"
+                     (change)="changeCheckboxValue($event,'requiredInfo', ri)"
+                />
+                {{ ri.value }}
               </div>
             </div>
           </div>

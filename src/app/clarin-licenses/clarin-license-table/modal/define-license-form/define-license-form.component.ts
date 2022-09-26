@@ -2,12 +2,17 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClarinLicenseLabel } from '../../../../core/shared/clarin/clarin-license-label.model';
-import { CLARIN_LICENSE_CONFIRMATION } from '../../../../core/shared/clarin/clarin-license.resource-type';
+import {
+  CLARIN_LICENSE_CONFIRMATION, CLARIN_LICENSE_FORM_REQUIRED_OPTIONS, CLARIN_LICENSE_REQUIRED_INFO,
+  ClarinLicenseRequiredInfo
+} from '../../../../core/shared/clarin/clarin-license.resource-type';
 import { ClarinLicenseLabelDataService } from '../../../../core/data/clarin/clarin-license-label-data.service';
 import { getFirstSucceededRemoteListPayload } from '../../../../core/shared/operators';
 import { validateLicenseLabel } from './define-license-form-validator';
 import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 import { DomSanitizer } from '@angular/platform-browser';
+import {isNull, isUndefined} from '../../../../shared/empty.util';
+import {source} from 'axe-core';
 
 /**
  * The component for defining and editing the Clarin License
@@ -46,12 +51,6 @@ export class DefineLicenseFormComponent implements OnInit {
   confirmation = '';
 
   /**
-   * The `requiredInfo` of the Clarin License
-   */
-  @Input()
-  requiredInfo = '';
-
-  /**
    * Selected extended license labels
    */
   @Input()
@@ -62,6 +61,12 @@ export class DefineLicenseFormComponent implements OnInit {
    */
   @Input()
   clarinLicenseLabel: ClarinLicenseLabel = null;
+
+  /**
+   * Selected required info
+   */
+  @Input()
+  requiredInfo = [];
 
   /**
    * The form with the Clarin License input fields
@@ -83,6 +88,11 @@ export class DefineLicenseFormComponent implements OnInit {
    */
   extendedClarinLicenseLabelOptions: ClarinLicenseLabel[] = [];
 
+  /**
+   * All user required info
+   */
+  requiredInfoOptions = CLARIN_LICENSE_FORM_REQUIRED_OPTIONS;
+
   ngOnInit(): void {
     this.createForm();
     // load clarin license labels
@@ -90,12 +100,12 @@ export class DefineLicenseFormComponent implements OnInit {
   }
 
   /**
-   * After init load loadExtendedClarinLicenseLabels
+   * After init load loadArrayValuesToForm
    */
   ngAfterViewInit(): void {
     // wait because the form is not loaded immediately after init - do not know why
     wait(500).then(r => {
-      this.loadExtendedClarinLicenseLabels();
+      this.loadArrayValuesToForm();
     });
   }
 
@@ -109,20 +119,28 @@ export class DefineLicenseFormComponent implements OnInit {
       definition: [this.definition, Validators.required],
       confirmation: this.confirmation,
       clarinLicenseLabel: [this.clarinLicenseLabel, validateLicenseLabel()],
-      extendedClarinLicenseLabels: new FormArray([])
+      extendedClarinLicenseLabels: new FormArray([]),
+      requiredInfo: new FormArray([]),
     });
   }
 
   /**
-   * The extended clarin licenses labels show as selected in the form - if the clarin license is editing the admin
-   * must see which extended clarin license labels are selected
+   * Show the selected extended clarin license labels and the required info in the form.
+   * if the admin is editing the clarin license he must see which extended clarin license labels/required info
+   * are selected.
    * @private
    */
-  private loadExtendedClarinLicenseLabels() {
+  private loadArrayValuesToForm() {
     // add passed extendedClarinLicenseLabels to the form because add them to the form in the init is a problem
     const extendedClarinLicenseLabels = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
     this.extendedClarinLicenseLabels.forEach(extendedClarinLicenseLabel => {
       extendedClarinLicenseLabels.push(extendedClarinLicenseLabel);
+    });
+
+    // add passed requiredInfo to the form because add them to the form in the init is a problem
+    const requiredInfoOptions = (this.clarinLicenseForm.controls.requiredInfo).value as any[];
+    this.requiredInfo.forEach(requiredInfo => {
+      requiredInfoOptions.push(requiredInfo);
     });
   }
 
@@ -143,22 +161,33 @@ export class DefineLicenseFormComponent implements OnInit {
   }
 
   /**
-   * Add or remove extended clarin license label based on the checkbox selection
+   * Add or remove checkbox value from form array based on the checkbox selection
    * @param event
+   * @param formName
    * @param extendedClarinLicenseLabel
    */
-  changeExtendedClarinLicenseLabels(event: any, extendedClarinLicenseLabel) {
-    const extendedClarinLicenseLabels = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
+  changeCheckboxValue(event: any, formName: string, checkBoxValue) {
+    let form = null;
+
+    Object.keys(this.clarinLicenseForm.controls).forEach( (key, index) => {
+      if (key === formName) {
+        form = (this.clarinLicenseForm.controls[key])?.value as any[];
+      }
+    });
+
+    if (isUndefined(form) || isNull(form)) {
+      return;
+    }
+
     if (event.target.checked) {
-      extendedClarinLicenseLabels.push(extendedClarinLicenseLabel);
+      form.push(checkBoxValue);
     } else {
-      extendedClarinLicenseLabels.forEach((ell: ClarinLicenseLabel, index)  => {
-        if (ell.id === extendedClarinLicenseLabel.id) {
-          extendedClarinLicenseLabels.splice(index, 1);
+      form.forEach((formValue, index)  => {
+        if (formValue?.id === checkBoxValue.id) {
+          form.splice(index, 1);
         }
       });
     }
-
   }
 
   /**
