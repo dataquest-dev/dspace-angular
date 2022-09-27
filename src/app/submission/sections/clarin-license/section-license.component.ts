@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Output, ViewChild} from '@angular/core';
 import {
   DynamicFormControlEvent,
   DynamicFormControlModel,
@@ -20,6 +20,9 @@ import { renderSectionFor } from '../sections-decorator';
 import { SectionsType } from '../sections-type';
 import { SectionsService } from '../sections.service';
 import { SECTION_LICENSE_FORM_LAYOUT } from './section-license.model';
+import {RequestService} from '../../../core/data/request.service';
+import {PatchRequest} from '../../../core/data/request.models';
+import {Operation} from 'fast-json-patch';
 
 interface licenseacceptbutton {
   handleColor: string|null;
@@ -112,6 +115,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    *
    * @param {ChangeDetectorRef} changeDetectorRef
    * @param {CollectionDataService} collectionDataService
+   * @param requestService
    * @param {FormBuilderService} formBuilderService
    * @param {SectionFormOperationsService} formOperationsService
    * @param {FormService} formService
@@ -124,6 +128,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   constructor(protected changeDetectorRef: ChangeDetectorRef,
               protected collectionDataService: CollectionDataService,
+              protected requestService: RequestService,
               protected formBuilderService: FormBuilderService,
               protected formOperationsService: SectionFormOperationsService,
               protected formService: FormService,
@@ -136,16 +141,18 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     super(injectedCollectionId, injectedSectionData, injectedSubmissionId);
   }
 
+  @ViewChild('abc') el: ElementRef;
+
   /**
    * Initialize all instance variables and retrieve submission license
    */
   onSectionInit() {
-    //todo set from backend
+    // todo set from backend
     // this.model.value = accepted distrubution
     // id = license id from html select options
     // use '' for not selected
 
-    //'' = not selected
+    // '' = not selected
     let id = '';
     this.model.value = false;
 
@@ -168,9 +175,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Method called when a form dfChange event is fired.
    * Dispatch form operations based on changes.
    */
-  @ViewChild('abc') el: ElementRef;
-
-  onChange(event: DynamicFormControlEvent) {
+  onChange(event: any) {
     let selectedLicenseId: string;
     if (this.el == undefined) {
       this.status = false;
@@ -192,17 +197,30 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
           licenseLabel = options[i].label
         }
       }
+      //
+      // this.formOperationsService.dispatchOperationsFromEvent(
+      //   this.pathCombiner,
+      //   event,
+      //   this.previousValue,
+      //   this.hasStoredValue(this.formBuilderService.getId(event.model), this.formOperationsService.getArrayIndexFromEvent(event)));
+      // const metadata = this.formOperationsService.getFieldPathSegmentedFromChangeEvent(event);
+      // const value = this.formOperationsService.getFieldValueFromChangeEvent(event);
 
-      //todo to sent Backend.
+      // console.log('change');
+      //
+      // this.sectionService.updateSectionData(this.submissionId, this.sectionData.id, Object.assign({}, {}, {}));
+      // this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
+
+      // todo to sent Backend.
       // Accepted = this.model.value.
       // License: licenseLabel
     }
   }
 
-  change() {
-    this.onChange(null);
-    this.sectionService.updateSectionData(this.submissionId, this.sectionData.id, "x");
-  }
+  // changee() {
+  // //   this.onChange(null);
+  // //   this.sectionService.updateSectionData(this.submissionId, this.sectionData.id, "x");
+  // }
 
   /**
    * Unsubscribe from all subscriptions
@@ -215,6 +233,30 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
 
   clickLicense() {
     document.getElementById('license-text').click();
+  }
+
+  sendRequest() {
+    console.log('sending patch request');
+    // const handleObj = {
+    //   handle: 'handle',
+    //   url: 'url'
+    // };
+    //
+    // // create request with the updated Handle
+    // const patchOperation = {
+    //   op: 'replace', path: '/sections/clarin-license/granted', value: handleObj
+    // } as Operation;
+    //
+    // const requestId = this.requestService.generateRequestId();
+    // const patchRequest = new PatchRequest(requestId, 'http://localhost:8080/server/api/submission/workspaceitems/' + this.submissionId, [patchOperation]);
+    // // call patch request
+    // this.requestService.send(patchRequest);
+    //
+    // // check response
+    // this.requestService.getByUUID(requestId)
+    //   .subscribe( res => {
+    //     console.log('res', res);
+    //   });
   }
 }
 

@@ -1,4 +1,4 @@
-<button id="secret-change-button" type="button" (click)="change()" style="display: none">
+<button id="secret-change-button" type="button" (click)="onChange($event)" style="display: none">
 </button>
 <div class="container">
   <div class="well well-white">
@@ -20,8 +20,7 @@
                      [offColor]="model.offColor"
                      [offText]="model.offText"
                      [size]="model.size"
-                     on-change="change()"
-                     (valueChange)="change()"
+                     (valueChange)="sendRequest($event)"
                      [(ngModel)]="model.value"
           >
           </ng-toggle>
