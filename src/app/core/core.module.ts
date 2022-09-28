@@ -164,6 +164,7 @@ import { SearchConfig } from './shared/search/search-filters/search-config.model
 import { SequenceService } from './shared/sequence.service';
 import { GroupDataService } from './eperson/group-data.service';
 import { SubmissionAccessesModel } from './config/models/config-submission-accesses.model';
+import {ClarinLicenseDataService} from './data/clarin/clarin-license-data.service';
 
 /**
  * When not in production, endpoint responses can be mocked for testing purposes
@@ -289,7 +290,8 @@ const PROVIDERS = [
   VocabularyTreeviewService,
   SequenceService,
   GroupDataService,
-  FeedbackDataService
+  FeedbackDataService,
+  ClarinLicenseDataService
 ];
 
 /**

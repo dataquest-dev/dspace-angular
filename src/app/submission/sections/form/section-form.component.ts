@@ -292,7 +292,6 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    *    the section errors retrieved from the server
    */
   updateForm(sectionData: WorkspaceitemSectionFormObject, errors: SubmissionSectionError[]): void {
-
     if (isNotEmpty(sectionData) && !isEqual(sectionData, this.sectionData.data)) {
       this.sectionData.data = sectionData;
       if (this.hasMetadataEnrichment(sectionData)) {
@@ -351,6 +350,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         }),
         distinctUntilChanged())
         .subscribe((sectionState: SubmissionSectionObject) => {
+          console.log('something changed!');
           this.fieldsOnTheirWayToBeRemoved = new Map();
           this.sectionMetadata = sectionState.metadata;
           this.updateForm(sectionState.data as WorkspaceitemSectionFormObject, sectionState.errorsToShow);
