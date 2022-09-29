@@ -40,8 +40,10 @@ import {WorkspaceitemSectionsObject} from '../../../core/submission/models/works
 import {SubmissionSectionError} from '../../objects/submission-objects.reducer';
 import parseSectionErrors from '../../utils/parseSectionErrors';
 import {normalizeSectionData} from '../../../core/submission/submission-response-parsing.service';
+import licenseDefinitions from './license-definitions.json';
+import {License4Selector} from './license-4-selector.model';
 
-interface licenseacceptbutton {
+interface LicenseAcceptButton {
   handleColor: string|null;
   handleOnColor: string|null;
   handleOffColor: string|null;
@@ -66,7 +68,7 @@ interface licenseacceptbutton {
 @renderSectionFor(SectionsType.clarinLicense)
 export class SubmissionSectionClarinLicenseComponent extends SectionModelComponent {
 
-  toggleAcceptation: licenseacceptbutton = {
+  toggleAcceptation: LicenseAcceptButton = {
     handleColor: 'dark',
     handleOnColor: 'danger',
     handleOffColor: 'info',
@@ -81,7 +83,9 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
 
   private selectedLicenseDefinition = '';
 
-  private status: boolean;
+  private status = false;
+
+  licenses4Selector: License4Selector[] = [];
 
   /**
    * The form id
@@ -168,6 +172,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
 
   @ViewChild('abc') el: ElementRef;
 
+  loadLicenses4Selector() {
+    licenseDefinitions.forEach((license4Selector: License4Selector) => {
+      this.licenses4Selector.push(license4Selector);
+    });
+  }
   /**
    * Initialize all instance variables and retrieve submission license
    */
@@ -202,6 +211,9 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
           this.changeDetectorRef.detectChanges();
         })
     );
+
+    // initialize licenses for license selector
+    this.loadLicenses4Selector();
     // '' = not selected
     let id = '';
     this.toggleAcceptation.value = false;
@@ -219,6 +231,10 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   protected getSectionStatus(): Observable<boolean> {
     return of(this.status);
+  }
+
+  selectLicense() {
+
   }
 
   /**
@@ -256,7 +272,8 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       this.selectedLicenseDefinition = licenseLabel;
       console.log('licenseLabel', licenseLabel);
       console.log('selectedLicense', selectedLicense);
-
+      // console.log('loadLicenses4Selector', this.loadLicenses4Selector());
+      this.loadLicenses4Selector();
       //
       // this.formOperationsService.dispatchOperationsFromEvent(
       //   this.pathCombiner,
