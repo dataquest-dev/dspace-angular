@@ -4,86 +4,74 @@
   <div class="well well-white">
     <div class="unstyled">
       <div id="aspect_submission_StepTransformer_item_head" class="form-group distribution_licnese_head">
-        <div>
-          <span class="">Read and accept the </span>
-          <span class="">
-            <a href="/repository/xmlui/page/contract" class="target_blank"
-               target="_blank">Distribution License Agreement</a>
-          </span>
-        </div>
+        <span> {{'submission.sections.clarin-license.head.read-accept' | translate}} </span>
+        <span class="">
+          <a href="/repository/xmlui/page/contract" class="target_blank"
+             target="_blank">{{'submission.sections.clarin-license.head.license-agreement' | translate}}</a>
+        </span>
       </div>
-      <span class="license-decision-checkbox">
-        <div>
-          <ng-toggle class="btn-dark"
-                     [onColor]="toggleAcceptation.onColor"
-                     [onText]="toggleAcceptation.onText"
-                     [offColor]="toggleAcceptation.offColor"
-                     [offText]="toggleAcceptation.offText"
-                     [size]="toggleAcceptation.size"
-                     (valueChange)="sendRequest($event)"
-                     [(ngModel)]="toggleAcceptation.value"
-          >
-          </ng-toggle>
-        </div>
-      </span>
-      <span class="license-decision-message">By checking this box, you agree to the Distribution License
-                        Agreement for this repository to reproduce, translate and distribute your submissions
-                        worldwide.</span>
+      <div class="license-decision-checkbox">
+        <ng-toggle class="btn-dark"
+                   [onColor]="toggleAcceptation.onColor"
+                   [onText]="toggleAcceptation.onText"
+                   [offColor]="toggleAcceptation.offColor"
+                   [offText]="toggleAcceptation.offText"
+                   [size]="toggleAcceptation.size"
+                   (valueChange)="sendRequest($event)"
+                   [(ngModel)]="toggleAcceptation.value">
+        </ng-toggle>
+      </div>
+      <span class="license-decision-message">{{ 'submission.sections.clarin-license.head.license-decision-message' | translate}}</span>
       <div class="well-sm alert">
-        <div>
-          <i class="fas fa-exclamation-triangle"></i>
-          <span class="">If you have questions regarding this licence please contact the
-              <a class="helpdesk-tolink" href="mailto:lindat-help@ufal.mff.cuni.cz">Help Desk</a>.</span>
-        </div>
+        <span class="">{{'submission.sections.clarin-license.head.license-question-help-desk.0' | translate}}
+          <a class="helpdesk-tolink" [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">
+            {{'submission.sections.clarin-license.head.license-question-help-desk.1' | translate}}
+          </a>
+        </span>
       </div>
     </div>
   </div>
   <div class="well well-white">
-    <span class="distribution_licnese_head">Select the resource license</span>
+    <span class="distribution_licnese_head">{{'submission.sections.clarin-license.head.license-select-resource' | translate}}</span>
     <div class="unstyled">
       <div id="aspect_submission_StepTransformer_item_" class="form-group alert alert-info">
         <div id="placeholder">
-          <i class="fa fa-3x fa-crosshairs  pull-left"> </i>
+          <span>{{'submission.sections.clarin-license.head.license-select-providing.0' | translate}}</span>
           <span>
-                              The License Selector will provide you
-                                visual assistance to select the most appropriate license for your data or
-                                software.</span>
-          <span>For the list of all supported licenses and their details visit </span>
-          <span>
-                                <a href="/repository/xmlui/page/licenses" class="target_blank alert-link"
-                                   target="_blank">License List Page</a>
-                            </span>
-          <span class="">.</span>
+            <a href="/repository/xmlui/page/licenses" class="target_blank alert-link" target="_blank">
+              {{'submission.sections.clarin-license.head.license-select-providing.1' | translate}}
+            </a>
+          </span>
+          <span>{{'submission.sections.clarin-license.head.license-select-providing.2' | translate}}</span>
           <a id="button-holder" (click)="clickLicense()"
              class="btn btn-repository licenseselector bold btn-block btn-lg">
-            <a>OPEN License Selector</a>
+            <a>{{'submission.sections.clarin-license.head.license-open-selector' | translate}}</a>
           </a>
         </div>
       </div>
-      <li class="form-group text-center">
-        <div>- OR -</div>
-      </li>
-      <li class="form-group">
-        <div>
-                            <span class="license-resource-text">If you already know under which license you want to
-                                distribute your work, please select from the dropdown below.</span>
-        </div>
-      </li>
-      <li id="aspect_submission_StepTransformer_item_license-not-supported-message"
+      <div class="form-group text-center">
+        {{'submission.sections.clarin-license.head.license-select-or' | translate}}
+      </div>
+      <div class="form-group">
+        <span class="license-resource-text">
+          {{'submission.sections.clarin-license.head.license-dropdown-info' | translate}}
+        </span>
+      </div>
+      <div id="aspect_submission_StepTransformer_item_license-not-supported-message"
           class="form-group alert alert-danger alert-dismissible fade in hidden">
-        <div>The selected license is not supported at the moment. Please follow the procedure described
-          under section "None of these licenses suits your needs".
-        </div>
-      </li>
-      <li class="form-group">
-        <div>
-          <select (change)="onChange($event)" #abc id="aspect_submission_StepTransformer_field_license"
-                  class="form-control" name="license" tabindex="-1" title="">
-            <option value="" selected="selected">Select a License ...</option>
-            <option *ngFor="let license of licenses4Selector" [value]="license.id">{{license.name}}</option>
-          </select>
-        </div>
-      </li>
+        {{'submission.sections.clarin-license.head.license-not-supported-message' | translate}}
+      </div>
+      <div class="form-group">
+        <select (change)="onChange($event)" #abc id="aspect_submission_StepTransformer_field_license"
+                class="form-control" name="license" tabindex="-1" title="">
+          <option value="" selected="selected">
+            {{'submission.sections.clarin-license.head.license-select-default-value' | translate}}
+          </option>
+          <option *ngFor="let license of licenses4Selector" [value]="license.id">
+            {{license.name}}
+          </option>
+        </select>
+      </div>
       <div id="aspect_submission_StepTransformer_list_accordion_lic" class="accordion">
         <div id="aspect_submission_StepTransformer_list_accordion-group_lic_1"
              class="accordion-group hidden">
@@ -91,7 +79,7 @@
             <a href="#aspect_submission_StepTransformer_list_accordion-body_lic_1"
                data-toggle="collapse"
                data-parent="#aspect_submission_StepTransformer_list_accordion_lic">
-              <span class="bold">See more details for the licenses</span>
+              <span class="bold">{{'submission.sections.clarin-license.head.license-more-details' | translate}}</span>
             </a>
           </div>
           <div id="aspect_submission_StepTransformer_list_accordion-body_lic_1"
@@ -110,23 +98,23 @@
     <div class="well-sm alert well-white">
       <div class="unstyled">
         <div id="aspect_submission_StepTransformer_item_x" class="form-group bold">
-          <div>None of these licenses suits your needs</div>
+          {{'submission.sections.clarin-license.head.license-do-not-suits-needs' | translate}}
         </div>
         <div class="form-group">
-          <div>If you need to use a license we currently do not offer, proceed as follows:
-          </div>
+          {{'submission.sections.clarin-license.head.license-not-offer-proceeds' | translate}}
         </div>
         <ul id="aspect_submission_StepTransformer_list_steps" class="ds-bulleted-list">
-          <li>Obtain a link (or a copy) to the license.</li>
-          <li>Send an email to
-            <a href="mailto:lindat-help@ufal.mff.cuni.cz">Help Desk</a> with the license
-            details.
+          <li>{{'submission.sections.clarin-license.head.license-not-offer-proceed-link' | translate}}</li>
+          <li>{{'submission.sections.clarin-license.head.license-not-offer-proceed-email.0' | translate}}
+            <a [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">
+              {{'submission.sections.clarin-license.head.license-not-offer-proceed-email.1' | translate}}
+            </a>
+            {{'submission.sections.clarin-license.head.license-not-offer-proceed-email.2' | translate}}
           </li>
-          <li>Save the unfinished submission and wait. We will add the license to the
-            selection list and contact you.
+          <li>{{'submission.sections.clarin-license.head.license-not-offer-proceed-wait' | translate}}
           </li>
           <li>
-            You will be able to continue the submission afterwards.
+            {{'submission.sections.clarin-license.head.license-not-offer-proceed-continue' | translate}}
           </li>
         </ul>
       </div>

@@ -42,6 +42,9 @@ import parseSectionErrors from '../../utils/parseSectionErrors';
 import {normalizeSectionData} from '../../../core/submission/submission-response-parsing.service';
 import licenseDefinitions from './license-definitions.json';
 import {License4Selector} from './license-4-selector.model';
+import {ConfigurationProperty} from '../../../core/shared/configuration-property.model';
+import {HELP_DESK_PROPERTY} from '../../../item-page/tombstone/tombstone.component';
+import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
 
 interface LicenseAcceptButton {
   handleColor: string|null;
@@ -80,6 +83,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     size: 'sm',
     value: false
   };
+
+  /**
+   * The mail for the help desk is loaded from the server.
+   */
+  helpDesk$: Observable<RemoteData<ConfigurationProperty>>;
 
   private selectedLicenseDefinition = '';
 
@@ -157,6 +165,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
               protected workspaceItemService: WorkspaceitemDataService,
               protected halService: HALEndpointService,
               protected rdbService: RemoteDataBuildService,
+              private configurationDataService: ConfigurationDataService,
               protected requestService: RequestService,
               protected formBuilderService: FormBuilderService,
               protected formOperationsService: SectionFormOperationsService,
@@ -181,6 +190,8 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Initialize all instance variables and retrieve submission license
    */
   onSectionInit() {
+    this.helpDesk$ = this.configurationDataService.findByPropertyName(HELP_DESK_PROPERTY);
+
     // todo set from backend
     // this.toggleAcceptation.value = accepted distrubution
     // id = license id from html select options
