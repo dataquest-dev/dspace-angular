@@ -1,43 +1,32 @@
-import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Output, ViewChild} from '@angular/core';
-import {
-  DynamicCheckboxModel,
-  DynamicFormControlEvent,
-  DynamicFormControlModel,
-  DynamicFormLayout
-} from '@ng-dynamic-forms/core';
+import {ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {DynamicFormControlModel, DynamicFormLayout} from '@ng-dynamic-forms/core';
 
-import {of, Observable, Subscription } from 'rxjs';
-import { CollectionDataService } from '../../../core/data/collection-data.service';
-import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
-import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
+import {Observable, of, Subscription} from 'rxjs';
+import {CollectionDataService} from '../../../core/data/collection-data.service';
+import {JsonPatchOperationPathCombiner} from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
+import {JsonPatchOperationsBuilder} from '../../../core/json-patch/builder/json-patch-operations-builder';
 import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined} from '../../../shared/empty.util';
-import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
-import { FormService } from '../../../shared/form/form.service';
-import { SubmissionService } from '../../submission.service';
-import { SectionFormOperationsService } from '../form/section-form-operations.service';
-import { SectionDataObject } from '../models/section-data.model';
-import { SectionModelComponent } from '../models/section.model';
-import { renderSectionFor } from '../sections-decorator';
-import { SectionsType } from '../sections-type';
-import { SectionsService } from '../sections.service';
-import { SECTION_LICENSE_FORM_LAYOUT } from './section-license.model';
+import {FormBuilderService} from '../../../shared/form/builder/form-builder.service';
+import {FormService} from '../../../shared/form/form.service';
+import {SubmissionService} from '../../submission.service';
+import {SectionFormOperationsService} from '../form/section-form-operations.service';
+import {SectionDataObject} from '../models/section-data.model';
+import {SectionModelComponent} from '../models/section.model';
+import {renderSectionFor} from '../sections-decorator';
+import {SectionsType} from '../sections-type';
+import {SectionsService} from '../sections.service';
+import {SECTION_LICENSE_FORM_LAYOUT} from './section-license.model';
 import {RequestService} from '../../../core/data/request.service';
 import {PatchRequest} from '../../../core/data/request.models';
 import {Operation} from 'fast-json-patch';
 import {ClarinLicenseDataService} from '../../../core/data/clarin/clarin-license-data.service';
 import {ClarinLicense} from '../../../core/shared/clarin/clarin-license.model';
-import {HALLink} from '../../../core/shared/hal-link.model';
-import {getFirstCompletedRemoteData, getFirstSucceededRemoteData} from '../../../core/shared/operators';
-import {distinctUntilChanged, filter, find, map, take} from 'rxjs/operators';
+import {getFirstCompletedRemoteData} from '../../../core/shared/operators';
+import {distinctUntilChanged, filter, find} from 'rxjs/operators';
 import {HALEndpointService} from '../../../core/shared/hal-endpoint.service';
 import {RemoteDataBuildService} from '../../../core/cache/builders/remote-data-build.service';
 import {WorkspaceitemDataService} from '../../../core/submission/workspaceitem-data.service';
-import {FormFieldMetadataValueObject} from '../../../shared/form/builder/models/form-field-metadata-value.model';
 import {RemoteData} from '../../../core/data/remote-data';
-import {State} from '@ngrx/store';
-import {RequestEntryState} from '../../../core/data/request.reducer';
-import {WorkspaceitemSectionsObject} from '../../../core/submission/models/workspaceitem-sections.model';
-import {SubmissionSectionError} from '../../objects/submission-objects.reducer';
 import parseSectionErrors from '../../utils/parseSectionErrors';
 import {normalizeSectionData} from '../../../core/submission/submission-response-parsing.service';
 import licenseDefinitions from './license-definitions.json';
@@ -70,6 +59,8 @@ interface LicenseAcceptButton {
 })
 @renderSectionFor(SectionsType.clarinLicense)
 export class SubmissionSectionClarinLicenseComponent extends SectionModelComponent {
+
+  @ViewChild('licenseSelection') licenseSelectionRef: ElementRef;
 
   toggleAcceptation: LicenseAcceptButton = {
     handleColor: 'dark',
@@ -179,8 +170,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     super(injectedCollectionId, injectedSectionData, injectedSubmissionId);
   }
 
-  @ViewChild('licenseSelection') licenseSelection: ElementRef;
-
   loadLicenses4Selector() {
     licenseDefinitions.forEach((license4Selector: License4Selector) => {
       this.licenses4Selector.push(license4Selector);
@@ -234,6 +223,34 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     // $('#license-text').css('display', 'inline').appendTo('#button-holder');
   }
 
+  getLicenseDefinitionFromRef() {
+    let selectedLicenseId: string;
+    if (this.licenseSelectionRef == undefined) {
+      this.status = false;
+      return;
+    }
+    selectedLicenseId = this.licenseSelectionRef.nativeElement.value
+    let selectedLicense: boolean = false;
+    selectedLicense = selectedLicenseId.trim().length != 0
+    this.status = this.toggleAcceptation.value && selectedLicense;
+
+    // is any license selected - create method
+    if (selectedLicense) {
+      if (this.licenseSelectionRef.nativeElement == undefined) {
+        return;
+      }
+      let licenseLabel: string;
+      let options = this.licenseSelectionRef.nativeElement.children
+      for (let i = 0; i < options.length; i++) {
+        if (options[i].value == selectedLicenseId) {
+          licenseLabel = options[i].label
+        }
+      }
+      return licenseLabel;
+    }
+    return '';
+  }
+
   /**
    * Get section status
    *
@@ -244,71 +261,31 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     return of(this.status);
   }
 
-  selectLicense(selectedLicense) {
-    if (isEmpty(selectedLicense)) {
+  selectLicense(selectedLicenseId) {
+    if (isEmpty(selectedLicenseId)) {
       this.selectedLicenseDefinition = '';
     }
-    this.selectedLicenseDefinition = selectedLicense;
+    this.selectedLicenseDefinition = this.getLicenseDefinitionById(selectedLicenseId);
     console.log('this.selectedLicenseDefinition', this.selectedLicenseDefinition);
   }
 
+  getLicenseDefinitionById(selectionLicenseId) {
+    let licenseDefinition = '';
+    this.licenses4Selector.forEach(license4Selector => {
+      if (String(license4Selector.id) === selectionLicenseId) {
+        licenseDefinition = license4Selector.name;
+        return;
+      }
+    });
+    return licenseDefinition;
+  }
   /**
    * Method called when a form dfChange event is fired.
    * Dispatch form operations based on changes.
    */
-  onChange(event: any) {
-
-    let selectedLicenseId: string;
-    if (this.licenseSelection == undefined) {
-      this.status = false;
-      return;
-    }
-      selectedLicenseId = this.licenseSelection.nativeElement.value
-    let selectedLicense: boolean = false;
-    selectedLicense = selectedLicenseId.trim().length != 0
-    this.status = this.toggleAcceptation.value && selectedLicense;
-
-    // is any license selected - create method
-    // set status method
-    //
-
-    this.updateSectionStatus();
-    if (selectedLicense) {
-      if (this.licenseSelection.nativeElement == undefined) {
-        return;
-      }
-      let licenseLabel:string;
-      let options = this.licenseSelection.nativeElement.children
-      for (let i = 0; i < options.length; i++) {
-        if (options[i].value == selectedLicenseId) {
-          licenseLabel = options[i].label
-        }
-      }
-
-      this.selectedLicenseDefinition = licenseLabel;
-      console.log('this.selectedLicenseDefinition', this.selectedLicenseDefinition);
-      console.log('licenseLabel', licenseLabel);
-      console.log('selectedLicense', selectedLicense);
-      // console.log('loadLicenses4Selector', this.loadLicenses4Selector());
-      // this.loadLicenses4Selector();
-      //
-      // this.formOperationsService.dispatchOperationsFromEvent(
-      //   this.pathCombiner,
-      //   event,
-      //   this.previousValue,
-      //   this.hasStoredValue(this.formBuilderService.getId(event.toggleAcceptation), this.formOperationsService.getArrayIndexFromEvent(event)));
-      // const metadata = this.formOperationsService.getFieldPathSegmentedFromChangeEvent(event);
-      // const value = this.formOperationsService.getFieldValueFromChangeEvent(event);
-
-      // console.log('change');
-      //
-      // this.sectionService.updateSectionData(this.submissionId, this.sectionData.id, Object.assign({}, {}, {}));
-      // this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
-
-      // todo to sent Backend.
-      // Accepted = this.toggleAcceptation.value.
-      // License: licenseLabel
-    }
+  changeLicenseDefFromRef() {
+    this.selectedLicenseDefinition = this.getLicenseDefinitionFromRef();
+    console.log('this.selectedLicenseDefinition', this.selectedLicenseDefinition);
   }
 
   // change() {
@@ -327,6 +304,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
 
   clickLicense() {
     document.getElementById('license-text').click();
+    console.log('clicked');
   }
 
   sendRequest(event) {
