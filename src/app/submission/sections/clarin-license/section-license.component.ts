@@ -10,7 +10,7 @@ import {of, Observable, Subscription } from 'rxjs';
 import { CollectionDataService } from '../../../core/data/collection-data.service';
 import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
-import {hasValue, isNotEmpty, isNotNull, isNotUndefined} from '../../../shared/empty.util';
+import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined} from '../../../shared/empty.util';
 import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
 import { FormService } from '../../../shared/form/form.service';
 import { SubmissionService } from '../../submission.service';
@@ -179,7 +179,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     super(injectedCollectionId, injectedSectionData, injectedSubmissionId);
   }
 
-  @ViewChild('abc') el: ElementRef;
+  @ViewChild('licenseSelection') licenseSelection: ElementRef;
 
   loadLicenses4Selector() {
     licenseDefinitions.forEach((license4Selector: License4Selector) => {
@@ -244,8 +244,12 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     return of(this.status);
   }
 
-  selectLicense() {
-
+  selectLicense(selectedLicense) {
+    if (isEmpty(selectedLicense)) {
+      this.selectedLicenseDefinition = '';
+    }
+    this.selectedLicenseDefinition = selectedLicense;
+    console.log('this.selectedLicenseDefinition', this.selectedLicenseDefinition);
   }
 
   /**
@@ -253,12 +257,13 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Dispatch form operations based on changes.
    */
   onChange(event: any) {
+
     let selectedLicenseId: string;
-    if (this.el == undefined) {
+    if (this.licenseSelection == undefined) {
       this.status = false;
       return;
     }
-      selectedLicenseId = this.el.nativeElement.value
+      selectedLicenseId = this.licenseSelection.nativeElement.value
     let selectedLicense: boolean = false;
     selectedLicense = selectedLicenseId.trim().length != 0
     this.status = this.toggleAcceptation.value && selectedLicense;
@@ -269,11 +274,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
 
     this.updateSectionStatus();
     if (selectedLicense) {
-      if (this.el.nativeElement == undefined) {
+      if (this.licenseSelection.nativeElement == undefined) {
         return;
       }
       let licenseLabel:string;
-      let options = this.el.nativeElement.children
+      let options = this.licenseSelection.nativeElement.children
       for (let i = 0; i < options.length; i++) {
         if (options[i].value == selectedLicenseId) {
           licenseLabel = options[i].label
@@ -281,10 +286,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       }
 
       this.selectedLicenseDefinition = licenseLabel;
+      console.log('this.selectedLicenseDefinition', this.selectedLicenseDefinition);
       console.log('licenseLabel', licenseLabel);
       console.log('selectedLicense', selectedLicense);
       // console.log('loadLicenses4Selector', this.loadLicenses4Selector());
-      this.loadLicenses4Selector();
+      // this.loadLicenses4Selector();
       //
       // this.formOperationsService.dispatchOperationsFromEvent(
       //   this.pathCombiner,

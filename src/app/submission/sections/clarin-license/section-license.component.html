@@ -62,12 +62,12 @@
         {{'submission.sections.clarin-license.head.license-not-supported-message' | translate}}
       </div>
       <div class="form-group">
-        <select (change)="onChange($event)" #abc id="aspect_submission_StepTransformer_field_license"
+        <select #licenseSelection (change)="selectLicense(licenseSelection.value)"  id="aspect_submission_StepTransformer_field_license"
                 class="form-control" name="license" tabindex="-1" title="">
           <option value="" selected="selected">
             {{'submission.sections.clarin-license.head.license-select-default-value' | translate}}
           </option>
-          <option *ngFor="let license of licenses4Selector" [value]="license.id">
+          <option *ngFor="let license of licenses4Selector" [value]="license.name">
             {{license.name}}
           </option>
         </select>
