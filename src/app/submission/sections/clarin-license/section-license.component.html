@@ -17,7 +17,7 @@
                    [offColor]="toggleAcceptation.offColor"
                    [offText]="toggleAcceptation.offText"
                    [size]="toggleAcceptation.size"
-                   (valueChange)="sendRequest($event)"
+                   (valueChange)="sendRequest(toggleAcceptation.value)"
                    [(ngModel)]="toggleAcceptation.value">
         </ng-toggle>
       </div>

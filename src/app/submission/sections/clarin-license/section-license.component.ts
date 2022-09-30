@@ -34,6 +34,8 @@ import {License4Selector} from './license-4-selector.model';
 import {ConfigurationProperty} from '../../../core/shared/configuration-property.model';
 import {HELP_DESK_PROPERTY} from '../../../item-page/tombstone/tombstone.component';
 import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
+import {WorkspaceItem} from '../../../core/submission/models/workspaceitem.model';
+import {PaginatedList} from '../../../core/data/paginated-list.model';
 
 interface LicenseAcceptButton {
   handleColor: string|null;
@@ -288,11 +290,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     console.log('this.selectedLicenseDefinition', this.selectedLicenseDefinition);
   }
 
-  // change() {
-  // //   this.onChange(null);
-  // //   this.sectionService.updateSectionData(this.submissionId, this.sectionData.id, "x");
-  // }
-
   /**
    * Unsubscribe from all subscriptions
    */
@@ -307,19 +304,103 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     console.log('clicked');
   }
 
-  sendRequest(event) {
-    // this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
-    console.log('sending patch request');
-    const clarinLicense = Object.assign(new ClarinLicense(), {
+  async getActualWorkspaceItem(): Promise<RemoteData<WorkspaceItem>> {
+    return this.workspaceItemService.findById(this.submissionId)
+      .pipe(getFirstCompletedRemoteData()).toPromise();
+  }
+
+  sendRequest(toogleAcceptiationValue) {
+    const dumpClarinLicense = Object.assign(new ClarinLicense(), {
       id: 1,
-      name: 'fff',
-      value: 'sdsdd',
+      name: '',
+      definition: this.selectedLicenseDefinition,
       confirmation: 0,
-      requiredInfo: 'NAME',
+      requiredInfo: '',
       _links: {
-        self: 'http://localhost:8080/server/api/core/clarinlicenses/1'
+        self: ''
       }
     });
+
+    // if true
+    //  if selected definition
+    //    send request with clarin license definition
+    //  if not selected
+    //    send request with empty clarin license definition
+    //    show validation errors
+    // if false
+    //  send request with empty clarin license definition
+    //  show validation errors
+    if (!toogleAcceptiationValue) {
+      console.log('sending the request');
+      // send request with empty clarin license definition
+      // show metadata validation errors
+
+      this.getActualWorkspaceItem()
+        .then(workspaceItemRD => {
+          const requestId = this.requestService.generateRequestId();
+          const hrefObs = this.halService.getEndpoint(this.workspaceItemService.getLinkPath());
+
+          const patchOperation2 = {
+            op: 'replace', path: '/license', value: this.selectedLicenseDefinition
+          } as Operation;
+
+          hrefObs.pipe(
+            find((href: string) => hasValue(href)),
+          ).subscribe((href: string) => {
+            const request = new PatchRequest(requestId, href + '/' + workspaceItemRD.payload.id, [patchOperation2]);
+            this.requestService.send(request);
+          });
+        });
+
+      // this.workspaceItemService.findById(this.submissionId)
+      //   .pipe(getFirstCompletedRemoteData())
+      //   .subscribe(res => {
+      //
+      //     const requestId = this.requestService.generateRequestId();
+      //     const hrefObs = this.halService.getEndpoint(this.workspaceItemService.getLinkPath());
+      //
+      //     const patchOperation2 = {
+      //       op: 'replace', path: '/license/' + clarinLicense.definition, value: clarinLicense
+      //     } as Operation;
+      //
+      //     hrefObs.pipe(
+      //       find((href: string) => hasValue(href)),
+      //     ).subscribe((href: string) => {
+      //       const request = new PatchRequest(requestId, href + '/' + res.payload.id, [patchOperation2]);
+      //       this.requestService.send(request);
+      //     });
+          //
+          // this.rdbService.buildFromRequestUUID(requestId)
+          //   // .pipe(filter(response => hasValue(response) && response.state !== RequestEntryState.ResponsePending))
+          //   .pipe(getFirstCompletedRemoteData())
+          //   // .pipe(take(1))
+          //   .subscribe(response => {
+          //     console.log('response', response);
+          //
+          //     // show validation errors in every section
+          //     const workspaceitem = response.payload;
+          //
+          //     const { sections } = workspaceitem;
+          //     const { errors } = workspaceitem;
+          //
+          //     const errorsList = parseSectionErrors(errors);
+          //
+          //     if (sections && isNotEmpty(sections)) {
+          //       Object.keys(sections)
+          //         .forEach((sectionId) => {
+          //           const sectionData = normalizeSectionData(sections[sectionId]);
+          //           const sectionErrors = errorsList[sectionId];
+          //           this.sectionService.updateSectionData(this.submissionId, sectionId, sectionData, sectionErrors, sectionErrors);
+          //         });
+          //     }
+          //   });
+        // });
+    }
+
+
+
+    // this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
+    console.log('sending patch request');
     // const patchOperation = {
     //   op: 'replace', path: '1', value: clarinLicense
     // } as Operation;
@@ -328,118 +409,48 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     console.log('event', event);
     // this.submissionService.dispatchSave(this.submissionId, true);
     // dispatch save to show validation errors in the section-form (traditionalpageone)
-    this.workspaceItemService.findById(this.submissionId)
-      .pipe(getFirstCompletedRemoteData())
-      .subscribe(res => {
-
-        const requestId = this.requestService.generateRequestId();
-        const hrefObs = this.halService.getEndpoint(this.workspaceItemService.getLinkPath());
-
-        const patchOperation2 = {
-          op: 'replace', path: '/license/' + clarinLicense.definition, value: clarinLicense
-        } as Operation;
-
-        hrefObs.pipe(
-          find((href: string) => hasValue(href)),
-        ).subscribe((href: string) => {
-          const request = new PatchRequest(requestId, href + '/' + res.payload.id, [patchOperation2]);
-          this.requestService.send(request);
-        });
-
-        // this.requestService.getByUUID(requestId)
-        //   .pipe(filter(response => hasValue(response) && response.state !== RequestEntryState.ResponsePending))
-        //   // .pipe(take(1))
-        //   .subscribe(response => {
-        //     console.log('response', response);
-        //   });
-
-        this.rdbService.buildFromRequestUUID(requestId)
-          // .pipe(filter(response => hasValue(response) && response.state !== RequestEntryState.ResponsePending))
-          .pipe(getFirstCompletedRemoteData())
-          // .pipe(take(1))
-          .subscribe(response => {
-            console.log('response', response);
-
-            // show validation errors in every section
-            const workspaceitem = response.payload;
-
-            const { sections } = workspaceitem;
-            const { errors } = workspaceitem;
-
-            const errorsList = parseSectionErrors(errors);
-
-            if (sections && isNotEmpty(sections)) {
-              Object.keys(sections)
-                .forEach((sectionId) => {
-                  const sectionData = normalizeSectionData(sections[sectionId]);
-                  const sectionErrors = errorsList[sectionId];
-                  this.sectionService.updateSectionData(this.submissionId, sectionId, sectionData, sectionErrors, sectionErrors);
-                });
-            }
-            // const sectionError: SubmissionSectionError = {
-            //   message: 'error.validation.required',
-            //   path: '/sections/traditionalpageone/local.contact.person'
-            // };
-            // console.log('response', response);
-            // this.sectionService.updateSectionData(this.submissionId, this.sectionData.id, Object.assign({}, {}, Object.assign(new WorkspaceitemSectionsObject(), {
-            //   url: 'superUrl',
-            //   acceptanceDate: 'sss',
-            //   granted: true
-            // })), [sectionError]);
-            // this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
-            // @ts-ignore
-            // this.sectionService.checkSectionErrors(this.submissionId, this.sectionData.id, this.formId, response.payload.errors, this.sectionData.errorsToShow);
-            // @ts-ignore
-            // this.sectionData.errorsToShow = response.payload.errors;
-            // this.changeDetectorRef.detectChanges();
-            // this.updateSectionStatus();
-          });
-      });
-
-    // this.operationsBuilder.add(this.pathCombiner.getPath('dc.contributor.author'), Object.assign(new FormFieldMetadataValueObject(), {
-    //   value: 'qqqq',
-    //   display: 'qqqq',
-    //   confidence: -1,
-    //   place: 0
-    // }), false);
-
-    // this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
-    // this.sectionService.checkSectionErrors(this.submissionId, this.sectionData.id, this.formId, errors, this.sectionData.errorsToShow);
-    // this.sectionData.errorsToShow = errors;
-    // this.changeDetectorRef.detectChanges();
-    // this.updateSectionStatus();
-    // send workspaceitem in the request
-
-
-
-
-    //
-
-    // this.clarinLicenseService.patch(clarinLicense, [patchOperation])
-    //   .pipe(getFirstSucceededRemoteData())
+    // this.workspaceItemService.findById(this.submissionId)
+    //   .pipe(getFirstCompletedRemoteData())
     //   .subscribe(res => {
-    //     console.log('res', res);
-    //   });
-    // this.clarinLicenseService.create(clarinLicense);
-    // const handleObj = {
-    //   handle: 'handle',
-    //   url: 'url'
-    // };
     //
-    // // create request with the updated Handle
-    // const patchOperation = {
-    //   op: 'replace', path: '/sections/clarin-license/granted', value: handleObj
-    // } as Operation;
+    //     const requestId = this.requestService.generateRequestId();
+    //     const hrefObs = this.halService.getEndpoint(this.workspaceItemService.getLinkPath());
     //
-    // const requestId = this.requestService.generateRequestId();
-    // const patchRequest = new PatchRequest(requestId, 'http://localhost:8080/server/api/submission/workspaceitems/' + this.submissionId, [patchOperation]);
-    // // call patch request
-    // this.requestService.send(patchRequest);
+    //     const patchOperation2 = {
+    //       op: 'replace', path: '/license/' + clarinLicense.definition, value: clarinLicense
+    //     } as Operation;
     //
-    // // check response
-    // this.requestService.getByUUID(requestId)
-    //   .subscribe( res => {
-    //     console.log('res', res);
+    //     hrefObs.pipe(
+    //       find((href: string) => hasValue(href)),
+    //     ).subscribe((href: string) => {
+    //       const request = new PatchRequest(requestId, href + '/' + res.payload.id, [patchOperation2]);
+    //       this.requestService.send(request);
+    //     });
+    //
+    //     this.rdbService.buildFromRequestUUID(requestId)
+    //       // .pipe(filter(response => hasValue(response) && response.state !== RequestEntryState.ResponsePending))
+    //       .pipe(getFirstCompletedRemoteData())
+    //       // .pipe(take(1))
+    //       .subscribe(response => {
+    //         console.log('response', response);
+    //
+    //         // show validation errors in every section
+    //         const workspaceitem = response.payload;
+    //
+    //         const { sections } = workspaceitem;
+    //         const { errors } = workspaceitem;
+    //
+    //         const errorsList = parseSectionErrors(errors);
+    //
+    //         if (sections && isNotEmpty(sections)) {
+    //           Object.keys(sections)
+    //             .forEach((sectionId) => {
+    //               const sectionData = normalizeSectionData(sections[sectionId]);
+    //               const sectionErrors = errorsList[sectionId];
+    //               this.sectionService.updateSectionData(this.submissionId, sectionId, sectionData, sectionErrors, sectionErrors);
+    //             });
+    //         }
+    //       });
     //   });
   }
 }
