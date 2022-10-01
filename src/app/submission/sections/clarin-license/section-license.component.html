@@ -18,7 +18,8 @@
                    [offText]="toggleAcceptation.offText"
                    [size]="toggleAcceptation.size"
                    (valueChange)="sendRequest()"
-                   [(ngModel)]="toggleAcceptation.value">
+                   [(ngModel)]="toggleAcceptation.value"
+                   [disabled]="(selectedLicenseName == '' || !(unsupportedLicenseMsgHidden | async))">
         </ng-toggle>
       </div>
       <span class="license-decision-message">{{ 'submission.sections.clarin-license.head.license-decision-message' | translate}}</span>
@@ -43,10 +44,10 @@
             </a>
           </span>
           <span>{{'submission.sections.clarin-license.head.license-select-providing.2' | translate}}</span>
-          <a id="button-holder" (click)="clickLicense()"
+          <button id="button-holder" (click)="clickLicense()"
              class="btn btn-repository licenseselector bold btn-block btn-lg">
             <a>{{'submission.sections.clarin-license.head.license-open-selector' | translate}}</a>
-          </a>
+          </button>
         </div>
       </div>
       <div class="form-group text-center">
@@ -57,7 +58,7 @@
           {{'submission.sections.clarin-license.head.license-dropdown-info' | translate}}
         </span>
       </div>
-      <div class="form-group alert alert-danger alert-dismissible fade in" [hidden]="(licenseIsSupported | async)">
+      <div class="form-group alert alert-danger alert-dismissible fade in" [hidden]="(unsupportedLicenseMsgHidden | async)">
         {{'submission.sections.clarin-license.head.license-not-supported-message' | translate}}
       </div>
       <div class="form-group">
@@ -66,7 +67,7 @@
           <option value="" selected="selected">
             {{'submission.sections.clarin-license.head.license-select-default-value' | translate}}
           </option>
-          <option *ngFor="let license of licenses4Selector" [value]="license.id">
+          <option *ngFor="let license of licenses4Selector" [value]="license.id" id="license_option">
             {{license.name}}
           </option>
         </select>
