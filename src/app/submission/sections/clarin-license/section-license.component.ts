@@ -1,7 +1,7 @@
-import {ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Inject, NgZone, ViewChild} from '@angular/core';
 import {DynamicFormControlModel, DynamicFormLayout} from '@ng-dynamic-forms/core';
 
-import {Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {CollectionDataService} from '../../../core/data/collection-data.service';
 import {JsonPatchOperationPathCombiner} from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import {JsonPatchOperationsBuilder} from '../../../core/json-patch/builder/json-patch-operations-builder';
@@ -36,6 +36,8 @@ import {HELP_DESK_PROPERTY} from '../../../item-page/tombstone/tombstone.compone
 import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
 import {WorkspaceItem} from '../../../core/submission/models/workspaceitem.model';
 import {PaginatedList} from '../../../core/data/paginated-list.model';
+import {SubmissionSectionError} from '../../objects/submission-objects.reducer';
+import {hasFailed} from '../../../core/data/request.reducer';
 
 interface LicenseAcceptButton {
   handleColor: string|null;
@@ -82,9 +84,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   helpDesk$: Observable<RemoteData<ConfigurationProperty>>;
 
-  private selectedLicenseDefinition = '';
+  private selectedLicenseName = '';
 
   private status = false;
+
+  licenseIsSupported = new BehaviorSubject<boolean>(true);
 
   licenses4Selector: License4Selector[] = [];
 
@@ -155,6 +159,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   constructor(protected changeDetectorRef: ChangeDetectorRef,
               protected collectionDataService: CollectionDataService,
               protected clarinLicenseService: ClarinLicenseDataService,
+              private _ngZone: NgZone,
               protected workspaceItemService: WorkspaceitemDataService,
               protected halService: HALEndpointService,
               protected rdbService: RemoteDataBuildService,
@@ -172,6 +177,15 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     super(injectedCollectionId, injectedSectionData, injectedSubmissionId);
   }
 
+  /**
+   * Unsubscribe from all subscriptions
+   */
+  onSectionDestroy() {
+    this.subs
+      .filter((subscription) => hasValue(subscription))
+      .forEach((subscription) => subscription.unsubscribe());
+  }
+
   loadLicenses4Selector() {
     licenseDefinitions.forEach((license4Selector: License4Selector) => {
       this.licenses4Selector.push(license4Selector);
@@ -181,30 +195,36 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Initialize all instance variables and retrieve submission license
    */
   onSectionInit() {
-    this.helpDesk$ = this.configurationDataService.findByPropertyName(HELP_DESK_PROPERTY);
+    this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
+    this.formId = this.formService.getUniqueId(this.sectionData.id);
 
-    // todo set from backend
-    // this.toggleAcceptation.value = accepted distrubution
-    // id = license id from html select options
-    // use '' for not selected
+    this.helpDesk$ = this.configurationDataService.findByPropertyName(HELP_DESK_PROPERTY);
+    // initialize licenses for license selector
+    this.loadLicenses4Selector();
+    // (document.getElementById('aspect_submission_StepTransformer_field_license') as HTMLSelectElement).value = '';
+
+    // subscribe validation errors
     this.subs.push(
       this.sectionService.getSectionErrors(this.submissionId, this.sectionData.id).pipe(
         filter((errors) => isNotEmpty(errors)),
         distinctUntilChanged())
         .subscribe((errors) => {
           // parse errors
+          console.log('new error');
           const newErrors = errors.map((error) => {
             // When the error path is only on the section,
             // replace it with the path to the form field to display error also on the form
             if (error.path === '/sections/clarin-license') {
               // check whether license is not accepted
+              // if the license def is null and the toogle acceptation is false
+              return Object.assign({}, error, { path: '/sections/license/clarin-license' });
             } else {
               return error;
             }
           }).filter((error) => isNotNull(error));
 
           if (isNotUndefined(newErrors) && isNotEmpty(newErrors)) {
-            // this.sectionService.checkSectionErrors(this.submissionId, this.sectionData.id, this.formId, newErrors);
+            this.sectionService.checkSectionErrors(this.submissionId, this.sectionData.id, this.formId, newErrors);
             this.sectionData.errors = errors;
           } else {
             // Remove any section's errors
@@ -213,19 +233,166 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
           this.changeDetectorRef.detectChanges();
         })
     );
-
-    // initialize licenses for license selector
-    this.loadLicenses4Selector();
-    // '' = not selected
-    let id = '';
-    this.toggleAcceptation.value = false;
-
-    (document.getElementById('aspect_submission_StepTransformer_field_license') as HTMLSelectElement).value = id;
-    // if ever we needed to move button. Now just click event is redirected
-    // $('#license-text').css('display', 'inline').appendTo('#button-holder');
   }
 
-  getLicenseDefinitionFromRef() {
+  /**
+   * Get section status
+   *
+   * @return Observable<boolean>
+   *     the section status
+   */
+  protected getSectionStatus(): Observable<boolean> {
+    return of(this.status);
+  }
+
+  /**
+   * Method called when a form dfChange event is fired.
+   * Dispatch form operations based on changes.
+   */
+  async changeLicenseNameFromRef() {
+    this.selectedLicenseName = this.getLicenseNameFromRef();
+    await this.maintainLicenseSelection();
+  }
+
+  async maintainLicenseSelection() {
+    this.isLicenseSupported(this.selectedLicenseName)
+      .then(isSupported => {
+        if (isSupported) {
+          this.sendRequest();
+        }
+        this.licenseIsSupported.next(isSupported);
+        console.log('this.licenseIsSupported', this.licenseIsSupported.getValue());
+      });
+  }
+
+  async selectLicense(selectedLicenseId) {
+    if (isEmpty(selectedLicenseId)) {
+      this.selectedLicenseName = '';
+    }
+    this.selectedLicenseName = this.getLicenseNameById(selectedLicenseId);
+
+    await this.maintainLicenseSelection();
+  }
+
+  // findById(String(this.getLicenseIdByDefinition(licenseDefinition)), false)
+  async findClarinLicenseByName(licenseName): Promise<RemoteData<PaginatedList<ClarinLicense>>> {
+    const options = {
+      searchParams: [
+        {
+          fieldName: 'name',
+          fieldValue: licenseName
+        }
+      ]
+    };
+    return this.clarinLicenseService.searchBy('byName', options, false)
+      .pipe(getFirstCompletedRemoteData()).toPromise();
+  }
+
+  async isLicenseSupported(licenseName) {
+    let supported = true;
+    await this.findClarinLicenseByName(licenseName)
+      .then((response: RemoteData<PaginatedList<ClarinLicense>>) => {
+        if (hasFailed(response?.state) || response?.payload?.page?.length === 0) {
+          supported = false;
+        } else {
+          supported = true;
+        }
+    });
+    return supported;
+  }
+
+  async sendRequest() {
+    let licenseNameRest = '';
+    // send license definition value only if the acceptation toggle is true
+    if (this.toggleAcceptation.value) {
+      licenseNameRest = this.selectedLicenseName;
+    }
+
+    // if true
+    //  if selected definition
+    //    send request with clarin license definition
+    //  if not selected
+    //    send request with empty clarin license definition
+    //    show validation errors
+    // if false
+    //  send request with empty clarin license definition
+    //  show validation errors
+
+    await this.getActualWorkspaceItem()
+      .then(workspaceItemRD => {
+        const requestId = this.requestService.generateRequestId();
+        const hrefObs = this.halService.getEndpoint(this.workspaceItemService.getLinkPath());
+
+        const patchOperation2 = {
+          op: 'replace', path: '/license', value: licenseNameRest
+        } as Operation;
+
+        hrefObs.pipe(
+          find((href: string) => hasValue(href)),
+        ).subscribe((href: string) => {
+          const request = new PatchRequest(requestId, href + '/' + workspaceItemRD.payload.id, [patchOperation2]);
+          this.requestService.send(request);
+        });
+
+        // process the response
+        this.rdbService.buildFromRequestUUID(requestId)
+          .pipe(getFirstCompletedRemoteData())
+          .subscribe((response: RemoteData<WorkspaceItem>) => {
+
+            // show validation errors in every section
+            const workspaceitem = response.payload;
+
+            const {sections} = workspaceitem;
+            const {errors} = workspaceitem;
+
+            const errorsList = parseSectionErrors(errors);
+
+            if (sections && isNotEmpty(sections)) {
+              Object.keys(sections)
+                .forEach((sectionId) => {
+                  const sectionData = normalizeSectionData(sections[sectionId]);
+                  const sectionErrors = errorsList[sectionId];
+                  // update section data to show validation errors for every section (upload, form)
+                  this.sectionService.updateSectionData(this.submissionId, sectionId, sectionData, sectionErrors, sectionErrors);
+                });
+            }
+          });
+      });
+  }
+
+  clickLicense() {
+    document.getElementById('license-text').click();
+    console.log('clicked');
+  }
+
+  getLicenseNameById(selectionLicenseId) {
+    let licenseName = '';
+    this.licenses4Selector.forEach(license4Selector => {
+      if (String(license4Selector.id) === selectionLicenseId) {
+        licenseName = license4Selector.name;
+        return;
+      }
+    });
+    return licenseName;
+  }
+
+  getLicenseIdByDefinition(licenseDefinition) {
+    let licenseId = -1;
+    this.licenses4Selector.forEach(license4Selector => {
+      if (license4Selector.name === licenseDefinition) {
+        licenseId = license4Selector.id;
+        return;
+      }
+    });
+    return licenseId;
+  }
+
+  async getActualWorkspaceItem(): Promise<RemoteData<WorkspaceItem>> {
+    return this.workspaceItemService.findById(this.submissionId)
+      .pipe(getFirstCompletedRemoteData()).toPromise();
+  }
+
+  getLicenseNameFromRef() {
     let selectedLicenseId: string;
     if (this.licenseSelectionRef == undefined) {
       this.status = false;
@@ -251,207 +418,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       return licenseLabel;
     }
     return '';
-  }
-
-  /**
-   * Get section status
-   *
-   * @return Observable<boolean>
-   *     the section status
-   */
-  protected getSectionStatus(): Observable<boolean> {
-    return of(this.status);
-  }
-
-  selectLicense(selectedLicenseId) {
-    if (isEmpty(selectedLicenseId)) {
-      this.selectedLicenseDefinition = '';
-    }
-    this.selectedLicenseDefinition = this.getLicenseDefinitionById(selectedLicenseId);
-    console.log('this.selectedLicenseDefinition', this.selectedLicenseDefinition);
-  }
-
-  getLicenseDefinitionById(selectionLicenseId) {
-    let licenseDefinition = '';
-    this.licenses4Selector.forEach(license4Selector => {
-      if (String(license4Selector.id) === selectionLicenseId) {
-        licenseDefinition = license4Selector.name;
-        return;
-      }
-    });
-    return licenseDefinition;
-  }
-  /**
-   * Method called when a form dfChange event is fired.
-   * Dispatch form operations based on changes.
-   */
-  changeLicenseDefFromRef() {
-    this.selectedLicenseDefinition = this.getLicenseDefinitionFromRef();
-    console.log('this.selectedLicenseDefinition', this.selectedLicenseDefinition);
-  }
-
-  /**
-   * Unsubscribe from all subscriptions
-   */
-  onSectionDestroy() {
-    this.subs
-      .filter((subscription) => hasValue(subscription))
-      .forEach((subscription) => subscription.unsubscribe());
-  }
-
-  clickLicense() {
-    document.getElementById('license-text').click();
-    console.log('clicked');
-  }
-
-  async getActualWorkspaceItem(): Promise<RemoteData<WorkspaceItem>> {
-    return this.workspaceItemService.findById(this.submissionId)
-      .pipe(getFirstCompletedRemoteData()).toPromise();
-  }
-
-  sendRequest(toogleAcceptiationValue) {
-    const dumpClarinLicense = Object.assign(new ClarinLicense(), {
-      id: 1,
-      name: '',
-      definition: this.selectedLicenseDefinition,
-      confirmation: 0,
-      requiredInfo: '',
-      _links: {
-        self: ''
-      }
-    });
-
-    // if true
-    //  if selected definition
-    //    send request with clarin license definition
-    //  if not selected
-    //    send request with empty clarin license definition
-    //    show validation errors
-    // if false
-    //  send request with empty clarin license definition
-    //  show validation errors
-    if (!toogleAcceptiationValue) {
-      console.log('sending the request');
-      // send request with empty clarin license definition
-      // show metadata validation errors
-
-      this.getActualWorkspaceItem()
-        .then(workspaceItemRD => {
-          const requestId = this.requestService.generateRequestId();
-          const hrefObs = this.halService.getEndpoint(this.workspaceItemService.getLinkPath());
-
-          const patchOperation2 = {
-            op: 'replace', path: '/license', value: this.selectedLicenseDefinition
-          } as Operation;
-
-          hrefObs.pipe(
-            find((href: string) => hasValue(href)),
-          ).subscribe((href: string) => {
-            const request = new PatchRequest(requestId, href + '/' + workspaceItemRD.payload.id, [patchOperation2]);
-            this.requestService.send(request);
-          });
-        });
-
-      // this.workspaceItemService.findById(this.submissionId)
-      //   .pipe(getFirstCompletedRemoteData())
-      //   .subscribe(res => {
-      //
-      //     const requestId = this.requestService.generateRequestId();
-      //     const hrefObs = this.halService.getEndpoint(this.workspaceItemService.getLinkPath());
-      //
-      //     const patchOperation2 = {
-      //       op: 'replace', path: '/license/' + clarinLicense.definition, value: clarinLicense
-      //     } as Operation;
-      //
-      //     hrefObs.pipe(
-      //       find((href: string) => hasValue(href)),
-      //     ).subscribe((href: string) => {
-      //       const request = new PatchRequest(requestId, href + '/' + res.payload.id, [patchOperation2]);
-      //       this.requestService.send(request);
-      //     });
-          //
-          // this.rdbService.buildFromRequestUUID(requestId)
-          //   // .pipe(filter(response => hasValue(response) && response.state !== RequestEntryState.ResponsePending))
-          //   .pipe(getFirstCompletedRemoteData())
-          //   // .pipe(take(1))
-          //   .subscribe(response => {
-          //     console.log('response', response);
-          //
-          //     // show validation errors in every section
-          //     const workspaceitem = response.payload;
-          //
-          //     const { sections } = workspaceitem;
-          //     const { errors } = workspaceitem;
-          //
-          //     const errorsList = parseSectionErrors(errors);
-          //
-          //     if (sections && isNotEmpty(sections)) {
-          //       Object.keys(sections)
-          //         .forEach((sectionId) => {
-          //           const sectionData = normalizeSectionData(sections[sectionId]);
-          //           const sectionErrors = errorsList[sectionId];
-          //           this.sectionService.updateSectionData(this.submissionId, sectionId, sectionData, sectionErrors, sectionErrors);
-          //         });
-          //     }
-          //   });
-        // });
-    }
-
-
-
-    // this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
-    console.log('sending patch request');
-    // const patchOperation = {
-    //   op: 'replace', path: '1', value: clarinLicense
-    // } as Operation;
-
-    console.log('toggleAcceptation value', this.toggleAcceptation);
-    console.log('event', event);
-    // this.submissionService.dispatchSave(this.submissionId, true);
-    // dispatch save to show validation errors in the section-form (traditionalpageone)
-    // this.workspaceItemService.findById(this.submissionId)
-    //   .pipe(getFirstCompletedRemoteData())
-    //   .subscribe(res => {
-    //
-    //     const requestId = this.requestService.generateRequestId();
-    //     const hrefObs = this.halService.getEndpoint(this.workspaceItemService.getLinkPath());
-    //
-    //     const patchOperation2 = {
-    //       op: 'replace', path: '/license/' + clarinLicense.definition, value: clarinLicense
-    //     } as Operation;
-    //
-    //     hrefObs.pipe(
-    //       find((href: string) => hasValue(href)),
-    //     ).subscribe((href: string) => {
-    //       const request = new PatchRequest(requestId, href + '/' + res.payload.id, [patchOperation2]);
-    //       this.requestService.send(request);
-    //     });
-    //
-    //     this.rdbService.buildFromRequestUUID(requestId)
-    //       // .pipe(filter(response => hasValue(response) && response.state !== RequestEntryState.ResponsePending))
-    //       .pipe(getFirstCompletedRemoteData())
-    //       // .pipe(take(1))
-    //       .subscribe(response => {
-    //         console.log('response', response);
-    //
-    //         // show validation errors in every section
-    //         const workspaceitem = response.payload;
-    //
-    //         const { sections } = workspaceitem;
-    //         const { errors } = workspaceitem;
-    //
-    //         const errorsList = parseSectionErrors(errors);
-    //
-    //         if (sections && isNotEmpty(sections)) {
-    //           Object.keys(sections)
-    //             .forEach((sectionId) => {
-    //               const sectionData = normalizeSectionData(sections[sectionId]);
-    //               const sectionErrors = errorsList[sectionId];
-    //               this.sectionService.updateSectionData(this.submissionId, sectionId, sectionData, sectionErrors, sectionErrors);
-    //             });
-    //         }
-    //       });
-    //   });
   }
 }
 

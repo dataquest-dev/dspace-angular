@@ -1,4 +1,4 @@
-<button id="secret-change-button" type="button" (click)="changeLicenseDefFromRef()" style="display: none">
+<button id="secret-change-button" type="button" (click)="changeLicenseNameFromRef()" style="display: none">
 </button>
 <div class="container">
   <div class="well well-white">
@@ -17,7 +17,7 @@
                    [offColor]="toggleAcceptation.offColor"
                    [offText]="toggleAcceptation.offText"
                    [size]="toggleAcceptation.size"
-                   (valueChange)="sendRequest(toggleAcceptation.value)"
+                   (valueChange)="sendRequest()"
                    [(ngModel)]="toggleAcceptation.value">
         </ng-toggle>
       </div>
@@ -57,8 +57,7 @@
           {{'submission.sections.clarin-license.head.license-dropdown-info' | translate}}
         </span>
       </div>
-      <div id="aspect_submission_StepTransformer_item_license-not-supported-message"
-          class="form-group alert alert-danger alert-dismissible fade in hidden">
+      <div class="form-group alert alert-danger alert-dismissible fade in" [hidden]="(licenseIsSupported | async)">
         {{'submission.sections.clarin-license.head.license-not-supported-message' | translate}}
       </div>
       <div class="form-group">

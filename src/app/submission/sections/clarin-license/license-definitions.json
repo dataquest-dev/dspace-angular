@@ -282,12 +282,12 @@
   {
     "id": 12,
     "url":"http://creativecommons.org/publicdomain/zero/1.0/",
-    "name": " Public Domain Dedication (CC Zero)"
+    "name": "Public Domain Dedication (CC Zero)"
   },
   {
     "id": 11,
     "url":"http://opensource.org/licenses/mit-license.php",
-    "name": " The MIT License (MIT)"
+    "name": "The MIT License (MIT)"
   },
   {
     "id": 8,
@@ -357,7 +357,7 @@
   {
     "id": 7,
     "url":"https://lindat.mff.cuni.cz/repository/xmlui/page/license-pdt2",
-    "name" : "PDT 2.0 License"
+    "name": "PDT 2.0 License"
   },
   {
     "id": 19,

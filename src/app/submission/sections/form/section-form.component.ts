@@ -350,7 +350,6 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         }),
         distinctUntilChanged())
         .subscribe((sectionState: SubmissionSectionObject) => {
-          console.log('something changed!');
           this.fieldsOnTheirWayToBeRemoved = new Map();
           this.sectionMetadata = sectionState.metadata;
           this.updateForm(sectionState.data as WorkspaceitemSectionFormObject, sectionState.errorsToShow);
