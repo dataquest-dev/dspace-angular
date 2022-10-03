@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LicenseContractPageComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+    console.log('fsfs');
+  }
 
   ngOnInit(): void {
+    console.log('fsfs');
   }
 
 }

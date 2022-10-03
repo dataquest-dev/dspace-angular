@@ -59,7 +59,6 @@ import { PageInternalServerErrorComponent } from './page-internal-server-error/p
 import { DtqTestExampleComponent } from './dtq-test-example/dtq-test-example.component';
 
 import { APP_CONFIG, AppConfig } from '../config/app-config.interface';
-import { LicenseContractPageComponent } from './license-contract-page/license-contract-page.component';
 
 export function getConfig() {
   return environment;
@@ -204,7 +203,6 @@ const EXPORTS = [
   ],
   declarations: [
     ...DECLARATIONS,
-    LicenseContractPageComponent,
   ],
   exports: [
     ...EXPORTS,

@@ -31,6 +31,7 @@ import { GroupAdministratorGuard } from './core/data/feature-authorization/featu
 import { ThemedPageInternalServerErrorComponent } from './page-internal-server-error/themed-page-internal-server-error.component';
 import { ServerCheckGuard } from './core/server-check/server-check.guard';
 import {LicenseContractPageComponent} from './license-contract-page/license-contract-page.component';
+import {LicenseContractPageModule} from './license-contract-page/license-contract-page.module';
 
 @NgModule({
   imports: [
@@ -127,12 +128,12 @@ import {LicenseContractPageComponent} from './license-contract-page/license-cont
               .then((m) => m.MyDSpacePageModule),
             canActivate: [AuthenticatedGuard, EndUserAgreementCurrentUserGuard]
           },
-          // {
-          //   path: 'search',
-          //   loadChildren: () => import('./search-page/search-page-routing.module')
-          //     .then((m) => m.SearchPageRoutingModule),
-          //   canActivate: [EndUserAgreementCurrentUserGuard]
-          // },
+          {
+            path: 'search',
+            loadChildren: () => import('./search-page/search-page-routing.module')
+              .then((m) => m.SearchPageRoutingModule),
+            canActivate: [EndUserAgreementCurrentUserGuard]
+          },
           {
             path: 'browse',
             loadChildren: () => import('./browse-by/browse-by-page.module')
@@ -216,8 +217,8 @@ import {LicenseContractPageComponent} from './license-contract-page/license-cont
           },
           {
             path: STATIC_PAGE_MODULE_PATH,
-            loadChildren: () => import('./license-contract-page/license-contract-page.component')
-              .then((m) => m.LicenseContractPageComponent),
+            loadChildren: () => import('./license-contract-page/license-contract-page.module')
+              .then((m) => m.LicenseContractPageModule),
             canActivate: [EndUserAgreementCurrentUserGuard]
           },
           { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent },
