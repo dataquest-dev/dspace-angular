@@ -213,7 +213,9 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     }
 
     const dcRightsValue = dcRightsMetadata[0].value;
-    this.selectLicenseOnInit(dcRightsValue).catch(err => console.error(err));
+    this.selectLicenseOnInit(dcRightsValue)
+      .then(() => this.updateSectionStatus())
+      .catch(err => console.error(err));
   }
 
   /**
@@ -242,6 +244,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
             this.initializeLicenseFromMetadata(dcRightsMetadata);
           });
       });
+
 
     // subscribe validation errors
     this.subs.push(
@@ -272,43 +275,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
           this.changeDetectorRef.detectChanges();
         })
     );
-  }
-
-  /**
-   * Get section status
-   *
-   * @return Observable<boolean>
-   *     the section status
-   */
-  // protected getSectionStatus(): Observable<boolean> {
-  //   return of(this.status);
-  // }
-
-  /**
-   * Get section status
-   *
-   * @return Observable<boolean>
-   *     the section status
-   */
-  protected getSectionStatus(): Observable<boolean> {
-    const formStatus$ = this.formService.isValid(this.formId);
-    const serverValidationStatus$ = this.sectionService.getSectionServerErrors(this.submissionId, this.sectionData.id).pipe(
-      map((validationErrors) => isEmpty(validationErrors))
-    );
-
-    const no = of(false);
-    const statusRes = observableCombineLatest([formStatus$, serverValidationStatus$]).pipe(
-      map(([formValidation, serverSideValidation]: [boolean, boolean]) => formValidation && serverSideValidation)
-    );
-
-
-    // TODO urobit status
-    console.log('statusRes', statusRes);
-    statusRes.subscribe(res => {
-      console.log('statusRes', res);
-    });
-
-    return statusRes;
   }
 
   /**
@@ -391,7 +357,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   }
 
   async sendRequest() {
-    console.log('setting toogle sendRequest');
     // Do not send request in initialization because the validation errors will be seen.
     if (!this.couldShowValidationErrors) {
       return;
@@ -401,6 +366,8 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     // send license definition value only if the acceptation toggle is true
     if (this.toggleAcceptation.value) {
       licenseNameRest = this.selectedLicenseName;
+      this.status = true;
+      this.updateSectionStatus();
     }
 
     await this.getActualWorkspaceItem()
@@ -486,13 +453,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   getLicenseNameFromRef() {
     let selectedLicenseId: string;
     if (isUndefined(this.licenseSelectionRef)) {
-      this.status = false;
       return;
     }
     selectedLicenseId = this.licenseSelectionRef.nativeElement.value;
     let selectedLicense = false;
     selectedLicense = selectedLicenseId.trim().length !== 0;
-    this.status = this.toggleAcceptation.value && selectedLicense;
 
     // is any license selected - create method
     if (selectedLicense) {
@@ -509,6 +474,24 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       return licenseLabel;
     }
     return '';
+  }
+
+  /**
+   * Get section status
+   *
+   * @return Observable<boolean>
+   *     the section status
+   */
+  protected getSectionStatus(): Observable<boolean> {
+    if (isEmpty(this.selectedLicenseName)) {
+      this.status = null;
+    } else if (isEmpty(this.sectionData.errorsToShow)) {
+      this.status = true;
+    } else {
+      this.status = false;
+    }
+
+    return of(this.status);
   }
 }
 
