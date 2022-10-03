@@ -117,4 +117,7 @@ export function getRequestCopyModulePath() {
   return `/${REQUEST_COPY_MODULE_PATH}`;
 }
 
-
+export const STATIC_PAGE_MODULE_PATH = 'contract';
+export function getLicenseContractPagePath() {
+  return `/${STATIC_PAGE_MODULE_PATH}`;
+}

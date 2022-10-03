@@ -41,6 +41,7 @@ import {hasFailed} from '../../../core/data/request.reducer';
 import {ItemDataService} from '../../../core/data/item-data.service';
 import {Item} from '../../../core/shared/item.model';
 import {MetadataValue} from '../../../core/shared/metadata.models';
+import {TranslateService} from '@ngx-translate/core';
 
 interface LicenseAcceptButton {
   handleColor: string|null;
@@ -153,6 +154,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   constructor(protected changeDetectorRef: ChangeDetectorRef,
               protected collectionDataService: CollectionDataService,
               protected clarinLicenseService: ClarinLicenseDataService,
+              protected translateService: TranslateService,
               protected itemService: ItemDataService,
               private _ngZone: NgZone,
               protected workspaceItemService: WorkspaceitemDataService,
@@ -180,8 +182,8 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       handleOffColor: 'info',
       onColor: 'success',
       offColor: 'danger',
-      onText: 'license accepted',
-      offText: 'click to accept license',
+      onText: this.translateService.instant('submission.sections.clarin-license.toggle.on-text'),
+      offText: this.translateService.instant('submission.sections.clarin-license.toggle.off-text'),
       disabled: false,
       size: 'sm',
       value: false
@@ -494,4 +496,3 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     return of(this.status);
   }
 }
-

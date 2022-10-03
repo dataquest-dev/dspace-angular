@@ -4052,6 +4052,10 @@
 
   "submission.sections.clarin-license.head.license-not-offer-proceed-continue": "You will be able to continue the submission afterwards.",
 
+  "submission.sections.clarin-license.toggle.off-text": "Click to accept",
+
+  "submission.sections.clarin-license.toggle.on-text": "Accepted",
+
 
 
   "submission.submit.breadcrumbs": "New submission",

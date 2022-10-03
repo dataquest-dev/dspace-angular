@@ -15,7 +15,7 @@ import {
   LEGACY_BITSTREAM_MODULE_PATH,
   PROFILE_MODULE_PATH,
   REGISTER_PATH,
-  REQUEST_COPY_MODULE_PATH,
+  REQUEST_COPY_MODULE_PATH, STATIC_PAGE_MODULE_PATH,
   WORKFLOW_ITEM_MODULE_PATH,
 } from './app-routing-paths';
 import { COLLECTION_MODULE_PATH } from './collection-page/collection-page-routing-paths';
@@ -30,6 +30,7 @@ import { ThemedForbiddenComponent } from './forbidden/themed-forbidden.component
 import { GroupAdministratorGuard } from './core/data/feature-authorization/feature-authorization-guard/group-administrator.guard';
 import { ThemedPageInternalServerErrorComponent } from './page-internal-server-error/themed-page-internal-server-error.component';
 import { ServerCheckGuard } from './core/server-check/server-check.guard';
+import {LicenseContractPageComponent} from './license-contract-page/license-contract-page.component';
 
 @NgModule({
   imports: [
@@ -126,12 +127,12 @@ import { ServerCheckGuard } from './core/server-check/server-check.guard';
               .then((m) => m.MyDSpacePageModule),
             canActivate: [AuthenticatedGuard, EndUserAgreementCurrentUserGuard]
           },
-          {
-            path: 'search',
-            loadChildren: () => import('./search-page/search-page-routing.module')
-              .then((m) => m.SearchPageRoutingModule),
-            canActivate: [EndUserAgreementCurrentUserGuard]
-          },
+          // {
+          //   path: 'search',
+          //   loadChildren: () => import('./search-page/search-page-routing.module')
+          //     .then((m) => m.SearchPageRoutingModule),
+          //   canActivate: [EndUserAgreementCurrentUserGuard]
+          // },
           {
             path: 'browse',
             loadChildren: () => import('./browse-by/browse-by-page.module')
@@ -212,6 +213,12 @@ import { ServerCheckGuard } from './core/server-check/server-check.guard';
             path: ACCESS_CONTROL_MODULE_PATH,
             loadChildren: () => import('./access-control/access-control.module').then((m) => m.AccessControlModule),
             canActivate: [GroupAdministratorGuard],
+          },
+          {
+            path: STATIC_PAGE_MODULE_PATH,
+            loadChildren: () => import('./license-contract-page/license-contract-page.component')
+              .then((m) => m.LicenseContractPageComponent),
+            canActivate: [EndUserAgreementCurrentUserGuard]
           },
           { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent },
         ]
