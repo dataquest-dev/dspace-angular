@@ -9,6 +9,7 @@ import { TopLevelCommunityListComponent } from './top-level-community-list/top-l
 import { StatisticsModule } from '../statistics/statistics.module';
 import { ThemedHomeNewsComponent } from './home-news/themed-home-news.component';
 import { ThemedHomePageComponent } from './themed-home-page.component';
+import {DevTableComponent} from '../dev-table/dev-table.component';
 
 const DECLARATIONS = [
   HomePageComponent,
@@ -16,6 +17,7 @@ const DECLARATIONS = [
   TopLevelCommunityListComponent,
   ThemedHomeNewsComponent,
   HomeNewsComponent,
+  DevTableComponent
 ];
 
 @NgModule({
@@ -23,7 +25,7 @@ const DECLARATIONS = [
     CommonModule,
     SharedModule,
     HomePageRoutingModule,
-    StatisticsModule.forRoot()
+    StatisticsModule.forRoot(),
   ],
   declarations: [
     ...DECLARATIONS,

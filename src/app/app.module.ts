@@ -193,7 +193,7 @@ const DECLARATIONS = [
   IdleModalComponent,
   ThemedPageInternalServerErrorComponent,
   PageInternalServerErrorComponent,
-  DtqTestExampleComponent
+  DtqTestExampleComponent,
 ];
 
 const EXPORTS = [
@@ -214,12 +214,10 @@ const EXPORTS = [
   ],
   declarations: [
     ...DECLARATIONS,
-    DevTableComponent,
   ],
     exports: [
         ...EXPORTS,
         ...DECLARATIONS,
-        DevTableComponent,
     ]
 })
 export class AppModule {
