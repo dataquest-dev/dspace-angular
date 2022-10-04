@@ -17,9 +17,8 @@
                    [offColor]="toggleAcceptation.offColor"
                    [offText]="toggleAcceptation.offText"
                    [size]="toggleAcceptation.size"
-                   (valueChange)="sendRequest()"
-                   [(ngModel)]="toggleAcceptation.value"
-                   [disabled]="(selectedLicenseName == '' || !(unsupportedLicenseMsgHidden | async))">
+                   (valueChange)="onToggleChange()"
+                   [(ngModel)]="toggleAcceptation.value">
         </ng-toggle>
       </div>
       <span class="license-decision-message">{{ 'submission.sections.clarin-license.head.license-decision-message' | translate}}</span>

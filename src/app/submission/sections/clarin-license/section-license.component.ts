@@ -1,9 +1,12 @@
 import {ChangeDetectorRef, Component, ElementRef, Inject, NgZone, OnInit, ViewChild} from '@angular/core';
-import {DynamicFormControlModel, DynamicFormLayout} from '@ng-dynamic-forms/core';
+import {DynamicFormControlEvent, DynamicFormControlModel, DynamicFormLayout} from '@ng-dynamic-forms/core';
 
 import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, of, Subscription} from 'rxjs';
 import {CollectionDataService} from '../../../core/data/collection-data.service';
-import {JsonPatchOperationPathCombiner} from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
+import {
+  JsonPatchOperationPathCombiner,
+  JsonPatchOperationPathObject
+} from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import {JsonPatchOperationsBuilder} from '../../../core/json-patch/builder/json-patch-operations-builder';
 import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined, isUndefined} from '../../../shared/empty.util';
 import {FormBuilderService} from '../../../shared/form/builder/form-builder.service';
@@ -279,6 +282,22 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     );
   }
 
+  onToggleChange(event: DynamicFormControlEvent) {
+    // const path = this.formOperationsService.getFieldPathSegmentedFromChangeEvent(event);
+    const path = '/sections/license/granted';
+    if (this.toggleAcceptation.value) {
+      const pathObj = this.pathCombiner.getPath(path);
+      pathObj.path = path;
+      this.operationsBuilder.add(pathObj, String(this.toggleAcceptation.value), false, true);
+      // Remove any section's errors
+      this.sectionService.dispatchRemoveSectionErrors(this.submissionId, this.sectionData.id);
+    } else {
+      const pathObj = this.pathCombiner.getPath(path);
+      pathObj.path = path;
+      this.operationsBuilder.remove(pathObj);
+    }
+    console.log('changed toggle to: ' + this.toggleAcceptation.value);
+  }
   /**
    * Method called when a form dfChange event is fired.
    * Dispatch form operations based on changes.
@@ -298,7 +317,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       this.selectedLicenseName = '';
     } else {
       this.selectedLicenseName = licenseName;
-      console.log('chanted this.selectedLicenseName', this.selectedLicenseName);
     }
 
     this.setToggleAcceptation();
