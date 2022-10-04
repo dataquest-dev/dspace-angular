@@ -65,6 +65,10 @@ mat-tree-node {
   display: inline;
 }
 
+.done.mat-tree-node, .waiting.mat-tree-node, .not-done.mat-tree-node {
+  background-color: #f2f2f2 !important;
+}
+
 
 ul {
   display: grid;
@@ -80,10 +84,10 @@ ul {
   height: 45vh;
   //height: 100%;
   margin:auto;
-  width: 50%;
+  width: 100%;
   overflow: hidden;
   //overflow-y: auto;
-  background: $clr;
+  background: #f2f2f2;
   border-radius: 5px;
   padding: 1px;
 }

@@ -203,11 +203,6 @@ const EXPORTS = [
   imports: [
     BrowserModule.withServerTransition({appId: 'dspace-angular'}),
     ...IMPORTS,
-    MatTableModule,
-    MatTreeModule,
-    MatIconModule,
-    MatButtonModule,
-    ScrollingModule,
   ],
   providers: [
     ...PROVIDERS
