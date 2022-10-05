@@ -17,7 +17,7 @@
                    [offColor]="toggleAcceptation.offColor"
                    [offText]="toggleAcceptation.offText"
                    [size]="toggleAcceptation.size"
-                   (valueChange)="onToggleChange()"
+                   (valueChange)="onToggleChange($event)"
                    [(ngModel)]="toggleAcceptation.value">
         </ng-toggle>
       </div>
