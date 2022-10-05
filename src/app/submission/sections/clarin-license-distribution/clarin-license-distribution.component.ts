@@ -85,13 +85,6 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
     // Retrieve license accepted status
     (model as DynamicCheckboxModel).value = (this.sectionData.data as WorkspaceitemSectionLicenseObject).granted;
 
-    this.collectionDataService.findById(this.collectionId, true, true, followLink('license')).pipe(
-      filter((collectionData: RemoteData<Collection>) => isNotUndefined((collectionData.payload))),
-      mergeMap((collectionData: RemoteData<Collection>) => (collectionData.payload as any).license))
-      .subscribe(res => {
-        console.log('license data res', res);
-      });
-
     this.subs.push(
       // Disable checkbox whether it's in workflow or item scope
       this.sectionService.isSectionReadOnly(
@@ -155,7 +148,7 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
    * Method called when a form dfChange event is fired.
    * Dispatch form operations based on changes.
    */
-  onChange(event: DynamicFormControlEvent) {
+  onChange() {
     const path = '/sections/license/granted';
     const pathObj: JsonPatchOperationPathObject = this.pathCombiner.getPath(path);
     pathObj.path = path;

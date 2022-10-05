@@ -237,11 +237,9 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
         this.itemService.findByHref(workspaceItemRD.payload._links.item.href)
           .pipe(getFirstCompletedRemoteData())
           .subscribe((itemRD: RemoteData<Item>) => {
-            console.log('itemRD', itemRD);
             // Load the metadata where is store clarin license name (`dc.rights`).
             const item = itemRD.payload;
             const dcRightsMetadata = item.metadata['dc.rights'];
-            console.log('dcRights', dcRightsMetadata);
             if (isUndefined(dcRightsMetadata)) {
               return;
             }
@@ -319,7 +317,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       this.selectedLicenseName = licenseName;
     }
 
-    this.setToggleAcceptation();
     this.setLicenseNameForRef(this.selectedLicenseName);
   }
 
@@ -337,16 +334,17 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
 
     this.isLicenseSupported(this.selectedLicenseName)
       .then(isSupported => {
-        if (!isSupported) {
-          this.toggleAcceptation.value = false;
-        } else {
-          // the user has chosen first supported license so the validation errors could be showed
-          if (!this.couldShowValidationErrors) {
-            this.couldShowValidationErrors = true;
-          }
+        // the user has chosen first supported license so the validation errors could be showed
+        if (!this.couldShowValidationErrors) {
+          this.couldShowValidationErrors = true;
         }
         this.unsupportedLicenseMsgHidden.next(isSupported);
-        this.sendRequest();
+
+        let selectedLicenseName = '';
+        if (isSupported) {
+          selectedLicenseName = this.selectedLicenseName;
+        }
+        this.sendRequest(selectedLicenseName);
       });
   }
 
@@ -376,19 +374,14 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     return supported;
   }
 
-  async sendRequest() {
+  async sendRequest(licenseNameRest) {
     // Do not send request in initialization because the validation errors will be seen.
     if (!this.couldShowValidationErrors) {
       return;
     }
 
-    let licenseNameRest = '';
     // send license definition value only if the acceptation toggle is true
-    if (this.toggleAcceptation.value) {
-      licenseNameRest = this.selectedLicenseName;
-      this.status = true;
-      this.updateSectionStatus();
-    }
+    // this.updateSectionStatus();
 
     await this.getActualWorkspaceItem()
       .then(workspaceItemRD => {
