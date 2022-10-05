@@ -28,6 +28,8 @@ import {distinctUntilChanged, filter, find, map, mergeMap, startWith, take} from
 import {Collection} from '../../../core/shared/collection.model';
 import {isNotEmpty, isNotNull, isNotUndefined} from '../../../shared/empty.util';
 import {License} from '../../../core/shared/license.model';
+import {getLicenseContractPagePath} from '../../../app-routing-paths';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'ds-clarin-license-distribution',
@@ -70,7 +72,11 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
    */
   helpDesk$: Observable<RemoteData<ConfigurationProperty>>;
 
+  contractRoutingPath = '';
+
   onSectionInit(): void {
+    this.contractRoutingPath = getLicenseContractPagePath();
+
     this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
     this.formId = this.formService.getUniqueId(this.sectionData.id);
     this.formModel = this.formBuilderService.fromJSON(SECTION_LICENSE_FORM_MODEL);
@@ -79,12 +85,12 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
     // Retrieve license accepted status
     (model as DynamicCheckboxModel).value = (this.sectionData.data as WorkspaceitemSectionLicenseObject).granted;
 
-    this.licenseText$ = this.collectionDataService.findById(this.collectionId, true, true, followLink('license')).pipe(
+    this.collectionDataService.findById(this.collectionId, true, true, followLink('license')).pipe(
       filter((collectionData: RemoteData<Collection>) => isNotUndefined((collectionData.payload))),
-      mergeMap((collectionData: RemoteData<Collection>) => (collectionData.payload as any).license),
-      find((licenseData: RemoteData<License>) => isNotUndefined((licenseData.payload))),
-      map((licenseData: RemoteData<License>) => licenseData.payload.text),
-      startWith(''));
+      mergeMap((collectionData: RemoteData<Collection>) => (collectionData.payload as any).license))
+      .subscribe(res => {
+        console.log('license data res', res);
+      });
 
     this.subs.push(
       // Disable checkbox whether it's in workflow or item scope
