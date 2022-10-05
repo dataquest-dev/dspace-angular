@@ -1,6 +1,6 @@
 {
   "Submission extensions": {
-    "percentage": "95",
+    "percentage": "100",
     "status": "done",
     "Different fields for different types of submission": {
       "percentage": 100,
@@ -44,8 +44,8 @@
     }
   },
   "Dissemination extensions": {
-    "status": "waiting",
-    "percentage": 80,
+    "status": "done",
+    "percentage": 100,
     "Harvestable metadata via OAI-PMH": {
       "percentage": 100,
       "status": "done"
@@ -56,47 +56,75 @@
     },
     "Item is hidden from search, harvestable only for oai": {
       "percentage": 65,
-      "status": "waiting"
+      "status": "done"
     },
     "Harvest CMDI metadata format": {
       "percentage": 70,
-      "status": "waiting"
+      "status": "done"
     },
     "Harvest OLAC metadata format": {
       "percentage": 70,
-      "status": "waiting"
+      "status": "done"
     },
     "Google scholar mapping metadata": {
       "percentage": 70,
-      "status": "waiting"
+      "status": "done"
     }
   },
   "PIDs": {
-    "status": "waiting",
-    "percentage": 80,
+    "status": "done",
+    "percentage": 100,
     "PIDs associat. to metadata records": {
-      "percentage": 75,
-      "status": "waiting"
+      "percentage": 100,
+      "status": "done"
     },
     "HTTP-accept header for content negotiation": {
-      "percentage": 85,
-      "status": "waiting"
+      "percentage": 100,
+      "status": "done"
     },
     "Return directly cmdi": {
-      "percentage": 85,
-      "status": "waiting"
+      "percentage": 100,
+      "status": "done"
     },
     "Config handle prefix for communities": {
-      "percentage": 70,
-      "status": "waiting"
+      "percentage": 100,
+      "status": "done"
     },
     "Manage handle table": {
-      "percentage": 75,
-      "status": "waiting"
+      "percentage": 100,
+      "status": "done"
     },
     "Support DOIs": {
-      "percentage": 85,
+      "percentage": 100,
+      "status": "done"
+    }
+  },
+  "Licensing Framework": {
+    "percentage": 60,
+    "status": "waiting",
+    "License administrator": {
+      "percentage": 0,
+      "status": "done"
+    },
+    "Choose license in submission process": {
+      "percentage": 0,
       "status": "waiting"
+    },
+    "Item view - show item license": {
+      "percentage": 30,
+      "status": "waiting"
+    },
+    "Technical support for restricted items": {
+      "percentage": 0,
+      "status": "not-done"
+    },
+    "Attach/dettach license to/from item": {
+      "percentage": 0,
+      "status": "not-done"
+    },
+    "New search filter option in search page - Licenses": {
+      "percentage": 0,
+      "status": "not-done"
     }
   },
   "Statistics": {
@@ -107,34 +135,6 @@
       "status": "not-done"
     },
     "Stat based on Matomo Analytics": {
-      "percentage": 0,
-      "status": "not-done"
-    }
-  },
-  "Licensing Framework": {
-    "percentage": 10,
-    "status": "waiting",
-    "Item view - show item license": {
-      "percentage": 0,
-      "status": "not-done"
-    },
-    "Technical support for restricted items": {
-      "percentage": 0,
-      "status": "not-done"
-    },
-    "Choose license in submission process": {
-      "percentage": 0,
-      "status": "not-done"
-    },
-    "License administrator": {
-      "percentage": 0,
-      "status": "not-done"
-    },
-    "Attach/dettach license to/from item": {
-      "percentage": 0,
-      "status": "not-done"
-    },
-    "New search filter option in search page - Licenses": {
       "percentage": 0,
       "status": "not-done"
     }
