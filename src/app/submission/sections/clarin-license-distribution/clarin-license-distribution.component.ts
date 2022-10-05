@@ -152,6 +152,7 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
     const path = '/sections/license/granted';
     const pathObj: JsonPatchOperationPathObject = this.pathCombiner.getPath(path);
     pathObj.path = path;
+    console.log('on change value', String(this.toggleAcceptation.value));
 
     if (isNotUndefined(this.toggleAcceptation.value)) {
       this.operationsBuilder.add(pathObj, String(this.toggleAcceptation.value), false, true);
