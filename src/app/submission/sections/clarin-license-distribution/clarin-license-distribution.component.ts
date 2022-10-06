@@ -12,7 +12,7 @@ import {SubmissionService} from '../../submission.service';
 import {SectionDataObject} from '../models/section-data.model';
 import {TranslateService} from '@ngx-translate/core';
 import {HELP_DESK_PROPERTY} from '../../../item-page/tombstone/tombstone.component';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {RemoteData} from '../../../core/data/remote-data';
 import {ConfigurationProperty} from '../../../core/shared/configuration-property.model';
 import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
@@ -26,7 +26,7 @@ import {WorkspaceitemSectionLicenseObject} from '../../../core/submission/models
 import {followLink} from '../../../shared/utils/follow-link-config.model';
 import {distinctUntilChanged, filter, find, map, mergeMap, startWith, take} from 'rxjs/operators';
 import {Collection} from '../../../core/shared/collection.model';
-import {isNotEmpty, isNotNull, isNotUndefined} from '../../../shared/empty.util';
+import {isNotEmpty, isNotNull, isNotUndefined, isNull} from '../../../shared/empty.util';
 import {License} from '../../../core/shared/license.model';
 import {getLicenseContractPagePath} from '../../../app-routing-paths';
 import {ActivatedRoute} from '@angular/router';
@@ -74,7 +74,11 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
 
   contractRoutingPath = '';
 
+  isInit = false;
+
   onSectionInit(): void {
+    this.isInit = true;
+
     this.contractRoutingPath = getLicenseContractPagePath();
 
     this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
@@ -108,7 +112,7 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
             if (error.path === '/sections/license') {
               // check whether license is not accepted
               if (!(model as DynamicCheckboxModel).checked) {
-                return Object.assign({}, error, { path: '/sections/license/granted' });
+                return Object.assign({}, error, {path: '/sections/license/granted'});
               } else {
                 return null;
               }
@@ -144,15 +148,29 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
     this.helpDesk$ = this.configurationDataService.findByPropertyName(HELP_DESK_PROPERTY);
   }
 
+  changeToNotInit() {
+    if (this.isInit) {
+      this.isInit = false;
+    }
+  }
+
   /**
    * Method called when a form dfChange event is fired.
    * Dispatch form operations based on changes.
    */
-  onChange() {
+  onChange(event: any) {
+    // Filter changing value on init
+    if (isNull(event)) {
+      return;
+    }
+    if (this.isInit === true) {
+      this.isInit = false;
+      return;
+    }
+
     const path = '/sections/license/granted';
     const pathObj: JsonPatchOperationPathObject = this.pathCombiner.getPath(path);
     pathObj.path = path;
-    console.log('on change value', String(this.toggleAcceptation.value));
 
     if (isNotUndefined(this.toggleAcceptation.value)) {
       this.operationsBuilder.add(pathObj, String(this.toggleAcceptation.value), false, true);
@@ -161,8 +179,23 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
     } else {
       this.operationsBuilder.remove(pathObj);
     }
+    this.updateSectionStatus();
+  }
+
+  /**
+   * Get section status
+   *
+   * @return Observable<boolean>
+   *     the section status
+   */
+  protected getSectionStatus(): Observable<boolean> {
+    if (this.toggleAcceptation.value) {
+      return of(true);
+    }
+    return of(false);
   }
 }
+
 
 interface LicenseAcceptButton {
   handleColor: string|null;

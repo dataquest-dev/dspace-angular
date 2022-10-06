@@ -20,7 +20,8 @@
                    [offColor]="toggleAcceptation.offColor"
                    [offText]="toggleAcceptation.offText"
                    [size]="toggleAcceptation.size"
-                   (valueChange)="onChange()"
+                   (valueChange)="onChange($event)"
+                   (click)="changeToNotInit()"
                    [(ngModel)]="toggleAcceptation.value">
         </ng-toggle>
     </div>
@@ -28,7 +29,7 @@
   </div>
   <div class="row pt-3">
     <div class="col-md-12">
-      <div class="alert alert-warning justify-content-start align-self-start">
+      <div class="alert alert-warning justify-content-start align-self-start w-100">
         <span class="fas fa-exclamation-triangle fa-lg"></span>
         <span class="">{{'submission.sections.clarin-license.head.license-question-help-desk.0' | translate}}
           <a class="helpdesk-tolink" [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">

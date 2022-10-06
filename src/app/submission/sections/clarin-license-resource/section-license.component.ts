@@ -383,6 +383,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     // send license definition value only if the acceptation toggle is true
     // this.updateSectionStatus();
 
+    this.updateSectionStatus();
     await this.getActualWorkspaceItem()
       .then(workspaceItemRD => {
         const requestId = this.requestService.generateRequestId();
