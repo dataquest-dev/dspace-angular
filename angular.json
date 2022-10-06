@@ -65,8 +65,8 @@
               }
             ],
             "scripts": [
-              "src\\license-selector.js",
-              "src\\license-selector-creation.js"
+              "src/license-selector.js",
+              "src/license-selector-creation.js"
             ]
           },
           "configurations": {
