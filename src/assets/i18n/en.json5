@@ -1680,6 +1680,10 @@
 
 
 
+  "licenses.breadcrumbs": "License administration",
+
+
+
   "info.end-user-agreement.accept": "I have read and I agree to the End User Agreement",
 
   "info.end-user-agreement.accept.error": "An error occurred accepting the End User Agreement",
@@ -2706,9 +2710,15 @@
   "menu.section.toggle.statistics_task": "Toggle Statistics Task section",
 
 
+
   "menu.section.workflow": "Administer Workflow",
 
   "menu.section.handle": "Manage Handles",
+
+
+  "menu.section.licenses": "License Administration",
+
+
 
 
   "autocomplete.suggestion.sponsor.funding-code": "Funding code",
@@ -3316,6 +3326,76 @@
   "resource-policies.table.headers.title.for.community": "Policies for Community",
 
   "resource-policies.table.headers.title.for.collection": "Policies for Collection",
+
+
+  "clarin-license-table.title": "License Administration",
+
+  "clarin-license.table.name": "License Name",
+
+  "clarin-license.table.definition": "Definition (URL)",
+
+  "clarin-license.table.confirmation": "Confirmation",
+
+  "clarin-license.table.required-user-info": "Required user info",
+
+  "clarin-license.table.label": "License Label",
+
+  "clarin-license.table.extended-labels": "Extended Labels",
+
+  "clarin-license.table.bitstreams": "Used by Bitstreams",
+
+  "clarin-license.button.define": "Define",
+
+  "clarin-license.button.define-license": "Define License",
+
+  "clarin-license.button.define-license-label": "Define License Label",
+
+  "clarin-license.button.edit-license": "Edit License",
+
+  "clarin-license.button.delete-license": "Delete License",
+
+
+  "clarin-license.define-license-form.form-name": "Define new license",
+
+  "clarin-license.define-license-form.input-name": "License name",
+
+  "clarin-license.define-license-form.input-definition-url": "License Definition URL",
+
+  "clarin-license.define-license-form.input-confirmation": "License requires confirmation",
+
+  "clarin-license.define-license-form.license-labels": "License Labels",
+
+  "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
+
+  "clarin-license.define-license-form.required-info": "Additional required user info",
+
+  "clarin-license.define-license-form.submit-button": "Save",
+
+  "clarin-license.define-license.notification.successful-content": "License was defined successfully",
+
+  "clarin-license.define-license.notification.error-content": "Error: cannot define new License",
+
+  "clarin-license.edit-license.notification.successful-content": "License was updated successfully",
+
+  "clarin-license.edit-license.notification.error-content": "Error: cannot edit the License",
+
+  "clarin-license.delete-license.notification.successful-content": "License was deleted successfully",
+
+  "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
+
+
+
+  "clarin-license-label.define-license-label.input-label": "Short Label (max 5. chars)",
+
+  "clarin-license-label.define-license-label.input-title": "Label Title",
+
+  "clarin-license-label.define-license-label.input-is-extended": "Is extended",
+
+  "clarin-license-label.define-license-label.input-icon": "Icon",
+
+  "clarin-license-label.define-license-label.notification.successful-content": "License Label was defined successfully",
+
+  "clarin-license-label.define-license-label.notification.error-content": "Error: cannot define new License Label",
 
 
 

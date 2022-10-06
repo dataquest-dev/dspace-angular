@@ -1,7 +1,9 @@
 import { loginProcess } from './submission-ui.spec';
 
-describe('Community Page', () => {
-
+/**
+ * Test menu options for admin
+ */
+describe('Admin Menu Page', () => {
   it('should pass accessibility tests', () => {
     // Login as admin
     cy.visit('/');
@@ -12,5 +14,8 @@ describe('Community Page', () => {
 
     // check handles redirect url in the <a> tag
     cy.get('.sidebar-top-level-items a[href = "/handle-table"]').scrollIntoView().should('be.visible');
+
+    // check licenses redirect url in the <a> tag
+    cy.get('.sidebar-top-level-items a[href = "/licenses"]').scrollIntoView().should('be.visible');
   });
 });

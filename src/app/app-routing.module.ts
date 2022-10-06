@@ -13,7 +13,7 @@ import {
   HANDLE_TABLE_MODULE_PATH,
   INFO_MODULE_PATH,
   INTERNAL_SERVER_ERROR,
-  LEGACY_BITSTREAM_MODULE_PATH,
+  LEGACY_BITSTREAM_MODULE_PATH, LICENSES_MODULE_PATH,
   PROFILE_MODULE_PATH,
   REGISTER_PATH,
   REQUEST_COPY_MODULE_PATH, STATIC_PAGE_MODULE_PATH,
@@ -217,6 +217,10 @@ import {LicenseContractPageModule} from './license-contract-page/license-contrac
             canActivate: [GroupAdministratorGuard],
           },
           {
+            path: LICENSES_MODULE_PATH,
+            loadChildren: () => import('./clarin-licenses/clarin-license.module').then((m) => m.ClarinLicenseModule),
+            canActivate: [SiteAdministratorGuard],
+          },
             path: STATIC_PAGE_MODULE_PATH,
             loadChildren: () => import('./license-contract-page/license-contract-page.module')
               .then((m) => m.LicenseContractPageModule),
