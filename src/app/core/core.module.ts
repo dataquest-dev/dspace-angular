@@ -165,6 +165,8 @@ import { SequenceService } from './shared/sequence.service';
 import { GroupDataService } from './eperson/group-data.service';
 import { SubmissionAccessesModel } from './config/models/config-submission-accesses.model';
 import {ClarinLicenseDataService} from './data/clarin/clarin-license-data.service';
+import { HandleDataService } from './data/handle-data.service';
+import { Handle } from './handle/handle.model';
 
 /**
  * When not in production, endpoint responses can be mocked for testing purposes
@@ -291,7 +293,8 @@ const PROVIDERS = [
   SequenceService,
   GroupDataService,
   FeedbackDataService,
-  ClarinLicenseDataService
+  ClarinLicenseDataService,
+  HandleDataService
 ];
 
 /**
@@ -351,7 +354,8 @@ export const models =
     UsageReport,
     Root,
     SearchConfig,
-    SubmissionAccessesModel
+    SubmissionAccessesModel,
+    Handle
   ];
 
 @NgModule({

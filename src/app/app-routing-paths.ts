@@ -120,4 +120,8 @@ export function getRequestCopyModulePath() {
 export const STATIC_PAGE_MODULE_PATH = 'contract';
 export function getLicenseContractPagePath() {
   return `/${STATIC_PAGE_MODULE_PATH}`;
+
+export const HANDLE_TABLE_MODULE_PATH = 'handle-table';
+export function getHandleTableModulePath() {
+  return `/${HANDLE_TABLE_MODULE_PATH}`;
 }

@@ -10,6 +10,7 @@ import {
   BITSTREAM_MODULE_PATH,
   FORBIDDEN_PATH,
   FORGOT_PASSWORD_PATH,
+  HANDLE_TABLE_MODULE_PATH,
   INFO_MODULE_PATH,
   INTERNAL_SERVER_ERROR,
   LEGACY_BITSTREAM_MODULE_PATH,
@@ -220,6 +221,11 @@ import {LicenseContractPageModule} from './license-contract-page/license-contrac
             loadChildren: () => import('./license-contract-page/license-contract-page.module')
               .then((m) => m.LicenseContractPageModule),
             canActivate: [EndUserAgreementCurrentUserGuard]
+          },
+          {
+            path: HANDLE_TABLE_MODULE_PATH,
+            loadChildren: () => import('./handle-page/handle-page.module').then((m) => m.HandlePageModule),
+            canActivate: [SiteAdministratorGuard],
           },
           { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent },
         ]
