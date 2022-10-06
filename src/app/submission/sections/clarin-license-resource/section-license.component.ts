@@ -141,36 +141,33 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Initialize instance variables
    *
    * @param {ChangeDetectorRef} changeDetectorRef
-   * @param {CollectionDataService} collectionDataService
    * @param clarinLicenseService
+   * @param translateService
+   * @param itemService
+   * @param workspaceItemService
+   * @param halService
+   * @param rdbService
+   * @param configurationDataService
    * @param requestService
-   * @param {FormBuilderService} formBuilderService
-   * @param {SectionFormOperationsService} formOperationsService
    * @param {FormService} formService
    * @param {JsonPatchOperationsBuilder} operationsBuilder
    * @param {SectionsService} sectionService
-   * @param {SubmissionService} submissionService
    * @param {string} injectedCollectionId
    * @param {SectionDataObject} injectedSectionData
    * @param {string} injectedSubmissionId
    */
   constructor(protected changeDetectorRef: ChangeDetectorRef,
-              protected collectionDataService: CollectionDataService,
               protected clarinLicenseService: ClarinLicenseDataService,
               protected translateService: TranslateService,
               protected itemService: ItemDataService,
-              private _ngZone: NgZone,
               protected workspaceItemService: WorkspaceitemDataService,
               protected halService: HALEndpointService,
               protected rdbService: RemoteDataBuildService,
               private configurationDataService: ConfigurationDataService,
               protected requestService: RequestService,
-              protected formBuilderService: FormBuilderService,
-              protected formOperationsService: SectionFormOperationsService,
               protected formService: FormService,
               protected operationsBuilder: JsonPatchOperationsBuilder,
               protected sectionService: SectionsService,
-              protected submissionService: SubmissionService,
               @Inject('collectionIdProvider') public injectedCollectionId: string,
               @Inject('sectionDataProvider') public injectedSectionData: SectionDataObject,
               @Inject('submissionIdProvider') public injectedSubmissionId: string) {
