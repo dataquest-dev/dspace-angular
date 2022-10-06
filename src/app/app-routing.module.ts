@@ -16,7 +16,7 @@ import {
   LEGACY_BITSTREAM_MODULE_PATH, LICENSES_MODULE_PATH,
   PROFILE_MODULE_PATH,
   REGISTER_PATH,
-  REQUEST_COPY_MODULE_PATH,
+  REQUEST_COPY_MODULE_PATH, STATIC_PAGE_MODULE_PATH,
   WORKFLOW_ITEM_MODULE_PATH,
 } from './app-routing-paths';
 import { COLLECTION_MODULE_PATH } from './collection-page/collection-page-routing-paths';
@@ -31,6 +31,8 @@ import { ThemedForbiddenComponent } from './forbidden/themed-forbidden.component
 import { GroupAdministratorGuard } from './core/data/feature-authorization/feature-authorization-guard/group-administrator.guard';
 import { ThemedPageInternalServerErrorComponent } from './page-internal-server-error/themed-page-internal-server-error.component';
 import { ServerCheckGuard } from './core/server-check/server-check.guard';
+import {LicenseContractPageComponent} from './license-contract-page/license-contract-page.component';
+import {LicenseContractPageModule} from './license-contract-page/license-contract-page.module';
 
 @NgModule({
   imports: [
@@ -218,6 +220,11 @@ import { ServerCheckGuard } from './core/server-check/server-check.guard';
             path: LICENSES_MODULE_PATH,
             loadChildren: () => import('./clarin-licenses/clarin-license.module').then((m) => m.ClarinLicenseModule),
             canActivate: [SiteAdministratorGuard],
+          },
+            path: STATIC_PAGE_MODULE_PATH,
+            loadChildren: () => import('./license-contract-page/license-contract-page.module')
+              .then((m) => m.LicenseContractPageModule),
+            canActivate: [EndUserAgreementCurrentUserGuard]
           },
           {
             path: HANDLE_TABLE_MODULE_PATH,
