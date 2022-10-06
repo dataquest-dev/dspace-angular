@@ -1365,6 +1365,8 @@
 
   "error.validation.license.notgranted": "You must grant this license to complete your submission. If you are unable to grant this license at this time you may save your work and return later or remove the submission.",
 
+  "error.validation.clarin-license.notgranted": "You must choose one of the resource licenses.",
+
   "error.validation.pattern": "This input is restricted by the current pattern: {{ pattern }}.",
 
   "error.validation.filerequired": "The file upload is mandatory",
@@ -4005,6 +4007,8 @@
 
   "submission.sections.submit.progressbar.license": "Deposit license",
 
+  "submission.sections.submit.progressbar.clarin-license": "Pick license",
+
   "submission.sections.submit.progressbar.upload": "Upload files",
 
 
@@ -4118,6 +4122,52 @@
   "submission.sections.accesses.form.until-hint": "Select the date until which the related access condition is applied",
 
   "submission.sections.accesses.form.until-placeholder": "Until",
+
+
+  "contract.breadcrumbs": "Distribution License Agreement",
+
+  "contract.message.distribution-license-agreement": "Distribution License Agreement",
+
+  "submission.sections.clarin-license.head.read-accept": "Read and accept the ",
+
+  "submission.sections.clarin-license.head.license-agreement": "Distribution License Agreement",
+
+  "submission.sections.clarin-license.head.license-decision-message": "By checking this box, you agree to the Distribution License Agreement for this repository to reproduce, translate and distribute your submissions worldwide.",
+
+  "submission.sections.clarin-license.head.license-question-help-desk": ["If you have questions regarding this licence please contact the", "Help Desk"],
+
+  "submission.sections.clarin-license.head.license-select-resource": "Select the resource license",
+
+  "submission.sections.clarin-license.head.license-select-providing": ["The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ", "License List Page", "."],
+
+  "submission.sections.clarin-license.head.license-open-selector": "OPEN License Selector",
+
+  "submission.sections.clarin-license.head.license-select-or": "- OR -",
+
+  "submission.sections.clarin-license.head.license-dropdown-info": "If you already know under which license you want to distribute your work, please select from the dropdown below.",
+
+  "submission.sections.clarin-license.head.license-not-supported-message": "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\".",
+
+  "submission.sections.clarin-license.head.license-select-default-value": "Select a License ...",
+
+  "submission.sections.clarin-license.head.license-more-details": "See more details for the licenses",
+
+  "submission.sections.clarin-license.head.license-do-not-suits-needs": "None of these licenses suits your needs",
+
+  "submission.sections.clarin-license.head.license-not-offer-proceeds": "If you need to use a license we currently do not offer, proceed as follows:",
+
+  "submission.sections.clarin-license.head.license-not-offer-proceed-link": "Obtain a link (or a copy) to the license.",
+
+  "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Send an email to", "Help Desk", "with the license details."],
+
+  "submission.sections.clarin-license.head.license-not-offer-proceed-wait": "Save the unfinished submission and wait. We will add the license to the selection list and contact you.",
+
+  "submission.sections.clarin-license.head.license-not-offer-proceed-continue": "You will be able to continue the submission afterwards.",
+
+  "submission.sections.clarin-license.toggle.off-text": "Click to accept",
+
+  "submission.sections.clarin-license.toggle.on-text": "Accepted",
+
 
 
   "submission.submit.breadcrumbs": "New submission",
