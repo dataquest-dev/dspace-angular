@@ -221,6 +221,7 @@ import {LicenseContractPageModule} from './license-contract-page/license-contrac
             loadChildren: () => import('./clarin-licenses/clarin-license.module').then((m) => m.ClarinLicenseModule),
             canActivate: [SiteAdministratorGuard],
           },
+          {
             path: STATIC_PAGE_MODULE_PATH,
             loadChildren: () => import('./license-contract-page/license-contract-page.module')
               .then((m) => m.LicenseContractPageModule),
@@ -231,7 +232,7 @@ import {LicenseContractPageModule} from './license-contract-page/license-contrac
             loadChildren: () => import('./handle-page/handle-page.module').then((m) => m.HandlePageModule),
             canActivate: [SiteAdministratorGuard],
           },
-          { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent },
+          { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent }
         ]
       }
     ], {
