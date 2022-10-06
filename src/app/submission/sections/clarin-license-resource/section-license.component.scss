@@ -12,6 +12,24 @@
   max-width: 100% !important;
   width: 100% !important;
 }
+
+.alert-warning {
+  color: #7b4d1b !important;
+  background-color: #fbead6 !important;
+  border-color: #fae1c6 !important;
+  background-image: none;
+}
+
+.alert-danger {
+  color: #6c2323;
+  background-color: #f5dada;
+  border-color: #f2cbcb;
+  background-image: none;
+  box-shadow: none;
+  padding-bottom: 12px;
+  padding-top: 12px;
+}
+
 // might help with alighing license selector button and target icon
 
 //#text-of-distr-agr {

@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class="col-md-12">
-      <div class="form-group alert alert-danger alert-dismissible fade in" [hidden]="(unsupportedLicenseMsgHidden | async)">
+      <div class="form-group alert alert-danger in" [hidden]="(unsupportedLicenseMsgHidden | async)">
         {{'submission.sections.clarin-license.head.license-not-supported-message' | translate}}
       </div>
     </div>
@@ -79,8 +79,8 @@
       </div>
     </div>
   </div>
-  <div class="col-md-12 alert">
-    <div id="aspect_submission_StepTransformer_item_x" class="form-group bold">
+  <div class="col-md-12 alert alert-warning">
+    <div id="" class="form-group bold">
       {{'submission.sections.clarin-license.head.license-do-not-suits-needs' | translate}}
     </div>
     <div class="form-group">
