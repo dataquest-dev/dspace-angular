@@ -8,6 +8,7 @@ on:
     branches:
       - dtq-dev
       - dtq-dev-present
+      - dtq-dev-lf
     tags:
       - 'dspace-**'
   pull_request:
