@@ -34,4 +34,3 @@ jobs:
         run: |
           cd ~
           ./import_licenses.sh
-
