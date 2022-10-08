@@ -166,7 +166,6 @@ import { GroupDataService } from './eperson/group-data.service';
 import { SubmissionAccessesModel } from './config/models/config-submission-accesses.model';
 import { ClarinLicenseDataService } from './data/clarin/clarin-license-data.service';
 import { ClarinLicenseLabelDataService } from './data/clarin/clarin-license-label-data.service';
-import {ClarinLicenseDataService} from './data/clarin/clarin-license-data.service';
 import { HandleDataService } from './data/handle-data.service';
 import { Handle } from './handle/handle.model';
 
