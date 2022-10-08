@@ -24,10 +24,10 @@ body {
 }
 
 .main-content {
-  //z-index: var(--ds-main-z-index);
-  //flex: 1 1 100%;
-  //margin-top: var(--ds-content-spacing);
-  //margin-bottom: var(--ds-content-spacing);
+  z-index: var(--ds-main-z-index);
+  flex: 1 1 100%;
+  margin-top: var(--ds-content-spacing);
+  margin-bottom: var(--ds-content-spacing);
 }
 
 .alert.hide {

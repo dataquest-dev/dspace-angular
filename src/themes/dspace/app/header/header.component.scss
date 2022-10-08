@@ -17,6 +17,7 @@
     height: var(--ds-header-logo-height-xs);
   }
 }
+
 .navbar-toggler .navbar-toggler-icon {
   background-image: none !important;
   line-height: 1.5;
@@ -26,6 +27,8 @@
 @charset "UTF-8";
 .lindat-common2.lindat-common-header {
   background-color: var(--navbar-background-color, red);
+  height: var(--lt-common-navbar-height);
+
 }
 .lindat-common2.lindat-common-footer {
   background-color: var(--footer-background-color);
@@ -53,6 +56,10 @@
   /* source-code-pro-regular - latin_latin-ext */
   /* source-sans-pro-regular - latin_latin-ext */
   /* source-sans-pro-300 - latin_latin-ext */
+}
+
+.lindat-common2 .lindat-navbar {
+  height: var(--lt-common-navbar-height);
 }
 @media print {
   .lindat-common2 *,
