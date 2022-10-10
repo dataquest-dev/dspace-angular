@@ -30,3 +30,10 @@ jobs:
 
           export ENVFILE=$(pwd)/.env.dev-5
           ./start.sh
+      
+      - name: data import
+        run: |
+          cd $GITHUB_WORKSPACE
+          ls
+          ls python_data_import
+          ls python_data_import/lib
