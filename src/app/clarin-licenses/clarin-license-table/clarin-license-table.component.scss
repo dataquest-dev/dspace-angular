@@ -1,3 +1,7 @@
 /**
   The file for styling `clarin-license-table.component.html`. No styling needed.
  */
+.table {
+  table-layout: fixed;
+  word-wrap: break-word;
+}
