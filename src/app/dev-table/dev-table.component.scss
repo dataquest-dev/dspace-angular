@@ -79,15 +79,12 @@ ul {
   background: transparent;
 }
 
-#scroll-dev-table {
-
-  height: 45vh;
-  //height: 100%;
+.dev-table {
+  height: 100%;
   margin:auto;
   width: 100%;
   overflow: hidden;
-  //overflow-y: auto;
-  background: #f2f2f2;
+  overflow-y: auto;
   border-radius: 5px;
   padding: 1px;
 }
