@@ -36,4 +36,5 @@ jobs:
           cd $GITHUB_WORKSPACE
           ls
           ls python_data_import
+          echo "lib contents"
           ls python_data_import/lib
