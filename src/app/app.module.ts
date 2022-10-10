@@ -65,6 +65,7 @@ import {MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import { ClarinNavbarTopComponent } from './clarin-navbar-top/clarin-navbar-top.component';
 
 export function getConfig() {
   return environment;
@@ -194,6 +195,7 @@ const DECLARATIONS = [
   ThemedPageInternalServerErrorComponent,
   PageInternalServerErrorComponent,
   DtqTestExampleComponent,
+  ClarinNavbarTopComponent,
 ];
 
 const EXPORTS = [
