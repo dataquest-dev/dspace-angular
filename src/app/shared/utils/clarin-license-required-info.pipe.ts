@@ -11,6 +11,10 @@ import {ClarinLicenseRequiredInfo} from '../../core/shared/clarin/clarin-license
 export class ClarinLicenseRequiredInfoPipe implements PipeTransform {
 
   transform(value: ClarinLicenseRequiredInfo[]): string {
+    if (!Array.isArray(value)) {
+      return value;
+    }
+
     if (isEmpty(value)) {
       return '';
     }

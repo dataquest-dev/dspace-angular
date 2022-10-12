@@ -39,8 +39,6 @@ describe('ClarinLicenseTableComponent', () => {
   let notificationService: NotificationsServiceStub;
   let modalStub: NgbActiveModal;
 
-
-
   beforeEach(async () => {
     notificationService = new NotificationsServiceStub();
     clarinLicenseDataService = jasmine.createSpyObj('clarinLicenseService', {

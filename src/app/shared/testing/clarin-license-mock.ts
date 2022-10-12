@@ -3,10 +3,17 @@ import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
 import { buildPaginatedList } from '../../core/data/paginated-list.model';
 import { PageInfo } from '../../core/shared/page-info.model';
+import {ClarinLicenseRequiredInfo} from '../../core/shared/clarin/clarin-license.resource-type';
 
 /**
  * The mocked Clarin License and Clarin License Label objects for testing.
  */
+
+export const mockClarinRequiredInfo = [Object.assign(new ClarinLicenseRequiredInfo(), {
+  id: 0,
+  value: 'test rInfo',
+  name: 'test rName'
+})];
 
 export const mockExtendedLicenseLabel = Object.assign(new ClarinLicenseLabel(), {
   id: 1,
@@ -41,7 +48,7 @@ export const mockLicense = Object.assign(new ClarinLicense(), {
   name: 'test license',
   definition: 'test definition',
   confirmation: 0,
-  requiredInfo: 'test info',
+  requiredInfo: mockClarinRequiredInfo,
   clarinLicenseLabel: mockNonExtendedLicenseLabel,
   extendedClarinLicenseLabels: [mockExtendedLicenseLabel],
   bitstreams: 0,
@@ -51,6 +58,7 @@ export const mockLicense = Object.assign(new ClarinLicense(), {
     }
   }
 });
+
 
 export const mockLicenseRD$ = createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [mockLicense]));
 export const mockLicenseLabelListRD$ = createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(),
