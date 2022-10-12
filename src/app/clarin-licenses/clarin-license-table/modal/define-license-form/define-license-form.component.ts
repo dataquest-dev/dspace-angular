@@ -27,8 +27,7 @@ export class DefineLicenseFormComponent implements OnInit {
   constructor(
     public activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,
-    private clarinLicenseLabelService: ClarinLicenseLabelDataService,
-    private sanitizer: DomSanitizer
+    private clarinLicenseLabelService: ClarinLicenseLabelDataService
   ) {
   }
 
@@ -142,15 +141,6 @@ export class DefineLicenseFormComponent implements OnInit {
     this.requiredInfo.forEach(requiredInfo => {
       requiredInfoOptions.push(requiredInfo);
     });
-  }
-
-  /**
-   * Convert raw byte array to the image is not secure - this function make it secure
-   * @param imageByteArray as secure byte array
-   */
-  secureImageData(imageByteArray) {
-    const objectURL = 'data:image/png;base64,' + imageByteArray;
-    return this.sanitizer.bypassSecurityTrustUrl(objectURL);
   }
 
   /**

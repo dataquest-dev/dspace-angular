@@ -73,7 +73,8 @@ const DECLARATIONS = [
   VersionPageComponent,
   TombstoneComponent,
   ReplacedTombstoneComponent,
-  WithdrawnTombstoneComponent
+  WithdrawnTombstoneComponent,
+  ClarinLicenseInfoComponent
 ];
 
 @NgModule({
@@ -89,8 +90,7 @@ const DECLARATIONS = [
   ],
   declarations: [
     ...DECLARATIONS,
-    VersionedItemComponent,
-    ClarinLicenseInfoComponent
+    VersionedItemComponent
   ],
   exports: [
     ...DECLARATIONS
