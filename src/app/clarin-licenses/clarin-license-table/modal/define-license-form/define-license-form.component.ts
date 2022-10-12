@@ -3,16 +3,13 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClarinLicenseLabel } from '../../../../core/shared/clarin/clarin-license-label.model';
 import {
-  CLARIN_LICENSE_CONFIRMATION, CLARIN_LICENSE_FORM_REQUIRED_OPTIONS, CLARIN_LICENSE_REQUIRED_INFO,
-  ClarinLicenseRequiredInfo
+  CLARIN_LICENSE_CONFIRMATION, CLARIN_LICENSE_FORM_REQUIRED_OPTIONS
 } from '../../../../core/shared/clarin/clarin-license.resource-type';
 import { ClarinLicenseLabelDataService } from '../../../../core/data/clarin/clarin-license-label-data.service';
 import { getFirstSucceededRemoteListPayload } from '../../../../core/shared/operators';
 import { validateLicenseLabel } from './define-license-form-validator';
 import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
-import { DomSanitizer } from '@angular/platform-browser';
 import {isNull, isUndefined} from '../../../../shared/empty.util';
-import {source} from 'axe-core';
 
 /**
  * The component for defining and editing the Clarin License

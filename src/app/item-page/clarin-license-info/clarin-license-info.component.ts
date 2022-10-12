@@ -1,12 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Item} from '../../core/shared/item.model';
-import {ClarinLicenseLabelDataService} from '../../core/data/clarin/clarin-license-label-data.service';
 import {getFirstCompletedRemoteData} from '../../core/shared/operators';
 import {switchMap} from 'rxjs/operators';
 import {RemoteData} from '../../core/data/remote-data';
-import {ClarinLicenseLabel} from '../../core/shared/clarin/clarin-license-label.model';
 import {PaginatedList} from '../../core/data/paginated-list.model';
-import {ItemDataService} from '../../core/data/item-data.service';
 import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
 import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -19,9 +16,7 @@ import {secureImageData} from '../../shared/clarin-shared-util';
 })
 export class ClarinLicenseInfoComponent implements OnInit {
 
-  constructor(private clarinLicenseLabelService: ClarinLicenseLabelDataService,
-              private itemService: ItemDataService,
-              private sanitizer: DomSanitizer,
+  constructor(private sanitizer: DomSanitizer,
               private clarinLicenseService: ClarinLicenseDataService) { }
 
   /**
