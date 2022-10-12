@@ -10,6 +10,7 @@ import {ItemDataService} from '../../core/data/item-data.service';
 import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
 import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
 import {DomSanitizer} from '@angular/platform-browser';
+import {secureImageData} from '../../shared/clarin-shared-util';
 
 @Component({
   selector: 'ds-clarin-license-info',
@@ -39,6 +40,7 @@ export class ClarinLicenseInfoComponent implements OnInit {
   licenseLabelIcons: any[] = [];
 
   ngOnInit(): void {
+    // load license info from item attributes
     this.licenseLabel = this.item.metadata?.['dc.rights.label']?.[0]?.value;
     this.license = this.item.metadata?.['dc.rights']?.[0]?.value;
     this.licenseURI = this.item.metadata?.['dc.rights.uri']?.[0]?.value;
@@ -54,6 +56,7 @@ export class ClarinLicenseInfoComponent implements OnInit {
         break;
     }
 
+    // load license label icons
     const options = {
       searchParams: [
         {
@@ -74,13 +77,8 @@ export class ClarinLicenseInfoComponent implements OnInit {
         });
   }
 
-  /**
-   * Convert raw byte array to the image is not secure - this function make it secure
-   * @param imageByteArray as secure byte array
-   */
   secureImageData(imageByteArray) {
-    const objectURL = 'data:image/png;base64,' + imageByteArray;
-    return this.sanitizer.bypassSecurityTrustUrl(objectURL);
+    return secureImageData(this.sanitizer, imageByteArray);
   }
 }
 
