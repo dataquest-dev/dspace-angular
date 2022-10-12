@@ -3440,6 +3440,8 @@
 
   "search.filters.applied.f.withdrawn": "Withdrawn",
 
+  "search.filters.applied.f.rights": "Rights",
+
 
 
   "search.filters.filter.author.head": "Author",
@@ -3579,6 +3581,9 @@
   "search.filters.filter.submitter.placeholder": "Submitter",
 
   "search.filters.filter.submitter.label": "Search submitter",
+
+  "search.filters.filter.rights.head": "Rights",
+
 
 
 
