@@ -305,7 +305,6 @@ export class ClarinLicenseTableComponent implements OnInit {
    * @param clarinLicense
    */
   switchSelectedLicense(clarinLicense: ClarinLicense) {
-    console.log('sciwth', clarinLicense);
     if (isNull(clarinLicense)) {
       return;
     }
