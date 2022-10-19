@@ -21,7 +21,7 @@ import { MenuService } from '../../shared/menu/menu.service';
 import { CSSVariableService } from '../../shared/sass-helper/sass-helper.service';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 /**
  * Component representing the admin sidebar
@@ -307,7 +307,6 @@ export class AdminSidebarComponent extends MenuComponent implements OnInit {
           icon: 'terminal',
           index: 10
         },
-
         /* Handle table */
         {
           id: 'handle_table',
@@ -321,7 +320,6 @@ export class AdminSidebarComponent extends MenuComponent implements OnInit {
           icon: 'table',
           index: 12
         },
-
         /* License administration */
         {
           id: 'licenses',

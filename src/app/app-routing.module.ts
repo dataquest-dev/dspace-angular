@@ -16,7 +16,7 @@ import {
   LEGACY_BITSTREAM_MODULE_PATH, LICENSES_MODULE_PATH,
   PROFILE_MODULE_PATH,
   REGISTER_PATH,
-  REQUEST_COPY_MODULE_PATH, STATIC_PAGE_MODULE_PATH,
+  REQUEST_COPY_MODULE_PATH, CONTRACT_PAGE_MODULE_PATH,
   WORKFLOW_ITEM_MODULE_PATH,
 } from './app-routing-paths';
 import { COLLECTION_MODULE_PATH } from './collection-page/collection-page-routing-paths';
@@ -222,7 +222,7 @@ import {LicenseContractPageModule} from './license-contract-page/license-contrac
             canActivate: [SiteAdministratorGuard],
           },
           {
-            path: STATIC_PAGE_MODULE_PATH,
+            path: CONTRACT_PAGE_MODULE_PATH,
             loadChildren: () => import('./license-contract-page/license-contract-page.module')
               .then((m) => m.LicenseContractPageModule),
             canActivate: [EndUserAgreementCurrentUserGuard]

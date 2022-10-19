@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import {Site} from '../core/shared/site.model';
+import { Site } from '../core/shared/site.model';
 
 @Component({
   selector: 'ds-home-page',

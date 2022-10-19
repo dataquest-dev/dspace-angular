@@ -1,17 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LicenseContractPageComponent } from './license-contract-page.component';
-import {BrowserModule} from '@angular/platform-browser';
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {TranslateModule} from '@ngx-translate/core';
-import {FormComponent} from '../shared/form/form.component';
-import {SubmissionSectionLicenseComponent} from '../submission/sections/license/section-license.component';
-import {ActivatedRoute, Params} from '@angular/router';
-import {createSuccessfulRemoteDataObject$} from '../shared/remote-data.utils';
-import {CollectionDataService} from '../core/data/collection-data.service';
-import {ContentSource} from '../core/shared/content-source.model';
-import {Collection} from '../core/shared/collection.model';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
+import { CollectionDataService } from '../core/data/collection-data.service';
+import { Collection } from '../core/shared/collection.model';
+import { mockLicenseRD$ } from '../shared/testing/clarin-license-mock';
+import { take } from 'rxjs/operators';
+import { getFirstCompletedRemoteData } from '../core/shared/operators';
 
 describe('LicenseContractPageComponent', () => {
   let component: LicenseContractPageComponent;
@@ -33,7 +32,8 @@ describe('LicenseContractPageComponent', () => {
     _links: {
       self: {href: 'collection-selflink'},
       license: {href: 'license-link'}
-    }
+    },
+    license: mockLicenseRD$
   });
 
   routeStub = {
@@ -69,10 +69,27 @@ describe('LicenseContractPageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LicenseContractPageComponent);
     component = fixture.componentInstance;
-    // fixture.detectChanges();
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should load collectionRD$', () => {
+    collectionService.findById(collection.uuid)
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe(collectionRD$ => {
+        expect(component.collectionRD$.value).toEqual(collectionRD$);
+      });
+  });
+
+  it('should load licenseRD$', () => {
+    collection.license
+      .pipe(take(1))
+      .subscribe(licenseRD$ => {
+        expect(component.licenseRD$.value).toEqual(licenseRD$);
+      });
+  });
+
 });

@@ -197,7 +197,7 @@ export class SubmissionSectionLicenseComponent extends SectionModelComponent {
    * Method called when a form dfChange event is fired.
    * Dispatch form operations based on changes.
    */
-    onChange(event: DynamicFormControlEvent) {
+  onChange(event: DynamicFormControlEvent) {
     const path = this.formOperationsService.getFieldPathSegmentedFromChangeEvent(event);
     const value = this.formOperationsService.getFieldValueFromChangeEvent(event);
     if (value) {
