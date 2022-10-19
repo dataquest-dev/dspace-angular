@@ -54,6 +54,7 @@ describe('DefineLicenseFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DefineLicenseFormComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -61,15 +62,11 @@ describe('DefineLicenseFormComponent', () => {
   });
 
   it('should create clarinLicenseForm on init', () => {
-    (component as DefineLicenseFormComponent).ngOnInit();
     expect((component as any).clarinLicenseForm).not.toBeNull();
   });
 
   it('should load and assign extended and non extended clarin license labels options ' +
     'to the specific arrays on init',() => {
-    (component as DefineLicenseFormComponent).clarinLicenseLabelOptions = [];
-    (component as DefineLicenseFormComponent).extendedClarinLicenseLabelOptions = [];
-    (component as DefineLicenseFormComponent).ngOnInit();
     expect((component as any).clarinLicenseLabelOptions).not.toBeNull();
     expect((component as any).extendedClarinLicenseLabelOptions).not.toBeNull();
     expect((component as any).clarinLicenseLabelOptions?.length).toBe(1);
@@ -78,7 +75,6 @@ describe('DefineLicenseFormComponent', () => {
 
   it('after clicking on submit button the active modal should call close function ' +
     'with clarinLicenseForm values', () => {
-    (component as DefineLicenseFormComponent).ngOnInit();
     (component as DefineLicenseFormComponent).submitForm();
     expect((component as any).activeModal.close).toHaveBeenCalledWith(
       (component as DefineLicenseFormComponent).clarinLicenseForm.value);
