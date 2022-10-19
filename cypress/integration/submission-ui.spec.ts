@@ -2,26 +2,28 @@
  * This IT will be never be pushed to the upstream because clicking testing DOM elements is antipattern because
  * the tests on other machines could fail.
  */
+import {TEST_ADMIN_PASSWORD, TEST_ADMIN_USER, TEST_SUBMIT_COLLECTION_UUID,} from '../support';
 
-const CLARIN_DSPACE_PASSWORD = 'dspace';
-const CLARIN_DSPACE_EMAIL = 'dspacedemo+admin@gmail.com';
+// const CLARIN_DSPACE_PASSWORD = 'dspace';
+// const CLARIN_DSPACE_EMAIL = 'dspacedemo+admin@gmail.com';
 
 const collectionName = 'Col';
 const communityName = 'Com';
 
 export const loginProcess = {
-  clickOnLoginDropdown() {
-    cy.get('.navbar-container .dropdownLogin ').click();
-  },
-  typeEmail() {
-    cy.get('.navbar-container form input[type = "email"] ').type(CLARIN_DSPACE_EMAIL);
-  },
-  typePassword() {
-    cy.get('.navbar-container form input[type = "password"] ').type(CLARIN_DSPACE_PASSWORD);
-  },
-  submit() {
-    cy.get('.navbar-container form button[type = "submit"] ').click();
-  }
+  // clickOnLoginDropdown() {
+  //   cy.get('.navbar-container .dropdownLogin ').click();
+  // },
+  // typeEmail() {
+  //   cy.get('.navbar-container form input[type = "email"] ').type(CLARIN_DSPACE_EMAIL);
+  // },
+  // typePassword() {
+  //   cy.get('.navbar-container form input[type = "password"] ').type(CLARIN_DSPACE_PASSWORD);
+  // },
+  // submit() {
+  //   cy.get('.navbar-container form button[type = "submit"] ').click();
+  // }
+
 };
 
 const createCommunityProcess = {
@@ -151,32 +153,10 @@ describe('Create a new submission', () => {
   beforeEach(() => {
     cy.visit('/');
     // Login as admin
-    loginProcess.clickOnLoginDropdown();
-    loginProcess.typeEmail();
-    loginProcess.typePassword();
-    loginProcess.submit();
+    cy.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
 
-    // Create a new Community
-    sideBarMenu.clickOnNewButton();
-    sideBarMenu.clickOnNewCommunityButton();
-    createCommunityProcess.clickOnCreateTopLevelComunity();
-    createCommunityProcess.typeCommunityName();
-    createCommunityProcess.submit();
-
-    // Create a new Colletion
-    cy.visit('/');
-    sideBarMenu.clickOnNewButton();
-    sideBarMenu.clickOnNewCollectionButton();
-    createCollectionProcess.selectCommunity();
-    createCollectionProcess.typeCollectionName();
-    createCollectionProcess.submit();
-
-    // Create a new Item
-    cy.visit('/');
-    sideBarMenu.clickOnNewButton();
-    sideBarMenu.clickOnNewItemButton();
-    createItemProcess.typeCollectionName();
-    createItemProcess.selectCollection();
+    // Create a new submission
+    cy.visit('/submit?collection=' + TEST_SUBMIT_COLLECTION_UUID + '&entityType=none');
   });
 
   // Test openAIRE - configured more retries because it failed with 3 retries
@@ -286,6 +266,16 @@ describe('Create a new submission', () => {
     cy.reload();
     createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
   });
+
+  // it('should change the step status after accepting/declining the distribution license', {
+  //   retries: {
+  //     runMode: 6,
+  //     openMode: 6,
+  //   },
+  //   defaultCommandTimeout: 10000
+  // },() => {
+  //
+  // });
 });
 
 function addEUSponsor(euSponsorOrder) {
