@@ -1,10 +1,11 @@
 import {
+  TEST_ADMIN_PASSWORD,
+  TEST_ADMIN_USER, TEST_SUBMIT_COLLECTION_UUID,
   TEST_WITHDRAWN_AUTHORS,
   TEST_WITHDRAWN_ITEM,
   TEST_WITHDRAWN_ITEM_WITH_REASON, TEST_WITHDRAWN_ITEM_WITH_REASON_AND_AUTHORS, TEST_WITHDRAWN_REASON,
   TEST_WITHDRAWN_REPLACED_ITEM, TEST_WITHDRAWN_REPLACED_ITEM_WITH_AUTHORS, TEST_WITHDRAWN_REPLACEMENT
 } from '../support';
-import { loginProcess } from './submission-ui.spec';
 
 const ITEMPAGE_WITHDRAWN = '/items/' + TEST_WITHDRAWN_ITEM;
 const ITEMPAGE_WITHDRAWN_REASON = '/items/' + TEST_WITHDRAWN_ITEM_WITH_REASON;
@@ -62,10 +63,7 @@ describe('Admin Tombstone  Page', () => {
   beforeEach(() => {
     cy.visit('/');
     // Login as admin
-    loginProcess.clickOnLoginDropdown();
-    loginProcess.typeEmail();
-    loginProcess.typePassword();
-    loginProcess.submit();
+    cy.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
   });
 
   it('the admin should see ds-item-page',{

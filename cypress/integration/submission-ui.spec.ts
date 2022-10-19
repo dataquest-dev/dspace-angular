@@ -10,22 +10,6 @@ import {TEST_ADMIN_PASSWORD, TEST_ADMIN_USER, TEST_SUBMIT_COLLECTION_UUID,} from
 const collectionName = 'Col';
 const communityName = 'Com';
 
-export const loginProcess = {
-  // clickOnLoginDropdown() {
-  //   cy.get('.navbar-container .dropdownLogin ').click();
-  // },
-  // typeEmail() {
-  //   cy.get('.navbar-container form input[type = "email"] ').type(CLARIN_DSPACE_EMAIL);
-  // },
-  // typePassword() {
-  //   cy.get('.navbar-container form input[type = "password"] ').type(CLARIN_DSPACE_PASSWORD);
-  // },
-  // submit() {
-  //   cy.get('.navbar-container form button[type = "submit"] ').click();
-  // }
-
-};
-
 const createCommunityProcess = {
   clickOnCreateTopLevelComunity() {
     cy.get('.modal-body button').eq(0).click();
@@ -146,6 +130,45 @@ const createItemProcess = {
   clickAddMore(inputFieldOrder) {
     cy.get('#traditionalpageone form div[role = "group"] button[title = "Add more"]').eq(inputFieldOrder)
       .click({force: true});
+  },
+  checkDistributionLicenseStep() {
+    cy.get('ds-clarin-license-distribution').should('be.visible');
+  },
+  checkDistributionLicenseToggle() {
+    cy.get('ds-clarin-license-distribution ng-toggle').should('be.visible');
+  },
+  checkDistributionLicenseStatus(statusTitle: string) {
+    cy.get('div[id = "license-header"] button i[title = "' + statusTitle + '"]').should('be.visible');
+  },
+  clickOnDistributionLicenseToggle() {
+    cy.get('ds-clarin-license-distribution ng-toggle').click();
+  },
+  checkLicenseResourceStep() {
+    cy.get('ds-submission-section-clarin-license').should('be.visible');
+  },
+  clickOnLicenseSelectorButton() {
+    cy.get('ds-submission-section-clarin-license div[id = "aspect_submission_StepTransformer_item_"] button').click();
+  },
+  checkLicenseSelectorModal() {
+    cy.get('section[class = "license-selector is-active"]').should('be.visible');
+  },
+  pickUpLicenseFromLicenseSelector() {
+    cy.get('section[class = "license-selector is-active"] ul li').eq(0).dblclick();
+  },
+  checkLicenseSelectionValue(value: string) {
+    cy.get('ds-submission-section-clarin-license select[id = "aspect_submission_StepTransformer_field_license"]').contains(value);
+  },
+  selectValueFromLicenseSelection(option: string) {
+    cy.get('ds-submission-section-clarin-license select[id = "aspect_submission_StepTransformer_field_license"]').select(option);
+  },
+  checkResourceLicenseStatus(statusTitle: string) {
+    cy.get('div[id = "clarin-license-header"] button i[title = "' + statusTitle + '"]').should('be.visible');
+  },
+  showErrorMustChooseLicense() {
+    cy.get('div[id = "sectionGenericError_clarin-license"] ds-alert').contains('You must choose one of the resource licenses.');
+  },
+  showErrorNotSupportedLicense() {
+    cy.get('div[class = "form-group alert alert-danger in"]').contains('The selected license is not supported at the moment. Please follow the procedure described under section "None of these licenses suits your needs".');
   }
 };
 
@@ -267,15 +290,88 @@ describe('Create a new submission', () => {
     createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
   });
 
-  // it('should change the step status after accepting/declining the distribution license', {
-  //   retries: {
-  //     runMode: 6,
-  //     openMode: 6,
-  //   },
-  //   defaultCommandTimeout: 10000
-  // },() => {
-  //
-  // });
+  it('should change the step status after accepting/declining the distribution license', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+    defaultCommandTimeout: 10000
+  },() => {
+    createItemProcess.checkDistributionLicenseStep();
+    createItemProcess.checkDistributionLicenseToggle();
+    // default status value is warnings
+    createItemProcess.checkDistributionLicenseStatus('Warnings');
+    // accept the distribution license agreement
+    createItemProcess.clickOnDistributionLicenseToggle();
+    // after accepting the status should be valid
+    createItemProcess.checkDistributionLicenseStatus('Valid');
+    // click on the toggle again and status should be changed to `Warnings`
+    createItemProcess.clickOnDistributionLicenseToggle();
+    createItemProcess.checkDistributionLicenseStatus('Warnings');
+  });
+
+  it('should pick up the license from the license selector', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+    defaultCommandTimeout: 10000
+  },() => {
+    createItemProcess.checkLicenseResourceStep();
+    // check default value in the license dropdown selection
+    createItemProcess.checkLicenseSelectionValue('Select a License ...');
+    // pop up the license selector modal
+    createItemProcess.clickOnLicenseSelectorButton();
+    // check if the modal was popped up
+    createItemProcess.checkLicenseSelectorModal();
+    // pick up the first license from the modal, it is `Public Domain Mark (PD)`
+    createItemProcess.pickUpLicenseFromLicenseSelector();
+    // check if the picked up license value is seen as selected value in the selection
+    createItemProcess.checkLicenseSelectionValue('Public Domain Mark (PD)');
+  });
+
+  it('should select the license from the license selection dropdown and change status', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+    defaultCommandTimeout: 10000
+  },() => {
+    createItemProcess.checkLicenseResourceStep();
+    // check default value in the license dropdown selection
+    createItemProcess.checkLicenseSelectionValue('Select a License ...');
+    // check step status - it should be as warning
+    createItemProcess.checkResourceLicenseStatus('Warnings');
+    // select `Public Domain Mark (PD)` from the selection
+    createItemProcess.selectValueFromLicenseSelection('Public Domain Mark (PD)');
+    // selected value should be seen as selected value in the selection
+    createItemProcess.checkLicenseSelectionValue('Public Domain Mark (PD)');
+    // check step status - it should be valid
+    createItemProcess.checkResourceLicenseStatus('Valid');
+  });
+
+  it('should show warning messages if was selected non-supported license', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+    defaultCommandTimeout: 10000
+  },() => {
+    createItemProcess.checkLicenseResourceStep();
+    // check default value in the license dropdown selection
+    createItemProcess.checkLicenseSelectionValue('Select a License ...');
+    // check step status - it should be as warning
+    createItemProcess.checkResourceLicenseStatus('Warnings');
+    // select `Select a License ...` from the selection - this license is not supported
+    createItemProcess.selectValueFromLicenseSelection('Select a License ...');
+    // selected value should be seen as selected value in the selection
+    createItemProcess.checkLicenseSelectionValue('Select a License ...');
+    // check step status - it should an error
+    createItemProcess.checkResourceLicenseStatus('Errors');
+    // error messages should be popped up
+    createItemProcess.showErrorMustChooseLicense();
+    createItemProcess.showErrorNotSupportedLicense();
+  });
 });
 
 function addEUSponsor(euSponsorOrder) {
