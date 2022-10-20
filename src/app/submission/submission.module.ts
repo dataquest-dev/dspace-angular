@@ -80,7 +80,6 @@ const DECLARATIONS = [
   SubmissionImportExternalSearchbarComponent,
   SubmissionImportExternalPreviewComponent,
   SubmissionImportExternalCollectionComponent,
-  // NgToggleModule
 ];
 
 @NgModule({

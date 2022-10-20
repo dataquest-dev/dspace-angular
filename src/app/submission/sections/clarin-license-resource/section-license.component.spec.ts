@@ -3,13 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
-
-import {of, of as observableOf} from 'rxjs';
+import { of, of as observableOf } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { DynamicCheckboxModel, DynamicFormControlEvent, DynamicFormControlEventType } from '@ng-dynamic-forms/core';
-
-import {createSuccessfulRemoteDataObject, createSuccessfulRemoteDataObject$} from '../../../shared/remote-data.utils';
-import {createPaginatedList, createTestComponent} from '../../../shared/testing/utils.test';
+import { DynamicFormControlEvent, DynamicFormControlEventType } from '@ng-dynamic-forms/core';
+import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
+import { createTestComponent} from '../../../shared/testing/utils.test';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
 import { NotificationsServiceStub } from '../../../shared/testing/notifications-service.stub';
 import { SubmissionService } from '../../submission.service';
@@ -24,27 +22,23 @@ import { SubmissionFormsConfigService } from '../../../core/config/submission-fo
 import { SectionDataObject } from '../models/section-data.model';
 import { SectionsType } from '../sections-type';
 import {
-  mockLicenseParsedErrors,
   mockSubmissionCollectionId,
   mockSubmissionId
 } from '../../../shared/mocks/submission.mock';
 import { FormComponent } from '../../../shared/form/form.component';
-import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { SubmissionSectionClarinLicenseComponent } from './section-license.component';
 import { CollectionDataService } from '../../../core/data/collection-data.service';
 import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
 import { SectionFormOperationsService } from '../form/section-form-operations.service';
 import { Collection } from '../../../core/shared/collection.model';
 import { License } from '../../../core/shared/license.model';
-import { FormFieldMetadataValueObject } from '../../../shared/form/builder/models/form-field-metadata-value.model';
-import { cold } from 'jasmine-marbles';
-import {ClarinLicenseDataService} from '../../../core/data/clarin/clarin-license-data.service';
-import {ItemDataService} from '../../../core/data/item-data.service';
-import {WorkspaceitemDataService} from '../../../core/submission/workspaceitem-data.service';
-import {HALEndpointService} from '../../../core/shared/hal-endpoint.service';
-import {RemoteDataBuildService} from '../../../core/cache/builders/remote-data-build.service';
-import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
-import {RequestService} from '../../../core/data/request.service';
+import { ClarinLicenseDataService } from '../../../core/data/clarin/clarin-license-data.service';
+import { ItemDataService } from '../../../core/data/item-data.service';
+import { WorkspaceitemDataService } from '../../../core/submission/workspaceitem-data.service';
+import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
+import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
+import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
+import { RequestService } from '../../../core/data/request.service';
 
 const collectionId = mockSubmissionCollectionId;
 const licenseText = 'License text';
@@ -84,27 +78,9 @@ const sectionObject: SectionDataObject = {
   sectionType: SectionsType.License
 };
 
-const dynamicFormControlEvent: DynamicFormControlEvent = {
-  $event: new Event('change'),
-  context: null,
-  control: null,
-  group: null,
-  model: null,
-  type: DynamicFormControlEventType.Change
-};
-
 const helpDeskMail = 'test@mail.com';
 
 describe('ClarinSubmissionSectionLicenseComponent test suite', () => {
-
-  // let comp: SubmissionSectionClarinLicenseComponent;
-  // let compAsAny: any;
-  // let fixture: ComponentFixture<SubmissionSectionClarinLicenseComponent>;
-  // let submissionServiceStub: SubmissionServiceStub;
-  // let formService: any;
-  // let formOperationsService: any;
-  // let formBuilderService: any;
-
   const sectionsServiceStub: any = new SectionsServiceStub();
   const submissionId = mockSubmissionId;
 
@@ -138,9 +114,6 @@ describe('ClarinSubmissionSectionLicenseComponent test suite', () => {
   });
 
   const mockRdbService = jasmine.createSpyObj('RemoteDataBuildService', {
-    // buildList: cold('a', {
-    //   a: createSuccessfulRemoteDataObject(createPaginatedList([testObject]))
-    // })
     buildFromRequestUUID: jasmine.createSpy('buildFromRequestUUID')
   });
 
@@ -215,159 +188,9 @@ describe('ClarinSubmissionSectionLicenseComponent test suite', () => {
     });
 
     it('should create ClarinSubmissionSectionLicenseComponent', inject([SubmissionSectionClarinLicenseComponent], (app: SubmissionSectionClarinLicenseComponent) => {
-
       expect(app).toBeDefined();
-
     }));
   });
-
-  // describe('', () => {
-  //   beforeEach(() => {
-  //     fixture = TestBed.createComponent(SubmissionSectionClarinLicenseComponent);
-  //     comp = fixture.componentInstance;
-  //     compAsAny = comp;
-  //     submissionServiceStub = TestBed.inject(SubmissionService as any);
-  //     formService = TestBed.inject(FormService);
-  //     formBuilderService = TestBed.inject(FormBuilderService);
-  //     formOperationsService = TestBed.inject(SectionFormOperationsService);
-  //
-  //     compAsAny.pathCombiner = new JsonPatchOperationPathCombiner('sections', sectionObject.id);
-  //
-  //   });
-  //
-  //   afterEach(() => {
-  //     fixture.destroy();
-  //     comp = null;
-  //     compAsAny = null;
-  //   });
-  //
-  //   describe('', () => {
-  //     beforeEach(() => {
-  //       mockCollectionDataService.findById.and.returnValue(createSuccessfulRemoteDataObject$(mockCollection));
-  //       sectionsServiceStub.getSectionErrors.and.returnValue(observableOf([]));
-  //       sectionsServiceStub.isSectionReadOnly.and.returnValue(observableOf(false));
-  //     });
-  //
-  //     it('should init section properly', () => {
-  //
-  //       spyOn(compAsAny, 'getSectionStatus');
-  //
-  //       comp.onSectionInit();
-  //
-  //       const model = formBuilderService.findById('granted', comp.formModel);
-  //
-  //       expect(compAsAny.subs.length).toBe(2);
-  //       expect(comp.formModel).toBeDefined();
-  //       expect(model.value).toBeFalsy();
-  //       expect(comp.licenseText$).toBeObservable(cold('(ab|)', {
-  //         a: '',
-  //         b: licenseText
-  //       }));
-  //     });
-  //
-  //     it('should set checkbox value to true', () => {
-  //       comp.sectionData.data = {
-  //         url: 'url',
-  //         acceptanceDate: Date.now(),
-  //         granted: true
-  //       } as any;
-  //
-  //       spyOn(compAsAny, 'getSectionStatus');
-  //
-  //       comp.onSectionInit();
-  //
-  //       const model = formBuilderService.findById('granted', comp.formModel);
-  //
-  //       expect(compAsAny.subs.length).toBe(2);
-  //       expect(comp.formModel).toBeDefined();
-  //       expect(model.value).toBeTruthy();
-  //       expect(comp.licenseText$).toBeObservable(cold('(ab|)', {
-  //         a: '',
-  //         b: licenseText
-  //       }));
-  //     });
-  //
-  //     it('should have status true when checkbox is selected', () => {
-  //       fixture.detectChanges();
-  //       const model = formBuilderService.findById('granted', comp.formModel);
-  //
-  //       (model as DynamicCheckboxModel).value = true;
-  //
-  //       compAsAny.getSectionStatus().subscribe((status) => {
-  //         expect(status).toBeTruthy();
-  //       });
-  //     });
-  //
-  //     it('should have status false when checkbox is not selected', () => {
-  //       fixture.detectChanges();
-  //       const model = formBuilderService.findById('granted', comp.formModel);
-  //
-  //       compAsAny.getSectionStatus().subscribe((status) => {
-  //         expect(status).toBeFalsy();
-  //       });
-  //
-  //       (model as DynamicCheckboxModel).value = false;
-  //     });
-  //
-  //   });
-
-    // describe('', () => {
-    //   beforeEach(() => {
-    //     mockCollectionDataService.findById.and.returnValue(createSuccessfulRemoteDataObject$(mockCollection));
-    //     sectionsServiceStub.getSectionErrors.and.returnValue(observableOf(mockLicenseParsedErrors.license));
-    //     sectionsServiceStub.isSectionReadOnly.and.returnValue(observableOf(false));
-    //   });
-    //
-    //   it('should set section errors properly', () => {
-    //     comp.onSectionInit();
-    //     const expectedErrors = mockLicenseParsedErrors.license;
-    //
-    //     expect(sectionsServiceStub.checkSectionErrors).toHaveBeenCalled();
-    //     expect(comp.sectionData.errors).toEqual(expectedErrors);
-    //
-    //   });
-    //
-    //   it('should remove any section\'s errors when checkbox is selected', () => {
-    //     comp.sectionData.data = {
-    //       url: 'url',
-    //       acceptanceDate: Date.now(),
-    //       granted: true
-    //     } as any;
-    //
-    //     comp.onSectionInit();
-    //
-    //     expect(sectionsServiceStub.dispatchRemoveSectionErrors).toHaveBeenCalled();
-    //
-    //   });
-    // });
-
-    // describe('', () => {
-    //   let event;
-    //   beforeEach(() => {
-    //     event = dynamicFormControlEvent;
-    //     formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('granted');
-    //   });
-    //
-    //   it('should dispatch a json-path add operation when checkbox is selected', () => {
-    //
-    //     formOperationsService.getFieldValueFromChangeEvent.and.returnValue(new FormFieldMetadataValueObject(true));
-    //
-    //     comp.onChange(event);
-    //
-    //     expect(jsonPatchOpBuilder.add).toHaveBeenCalledWith(pathCombiner.getPath('granted'), 'true', false, true);
-    //     expect(sectionsServiceStub.dispatchRemoveSectionErrors).toHaveBeenCalled();
-    //   });
-    //
-    //   it('should dispatch a json-path remove operation when checkbox is not selected', () => {
-    //
-    //     formOperationsService.getFieldValueFromChangeEvent.and.returnValue(null);
-    //
-    //     comp.onChange(event);
-    //
-    //     expect(jsonPatchOpBuilder.remove).toHaveBeenCalledWith(pathCombiner.getPath('granted'));
-    //   });
-    // });
-  // });
 });
 
 // declare a test component

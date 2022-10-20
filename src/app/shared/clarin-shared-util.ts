@@ -1,4 +1,4 @@
-import {DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
 /**
  * Convert raw byte array to the image is not secure - this function make it secure

@@ -19,5 +19,4 @@ export class CharToEndPipe implements PipeTransform {
     }
     return value;
   }
-
 }

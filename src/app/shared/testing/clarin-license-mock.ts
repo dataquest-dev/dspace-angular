@@ -3,7 +3,7 @@ import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
 import { buildPaginatedList } from '../../core/data/paginated-list.model';
 import { PageInfo } from '../../core/shared/page-info.model';
-import {ClarinLicenseRequiredInfo} from '../../core/shared/clarin/clarin-license.resource-type';
+import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
 
 /**
  * The mocked Clarin License and Clarin License Label objects for testing.

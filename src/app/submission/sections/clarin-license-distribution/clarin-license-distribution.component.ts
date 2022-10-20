@@ -1,36 +1,35 @@
-import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
-import {SubmissionSectionLicenseComponent} from '../license/section-license.component';
-import {renderSectionFor} from '../sections-decorator';
-import {SectionsType} from '../sections-type';
-import {CollectionDataService} from '../../../core/data/collection-data.service';
-import {FormBuilderService} from '../../../shared/form/builder/form-builder.service';
-import {SectionFormOperationsService} from '../form/section-form-operations.service';
-import {FormService} from '../../../shared/form/form.service';
-import {JsonPatchOperationsBuilder} from '../../../core/json-patch/builder/json-patch-operations-builder';
-import {SectionsService} from '../sections.service';
-import {SubmissionService} from '../../submission.service';
-import {SectionDataObject} from '../models/section-data.model';
-import {TranslateService} from '@ngx-translate/core';
-import {HELP_DESK_PROPERTY} from '../../../item-page/tombstone/tombstone.component';
-import {Observable, of} from 'rxjs';
-import {RemoteData} from '../../../core/data/remote-data';
-import {ConfigurationProperty} from '../../../core/shared/configuration-property.model';
-import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
-import {DynamicCheckboxModel, DynamicFormControlEvent} from '@ng-dynamic-forms/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { SubmissionSectionLicenseComponent } from '../license/section-license.component';
+import { renderSectionFor } from '../sections-decorator';
+import { SectionsType } from '../sections-type';
+import { CollectionDataService } from '../../../core/data/collection-data.service';
+import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
+import { SectionFormOperationsService } from '../form/section-form-operations.service';
+import { FormService } from '../../../shared/form/form.service';
+import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
+import { SectionsService } from '../sections.service';
+import { SubmissionService } from '../../submission.service';
+import { SectionDataObject } from '../models/section-data.model';
+import { TranslateService } from '@ngx-translate/core';
+import { HELP_DESK_PROPERTY } from '../../../item-page/tombstone/tombstone.component';
+import { Observable, of } from 'rxjs';
+import { RemoteData } from '../../../core/data/remote-data';
+import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
+import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
+import { DynamicCheckboxModel } from '@ng-dynamic-forms/core';
 import {
   JsonPatchOperationPathCombiner,
   JsonPatchOperationPathObject
 } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
-import {SECTION_LICENSE_FORM_MODEL} from '../license/section-license.model';
-import {WorkspaceitemSectionLicenseObject} from '../../../core/submission/models/workspaceitem-section-license.model';
-import {followLink} from '../../../shared/utils/follow-link-config.model';
-import {distinctUntilChanged, filter, find, map, mergeMap, startWith, take} from 'rxjs/operators';
-import {Collection} from '../../../core/shared/collection.model';
-import {isNotEmpty, isNotNull, isNotUndefined, isNull} from '../../../shared/empty.util';
-import {License} from '../../../core/shared/license.model';
-import {getLicenseContractPagePath} from '../../../app-routing-paths';
-import {ActivatedRoute} from '@angular/router';
+import { SECTION_LICENSE_FORM_MODEL } from '../license/section-license.model';
+import { WorkspaceitemSectionLicenseObject } from '../../../core/submission/models/workspaceitem-section-license.model';
+import { distinctUntilChanged, filter, take } from 'rxjs/operators';
+import { isNotEmpty, isNotNull, isNotUndefined, isNull } from '../../../shared/empty.util';
+import { getLicenseContractPagePath } from '../../../app-routing-paths';
 
+/**
+ * This component render Distribution Step License in the submission workflow.
+ */
 @Component({
   selector: 'ds-clarin-license-distribution',
   templateUrl: './clarin-license-distribution.component.html',
@@ -65,6 +64,9 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
       injectedSubmissionId);
   }
 
+  /**
+   * Acceptation toggle object.
+   */
   toggleAcceptation: LicenseAcceptButton;
 
   /**
@@ -72,8 +74,14 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
    */
   helpDesk$: Observable<RemoteData<ConfigurationProperty>>;
 
+  /**
+   * Full Distribution License content is on another page.
+   */
   contractRoutingPath = '';
 
+  /**
+   * Some operations do only in init.
+   */
   isInit = false;
 
   onSectionInit(): void {
@@ -148,6 +156,9 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
     this.helpDesk$ = this.configurationDataService.findByPropertyName(HELP_DESK_PROPERTY);
   }
 
+  /**
+   * If the user click on the toggle that means initialization has ended.
+   */
   changeToNotInit() {
     if (this.isInit) {
       this.isInit = false;
@@ -197,6 +208,9 @@ export class SubmissionSectionClarinLicenseDistributionComponent extends Submiss
 }
 
 
+/**
+ * Toggle button must contains certain attributes.
+ */
 interface LicenseAcceptButton {
   handleColor: string|null;
   handleOnColor: string|null;

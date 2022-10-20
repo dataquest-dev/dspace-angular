@@ -1,8 +1,4 @@
 @import "ufal-theme.css";
-@import "bootstrap.css";
-@import "repository.css";
-@import "bootstrap-theme.css";
-@import "base.css";
 
 .container {
   max-width: none;
@@ -40,13 +36,3 @@
   box-shadow: none;
   background-image: none;
 }
-
-
-// might help with alighing license selector button and target icon
-
-//#text-of-distr-agr {
-//  min-height: 72px;
-//}
-//#second-text-of-distr-agr {
-//  align-content: center;
-//}

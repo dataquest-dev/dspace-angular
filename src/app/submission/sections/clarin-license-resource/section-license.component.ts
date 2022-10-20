@@ -1,68 +1,46 @@
-import {ChangeDetectorRef, Component, ElementRef, Inject, NgZone, OnInit, ViewChild} from '@angular/core';
-import {DynamicFormControlEvent, DynamicFormControlModel, DynamicFormLayout} from '@ng-dynamic-forms/core';
-
-import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, of, Subscription} from 'rxjs';
-import {CollectionDataService} from '../../../core/data/collection-data.service';
+import { ChangeDetectorRef, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { DynamicFormControlModel, DynamicFormLayout } from '@ng-dynamic-forms/core';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import {
   JsonPatchOperationPathCombiner,
-  JsonPatchOperationPathObject
 } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
-import {JsonPatchOperationsBuilder} from '../../../core/json-patch/builder/json-patch-operations-builder';
-import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined, isUndefined} from '../../../shared/empty.util';
-import {FormBuilderService} from '../../../shared/form/builder/form-builder.service';
-import {FormService} from '../../../shared/form/form.service';
-import {SubmissionService} from '../../submission.service';
-import {SectionFormOperationsService} from '../form/section-form-operations.service';
-import {SectionDataObject} from '../models/section-data.model';
-import {SectionModelComponent} from '../models/section.model';
-import {renderSectionFor} from '../sections-decorator';
-import {SectionsType} from '../sections-type';
-import {SectionsService} from '../sections.service';
-import {SECTION_LICENSE_FORM_LAYOUT} from './section-license.model';
-import {RequestService} from '../../../core/data/request.service';
-import {PatchRequest} from '../../../core/data/request.models';
-import {Operation} from 'fast-json-patch';
-import {ClarinLicenseDataService} from '../../../core/data/clarin/clarin-license-data.service';
-import {ClarinLicense} from '../../../core/shared/clarin/clarin-license.model';
-import {getFirstCompletedRemoteData} from '../../../core/shared/operators';
-import {distinctUntilChanged, filter, find, map} from 'rxjs/operators';
-import {HALEndpointService} from '../../../core/shared/hal-endpoint.service';
-import {RemoteDataBuildService} from '../../../core/cache/builders/remote-data-build.service';
-import {WorkspaceitemDataService} from '../../../core/submission/workspaceitem-data.service';
-import {RemoteData} from '../../../core/data/remote-data';
+import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
+import { hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined, isUndefined } from '../../../shared/empty.util';
+import { FormService } from '../../../shared/form/form.service';
+import { SectionDataObject } from '../models/section-data.model';
+import { SectionModelComponent } from '../models/section.model';
+import { renderSectionFor } from '../sections-decorator';
+import { SectionsType } from '../sections-type';
+import { SectionsService } from '../sections.service';
+import { RequestService } from '../../../core/data/request.service';
+import { PatchRequest } from '../../../core/data/request.models';
+import { Operation } from 'fast-json-patch';
+import { ClarinLicenseDataService } from '../../../core/data/clarin/clarin-license-data.service';
+import { ClarinLicense } from '../../../core/shared/clarin/clarin-license.model';
+import { getFirstCompletedRemoteData } from '../../../core/shared/operators';
+import { distinctUntilChanged, filter, find } from 'rxjs/operators';
+import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
+import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
+import { WorkspaceitemDataService } from '../../../core/submission/workspaceitem-data.service';
+import { RemoteData } from '../../../core/data/remote-data';
 import parseSectionErrors from '../../utils/parseSectionErrors';
-import {normalizeSectionData} from '../../../core/submission/submission-response-parsing.service';
+import { normalizeSectionData } from '../../../core/submission/submission-response-parsing.service';
 import licenseDefinitions from './license-definitions.json';
-import {License4Selector} from './license-4-selector.model';
-import {ConfigurationProperty} from '../../../core/shared/configuration-property.model';
-import {HELP_DESK_PROPERTY} from '../../../item-page/tombstone/tombstone.component';
-import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
-import {WorkspaceItem} from '../../../core/submission/models/workspaceitem.model';
-import {PaginatedList} from '../../../core/data/paginated-list.model';
-import {SubmissionSectionError} from '../../objects/submission-objects.reducer';
-import {hasFailed} from '../../../core/data/request.reducer';
-import {ItemDataService} from '../../../core/data/item-data.service';
-import {Item} from '../../../core/shared/item.model';
-import {MetadataValue} from '../../../core/shared/metadata.models';
-import {TranslateService} from '@ngx-translate/core';
-
-interface LicenseAcceptButton {
-  handleColor: string|null;
-  handleOnColor: string|null;
-  handleOffColor: string|null;
-  onColor: string;
-  offColor: string;
-  onText: string;
-  offText: string;
-  disabled: boolean;
-  size: 'sm' | 'lg' | '';
-  value: boolean;
-}
+import { License4Selector } from './license-4-selector.model';
+import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
+import { HELP_DESK_PROPERTY } from '../../../item-page/tombstone/tombstone.component';
+import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
+import { WorkspaceItem } from '../../../core/submission/models/workspaceitem.model';
+import { PaginatedList } from '../../../core/data/paginated-list.model';
+import { hasFailed } from '../../../core/data/request.reducer';
+import { ItemDataService } from '../../../core/data/item-data.service';
+import { Item } from '../../../core/shared/item.model';
+import { MetadataValue } from '../../../core/shared/metadata.models';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
- * This component represents a section that contains the submission license form.
+ * This component render resource license step in the submission workflow.
  */
-
 @Component({
   selector: 'ds-submission-section-clarin-license',
   styleUrls: ['./section-license.component.scss'],
@@ -71,23 +49,39 @@ interface LicenseAcceptButton {
 @renderSectionFor(SectionsType.clarinLicense)
 export class SubmissionSectionClarinLicenseComponent extends SectionModelComponent {
 
-  couldShowValidationErrors = false;
-
+  /**
+   * The license selection dropdown reference.
+   */
   @ViewChild('licenseSelection') licenseSelectionRef: ElementRef;
+
+  /**
+   * Sometimes do not show validation errors e.g. on Init.
+   */
+  couldShowValidationErrors = false;
 
   /**
    * The mail for the help desk is loaded from the server.
    */
   helpDesk$: Observable<RemoteData<ConfigurationProperty>>;
 
+  /**
+   * Current selected license name.
+   */
   selectedLicenseName = '';
 
-  private status = false;
+  /**
+   * Actual step status.
+   */
+  status = false;
 
-  toggleAcceptation: LicenseAcceptButton;
-
+  /**
+   * Message that selected license is not supported.
+   */
   unsupportedLicenseMsgHidden = new BehaviorSubject<boolean>(true);
 
+  /**
+   * Licenses loaded from the license-definitions.json and mapped to the object list.
+   */
   licenses4Selector: License4Selector[] = [];
 
   /**
@@ -103,22 +97,10 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   public formModel: DynamicFormControlModel[];
 
   /**
-   * The [[DynamicFormLayout]] object
-   * @type {DynamicFormLayout}
-   */
-  public formLayout: DynamicFormLayout = SECTION_LICENSE_FORM_LAYOUT;
-
-  /**
    * A boolean representing if to show form submit and cancel buttons
    * @type {boolean}
    */
   public displaySubmit = false;
-
-  /**
-   * The submission license text
-   * @type {Array}
-   */
-  public licenseText$: Observable<string>;
 
   /**
    * The [[JsonPatchOperationPathCombiner]] object
@@ -131,11 +113,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * @type {Array}
    */
   protected subs: Subscription[] = [];
-
-
-  /**
-   * The FormComponent reference
-   */
 
   /**
    * Initialize instance variables
@@ -176,19 +153,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
 
   ngOnInit() {
     super.ngOnInit();
-    this.toggleAcceptation = {
-      handleColor: 'dark',
-      handleOnColor: 'danger',
-      handleOffColor: 'info',
-      onColor: 'success',
-      offColor: 'danger',
-      onText: this.translateService.instant('submission.sections.clarin-license.toggle.on-text'),
-      offText: this.translateService.instant('submission.sections.clarin-license.toggle.off-text'),
-      disabled: false,
-      size: 'sm',
-      value: false
-    };
-
     this.helpDesk$ = this.configurationDataService.findByPropertyName(HELP_DESK_PROPERTY);
     // initialize licenses for license selector
     this.loadLicenses4Selector();
@@ -203,23 +167,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       .forEach((subscription) => subscription.unsubscribe());
   }
 
-  loadLicenses4Selector() {
-    licenseDefinitions.forEach((license4Selector: License4Selector) => {
-      this.licenses4Selector.push(license4Selector);
-    });
-  }
-
-  private initializeLicenseFromMetadata(dcRightsMetadata: MetadataValue[]) {
-    if (isEmpty(dcRightsMetadata)) {
-      return;
-    }
-
-    const dcRightsValue = dcRightsMetadata[0].value;
-    this.selectLicenseOnInit(dcRightsValue)
-      .then(() => this.updateSectionStatus())
-      .catch(err => console.error(err));
-  }
-
   /**
    * Initialize all instance variables and retrieve submission license
    */
@@ -230,7 +177,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     // Load the accepted license of the item
     this.getActualWorkspaceItem()
       .then((workspaceItemRD: RemoteData<WorkspaceItem>) => {
-        console.log('workspaceItemRD', workspaceItemRD);
         this.itemService.findByHref(workspaceItemRD.payload._links.item.href)
           .pipe(getFirstCompletedRemoteData())
           .subscribe((itemRD: RemoteData<Item>) => {
@@ -240,7 +186,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
             if (isUndefined(dcRightsMetadata)) {
               return;
             }
-
             this.initializeLicenseFromMetadata(dcRightsMetadata);
           });
       });
@@ -277,22 +222,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     );
   }
 
-  onToggleChange(event: DynamicFormControlEvent) {
-    // const path = this.formOperationsService.getFieldPathSegmentedFromChangeEvent(event);
-    const path = '/sections/license/granted';
-    if (this.toggleAcceptation.value) {
-      const pathObj = this.pathCombiner.getPath(path);
-      pathObj.path = path;
-      this.operationsBuilder.add(pathObj, String(this.toggleAcceptation.value), false, true);
-      // Remove any section's errors
-      this.sectionService.dispatchRemoveSectionErrors(this.submissionId, this.sectionData.id);
-    } else {
-      const pathObj = this.pathCombiner.getPath(path);
-      pathObj.path = path;
-      this.operationsBuilder.remove(pathObj);
-    }
-    console.log('changed toggle to: ' + this.toggleAcceptation.value);
-  }
   /**
    * Method called when a form dfChange event is fired.
    * Dispatch form operations based on changes.
@@ -302,21 +231,9 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     await this.maintainLicenseSelection();
   }
 
-  setToggleAcceptation() {
-    console.log('setting toogle');
-    this.toggleAcceptation.value = true;
-  }
-
-  async selectLicenseOnInit(licenseName) {
-    if (isEmpty(licenseName)) {
-      this.selectedLicenseName = '';
-    } else {
-      this.selectedLicenseName = licenseName;
-    }
-
-    this.setLicenseNameForRef(this.selectedLicenseName);
-  }
-
+  /**
+   * Select license by the license Id.
+   */
   async selectLicense(selectedLicenseId) {
     if (isEmpty(selectedLicenseId)) {
       this.selectedLicenseName = '';
@@ -327,58 +244,15 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     await this.maintainLicenseSelection();
   }
 
-  async maintainLicenseSelection() {
-
-    this.isLicenseSupported(this.selectedLicenseName)
-      .then(isSupported => {
-        // the user has chosen first supported license so the validation errors could be showed
-        if (!this.couldShowValidationErrors) {
-          this.couldShowValidationErrors = true;
-        }
-        this.unsupportedLicenseMsgHidden.next(isSupported);
-
-        let selectedLicenseName = '';
-        if (isSupported) {
-          selectedLicenseName = this.selectedLicenseName;
-        }
-        this.sendRequest(selectedLicenseName);
-      });
-  }
-
-  async findClarinLicenseByName(licenseName): Promise<RemoteData<PaginatedList<ClarinLicense>>> {
-    const options = {
-      searchParams: [
-        {
-          fieldName: 'name',
-          fieldValue: licenseName
-        }
-      ]
-    };
-    return this.clarinLicenseService.searchBy('byName', options, false)
-      .pipe(getFirstCompletedRemoteData()).toPromise();
-  }
-
-  async isLicenseSupported(licenseName) {
-    let supported = true;
-    await this.findClarinLicenseByName(licenseName)
-      .then((response: RemoteData<PaginatedList<ClarinLicense>>) => {
-        if (hasFailed(response?.state) || response?.payload?.page?.length === 0) {
-          supported = false;
-        } else {
-          supported = true;
-        }
-    });
-    return supported;
-  }
-
+  /**
+   * Send Replace request to the API with the selected license name and update the section status.
+   * @param licenseNameRest
+   */
   async sendRequest(licenseNameRest) {
     // Do not send request in initialization because the validation errors will be seen.
     if (!this.couldShowValidationErrors) {
       return;
     }
-
-    // send license definition value only if the acceptation toggle is true
-    // this.updateSectionStatus();
 
     this.updateSectionStatus();
     await this.getActualWorkspaceItem()
@@ -423,11 +297,130 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       });
   }
 
+  /**
+   * Pop up the License Selector.
+   */
   clickLicense() {
     document.getElementById('license-text').click();
   }
 
-  getLicenseNameById(selectionLicenseId) {
+  /**
+   * Get section status
+   *
+   * @return Observable<boolean>
+   *     the section status
+   */
+  protected getSectionStatus(): Observable<boolean> {
+    if (isEmpty(this.selectedLicenseName)) {
+      this.status = null;
+    } else if (isEmpty(this.sectionData.errorsToShow)) {
+      this.status = true;
+    } else {
+      this.status = false;
+    }
+
+    return of(this.status);
+  }
+
+  /**
+   * The Item has resource license name in the metadata `dc.rights`, load this metadata value and select the license
+   * with this value.
+   */
+  private initializeLicenseFromMetadata(dcRightsMetadata: MetadataValue[]) {
+    if (isEmpty(dcRightsMetadata)) {
+      return;
+    }
+
+    const dcRightsValue = dcRightsMetadata[0].value;
+    this.selectLicenseOnInit(dcRightsValue)
+      .then(() => this.updateSectionStatus())
+      .catch(err => console.error(err));
+  }
+
+  /**
+   * Select the license by `licenseName` value.
+   * @param licenseName loaded from the `dc.rights` item metaddata
+   */
+  private async selectLicenseOnInit(licenseName) {
+    if (isEmpty(licenseName)) {
+      this.selectedLicenseName = '';
+    } else {
+      this.selectedLicenseName = licenseName;
+    }
+
+    this.setLicenseNameForRef(this.selectedLicenseName);
+  }
+
+  /**
+   * Select the license in the license selection dropdown/
+   */
+  private setLicenseNameForRef(licenseName) {
+    const licenseId = this.getLicenseIdByName(licenseName);
+    // @ts-ignore
+    document.getElementById('aspect_submission_StepTransformer_field_license').value = licenseId;
+    document.getElementById('secret-change-button').click();
+  }
+
+  /**
+   * Send request to the API for updating the selection or show error message that the selected license
+   * is not supported.
+   * @private
+   */
+  private async maintainLicenseSelection() {
+    this.isLicenseSupported(this.selectedLicenseName)
+      .then(isSupported => {
+        // the user has chosen first supported license so the validation errors could be showed
+        if (!this.couldShowValidationErrors) {
+          this.couldShowValidationErrors = true;
+        }
+        this.unsupportedLicenseMsgHidden.next(isSupported);
+
+        let selectedLicenseName = '';
+        if (isSupported) {
+          selectedLicenseName = this.selectedLicenseName;
+        }
+        this.sendRequest(selectedLicenseName);
+      });
+  }
+
+  /**
+   * Get the license object from the API by the license name.
+   */
+  private async findClarinLicenseByName(licenseName): Promise<RemoteData<PaginatedList<ClarinLicense>>> {
+    const options = {
+      searchParams: [
+        {
+          fieldName: 'name',
+          fieldValue: licenseName
+        }
+      ]
+    };
+    return this.clarinLicenseService.searchBy('byName', options, false)
+      .pipe(getFirstCompletedRemoteData()).toPromise();
+  }
+
+  /**
+   * Check if the selected license is supported by CLARIN/DSpace, because not every license from the license
+   * selector must be supported by the CLARIN/DSpace.
+   * @param licenseName selected license name.
+   */
+  private async isLicenseSupported(licenseName) {
+    let supported = true;
+    await this.findClarinLicenseByName(licenseName)
+      .then((response: RemoteData<PaginatedList<ClarinLicense>>) => {
+        if (hasFailed(response?.state) || response?.payload?.page?.length === 0) {
+          supported = false;
+        } else {
+          supported = true;
+        }
+      });
+    return supported;
+  }
+
+  /**
+   * From the license object list get whole object by the Id.
+   */
+  private getLicenseNameById(selectionLicenseId) {
     let licenseName = '';
     this.licenses4Selector.forEach(license4Selector => {
       if (String(license4Selector.id) === selectionLicenseId) {
@@ -438,7 +431,10 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     return licenseName;
   }
 
-  getLicenseIdByName(selectionLicenseName) {
+  /**
+   * From the license object list get whole object by the Id.
+   */
+  private getLicenseIdByName(selectionLicenseName) {
     let licenseId = -1;
     this.licenses4Selector.forEach(license4Selector => {
       if (license4Selector.name === selectionLicenseName) {
@@ -449,19 +445,18 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     return licenseId;
   }
 
-  async getActualWorkspaceItem(): Promise<RemoteData<WorkspaceItem>> {
+  /**
+   * Get the current workspace item by the submissionId.
+   */
+  private async getActualWorkspaceItem(): Promise<RemoteData<WorkspaceItem>> {
     return this.workspaceItemService.findById(this.submissionId)
       .pipe(getFirstCompletedRemoteData()).toPromise();
   }
 
-  setLicenseNameForRef(licenseName) {
-    const licenseId = this.getLicenseIdByName(licenseName);
-    // @ts-ignore
-    document.getElementById('aspect_submission_StepTransformer_field_license').value = licenseId;
-    document.getElementById('secret-change-button').click();
-  }
-
-  getLicenseNameFromRef() {
+  /**
+   * Load selected value from the license selection dropdown reference.
+   */
+  private getLicenseNameFromRef() {
     let selectedLicenseId: string;
     if (isUndefined(this.licenseSelectionRef)) {
       return;
@@ -488,20 +483,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   }
 
   /**
-   * Get section status
-   *
-   * @return Observable<boolean>
-   *     the section status
+   * Map licenses from `license-definitions.json` to the object list.
    */
-  protected getSectionStatus(): Observable<boolean> {
-    if (isEmpty(this.selectedLicenseName)) {
-      this.status = null;
-    } else if (isEmpty(this.sectionData.errorsToShow)) {
-      this.status = true;
-    } else {
-      this.status = false;
-    }
-
-    return of(this.status);
+  private loadLicenses4Selector() {
+    licenseDefinitions.forEach((license4Selector: License4Selector) => {
+      this.licenses4Selector.push(license4Selector);
+    });
   }
 }

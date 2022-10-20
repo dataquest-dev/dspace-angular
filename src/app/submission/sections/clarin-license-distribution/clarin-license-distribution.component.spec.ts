@@ -1,40 +1,34 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SubmissionSectionClarinLicenseDistributionComponent } from './clarin-license-distribution.component';
-import {BrowserModule} from '@angular/platform-browser';
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {TranslateModule} from '@ngx-translate/core';
-import {LicenseContractPageComponent} from '../../../license-contract-page/license-contract-page.component';
-import {ActivatedRoute, Params} from '@angular/router';
-import {CollectionDataService} from '../../../core/data/collection-data.service';
-import {Collection} from '../../../core/shared/collection.model';
-import {createSuccessfulRemoteDataObject$} from '../../../shared/remote-data.utils';
-import {FormComponent} from '../../../shared/form/form.component';
-import {SubmissionSectionLicenseComponent} from '../license/section-license.component';
-import {SectionFormOperationsService} from '../form/section-form-operations.service';
-import {getMockFormOperationsService} from '../../../shared/mocks/form-operations-service.mock';
-import {FormService} from '../../../shared/form/form.service';
-import {getMockFormService} from '../../../shared/mocks/form-service.mock';
-import {JsonPatchOperationsBuilder} from '../../../core/json-patch/builder/json-patch-operations-builder';
-import {SubmissionFormsConfigService} from '../../../core/config/submission-forms-config.service';
-import {NotificationsService} from '../../../shared/notifications/notifications.service';
-import {NotificationsServiceStub} from '../../../shared/testing/notifications-service.stub';
-import {SectionsService} from '../sections.service';
-import {SubmissionService} from '../../submission.service';
-import {SubmissionServiceStub} from '../../../shared/testing/submission-service.stub';
-import {ChangeDetectorRef, Component, NO_ERRORS_SCHEMA} from '@angular/core';
-import {FormBuilderService} from '../../../shared/form/builder/form-builder.service';
-import {SectionsServiceStub} from '../../../shared/testing/sections-service.stub';
-import {mockSubmissionCollectionId, mockSubmissionId} from '../../../shared/mocks/submission.mock';
-import {JsonPatchOperationPathCombiner} from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
-import {License} from '../../../core/shared/license.model';
-import {SectionDataObject} from '../models/section-data.model';
-import {SectionsType} from '../sections-type';
-import {DynamicFormControlEvent, DynamicFormControlEventType} from '@ng-dynamic-forms/core';
-import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
-import {of as observableOf, of} from 'rxjs';
-import {createTestComponent} from '../../../shared/testing/utils.test';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { CollectionDataService } from '../../../core/data/collection-data.service';
+import { Collection } from '../../../core/shared/collection.model';
+import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
+import { FormComponent } from '../../../shared/form/form.component';
+import { SubmissionSectionLicenseComponent } from '../license/section-license.component';
+import { SectionFormOperationsService } from '../form/section-form-operations.service';
+import { getMockFormOperationsService } from '../../../shared/mocks/form-operations-service.mock';
+import { FormService } from '../../../shared/form/form.service';
+import { getMockFormService } from '../../../shared/mocks/form-service.mock';
+import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
+import { SubmissionFormsConfigService } from '../../../core/config/submission-forms-config.service';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
+import { NotificationsServiceStub } from '../../../shared/testing/notifications-service.stub';
+import { SectionsService } from '../sections.service';
+import { SubmissionService } from '../../submission.service';
+import { SubmissionServiceStub } from '../../../shared/testing/submission-service.stub';
+import { ChangeDetectorRef, Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
+import { SectionsServiceStub } from '../../../shared/testing/sections-service.stub';
+import { mockSubmissionCollectionId, mockSubmissionId } from '../../../shared/mocks/submission.mock';
+import { License } from '../../../core/shared/license.model';
+import { SectionDataObject } from '../models/section-data.model';
+import { SectionsType } from '../sections-type';
+import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
+import { of as observableOf, of } from 'rxjs';
 
 const collectionId = mockSubmissionCollectionId;
 const licenseText = 'License text';
@@ -75,15 +69,6 @@ const sectionObject: SectionDataObject = {
   sectionType: SectionsType.License
 };
 
-const dynamicFormControlEvent: DynamicFormControlEvent = {
-  $event: new Event('change'),
-  context: null,
-  control: null,
-  group: null,
-  model: null,
-  type: DynamicFormControlEventType.Change
-};
-
 describe('SubmissionSectionClarinLicenseDistributionComponent', () => {
   let component: SubmissionSectionClarinLicenseDistributionComponent;
   let fixture: ComponentFixture<SubmissionSectionClarinLicenseDistributionComponent>;
@@ -91,7 +76,6 @@ describe('SubmissionSectionClarinLicenseDistributionComponent', () => {
   const sectionsServiceStub: any = new SectionsServiceStub();
   const submissionId = mockSubmissionId;
 
-  const pathCombiner = new JsonPatchOperationPathCombiner('sections', sectionObject.id);
   const jsonPatchOpBuilder: any = jasmine.createSpyObj('jsonPatchOpBuilder', {
     add: jasmine.createSpy('add'),
     replace: jasmine.createSpy('replace'),

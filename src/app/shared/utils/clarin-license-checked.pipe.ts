@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
-import {isEmpty, isUndefined} from '../empty.util';
-import {ClarinLicenseRequiredInfo} from '../../core/shared/clarin/clarin-license.resource-type';
+import { isEmpty } from '../empty.util';
+import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
 
 /**
  * Pipe to mark checkbox or input to true/false based on the input form data.
