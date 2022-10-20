@@ -4,6 +4,7 @@ import { testA11y } from 'cypress/support/utils';
 describe('Collection Statistics Page', () => {
     const COLLECTIONSTATISTICSPAGE = '/statistics/collections/' + TEST_COLLECTION;
 
+    // TODO the statistics option was removed from the navbar - add it there in the future and uncomment this test
     // it('should load if you click on "Statistics" from a Collection page', () => {
     //     cy.visit('/collections/' + TEST_COLLECTION);
     //     cy.get('ds-navbar ds-link-menu-item a[title="Statistics"]').click();

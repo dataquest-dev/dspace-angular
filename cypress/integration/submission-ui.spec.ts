@@ -2,11 +2,8 @@
  * This IT will be never be pushed to the upstream because clicking testing DOM elements is antipattern because
  * the tests on other machines could fail.
  */
-import {TEST_ADMIN_PASSWORD, TEST_ADMIN_USER, TEST_SUBMIT_COLLECTION_UUID,} from '../support';
-import {loginProcess} from '../support/commands';
-
-// const CLARIN_DSPACE_PASSWORD = 'dspace';
-// const CLARIN_DSPACE_EMAIL = 'dspacedemo+admin@gmail.com';
+import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER, TEST_SUBMIT_COLLECTION_UUID } from '../support';
+import { loginProcess } from '../support/commands';
 
 const collectionName = 'Col';
 const communityName = 'Com';

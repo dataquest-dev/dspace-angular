@@ -1,6 +1,6 @@
 import { testA11y } from 'cypress/support/utils';
 
-// NOTE: We changed homepage these tests are failing
+// NOTE: We changed homepage and these tests are failing
 // describe('Homepage', () => {
 //   beforeEach(() => {
 //     // All tests start with visiting homepage

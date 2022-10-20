@@ -89,16 +89,17 @@ export const loginProcess = {
     cy.get('.navbar-container .dropdownLogin ').click();
   },
   typeEmail(email: string) {
-    cy.get('.navbar-container form input[type = "email"] ').type(email);
+    cy.get('ds-log-in-container form input[type = "email"] ').type(email);
   },
   typePassword(password: string) {
-    cy.get('.navbar-container form input[type = "password"] ').type(password);
+    cy.get('ds-log-in-container form input[type = "password"] ').type(password);
   },
   submit() {
-    cy.get('.navbar-container form button[type = "submit"] ').click();
+    cy.get('ds-log-in-container form button[type = "submit"] ').click();
   },
   login(email: string, password: string) {
-    loginProcess.clickOnLoginDropdown();
+    cy.visit('/login');
+    // loginProcess.clickOnLoginDropdown();
     loginProcess.typeEmail(email);
     loginProcess.typePassword(password);
     loginProcess.submit();

@@ -1,5 +1,5 @@
-import {TEST_ADMIN_PASSWORD, TEST_ADMIN_USER, TEST_SUBMIT_COLLECTION_UUID} from '../support';
-import {loginProcess} from '../support/commands';
+import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from '../support';
+import { loginProcess } from '../support/commands';
 
 /**
  * Test for checking if the handle page is loaded after redirecting.
@@ -7,8 +7,8 @@ import {loginProcess} from '../support/commands';
 describe('Handle Page', () => {
 
   it('should pass accessibility tests', () => {
-    // Login as admin
     cy.visit('/');
+
     // Login as admin
     loginProcess.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
 

@@ -13,6 +13,7 @@ const page = {
     }
 };
 
+// NOTE: search was removed from the navbar - these tests are not actual
 // describe('Search from Navigation Bar', () => {
 //     // NOTE: these tests currently assume this query will return results!
 //     const query = 'test';
