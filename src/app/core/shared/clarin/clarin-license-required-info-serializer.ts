@@ -2,7 +2,7 @@ import {
   CLARIN_LICENSE_REQUIRED_INFO,
   ClarinLicenseRequiredInfo
 } from './clarin-license.resource-type';
-import {isEmpty} from '../../../shared/empty.util';
+import { isEmpty } from '../../../shared/empty.util';
 
 /**
  * The Clarin License REST/API returns license.confirmation as number and this serializer converts it to the

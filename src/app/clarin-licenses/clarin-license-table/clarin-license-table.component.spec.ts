@@ -1,26 +1,22 @@
-import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
-
+import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { ClarinLicenseTableComponent } from './clarin-license-table.component';
-import {createSuccessfulRemoteDataObject$} from '../../shared/remote-data.utils';
-import {buildPaginatedList} from '../../core/data/paginated-list.model';
-import {PageInfo} from '../../core/shared/page-info.model';
-import {NotificationsServiceStub} from '../../shared/testing/notifications-service.stub';
-import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
-import {RequestService} from '../../core/data/request.service';
-import {of as observableOf} from 'rxjs';
-import {SharedModule} from '../../shared/shared.module';
-import {CommonModule} from '@angular/common';
-import {ReactiveFormsModule} from '@angular/forms';
-import {TranslateModule} from '@ngx-translate/core';
-import {RouterTestingModule} from '@angular/router/testing';
-import {PaginationService} from '../../core/pagination/pagination.service';
-import {PaginationServiceStub} from '../../shared/testing/pagination-service.stub';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
-import {defaultPagination} from '../clarin-license-table-pagination';
-import {ClarinLicenseLabelDataService} from '../../core/data/clarin/clarin-license-label-data.service';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {HostWindowService} from '../../shared/host-window.service';
-import {HostWindowServiceStub} from '../../shared/testing/host-window-service.stub';
+import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
+import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
+import { RequestService } from '../../core/data/request.service';
+import { of as observableOf } from 'rxjs';
+import { SharedModule } from '../../shared/shared.module';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { PaginationService } from '../../core/pagination/pagination.service';
+import { PaginationServiceStub } from '../../shared/testing/pagination-service.stub';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { defaultPagination } from '../clarin-license-table-pagination';
+import { ClarinLicenseLabelDataService } from '../../core/data/clarin/clarin-license-label-data.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { HostWindowService } from '../../shared/host-window.service';
+import { HostWindowServiceStub } from '../../shared/testing/host-window-service.stub';
 import {
   createdLicenseLabelRD$,
   createdLicenseRD$,

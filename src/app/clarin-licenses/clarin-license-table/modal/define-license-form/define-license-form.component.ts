@@ -9,7 +9,7 @@ import { ClarinLicenseLabelDataService } from '../../../../core/data/clarin/clar
 import { getFirstSucceededRemoteListPayload } from '../../../../core/shared/operators';
 import { validateLicenseLabel } from './define-license-form-validator';
 import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
-import {isNull, isUndefined} from '../../../../shared/empty.util';
+import { isNull, isUndefined } from '../../../../shared/empty.util';
 
 /**
  * The component for defining and editing the Clarin License

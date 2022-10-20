@@ -1,12 +1,10 @@
 /**
  * Json node data with nested structure. Each node has a filename and a value or a list of children
  */
-
-
 import doc from './dev-progress.json';
-import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {FileNode} from './file-node';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { FileNode } from './file-node';
 
 /**
  * The Json tree data in string. The data could be parsed into Json object
@@ -59,7 +57,6 @@ export class FileDatabase {
         return accumulator;
       }
 
-
       if (value != null) {
         if (typeof value === 'object') {
           node.children = this.buildFileTree(value, level + 1);
@@ -81,4 +78,3 @@ export class FileDatabase {
     }, []);
   }
 }
-

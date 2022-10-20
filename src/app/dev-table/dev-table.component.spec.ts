@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-
 import { DevTableComponent } from './dev-table.component';
 
 describe('DevTableComponent', () => {

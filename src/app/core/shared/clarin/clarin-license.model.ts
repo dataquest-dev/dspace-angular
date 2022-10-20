@@ -1,21 +1,15 @@
-import {link, typedObject} from '../../cache/builders/build-decorators';
-import {ListableObject} from '../../../shared/object-collection/shared/listable-object.model';
-import {HALResource} from '../hal-resource.model';
-import {METADATA_VALUE} from '../../metadata/metadata-value.resource-type';
-import {excludeFromEquals} from '../../utilities/equals.decorators';
-import {autoserialize, autoserializeAs, deserialize, deserializeAs, serializeAs} from 'cerialize';
-import {ResourceType} from '../resource-type';
-import {HALLink} from '../hal-link.model';
-import {METADATA_FIELD} from '../../metadata/metadata-field.resource-type';
-import {Observable} from 'rxjs';
-import {RemoteData} from '../../data/remote-data';
-import {MetadataField} from '../../metadata/metadata-field.model';
-import {GenericConstructor} from '../generic-constructor';
-import {CLARIN_LICENSE} from './clarin-license.resource-type';
-import {CLARIN_LICENSE_LABEL} from './clarin-license-label.resource-type';
-import {ClarinLicenseLabel} from './clarin-license-label.model';
-import {ClarinLicenseConfirmationSerializer} from './clarin-license-confirmation-serializer';
-import {ClarinLicenseRequiredInfoSerializer} from './clarin-license-required-info-serializer';
+import { typedObject } from '../../cache/builders/build-decorators';
+import { ListableObject } from '../../../shared/object-collection/shared/listable-object.model';
+import { HALResource } from '../hal-resource.model';
+import { excludeFromEquals } from '../../utilities/equals.decorators';
+import { autoserialize, autoserializeAs, deserialize } from 'cerialize';
+import { ResourceType } from '../resource-type';
+import { HALLink } from '../hal-link.model';
+import { GenericConstructor } from '../generic-constructor';
+import { CLARIN_LICENSE } from './clarin-license.resource-type';
+import { ClarinLicenseLabel } from './clarin-license-label.model';
+import { ClarinLicenseConfirmationSerializer } from './clarin-license-confirmation-serializer';
+import { ClarinLicenseRequiredInfoSerializer } from './clarin-license-required-info-serializer';
 
 /**
  * Class that represents a Clarin License

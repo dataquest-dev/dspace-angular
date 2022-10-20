@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {BehaviorSubject} from 'rxjs';
-import {RemoteData} from '../core/data/remote-data';
-import {Collection} from '../core/shared/collection.model';
-import {CollectionDataService} from '../core/data/collection-data.service';
-import {getFirstCompletedRemoteData} from '../core/shared/operators';
-import {License} from '../core/shared/license.model';
-import {followLink} from '../shared/utils/follow-link-config.model';
-import {filter} from 'rxjs/operators';
-import {isNotUndefined} from '../shared/empty.util';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { RemoteData } from '../core/data/remote-data';
+import { Collection } from '../core/shared/collection.model';
+import { CollectionDataService } from '../core/data/collection-data.service';
+import { License } from '../core/shared/license.model';
+import { followLink } from '../shared/utils/follow-link-config.model';
+import { filter } from 'rxjs/operators';
+import { isNotUndefined } from '../shared/empty.util';
 
+/**
+ * The component load and show distribution license based on the collection.
+ */
 @Component({
   selector: 'ds-license-contract-page',
   templateUrl: './license-contract-page.component.html',
@@ -21,10 +23,19 @@ export class LicenseContractPageComponent implements OnInit {
               protected collectionDataService: CollectionDataService,) {
   }
 
+  /**
+   * Show distribution license for the collection with this Id. The collection Id is loaded from the URL.
+   */
   collectionId: string;
 
+  /**
+   * Collection RemoteData object loaded from the API.
+   */
   collectionRD$: BehaviorSubject<RemoteData<Collection>> = new BehaviorSubject<RemoteData<Collection>>(null);
 
+  /**
+   * License RemoteData object loaded from the API.
+   */
   licenseRD$: BehaviorSubject<RemoteData<License>> = new BehaviorSubject<RemoteData<License>>(null);
 
   ngOnInit(): void {
@@ -41,5 +52,4 @@ export class LicenseContractPageComponent implements OnInit {
         });
       });
   }
-
 }

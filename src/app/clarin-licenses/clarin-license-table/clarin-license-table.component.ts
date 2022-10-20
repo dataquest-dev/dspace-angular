@@ -8,7 +8,6 @@ import { getFirstCompletedRemoteData, getFirstSucceededRemoteData } from '../../
 import { switchMap } from 'rxjs/operators';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
-import { SortOptions } from '../../core/cache/models/sort-options.model';
 import { defaultPagination, defaultSortConfiguration } from '../clarin-license-table-pagination';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DefineLicenseFormComponent } from './modal/define-license-form/define-license-form.component';
@@ -20,11 +19,11 @@ import { isNull } from '../../shared/empty.util';
 import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
 import { ClarinLicenseLabelDataService } from '../../core/data/clarin/clarin-license-label-data.service';
 import { ClarinLicenseLabelExtendedSerializer } from '../../core/shared/clarin/clarin-license-label-extended-serializer';
-import {ClarinLicenseRequiredInfoSerializer} from '../../core/shared/clarin/clarin-license-required-info-serializer';
-import {cloneDeep} from 'lodash';
+import { ClarinLicenseRequiredInfoSerializer } from '../../core/shared/clarin/clarin-license-required-info-serializer';
+import { cloneDeep } from 'lodash';
 
 /**
- * Component for managing clarin licenses and defining clarin license labels
+ * Component for managing clarin licenses and defining clarin license labels.
  */
 @Component({
   selector: 'ds-clarin-license-table',
@@ -42,7 +41,7 @@ export class ClarinLicenseTableComponent implements OnInit {
               private translateService: TranslateService,) { }
 
   /**
-   * The list of License object as BehaviorSubject object
+   * The list of ClarinLicense object as BehaviorSubject object
    */
   licensesRD$: BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>> = new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
 
@@ -51,11 +50,6 @@ export class ClarinLicenseTableComponent implements OnInit {
    * Start at page 1 and always use the set page size
    */
   options: PaginationComponentOptions;
-
-  /**
-   * The configuration which is send to the server with search request.
-   */
-  sortConfiguration: SortOptions;
 
   /**
    * The license which is currently selected, only one license could be selected
@@ -69,22 +63,27 @@ export class ClarinLicenseTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializePaginationOptions();
-    this.initializeSortingOptions();
     this.loadAllLicenses();
   }
 
   // define license
+  /**
+   * Pop up the License modal where the user fill in the License data.
+   */
   openDefineLicenseForm() {
     const defineLicenseModalRef = this.modalService.open(DefineLicenseFormComponent);
 
     defineLicenseModalRef.result.then((result: ClarinLicense) => {
-      console.log('this.defineNewLicense(result);', result);
       this.defineNewLicense(result);
     }).catch((error) => {
-      console.log(error);
+      console.error(error);
     });
   }
 
+  /**
+   * Send create request to the API with the new License.
+   * @param clarinLicense from the License modal.
+   */
   defineNewLicense(clarinLicense: ClarinLicense) {
     const successfulMessageContentDef = 'clarin-license.define-license.notification.successful-content';
     const errorMessageContentDef = 'clarin-license.define-license.notification.error-content';
@@ -109,6 +108,9 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   // edit license
+  /**
+   * Pop up the License modal where the user fill in the License data. The modal is the same as the DefineLicenseForm.
+   */
   openEditLicenseForm() {
     if (isNull(this.selectedLicense)) {
       return;
@@ -130,6 +132,10 @@ export class ClarinLicenseTableComponent implements OnInit {
     });
   }
 
+  /**
+   * Send put request to the API with updated Clarin License.
+   * @param clarinLicense from the License modal.
+   */
   editLicense(clarinLicense: ClarinLicense) {
     const successfulMessageContentDef = 'clarin-license.edit-license.notification.successful-content';
     const errorMessageContentDef = 'clarin-license.edit-license.notification.error-content';
@@ -182,6 +188,9 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   // define license label
+  /**
+   * Pop up License Label modal where the user fill in the License Label data.
+   */
   openDefineLicenseLabelForm() {
     const defineLicenseLabelModalRef = this.modalService.open(DefineLicenseLabelFormComponent);
 
@@ -192,6 +201,10 @@ export class ClarinLicenseTableComponent implements OnInit {
     });
   }
 
+  /**
+   * Send create request to the API, the License Label icon is transformed to the byte array.
+   * @param clarinLicenseLabel object from the License Label modal.
+   */
   defineLicenseLabel(clarinLicenseLabel: ClarinLicenseLabel) {
     const successfulMessageContentDef = 'clarin-license-label.define-license-label.notification.successful-content';
     const errorMessageContentDef = 'clarin-license-label.define-license-label.notification.error-content';
@@ -238,6 +251,9 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   // delete license
+  /**
+   * Delete selected license. If none license is selected do nothing.
+   */
   deleteLicense() {
     if (isNull(this.selectedLicense?.id)) {
       return;
@@ -252,6 +268,12 @@ export class ClarinLicenseTableComponent implements OnInit {
       });
   }
 
+  /**
+   * Pop up the notification about the request success. Messages are loaded from the `en.json5`.
+   * @param operationResponse current response
+   * @param sucContent successful message name
+   * @param errContent error message name
+   */
   notifyOperationStatus(operationResponse, sucContent, errContent) {
     if (isNull(operationResponse)) {
       this.notificationService.error('', this.translateService.get(errContent));
@@ -274,6 +296,9 @@ export class ClarinLicenseTableComponent implements OnInit {
     this.loadAllLicenses();
   }
 
+  /**
+   * Fetch all licenses from the API.
+   */
   loadAllLicenses() {
     this.selectedLicense = null;
 
@@ -318,9 +343,5 @@ export class ClarinLicenseTableComponent implements OnInit {
 
   private initializePaginationOptions() {
     this.options = defaultPagination;
-  }
-
-  private initializeSortingOptions() {
-    this.sortConfiguration = defaultSortConfiguration;
   }
 }

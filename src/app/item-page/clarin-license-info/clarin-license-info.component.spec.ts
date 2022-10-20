@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ClarinLicenseInfoComponent } from './clarin-license-info.component';
-import {DomSanitizer} from '@angular/platform-browser';
-import {mockLicenseRD$} from '../../shared/testing/clarin-license-mock';
-import {SharedModule} from '../../shared/shared.module';
-import {CommonModule} from '@angular/common';
-import {ReactiveFormsModule} from '@angular/forms';
-import {TranslateModule} from '@ngx-translate/core';
-import {RouterTestingModule} from '@angular/router/testing';
-import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
-import {ItemMock} from '../../shared/mocks/item.mock';
-import {MetadataValue} from '../../core/shared/metadata.models';
+import { DomSanitizer } from '@angular/platform-browser';
+import { mockLicenseRD$ } from '../../shared/testing/clarin-license-mock';
+import { SharedModule } from '../../shared/shared.module';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
+import { ItemMock } from '../../shared/mocks/item.mock';
+import { MetadataValue } from '../../core/shared/metadata.models';
 
 const item = ItemMock;
 const license = 'Test License Name';
@@ -84,5 +84,4 @@ describe('ClarinLicenseInfoComponent', () => {
   it('should load license label icons', () => {
     expect(component.licenseLabelIcons.length).toEqual(2);
   });
-
 });

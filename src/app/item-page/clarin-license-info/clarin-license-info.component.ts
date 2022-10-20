@@ -1,14 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Item} from '../../core/shared/item.model';
-import {getFirstCompletedRemoteData} from '../../core/shared/operators';
-import {switchMap} from 'rxjs/operators';
-import {RemoteData} from '../../core/data/remote-data';
-import {PaginatedList} from '../../core/data/paginated-list.model';
-import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
-import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
-import {DomSanitizer} from '@angular/platform-browser';
-import {secureImageData} from '../../shared/clarin-shared-util';
+import { Component, Input, OnInit } from '@angular/core';
+import { Item } from '../../core/shared/item.model';
+import { getFirstCompletedRemoteData } from '../../core/shared/operators';
+import { switchMap } from 'rxjs/operators';
+import { RemoteData } from '../../core/data/remote-data';
+import { PaginatedList } from '../../core/data/paginated-list.model';
+import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
+import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
+import { DomSanitizer } from '@angular/platform-browser';
+import { secureImageData } from '../../shared/clarin-shared-util';
 
+/**
+ * This component show clarin license info in the item page and item full page.
+ */
 @Component({
   selector: 'ds-clarin-license-info',
   templateUrl: './clarin-license-info.component.html',
@@ -24,14 +27,29 @@ export class ClarinLicenseInfoComponent implements OnInit {
    */
   @Input() item: Item;
 
+  /**
+   * Current License Label e.g. `PUB`
+   */
   licenseLabel: string;
 
+  /**
+   * Current License name e.g. `Awesome License`
+   */
   license: string;
 
+  /**
+   * Current License type e.g. `Publicly Available`
+   */
   licenseType: string;
 
+  /**
+   * Current License URI e.g. `http://www.awesomelicense.edu`
+   */
   licenseURI: string;
 
+  /**
+   * Current License Label icon as byte array.
+   */
   licenseLabelIcons: any[] = [];
 
   ngOnInit(): void {

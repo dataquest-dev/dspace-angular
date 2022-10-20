@@ -4,18 +4,27 @@
  * Needs to be in a separate file to prevent circular
  * dependencies in webpack.
  */
-import {ResourceType} from '../resource-type';
+import { ResourceType } from '../resource-type';
 
 export const CLARIN_LICENSE = new ResourceType('clarinlicense');
 
+/**
+ * Confirmation possible values.
+ */
 export const CLARIN_LICENSE_CONFIRMATION = ['Not required', 'Ask only once', 'Ask always', 'Allow anonymous'];
 
+/**
+ * Wrap required info to the object for better maintaining in the clarin license table.
+ */
 export class ClarinLicenseRequiredInfo {
   id: number;
   value: string;
   name: string;
 }
 
+/**
+ * Required info possible values.
+ */
 export const CLARIN_LICENSE_REQUIRED_INFO = {
   SEND_TOKEN: 'The user will receive an email with download instructions',
   NAME: 'User name',
@@ -28,6 +37,9 @@ export const CLARIN_LICENSE_REQUIRED_INFO = {
   INTENDED_USE: 'Ask user for intentions with the item'
 };
 
+/**
+ * Create list of required info objects filled by possible values.
+ */
 export const CLARIN_LICENSE_FORM_REQUIRED_OPTIONS = [
   Object.assign(new ClarinLicenseRequiredInfo(), {
     id: 0,

@@ -13,10 +13,12 @@ import {
   HANDLE_TABLE_MODULE_PATH,
   INFO_MODULE_PATH,
   INTERNAL_SERVER_ERROR,
-  LEGACY_BITSTREAM_MODULE_PATH, LICENSES_MODULE_PATH,
+  LEGACY_BITSTREAM_MODULE_PATH,
+  LICENSES_MODULE_PATH,
   PROFILE_MODULE_PATH,
   REGISTER_PATH,
-  REQUEST_COPY_MODULE_PATH, CONTRACT_PAGE_MODULE_PATH,
+  REQUEST_COPY_MODULE_PATH,
+  CONTRACT_PAGE_MODULE_PATH,
   WORKFLOW_ITEM_MODULE_PATH,
 } from './app-routing-paths';
 import { COLLECTION_MODULE_PATH } from './collection-page/collection-page-routing-paths';
@@ -31,8 +33,6 @@ import { ThemedForbiddenComponent } from './forbidden/themed-forbidden.component
 import { GroupAdministratorGuard } from './core/data/feature-authorization/feature-authorization-guard/group-administrator.guard';
 import { ThemedPageInternalServerErrorComponent } from './page-internal-server-error/themed-page-internal-server-error.component';
 import { ServerCheckGuard } from './core/server-check/server-check.guard';
-import {LicenseContractPageComponent} from './license-contract-page/license-contract-page.component';
-import {LicenseContractPageModule} from './license-contract-page/license-contract-page.module';
 
 @NgModule({
   imports: [

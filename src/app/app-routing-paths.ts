@@ -117,7 +117,6 @@ export function getRequestCopyModulePath() {
   return `/${REQUEST_COPY_MODULE_PATH}`;
 }
 
-
 export const LICENSES_MODULE_PATH = 'licenses';
 export function getLicensesModulePath() {
   return `/${LICENSES_MODULE_PATH}`;

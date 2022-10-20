@@ -55,6 +55,10 @@ export class DefineLicenseLabelFormComponent implements OnInit {
     this.createForm();
   }
 
+  /**
+   * Create form for changing license label data. The initial form values are passed from the selected license label
+   * from the clarin-license-table.
+   */
   private createForm() {
     this.clarinLicenseLabelForm = this.formBuilder.group({
       label: [this.label, [Validators.required, Validators.maxLength(5)]],

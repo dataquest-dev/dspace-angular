@@ -1,14 +1,12 @@
-import {Component, Injectable, OnInit} from '@angular/core';
-import {NestedTreeControl} from '@angular/cdk/tree';
-import {MatTreeNestedDataSource} from '@angular/material/tree';
-import {BehaviorSubject} from 'rxjs';
-
-import doc from './dev-progress.json';
+import { Component, OnInit } from '@angular/core';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { FileNode } from './file-node';
 import { FileDatabase } from './file-database';
 
-
-
+/**
+ * This component holds project progress info in the clickable table. The component is only for internal purposes.
+ */
 @Component({
   selector: 'ds-dev-table',
   templateUrl: './dev-table.component.html',
