@@ -3,6 +3,7 @@
  * the tests on other machines could fail.
  */
 import {TEST_ADMIN_PASSWORD, TEST_ADMIN_USER, TEST_SUBMIT_COLLECTION_UUID,} from '../support';
+import {loginProcess} from '../support/commands';
 
 // const CLARIN_DSPACE_PASSWORD = 'dspace';
 // const CLARIN_DSPACE_EMAIL = 'dspacedemo+admin@gmail.com';
@@ -176,7 +177,7 @@ describe('Create a new submission', () => {
   beforeEach(() => {
     cy.visit('/');
     // Login as admin
-    cy.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
+    loginProcess.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
 
     // Create a new submission
     cy.visit('/submit?collection=' + TEST_SUBMIT_COLLECTION_UUID + '&entityType=none');

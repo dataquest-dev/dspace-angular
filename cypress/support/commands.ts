@@ -50,6 +50,8 @@ function login(email: string, password: string): void {
     // To login via REST, first we have to do a GET to obtain a valid CSRF token
     cy.request( baseRestUrl + '/api/authn/status' )
       .then((response) => {
+        cy.log(JSON.stringify(response.body));
+        // console.log('login response: ' + response);
         // We should receive a CSRF token returned in a response header
         expect(response.headers).to.have.property('dspace-xsrf-token');
         const csrfToken = response.headers['dspace-xsrf-token'];
@@ -81,3 +83,24 @@ function login(email: string, password: string): void {
 }
 // Add as a Cypress command (i.e. assign to 'cy.login')
 Cypress.Commands.add('login', login);
+
+export const loginProcess = {
+  clickOnLoginDropdown() {
+    cy.get('.navbar-container .dropdownLogin ').click();
+  },
+  typeEmail(email: string) {
+    cy.get('.navbar-container form input[type = "email"] ').type(email);
+  },
+  typePassword(password: string) {
+    cy.get('.navbar-container form input[type = "password"] ').type(password);
+  },
+  submit() {
+    cy.get('.navbar-container form button[type = "submit"] ').click();
+  },
+  login(email: string, password: string) {
+    loginProcess.clickOnLoginDropdown();
+    loginProcess.typeEmail(email);
+    loginProcess.typePassword(password);
+    loginProcess.submit();
+  }
+};

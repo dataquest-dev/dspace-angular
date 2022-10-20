@@ -1,4 +1,5 @@
 import {TEST_ADMIN_PASSWORD, TEST_ADMIN_USER, TEST_SUBMIT_COLLECTION_UUID} from '../support';
+import {loginProcess} from '../support/commands';
 
 /**
  * Test menu options for admin
@@ -8,7 +9,7 @@ describe('Admin Menu Page', () => {
     // Login as admin
     cy.visit('/');
     // Login as admin
-    cy.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
+    loginProcess.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
 
     // Create a new submission
     cy.visit('/submit?collection=' + TEST_SUBMIT_COLLECTION_UUID + '&entityType=none');
