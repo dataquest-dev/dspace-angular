@@ -103,5 +103,7 @@ export const loginProcess = {
     loginProcess.typeEmail(email);
     loginProcess.typePassword(password);
     loginProcess.submit();
+    // wait for redirecting after login - end of login process
+    cy.url().should('contain', '/home');
   }
 };
