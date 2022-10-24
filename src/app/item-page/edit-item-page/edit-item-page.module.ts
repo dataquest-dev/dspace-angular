@@ -35,6 +35,7 @@ import { ItemVersionHistoryComponent } from './item-version-history/item-version
 import { ItemAuthorizationsComponent } from './item-authorizations/item-authorizations.component';
 import { ObjectValuesPipe } from '../../shared/utils/object-values-pipe';
 import { ResourcePoliciesModule } from '../../shared/resource-policies/resource-policies.module';
+import {ItemManageClarinLicenseComponent} from './item-manage-clarin-license/item-manage-clarin-license.component';
 
 
 /**
@@ -65,6 +66,7 @@ import { ResourcePoliciesModule } from '../../shared/resource-policies/resource-
     ItemRelationshipsComponent,
     ItemBitstreamsComponent,
     ItemVersionHistoryComponent,
+    ItemManageClarinLicenseComponent,
     EditInPlaceFieldComponent,
     ItemEditBitstreamComponent,
     ItemEditBitstreamBundleComponent,

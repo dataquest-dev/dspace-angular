@@ -38,6 +38,8 @@ import { ItemPageBitstreamsGuard } from './item-page-bitstreams.guard';
 import { ItemPageRelationshipsGuard } from './item-page-relationships.guard';
 import { ItemPageVersionHistoryGuard } from './item-page-version-history.guard';
 import { ItemPageCollectionMapperGuard } from './item-page-collection-mapper.guard';
+import { ItemManageClarinLicenseComponent } from './item-manage-clarin-license/item-manage-clarin-license.component';
+import {ItemPageClarinLicenseGuard} from './item-page-clarin-license.guard';
 
 /**
  * Routing module that handles the routing for the Edit Item page administrator functionality
@@ -111,9 +113,9 @@ import { ItemPageCollectionMapperGuard } from './item-page-collection-mapper.gua
               },
               {
                 path: 'license',
-                component: ItemStatusComponent,
+                component: ItemManageClarinLicenseComponent,
                 data: { title: 'item.edit.tabs.license.title', showBreadcrumbs: true },
-                canActivate: [ItemPageStatusGuard]
+                canActivate: [ItemPageClarinLicenseGuard]
               }
             ]
           },
@@ -192,6 +194,7 @@ import { ItemPageCollectionMapperGuard } from './item-page-collection-mapper.gua
     ItemPageRelationshipsGuard,
     ItemPageVersionHistoryGuard,
     ItemPageCollectionMapperGuard,
+    ItemPageClarinLicenseGuard
   ]
 })
 export class EditItemPageRoutingModule {

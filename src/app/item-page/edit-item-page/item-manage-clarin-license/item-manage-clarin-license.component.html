@@ -1,0 +1,26 @@
+<div class="container" *ngVar="(itemRD$ | async).payload as item">
+  <div class="row">
+    <h2>{{'item.edit.license.title' | translate}}</h2>
+  </div>
+  <div class="row">
+    {{licenseName}} | Remove license
+  </div>
+  <div class="row">
+    <div class="col-12">
+      Select License
+    </div>
+    <div class="col-12">
+      Dropdown
+    </div>
+    <div class="col-12">
+      Warning
+    </div>
+  </div>
+  <div class="row">
+    Define new License
+  </div>
+  <div class="row">
+    BUTTON 1 | BUTTON 2
+  </div>
+
+</div>
