@@ -108,6 +108,12 @@ import { ItemPageCollectionMapperGuard } from './item-page-collection-mapper.gua
                 component: ItemCollectionMapperComponent,
                 data: { title: 'item.edit.tabs.item-mapper.title', showBreadcrumbs: true },
                 canActivate: [ItemPageCollectionMapperGuard]
+              },
+              {
+                path: 'license',
+                component: ItemStatusComponent,
+                data: { title: 'item.edit.tabs.license.title', showBreadcrumbs: true },
+                canActivate: [ItemPageStatusGuard]
               }
             ]
           },

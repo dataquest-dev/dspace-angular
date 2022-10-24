@@ -2133,6 +2133,10 @@
 
   "item.edit.tabs.view.title": "Item Edit -  View",
 
+  "item.edit.tabs.license.title": "License",
+
+  "item.edit.tabs.license.head": "License",
+
 
 
   "item.edit.withdraw.cancel": "Cancel",
