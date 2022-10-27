@@ -1,26 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {RemoteData} from '../../../core/data/remote-data';
-import {Item} from '../../../core/shared/item.model';
-import {filter, first, map, switchMap} from 'rxjs/operators';
-import {ActivatedRoute} from '@angular/router';
-import {ItemDataService} from '../../../core/data/item-data.service';
-import {Operation} from 'fast-json-patch';
-import {FindListOptions, PatchRequest} from '../../../core/data/request.models';
-import {RequestService} from '../../../core/data/request.service';
-import {ClarinLicense} from '../../../core/shared/clarin/clarin-license.model';
-import {PaginatedList} from '../../../core/data/paginated-list.model';
-import {ClarinLicenseDataService} from '../../../core/data/clarin/clarin-license-data.service';
-import {getFirstCompletedRemoteData} from '../../../core/shared/operators';
-import {NotificationsService} from '../../../shared/notifications/notifications.service';
-import {hasCompleted, hasSucceeded, isError, isSuccess, RequestEntry} from '../../../core/data/request.reducer';
-import {TranslateService} from '@ngx-translate/core';
-import {isNull, isUndefined} from '../../../shared/empty.util';
-import {DefineLicenseFormComponent} from '../../../clarin-licenses/clarin-license-table/modal/define-license-form/define-license-form.component';
-import {ClarinLicenseConfirmationSerializer} from '../../../core/shared/clarin/clarin-license-confirmation-serializer';
-import {ClarinLicenseRequiredInfoSerializer} from '../../../core/shared/clarin/clarin-license-required-info-serializer';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject } from 'rxjs';
+import { RemoteData } from '../../../core/data/remote-data';
+import { Item } from '../../../core/shared/item.model';
+import { filter, first, map, switchMap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { ItemDataService } from '../../../core/data/item-data.service';
+import { Operation } from 'fast-json-patch';
+import { FindListOptions, PatchRequest } from '../../../core/data/request.models';
+import { RequestService } from '../../../core/data/request.service';
+import { ClarinLicense } from '../../../core/shared/clarin/clarin-license.model';
+import { PaginatedList } from '../../../core/data/paginated-list.model';
+import { ClarinLicenseDataService } from '../../../core/data/clarin/clarin-license-data.service';
+import { getFirstCompletedRemoteData } from '../../../core/shared/operators';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
+import { hasCompleted, hasSucceeded, RequestEntry } from '../../../core/data/request.reducer';
+import { TranslateService } from '@ngx-translate/core';
+import { isNull, isUndefined } from '../../../shared/empty.util';
+import { DefineLicenseFormComponent } from '../../../clarin-licenses/clarin-license-table/modal/define-license-form/define-license-form.component';
+import { ClarinLicenseConfirmationSerializer } from '../../../core/shared/clarin/clarin-license-confirmation-serializer';
+import { ClarinLicenseRequiredInfoSerializer } from '../../../core/shared/clarin/clarin-license-required-info-serializer';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+/**
+ * This component manages (update, remove, define) Clarin License for the Item in the Edit Item view.
+ */
 @Component({
   selector: 'ds-item-manage-clarin-license',
   templateUrl: './item-manage-clarin-license.component.html',
@@ -28,12 +31,25 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 })
 export class ItemManageClarinLicenseComponent implements OnInit {
 
+  /**
+   * Href of the current Item. It is used for getting Item's metadata.
+   */
   itemSelfLink: string;
 
+  /**
+   * The Clarin License which is selected from the selection. Clarin License is wrapped into the BehaviorSubject
+   * because the property must be asynchronous.
+   */
   selectedLicense: BehaviorSubject<ClarinLicense> = new BehaviorSubject<ClarinLicense>(null);
 
+  /**
+   * All Clarin Licenses listed in the selection. Max count of listed Clarin Licenses is set to 999.
+   */
   licenseOptions: BehaviorSubject<ClarinLicense[]> = new BehaviorSubject<ClarinLicense[]>([]);
 
+  /**
+   * Value selected from the selection.
+   */
   selectedLicenseName: string;
 
   constructor(private route: ActivatedRoute,
@@ -45,6 +61,8 @@ export class ItemManageClarinLicenseComponent implements OnInit {
               private modalService: NgbModal) { }
 
   ngOnInit(): void {
+    // At first load the ItemHref because it is needed for getting the current Item object where are stored
+    // Clarin License metadata.
     this.loadItemHref()
       .then(href => {
         this.itemSelfLink = href;
@@ -97,6 +115,9 @@ export class ItemManageClarinLicenseComponent implements OnInit {
       });
   }
 
+  /**
+   * Load Href of the current Item and return tha value in the Promise.
+   */
   loadItemHref(): Promise<string> {
     const itemRD$ = this.route.parent.data.pipe(map((data) => data.dso));
     return itemRD$.pipe(
@@ -104,14 +125,20 @@ export class ItemManageClarinLicenseComponent implements OnInit {
       switchMap((data: RemoteData<Item>) => [data?.payload?._links?.self?.href])).toPromise();
   }
 
+  /**
+   * Load the Item's Clarin License to the page info as well as to the selection.
+   */
   initSelectedLicense() {
+    // Get actual Item.
     const itemRD$ = this.itemService.findByHref(this.itemSelfLink);
     itemRD$.pipe(
       first(),
       map((data: RemoteData<Item>) => data.payload)
     ).subscribe((item: Item) => {
+      // Get Item's metadata where are store Clarin License info.
       const licenseName = item?.metadata?.['dc.rights']?.[0]?.value;
       const licenseURI = item?.metadata?.['dc.rights.uri']?.[0]?.value;
+      // Update async selectedLicense object with fresh data.
       this.selectedLicense.next(
         Object.assign(new ClarinLicense(), {
           name: licenseName,
@@ -119,6 +146,7 @@ export class ItemManageClarinLicenseComponent implements OnInit {
         })
       );
 
+      // Update initial selection value.
       if (isUndefined(licenseName) || isUndefined(licenseURI)) {
         this.selectedLicenseName = '';
       } else {
@@ -127,6 +155,9 @@ export class ItemManageClarinLicenseComponent implements OnInit {
     });
   }
 
+  /**
+   * Load all Clarin Licenses from the API. Max count of listed Clarin Licenses is set to 999.
+   */
   loadLicenseOptions() {
     const options = new FindListOptions();
     options.elementsPerPage = 999;
@@ -140,10 +171,16 @@ export class ItemManageClarinLicenseComponent implements OnInit {
       });
   }
 
+  /**
+   * The user clicked to the `Return` button. The selection value is returned to the actual Item's Clarin License.
+   */
   removeChanges() {
     this.selectedLicenseName = this.selectedLicense?.value?.name;
   }
 
+  /**
+   * The user accepted changes and the Clarin License for the Item is updated.
+   */
   updateLicense() {
     const requestId = this.sendReplaceRequest('attach', this.selectedLicenseName);
 
@@ -153,6 +190,9 @@ export class ItemManageClarinLicenseComponent implements OnInit {
     this.processResponse(requestId, successfulMessageContentDef, errorMessageContentDef);
   }
 
+  /**
+   * Detach current Item's Clarin License.
+   */
   removeLicense() {
     const requestId = this.sendReplaceRequest('detach', this.selectedLicense.value.name);
 
@@ -162,8 +202,13 @@ export class ItemManageClarinLicenseComponent implements OnInit {
     this.processResponse(requestId, successfulMessageContentDef, errorMessageContentDef);
   }
 
+  /**
+   * Detach or attach the Clarin License for the Item.
+   * @param operation `detach` or `attach`
+   * @param licenseName license to update or remove
+   */
   sendReplaceRequest(operation, licenseName) {
-    // create request with the updated Handle
+    // Create request with the `detach` or `attach` operation
     const patchOperation = {
       op: 'replace', path: '/license/' + operation, value: licenseName
     } as Operation;
@@ -171,12 +216,18 @@ export class ItemManageClarinLicenseComponent implements OnInit {
     const requestId = this.requestService.generateRequestId();
     const patchRequest = new PatchRequest(requestId, this.itemSelfLink, [patchOperation]);
 
-    // call patch request
+    // Call patch request
     this.requestService.send(patchRequest);
 
     return requestId;
   }
 
+  /**
+   * Based on the requestId check if the request was successful and pop up notification with response status.
+   * @param requestId of the Patch Request
+   * @param successMessage definition
+   * @param errorMessage definition
+   */
   processResponse(requestId, successMessage, errorMessage) {
     this.requestService.getByUUID(requestId)
       .pipe(
