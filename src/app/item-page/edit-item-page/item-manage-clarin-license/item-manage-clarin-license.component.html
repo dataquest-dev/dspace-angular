@@ -2,14 +2,16 @@
   <div class="row">
     <h2>{{'item.edit.license.title' | translate}}</h2>
   </div>
-  <div class="row">
+  <div class="row" [hidden]="selectedLicense?.name == undefined">
     <div class="col-md-12 pl-0">
       <div class="card license-name-card">
         <div class="card-body py-3 px-3">
           <span class="py-1 px-2 license-name-chip rounded">
             <a [href]="selectedLicense?.definition">{{selectedLicense?.name}}</a>
           </span>
-          <button (click)="removeLicense()">Remove license</button>
+          <span>
+            <button (click)="removeLicense()" class="ml-2">Remove license</button>
+          </span>
         </div>
       </div>
     </div>
@@ -26,9 +28,8 @@
               #select
               [(ngModel)]="selectedLicenseName"
               class="form-control"
-              (change)="onChangeLicense()"
               [ngModelOptions]="{standalone: true}">
-              <option *ngFor="let clarinLicense of licenseOptions"
+              <option *ngFor="let clarinLicense of (licenseOptions |async)"
                       [value]="clarinLicense.name">
                 {{clarinLicense.name}}
               </option>
@@ -42,10 +43,17 @@
     </div>
   </div>
   <div class="row">
-    Define new License
+    <div class="py-2">
+      <a (click)="openDefineLicenseForm()" class="text-info cursor">Define new License</a>
+    </div>
   </div>
   <div class="row">
-    BUTTON 1 | BUTTON 2
+    <div>
+      <button (click)="updateLicense()">Update</button>
+    </div>
+    <div class="ml-2">
+      <button (click)="removeChanges()">Return</button>
+    </div>
   </div>
 
 </div>

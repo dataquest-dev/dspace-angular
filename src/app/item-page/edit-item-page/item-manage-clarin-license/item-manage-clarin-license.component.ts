@@ -6,7 +6,7 @@ import {filter, first, map, switchMap} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {ItemDataService} from '../../../core/data/item-data.service';
 import {Operation} from 'fast-json-patch';
-import {PatchRequest} from '../../../core/data/request.models';
+import {FindListOptions, PatchRequest} from '../../../core/data/request.models';
 import {RequestService} from '../../../core/data/request.service';
 import {ClarinLicense} from '../../../core/shared/clarin/clarin-license.model';
 import {PaginatedList} from '../../../core/data/paginated-list.model';
@@ -15,7 +15,11 @@ import {getFirstCompletedRemoteData} from '../../../core/shared/operators';
 import {NotificationsService} from '../../../shared/notifications/notifications.service';
 import {hasCompleted, hasSucceeded, isError, isSuccess, RequestEntry} from '../../../core/data/request.reducer';
 import {TranslateService} from '@ngx-translate/core';
-import {isUndefined} from '../../../shared/empty.util';
+import {isNull, isUndefined} from '../../../shared/empty.util';
+import {DefineLicenseFormComponent} from '../../../clarin-licenses/clarin-license-table/modal/define-license-form/define-license-form.component';
+import {ClarinLicenseConfirmationSerializer} from '../../../core/shared/clarin/clarin-license-confirmation-serializer';
+import {ClarinLicenseRequiredInfoSerializer} from '../../../core/shared/clarin/clarin-license-required-info-serializer';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'ds-item-manage-clarin-license',
@@ -28,7 +32,7 @@ export class ItemManageClarinLicenseComponent implements OnInit {
 
   selectedLicense: BehaviorSubject<ClarinLicense> = new BehaviorSubject<ClarinLicense>(null);
 
-  licenseOptions: ClarinLicense[] = [];
+  licenseOptions: BehaviorSubject<ClarinLicense[]> = new BehaviorSubject<ClarinLicense[]>([]);
 
   selectedLicenseName: string;
 
@@ -37,7 +41,8 @@ export class ItemManageClarinLicenseComponent implements OnInit {
               private requestService: RequestService,
               private clarinLicenseService: ClarinLicenseDataService,
               private notificationsService: NotificationsService,
-              private translateService: TranslateService) { }
+              private translateService: TranslateService,
+              private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.loadItemHref()
@@ -46,6 +51,48 @@ export class ItemManageClarinLicenseComponent implements OnInit {
         this.initSelectedLicense();
       });
     this.loadLicenseOptions();
+  }
+
+  /**
+   * Pop up the License modal where the user fill in the License data.
+   */
+  openDefineLicenseForm() {
+    const defineLicenseModalRef = this.modalService.open(DefineLicenseFormComponent);
+
+    defineLicenseModalRef.result.then((result: ClarinLicense) => {
+      this.defineNewLicense(result);
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+  /**
+   * Send create request to the API with the new License.
+   * @param clarinLicense from the License modal.
+   */
+  defineNewLicense(clarinLicense: ClarinLicense) {
+    const successfulMessageContentDef = 'clarin-license.define-license.notification.successful-content';
+    const errorMessageContentDef = 'clarin-license.define-license.notification.error-content';
+    if (isNull(clarinLicense)) {
+      // this.notifyOperationStatus(clarinLicense, successfulMessageContentDef, errorMessageContentDef);
+    }
+
+    // convert string value from the form to the number
+    clarinLicense.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
+    // convert ClarinLicenseUserInfo.short the string value
+    if (Array.isArray(clarinLicense.requiredInfo)) {
+      clarinLicense.requiredInfo = ClarinLicenseRequiredInfoSerializer.Serialize(clarinLicense.requiredInfo);
+    }
+
+    this.clarinLicenseService.create(clarinLicense)
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe((defineLicenseResponse: RemoteData<ClarinLicense>) => {
+        this.loadLicenseOptions();
+        console.log('response', defineLicenseResponse);
+        // check payload and show error or successful
+        // this.notifyOperationStatus(defineLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
+        // this.loadAllLicenses();
+      });
   }
 
   loadItemHref(): Promise<string> {
@@ -72,27 +119,31 @@ export class ItemManageClarinLicenseComponent implements OnInit {
 
       if (isUndefined(licenseName) || isUndefined(licenseURI)) {
         this.selectedLicenseName = '';
+      } else {
+        this.selectedLicenseName = licenseName;
       }
     });
   }
 
-  onChangeLicense() {
-    this.updateLicense(this.selectedLicenseName);
-  }
-
   loadLicenseOptions() {
+    const options = new FindListOptions();
+    options.elementsPerPage = 999;
     // Call clarinLicense API - GET
-    this.clarinLicenseService.findAll()
+    this.clarinLicenseService.findAll(options, false)
       .pipe(
         getFirstCompletedRemoteData(),
-        switchMap((clList: RemoteData<PaginatedList<ClarinLicense>>) => clList?.payload?.page))
-      .subscribe((clarinLicense: ClarinLicense) => {
-        this.licenseOptions.push(clarinLicense);
+        switchMap((clList: RemoteData<PaginatedList<ClarinLicense>>) => [clList?.payload?.page]))
+      .subscribe((clarinLicenses: ClarinLicense[]) => {
+        this.licenseOptions.next(clarinLicenses);
       });
   }
 
-  updateLicense(updatedLicenseName) {
-    this.sendReplaceRequest('attach', updatedLicenseName);
+  updateLicense() {
+    this.sendReplaceRequest('attach', this.selectedLicenseName);
+  }
+
+  removeChanges() {
+    this.selectedLicenseName = this.selectedLicense?.value?.name;
   }
 
   removeLicense() {
