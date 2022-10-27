@@ -1,19 +1,44 @@
-<div class="container" *ngVar="(itemRD$ | async).payload as item">
+<div class="container" *ngVar="(selectedLicense | async) as selectedLicense">
   <div class="row">
     <h2>{{'item.edit.license.title' | translate}}</h2>
   </div>
   <div class="row">
-    {{licenseName}} | Remove license
+    <div class="col-md-12 pl-0">
+      <div class="card license-name-card">
+        <div class="card-body py-3 px-3">
+          <span class="py-1 px-2 license-name-chip rounded">
+            <a [href]="selectedLicense?.definition">{{selectedLicense?.name}}</a>
+          </span>
+          <button (click)="removeLicense()">Remove license</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="row">
-    <div class="col-12">
-      Select License
-    </div>
-    <div class="col-12">
-      Dropdown
-    </div>
-    <div class="col-12">
-      Warning
+  <div class="row pt-3">
+    <div class="col-md-12 pl-0">
+      <div class="card">
+        <div class="card-body py-3 px-3">
+          <div class="col-md-12">
+            Select License
+          </div>
+          <div class="col-md-12">
+            <select
+              #select
+              [(ngModel)]="selectedLicenseName"
+              class="form-control"
+              (change)="onChangeLicense()"
+              [ngModelOptions]="{standalone: true}">
+              <option *ngFor="let clarinLicense of licenseOptions"
+                      [value]="clarinLicense.name">
+                {{clarinLicense.name}}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-12">
+            Warning
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="row">

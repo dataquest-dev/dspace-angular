@@ -27,9 +27,9 @@
 }
 
 .alert-primary {
-  color: #004085;
-  background-color: #cce5ff;
-  border-color: #b8daff;
+  color: var(--ds-clarin-alert-primary-text-color);
+  background-color: var(--ds-clarin-alert-primary-background-color);
+  border-color: var(--ds-clarin-alert-primary-border-color);
 }
 
 .licenseselector {
