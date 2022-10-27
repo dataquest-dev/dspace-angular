@@ -71,27 +71,29 @@ export class ItemManageClarinLicenseComponent implements OnInit {
    * @param clarinLicense from the License modal.
    */
   defineNewLicense(clarinLicense: ClarinLicense) {
-    const successfulMessageContentDef = 'clarin-license.define-license.notification.successful-content';
-    const errorMessageContentDef = 'clarin-license.define-license.notification.error-content';
+    const successfulMessageContentDef = 'item.edit.license.notification.define-license.success';
+    const errorMessageContentDef = 'item.edit.license.notification.define-license.error';
     if (isNull(clarinLicense)) {
-      // this.notifyOperationStatus(clarinLicense, successfulMessageContentDef, errorMessageContentDef);
+      this.notificationsService.error('', this.translateService.instant(errorMessageContentDef));
     }
 
-    // convert string value from the form to the number
+    // Convert string value from the form to the number
     clarinLicense.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
     // convert ClarinLicenseUserInfo.short the string value
     if (Array.isArray(clarinLicense.requiredInfo)) {
       clarinLicense.requiredInfo = ClarinLicenseRequiredInfoSerializer.Serialize(clarinLicense.requiredInfo);
     }
 
+    // Send create request and pop up notification about result status
     this.clarinLicenseService.create(clarinLicense)
       .pipe(getFirstCompletedRemoteData())
       .subscribe((defineLicenseResponse: RemoteData<ClarinLicense>) => {
-        this.loadLicenseOptions();
-        console.log('response', defineLicenseResponse);
-        // check payload and show error or successful
-        // this.notifyOperationStatus(defineLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
-        // this.loadAllLicenses();
+        if (hasSucceeded(defineLicenseResponse.state)) {
+          this.notificationsService.success('', this.translateService.instant(successfulMessageContentDef));
+          this.loadLicenseOptions();
+        } else {
+          this.notificationsService.error('', this.translateService.instant(errorMessageContentDef));
+        }
       });
   }
 
@@ -138,16 +140,26 @@ export class ItemManageClarinLicenseComponent implements OnInit {
       });
   }
 
-  updateLicense() {
-    this.sendReplaceRequest('attach', this.selectedLicenseName);
-  }
-
   removeChanges() {
     this.selectedLicenseName = this.selectedLicense?.value?.name;
   }
 
+  updateLicense() {
+    const requestId = this.sendReplaceRequest('attach', this.selectedLicenseName);
+
+    const successfulMessageContentDef = 'item.edit.license.notification.update-license.success';
+    const errorMessageContentDef = 'item.edit.license.notification.update-license.error';
+    // check the response
+    this.processResponse(requestId, successfulMessageContentDef, errorMessageContentDef);
+  }
+
   removeLicense() {
-    this.sendReplaceRequest('detach', this.selectedLicense.value.name);
+    const requestId = this.sendReplaceRequest('detach', this.selectedLicense.value.name);
+
+    const successfulMessageContentDef = 'item.edit.license.notification.remove-license.success';
+    const errorMessageContentDef = 'item.edit.license.notification.remove-license.error';
+    // check the response
+    this.processResponse(requestId, successfulMessageContentDef, errorMessageContentDef);
   }
 
   sendReplaceRequest(operation, licenseName) {
@@ -162,17 +174,20 @@ export class ItemManageClarinLicenseComponent implements OnInit {
     // call patch request
     this.requestService.send(patchRequest);
 
-    // check the response
+    return requestId;
+  }
+
+  processResponse(requestId, successMessage, errorMessage) {
     this.requestService.getByUUID(requestId)
       .pipe(
         filter((res: RequestEntry) => hasCompleted(res.state))
       )
       .subscribe(requestEntry => {
         if (hasSucceeded(requestEntry.state)) {
-          this.notificationsService.success(null, this.translateService.get('handle-table.change-handle-prefix.notify.successful'));
+          this.notificationsService.success('', this.translateService.get(successMessage));
           this.initSelectedLicense();
         } else {
-          this.notificationsService.error(null, this.translateService.get('handle-table.change-handle-prefix.notify.successful'));
+          this.notificationsService.error('', this.translateService.get(errorMessage));
         }
       });
   }

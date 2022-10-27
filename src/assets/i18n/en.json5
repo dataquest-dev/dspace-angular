@@ -2141,6 +2141,33 @@
 
   "item.edit.license.title": "Current License",
 
+  "item.edit.license.operation.remove-license": "Remove License",
+
+  "item.edit.license.operation.define-license": "Define New License",
+
+  "item.edit.license.select.title": "Select License",
+
+  "item.edit.license.select.warning": "If you want to change the license, select a new license from the list and press update.",
+
+  "item.edit.license.button.update": "Update",
+
+  "item.edit.license.button.return": "Return",
+
+
+
+  "item.edit.license.notification.define-license.success": "License was successfully created.",
+
+  "item.edit.license.notification.define-license.error": "Cannot define new license.",
+
+  "item.edit.license.notification.update-license.success": "License was successfully updated.",
+
+  "item.edit.license.notification.update-license.error": "Cannot update license.",
+
+  "item.edit.license.notification.remove-license.success": "License was successfully removed.",
+
+  "item.edit.license.notification.remove-license.error": "Cannot remove license.",
+
+
 
 
   "item.edit.withdraw.cancel": "Cancel",

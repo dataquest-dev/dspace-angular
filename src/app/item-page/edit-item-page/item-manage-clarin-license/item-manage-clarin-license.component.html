@@ -1,59 +1,69 @@
 <div class="container" *ngVar="(selectedLicense | async) as selectedLicense">
-  <div class="row">
-    <h2>{{'item.edit.license.title' | translate}}</h2>
-  </div>
-  <div class="row" [hidden]="selectedLicense?.name == undefined">
-    <div class="col-md-12 pl-0">
-      <div class="card license-name-card">
-        <div class="card-body py-3 px-3">
+  <div class="card mt-2">
+    <div class="card-body bg-light">
+      <div class="pt-2 pb-2">
+        <h2>{{'item.edit.license.title' | translate}}</h2>
+      </div>
+      <div class="row" [hidden]="selectedLicense?.name == undefined">
+        <div class="col-md-12 pb-1">
+          <div class="card license-name-card">
+            <div class="card-body py-3 px-3">
           <span class="py-1 px-2 license-name-chip rounded">
             <a [href]="selectedLicense?.definition">{{selectedLicense?.name}}</a>
           </span>
-          <span>
-            <button (click)="removeLicense()" class="ml-2">Remove license</button>
+              <span>
+            <a (click)="removeLicense()" class="ml-2 text-info cursor">
+              {{'item.edit.license.operation.remove-license' | translate}}
+            </a>
           </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row pt-3">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body pt-3 pb-3 px-1">
+              <div class="col-md-12 pb-1">
+                <b>{{'item.edit.license.select.title' | translate}}</b>
+              </div>
+              <div class="col-md-12">
+                <select
+                  [(ngModel)]="selectedLicenseName"
+                  class="form-control"
+                  [ngModelOptions]="{standalone: true}">
+                  <option *ngFor="let clarinLicense of (licenseOptions |async)"
+                          [value]="clarinLicense.name">
+                    {{clarinLicense.name}}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-12 pt-2 text-info">
+                <span><i class="fas fa-info-circle"></i>{{'item.edit.license.select.warning' | translate}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class=" col-md-12 py-3">
+          <a (click)="openDefineLicenseForm()" class="text-info cursor">
+            {{'item.edit.license.operation.define-license' | translate}}
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pl-3">
+          <button (click)="updateLicense()" class="btn clarin-btn">
+            {{'item.edit.license.button.update' | translate}}
+          </button>
+        </div>
+        <div class="ml-2">
+          <button (click)="removeChanges()" class="btn clarin-btn">
+            {{'item.edit.license.button.return' | translate}}
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <div class="row pt-3">
-    <div class="col-md-12 pl-0">
-      <div class="card">
-        <div class="card-body py-3 px-3">
-          <div class="col-md-12">
-            Select License
-          </div>
-          <div class="col-md-12">
-            <select
-              #select
-              [(ngModel)]="selectedLicenseName"
-              class="form-control"
-              [ngModelOptions]="{standalone: true}">
-              <option *ngFor="let clarinLicense of (licenseOptions |async)"
-                      [value]="clarinLicense.name">
-                {{clarinLicense.name}}
-              </option>
-            </select>
-          </div>
-          <div class="col-md-12">
-            Warning
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="py-2">
-      <a (click)="openDefineLicenseForm()" class="text-info cursor">Define new License</a>
-    </div>
-  </div>
-  <div class="row">
-    <div>
-      <button (click)="updateLicense()">Update</button>
-    </div>
-    <div class="ml-2">
-      <button (click)="removeChanges()">Return</button>
-    </div>
-  </div>
-
 </div>
