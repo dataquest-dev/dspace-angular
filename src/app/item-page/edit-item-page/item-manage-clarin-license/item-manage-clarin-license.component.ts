@@ -186,7 +186,7 @@ export class ItemManageClarinLicenseComponent implements OnInit {
 
     const successfulMessageContentDef = 'item.edit.license.notification.update-license.success';
     const errorMessageContentDef = 'item.edit.license.notification.update-license.error';
-    // check the response
+    // Check the response
     this.processResponse(requestId, successfulMessageContentDef, errorMessageContentDef);
   }
 
@@ -198,7 +198,7 @@ export class ItemManageClarinLicenseComponent implements OnInit {
 
     const successfulMessageContentDef = 'item.edit.license.notification.remove-license.success';
     const errorMessageContentDef = 'item.edit.license.notification.remove-license.error';
-    // check the response
+    // Check the response
     this.processResponse(requestId, successfulMessageContentDef, errorMessageContentDef);
   }
 
