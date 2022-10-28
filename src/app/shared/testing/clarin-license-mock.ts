@@ -75,6 +75,22 @@ export const mockSecondLicense = Object.assign(new ClarinLicense(), {
   }
 });
 
+export const mockThirdLicense = Object.assign(new ClarinLicense(), {
+  id: 3,
+  name: 'third test license',
+  definition: 'third test definition',
+  confirmation: 0,
+  requiredInfo: mockClarinRequiredInfo,
+  clarinLicenseLabel: mockNonExtendedLicenseLabel,
+  extendedClarinLicenseLabels: [mockExtendedLicenseLabel],
+  bitstreams: 0,
+  _links: {
+    self: {
+      href: 'url.license.3'
+    }
+  }
+});
+
 export const mockLicenseList = [mockLicense, mockSecondLicense];
 export const mockLicenseRD$ = createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [mockLicense]));
 export const mockLicenseLabelListRD$ = createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(),

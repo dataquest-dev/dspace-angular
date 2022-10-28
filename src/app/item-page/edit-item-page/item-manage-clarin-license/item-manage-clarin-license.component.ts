@@ -97,7 +97,7 @@ export class ItemManageClarinLicenseComponent implements OnInit {
 
     // Convert string value from the form to the number
     clarinLicense.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
-    // convert ClarinLicenseUserInfo.short the string value
+    // Convert ClarinLicenseUserInfo.short the string value
     if (Array.isArray(clarinLicense.requiredInfo)) {
       clarinLicense.requiredInfo = ClarinLicenseRequiredInfoSerializer.Serialize(clarinLicense.requiredInfo);
     }
@@ -133,7 +133,9 @@ export class ItemManageClarinLicenseComponent implements OnInit {
     const itemRD$ = this.itemService.findByHref(this.itemSelfLink);
     itemRD$.pipe(
       first(),
-      map((data: RemoteData<Item>) => data.payload)
+      map((data: RemoteData<Item>) => {
+        return data.payload;
+      })
     ).subscribe((item: Item) => {
       // Get Item's metadata where are store Clarin License info.
       const licenseName = item?.metadata?.['dc.rights']?.[0]?.value;
