@@ -235,10 +235,10 @@ export class ItemManageClarinLicenseComponent implements OnInit {
       )
       .subscribe(requestEntry => {
         if (hasSucceeded(requestEntry.state)) {
-          this.notificationsService.success('', this.translateService.get(successMessage));
+          this.notificationsService.success('', this.translateService.instant(successMessage));
           this.initSelectedLicense();
         } else {
-          this.notificationsService.error('', this.translateService.get(errorMessage));
+          this.notificationsService.error('', this.translateService.instant(errorMessage));
         }
       });
   }
