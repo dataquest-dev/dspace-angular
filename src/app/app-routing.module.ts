@@ -10,12 +10,15 @@ import {
   BITSTREAM_MODULE_PATH,
   FORBIDDEN_PATH,
   FORGOT_PASSWORD_PATH,
+  HANDLE_TABLE_MODULE_PATH,
   INFO_MODULE_PATH,
   INTERNAL_SERVER_ERROR,
   LEGACY_BITSTREAM_MODULE_PATH,
+  LICENSES_MODULE_PATH,
   PROFILE_MODULE_PATH,
   REGISTER_PATH,
   REQUEST_COPY_MODULE_PATH,
+  CONTRACT_PAGE_MODULE_PATH,
   WORKFLOW_ITEM_MODULE_PATH,
 } from './app-routing-paths';
 import { COLLECTION_MODULE_PATH } from './collection-page/collection-page-routing-paths';
@@ -213,7 +216,23 @@ import { ServerCheckGuard } from './core/server-check/server-check.guard';
             loadChildren: () => import('./access-control/access-control.module').then((m) => m.AccessControlModule),
             canActivate: [GroupAdministratorGuard],
           },
-          { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent },
+          {
+            path: LICENSES_MODULE_PATH,
+            loadChildren: () => import('./clarin-licenses/clarin-license.module').then((m) => m.ClarinLicenseModule),
+            canActivate: [SiteAdministratorGuard],
+          },
+          {
+            path: CONTRACT_PAGE_MODULE_PATH,
+            loadChildren: () => import('./license-contract-page/license-contract-page.module')
+              .then((m) => m.LicenseContractPageModule),
+            canActivate: [EndUserAgreementCurrentUserGuard]
+          },
+          {
+            path: HANDLE_TABLE_MODULE_PATH,
+            loadChildren: () => import('./handle-page/handle-page.module').then((m) => m.HandlePageModule),
+            canActivate: [SiteAdministratorGuard],
+          },
+          { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent }
         ]
       }
     ], {
