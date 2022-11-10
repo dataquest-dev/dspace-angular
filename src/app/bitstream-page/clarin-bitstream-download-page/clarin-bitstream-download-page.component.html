@@ -1,0 +1,6 @@
+<div class="container">
+  <ds-clarin-license-agreement-page
+    *ngIf="(downloadStatus | async) === 'MissingLicenseAgreementException'"
+    [bitstream]="bitstream$">
+  </ds-clarin-license-agreement-page>
+</div>

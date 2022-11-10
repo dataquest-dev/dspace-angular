@@ -6,6 +6,8 @@ import { BitstreamPageRoutingModule } from './bitstream-page-routing.module';
 import { BitstreamAuthorizationsComponent } from './bitstream-authorizations/bitstream-authorizations.component';
 import { FormModule } from '../shared/form/form.module';
 import { ResourcePoliciesModule } from '../shared/resource-policies/resource-policies.module';
+import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page/clarin-bitstream-download-page.component';
+import { ClarinLicenseAgreementPageComponent } from './clarin-license-agreement-page/clarin-license-agreement-page.component';
 
 /**
  * This module handles all components that are necessary for Bitstream related pages
@@ -20,7 +22,9 @@ import { ResourcePoliciesModule } from '../shared/resource-policies/resource-pol
   ],
   declarations: [
     BitstreamAuthorizationsComponent,
-    EditBitstreamPageComponent
+    EditBitstreamPageComponent,
+    ClarinBitstreamDownloadPageComponent,
+    ClarinLicenseAgreementPageComponent
   ]
 })
 export class BitstreamPageModule {

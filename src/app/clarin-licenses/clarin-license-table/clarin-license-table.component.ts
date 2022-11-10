@@ -151,7 +151,8 @@ export class ClarinLicenseTableComponent implements OnInit {
     clarinLicenseObj.extendedClarinLicenseLabels = this.ignoreIcon(clarinLicense.extendedClarinLicenseLabels);
     clarinLicenseObj._links = this.selectedLicense._links;
     clarinLicenseObj.id = clarinLicense.id;
-    clarinLicenseObj.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
+    // clarinLicenseObj.confirmation = ClarinLicenseConfirmationSerializer.Serialize(clarinLicense.confirmation);
+    clarinLicenseObj.confirmation = clarinLicense.confirmation;
     // convert ClarinLicenseUserInfo.short the string value
     if (Array.isArray(clarinLicense.requiredInfo)) {
       clarinLicenseObj.requiredInfo = ClarinLicenseRequiredInfoSerializer.Serialize(clarinLicense.requiredInfo);
