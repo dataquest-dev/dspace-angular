@@ -86,6 +86,7 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
         filter((res: RequestEntry) => hasCompleted(res.state))
       ).subscribe(requestEntry => {
         console.log('requestEntry', requestEntry);
+        // If the authorization request is successful -> the user is authorized to download the bitstream
         if (isEqual(requestEntry.response?.statusCode, 200)) {
           // User is authorized -> start downloading
           this.hardRedirectService.redirect(bitstream?._links?.content?.href);
@@ -96,10 +97,12 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
           if (requestEntry.response?.statusCode === HTTP_STATUS_UNAUTHORIZED) {
             switch (requestEntry.response?.errorMessage) {
               case MISSING_LICENSE_AGREEMENT_EXCEPTION:
+                // Show License Agreement page with required user data for the current license
                 this.downloadStatus.next(MISSING_LICENSE_AGREEMENT_EXCEPTION);
                 console.log('MissingLicenseAgreementException');
                 return;
               case DOWNLOAD_TOKEN_EXPIRED_EXCEPTION:
+                // Token is expired or wrong -> try to download without token
                 this.downloadStatus.next(DOWNLOAD_TOKEN_EXPIRED_EXCEPTION);
                 console.log('DownloadTokenExpiredException');
                 return;
