@@ -41,6 +41,7 @@ const EDIT_BITSTREAM_AUTHORIZATIONS_PATH = ':id/authorizations';
         // Resolve angular bitstream download URLs
         path: ':id/download',
         component: ClarinBitstreamDownloadPageComponent,
+        // component: BitstreamDownloadPageComponent,
         resolve: {
           bitstream: BitstreamPageResolver
         },
