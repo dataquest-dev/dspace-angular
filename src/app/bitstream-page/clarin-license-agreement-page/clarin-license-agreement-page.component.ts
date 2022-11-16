@@ -16,7 +16,7 @@ import {
 } from '../../core/shared/operators';
 import {ClruaModel} from '../../core/shared/clarin/clrua.model';
 import {RequestParam} from '../../core/cache/models/request-param.model';
-import {hasValue, isEmpty, isNotEmpty, isNotNull, isNull} from '../../shared/empty.util';
+import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined, isNull} from '../../shared/empty.util';
 import {FindListOptions} from '../../core/data/request.models';
 import {EPerson} from '../../core/eperson/models/eperson.model';
 import {AuthService} from '../../core/auth/auth.service';
@@ -29,6 +29,12 @@ import {MetadataSchema} from '../../core/metadata/metadata-schema.model';
 import {EpersonDtoModel} from '../../core/eperson/models/eperson-dto.model';
 import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
 import {ClarinLicenseResourceMappingService} from '../../core/data/clarin/clarin-license-resource-mapping-data.service';
+import {HELP_DESK_PROPERTY} from '../../item-page/tombstone/tombstone.component';
+import {ConfigurationDataService} from '../../core/data/configuration-data.service';
+import {ConfigurationProperty} from '../../core/shared/configuration-property.model';
+import {BundleDataService} from '../../core/data/bundle-data.service';
+import {Bundle} from '../../core/shared/bundle.model';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'ds-clarin-license-agreement-page',
@@ -40,18 +46,32 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   @Input()
   bitstream$: Observable<Bitstream>;
 
+  ipAddress$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+  item$: BehaviorSubject<Item> = new BehaviorSubject<Item>(null);
   userRegistration$: BehaviorSubject<ClarinUserRegistration> = new BehaviorSubject<ClarinUserRegistration>(null);
   userMetadata$: BehaviorSubject<PaginatedList<ClarinUserMetadata>> = new BehaviorSubject<PaginatedList<ClarinUserMetadata>>(null);
   resourceMapping$: BehaviorSubject<ClarinLicenseResourceMapping> = new BehaviorSubject<ClarinLicenseResourceMapping>(null);
   clarinLicense$: BehaviorSubject<ClarinLicense> = new BehaviorSubject<ClarinLicense>(null);
+  currentUser$: BehaviorSubject<EPerson> = new BehaviorSubject<EPerson>(null);
+  /**
+   * The mail for the help desk is loaded from the server.
+   */
+  helpDesk$: Observable<RemoteData<ConfigurationProperty>>;
 
   constructor(
     protected clarinLicenseService: ClarinLicenseDataService,
     protected clruaService: ClruaDataService,
     protected clarinLicenseResourceMappingService: ClarinLicenseResourceMappingService,
-    private auth: AuthService) { }
+    protected configurationDataService: ConfigurationDataService,
+    protected bundleService: BundleDataService,
+    private auth: AuthService,
+    private http: HttpClient) { }
 
   ngOnInit(): void {
+    this.loadCurrentItem();
+    this.loadHelpDeskEmail();
+    this.loadIPAddress();
+
     // Get bitstreamUUID and currentUserUUID to search data from ClarinLicenseResourceUserAllowance - Clrua
     let bistreamUUID = null;
     let currentUserUUID = null;
@@ -59,6 +79,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       return bistreamUUID = bitstream.uuid;
     });
     this.getCurrentUser().pipe(take(1)).subscribe((user) => {
+      this.currentUser$.next(user);
       currentUserUUID = user.uuid;
     });
 
@@ -135,5 +156,44 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
         }
       })
     );
+  }
+
+  private loadIPAddress() {
+    this.http.get('http://api.ipify.org/?format=json').subscribe((res: any) => {
+      this.ipAddress$.next(res.ip);
+    });
+  }
+
+  private loadCurrentItem() {
+    this.bitstream$.pipe(
+      take(1),
+      switchMap((bitstreamRD$) => {
+        return bitstreamRD$?.bundle;
+      })
+    )
+      // Get Bundle of the Bitstream
+      .pipe(
+        getFirstCompletedRemoteData(),
+        switchMap((bundleRD$: RemoteData<Bundle>) => {
+          return this.bundleService.findById(bundleRD$?.payload?.id, false, true,
+            followLink('item'));
+        })
+      )
+      // Get Bundle with Item
+      .pipe(
+        getFirstCompletedRemoteData(),
+        switchMap((bundleRD$: RemoteData<Bundle>) => {
+          return bundleRD$.payload?.item;
+        })
+      )
+      // Get Bundle's Item
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe(itemRD$ => {
+        this.item$.next(itemRD$.payload);
+      });
+  }
+
+  private loadHelpDeskEmail() {
+    this.helpDesk$ = this.configurationDataService.findByPropertyName(HELP_DESK_PROPERTY);
   }
 }

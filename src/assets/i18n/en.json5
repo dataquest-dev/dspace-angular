@@ -551,6 +551,28 @@
 
   "bitstream.download.page": "Now downloading {{bitstream}}..." ,
 
+  "clarin.license.agreement.breadcrumbs": "License Agreement",
+
+  "clarin.license.agreement.title": "License Agreement",
+
+  "clarin.license.agreement.header.info": "The requested content is distributed under one or more licence(s). You have to agree to the licence(s) below before you can obtain the content. Please, view the licence(s) by clicking on the button(s) and read it carefully. The data filled below might be shared with the submitter of the item and/or for creating statistics.",
+
+  "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
+
+  "clarin.license.agreement.item.handle": "Item handle",
+
+  "clarin.license.agreement.bitstream.name": "Bitstream",
+
+  "clarin.license.agreement.signer.name": "Signer",
+
+  "clarin.license.agreement.signer.id": "User ID",
+
+  "clarin.license.agreement.signer.ip.address": "Ip Address",
+
+  "clarin.license.agreement.button.agree": "I AGREE",
+
+  "clarin.license.agreement.warning": "By clicking on the button below I, SIGNER with the above ID, agree to the LICENCE(s) restricting the usage of requested BITSTREAM(s).",
+
 
 
   "bitstream.edit.authorizations.link": "Edit bitstream's Policies",

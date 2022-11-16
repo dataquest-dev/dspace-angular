@@ -63,6 +63,10 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
     this.bitstreamRD$ = this.route.data.pipe(
       map((data) => data.bitstream));
 
+    this.route.data.subscribe(data => {
+      console.log('routeData', data);
+    });
+
     this.bitstream$ = this.bitstreamRD$.pipe(
       redirectOn4xx(this.router, this.auth),
       getRemoteDataPayload()

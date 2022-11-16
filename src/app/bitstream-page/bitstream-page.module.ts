@@ -8,6 +8,9 @@ import { FormModule } from '../shared/form/form.module';
 import { ResourcePoliciesModule } from '../shared/resource-policies/resource-policies.module';
 import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page/clarin-bitstream-download-page.component';
 import { ClarinLicenseAgreementPageComponent } from './clarin-license-agreement-page/clarin-license-agreement-page.component';
+import {ItemPageResolver} from '../item-page/item-page.resolver';
+import {ItemPageByBitstreamResolver} from './item-page-by-bitstream.resolver';
+import {HttpClientModule} from '@angular/common/http';
 
 /**
  * This module handles all components that are necessary for Bitstream related pages
@@ -18,13 +21,17 @@ import { ClarinLicenseAgreementPageComponent } from './clarin-license-agreement-
     SharedModule,
     BitstreamPageRoutingModule,
     FormModule,
-    ResourcePoliciesModule
+    ResourcePoliciesModule,
+    HttpClientModule
   ],
   declarations: [
     BitstreamAuthorizationsComponent,
     EditBitstreamPageComponent,
     ClarinBitstreamDownloadPageComponent,
     ClarinLicenseAgreementPageComponent
+  ],
+  providers: [
+    ItemPageByBitstreamResolver
   ]
 })
 export class BitstreamPageModule {
