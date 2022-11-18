@@ -29,11 +29,11 @@
     <div class="col-12">
       <table class="table table-bordered">
         <tbody>
-        <tr>
+        <tr *ngIf="(currentUser$ | async) != null">
           <td><b>{{'clarin.license.agreement.signer.name' | translate}}</b></td>
           <td><input type="text" disabled class="rounded max-width" [value]="(currentUser$ | async)?.name"></td>
         </tr>
-        <tr>
+        <tr *ngIf="(currentUser$ | async) != null">
           <td><b>{{'clarin.license.agreement.signer.id' | translate}}</b></td>
           <td><input type="text" disabled class="rounded max-width" [value]="(userRegistration$ | async)?.email"></td>
         </tr>
@@ -53,7 +53,16 @@
       </table>
     </div>
   </div>
-  <div class="row">
+  <div class="row" [hidden]="!(clarinLicense$ | async)?.name.includes('HamleDT')">
+    <div class="col-12">
+      <div class="card bg-clarin-blue">
+        <div class="card-body row">
+          <div class="col-11"><b>{{'clarin.license.agreement.token.info' | translate}}</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-3">
     <div class="col-12">
       <div class="card bg-clarin-red">
         <div class="card-body row">

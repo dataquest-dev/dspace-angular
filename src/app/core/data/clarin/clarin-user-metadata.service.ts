@@ -14,7 +14,7 @@ import {HttpClient} from '@angular/common/http';
 import {NotificationsService} from '../../../shared/notifications/notifications.service';
 import {ClarinUserMetadata} from '../../shared/clarin/clarin-user-metadata.model';
 
-export const linkName = 'clarinusermetadatarest';
+export const linkName = 'clarinusermetadatas';
 export const AUTOCOMPLETE = new ResourceType(linkName);
 
 /**

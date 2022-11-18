@@ -567,6 +567,8 @@
 
   "clarin.license.agreement.signer.id": "User ID",
 
+  "clarin.license.agreement.token.info": "You will receive an email with download instructions.",
+
   "clarin.license.agreement.signer.ip.address": "Ip Address",
 
   "clarin.license.agreement.button.agree": "I AGREE",

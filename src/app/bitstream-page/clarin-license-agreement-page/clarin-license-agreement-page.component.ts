@@ -9,8 +9,9 @@ import {followLink} from '../../shared/utils/follow-link-config.model';
 import {ClarinUserRegistration} from '../../core/shared/clarin/clarin-user-registration.model';
 import {ClarinUserMetadata} from '../../core/shared/clarin/clarin-user-metadata.model';
 import {
+  getAllCompletedRemoteData,
   getAllSucceededRemoteData, getAllSucceededRemoteListPayload,
-  getFirstCompletedRemoteData, getFirstSucceededRemoteDataPayload,
+  getFirstCompletedRemoteData, getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteDataWithNotEmptyPayload,
   getFirstSucceededRemoteListPayload,
   getPaginatedListPayload, getRemoteDataPayload
 } from '../../core/shared/operators';
@@ -35,6 +36,7 @@ import {ConfigurationProperty} from '../../core/shared/configuration-property.mo
 import {BundleDataService} from '../../core/data/bundle-data.service';
 import {Bundle} from '../../core/shared/bundle.model';
 import {HttpClient} from '@angular/common/http';
+import {ClarinUserMetadataDataService} from '../../core/data/clarin/clarin-user-metadata.service';
 
 @Component({
   selector: 'ds-clarin-license-agreement-page',
@@ -53,6 +55,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   resourceMapping$: BehaviorSubject<ClarinLicenseResourceMapping> = new BehaviorSubject<ClarinLicenseResourceMapping>(null);
   clarinLicense$: BehaviorSubject<ClarinLicense> = new BehaviorSubject<ClarinLicense>(null);
   currentUser$: BehaviorSubject<EPerson> = new BehaviorSubject<EPerson>(null);
+
   /**
    * The mail for the help desk is loaded from the server.
    */
@@ -64,6 +67,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     protected clarinLicenseResourceMappingService: ClarinLicenseResourceMappingService,
     protected configurationDataService: ConfigurationDataService,
     protected bundleService: BundleDataService,
+    protected userMetadataService: ClarinUserMetadataDataService,
     private auth: AuthService,
     private http: HttpClient) { }
 
@@ -83,14 +87,21 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       currentUserUUID = user.uuid;
     });
 
+    // this.userMetadataService.findAll()
+    //   .pipe(getFirstCompletedRemoteData())
+    //   .subscribe(response => {
+    //     console.log('response', response);
+    //   });
+
     // Get UserMetadata, UserRegistration, LicenseResourceMapping data from ClarinLicenseResourceUserAllowance - Clrua
     this.clruaService.searchBy('byBitstreamAndUser',
       this.createSearchOptions(bistreamUUID, currentUserUUID), false, true,
       followLink('userRegistration'), followLink('userMetadata'), followLink('resourceMapping'))
       .pipe(
-        getFirstCompletedRemoteData())
+        getFirstSucceededRemoteListPayload())
       .subscribe(res => {
-        const clrua = res?.payload?.page?.[0];
+        const clrua = res?.[0];
+        console.log('clrua', clrua);
         if (isNull(clrua)) {
           return;
         }
@@ -104,13 +115,15 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
         clrua.resourceMapping
           .pipe(getFirstCompletedRemoteData())
           .subscribe(resourceMapping$ => {
+            console.log('resourceMapping', resourceMapping$);
           this.resourceMapping$.next(resourceMapping$?.payload);
         });
         // Load userMetadata
-        clrua.userMetadata.
-        pipe(getFirstCompletedRemoteData())
-          .subscribe(userMetadata => {
-          this.userMetadata$.next(userMetadata.payload);
+        clrua.userMetadata
+          .pipe(getFirstCompletedRemoteData())
+          .subscribe(userMetadata$ => {
+          // this.userMetadata$.next(userMetadata$);
+          console.log('userMetadata$', userMetadata$.payload);
         });
         // Load clarinLicense from resourceMapping
         this.resourceMapping$.pipe(

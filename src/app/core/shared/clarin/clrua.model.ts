@@ -52,7 +52,7 @@ export class ClruaModel extends ListableObject implements HALResource {
   @link(CLARIN_USER_REGISTRATION)
   userRegistration?: Observable<RemoteData<ClarinUserRegistration>>;
 
-  @link(CLARIN_USER_METADATA)
+  @link(CLARIN_USER_METADATA, true)
   userMetadata?: Observable<RemoteData<PaginatedList<ClarinUserMetadata>>>;
 
   @link(CLARIN_LICENSE_RESOURCE_MAPPING)
