@@ -575,6 +575,9 @@
 
   "clarin.license.agreement.warning": "By clicking on the button below I, SIGNER with the above ID, agree to the LICENCE(s) restricting the usage of requested BITSTREAM(s).",
 
+  "clarin.license.agreement.notification.error.required.info": "You must fill in required info.",
+
+  "clarin.license.agreement.error.message.cannot.download": ["Something went wrong and you cannot download this bitstream, please contact", " Help Desk."],
 
 
   "bitstream.edit.authorizations.link": "Edit bitstream's Policies",

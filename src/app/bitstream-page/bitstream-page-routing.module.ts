@@ -48,7 +48,6 @@ const EDIT_BITSTREAM_AUTHORIZATIONS_PATH = ':id/authorizations';
         // component: BitstreamDownloadPageComponent,
         resolve: {
           bitstream: BitstreamPageResolver,
-          // item: ItemPageByBitstreamResolver,
           breadcrumb: I18nBreadcrumbResolver
         },
         data: { breadcrumbKey: 'clarin.license.agreement' },

@@ -14,7 +14,7 @@ import {HttpClient} from '@angular/common/http';
 import {NotificationsService} from '../../../shared/notifications/notifications.service';
 import {ClarinUserRegistration} from '../../shared/clarin/clarin-user-registration.model';
 
-export const linkName = 'clarinuserregistration';
+export const linkName = 'clarinuserregistrations';
 export const AUTOCOMPLETE = new ResourceType(linkName);
 
 /**

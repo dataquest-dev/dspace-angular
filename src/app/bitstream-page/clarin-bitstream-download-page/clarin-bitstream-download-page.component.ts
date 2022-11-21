@@ -20,7 +20,7 @@ import {
 import {RemoteDataBuildService} from '../../core/cache/builders/remote-data-build.service';
 import {PaginatedList} from '../../core/data/paginated-list.model';
 import {Group} from '../../core/eperson/models/group.model';
-import {hasValue, isNotEmpty, isNotNull, isNull, isUndefined} from '../../shared/empty.util';
+import {hasValue, isEmpty, isNotEmpty, isNotNull, isNull, isUndefined} from '../../shared/empty.util';
 import {isEqual} from 'lodash';
 import {HttpOptions} from '../../core/dspace-rest/dspace-rest.service';
 import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
@@ -121,7 +121,7 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
       } else if (!(isAuthorized || isAuthorizedByClarin) && isLoggedIn) {
         this.downloadStatus.next(HTTP_STATUS_UNAUTHORIZED.toString());
         this.router.navigateByUrl(getForbiddenRoute(), {skipLocationChange: true});
-      } else if (!(isAuthorized || isAuthorizedByClarin) && !isLoggedIn) {
+      } else if (!(isAuthorized || isAuthorizedByClarin) && !isLoggedIn && isEmpty(this.downloadStatus.value)) {
         this.auth.setRedirectUrl(this.router.url);
         this.router.navigateByUrl('login');
       }

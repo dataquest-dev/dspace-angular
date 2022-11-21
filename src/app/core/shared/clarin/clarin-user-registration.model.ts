@@ -56,7 +56,7 @@ export class ClarinUserRegistration extends ListableObject implements HALResourc
   @link(CLARIN_LICENSE)
   clarinLicenses?: Observable<RemoteData<PaginatedList<ClarinLicense>>>;
 
-  @link(CLARIN_USER_METADATA)
+  @link(CLARIN_USER_METADATA, true)
   userMetadata?: Observable<RemoteData<PaginatedList<ClarinUserMetadata>>>;
 
   getRenderTypes(): (string | GenericConstructor<ListableObject>)[] {

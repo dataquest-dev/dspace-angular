@@ -14,7 +14,7 @@ import {HttpClient} from '@angular/common/http';
 import {NotificationsService} from '../../../shared/notifications/notifications.service';
 import {ClarinLicenseResourceMapping} from '../../shared/clarin/clarin-license-resource-mapping.model';
 
-export const linkName = 'clarinlicenseresourcemapping';
+export const linkName = 'clarinlicenseresourcemappings';
 export const AUTOCOMPLETE = new ResourceType(linkName);
 
 /**
