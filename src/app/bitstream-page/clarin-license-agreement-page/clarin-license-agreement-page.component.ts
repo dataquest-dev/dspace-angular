@@ -17,7 +17,7 @@ import {
 } from '../../core/shared/operators';
 import {ClruaModel} from '../../core/shared/clarin/clrua.model';
 import {RequestParam} from '../../core/cache/models/request-param.model';
-import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined, isNull} from '../../shared/empty.util';
+import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined, isNull, isUndefined} from '../../shared/empty.util';
 import {FindListOptions} from '../../core/data/request.models';
 import {EPerson} from '../../core/eperson/models/eperson.model';
 import {AuthService} from '../../core/auth/auth.service';
@@ -37,6 +37,7 @@ import {BundleDataService} from '../../core/data/bundle-data.service';
 import {Bundle} from '../../core/shared/bundle.model';
 import {HttpClient} from '@angular/common/http';
 import {ClarinUserMetadataDataService} from '../../core/data/clarin/clarin-user-metadata.service';
+import {ClarinLicenseRequiredInfo} from '../../core/shared/clarin/clarin-license.resource-type';
 
 @Component({
   selector: 'ds-clarin-license-agreement-page',
@@ -55,6 +56,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   resourceMapping$: BehaviorSubject<ClarinLicenseResourceMapping> = new BehaviorSubject<ClarinLicenseResourceMapping>(null);
   clarinLicense$: BehaviorSubject<ClarinLicense> = new BehaviorSubject<ClarinLicense>(null);
   currentUser$: BehaviorSubject<EPerson> = new BehaviorSubject<EPerson>(null);
+  requiredInfo$: BehaviorSubject<ClarinLicenseRequiredInfo[]> = new BehaviorSubject<ClarinLicenseRequiredInfo[]>(null);
 
   /**
    * The mail for the help desk is loaded from the server.
@@ -101,7 +103,6 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
         getFirstSucceededRemoteListPayload())
       .subscribe(res => {
         const clrua = res?.[0];
-        console.log('clrua', clrua);
         if (isNull(clrua)) {
           return;
         }
@@ -115,16 +116,16 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
         clrua.resourceMapping
           .pipe(getFirstCompletedRemoteData())
           .subscribe(resourceMapping$ => {
-            console.log('resourceMapping', resourceMapping$);
           this.resourceMapping$.next(resourceMapping$?.payload);
         });
         // Load userMetadata
         clrua.userMetadata
           .pipe(getFirstCompletedRemoteData())
           .subscribe(userMetadata$ => {
-          // this.userMetadata$.next(userMetadata$);
-          console.log('userMetadata$', userMetadata$.payload);
+          this.userMetadata$.next(userMetadata$?.payload);
+          console.log('userMetadata$', userMetadata$?.payload);
         });
+
         // Load clarinLicense from resourceMapping
         this.resourceMapping$.pipe(
           switchMap((resourceMapping: ClarinLicenseResourceMapping) => {
@@ -137,9 +138,27 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
           clarinLicense$
             .subscribe(clarinLicense => {
               this.clarinLicense$.next(clarinLicense?.payload);
+              if (isUndefined(clarinLicense?.payload?.requiredInfo)) {
+                return;
+              }
+              // @ts-ignore
+              this.requiredInfo$.next(clarinLicense?.payload.requiredInfo);
+              // const requiredInfo = clarinLicense?.payload?.requiredInfo.split(',');
+              // console.log('requiredInfo', requiredInfo);
+              console.log(this.requiredInfo$.value);
             });
         });
     });
+  }
+
+  protected getMetadataValueByKey(metadataKey: string) {
+    let result = '';
+    this.userMetadata$.value?.page?.forEach(userMetadata => {
+      if (userMetadata.metadataKey === metadataKey) {
+        result = userMetadata.metadataValue;
+      }
+    });
+    return result;
   }
 
   private createSearchOptions(bitstreamUUID: string, ePersonUUID: string) {

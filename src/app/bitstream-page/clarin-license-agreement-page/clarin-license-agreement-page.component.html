@@ -31,23 +31,29 @@
         <tbody>
         <tr *ngIf="(currentUser$ | async) != null">
           <td><b>{{'clarin.license.agreement.signer.name' | translate}}</b></td>
-          <td><input type="text" disabled class="rounded max-width" [value]="(currentUser$ | async)?.name"></td>
+          <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(currentUser$ | async)?.name"></td>
         </tr>
         <tr *ngIf="(currentUser$ | async) != null">
           <td><b>{{'clarin.license.agreement.signer.id' | translate}}</b></td>
-          <td><input type="text" disabled class="rounded max-width" [value]="(userRegistration$ | async)?.email"></td>
+          <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(userRegistration$ | async)?.email"></td>
         </tr>
         <tr>
           <td><b>{{'clarin.license.agreement.item.handle' | translate}}</b></td>
-          <td><input type="text" disabled class="rounded max-width" [value]="(item$ | async)?.handle"></td>
+          <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(item$ | async)?.handle"></td>
         </tr>
+        <tr *ngFor="let requiredInfo of requiredInfo$ | async" [hidden]="requiredInfo.name === 'SEND_TOKEN'">
+          <td><b>{{requiredInfo.value}}</b></td>
+          <td class="input-group"><input type="text" class="rounded-sm max-width border-gray border-gray"
+                                         [value]="getMetadataValueByKey(requiredInfo.name)"></td>
+        </tr>
+
         <tr>
           <td><b>{{'clarin.license.agreement.bitstream.name' | translate}}</b></td>
-          <td><input type="text" disabled class="rounded max-width" [value]="(bitstream$ | async)?.name"></td>
+          <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(bitstream$ | async)?.name"></td>
         </tr>
         <tr>
           <td><b>{{'clarin.license.agreement.signer.ip.address' | translate}}</b></td>
-          <td><input type="text" disabled class="rounded max-width" [value]="(ipAddress$ | async)"></td>
+          <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(ipAddress$ | async)"></td>
         </tr>
         </tbody>
       </table>
