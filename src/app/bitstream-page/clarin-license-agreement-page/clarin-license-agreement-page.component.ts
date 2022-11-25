@@ -314,39 +314,23 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   }
 
   private checkFilledInRequiredInfo() {
-    let requiredInfoLength = 0;
-
     const areFilledIn = [];
     // Every requiredInfo.name === userMetadata.metadataKey must have the value in the userMetadata.metadataValue
     this.requiredInfo$?.value.forEach(requiredInfo => {
       if (requiredInfo.name === 'SEND_TOKEN') {
         return;
+      } else {
+        let hasMetadataValue = false;
+        this.userMetadata$?.value?.page?.forEach(userMetadata => {
+          if (userMetadata.metadataKey === requiredInfo.name) {
+            if (isNotEmpty(userMetadata.metadataValue)) {
+              hasMetadataValue = true;
+            }
+          }
+        });
+        areFilledIn.push(hasMetadataValue);
       }
-      requiredInfoLength++;
-
-      const userMetadataList = this.userMetadata$?.value?.page;
-      if (isEmpty(userMetadataList)) {
-        areFilledIn.push(false);
-        return;
-      }
-
-      userMetadataList.forEach(userMetadata => {
-        if (userMetadata.metadataKey !== requiredInfo.name) {
-          return;
-        }
-        if (isNotEmpty(userMetadata.metadataValue)) {
-          areFilledIn.push(true);
-        } else {
-          areFilledIn.push(false);
-        }
-      });
     });
-
-    // Count of filled in user metadata doesn't equals to the count of required info. SEND_TOKEN required info
-    // is not counted as required info which the user must fill in.
-    if (requiredInfoLength !== this.userMetadata$?.value?.page?.length) {
-      return false;
-    }
 
     // Some required info wasn't filled in
     if (areFilledIn.includes(false)) {
