@@ -18,7 +18,7 @@ import {
 import {ClruaModel} from '../../core/shared/clarin/clrua.model';
 import {RequestParam} from '../../core/cache/models/request-param.model';
 import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined, isNull, isUndefined} from '../../shared/empty.util';
-import {FindListOptions} from '../../core/data/request.models';
+import {FindListOptions, GetRequest, PostRequest} from '../../core/data/request.models';
 import {EPerson} from '../../core/eperson/models/eperson.model';
 import {AuthService} from '../../core/auth/auth.service';
 import {buildPaginatedList, PaginatedList} from '../../core/data/paginated-list.model';
@@ -38,11 +38,22 @@ import {Bundle} from '../../core/shared/bundle.model';
 import {HttpClient} from '@angular/common/http';
 import {ClarinUserMetadataDataService} from '../../core/data/clarin/clarin-user-metadata.service';
 import {ClarinLicenseRequiredInfo} from '../../core/shared/clarin/clarin-license.resource-type';
-import {isEqual} from 'lodash';
+import {cloneDeep, isEqual} from 'lodash';
 import {NotificationsService} from '../../shared/notifications/notifications.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ItemDataService} from '../../core/data/item-data.service';
 import {ClarinUserRegistrationDataService} from '../../core/data/clarin/clarin-user-registration.service';
+import {FileService} from '../../core/shared/file.service';
+import {HardRedirectService} from '../../core/services/hard-redirect.service';
+import {RequestService} from '../../core/data/request.service';
+import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
+import {CLARIN_USER_METADATA_MANAGE} from '../../core/shared/clarin/clarin-user-metadata.resource-type';
+import {RemoteDataBuildService} from '../../core/cache/builders/remote-data-build.service';
+import {HttpOptions} from '../../core/dspace-rest/dspace-rest.service';
+import {Router} from '@angular/router';
+import {getItemPageRoute} from '../../item-page/item-page-routing-paths';
+import {getBitstreamDownloadRoute} from '../../app-routing-paths';
+import notEmpty = jasmine.notEmpty;
 
 @Component({
   selector: 'ds-clarin-license-agreement-page',
@@ -81,8 +92,14 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     protected translateService: TranslateService,
     protected itemService: ItemDataService,
     protected bitstreamService: BundleDataService,
+    private requestService: RequestService,
+    protected halService: HALEndpointService,
+    protected rdbService: RemoteDataBuildService,
+    private hardRedirectService: HardRedirectService,
+    private fileService: FileService,
     protected auth: AuthService,
-    protected http: HttpClient) { }
+    protected http: HttpClient,
+    protected router: Router,) { }
 
    ngOnInit(): void {
     // Load CurrentItem by bitstreamID to show itemHandle
@@ -110,58 +127,65 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     // If Clrua exist - load the resourceMapping, userMetadata from clrua
     // If Clrua doesn't exist (the user hasn't filled in any userMetadata)
 
+  }
 
-    // Get UserMetadata, UserRegistration, LicenseResourceMapping data from ClarinLicenseResourceUserAllowance - Clrua
-    // this.clruaService.searchBy('byBitstreamAndUser',
-    //   this.createSearchOptions(this.getBitstreamUUID(), this.currentUser$.value.uuid), false, true,
-    //   followLink('userRegistration'), followLink('userMetadata'), followLink('resourceMapping'))
-    //   .pipe(
-    //     getFirstSucceededRemoteListPayload())
-    //   .subscribe(res => {
-    //     const clrua = res?.[0];
-    //     if (isNull(clrua)) {
-    //       return;
-    //     }
-        // // Load userRegistration
-        // clrua.userRegistration
-        //   .pipe(getFirstCompletedRemoteData())
-        //   .subscribe(userRegistration => {
-        //   this.userRegistration$.next(userRegistration?.payload);
-        // });
-        // // Load resourceMapping
-        // clrua.resourceMapping
-        //   .pipe(getFirstCompletedRemoteData())
-        //   .subscribe(resourceMapping$ => {
-        //   this.resourceMapping$.next(resourceMapping$?.payload);
-        // });
-        // // Load userMetadata
-        // clrua.userMetadata
-        //   .pipe(getFirstCompletedRemoteData())
-        //   .subscribe(userMetadata$ => {
-        //   this.userMetadata$.next(userMetadata$?.payload);
-        //   console.log('userMetadata$', userMetadata$?.payload);
-        // });
+  private navigateToItemPage() {
+    this.router.navigate([getItemPageRoute(this.item$?.value)]);
+  }
 
-        // // Load clarinLicense from resourceMapping
-        // this.resourceMapping$.pipe(
-        //   switchMap((resourceMapping: ClarinLicenseResourceMapping) => {
-        //     return this.clarinLicenseResourceMappingService.findByHref(resourceMapping?._links?.self?.href,
-        //       false, true, followLink('clarinLicense'));
-        //   })
-        // ).pipe(getFirstCompletedRemoteData())
-        //   .subscribe(resourceMapping$ => {
-        //   const clarinLicense$ = resourceMapping$.payload.clarinLicense;
-        //   clarinLicense$
-        //     .subscribe(clarinLicense => {
-        //       this.clarinLicense$.next(clarinLicense?.payload);
-        //       if (isUndefined(clarinLicense?.payload?.requiredInfo)) {
-        //         return;
-        //       }
-        //       // @ts-ignore
-        //       this.requiredInfo$.next(clarinLicense?.payload.requiredInfo);
-        //     });
-        // });
-    // });
+  public accept() {
+    // Check if were filled in every required info
+    if (!this.checkFilledInRequiredInfo()) {
+      this.notificationService.error(
+        this.translateService.instant('clarin.license.agreement.notification.error.required.info'));
+      return;
+    }
+
+    const requestId = this.requestService.generateRequestId();
+    const requestOptions: HttpOptions = Object.create({
+      responseType: 'text'
+    });
+
+    const url = this.halService.getRootHref() + '/core/' + ClarinUserMetadata.type.value + '/' + CLARIN_USER_METADATA_MANAGE + '?bitstreamUUID=' + this.getBitstreamUUID();
+    const postRequest = new PostRequest(requestId, url, this.userMetadata$.value?.page, requestOptions);
+    this.requestService.send(postRequest);
+    const response = this.rdbService.buildFromRequestUUID(requestId);
+    response
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe(responseRD$ => {
+        if (isEmpty(responseRD$?.payload)) {
+          return;
+        }
+        const responseStringValue = Object.values(responseRD$.payload).join('');
+        // The user will get an email with download link - notification
+        if (isEqual(responseStringValue, 'checkEmail')) {
+          this.notificationService.info(
+            this.translateService.instant('clarin.license.agreement.notification.check.email'));
+          this.navigateToItemPage();
+          return;
+        } else {
+          // Or just download the bitstream by download token
+          const downloadToken = Object.values(responseRD$?.payload).join('');
+          this.redirectToDownload(downloadToken);
+        }
+      });
+  }
+
+  private redirectToDownload(downloadToken = null) {
+    // 1. Get bitstream
+    // 2. Get bitstream download link
+    // 3. Get bitstream content download link and check if there is `authorization-token` in to query params
+    let bitstream = null;
+    this.bitstream$
+      .pipe(take(1))
+      .subscribe(bitstream$ => {
+        bitstream = bitstream$;
+      });
+    let bitstreamDownloadPath = getBitstreamDownloadRoute(bitstream);
+    if (isNotEmpty(downloadToken)) {
+      bitstreamDownloadPath = bitstreamDownloadPath + '?dtoken=' + downloadToken;
+    }
+    this.hardRedirectService.redirect(bitstreamDownloadPath);
   }
 
   public getMetadataValueByKey(metadataKey: string) {
@@ -176,7 +200,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
 
   public setMetadataValue(metadataKey: string, newMetadataValue: string) {
     let wasUpdated = false;
-    let userMetadataList = this.userMetadata$?.value?.page;
+    let userMetadataList = cloneDeep(this.userMetadata$?.value?.page);
     if (isEmpty(userMetadataList)) {
       userMetadataList = [];
     }
@@ -200,23 +224,6 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     // Update userMetadata$ with new List
     this.userMetadata$.next(buildPaginatedList(
       this.userMetadata$?.value?.pageInfo, userMetadataList, false, this.userMetadata$?.value?._links));
-  }
-
-  public accept() {
-    // Check if were filled in every required info
-    if (!this.checkFilledInRequiredInfo()) {
-      this.notificationService.error(
-        this.translateService.instant('clarin.license.agreement.notification.error.required.info'));
-      return;
-    }
-
-    // Send userMetadata with bitstreamId
-    // this.userMetadata$?.value?.page?.forEach(userMetadata => {
-    //   if (isNotEmpty(userMetadata._links)) {
-    //     this.userMetadataService.put(userMetadata);
-    //   }
-    //   this.userMetadataService.create(userMetadata);
-    // });
   }
 
   private getBitstreamUUID() {
@@ -250,12 +257,21 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
               this.error$.value.push('Cannot load the License');
             }
             this.clarinLicense$.next(clarinLicense?.payload);
-
             // Load required info from ClarinLicense
             // @ts-ignore
             this.requiredInfo$.next(clarinLicense?.payload?.requiredInfo);
           });
       });
+  }
+
+  public shouldSeeSendTokenInfo() {
+    let shouldSee = false;
+    this.requiredInfo$?.value?.forEach(requiredInfo => {
+      if (requiredInfo?.name === 'SEND_TOKEN') {
+        shouldSee = true;
+      }
+    });
+    return shouldSee;
   }
 
   private loadUserRegistrationAndUserMetadata() {

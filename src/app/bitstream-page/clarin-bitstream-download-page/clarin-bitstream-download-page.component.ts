@@ -60,12 +60,10 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
     // Get dtoken
     this.dtoken = isUndefined(this.route.snapshot.queryParams.dtoken) ? null : this.route.snapshot.queryParams.dtoken;
 
+    console.log('dtoken', this.dtoken);
+
     this.bitstreamRD$ = this.route.data.pipe(
       map((data) => data.bitstream));
-
-    this.route.data.subscribe(data => {
-      console.log('routeData', data);
-    });
 
     this.bitstream$ = this.bitstreamRD$.pipe(
       redirectOn4xx(this.router, this.auth),
@@ -79,7 +77,7 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
         authorizationUrl = this.halService.getRootHref() + '/' + AuthrnBitstream.type.value + '/' + bitstream.uuid;
 
         // Add token to the url or not
-        authorizationUrl = isNotNull(this.dtoken) ? authorizationUrl + '?dtoken=' + this.dtoken : authorizationUrl;
+        authorizationUrl = isNotEmpty(this.dtoken) ? authorizationUrl + '?dtoken=' + this.dtoken : authorizationUrl;
 
         const requestId = this.requestService.generateRequestId();
         const headRequest = new GetRequest(requestId, authorizationUrl);
@@ -109,7 +107,11 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
       let bitstreamURL = bitstream._links.content.href;
       // Clarin Authorization is approving the user by token
       if (isAuthorizedByClarin) {
-        fileLink = isNotNull(this.dtoken) ? fileLink + '?dtoken=' + this.dtoken : fileLink;
+        if (fileLink.includes('authentication-token')) {
+          fileLink = isNotNull(this.dtoken) ? fileLink + '&dtoken=' + this.dtoken : fileLink;
+        } else {
+          fileLink = isNotNull(this.dtoken) ? fileLink + '?dtoken=' + this.dtoken : fileLink;
+        }
         bitstreamURL = isNotNull(this.dtoken) ? bitstreamURL + '?dtoken=' + this.dtoken : bitstreamURL ;
       }
       if ((isAuthorized || isAuthorizedByClarin) && isLoggedIn && isNotEmpty(fileLink)) {

@@ -61,7 +61,7 @@
       </table>
     </div>
   </div>
-  <div class="row" [hidden]="!(clarinLicense$ | async)?.name.includes('HamleDT')">
+  <div class="row" [hidden]="!shouldSeeSendTokenInfo()">
     <div class="col-12">
       <div class="card bg-clarin-blue">
         <div class="card-body row">

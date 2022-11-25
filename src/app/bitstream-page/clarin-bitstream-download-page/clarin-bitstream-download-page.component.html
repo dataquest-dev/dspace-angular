@@ -6,4 +6,8 @@
     *ngIf="(downloadStatus | async) === 'MissingLicenseAgreementException'"
     [bitstream$]="bitstream$">
   </ds-clarin-license-agreement-page>
+  <ds-clarin-bitstream-token-expired
+    *ngIf="(downloadStatus | async) === 'DownloadTokenExpiredException'"
+    [bitstream$]="bitstream$">
+  </ds-clarin-bitstream-token-expired>
 </div>
