@@ -429,6 +429,10 @@ export class ItemVersionsComponent implements OnInit {
       getFirstCompletedRemoteData(),
     ).subscribe((res: RemoteData<PaginatedList<Version>>) => {
       this.versionsRD$.next(res);
+      const version$ = res.payload.page[0];
+      version$.item.subscribe(item => {
+        console.log('item', item);
+      });
     });
   }
 

@@ -151,7 +151,6 @@ export class BitstreamRequestACopyPageComponent implements OnInit, OnDestroy {
         }
       })
     );
-
   }
 
   /**

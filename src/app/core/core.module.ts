@@ -168,6 +168,11 @@ import { ClarinLicenseDataService } from './data/clarin/clarin-license-data.serv
 import { ClarinLicenseLabelDataService } from './data/clarin/clarin-license-label-data.service';
 import { HandleDataService } from './data/handle-data.service';
 import { Handle } from './handle/handle.model';
+import {BitstreamAuthorizationService} from './auth/bitstream-authorization.service';
+import {ClruaDataService} from './data/clarin/clrua-data.service';
+import {ClarinUserRegistrationDataService} from './data/clarin/clarin-user-registration.service';
+import {ClarinUserMetadataDataService} from './data/clarin/clarin-user-metadata.service';
+import {ClarinLicenseResourceMappingService} from './data/clarin/clarin-license-resource-mapping-data.service';
 
 /**
  * When not in production, endpoint responses can be mocked for testing purposes
@@ -200,6 +205,11 @@ const PROVIDERS = [
   MetadataValueDataService,
   ClarinLicenseDataService,
   ClarinLicenseLabelDataService,
+  BitstreamAuthorizationService,
+  ClruaDataService,
+  ClarinUserRegistrationDataService,
+  ClarinUserMetadataDataService,
+  ClarinLicenseResourceMappingService,
   DSOResponseParsingService,
   { provide: MOCK_RESPONSE_MAP, useValue: mockResponseMap },
   { provide: DspaceRestService, useFactory: restServiceFactory, deps: [MOCK_RESPONSE_MAP, HttpClient] },
@@ -296,7 +306,6 @@ const PROVIDERS = [
   SequenceService,
   GroupDataService,
   FeedbackDataService,
-  ClarinLicenseDataService,
   HandleDataService
 ];
 

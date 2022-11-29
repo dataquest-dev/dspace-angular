@@ -9,8 +9,8 @@ export const paginationID = 'cLicense';
 
 export const defaultPagination = Object.assign(new PaginationComponentOptions(), {
   id: paginationID,
-  currentPage: 1,
-  pageSize: 10
+  currentPage: 0,
+  pageSize: 200
 });
 
 export const defaultSortConfiguration = new SortOptions('', SortDirection.DESC);

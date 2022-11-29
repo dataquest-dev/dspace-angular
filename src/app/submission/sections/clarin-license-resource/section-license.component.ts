@@ -13,11 +13,11 @@ import { renderSectionFor } from '../sections-decorator';
 import { SectionsType } from '../sections-type';
 import { SectionsService } from '../sections.service';
 import { RequestService } from '../../../core/data/request.service';
-import { PatchRequest } from '../../../core/data/request.models';
+import {FindListOptions, PatchRequest} from '../../../core/data/request.models';
 import { Operation } from 'fast-json-patch';
 import { ClarinLicenseDataService } from '../../../core/data/clarin/clarin-license-data.service';
 import { ClarinLicense } from '../../../core/shared/clarin/clarin-license.model';
-import { getFirstCompletedRemoteData } from '../../../core/shared/operators';
+import {getFirstCompletedRemoteData, getFirstSucceededRemoteListPayload} from '../../../core/shared/operators';
 import { distinctUntilChanged, filter, find } from 'rxjs/operators';
 import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
@@ -486,6 +486,21 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Map licenses from `license-definitions.json` to the object list.
    */
   private loadLicenses4Selector() {
+    const options = new FindListOptions();
+    options.currentPage = 0;
+    // Load all licenses
+    options.elementsPerPage = 1000;
+    this.clarinLicenseService.findAll(options, false)
+      .pipe(getFirstSucceededRemoteListPayload())
+      .subscribe((clarinLicenseList: ClarinLicense[]) => {
+        clarinLicenseList?.forEach(clarinLicense => {
+          const license4Selector = new License4Selector();
+          license4Selector.id = clarinLicense.id;
+          license4Selector.name = clarinLicense.name;
+          license4Selector.url = clarinLicense.definition;
+          this.licenses4Selector.push(license4Selector);
+        });
+      });
     licenseDefinitions.forEach((license4Selector: License4Selector) => {
       this.licenses4Selector.push(license4Selector);
     });
