@@ -6,7 +6,13 @@ import { loginProcess } from '../support/commands';
  */
 describe('License Administration Page', () => {
 
-  it('should pass accessibility tests', () => {
+  it('should pass accessibility tests', {
+    retries: {
+      runMode: 8,
+      openMode: 8,
+    },
+    defaultCommandTimeout: 10000
+  }, () => {
     cy.visit('/');
 
     // Login as admin
