@@ -12,7 +12,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HostWindowService } from '../../../../shared/host-window.service';
 import { HostWindowServiceStub } from '../../../../shared/testing/host-window-service.stub';
 import { DomSanitizer } from '@angular/platform-browser';
-import { mockLicenseLabelListRD$ } from '../../../../shared/testing/clarin-license-mock';
+import { createSuccessfulRemoteDataObject$ } from '../../../../shared/remote-data.utils';
+import { buildPaginatedList } from '../../../../core/data/paginated-list.model';
+import { PageInfo } from '../../../../core/shared/page-info.model';
+import { ClarinLicenseLabel } from '../../../../core/shared/clarin/clarin-license-label.model';
 
 describe('DefineLicenseFormComponent', () => {
   let component: DefineLicenseFormComponent;
@@ -24,7 +27,34 @@ describe('DefineLicenseFormComponent', () => {
 
   beforeEach(async () => {
     clarinLicenseLabelDataService = jasmine.createSpyObj('clarinLicenseLabelService', {
-      findAll: mockLicenseLabelListRD$
+      findAll: createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [
+        Object.assign(new ClarinLicenseLabel(), {
+          id: 1,
+          label: 'exLL',
+          title: 'exTTL',
+          extended: true,
+          icon: [new Blob(['blob string'], {
+            type: 'text/plain'
+          })],
+          _links: {
+            self: {
+              href: 'url.ex.1'
+            }
+          }
+        }),
+        Object.assign(new ClarinLicenseLabel(), {
+          id: 2,
+          label: 'LLL',
+          title: 'licenseLTTL',
+          extended: false,
+          icon: null,
+          _links: {
+            self: {
+              href: 'url.ex.1'
+            }
+          }
+        })
+      ]))
     });
     modalStub = jasmine.createSpyObj('modalService', ['close', 'open']);
     sanitizerStub = jasmine.createSpyObj('sanitizer', {
@@ -55,6 +85,12 @@ describe('DefineLicenseFormComponent', () => {
     fixture = TestBed.createComponent(DefineLicenseFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    component = null;
+    clarinLicenseLabelDataService = null;
+    fixture.destroy();
   });
 
   it('should create', () => {

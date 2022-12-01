@@ -82,6 +82,8 @@ describe('ClarinLicenseTableComponent', () => {
   });
 
   afterEach(() => {
+    component = null;
+    clarinLicenseLabelDataService = null;
     fixture.destroy();
   });
 
