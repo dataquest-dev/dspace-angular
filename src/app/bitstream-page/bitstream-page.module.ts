@@ -10,7 +10,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page/clarin-bitstream-download-page.component';
 import { ClarinLicenseAgreementPageComponent } from './clarin-license-agreement-page/clarin-license-agreement-page.component';
 import { ClarinBitstreamTokenExpiredComponent } from './clarin-bitstream-token-expired/clarin-bitstream-token-expired.component';
-import { ItemPageByBitstreamResolver } from './item-page-by-bitstream.resolver';
 
 /**
  * This module handles all components that are necessary for Bitstream related pages
@@ -30,9 +29,6 @@ import { ItemPageByBitstreamResolver } from './item-page-by-bitstream.resolver';
     ClarinBitstreamDownloadPageComponent,
     ClarinLicenseAgreementPageComponent,
     ClarinBitstreamTokenExpiredComponent
-  ],
-  providers: [
-    ItemPageByBitstreamResolver
   ]
 })
 export class BitstreamPageModule {
