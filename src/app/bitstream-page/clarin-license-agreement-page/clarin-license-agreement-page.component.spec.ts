@@ -2,8 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ClarinLicenseAgreementPageComponent } from './clarin-license-agreement-page.component';
 
 describe('ClarinLicenseAgreementPageComponent', () => {
-  let component: ClarinLicenseAgreementPageComponent;
-  let fixture: ComponentFixture<ClarinLicenseAgreementPageComponent>;
+  // TODO uncomment and create tests
+  // let component: ClarinLicenseAgreementPageComponent;
+  // let fixture: ComponentFixture<ClarinLicenseAgreementPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

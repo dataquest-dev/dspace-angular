@@ -2,8 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page.component';
 
 describe('ClarinBitstreamDownloadPageComponent', () => {
-  let component: ClarinBitstreamDownloadPageComponent;
-  let fixture: ComponentFixture<ClarinBitstreamDownloadPageComponent>;
+  // TODO uncomment and create tests
+  // let component: ClarinBitstreamDownloadPageComponent;
+  // let fixture: ComponentFixture<ClarinBitstreamDownloadPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
