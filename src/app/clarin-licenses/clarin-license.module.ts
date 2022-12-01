@@ -9,7 +9,6 @@ import { ClarinLicenseTableComponent } from './clarin-license-table/clarin-licen
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { DefineLicenseFormComponent } from './clarin-license-table/modal/define-license-form/define-license-form.component';
 import { DefineLicenseLabelFormComponent } from './clarin-license-table/modal/define-license-label-form/define-license-label-form.component';
-import { ClarinUserMetadataFormComponent } from './clarin-user-metadata-form/clarin-user-metadata-form.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +16,6 @@ import { ClarinUserMetadataFormComponent } from './clarin-user-metadata-form/cla
     ClarinLicenseTableComponent,
     DefineLicenseFormComponent,
     DefineLicenseLabelFormComponent,
-    ClarinUserMetadataFormComponent,
   ],
     imports: [
         CommonModule,

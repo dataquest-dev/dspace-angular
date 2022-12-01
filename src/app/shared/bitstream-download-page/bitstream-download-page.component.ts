@@ -25,6 +25,7 @@ export class BitstreamDownloadPageComponent implements OnInit {
   bitstream$: Observable<Bitstream>;
   bitstreamRD$: Observable<RemoteData<Bitstream>>;
 
+
   constructor(
     private route: ActivatedRoute,
     protected router: Router,

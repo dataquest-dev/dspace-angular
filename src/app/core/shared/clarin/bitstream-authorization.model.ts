@@ -1,15 +1,13 @@
-import {typedObject} from '../../cache/builders/build-decorators';
-import {ListableObject} from '../../../shared/object-collection/shared/listable-object.model';
-import {HALResource} from '../hal-resource.model';
-import {CLARIN_LICENSE} from './clarin-license.resource-type';
-import {excludeFromEquals} from '../../utilities/equals.decorators';
-import {autoserialize, deserialize} from 'cerialize';
-import {ResourceType} from '../resource-type';
-import {BITSTREAM_AUTHRN} from './bitstream-authorization.resource-type';
-import {HALLink} from '../hal-link.model';
+import { typedObject } from '../../cache/builders/build-decorators';
+import { HALResource } from '../hal-resource.model';
+import { excludeFromEquals } from '../../utilities/equals.decorators';
+import { autoserialize, deserialize } from 'cerialize';
+import { ResourceType } from '../resource-type';
+import { BITSTREAM_AUTHRN } from './bitstream-authorization.resource-type';
+import { HALLink } from '../hal-link.model';
 
 /**
- * Class that represents a Clarin License
+ * Class which is user do wrap Authorization response data for endpoint `/api/authrn`
  */
 @typedObject
 export class AuthrnBitstream implements HALResource {

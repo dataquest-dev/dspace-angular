@@ -1,35 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, of as observableOf} from 'rxjs';
-import {Bitstream} from '../../core/shared/bitstream.model';
-import {RemoteData} from '../../core/data/remote-data';
-import {AuthService} from '../../core/auth/auth.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {filter, map, switchMap, take} from 'rxjs/operators';
-import {getFirstCompletedRemoteData, getRemoteDataPayload, redirectOn4xx} from '../../core/shared/operators';
-import {BitstreamAuthorizationService} from '../../core/auth/bitstream-authorization.service';
-import {HardRedirectService} from '../../core/services/hard-redirect.service';
-import {BitstreamDataService} from '../../core/data/bitstream-data.service';
-import {DeleteRequest, GetRequest, HeadRequest} from '../../core/data/request.models';
-import {RequestService} from '../../core/data/request.service';
-import {hasCompleted, hasFailed, hasSucceeded, RequestEntry, RequestEntryState} from '../../core/data/request.reducer';
+import { BehaviorSubject, combineLatest as observableCombineLatest, Observable, of as observableOf } from 'rxjs';
+import { Bitstream } from '../../core/shared/bitstream.model';
+import { RemoteData } from '../../core/data/remote-data';
+import { AuthService } from '../../core/auth/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter, map, switchMap, take } from 'rxjs/operators';
+import { getRemoteDataPayload, redirectOn4xx } from '../../core/shared/operators';
+import { HardRedirectService } from '../../core/services/hard-redirect.service';
+import { GetRequest } from '../../core/data/request.models';
+import { RequestService } from '../../core/data/request.service';
+import { hasFailed, RequestEntryState } from '../../core/data/request.reducer';
 import {
   DOWNLOAD_TOKEN_EXPIRED_EXCEPTION,
   HTTP_STATUS_UNAUTHORIZED,
   MISSING_LICENSE_AGREEMENT_EXCEPTION
 } from '../../core/shared/clarin/constants';
-import {RemoteDataBuildService} from '../../core/cache/builders/remote-data-build.service';
-import {PaginatedList} from '../../core/data/paginated-list.model';
-import {Group} from '../../core/eperson/models/group.model';
-import {hasValue, isEmpty, isNotEmpty, isNotNull, isNull, isUndefined} from '../../shared/empty.util';
-import {isEqual} from 'lodash';
-import {HttpOptions} from '../../core/dspace-rest/dspace-rest.service';
-import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
-import {AuthrnBitstream} from '../../core/shared/clarin/bitstream-authorization.model';
-import {FeatureID} from '../../core/data/feature-authorization/feature-id';
-import {AuthorizationDataService} from '../../core/data/feature-authorization/authorization-data.service';
-import {FileService} from '../../core/shared/file.service';
-import {getForbiddenRoute} from '../../app-routing-paths';
+import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
+import { hasValue, isEmpty, isNotEmpty, isNotNull, isUndefined } from '../../shared/empty.util';
+import { isEqual } from 'lodash';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { AuthrnBitstream } from '../../core/shared/clarin/bitstream-authorization.model';
+import { FeatureID } from '../../core/data/feature-authorization/feature-id';
+import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+import { FileService } from '../../core/shared/file.service';
+import { getForbiddenRoute } from '../../app-routing-paths';
 
+/**
+ * `/<BITSTREAM_UUID>/download` page
+ * This component decides if the bitstream will be downloaded or if the user must fill in some user metadata or
+ * if the path contains `dtoken` parameter the component tries to download the bitstream with the token.
+ */
 @Component({
   selector: 'ds-clarin-bitstream-download-page',
   templateUrl: './clarin-bitstream-download-page.component.html',
@@ -47,9 +47,7 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
     protected router: Router,
     private auth: AuthService,
     protected authorizationService: AuthorizationDataService,
-    private bitstreamAuthService: BitstreamAuthorizationService,
     private hardRedirectService: HardRedirectService,
-    private bitstreamService: BitstreamDataService,
     private requestService: RequestService,
     protected rdbService: RemoteDataBuildService,
     protected halService: HALEndpointService,
@@ -130,6 +128,10 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
     });
   }
 
+  /**
+   * Check if the response contains error: MissingLicenseAgreementException or DownloadTokenExpiredException and
+   * show components.
+   */
   processClarinAuthorization(requestEntry: RemoteData<any>) {
     if (isEqual(requestEntry?.statusCode, 200)) {
       // User is authorized -> start downloading

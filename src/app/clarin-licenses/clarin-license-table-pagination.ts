@@ -7,6 +7,7 @@ import { SortDirection, SortOptions } from '../core/cache/models/sort-options.mo
 
 export const paginationID = 'cLicense';
 
+// pageSize: 200; get all licenses
 export const defaultPagination = Object.assign(new PaginationComponentOptions(), {
   id: paginationID,
   currentPage: 0,

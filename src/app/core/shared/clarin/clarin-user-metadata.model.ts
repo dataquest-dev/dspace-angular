@@ -1,14 +1,16 @@
-import {typedObject} from '../../cache/builders/build-decorators';
-import {ListableObject} from '../../../shared/object-collection/shared/listable-object.model';
-import {HALResource} from '../hal-resource.model';
-import {CLARIN_USER_REGISTRATION} from './clarin-user-registration.resource-type';
-import {excludeFromEquals} from '../../utilities/equals.decorators';
-import {autoserialize, deserialize} from 'cerialize';
-import {ResourceType} from '../resource-type';
-import {HALLink} from '../hal-link.model';
-import {CLARIN_USER_METADATA} from './clarin-user-metadata.resource-type';
-import {GenericConstructor} from '../generic-constructor';
+import { typedObject } from '../../cache/builders/build-decorators';
+import { ListableObject } from '../../../shared/object-collection/shared/listable-object.model';
+import { HALResource } from '../hal-resource.model';
+import { excludeFromEquals } from '../../utilities/equals.decorators';
+import { autoserialize, deserialize } from 'cerialize';
+import { ResourceType } from '../resource-type';
+import { HALLink } from '../hal-link.model';
+import { CLARIN_USER_METADATA } from './clarin-user-metadata.resource-type';
+import { GenericConstructor } from '../generic-constructor';
 
+/**
+ * Class which represents the ClarinUserMetadata object.
+ */
 @typedObject
 export class ClarinUserMetadata extends ListableObject implements HALResource {
   static type = CLARIN_USER_METADATA;

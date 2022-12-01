@@ -1,60 +1,48 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Bitstream} from '../../core/shared/bitstream.model';
-import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, of as observableOf} from 'rxjs';
-import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
-import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
-import {hasCompleted, hasFailed, hasSucceeded} from '../../core/data/request.reducer';
-import {ClruaDataService} from '../../core/data/clarin/clrua-data.service';
-import {followLink} from '../../shared/utils/follow-link-config.model';
-import {ClarinUserRegistration} from '../../core/shared/clarin/clarin-user-registration.model';
-import {ClarinUserMetadata} from '../../core/shared/clarin/clarin-user-metadata.model';
-import {
-  getAllCompletedRemoteData,
-  getAllSucceededRemoteData, getAllSucceededRemoteListPayload,
-  getFirstCompletedRemoteData, getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteDataWithNotEmptyPayload,
-  getFirstSucceededRemoteListPayload,
-  getPaginatedListPayload, getRemoteDataPayload
-} from '../../core/shared/operators';
-import {ClruaModel} from '../../core/shared/clarin/clrua.model';
-import {RequestParam} from '../../core/cache/models/request-param.model';
-import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined, isNull, isUndefined} from '../../shared/empty.util';
-import {FindListOptions, GetRequest, PostRequest} from '../../core/data/request.models';
-import {EPerson} from '../../core/eperson/models/eperson.model';
-import {AuthService} from '../../core/auth/auth.service';
-import {buildPaginatedList, PaginatedList} from '../../core/data/paginated-list.model';
-import {RemoteData} from '../../core/data/remote-data';
-import {ClarinLicenseResourceMapping} from '../../core/shared/clarin/clarin-license-resource-mapping.model';
-import {Item} from '../../core/shared/item.model';
-import {Relationship} from '../../core/shared/item-relationships/relationship.model';
-import {MetadataSchema} from '../../core/metadata/metadata-schema.model';
-import {EpersonDtoModel} from '../../core/eperson/models/eperson-dto.model';
-import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
-import {ClarinLicenseResourceMappingService} from '../../core/data/clarin/clarin-license-resource-mapping-data.service';
-import {HELP_DESK_PROPERTY} from '../../item-page/tombstone/tombstone.component';
-import {ConfigurationDataService} from '../../core/data/configuration-data.service';
-import {ConfigurationProperty} from '../../core/shared/configuration-property.model';
-import {BundleDataService} from '../../core/data/bundle-data.service';
-import {Bundle} from '../../core/shared/bundle.model';
-import {HttpClient} from '@angular/common/http';
-import {ClarinUserMetadataDataService} from '../../core/data/clarin/clarin-user-metadata.service';
-import {ClarinLicenseRequiredInfo} from '../../core/shared/clarin/clarin-license.resource-type';
-import {cloneDeep, isEqual} from 'lodash';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
-import {TranslateService} from '@ngx-translate/core';
-import {ItemDataService} from '../../core/data/item-data.service';
-import {ClarinUserRegistrationDataService} from '../../core/data/clarin/clarin-user-registration.service';
-import {FileService} from '../../core/shared/file.service';
-import {HardRedirectService} from '../../core/services/hard-redirect.service';
-import {RequestService} from '../../core/data/request.service';
-import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
-import {CLARIN_USER_METADATA_MANAGE} from '../../core/shared/clarin/clarin-user-metadata.resource-type';
-import {RemoteDataBuildService} from '../../core/cache/builders/remote-data-build.service';
-import {HttpOptions} from '../../core/dspace-rest/dspace-rest.service';
-import {Router} from '@angular/router';
-import {getItemPageRoute} from '../../item-page/item-page-routing-paths';
-import {getBitstreamDownloadRoute} from '../../app-routing-paths';
-import notEmpty = jasmine.notEmpty;
+import { Component, Input, OnInit } from '@angular/core';
+import { Bitstream } from '../../core/shared/bitstream.model';
+import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
+import { hasFailed } from '../../core/data/request.reducer';
+import { followLink } from '../../shared/utils/follow-link-config.model';
+import { ClarinUserRegistration } from '../../core/shared/clarin/clarin-user-registration.model';
+import { ClarinUserMetadata } from '../../core/shared/clarin/clarin-user-metadata.model';
+import { getFirstCompletedRemoteData, getFirstSucceededRemoteListPayload } from '../../core/shared/operators';
+import { RequestParam } from '../../core/cache/models/request-param.model';
+import { hasValue, isEmpty, isNotEmpty } from '../../shared/empty.util';
+import { FindListOptions, PostRequest } from '../../core/data/request.models';
+import { EPerson } from '../../core/eperson/models/eperson.model';
+import { AuthService } from '../../core/auth/auth.service';
+import { buildPaginatedList, PaginatedList } from '../../core/data/paginated-list.model';
+import { RemoteData } from '../../core/data/remote-data';
+import { ClarinLicenseResourceMapping } from '../../core/shared/clarin/clarin-license-resource-mapping.model';
+import { Item } from '../../core/shared/item.model';
+import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
+import { ClarinLicenseResourceMappingService } from '../../core/data/clarin/clarin-license-resource-mapping-data.service';
+import { HELP_DESK_PROPERTY } from '../../item-page/tombstone/tombstone.component';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
+import { BundleDataService } from '../../core/data/bundle-data.service';
+import { HttpClient } from '@angular/common/http';
+import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
+import { cloneDeep, isEqual } from 'lodash';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ItemDataService } from '../../core/data/item-data.service';
+import { ClarinUserRegistrationDataService } from '../../core/data/clarin/clarin-user-registration.service';
+import { HardRedirectService } from '../../core/services/hard-redirect.service';
+import { RequestService } from '../../core/data/request.service';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { CLARIN_USER_METADATA_MANAGE } from '../../core/shared/clarin/clarin-user-metadata.resource-type';
+import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
+import { HttpOptions } from '../../core/dspace-rest/dspace-rest.service';
+import { Router } from '@angular/router';
+import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
+import { getBitstreamDownloadRoute } from '../../app-routing-paths';
 
+/**
+ * The component shows the user's filled in user metadata and the user can fill in other required user metadata.
+ * The user must to approve his user metadata to download the bitstream.
+ */
 @Component({
   selector: 'ds-clarin-license-agreement-page',
   templateUrl: './clarin-license-agreement-page.component.html',
@@ -65,14 +53,49 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   @Input()
   bitstream$: Observable<Bitstream>;
 
+  /**
+   * The user IP Address which is loaded from `http://api.ipify.org/?format=json`
+   */
   ipAddress$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+
+  /**
+   * The item where is the bitstream attached to.
+   */
   item$: BehaviorSubject<Item> = new BehaviorSubject<Item>(null);
+
+  /**
+   * The object where are stored the user's e-mail and organization data.
+   */
   userRegistration$: BehaviorSubject<ClarinUserRegistration> = new BehaviorSubject<ClarinUserRegistration>(null);
+
+  /**
+   * The object where are stored the user's metadata.
+   */
   userMetadata$: BehaviorSubject<PaginatedList<ClarinUserMetadata>> = new BehaviorSubject<PaginatedList<ClarinUserMetadata>>(null);
+
+  /**
+   * By resourceMapping get the ClarinLicense object.
+   */
   resourceMapping$: BehaviorSubject<ClarinLicenseResourceMapping> = new BehaviorSubject<ClarinLicenseResourceMapping>(null);
+
+  /**
+   * The Clarin License which is attached to the bitstream.
+   */
   clarinLicense$: BehaviorSubject<ClarinLicense> = new BehaviorSubject<ClarinLicense>(null);
+
+  /**
+   * The current user object.
+   */
   currentUser$: BehaviorSubject<EPerson> = new BehaviorSubject<EPerson>(null);
+
+  /**
+   * Required info for downloading the bitstream.
+   */
   requiredInfo$: BehaviorSubject<ClarinLicenseRequiredInfo[]> = new BehaviorSubject<ClarinLicenseRequiredInfo[]>(null);
+
+  /**
+   * Errors which occurs by loading the data for the user approval.
+   */
   error$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
   /**
@@ -81,25 +104,20 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   helpDesk$: Observable<RemoteData<ConfigurationProperty>>;
 
   constructor(
-    protected clarinLicenseService: ClarinLicenseDataService,
-    protected clruaService: ClruaDataService,
     protected clarinLicenseResourceMappingService: ClarinLicenseResourceMappingService,
     protected configurationDataService: ConfigurationDataService,
     protected bundleService: BundleDataService,
-    protected userMetadataService: ClarinUserMetadataDataService,
     protected userRegistrationService: ClarinUserRegistrationDataService,
     protected notificationService: NotificationsService,
     protected translateService: TranslateService,
     protected itemService: ItemDataService,
-    protected bitstreamService: BundleDataService,
-    private requestService: RequestService,
+    protected auth: AuthService,
+    protected http: HttpClient,
+    protected router: Router,
     protected halService: HALEndpointService,
     protected rdbService: RemoteDataBuildService,
     private hardRedirectService: HardRedirectService,
-    private fileService: FileService,
-    protected auth: AuthService,
-    protected http: HttpClient,
-    protected router: Router,) { }
+    private requestService: RequestService) { }
 
    ngOnInit(): void {
     // Load CurrentItem by bitstreamID to show itemHandle
@@ -121,16 +139,6 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     // The user is signed in and has record in the userRegistration
     // Load userRegistration and userMetadata from userRegistration repository
     this.loadUserRegistrationAndUserMetadata();
-
-    // Check if exist ClarinLicenseResourceUserAllowance (Clrua) for the current user - the user has filled in
-    // some userMetadata
-    // If Clrua exist - load the resourceMapping, userMetadata from clrua
-    // If Clrua doesn't exist (the user hasn't filled in any userMetadata)
-
-  }
-
-  private navigateToItemPage() {
-    this.router.navigate([getItemPageRoute(this.item$?.value)]);
   }
 
   public accept() {
@@ -142,14 +150,19 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     }
 
     const requestId = this.requestService.generateRequestId();
+    // Response type must be `text` because it throws response as error byd status code is 200 (Success).
     const requestOptions: HttpOptions = Object.create({
       responseType: 'text'
     });
 
+    // `/core/clarinusermetadatavalues/manage?bitstreamUUID=<BITSTREAM_UUID>`
     const url = this.halService.getRootHref() + '/core/' + ClarinUserMetadata.type.value + '/' + CLARIN_USER_METADATA_MANAGE + '?bitstreamUUID=' + this.getBitstreamUUID();
     const postRequest = new PostRequest(requestId, url, this.userMetadata$.value?.page, requestOptions);
+    // Send POST request
     this.requestService.send(postRequest);
+    // Get response
     const response = this.rdbService.buildFromRequestUUID(requestId);
+    // Process response
     response
       .pipe(getFirstCompletedRemoteData())
       .subscribe(responseRD$ => {
@@ -169,6 +182,10 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
           this.redirectToDownload(downloadToken);
         }
       });
+  }
+
+  private navigateToItemPage() {
+    this.router.navigate([getItemPageRoute(this.item$?.value)]);
   }
 
   private redirectToDownload(downloadToken = null) {
@@ -388,32 +405,6 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
         }
         this.item$.next(item);
       });
-    // this.bitstream$.pipe(
-    //   take(1),
-    //   switchMap((bitstreamRD$) => {
-    //     return bitstreamRD$?.bundle;
-    //   })
-    // )
-    //   // Get Bundle of the Bitstream
-    //   .pipe(
-    //     getFirstCompletedRemoteData(),
-    //     switchMap((bundleRD$: RemoteData<Bundle>) => {
-    //       return this.bundleService.findById(bundleRD$?.payload?.id, false, true,
-    //         followLink('item'));
-    //     })
-    //   )
-    //   // Get Bundle with Item
-    //   .pipe(
-    //     getFirstCompletedRemoteData(),
-    //     switchMap((bundleRD$: RemoteData<Bundle>) => {
-    //       return bundleRD$.payload?.item;
-    //     })
-    //   )
-    //   // Get Bundle's Item
-    //   .pipe(getFirstCompletedRemoteData())
-    //   .subscribe(itemRD$ => {
-    //     this.item$.next(itemRD$.payload);
-    //   });
   }
 
   private loadHelpDeskEmail() {

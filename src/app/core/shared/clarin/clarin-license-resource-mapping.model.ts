@@ -1,20 +1,20 @@
-import {link, typedObject} from '../../cache/builders/build-decorators';
-import {ListableObject} from '../../../shared/object-collection/shared/listable-object.model';
-import {HALResource} from '../hal-resource.model';
-import {CLARIN_LICENSE_RESOURCE_USER_ALLOWANCE} from './clrua.resource-type';
-import {excludeFromEquals} from '../../utilities/equals.decorators';
-import {autoserialize, deserialize} from 'cerialize';
-import {ResourceType} from '../resource-type';
-import {HALLink} from '../hal-link.model';
-import {CLARIN_USER_REGISTRATION} from './clarin-user-registration.resource-type';
-import {Observable} from 'rxjs';
-import {RemoteData} from '../../data/remote-data';
-import {ClarinUserRegistration} from './clarin-user-registration.model';
-import {ClarinLicense} from './clarin-license.model';
-import {CLARIN_LICENSE} from './clarin-license.resource-type';
-import {CLARIN_LICENSE_RESOURCE_MAPPING} from './clarin-license-resource-mapping.resource-type';
-import {GenericConstructor} from '../generic-constructor';
+import { link, typedObject } from '../../cache/builders/build-decorators';
+import { ListableObject } from '../../../shared/object-collection/shared/listable-object.model';
+import { HALResource } from '../hal-resource.model';
+import { excludeFromEquals } from '../../utilities/equals.decorators';
+import { autoserialize, deserialize } from 'cerialize';
+import { ResourceType } from '../resource-type';
+import { HALLink } from '../hal-link.model';
+import { Observable } from 'rxjs';
+import { RemoteData } from '../../data/remote-data';
+import { ClarinLicense } from './clarin-license.model';
+import { CLARIN_LICENSE } from './clarin-license.resource-type';
+import { CLARIN_LICENSE_RESOURCE_MAPPING } from './clarin-license-resource-mapping.resource-type';
+import { GenericConstructor } from '../generic-constructor';
 
+/**
+ * Class which wraps the Clarin License Resource Mapping object for communicating with BE.
+ */
 @typedObject
 export class ClarinLicenseResourceMapping extends ListableObject implements HALResource {
 
