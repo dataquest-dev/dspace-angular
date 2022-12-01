@@ -168,7 +168,6 @@ import { ClarinLicenseDataService } from './data/clarin/clarin-license-data.serv
 import { ClarinLicenseLabelDataService } from './data/clarin/clarin-license-label-data.service';
 import { HandleDataService } from './data/handle-data.service';
 import { Handle } from './handle/handle.model';
-import {BitstreamAuthorizationService} from './auth/bitstream-authorization.service';
 import {ClruaDataService} from './data/clarin/clrua-data.service';
 import {ClarinUserRegistrationDataService} from './data/clarin/clarin-user-registration.service';
 import {ClarinUserMetadataDataService} from './data/clarin/clarin-user-metadata.service';
@@ -205,7 +204,6 @@ const PROVIDERS = [
   MetadataValueDataService,
   ClarinLicenseDataService,
   ClarinLicenseLabelDataService,
-  BitstreamAuthorizationService,
   ClruaDataService,
   ClarinUserRegistrationDataService,
   ClarinUserMetadataDataService,
