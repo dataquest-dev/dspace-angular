@@ -69,8 +69,8 @@ describe('Admin Tombstone  Page', () => {
 
   it('the admin should see ds-item-page',{
       retries: {
-        runMode: 6,
-        openMode: 6,
+        runMode: 8,
+        openMode: 8,
       },
       defaultCommandTimeout: 10000
     }, () => {
@@ -80,8 +80,8 @@ describe('Admin Tombstone  Page', () => {
 
   it('the admin should see the withdrawn message on the withdrawn item', {
       retries: {
-        runMode: 6,
-        openMode: 6,
+        runMode: 8,
+        openMode: 8,
       },
     defaultCommandTimeout: 10000
     }, () => {
@@ -91,8 +91,8 @@ describe('Admin Tombstone  Page', () => {
 
   it('the admin should see the withdrawn message on the replaced item', {
       retries: {
-        runMode: 6,
-        openMode: 6,
+        runMode: 8,
+        openMode: 8,
       },
     defaultCommandTimeout: 10000
     }, () => {
