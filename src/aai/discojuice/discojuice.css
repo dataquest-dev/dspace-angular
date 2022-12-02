@@ -32,9 +32,9 @@ div.discojuice form.discojuice_up {
 	margin: 0px;
 	font-family: Helvetica;
 }
-div.discojuice form.discojuice_up h2 {
-	margin: 0px inherit 3px inherit;
-}
+/*div.discojuice form.discojuice_up h2 {*/
+/*	margin: 0px inherit 3px inherit;*/
+/*}*/
 div.discojuice form.discojuice_up  p{
 		padding: 0px; margin: 0px;
 }
@@ -273,23 +273,24 @@ div.discojuice div.scroller a {
 
 	background-color: #fafafa;
 
+	/*background-image: -webkit-gradient(*/
+	/*	linear,*/
+	/*	left bottom,*/
+	/*	left top,*/
+	/*	color-stop(0.3, rgb(220,220,220)),*/
+	/*	color-stop(0.9, rgb(240,240,240))*/
+	/*);*/
+	/*background-image: -moz-linear-gradient(*/
+	/*	bottom,*/
+	/*	rgb(220,220,220) 30%,*/
+	/*	rgb(240,240,240) 90%*/
+	/*);*/
 	background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.3, rgb(220,220,220)),
-		color-stop(0.9, rgb(240,240,240))
-	);
-	background-image: -moz-linear-gradient(
-		center bottom,
-		rgb(220,220,220) 30%,
-		rgb(240,240,240) 90%
-	);
-	background-image: -o-linear-gradient(
-		bottom,
-		rgb(220,220,220) 30%,
-		rgb(240,240,240) 90%
-	);
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.3, rgb(220,220,220)),
+    color-stop(0.9, rgb(240,240,240)) );
 
 	/* Text */
 	color: #333;

@@ -4,6 +4,8 @@ import { take } from 'rxjs/operators';
 import { EPerson } from '../core/eperson/models/eperson.model';
 import { DOCUMENT } from '@angular/common';
 import {ScriptLoaderService} from './script-loader-service';
+import {HALEndpointService} from '../core/shared/hal-endpoint.service';
+import {BehaviorSubject} from 'rxjs';
 
 declare let gapi: any;
 
@@ -18,7 +20,7 @@ declare let gapi: any;
 export class ClarinNavbarTopComponent implements OnInit {
 
   constructor(private authService: AuthService,
-              private renderer: Renderer2,
+              private halService: HALEndpointService,
               private scriptLoader: ScriptLoaderService) { }
 
   /**
@@ -26,12 +28,14 @@ export class ClarinNavbarTopComponent implements OnInit {
    */
   authenticatedUser = null;
 
-  @Inject(DOCUMENT) private document: Document;
-  // @Inject(DOCUMENT) private aai: Document;
+  /**
+   *
+   */
+  repositoryPath = '';
 
   ngOnInit(): void {
     let authenticated = false;
-
+    this.loadRepositoryPath();
     this.authService.isAuthenticated()
       .pipe(take(1))
       .subscribe( auth => {
@@ -64,5 +68,9 @@ export class ClarinNavbarTopComponent implements OnInit {
 
   private loadAAIConfig = (): Promise<any> => {
     return this.scriptLoader.load('aaiConfig');
+  }
+
+  private loadRepositoryPath() {
+    this.repositoryPath = this.halService.getRootHref();
   }
 }
