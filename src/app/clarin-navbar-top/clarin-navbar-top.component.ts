@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit, Renderer2} from '@angular/core';
 import { AuthService } from '../core/auth/auth.service';
 import { take } from 'rxjs/operators';
 import { EPerson } from '../core/eperson/models/eperson.model';
+import { DOCUMENT } from '@angular/common';
+import {ScriptLoaderService} from './script-loader-service';
+
+declare let gapi: any;
 
 /**
  * The component which wraps `language` and `login`/`logout + profile` operations in the top navbar.
@@ -13,12 +17,17 @@ import { EPerson } from '../core/eperson/models/eperson.model';
 })
 export class ClarinNavbarTopComponent implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+              private renderer: Renderer2,
+              private scriptLoader: ScriptLoaderService) { }
 
   /**
    * The current authenticated user. It is null if the user is not authenticated.
    */
   authenticatedUser = null;
+
+  @Inject(DOCUMENT) private document: Document;
+  // @Inject(DOCUMENT) private aai: Document;
 
   ngOnInit(): void {
     let authenticated = false;
@@ -36,5 +45,24 @@ export class ClarinNavbarTopComponent implements OnInit {
     } else {
       this.authenticatedUser = null;
     }
+
+    // At first load DiscoJuice, second AAI and at last AAIConfig
+    this.loadDiscoJuice().then(() => {
+      this.loadAAI().then(() => {
+        this.loadAAIConfig().catch(error => console.log(error));
+      }).catch(error => console.log(error));
+    }).catch(error => console.log(error));
+  }
+
+  private loadDiscoJuice = (): Promise<any> => {
+    return this.scriptLoader.load('discojuice');
+  }
+
+  private loadAAI = (): Promise<any> => {
+    return this.scriptLoader.load('aai');
+  }
+
+  private loadAAIConfig = (): Promise<any> => {
+    return this.scriptLoader.load('aaiConfig');
   }
 }
