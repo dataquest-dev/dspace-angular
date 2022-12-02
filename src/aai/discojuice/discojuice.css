@@ -5,7 +5,7 @@
  */
 div.discojuice {
 	font-family: Arial;
-	
+
 /*	font-size: small;*/
 	z-index: 100;
 	margin: 0;
@@ -27,13 +27,8 @@ div.discojuice p {
 	margin: 2px; padding: 0px;
 }
 
-
-
-
-
-
 div.discojuice form.discojuice_up {
-	padding: 0px; 
+	padding: 0px;
 	margin: 0px;
 	font-family: Helvetica;
 }
@@ -65,7 +60,7 @@ div.discojuice form.discojuice_up input.submit {
 
 
 div.discojuice div.discojuice_page {
-	
+
 }
 
 div.discojuice p#dj_help {
@@ -78,7 +73,7 @@ div.discojuice > div.top {
 
 	background: #fff;
 	border-bottom: 1px solid #bbb;
-	
+
 	-webkit-border-top-left-radius: 15px;
 	-webkit-border-top-right-radius: 15px;
 	-moz-border-radius-topleft: 15px;
@@ -91,7 +86,7 @@ div.discojuice > div {
 
 	background: #eee;
 	border-bottom: 1px solid #bbb;
-	
+
 	padding: 8px 14px;
 	margin: 0;
 }
@@ -103,14 +98,14 @@ div.discojuice > div.bottom {
 
 	padding: 10px 17px;
 	margin: 0;
-		
+
 	-webkit-border-bottom-right-radius: 15px;
 	-webkit-border-bottom-left-radius: 15px;
 	-moz-border-radius-bottomright: 15px;
 	-moz-border-radius-bottomleft: 15px;
 	border-bottom-right-radius: 15px;
 	border-bottom-left-radius: 15px;
-	
+
 }
 
 div.discojuice .discojuice_maintitle {
@@ -165,7 +160,7 @@ div.discojuice a.textlink:hover {
  * Section for the scroller
  */
 div.discojuice .discojuice_listContent {
-	overflow: auto;	
+	overflow: auto;
 /*	max-height: 40%;	*/
 	max-height: 450px;
 }
@@ -275,9 +270,9 @@ div.discojuice div.scroller a {
 	border-radius: 4px;
 	-moz-border-radius:4px;
 	-webkit-border-radius:4px;
-	
+
 	background-color: #fafafa;
-	
+
 	background-image: -webkit-gradient(
 		linear,
 		left bottom,
@@ -307,7 +302,7 @@ div.discojuice div.scroller a {
 /* Shaddow effect for normal entries... */
 div.discojuice div.scroller a  {
 /*	box-shadow: inset 0 1px 3px #fff, inset 0 -15px #cbe6f2, 0 0 3px #8ec1da;*/
-} 
+}
 
 
 /* Item that is hovered. */
@@ -338,7 +333,7 @@ div.discojuice div.scroller a.hothit {
 /*	background-color: #daebf3;*/
 	color: #333;
 	margin-bottom: 14px;
-	
+
 	border-radius: 4px;
 	box-shadow: 0 0 5px  #ccc;
 	-o-box-shadow: 0 0 5px  #ccc;
@@ -448,4 +443,4 @@ div#discojuice_overlay {
 #discojuice_overlay {
         position: fixed !important;
 }
-}	
+}
