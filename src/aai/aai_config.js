@@ -23,6 +23,7 @@ jQuery(document).ready(
                         "" :
                         instance.host + instance.port + instance.repoPath +
                             "themes/UFAL/lib/html/disco-juice.html?";
+            // e.g., instance.metadataFeed = "http://localhost:8080/server/api/discojuice/feeds?callback=dj_md_1";
             instance.metadataFeed = instance.target + "discojuice/feeds";
             instance.serviceName = "LINDAT/CLARIAH-CZ Repository";
             instance.localauth =

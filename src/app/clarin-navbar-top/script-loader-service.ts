@@ -37,7 +37,7 @@ export class ScriptLoaderService {
     return new Promise((resolve, reject) => {
       if (!this.scripts[name].loaded) {
         // load script
-        let script = document.createElement('script');
+        const script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = this.scripts[name].src;
         if (script.readyState) {  // IE
