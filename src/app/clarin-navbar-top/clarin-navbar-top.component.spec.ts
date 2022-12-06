@@ -9,9 +9,8 @@ import { AuthService } from '../core/auth/auth.service';
 import { of } from 'rxjs';
 import { createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
 import { EPersonMock } from '../shared/testing/eperson.mock';
-import {HALEndpointServiceStub} from '../shared/testing/hal-endpoint-service.stub';
-import {HALEndpointService} from '../core/shared/hal-endpoint.service';
-import {ScriptLoaderService} from './script-loader-service';
+import { HALEndpointService } from '../core/shared/hal-endpoint.service';
+import { ScriptLoaderService } from './script-loader-service';
 
 describe('ClarinNavbarTopComponent', () => {
   let component: ClarinNavbarTopComponent;

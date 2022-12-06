@@ -13,6 +13,9 @@ export const ScriptStore: Scripts[] = [
 
 declare var document: any;
 
+/**
+ * The class for loading the js files dynamically. The scripts must be loaded by a webpack.
+ */
 @Injectable()
 export class ScriptLoaderService {
 
