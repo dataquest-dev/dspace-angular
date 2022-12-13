@@ -2569,6 +2569,45 @@
   "logout.title": "Logout",
 
 
+  "clarin.help-desk.name": "Help Desk",
+
+  "clarin.auth-failed.error.message": "Authentication Failed",
+
+  "clarin.auth-failed.warning.reason.message": "Reason!",
+
+  "clarin.auth-failed.warning.important.message": "Important!",
+
+  "clarin.auth-failed.warning.no-email.message": ["Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.", "If you have any question contact the ","Help Desk."],
+
+  "clarin.auth-failed.warning.email-info": "This address will be verified and remembered until your IDP provides a different one. You will still sign in through your IDP.",
+
+  "clarin.auth-failed.warning.has-email.message": ["Your IDP (home organization) has not provided your email address.", "You are registered by the e-mail: ", ". Try to login with that e-mail.", " If you have any login issues contact the ", "Help Desk."],
+
+  "clarin.auth-failed.netid": "netid",
+
+  "clarin.auth-failed.fname": "First Name",
+
+  "clarin.auth-failed.lname": "Last Name",
+
+  "clarin.auth-failed.email": "Email",
+
+  "clarin.auth-failed.button.submit": "Submit",
+
+  "clarin.auth-failed.button.login": "Redirect to login",
+
+  "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
+
+  "clarin.missing-headers.contact-us.message": "If you have any questions you can contact the ",
+
+  "clarin.autoregistration.successful.message": "You have been successfully registered.",
+
+  "clarin.autoregistration.error.message": "Error: registration failed.",
+
+  "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
+
+  "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
+
+
 
   "menu.header.admin": "Management",
 
