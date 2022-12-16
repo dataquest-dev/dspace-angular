@@ -90,17 +90,12 @@ export class AuthFailedPageComponent implements OnInit {
       });
   }
 
-
-  public redirectToLogin() {
-    this.router.navigate(['login']);
-  }
-
   private loadHelpDeskEmail() {
     this.helpDesk$ = this.configurationDataService.findByPropertyName(HELP_DESK_PROPERTY);
   }
 
   private loadUserByNetId() {
-    this.clarinVerificationTokenService.searchBy('byNetId', this.createSearchOptions('123456'), false)
+    this.clarinVerificationTokenService.searchBy('byNetId', this.createSearchOptions(this.netid), false)
       .pipe(getFirstSucceededRemoteListPayload())
       .subscribe(res => {
         this.verificationToken$.next(res?.[0]);

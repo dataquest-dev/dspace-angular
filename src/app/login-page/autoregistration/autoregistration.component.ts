@@ -85,8 +85,6 @@ export class AutoregistrationComponent implements OnInit {
         } else {
           this.notificationService.error(this.translateService.instant('clarin.autoregistration.error.message'));
         }
-        // Redirect to login.
-        // this.router.navigate(['login']);
       });
   }
 
@@ -95,25 +93,19 @@ export class AutoregistrationComponent implements OnInit {
   }
 
   private sendAutoLoginRequest() {
+    // Prepare request headers
     const options: HttpOptions = Object.create({});
     let headers = new HttpHeaders();
     headers = headers.append('verification-token', this.verificationToken);
-    // @TODO delete
-    headers = headers.append('SHIB-NETID', '123465');
-    headers = headers.append('Shib-Identity-Provider', 'random');
     options.headers = headers;
     options.responseType = 'text';
-
+    // Prepare request
     const requestId = this.requestService.generateRequestId();
-
     const url = this.halService.getRootHref() + '/authn/shibboleth';
-    const getRequest = new PostRequest(requestId, url, {}, options);
-    // Send GET request
-    this.requestService.send(getRequest);
+    const postRequest = new PostRequest(requestId, url, {}, options);
+    // Send POST request
+    this.requestService.send(postRequest);
     // Get response
-    // this.requestService.getByUUID(requestId).subscribe(respons => {
-    //   console.log('respons', respons);
-    // });
     const response = this.rdbService.buildFromRequestUUID(requestId);
     // Process response
     response
@@ -128,22 +120,12 @@ export class AutoregistrationComponent implements OnInit {
           this.store.dispatch(new AuthenticatedAction(authToken));
           this.router.navigate(['home']);
         }
-        // if (hasSucceeded(responseRD$.state)) {
-        //   this.notificationService.success(
-        //     this.translateService.instant('clarin.auth-failed.send-email.successful.message'));
-        // } else {
-        //   this.notificationService.error(
-        //     this.translateService.instant('clarin.auth-failed.send-email.error.message'));
-        // }
       });
   }
 
   private deleteVerificationToken() {
-    console.log('heeeeeeeere');
-    this.verificationTokenService.delete(this.verificationToken$.value.id).pipe(getFirstCompletedRemoteData())
-      .subscribe(deleteRest => {
-        console.log('deleteRest', deleteRest);
-      });
+    this.verificationTokenService.delete(this.verificationToken$.value.id)
+      .pipe(getFirstCompletedRemoteData());
   }
 
   loadVerificationToken() {
@@ -153,15 +135,10 @@ export class AutoregistrationComponent implements OnInit {
         if (isEmpty(res?.[0])) {
           return;
         }
-        console.log('verificationtoken: ', res?.[0]);
         this.verificationToken$.next(res?.[0]);
         this.loadShibHeaders(this.verificationToken$?.value?.shibHeaders);
       });
   }
-
-  // private showHeadersMessage() {
-  //
-  // }
 
   private loadShibHeaders(shibHeadersStr: string) {
     const shibHeaders: ShibHeader[] = [];
