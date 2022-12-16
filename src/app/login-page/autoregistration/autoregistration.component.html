@@ -1,0 +1,38 @@
+<div class="container" >
+  <div *ngIf="(verificationToken$ | async) != null">
+    <h5 class="display-4">Welcome to {{dspaceName$ | async}}</h5>
+    <div class="alert alert-info" role="alert" style="width: 100%">
+      <div><b>Privacy statement</b></div>
+      <p>The information released by your IdP (home organisation) is shown below.</p>
+      <table class="table bg-white table-responsive">
+        <thead>
+        <th>Header</th>
+        <th>Value</th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let shibHeader of (shibHeaders$ | async)">
+          <td><b>{{shibHeader.header}}</b></td>
+          <td>{{shibHeader.value}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="col-11">
+          <div>We use only the required attributes as stated in <b>{{'repository.policy.page' | translate}}</b></div>
+          <div>However we may log the attributes and keep them for a time period.</div>
+        </div>
+        <div class="col-1">
+          <span><i class="fas fa-exclamation-triangle fa-3x alert-danger"></i></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button (click)="autologin()">Continue to login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="(verificationToken$ | async) == null">
+    Verification token is not valid.
+  </div>
+</div>
