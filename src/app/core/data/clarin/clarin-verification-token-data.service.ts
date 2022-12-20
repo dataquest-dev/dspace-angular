@@ -14,8 +14,6 @@ import { NotificationsService } from '../../../shared/notifications/notification
 import { ClarinVerificationToken } from '../../shared/clarin/clarin-verification-token.model';
 
 export const linkName = 'clarinverificationtokens';
-export const AUTOCOMPLETE = new ResourceType(linkName);
-
 /**
  * A service responsible for fetching/sending license data from/to the ClarinVerificationToken REST API
  */
