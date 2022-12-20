@@ -2595,18 +2595,35 @@
 
   "clarin.auth-failed.button.login": "Redirect to login",
 
+  "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
+
+  "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
+
+
   "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
 
   "clarin.missing-headers.contact-us.message": "If you have any questions you can contact the ",
+
 
   "clarin.autoregistration.successful.message": "You have been successfully registered.",
 
   "clarin.autoregistration.error.message": "Error: registration failed.",
 
-  "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
+  "clarin.autoregistration.welcome.message": "Welcome to",
 
-  "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
+  "clarin.autoregistration.privacy.statement": "Privacy statement",
 
+  "clarin.autoregistration.information.released.by.idp.message": "The information released by your IdP (home organisation) is shown below.",
+
+  "clarin.autoregistration.table.header": "Header",
+
+  "clarin.autoregistration.table.value": "Value",
+
+  "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in","However we may log the attributes and keep them for a time period."],
+
+  "clarin.autoregistration.button.continue.to.login": "Continue to login",
+
+  "clarin.autoregistration.token.not.valid.message": "Verification token is not valid.",
 
 
   "menu.header.admin": "Management",
