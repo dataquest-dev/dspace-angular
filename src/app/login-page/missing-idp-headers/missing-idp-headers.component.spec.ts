@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MissingIdpHeadersComponent } from './missing-idp-headers.component';
 
 describe('MissingIdpHeadersComponent', () => {

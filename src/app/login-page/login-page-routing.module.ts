@@ -3,9 +3,9 @@ import { RouterModule } from '@angular/router';
 import { I18nBreadcrumbResolver } from '../core/breadcrumbs/i18n-breadcrumb.resolver';
 import { I18nBreadcrumbsService } from '../core/breadcrumbs/i18n-breadcrumbs.service';
 import { ThemedLoginPageComponent } from './themed-login-page.component';
-import {AuthFailedPageComponent} from './auth-failed-page/auth-failed-page.component';
-import {MissingIdpHeadersComponent} from './missing-idp-headers/missing-idp-headers.component';
-import {AutoregistrationComponent} from './autoregistration/autoregistration.component';
+import { AuthFailedPageComponent } from './auth-failed-page/auth-failed-page.component';
+import { MissingIdpHeadersComponent } from './missing-idp-headers/missing-idp-headers.component';
+import { AutoregistrationComponent } from './autoregistration/autoregistration.component';
 
 @NgModule({
   imports: [
