@@ -1,5 +1,5 @@
 /**
- * The resource type for the Clarin License endpoint
+ * The resource type for the ClarinVerificationToken endpoint
  *
  * Needs to be in a separate file to prevent circular
  * dependencies in webpack.

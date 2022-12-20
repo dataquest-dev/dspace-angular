@@ -1,11 +1,12 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <div *ngIf="!hasEmail()"
-        class="alert alert-info alert-dismissible fade show">
+      <div class="alert alert-info alert-dismissible fade show">
         <span>{{'clarin.auth-failed.warning.no-email.message.0' | translate}}</span>
         <span>{{'clarin.auth-failed.warning.no-email.message.1' | translate}}</span>
-        <a [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">{{'clarin.auth-failed.warning.no-email.message.2' | translate}}</a>
+        <a [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">
+          {{'clarin.auth-failed.warning.no-email.message.2' | translate}}
+        </a>
       </div>
     </div>
   </div>
@@ -19,7 +20,7 @@
                [(ngModel)]="email"
                aria-describedby="basic-addon1">
       </div>
-      <div class="alert alert-info alert-dismissible fade show" *ngIf="!hasEmail()">
+      <div class="alert alert-info alert-dismissible fade show">
         <i class="fas fa-info-circle"></i>
         <span>{{'clarin.auth-failed.warning.email-info' | translate}}</span>
       </div>
@@ -27,7 +28,7 @@
   </div>
   <div class="row">
     <div class="col-12">
-      <button *ngIf="!hasEmail()" (click)="sendEmail()"
+      <button (click)="sendEmail()"
               class="btn btn-success">{{'clarin.auth-failed.button.submit' | translate}}
       </button>
     </div>

@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AutoregistrationComponent } from './autoregistration.component';
 
+/**
+ * Test class for the `AutoregistrationComponent`.
+ */
 describe('AutoregistrationComponent', () => {
   let component: AutoregistrationComponent;
   let fixture: ComponentFixture<AutoregistrationComponent>;

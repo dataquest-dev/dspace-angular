@@ -1,17 +1,16 @@
-import {typedObject} from '../../cache/builders/build-decorators';
-import {ListableObject} from '../../../shared/object-collection/shared/listable-object.model';
-import {HALResource} from '../hal-resource.model';
-import {CLARIN_LICENSE} from './clarin-license.resource-type';
-import {excludeFromEquals} from '../../utilities/equals.decorators';
-import {autoserialize, autoserializeAs, deserialize} from 'cerialize';
-import {ResourceType} from '../resource-type';
-import {ClarinLicenseConfirmationSerializer} from './clarin-license-confirmation-serializer';
-import {ClarinLicenseRequiredInfoSerializer} from './clarin-license-required-info-serializer';
-import {ClarinLicenseLabel} from './clarin-license-label.model';
-import {HALLink} from '../hal-link.model';
-import {GenericConstructor} from '../generic-constructor';
-import {CLARIN_VERIFICATION_TOKEN} from './clarin-verification-token.resource-type';
+import { typedObject } from '../../cache/builders/build-decorators';
+import { ListableObject } from '../../../shared/object-collection/shared/listable-object.model';
+import { HALResource } from '../hal-resource.model';
+import { excludeFromEquals } from '../../utilities/equals.decorators';
+import { autoserialize, deserialize } from 'cerialize';
+import { ResourceType } from '../resource-type';
+import { HALLink } from '../hal-link.model';
+import { GenericConstructor } from '../generic-constructor';
+import { CLARIN_VERIFICATION_TOKEN } from './clarin-verification-token.resource-type';
 
+/**
+ * Class that represents a ClarinVerificationToken. A ClarinVerificationTokenRest is mapped to this object.
+ */
 @typedObject
 export class ClarinVerificationToken extends ListableObject implements HALResource {
   static type = CLARIN_VERIFICATION_TOKEN;
@@ -24,37 +23,38 @@ export class ClarinVerificationToken extends ListableObject implements HALResour
   type: ResourceType;
 
   /**
-   * The identifier of this Clarin License
+   * The identifier of this ClarinVerificationToken
    */
   @autoserialize
   id: string;
 
   /**
-   * The name of this Clarin License object
+   * The netid of the user which is trying to login.
    */
   @autoserialize
   ePersonNetID: string;
 
   /**
-   * The definition of this Clarin License object
+   * The email of the user which is trying to login.
+   * The user must fill in the email in the auth-failed.component
    */
   @autoserialize
   email: string;
 
   /**
-   * The definition of this Clarin License object
+   * The Shibboleth headers which are passed from the IdP.
    */
   @autoserialize
   shibHeaders: string;
 
   /**
-   * The definition of this Clarin License object
+   * Generated verification token for registration and login.
    */
   @autoserialize
   token: string;
 
   /**
-   * The {@link HALLink}s for this Clarin License
+   * The {@link HALLink}s for this ClarinVerificationToken
    */
   @deserialize
   _links: {

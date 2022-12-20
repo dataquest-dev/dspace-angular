@@ -11,14 +11,13 @@ import { ObjectCacheService } from '../../cache/object-cache.service';
 import { DefaultChangeAnalyzer } from '../default-change-analyzer.service';
 import { HttpClient } from '@angular/common/http';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
-import { ClarinLicense } from '../../shared/clarin/clarin-license.model';
-import {ClarinVerificationToken} from '../../shared/clarin/clarin-verification-token.model';
+import { ClarinVerificationToken } from '../../shared/clarin/clarin-verification-token.model';
 
 export const linkName = 'clarinverificationtokens';
 export const AUTOCOMPLETE = new ResourceType(linkName);
 
 /**
- * A service responsible for fetching/sending license data from/to the Clarin License REST API
+ * A service responsible for fetching/sending license data from/to the ClarinVerificationToken REST API
  */
 @Injectable()
 @dataService(ClarinVerificationToken.type)

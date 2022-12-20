@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AuthFailedPageComponent } from './auth-failed-page.component';
 
 describe('AuthFailedPageComponent', () => {
