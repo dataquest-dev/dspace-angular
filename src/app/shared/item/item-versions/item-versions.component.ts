@@ -379,7 +379,6 @@ export class ItemVersionsComponent implements OnInit {
    * Show submitter in version history table
    */
   showSubmitter() {
-    console.log('method is called')
     const includeSubmitter$ = this.configurationService.findByPropertyName('versioning.item.history.include.submitter').pipe(
       getFirstSucceededRemoteDataPayload(),
       map((configurationProperty) => configurationProperty.values[0]),
