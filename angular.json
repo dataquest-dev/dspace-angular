@@ -66,7 +66,8 @@
             ],
             "scripts": [
               "src/license-selector.js",
-              "src/license-selector-creation.js"
+              "src/license-selector-creation.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },
           "configurations": {
