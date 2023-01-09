@@ -38,6 +38,9 @@ import { TombstoneComponent } from './tombstone/tombstone.component';
 import { ReplacedTombstoneComponent } from './tombstone/replaced-tombstone/replaced-tombstone.component';
 import { WithdrawnTombstoneComponent } from './tombstone/withdrawn-tombstone/withdrawn-tombstone.component';
 import { ClarinLicenseInfoComponent } from './clarin-license-info/clarin-license-info.component';
+import { ClarinRefBoxComponent } from './clarin-ref-box/clarin-ref-box.component';
+import { ClarinRefCitationComponent } from './clarin-ref-citation/clarin-ref-citation.component';
+import { ClarinRefFeaturedServicesComponent } from './clarin-ref-featured-services/clarin-ref-featured-services.component';
 
 
 const ENTRY_COMPONENTS = [
@@ -90,7 +93,10 @@ const DECLARATIONS = [
   ],
   declarations: [
     ...DECLARATIONS,
-    VersionedItemComponent
+    VersionedItemComponent,
+    ClarinRefBoxComponent,
+    ClarinRefCitationComponent,
+    ClarinRefFeaturedServicesComponent
   ],
   exports: [
     ...DECLARATIONS
