@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Item} from '../../core/shared/item.model';
 
 @Component({
   selector: 'ds-clarin-ref-box',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./clarin-ref-box.component.scss']
 })
 export class ClarinRefBoxComponent implements OnInit {
+
+  @Input() item: Item;
 
   constructor() { }
 

@@ -11,7 +11,12 @@
       </div>
     </div>
     <div class="pt-2 clarin-ref-box-body d-flex justify-content-between pl-2" >
-      <div class="clarin-ref-box-text pr-4">LOREM IPSUM fwefwef  few q LOREM IPSUM fwefwef  few q LOREM IPSUM fwefwef  few qLOREM IPSUM fwefwef  few qLOREM IPSUM fwefwef  few qLOREM IPSUM</div>
+      <div class="clarin-ref-box-text pr-4">
+        <span>{{citationText + ', '}}</span>
+        <span><i>{{itemNameText + ', '}}</i></span>
+        <span>{{repositoryNameText}}</span>
+        <a [href]="handleText">{{handleText}}</a>
+      </div>
       <div class="clarin-ref-box-copy-wrapper">
         <i class="far fa-copy clarin-ref-box-copy-button pt-2"></i>
       </div>
