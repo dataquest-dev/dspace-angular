@@ -17,8 +17,9 @@
         <span>{{repositoryNameText}}</span>
         <a [href]="handleText">{{handleText}}</a>
       </div>
-      <div class="clarin-ref-box-copy-wrapper" placement="bottom" [ngbTooltip]="'Copied!'">
-        <i class="far fa-copy clarin-ref-box-copy-button pt-2" (click)="copyText()"></i>
+      <div class="clarin-ref-box-copy-wrapper" placement="bottom" [ngbTooltip]="'Copied!'" #tooltip="ngbTooltip"
+           (click)="copyText()">
+        <i class="far fa-copy clarin-ref-box-copy-button pt-2"></i>
       </div>
     </div>
   </div>

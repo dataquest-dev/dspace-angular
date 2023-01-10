@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Item} from '../../core/shared/item.model';
 import {ConfigurationDataService} from '../../core/data/configuration-data.service';
 import {take} from 'rxjs/operators';
@@ -6,7 +6,7 @@ import {isNull, isUndefined} from '../../shared/empty.util';
 import {getFirstSucceededRemoteData} from '../../core/shared/operators';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {BehaviorSubject} from 'rxjs';
-import {NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
+import {NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 
 export const ET_AL_TEXT = 'et al.';
 
@@ -18,6 +18,8 @@ export const ET_AL_TEXT = 'et al.';
 export class ClarinRefCitationComponent implements OnInit {
 
   @Input() item: Item;
+
+  @ViewChild('tooltip', {static: false}) tooltipRef: NgbTooltip;
 
   citationText: string;
   handleText: string;
@@ -54,6 +56,9 @@ export class ClarinRefCitationComponent implements OnInit {
     const tabChar = '  ';
     this.clipboard.copy(this.citationText + ',\n' + tabChar + this.itemNameText + ', ' +
       this.repositoryNameText + ', \n' + tabChar + this.handleText);
+    setTimeout(() => {
+      this.tooltipRef.close();
+    }, 700);
   }
 
   getRepositoryName(): Promise<any> {

@@ -49,8 +49,8 @@
         <span class="pl-2">Share</span>
       </div>
       <div class="pl-2">
-        <i class="fab fa-facebook-square clarin-share-buttons clarin-share-facebook"></i>
-        <i class="fab fa-twitter-square clarin-share-buttons clarin-share-twitter"></i>
+        <a class="fab fa-facebook-square clarin-share-buttons clarin-share-facebook" [href]="fbRedirectURL | async"></a>
+        <a class="fab fa-twitter-square clarin-share-buttons clarin-share-twitter" [href]="twitterRedirectURL | async"></a>
       </div>
     </div>
   </div>
