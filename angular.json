@@ -48,6 +48,7 @@
             ],
             "styles": [
               "src/styles/startup.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               {
                 "input": "src/styles/base-theme.scss",
                 "inject": false,
@@ -67,7 +68,7 @@
             "scripts": [
               "src/license-selector.js",
               "src/license-selector-creation.js",
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
           "configurations": {

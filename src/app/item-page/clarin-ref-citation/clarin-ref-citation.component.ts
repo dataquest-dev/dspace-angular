@@ -4,6 +4,9 @@ import {ConfigurationDataService} from '../../core/data/configuration-data.servi
 import {take} from 'rxjs/operators';
 import {isNull, isUndefined} from '../../shared/empty.util';
 import {getFirstSucceededRemoteData} from '../../core/shared/operators';
+import {Clipboard} from '@angular/cdk/clipboard';
+import {BehaviorSubject} from 'rxjs';
+import {NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 
 export const ET_AL_TEXT = 'et al.';
 
@@ -21,7 +24,12 @@ export class ClarinRefCitationComponent implements OnInit {
   itemNameText: string;
   repositoryNameText: string;
 
-  constructor(private configurationService: ConfigurationDataService) { }
+  constructor(private configurationService: ConfigurationDataService,
+              private clipboard: Clipboard,
+              config: NgbTooltipConfig) {
+    // Configure the tooltip to show on click
+    config.triggers = 'click';
+  }
 
   ngOnInit(): void {
     console.log('item', this.item);
@@ -40,6 +48,12 @@ export class ClarinRefCitationComponent implements OnInit {
     this.getRepositoryName().then(res => {
       this.repositoryNameText = res?.payload?.values?.[0];
     });
+  }
+
+  copyText() {
+    const tabChar = '  ';
+    this.clipboard.copy(this.citationText + ',\n' + tabChar + this.itemNameText + ', ' +
+      this.repositoryNameText + ', \n' + tabChar + this.handleText);
   }
 
   getRepositoryName(): Promise<any> {
