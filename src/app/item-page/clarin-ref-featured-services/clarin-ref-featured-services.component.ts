@@ -91,7 +91,6 @@ export class ClarinRefFeaturedServicesComponent implements OnInit {
         });
 
         this.featuredServices.next(featuredServicesArray);
-        console.log('featuredServices', this.featuredServices.value);
       });
 
   }

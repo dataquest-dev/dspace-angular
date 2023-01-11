@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Item} from '../../core/shared/item.model';
 import {ConfigurationDataService} from '../../core/data/configuration-data.service';
 import {take} from 'rxjs/operators';
@@ -6,7 +6,7 @@ import {isNull, isUndefined} from '../../shared/empty.util';
 import {getFirstSucceededRemoteData} from '../../core/shared/operators';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {BehaviorSubject} from 'rxjs';
-import {NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
+import {ModalDismissReasons, NgbModal, NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 
 export const ET_AL_TEXT = 'et al.';
 
@@ -20,15 +20,18 @@ export class ClarinRefCitationComponent implements OnInit {
   @Input() item: Item;
 
   @ViewChild('tooltip', {static: false}) tooltipRef: NgbTooltip;
+  @ViewChild('citationContent') citationContentRef: ElementRef<HTMLTextAreaElement>;
 
   citationText: string;
   handleText: string;
   itemNameText: string;
   repositoryNameText: string;
+  closeResult = '';
 
   constructor(private configurationService: ConfigurationDataService,
               private clipboard: Clipboard,
-              config: NgbTooltipConfig) {
+              config: NgbTooltipConfig,
+              private modalService: NgbModal) {
     // Configure the tooltip to show on click
     config.triggers = 'click';
   }
@@ -112,4 +115,25 @@ export class ClarinRefCitationComponent implements OnInit {
     return titleMetadata[0]?.value;
   }
 
+  open(content: any) {
+    this.modalService.open(content, {size: 'xl', ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  selectContent() {
+    console.log('selecting');
+    console.log(this.citationContentRef);
+  }
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
+  }
 }
