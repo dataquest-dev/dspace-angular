@@ -1,24 +1,19 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Item} from '../../core/shared/item.model';
-import {BehaviorSubject} from 'rxjs';
-import {isEmpty, isNotEmpty, isNull, isUndefined} from '../../shared/empty.util';
-import {DeleteRequest, GetRequest} from '../../core/data/request.models';
-import {RequestService} from '../../core/data/request.service';
-import {RemoteDataBuildService} from '../../core/cache/builders/remote-data-build.service';
-import {Store} from '@ngrx/store';
-import {CoreState} from '../../core/core.reducers';
-import {ObjectCacheService} from '../../core/cache/object-cache.service';
-import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
-import {
-  getFirstSucceededRemoteData,
-  getFirstSucceededRemoteDataPayload,
-  getFirstSucceededRemoteListPayload
-} from '../../core/shared/operators';
-import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
-import {ClarinFeaturedService} from '../../core/shared/clarin/clarin-featured-service.model';
-import {ClarinFeaturedServiceLink} from '../../core/shared/clarin/clarin-featured-service-link.model';
-import {HardRedirectService} from '../../core/services/hard-redirect.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { Item } from '../../core/shared/item.model';
+import { BehaviorSubject } from 'rxjs';
+import { isEmpty, isNotEmpty, isNull, isUndefined } from '../../shared/empty.util';
+import { GetRequest } from '../../core/data/request.models';
+import { RequestService } from '../../core/data/request.service';
+import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { getFirstSucceededRemoteDataPayload } from '../../core/shared/operators';
+import { ClarinFeaturedService } from '../../core/shared/clarin/clarin-featured-service.model';
+import { ClarinFeaturedServiceLink } from '../../core/shared/clarin/clarin-featured-service-link.model';
+import { HardRedirectService } from '../../core/services/hard-redirect.service';
 
+/**
+ * The component which shows Featured Service buttons based on the Item Metadata and the DSpace configuration.
+ */
 @Component({
   selector: 'ds-clarin-ref-featured-services',
   templateUrl: './clarin-ref-featured-services.component.html',
@@ -26,14 +21,26 @@ import {HardRedirectService} from '../../core/services/hard-redirect.service';
 })
 export class ClarinRefFeaturedServicesComponent implements OnInit {
 
+  /**
+   * The current Item
+   */
   @Input() item: Item;
 
+  /**
+   * The URLs for calling the FB, Twitter sharing API
+   */
   fbShareURL = 'http://www.facebook.com/sharer/sharer.php';
   twtrShareURL = 'http://twitter.com/intent/tweet';
 
+  /**
+   * Updated sharing URL based on the Item metadata
+   */
   fbRedirectURL: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   twitterRedirectURL: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
+  /**
+   * Featured Services for this Item. For each Featured Service is automatically rendered a button.
+   */
   featuredServices: BehaviorSubject<ClarinFeaturedService[]> = new BehaviorSubject<ClarinFeaturedService[]>([]);
 
   constructor(private requestService: RequestService,
@@ -47,6 +54,9 @@ export class ClarinRefFeaturedServicesComponent implements OnInit {
     this.loadFeaturedServices();
   }
 
+  /**
+   * Get the Featured Services for this Item based on the Item metadata and the DSpace configuration.
+   */
   loadFeaturedServices() {
     const requestId = this.requestService.generateRequestId();
     const getRequest = new GetRequest(requestId, this.halService.getRootHref() + '/core/refbox/services?id=' +
@@ -54,6 +64,7 @@ export class ClarinRefFeaturedServicesComponent implements OnInit {
     // Call get request
     this.requestService.send(getRequest);
 
+    // Process the response
     this.rdbService.buildFromRequestUUID(requestId)
       .pipe(getFirstSucceededRemoteDataPayload())
       .subscribe(res => {
@@ -71,10 +82,12 @@ export class ClarinRefFeaturedServicesComponent implements OnInit {
           return;
         }
 
+        // Response has more Feature Service objects in the Array
         featuredServicesResContent.forEach(featuredServiceContent => {
           if (isNull(featuredServiceContent)) {
             return;
           }
+          // Create the Feature Service object
           const featuredService = Object.assign(new ClarinFeaturedService(), {
             name: featuredServiceContent.name,
             url: featuredServiceContent.url,
@@ -82,6 +95,7 @@ export class ClarinRefFeaturedServicesComponent implements OnInit {
             featuredServiceLinks: []
           });
 
+          // Do not show Feature Service button if the Item doesn't have the metadata for it.
           if (isNotEmpty(featuredServiceContent.featuredServiceLinks)) {
             featuredService.featuredServiceLinks =
               this.parseFeaturedServicesLinks(featuredServiceContent.featuredServiceLinks);
@@ -90,11 +104,17 @@ export class ClarinRefFeaturedServicesComponent implements OnInit {
           featuredServicesArray.push(featuredService);
         });
 
+        // Update the featuredServices async property.
         this.featuredServices.next(featuredServicesArray);
       });
 
   }
 
+  /**
+   * Each Feature Service has the Feature Service Link objects for redirecting to the another language.
+   * Add appropriate Feature Service Links to the Feature Service
+   * @param featuredServiceLinksContent
+   */
   parseFeaturedServicesLinks(featuredServiceLinksContent) {
     if (isEmpty(featuredServiceLinksContent)) {
       return [];
@@ -115,6 +135,10 @@ export class ClarinRefFeaturedServicesComponent implements OnInit {
 
     return featuredServiceLinksArray;
   }
+
+  /**
+   * Add handle to the FB sharing URL
+   */
   prepareFbRedirectURL() {
     const itemHandle = this.getMetadata('dc.identifier.uri');
     if (isNull(itemHandle)) {
@@ -126,6 +150,9 @@ export class ClarinRefFeaturedServicesComponent implements OnInit {
     this.fbRedirectURL.next(redirectURL);
   }
 
+  /**
+   * Add handle and the item name to the Twitter sharing URL
+   */
   prepareTwtrRedirectURL() {
     const itemHandle = this.getMetadata('dc.identifier.uri');
     const itemName = this.getMetadata('dc.title');
@@ -148,8 +175,11 @@ export class ClarinRefFeaturedServicesComponent implements OnInit {
     return metadata[0]?.value;
   }
 
+  /**
+   * Hard redirect to the sharing URL
+   * @param url
+   */
   redirectToFeaturedService(url) {
     this.hardRedirectService.redirect(url);
   }
-
 }

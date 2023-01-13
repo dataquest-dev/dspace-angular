@@ -7,7 +7,7 @@
         </div>
         <div>
         <span class="pl-2">
-          This resource is also integrated in following services:
+          {{'item.refbox.featured-service.heading' | translate}}
         </span>
         </div>
       </div>
@@ -24,7 +24,6 @@
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false">
-            <span class="sr-only">Toggle Dropdown</span>
           </button>
           <div class="dropdown-menu">
             <a class="dropdown-item" *ngFor="let featuredServiceLink of featuredService.featuredServiceLinks"
@@ -36,7 +35,7 @@
     <div class="d-flex align-items-start">
       <div class="d-flex align-items-center pt-1">
         <i class="fas fa-share-alt clarin-ref-box-footer-icon"></i>
-        <span class="pl-2">Share</span>
+        <span class="pl-2">{{'item.refbox.featured-service.share.message' | translate}}</span>
       </div>
       <div class="pl-2">
         <a class="fab fa-facebook-square clarin-share-buttons clarin-share-facebook" [href]="fbRedirectURL | async"></a>

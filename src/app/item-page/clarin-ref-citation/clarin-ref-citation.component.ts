@@ -1,21 +1,26 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {Item} from '../../core/shared/item.model';
-import {ConfigurationDataService} from '../../core/data/configuration-data.service';
-import {take} from 'rxjs/operators';
-import {isNull, isUndefined} from '../../shared/empty.util';
-import {getFirstSucceededRemoteData} from '../../core/shared/operators';
-import {Clipboard} from '@angular/cdk/clipboard';
-import {BehaviorSubject} from 'rxjs';
-import {ModalDismissReasons, NgbModal, NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
-import {ClarinRefCitationModalComponent} from '../clarin-ref-citation-modal/clarin-ref-citation-modal.component';
-import {GetRequest} from '../../core/data/request.models';
-import {RequestService} from '../../core/data/request.service';
-import {RemoteDataBuildService} from '../../core/cache/builders/remote-data-build.service';
-import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
-import {HttpOptions} from '../../core/dspace-rest/dspace-rest.service';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Item } from '../../core/shared/item.model';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { isNull, isUndefined } from '../../shared/empty.util';
+import { getFirstSucceededRemoteData } from '../../core/shared/operators';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { NgbModal, NgbTooltip, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { ClarinRefCitationModalComponent } from '../clarin-ref-citation-modal/clarin-ref-citation-modal.component';
+import { GetRequest } from '../../core/data/request.models';
+import { RequestService } from '../../core/data/request.service';
+import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 
+/**
+ * If the item has more authors do not add all authors to the citation but add there a shortcut.
+ */
 export const ET_AL_TEXT = 'et al.';
 
+/**
+ * The citation part in the ref-box component.
+ * The components shows formatted text, the copy button and the modal buttons for the copying citation
+ * in the `bibtex` and `cmdi` format.
+ */
 @Component({
   selector: 'ds-clarin-ref-citation',
   templateUrl: './clarin-ref-citation.component.html',
@@ -23,16 +28,35 @@ export const ET_AL_TEXT = 'et al.';
 })
 export class ClarinRefCitationComponent implements OnInit {
 
+  /**
+   * The current item.
+   */
   @Input() item: Item;
 
+  /**
+   * After clicking on the `Copy` icon the message `Copied` is popped up.
+   */
   @ViewChild('tooltip', {static: false}) tooltipRef: NgbTooltip;
-  @ViewChild('citationContentRef', { static: true }) citationContentRef: ElementRef;
 
+  /**
+   * The parameters retrieved from the Item metadata for creating the citation in the proper way.
+   */
+  /**
+   * Author and issued year
+   */
   citationText: string;
+  /**
+   * Whole Handle URI
+   */
   identifierURI: string;
+  /**
+   * Name of the Item
+   */
   itemNameText: string;
+  /**
+   * The nam of the organization which provides the repository
+   */
   repositoryNameText: string;
-  closeResult = '';
 
   constructor(private configurationService: ConfigurationDataService,
               private clipboard: Clipboard,
@@ -41,12 +65,11 @@ export class ClarinRefCitationComponent implements OnInit {
               private requestService: RequestService,
               protected rdbService: RemoteDataBuildService,
               protected halService: HALEndpointService,) {
-    // Configure the tooltip to show on click
+    // Configure the tooltip to show on click - `Copied` message
     config.triggers = 'click';
   }
 
   ngOnInit(): void {
-    console.log('item', this.item);
     const author = this.getAuthors();
     const year = this.getYear();
 
@@ -64,6 +87,9 @@ export class ClarinRefCitationComponent implements OnInit {
     });
   }
 
+  /**
+   * After click on the `Copy` icon the text will be formatted and copied for the user.
+   */
   copyText() {
     const tabChar = '  ';
     this.clipboard.copy(this.citationText + ',\n' + tabChar + this.itemNameText + ', ' +
@@ -132,6 +158,10 @@ export class ClarinRefCitationComponent implements OnInit {
     return titleMetadata[0]?.value;
   }
 
+  /**
+   * Open the citation modal with the data retrieved from the OAI-PMH.
+   * @param citationType
+   */
   async openModal(citationType) {
     const modal = this.modalService.open(ClarinRefCitationModalComponent, {
       size: 'xl',
@@ -147,6 +177,9 @@ export class ClarinRefCitationComponent implements OnInit {
     modal.componentInstance.citationText = citationText;
   }
 
+  /**
+   * Get the OAI-PMH data through the RefBox Controller
+   */
   getCitationText(citationType): Promise<any> {
     const requestId = this.requestService.generateRequestId();
     // Create the request

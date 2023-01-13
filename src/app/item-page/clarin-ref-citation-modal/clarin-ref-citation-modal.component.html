@@ -6,11 +6,16 @@
     </button>
   </div>
   <div class="modal-body" >
-    <p>Press <kbd>ctlr + c</kbd> to copy</p>
+    <p>{{'item.refbox.modal.copy.instruction.0' | translate}}
+      <kbd>{{'item.refbox.modal.copy.instruction.1' | translate}}</kbd>
+      {{'item.refbox.modal.copy.instruction.2' | translate}}
+    </p>
     <div class="textarea" ></div>
     <textarea #copyCitationModal readonly class="clarin-ref-box-citation-textarea" (mouseover)="selectContent()">{{citationText}}</textarea>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Save click')">Ok</button>
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Save click')">
+      {{'item.refbox.modal.submit' | translate}}
+    </button>
   </div>
 </div>
