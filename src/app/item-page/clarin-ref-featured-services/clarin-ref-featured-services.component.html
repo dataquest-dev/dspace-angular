@@ -1,6 +1,6 @@
 <div class="card clarin-ref-box-footer">
-  <div class="card-body d-flex justify-content-between clarin-ref-box-footer-body">
-    <div class="">
+  <div class="card-body d-flex justify-content-between clarin-ref-box-footer-body py-2">
+    <div [hidden]="(featuredServices | async).length === 0">
       <div class="d-inline-flex align-items-center">
         <div>
           <i class="fas fa-puzzle-piece clarin-ref-box-footer-icon"></i>
