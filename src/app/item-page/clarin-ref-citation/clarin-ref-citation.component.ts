@@ -7,6 +7,12 @@ import {getFirstSucceededRemoteData} from '../../core/shared/operators';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {BehaviorSubject} from 'rxjs';
 import {ModalDismissReasons, NgbModal, NgbTooltip, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
+import {ClarinRefCitationModalComponent} from '../clarin-ref-citation-modal/clarin-ref-citation-modal.component';
+import {GetRequest} from '../../core/data/request.models';
+import {RequestService} from '../../core/data/request.service';
+import {RemoteDataBuildService} from '../../core/cache/builders/remote-data-build.service';
+import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
+import {HttpOptions} from '../../core/dspace-rest/dspace-rest.service';
 
 export const ET_AL_TEXT = 'et al.';
 
@@ -20,18 +26,21 @@ export class ClarinRefCitationComponent implements OnInit {
   @Input() item: Item;
 
   @ViewChild('tooltip', {static: false}) tooltipRef: NgbTooltip;
-  @ViewChild('citationContent') citationContentRef: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('citationContentRef', { static: true }) citationContentRef: ElementRef;
 
   citationText: string;
-  handleText: string;
+  identifierURI: string;
   itemNameText: string;
   repositoryNameText: string;
   closeResult = '';
 
   constructor(private configurationService: ConfigurationDataService,
               private clipboard: Clipboard,
-              config: NgbTooltipConfig,
-              private modalService: NgbModal) {
+              public config: NgbTooltipConfig,
+              private modalService: NgbModal,
+              private requestService: RequestService,
+              protected rdbService: RemoteDataBuildService,
+              protected halService: HALEndpointService,) {
     // Configure the tooltip to show on click
     config.triggers = 'click';
   }
@@ -49,7 +58,7 @@ export class ClarinRefCitationComponent implements OnInit {
 
     this.citationText = citationArray.join(', ');
     this.itemNameText = this.getTitle();
-    this.handleText = this.getHandle();
+    this.identifierURI = this.getIdentifierUri();
     this.getRepositoryName().then(res => {
       this.repositoryNameText = res?.payload?.values?.[0];
     });
@@ -58,7 +67,7 @@ export class ClarinRefCitationComponent implements OnInit {
   copyText() {
     const tabChar = '  ';
     this.clipboard.copy(this.citationText + ',\n' + tabChar + this.itemNameText + ', ' +
-      this.repositoryNameText + ', \n' + tabChar + this.handleText);
+      this.repositoryNameText + ', \n' + tabChar + this.identifierURI);
     setTimeout(() => {
       this.tooltipRef.close();
     }, 700);
@@ -69,13 +78,21 @@ export class ClarinRefCitationComponent implements OnInit {
       .pipe(getFirstSucceededRemoteData()).toPromise();
   }
 
-  getHandle() {
+  getIdentifierUri() {
     const handleMetadata = this.item.metadata['dc.identifier.uri'];
     if (isUndefined(handleMetadata) || isNull(handleMetadata)) {
       return null;
     }
 
     return handleMetadata?.[0]?.value;
+  }
+
+  getHandle() {
+    // Separate the handle from the full URI
+    const fullUri = this.getIdentifierUri();
+    const handleWord = 'handle/';
+    const startHandleIndex = fullUri.indexOf('handle/') + handleWord.length;
+    return fullUri.substr(startHandleIndex);
   }
 
   getAuthors() {
@@ -115,25 +132,33 @@ export class ClarinRefCitationComponent implements OnInit {
     return titleMetadata[0]?.value;
   }
 
-  open(content: any) {
-    this.modalService.open(content, {size: 'xl', ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+  async openModal(citationType) {
+    const modal = this.modalService.open(ClarinRefCitationModalComponent, {
+      size: 'xl',
+      ariaLabelledBy: 'modal-basic-title'
     });
+    modal.componentInstance.itemName = this.itemNameText;
+    // Fetch the citation text from the API
+    let citationText = '';
+    await this.getCitationText(citationType)
+      .then(res => {
+        citationText = res.payload?.metadata;
+      });
+    modal.componentInstance.citationText = citationText;
   }
 
-  selectContent() {
-    console.log('selecting');
-    console.log(this.citationContentRef);
-  }
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
+  getCitationText(citationType): Promise<any> {
+    const requestId = this.requestService.generateRequestId();
+    // Create the request
+    const getRequest = new GetRequest(requestId, this.halService.getRootHref() + '/core/refbox/citations?type=' +
+      // citationType + '&handle=' + this.getHandle(), requestOptions);
+    citationType + '&handle=' + this.getHandle());
+
+    // Call get request
+    this.requestService.send(getRequest);
+
+    // Process and return the response
+    return this.rdbService.buildFromRequestUUID(requestId)
+      .pipe(getFirstSucceededRemoteData()).toPromise();
   }
 }

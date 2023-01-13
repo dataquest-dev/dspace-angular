@@ -1,0 +1,16 @@
+<div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{itemName}}</h4>
+    <button type="button" class="close" aria-label="Close"(click)="activeModal.dismiss('Cross click')" >
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body" >
+    <p>Press <kbd>ctlr + c</kbd> to copy</p>
+    <div class="textarea" ></div>
+    <textarea #copyCitationModal readonly class="clarin-ref-box-citation-textarea" (mouseover)="selectContent()">{{citationText}}</textarea>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Save click')">Ok</button>
+  </div>
+</div>

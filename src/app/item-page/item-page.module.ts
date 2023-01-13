@@ -41,6 +41,7 @@ import { ClarinLicenseInfoComponent } from './clarin-license-info/clarin-license
 import { ClarinRefBoxComponent } from './clarin-ref-box/clarin-ref-box.component';
 import { ClarinRefCitationComponent } from './clarin-ref-citation/clarin-ref-citation.component';
 import { ClarinRefFeaturedServicesComponent } from './clarin-ref-featured-services/clarin-ref-featured-services.component';
+import { ClarinRefCitationModalComponent } from './clarin-ref-citation-modal/clarin-ref-citation-modal.component';
 
 
 const ENTRY_COMPONENTS = [
@@ -96,7 +97,8 @@ const DECLARATIONS = [
     VersionedItemComponent,
     ClarinRefBoxComponent,
     ClarinRefCitationComponent,
-    ClarinRefFeaturedServicesComponent
+    ClarinRefFeaturedServicesComponent,
+    ClarinRefCitationModalComponent
   ],
   exports: [
     ...DECLARATIONS
