@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit, Renderer2} from '@angular/core';
 import { AuthService } from '../core/auth/auth.service';
 import { take } from 'rxjs/operators';
 import { EPerson } from '../core/eperson/models/eperson.model';
