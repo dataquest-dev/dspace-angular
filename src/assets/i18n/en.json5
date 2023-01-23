@@ -2214,6 +2214,8 @@
 
   "item.page.edit": "Edit this item",
 
+  "item.page.statistics": "Show item statistics",
+
   "item.page.files": "Files",
 
   "item.page.filesection.description": "Description:",
