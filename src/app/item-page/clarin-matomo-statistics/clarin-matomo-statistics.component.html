@@ -1,1 +1,31 @@
-<p>clarin-matomo-statistics works!</p>
+<div class="container">
+  <div class="row bg-light">
+    BOX - INFO
+  </div>
+  <div class="row pt-2">
+    <div class="col-md-2 justify-content-start">
+      <div class="align-items-center justify-content-center d-flex"><i class="far fa-eye"></i></div>
+      <div class="align-items-center justify-content-center d-flex">{{'item.page.matomo-statistics.views.button' | translate}}</div>
+    </div>
+    <div class="col-md-2">
+      <div class="align-items-center justify-content-center d-flex"><i class="fas fa-download"></i></div>
+      <div class="align-items-center justify-content-center d-flex">{{'item.page.matomo-statistics.downloads.button' | translate}}</div>
+    </div>
+  </div>
+  <div class="row pt-1 justify-content-end">
+    <span>Statistics for year 2022</span>
+    <a class="pl-2">Back</a>
+  </div>
+  <div class="chart">
+    <canvas baseChart
+            [datasets]="chartData"
+            [labels]="chartLabels"
+            [options]="chartOptions"
+            [legend]="false"
+            chartType="line">
+    </canvas>
+  </div>
+  <div>
+    Filewise Statistics TABLE
+  </div>
+</div>

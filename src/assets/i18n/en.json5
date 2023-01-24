@@ -2268,6 +2268,10 @@
 
   "item.page.license.message": ['This item is', 'and licensed under:'],
 
+  "item.page.matomo-statistics.views.button": "Views",
+
+  "item.page.matomo-statistics.downloads.button": "Downloads",
+
   "item.preview.dc.identifier.uri": "Identifier:",
 
   "item.preview.dc.contributor.author": "Authors:",
