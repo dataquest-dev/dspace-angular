@@ -9,6 +9,8 @@ import statDayPeriod from 'cache-statistics-period-day.json';
 import {isTokenRefreshing} from '../../core/auth/selectors';
 import {isNull, isUndefined} from '../../shared/empty.util';
 import {lastIndexOf} from 'lodash';
+import {getDaysInHebrewMonth} from '@ng-bootstrap/ng-bootstrap/datepicker/hebrew/hebrew';
+import {range} from 'rxjs';
 
 @Component({
   selector: 'ds-clarin-matomo-statistics',
@@ -23,18 +25,18 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
   // Month shortcut with full name
   public months = [
-    ['Jan', 'January'],
-    ['Feb', 'February'],
-    ['Mar', 'March'],
-    ['Apr', 'April'],
-    ['May', 'May'],
-    ['Jun', 'June'],
-    ['Jul', 'July'],
-    ['Aug', 'August'],
-    ['Sep', 'September'],
-    ['Oct', 'October'],
-    ['Nov', 'November'],
-    ['Dec', 'December']
+    ['Jan', 'January', 31],
+    ['Feb', 'February', 28],
+    ['Mar', 'March', 31],
+    ['Apr', 'April', 30],
+    ['May', 'May', 31],
+    ['Jun', 'June', 30],
+    ['Jul', 'July', 31],
+    ['Aug', 'August', 31],
+    ['Sep', 'September', 30],
+    ['Oct', 'October', 31],
+    ['Nov', 'November', 30],
+    ['Dec', 'December', 31]
   ];
 
   public periodMonth = 'month';
@@ -274,23 +276,65 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
       console.log('downloadData', monthDownloadData);
     });
 
-    // // Get downloads data
-    //
-    // Object.values(downloadsForActualYear).forEach((downloadData: {}) => {
-    //   console.log('downloadData', downloadData);
-    //   // @ts-ignore
-    //   if (isUndefined(downloadData?.nb_hits)) {
-    //     return;
-    //   }
-    //   // @ts-ignore
-    //   totalDataDownloads.push(downloadData?.nb_hits);
-    // });
-
     this.updateChartData(monthLabels, totalDataViews, totalDataDownloads);
   }
 
   fetchAndProcessDaysStatistics() {
+    // TODO API call
+    const response = statDayPeriod?.response;
 
+    // Get views
+    const views = response?.views;
+    console.log('this.getActualMonthIndex()', this.getActualMonthIndex());
+    let actualMonthIndex: number = this.getActualMonthIndex();
+    const actualDayViews = response.views?.total?.[this.actualYear]?.['' + actualMonthIndex];
+    if (isUndefined(actualDayViews)) {
+      // TODO show error notification
+      return;
+    }
+
+    // console.log('getDaysInHebrewMonth(this.actualYear, --actualMonthIndex)', getDaysInHebrewMonth(this.actualYear, --actualMonthIndex));
+    const daysOfActualMonth = new Date(this.actualYear, --actualMonthIndex, 0).getDate();
+    console.log('daysOfActualMonth', daysOfActualMonth);
+
+    const totalDataViews = [];
+    const daysArray = [...Array(daysOfActualMonth).keys()];
+    daysArray.forEach(day => {
+      // Days are indexed from 1 to 31, not from 0
+      let dayIndex = day;
+      dayIndex++;
+
+      // View Data
+      const dayViewData = actualDayViews?.['' + dayIndex];
+      if (isUndefined(dayViewData) || isUndefined(dayViewData?.nb_hits)) {
+        totalDataViews.push(0);
+      } else {
+        // @ts-ignore
+        totalDataViews.push(dayViewData?.nb_hits);
+      }
+      console.log('viewData', dayViewData);
+    });
+    console.log('actualDayViews', actualDayViews);
+    console.log('totalDataViews', totalDataViews);
+    // Get downloads
+    const downloads = response?.downloads;
+
+
+    const dayLabels = [];
+    console.log('actual month: ' + this.actualMonth);
+  }
+
+  getActualMonthIndex(): number {
+    let actualMonthIndex = 0;
+    this.months.forEach((month, index) => {
+      if (month[0] === this.actualMonth) {
+        actualMonthIndex = index;
+      }
+    });
+
+    // The month is index from 1 to 12, not from 0 to 11
+    actualMonthIndex++;
+    return actualMonthIndex;
   }
 
   fetchDataAndUpdateChart(labelValue) {
@@ -319,9 +363,6 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
         break;
     }
     console.log('res', statYearPeriod.response);
-    // parse data
-    // if the sequence period is year - process data
-    // update chart
   }
 
   updateChartMessage(labels) {
