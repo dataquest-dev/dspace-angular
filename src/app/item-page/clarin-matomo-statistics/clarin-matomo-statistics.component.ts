@@ -1,6 +1,14 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Chart, ChartConfiguration, ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {BaseChartDirective, Label} from 'ng2-charts';
+import {HttpClient} from '@angular/common/http';
+import {ConfigurationDataService} from '../../core/data/configuration-data.service';
+import statYearPeriod from 'cache-statistics-period-year.json';
+import statMonthPeriod from 'cache-statistics-period-month.json';
+import statDayPeriod from 'cache-statistics-period-day.json';
+import {isTokenRefreshing} from '../../core/auth/selectors';
+import {isNull, isUndefined} from '../../shared/empty.util';
+import {lastIndexOf} from 'lodash';
 
 @Component({
   selector: 'ds-clarin-matomo-statistics',
@@ -9,18 +17,50 @@ import {BaseChartDirective, Label} from 'ng2-charts';
 })
 export class ClarinMatomoStatisticsComponent implements OnInit {
 
-  @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
+  constructor(protected http: HttpClient,
+              private configurationService: ConfigurationDataService) {
+  }
 
-  public chartLabels: Label[] = ['Luke Skywalker', 'Leia Organa', 'Han Solo', 'Darth Vader'];
-
-  public chartData: ChartDataSets[] = [
-    {data: [26,	21, 35, 42], label: 'Age then', backgroundColor: '#0c7b93', hidden: false},
-    {data: [70, 65,	79, 86], label: 'Age in 2021', backgroundColor: '#00a8cc', hidden: false}
+  // Month shortcut with full name
+  public months = [
+    ['Jan', 'January'],
+    ['Feb', 'February'],
+    ['Mar', 'March'],
+    ['Apr', 'April'],
+    ['May', 'May'],
+    ['Jun', 'June'],
+    ['Jul', 'July'],
+    ['Aug', 'August'],
+    ['Sep', 'September'],
+    ['Oct', 'October'],
+    ['Nov', 'November'],
+    ['Dec', 'December']
   ];
 
-  private color = '#27496d';
+  public periodMonth = 'month';
+  public periodYear = 'year';
+  public periodDay = 'day';
+
+  public actualPeriod = '';
+  private periodSequence = ['year', 'month', 'day'];
+
+  public actualYear = '';
+  public actualMonth = '';
+
+  public chartMessage = '';
+
+  @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
+
+  public chartLabels: Label[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  // `lineTension: 0` = straight lines
+  public chartData: ChartDataSets[] = [
+    {data: [0,0,0,0,0,0,0,0,70, 65,	79, 86], label: 'Views', backgroundColor: '#00a8cc', hidden: false, lineTension: 0},
+    {data: [70, 65,	79, 86 ,0,0,0,0,0,0,0,0], label: 'Downloads', backgroundColor: '#ffa8cc', hidden: false, lineTension: 0}
+  ];
+
+  public color = '#27496d';
   public chartOptions: ChartOptions = {
-    // @ts-ignore
     isDoubleSideRounded: false,
     scales: {
       xAxes: [{
@@ -29,7 +69,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
         },
         ticks: {
           fontColor: '#00a8cc'
-        }
+        },
       }],
       yAxes: [{
         gridLines: {
@@ -43,21 +83,287 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     }
   };
 
-  constructor() {
-    Chart.defaults.global.defaultFontFamily = "'Press Start 2P', cursive";
-    // Chart.elements.Rectangle.prototype.draw = drawRoundedEdges;
+
+  ngOnInit(): void {
+    this.actualPeriod = this.periodYear;
+    this.fetchDataAndUpdateChart();
   }
 
-  public hideLegend(index: number) {
-    if (this.chartData[index].hidden) {
-      this.chartData[index].hidden = false;
-    } else{
-      this.chartData[index].hidden = true;
+  private getActualPeriodIndex() {
+    let actualPeriodIndex = 0;
+    this.periodSequence.forEach((per, index) => {
+      if (per === this.actualPeriod) {
+        actualPeriodIndex = index;
+      }
+    });
+    return actualPeriodIndex;
+  }
+
+  back() {
+    this.setToPreviousPeriod();
+    this.fetchDataAndUpdateChart();
+  }
+  // 0 = year, 1 = month, 2 = day
+  private setToPreviousPeriod() {
+    let actualPeriodIndex = this.getActualPeriodIndex();
+    console.log('seting to previous period, actual period is: ' + actualPeriodIndex);
+    if (actualPeriodIndex === 0) {
+      // The actual period is year period - there is no way back
+      return;
     }
+
+    this.actualPeriod = this.periodSequence[--actualPeriodIndex];
+  }
+
+  // 0 = year, 1 = month, 2 = day
+  private setToNextPeriod() {
+    let actualPeriodIndex = this.getActualPeriodIndex();
+    console.log('actualPeriodIndex', actualPeriodIndex);
+    if (actualPeriodIndex === 2 ) {
+      // The actual period is year period - there is no way back
+      return;
+    }
+
+    this.actualPeriod = this.periodSequence[++actualPeriodIndex];
+    console.log('set period', this.actualPeriod);
+  }
+  // updateDownload - year
+    // getStat - toggle view
+  // updateDownload - month
+  // updateDownload - day
+
+  // updateView - year
+  // updateView - month
+  // updateView - day
+
+  // Hide/Show the dataset
+  toggleDownload() {
+    const index = 0;
+    this.toggleDatasetHidden(index);
+  }
+
+  toggleViews() {
+    const index = 1;
+    this.toggleDatasetHidden(index);
+  }
+
+  toggleDatasetHidden(index) {
+    this.chart.datasets[index].hidden = !this.chart.datasets[index].hidden;
     this.chart.update();
   }
 
-  ngOnInit(): void {
+  generateNumber(): number {
+    return Math.floor((Math.random()));
   }
 
+  chartClicked({ event, active }: { event?: ChartEvent, active?: {}[] }): void {
+    console.log('event', event);
+    console.log('active', active);
+    const clickedLabelIndex = active[0]?._index;
+
+    // The label value wasn;t clicked
+    if (isUndefined(clickedLabelIndex)) {
+      return;
+    }
+    console.log('clickedLabelIndex', clickedLabelIndex);
+    const labelValue = this.chartLabels[clickedLabelIndex];
+
+    console.log('clicked value: ', labelValue);
+
+    this.setToNextPeriod();
+    this.fetchDataAndUpdateChart(labelValue);
+  }
+
+  fetchAndProcessYearsStatistics() {
+    // TODO API call
+    const response = statYearPeriod?.response;
+
+    // Get views
+    const views = response?.views;
+    // Get downloads
+    const downloads = response?.downloads;
+
+    // Get labels - year values
+    const labelYears = Object.keys(views);
+
+    // If the item has statistics only for one year show the month statistics
+    if (labelYears.length === 1) {
+      this.setToNextPeriod();
+      this.fetchDataAndUpdateChart();
+    }
+
+    // Remove `total` from views and downloads
+    const totalIndex = labelYears.indexOf('total');
+    labelYears.splice(totalIndex, 1);
+
+    // Get views data
+    const totalDataViews = [];
+    Object.values(views?.total).forEach((viewData: {}) => {
+      console.log('viewData', viewData);
+      // Get only years data
+      // @ts-ignore
+      if (isUndefined(viewData?.nb_hits)) {
+        return;
+      }
+      // @ts-ignore
+      totalDataViews.push(viewData?.nb_hits);
+    });
+
+    // Get downloads data
+    const totalDataDownloads = [];
+    Object.values(downloads?.total).forEach((downloadData: {}) => {
+      console.log('downloadData', downloadData);
+      // Get only years data
+      // @ts-ignore
+      if (isUndefined(downloadData?.nb_hits)) {
+        return;
+      }
+      // @ts-ignore
+      totalDataDownloads.push(downloadData?.nb_hits);
+    });
+
+    this.updateChartData(labelYears, totalDataViews, totalDataDownloads);
+  }
+
+  fetchAndProcessMonthsStatistics() {
+    // TODO API call
+    const response = statMonthPeriod?.response;
+
+    // Get views
+    const views = response?.views;
+    // Get downloads
+    const downloads = response?.downloads;
+
+    // Get month labels
+    const monthLabels = [];
+    // Month are in the format `[['Feb', 'February']]
+    this.months.forEach(monthArray => {
+      // Add shortcut of the the month to the label.
+      monthLabels.push(monthArray[0]);
+    });
+
+    // Get views data
+    const totalDataViews = [];
+    const totalDataDownloads = [];
+    console.log('actual year', this.actualYear);
+    const viewsForActualYear = views?.total?.[this.actualYear];
+    const downloadsForActualYear = downloads?.total?.[this.actualYear];
+    this.months.forEach((month, index) => {
+      // The months are indexed from 1 to 12, not from 0 to 11
+      let increasedIndex = index;
+      increasedIndex++;
+
+      // View Data
+      const monthViewData = viewsForActualYear?.['' + increasedIndex];
+      if (isUndefined(monthViewData) || isUndefined(monthViewData?.nb_hits)) {
+        totalDataViews.push(0);
+      } else {
+        // @ts-ignore
+        totalDataViews.push(monthViewData?.nb_hits);
+      }
+      console.log('viewData', monthViewData);
+
+      // Download Data
+      const monthDownloadData = downloadsForActualYear?.['' + increasedIndex];
+      if (isUndefined(monthDownloadData) || isUndefined(monthDownloadData?.nb_hits)) {
+        totalDataDownloads.push(0);
+      } else {
+        // @ts-ignore
+        totalDataDownloads.push(monthDownloadData?.nb_hits);
+      }
+      console.log('downloadData', monthDownloadData);
+    });
+
+    // // Get downloads data
+    //
+    // Object.values(downloadsForActualYear).forEach((downloadData: {}) => {
+    //   console.log('downloadData', downloadData);
+    //   // @ts-ignore
+    //   if (isUndefined(downloadData?.nb_hits)) {
+    //     return;
+    //   }
+    //   // @ts-ignore
+    //   totalDataDownloads.push(downloadData?.nb_hits);
+    // });
+
+    this.updateChartData(monthLabels, totalDataViews, totalDataDownloads);
+  }
+
+  fetchAndProcessDaysStatistics() {
+
+  }
+
+  fetchDataAndUpdateChart(labelValue) {
+    const apiURL = 'https://api.agify.io/?name=bella';
+    // this.http.get('http://api.ipify.org/?format=json').subscribe((res: any) => {
+    //
+    // });
+
+    switch (this.actualPeriod) {
+      case this.periodYear:
+        console.log('year period');
+        this.fetchAndProcessYearsStatistics();
+        break;
+      case this.periodMonth:
+        this.actualYear = labelValue;
+        console.log('month period');
+        this.fetchAndProcessMonthsStatistics();
+        break;
+      case this.periodDay:
+        this.actualMonth = labelValue;
+        console.log('day period');
+        this.fetchAndProcessDaysStatistics();
+        break;
+      default:
+        this.fetchAndProcessYearsStatistics();
+        break;
+    }
+    console.log('res', statYearPeriod.response);
+    // parse data
+    // if the sequence period is year - process data
+    // update chart
+  }
+
+  updateChartMessage(labels) {
+    const actualPeriodIndex = this.getActualPeriodIndex();
+
+    this.chartMessage = 'Statistics for ';
+    // Show years interval
+    if (actualPeriodIndex === 0) {
+      // Start year and end year
+      let lastIndexOfLabels = labels.length;
+      this.chartMessage += 'years ' + labels[0] + ' to ' + labels[--lastIndexOfLabels];
+    } else if (actualPeriodIndex === 1) {
+      this.chartMessage += 'the year ' + this.actualYear;
+      console.log('Set actual month to:' + this.actualMonth);
+    } else {
+      this.chartMessage += this.actualMonth + ', ' + this.actualYear;
+    }
+  }
+
+  updateChartData(labels, totalDataViews, totalDataDownloads) {
+    // Update labels
+    this.removeLabels();
+    this.setLabels(labels);
+
+    console.log('labels', this.chartLabels);
+    // Update chart message e.g., `Statistics for years 2022 to 2023`, `Statistics for the year 2022`,..
+    this.updateChartMessage(labels);
+
+    // Update view data
+    this.chartData[0]?.data = totalDataViews;
+    // Update downloads data
+    this.chartData[1]?.data = totalDataDownloads;
+    this.chart.update();
+  }
+
+  setLabels(labels) {
+    labels.forEach(label => {
+      this.chartLabels.push(label);
+    });
+  }
+
+  removeLabels() {
+    this.chartLabels = [];
+  }
 }

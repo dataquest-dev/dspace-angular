@@ -3,18 +3,18 @@
     BOX - INFO
   </div>
   <div class="row pt-2">
-    <div class="col-md-2 justify-content-start">
+    <div class="col-md-2 justify-content-start" (click)="toggleViews()">
       <div class="align-items-center justify-content-center d-flex"><i class="far fa-eye"></i></div>
       <div class="align-items-center justify-content-center d-flex">{{'item.page.matomo-statistics.views.button' | translate}}</div>
     </div>
     <div class="col-md-2">
-      <div class="align-items-center justify-content-center d-flex"><i class="fas fa-download"></i></div>
+      <div class="align-items-center justify-content-center d-flex" (click)="toggleDownload()"><i class="far fa-eye"></i></div>
       <div class="align-items-center justify-content-center d-flex">{{'item.page.matomo-statistics.downloads.button' | translate}}</div>
     </div>
   </div>
   <div class="row pt-1 justify-content-end">
-    <span>Statistics for year 2022</span>
-    <a class="pl-2">Back</a>
+    <span>{{chartMessage}}</span>
+    <a *ngIf="!(this.actualPeriod === this.periodYear)" class="pl-2" (click)="back()">Back</a>
   </div>
   <div class="chart">
     <canvas baseChart
@@ -22,6 +22,7 @@
             [labels]="chartLabels"
             [options]="chartOptions"
             [legend]="false"
+            (chartClick)="chartClicked($event)"
             chartType="line">
     </canvas>
   </div>
