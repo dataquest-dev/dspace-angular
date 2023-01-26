@@ -1,16 +1,24 @@
 <div class="container">
-  <div class="row bg-light">
-    BOX - INFO
+  <div class="row px-2 py-2 rounded alert-info">
+    <i class="fas fa-info-circle pt-1"></i>
+    <span class="pl-2">{{'item.matomo-statistics.info.message' | translate}}</span>
   </div>
-  <div class="row pt-2">
-    <div class="col-md-2 justify-content-start" (click)="toggleViews()">
+  <div class="row pt-4 clarin-bottom-line">
+    <button type="button" class="col-md-2 clarin-chart-button btn btn-outline-success justify-content-start py-2 px-3"
+            [ngClass]="viewsButtonClicked ? 'clarin-chart-views-clicked' : 'clarin-chart-views'"
+            role="button"
+            data-bs-toggle="button"
+            (click)="toggleViews()">
       <div class="align-items-center justify-content-center d-flex"><i class="far fa-eye"></i></div>
       <div class="align-items-center justify-content-center d-flex">{{'item.page.matomo-statistics.views.button' | translate}}</div>
-    </div>
-    <div class="col-md-2">
-      <div class="align-items-center justify-content-center d-flex" (click)="toggleDownload()"><i class="far fa-eye"></i></div>
+    </button>
+    <button type="button" class="col-md-2 clarin-chart-button btn btn-outline-info py-2 px-3 ml-1"
+            [ngClass]="downloadsButtonClicked ? 'clarin-chart-downloads-clicked' : 'clarin-chart-downloads'"
+            data-bs-toggle="button"
+            (click)="toggleDownload()">
+      <div class="align-items-center justify-content-center d-flex"><i class="far fa-eye"></i></div>
       <div class="align-items-center justify-content-center d-flex">{{'item.page.matomo-statistics.downloads.button' | translate}}</div>
-    </div>
+    </button>
   </div>
   <div class="row pt-1 justify-content-end">
     <span>{{chartMessage}}</span>

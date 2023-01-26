@@ -25,18 +25,18 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
   // Month shortcut with full name
   public months = [
-    ['Jan', 'January', 31],
-    ['Feb', 'February', 28],
-    ['Mar', 'March', 31],
-    ['Apr', 'April', 30],
-    ['May', 'May', 31],
-    ['Jun', 'June', 30],
-    ['Jul', 'July', 31],
-    ['Aug', 'August', 31],
-    ['Sep', 'September', 30],
-    ['Oct', 'October', 31],
-    ['Nov', 'November', 30],
-    ['Dec', 'December', 31]
+    ['Jan', 'January'],
+    ['Feb', 'February'],
+    ['Mar', 'March'],
+    ['Apr', 'April'],
+    ['May', 'May'],
+    ['Jun', 'June'],
+    ['Jul', 'July'],
+    ['Aug', 'August'],
+    ['Sep', 'September'],
+    ['Oct', 'October'],
+    ['Nov', 'November'],
+    ['Dec', 'December']
   ];
 
   public periodMonth = 'month';
@@ -84,6 +84,9 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
       }]
     }
   };
+
+  public viewsButtonClicked = true;
+  public downloadsButtonClicked = true;
 
 
   ngOnInit(): void {
@@ -142,11 +145,13 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
   toggleDownload() {
     const index = 0;
     this.toggleDatasetHidden(index);
+    this.downloadsButtonClicked = !this.downloadsButtonClicked;
   }
 
   toggleViews() {
     const index = 1;
     this.toggleDatasetHidden(index);
+    this.viewsButtonClicked = !this.viewsButtonClicked;
   }
 
   toggleDatasetHidden(index) {
@@ -247,7 +252,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     // Get views data
     const totalDataViews = [];
     const totalDataDownloads = [];
-    // console.log('actual year', this.actualYear);
+    console.log('actual year', this.actualYear);
     const viewsForActualYear = views?.total?.[this.actualYear];
     const downloadsForActualYear = downloads?.total?.[this.actualYear];
     this.months.forEach((month, index) => {
@@ -364,7 +369,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
         this.fetchAndProcessYearsStatistics();
         break;
       case this.periodMonth:
-        this.actualYear = labelValue;
+        this.actualYear = isUndefined(labelValue) ? this.actualYear : labelValue;
         console.log('month period');
         this.fetchAndProcessMonthsStatistics();
         break;
