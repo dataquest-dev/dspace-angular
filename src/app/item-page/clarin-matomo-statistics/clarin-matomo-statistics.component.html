@@ -20,11 +20,11 @@
       <div class="align-items-center justify-content-center d-flex">{{'item.page.matomo-statistics.downloads.button' | translate}}</div>
     </button>
   </div>
-  <div class="row pt-1 justify-content-end">
-    <span>{{chartMessage}}</span>
-    <a *ngIf="!(this.actualPeriod === this.periodYear)" class="pl-2" (click)="back()">Back</a>
+  <div class="row pt-2 justify-content-end">
+    <span class="chart-message rounded px-2 py-2">{{chartMessage}}</span>
+    <button class="btn clarin-btn-back rounded px-2 py-2 ml-2" *ngIf="!(this.actualPeriod === this.periodYear)" (click)="back()">Back</button>
   </div>
-  <div class="chart">
+  <div class="chart pt-2">
     <canvas baseChart
             [datasets]="chartData"
             [labels]="chartLabels"

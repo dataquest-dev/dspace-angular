@@ -48,3 +48,33 @@
 .clarin-bottom-line {
   border-bottom: 1px solid #ddd;
 }
+
+.btn-success:hover {
+  color: #fff !important;
+  background-color: #7ba739 !important;
+  border-color: #92C642 !important;
+}
+
+.btn-success {
+  color: #fff !important;
+  background-color: #92C642 !important;
+  border-color: #92C642 !important;
+}
+
+.chart-message {
+  background-color: #5bc0de;
+  color: white;
+}
+
+.clarin-btn-back {
+  color: #fff;
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+
+.clarin-btn-back:hover {
+  //color: #fff;
+  background-color: #2e6391;
+  //border-color: #357ebd;
+}
+

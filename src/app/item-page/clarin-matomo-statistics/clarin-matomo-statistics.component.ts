@@ -57,8 +57,8 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
   // `lineTension: 0` = straight lines
   public chartData: ChartDataSets[] = [
-    {data: [0,0,0,0,0,0,0,0,70, 65,	79, 86], label: 'Views', backgroundColor: '#00a8cc', hidden: false, lineTension: 0},
-    {data: [70, 65,	79, 86 ,0,0,0,0,0,0,0,0], label: 'Downloads', backgroundColor: '#ffa8cc', hidden: false, lineTension: 0}
+    {data: [0,0,0,0,0,0,0,0,70, 65,	79, 86], label: 'Views', backgroundColor: '#9ee37d', borderColor: '#358600', pointBackgroundColor: '#1f6200',hidden: false, lineTension: 0},
+    {data: [70, 65,	79, 86 ,0,0,0,0,0,0,0,0], label: 'Downloads', backgroundColor: '#51b9f2', borderColor: '#336ab5', pointBackgroundColor: '#124a94', hidden: false, lineTension: 0}
   ];
 
   public color = '#27496d';
@@ -143,13 +143,13 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
   // Hide/Show the dataset
   toggleDownload() {
-    const index = 0;
+    const index = 1;
     this.toggleDatasetHidden(index);
     this.downloadsButtonClicked = !this.downloadsButtonClicked;
   }
 
   toggleViews() {
-    const index = 1;
+    const index = 0;
     this.toggleDatasetHidden(index);
     this.viewsButtonClicked = !this.viewsButtonClicked;
   }
@@ -388,14 +388,14 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
   updateChartMessage(labels) {
     const actualPeriodIndex = this.getActualPeriodIndex();
 
-    this.chartMessage = 'Statistics for ';
+    this.chartMessage = '';
     // Show years interval
     if (actualPeriodIndex === 0) {
       // Start year and end year
       let lastIndexOfLabels = labels.length;
-      this.chartMessage += 'years ' + labels[0] + ' to ' + labels[--lastIndexOfLabels];
+      this.chartMessage += labels[0] + ' - ' + labels[--lastIndexOfLabels];
     } else if (actualPeriodIndex === 1) {
-      this.chartMessage += 'the year ' + this.actualYear;
+      this.chartMessage += this.actualYear;
       console.log('Set actual month to:' + this.actualMonth);
     } else {
       this.chartMessage += this.actualMonth + ', ' + this.actualYear;
