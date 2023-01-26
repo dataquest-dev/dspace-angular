@@ -201,7 +201,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     // Get views data
     const totalDataViews = [];
     Object.values(views?.total).forEach((viewData: {}) => {
-      console.log('viewData', viewData);
+      // console.log('viewData', viewData);
       // Get only years data
       // @ts-ignore
       if (isUndefined(viewData?.nb_hits)) {
@@ -214,7 +214,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     // Get downloads data
     const totalDataDownloads = [];
     Object.values(downloads?.total).forEach((downloadData: {}) => {
-      console.log('downloadData', downloadData);
+      // console.log('downloadData', downloadData);
       // Get only years data
       // @ts-ignore
       if (isUndefined(downloadData?.nb_hits)) {
@@ -247,7 +247,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     // Get views data
     const totalDataViews = [];
     const totalDataDownloads = [];
-    console.log('actual year', this.actualYear);
+    // console.log('actual year', this.actualYear);
     const viewsForActualYear = views?.total?.[this.actualYear];
     const downloadsForActualYear = downloads?.total?.[this.actualYear];
     this.months.forEach((month, index) => {
@@ -263,7 +263,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
         // @ts-ignore
         totalDataViews.push(monthViewData?.nb_hits);
       }
-      console.log('viewData', monthViewData);
+      // console.log('viewData', monthViewData);
 
       // Download Data
       const monthDownloadData = downloadsForActualYear?.['' + increasedIndex];
@@ -273,7 +273,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
         // @ts-ignore
         totalDataDownloads.push(monthDownloadData?.nb_hits);
       }
-      console.log('downloadData', monthDownloadData);
+      // console.log('downloadData', monthDownloadData);
     });
 
     this.updateChartData(monthLabels, totalDataViews, totalDataDownloads);
@@ -284,10 +284,10 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     const response = statDayPeriod?.response;
 
     // Get views
-    const views = response?.views;
-    console.log('this.getActualMonthIndex()', this.getActualMonthIndex());
+    // console.log('this.getActualMonthIndex()', this.getActualMonthIndex());
     let actualMonthIndex: number = this.getActualMonthIndex();
     const actualDayViews = response.views?.total?.[this.actualYear]?.['' + actualMonthIndex];
+    const actualDayDownloads = response.downloads?.total?.[this.actualYear]?.['' + actualMonthIndex];
     if (isUndefined(actualDayViews)) {
       // TODO show error notification
       return;
@@ -295,10 +295,12 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
     // console.log('getDaysInHebrewMonth(this.actualYear, --actualMonthIndex)', getDaysInHebrewMonth(this.actualYear, --actualMonthIndex));
     const daysOfActualMonth = new Date(this.actualYear, --actualMonthIndex, 0).getDate();
-    console.log('daysOfActualMonth', daysOfActualMonth);
+    // console.log('daysOfActualMonth', daysOfActualMonth);
 
     const totalDataViews = [];
+    const totalDataDownloads = [];
     const daysArray = [...Array(daysOfActualMonth).keys()];
+
     daysArray.forEach(day => {
       // Days are indexed from 1 to 31, not from 0
       let dayIndex = day;
@@ -312,16 +314,29 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
         // @ts-ignore
         totalDataViews.push(dayViewData?.nb_hits);
       }
-      console.log('viewData', dayViewData);
+
+      // Download Data
+      const dayDownloadData = actualDayDownloads?.['' + dayIndex];
+      if (isUndefined(dayDownloadData) || isUndefined(dayDownloadData?.nb_hits)) {
+        totalDataDownloads.push(0);
+      } else {
+        // @ts-ignore
+        totalDataDownloads.push(dayDownloadData?.nb_hits);
+      }
+
+      // console.log('viewData', dayViewData);
     });
-    console.log('actualDayViews', actualDayViews);
-    console.log('totalDataViews', totalDataViews);
+    // console.log('actualDayViews', actualDayViews);
+    // console.log('totalDataViews', totalDataViews);
+    // console.log('totalDataDownloads', totalDataDownloads);
+
     // Get downloads
     const downloads = response?.downloads;
 
 
     const dayLabels = [];
     console.log('actual month: ' + this.actualMonth);
+    this.updateChartData(daysArray, totalDataViews, totalDataDownloads);
   }
 
   getActualMonthIndex(): number {
