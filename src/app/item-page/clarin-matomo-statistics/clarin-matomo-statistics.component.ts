@@ -10,7 +10,7 @@ import {isTokenRefreshing} from '../../core/auth/selectors';
 import {isNull, isUndefined} from '../../shared/empty.util';
 import {lastIndexOf} from 'lodash';
 import {getDaysInHebrewMonth} from '@ng-bootstrap/ng-bootstrap/datepicker/hebrew/hebrew';
-import {range} from 'rxjs';
+import {BehaviorSubject, range} from 'rxjs';
 
 @Component({
   selector: 'ds-clarin-matomo-statistics',
@@ -88,6 +88,8 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
   public viewsButtonClicked = true;
   public downloadsButtonClicked = true;
 
+  public filesDownloads: BehaviorSubject<{ [name: string]: number }> = new BehaviorSubject({});
+
 
   ngOnInit(): void {
     this.actualPeriod = this.periodYear;
@@ -132,14 +134,6 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     this.actualPeriod = this.periodSequence[++actualPeriodIndex];
     console.log('set period', this.actualPeriod);
   }
-  // updateDownload - year
-    // getStat - toggle view
-  // updateDownload - month
-  // updateDownload - day
-
-  // updateView - year
-  // updateView - month
-  // updateView - day
 
   // Hide/Show the dataset
   toggleDownload() {
@@ -229,7 +223,44 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
       totalDataDownloads.push(downloadData?.nb_hits);
     });
 
+    // Get download files data
+    // Go through download statistics and count occurrences of the file downloading
+    let filesDownloads: { [name: string]: number } = {};
+    const filesDownloadsResponse = response.downloads;
+    Object.keys(filesDownloadsResponse).forEach(year => {
+      const yearDownloadFilesData = filesDownloadsResponse[year];
+      if (year === 'total') {
+        return;
+      }
+      Object.keys(yearDownloadFilesData).forEach(fileName => {
+        // console.log('filesDownloads[fileName]', filesDownloads[fileName]);
+        const shortenedFileName = this.getFileNameFromFullURI(fileName);
+        const actualValue = isUndefined(filesDownloads[shortenedFileName]) ? 0 : filesDownloads[shortenedFileName];
+        filesDownloads[shortenedFileName] = actualValue + yearDownloadFilesData[fileName].nb_hits;
+      });
+    });
+
+    filesDownloads = this.sortByValue(filesDownloads);
+    this.filesDownloads.next(filesDownloads);
     this.updateChartData(labelYears, totalDataViews, totalDataDownloads);
+  }
+
+  getFileNameFromFullURI(fileName) {
+    if (isUndefined(fileName)) {
+      return undefined;
+    }
+    // Shortened file name
+    return fileName.substr(fileName.lastIndexOf('/') + 1, fileName.indexOf('handle/'));
+  }
+
+  sortByValue(dictionary) {
+    const sortedData: { [name: string]: number } = {};
+    Object.keys(dictionary)
+      .sort((a, b) => (dictionary[a] < dictionary[b] ? 1 : -1))
+      .map(x => {
+        sortedData[x] = dictionary[x];
+      });
+    return sortedData;
   }
 
   fetchAndProcessMonthsStatistics() {

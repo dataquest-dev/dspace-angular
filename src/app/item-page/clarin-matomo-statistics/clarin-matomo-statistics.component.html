@@ -34,7 +34,17 @@
             chartType="line">
     </canvas>
   </div>
-  <div>
-    Filewise Statistics TABLE
+  <div *ngIf="downloadsButtonClicked" class="pt-3">
+    <table class="table table-striped">
+      <thead>
+      Filewise Statistics
+      </thead>
+      <tbody>
+      <tr *ngFor="let fileData of (filesDownloads | async) | dsKeys">
+        <td><b>{{fileData.value}}</b></td>
+        <td>{{fileData.key}}</td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </div>
