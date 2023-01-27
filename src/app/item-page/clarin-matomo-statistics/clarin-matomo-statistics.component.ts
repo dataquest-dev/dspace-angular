@@ -11,6 +11,7 @@ import {isNull, isUndefined} from '../../shared/empty.util';
 import {lastIndexOf} from 'lodash';
 import {getDaysInHebrewMonth} from '@ng-bootstrap/ng-bootstrap/datepicker/hebrew/hebrew';
 import {BehaviorSubject, range} from 'rxjs';
+import {connectableObservableDescriptor} from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
   selector: 'ds-clarin-matomo-statistics',
@@ -225,42 +226,11 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
     // Get download files data
     // Go through download statistics and count occurrences of the file downloading
-    let filesDownloads: { [name: string]: number } = {};
     const filesDownloadsResponse = response.downloads;
-    Object.keys(filesDownloadsResponse).forEach(year => {
-      const yearDownloadFilesData = filesDownloadsResponse[year];
-      if (year === 'total') {
-        return;
-      }
-      Object.keys(yearDownloadFilesData).forEach(fileName => {
-        // console.log('filesDownloads[fileName]', filesDownloads[fileName]);
-        const shortenedFileName = this.getFileNameFromFullURI(fileName);
-        const actualValue = isUndefined(filesDownloads[shortenedFileName]) ? 0 : filesDownloads[shortenedFileName];
-        filesDownloads[shortenedFileName] = actualValue + yearDownloadFilesData[fileName].nb_hits;
-      });
-    });
-
-    filesDownloads = this.sortByValue(filesDownloads);
+    const filesDownloads = this.countFileDownloads(filesDownloadsResponse);
     this.filesDownloads.next(filesDownloads);
+
     this.updateChartData(labelYears, totalDataViews, totalDataDownloads);
-  }
-
-  getFileNameFromFullURI(fileName) {
-    if (isUndefined(fileName)) {
-      return undefined;
-    }
-    // Shortened file name
-    return fileName.substr(fileName.lastIndexOf('/') + 1, fileName.indexOf('handle/'));
-  }
-
-  sortByValue(dictionary) {
-    const sortedData: { [name: string]: number } = {};
-    Object.keys(dictionary)
-      .sort((a, b) => (dictionary[a] < dictionary[b] ? 1 : -1))
-      .map(x => {
-        sortedData[x] = dictionary[x];
-      });
-    return sortedData;
   }
 
   fetchAndProcessMonthsStatistics() {
@@ -312,6 +282,12 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
       // console.log('downloadData', monthDownloadData);
     });
 
+    // Get download files data
+    // Go through download statistics and count occurrences of the file downloading for the actual year
+    const filesDownloadsResponse = response.downloads[this.actualYear];
+    const filesDownloads = this.countFileDownloads(filesDownloadsResponse);
+    this.filesDownloads.next(filesDownloads);
+
     this.updateChartData(monthLabels, totalDataViews, totalDataDownloads);
   }
 
@@ -321,7 +297,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
     // Get views
     // console.log('this.getActualMonthIndex()', this.getActualMonthIndex());
-    let actualMonthIndex: number = this.getActualMonthIndex();
+    const actualMonthIndex: number = this.getActualMonthIndex();
     const actualDayViews = response.views?.total?.[this.actualYear]?.['' + actualMonthIndex];
     const actualDayDownloads = response.downloads?.total?.[this.actualYear]?.['' + actualMonthIndex];
     if (isUndefined(actualDayViews)) {
@@ -330,7 +306,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     }
 
     // console.log('getDaysInHebrewMonth(this.actualYear, --actualMonthIndex)', getDaysInHebrewMonth(this.actualYear, --actualMonthIndex));
-    const daysOfActualMonth = new Date(this.actualYear, --actualMonthIndex, 0).getDate();
+    const daysOfActualMonth = new Date(this.actualYear, actualMonthIndex - 1, 0).getDate();
     // console.log('daysOfActualMonth', daysOfActualMonth);
 
     const totalDataViews = [];
@@ -359,20 +335,53 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
         // @ts-ignore
         totalDataDownloads.push(dayDownloadData?.nb_hits);
       }
-
-      // console.log('viewData', dayViewData);
     });
-    // console.log('actualDayViews', actualDayViews);
-    // console.log('totalDataViews', totalDataViews);
-    // console.log('totalDataDownloads', totalDataDownloads);
 
-    // Get downloads
-    const downloads = response?.downloads;
+    // Get download files data
+    // Go through download statistics and count occurrences of the file downloading for the actual year
+    const filesDownloadsResponse = response.downloads[this.actualYear]['' + actualMonthIndex];
+    const filesDownloads = this.countFileDownloads(filesDownloadsResponse);
+    this.filesDownloads.next(filesDownloads);
 
-
-    const dayLabels = [];
     console.log('actual month: ' + this.actualMonth);
     this.updateChartData(daysArray, totalDataViews, totalDataDownloads);
+  }
+
+  countFileDownloads(filesDownloadsResponse) {
+    let filesDownloads: { [name: string]: number } = {};
+    Object.keys(filesDownloadsResponse).forEach(year => {
+      const yearDownloadFilesData = filesDownloadsResponse[year];
+      if (year === 'total') {
+        return;
+      }
+      Object.keys(yearDownloadFilesData).forEach(fileName => {
+        // console.log('filesDownloads[fileName]', filesDownloads[fileName]);
+        const shortenedFileName = this.getFileNameFromFullURI(fileName);
+        const actualValue = isUndefined(filesDownloads[shortenedFileName]) ? 0 : filesDownloads[shortenedFileName];
+        filesDownloads[shortenedFileName] = actualValue + yearDownloadFilesData[fileName].nb_hits;
+      });
+    });
+
+    filesDownloads = this.sortByValue(filesDownloads);
+    return filesDownloads;
+  }
+
+  getFileNameFromFullURI(fileName) {
+    if (isUndefined(fileName)) {
+      return undefined;
+    }
+    // Shortened file name
+    return fileName.substr(fileName.lastIndexOf('/') + 1, fileName.indexOf('handle/'));
+  }
+
+  sortByValue(dictionary) {
+    const sortedData: { [name: string]: number } = {};
+    Object.keys(dictionary)
+      .sort((a, b) => (dictionary[a] < dictionary[b] ? 1 : -1))
+      .map(x => {
+        sortedData[x] = dictionary[x];
+      });
+    return sortedData;
   }
 
   getActualMonthIndex(): number {
