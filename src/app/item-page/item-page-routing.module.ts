@@ -64,7 +64,10 @@ import {ClarinMatomoStatisticsComponent} from './clarin-matomo-statistics/clarin
           },
           {
             path: MATOMO_STATISTICS_PATH,
-            component: ClarinMatomoStatisticsComponent
+            component: ClarinMatomoStatisticsComponent,
+            resolve: {
+              dso: ItemPageResolver,
+            }
           },
         ],
         data: {

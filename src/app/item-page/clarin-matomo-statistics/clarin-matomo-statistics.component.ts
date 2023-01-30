@@ -1,17 +1,15 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {Chart, ChartConfiguration, ChartDataSets, ChartOptions, ChartType} from 'chart.js';
-import {BaseChartDirective, Label} from 'ng2-charts';
-import {HttpClient} from '@angular/common/http';
-import {ConfigurationDataService} from '../../core/data/configuration-data.service';
-import statYearPeriod from 'cache-statistics-period-year.json';
-import statMonthPeriod from 'cache-statistics-period-month.json';
-import statDayPeriod from 'cache-statistics-period-day.json';
-import {isTokenRefreshing} from '../../core/auth/selectors';
-import {isNull, isUndefined} from '../../shared/empty.util';
-import {lastIndexOf} from 'lodash';
-import {getDaysInHebrewMonth} from '@ng-bootstrap/ng-bootstrap/datepicker/hebrew/hebrew';
-import {BehaviorSubject, range} from 'rxjs';
-import {connectableObservableDescriptor} from 'rxjs/internal/observable/ConnectableObservable';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChartDataSets, ChartOptions } from 'chart.js';
+import { BaseChartDirective, Label } from 'ng2-charts';
+import { HttpClient } from '@angular/common/http';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { isNull, isUndefined } from '../../shared/empty.util';
+import { BehaviorSubject } from 'rxjs';
+import { getFirstSucceededRemoteData } from '../../core/shared/operators';
+import { map } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { RemoteData } from '../../core/data/remote-data';
+import { Item } from '../../core/shared/item.model';
 
 @Component({
   selector: 'ds-clarin-matomo-statistics',
@@ -21,8 +19,13 @@ import {connectableObservableDescriptor} from 'rxjs/internal/observable/Connecta
 export class ClarinMatomoStatisticsComponent implements OnInit {
 
   constructor(protected http: HttpClient,
-              private configurationService: ConfigurationDataService) {
+              private configurationService: ConfigurationDataService,
+              protected route: ActivatedRoute) {
   }
+
+  @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
+
+  itemRD$: BehaviorSubject<Item> = new BehaviorSubject<Item>(null);
 
   // Month shortcut with full name
   public months = [
@@ -52,19 +55,32 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
   public chartMessage = '';
 
-  @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
-
   public chartLabels: Label[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   // `lineTension: 0` = straight lines
   public chartData: ChartDataSets[] = [
-    {data: [0,0,0,0,0,0,0,0,70, 65,	79, 86], label: 'Views', backgroundColor: '#9ee37d', borderColor: '#358600', pointBackgroundColor: '#1f6200',hidden: false, lineTension: 0},
-    {data: [70, 65,	79, 86 ,0,0,0,0,0,0,0,0], label: 'Downloads', backgroundColor: '#51b9f2', borderColor: '#336ab5', pointBackgroundColor: '#124a94', hidden: false, lineTension: 0}
+    {
+      data: [],
+      label: 'Views',
+      backgroundColor: '#9ee37d',
+      borderColor: '#358600',
+      pointBackgroundColor: '#1f6200',
+      hidden: false,
+      lineTension: 0
+    },
+    {
+      data: [],
+      label: 'Downloads',
+      backgroundColor: '#51b9f2',
+      borderColor: '#336ab5',
+      pointBackgroundColor: '#124a94',
+      hidden: false,
+      lineTension: 0
+    }
   ];
 
   public color = '#27496d';
   public chartOptions: ChartOptions = {
-    isDoubleSideRounded: false,
     scales: {
       xAxes: [{
         gridLines: {
@@ -93,8 +109,14 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.route.data.pipe(
+      map((data) => data.dso as RemoteData<Item>))
+      .subscribe(data => {
+        this.itemRD$.next(data?.payload);
+      });
+
     this.actualPeriod = this.periodYear;
-    this.fetchDataAndUpdateChart();
+    this.fetchDataAndUpdateChart(undefined);
   }
 
   private getActualPeriodIndex() {
@@ -109,12 +131,11 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
   back() {
     this.setToPreviousPeriod();
-    this.fetchDataAndUpdateChart();
+    this.fetchDataAndUpdateChart(undefined);
   }
   // 0 = year, 1 = month, 2 = day
   private setToPreviousPeriod() {
     let actualPeriodIndex = this.getActualPeriodIndex();
-    console.log('seting to previous period, actual period is: ' + actualPeriodIndex);
     if (actualPeriodIndex === 0) {
       // The actual period is year period - there is no way back
       return;
@@ -126,14 +147,12 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
   // 0 = year, 1 = month, 2 = day
   private setToNextPeriod() {
     let actualPeriodIndex = this.getActualPeriodIndex();
-    console.log('actualPeriodIndex', actualPeriodIndex);
     if (actualPeriodIndex === 2 ) {
       // The actual period is year period - there is no way back
       return;
     }
 
     this.actualPeriod = this.periodSequence[++actualPeriodIndex];
-    console.log('set period', this.actualPeriod);
   }
 
   // Hide/Show the dataset
@@ -158,32 +177,61 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     return Math.floor((Math.random()));
   }
 
-  chartClicked({ event, active }: { event?: ChartEvent, active?: {}[] }): void {
-    console.log('event', event);
-    console.log('active', active);
+  chartClicked({ event, active }: { event?: any, active?: {}[] }): void {
+    // @ts-ignore
     const clickedLabelIndex = active[0]?._index;
 
     // The label value wasn;t clicked
     if (isUndefined(clickedLabelIndex)) {
       return;
     }
-    console.log('clickedLabelIndex', clickedLabelIndex);
     const labelValue = this.chartLabels[clickedLabelIndex];
-
-    console.log('clicked value: ', labelValue);
 
     this.setToNextPeriod();
     this.fetchDataAndUpdateChart(labelValue);
   }
 
-  fetchAndProcessYearsStatistics() {
-    // TODO API call
-    const response = statYearPeriod?.response;
+  private getCacheServerURI(): Promise<any> {
+    return this.configurationService.findByPropertyName('statistics.cache-server.uri')
+      .pipe(getFirstSucceededRemoteData()).toPromise();
+  }
+
+  async getStatisticsDataFromCacheServer(parametersURI): Promise<any> {
+    const cacheServerURI = await this.getCacheServerURI()
+      .then(res => {
+        return res.payload?.values?.[0];
+      });
+
+    if (isUndefined(cacheServerURI)) {
+      console.error('Cannot load the cache-server URI');
+      return;
+    }
+
+    return this.http.get(cacheServerURI + parametersURI)
+      .pipe().toPromise();
+  }
+
+  async fetchAndProcessYearsStatistics() {
+    // Get statistics data from the cache server
+    const response = await this.getStatisticsDataFromCacheServer('?h=' + this.itemRD$.value.handle + '&period=year')
+      .then(res => {
+        return res;
+      });
+
+    if (isUndefined(response) || isNull(response)) {
+      console.error('Cannot get the cache-server statistics data.');
+      return;
+    }
 
     // Get views
     const views = response?.views;
     // Get downloads
     const downloads = response?.downloads;
+
+    if (isUndefined(views) || isUndefined(downloads) || isNull(views) || isNull(downloads)) {
+      console.error('The response does not contains the `views` or `downloads` property.');
+      return;
+    }
 
     // Get labels - year values
     const labelYears = Object.keys(views);
@@ -191,7 +239,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     // If the item has statistics only for one year show the month statistics
     if (labelYears.length === 1) {
       this.setToNextPeriod();
-      this.fetchDataAndUpdateChart();
+      this.fetchDataAndUpdateChart(undefined);
     }
 
     // Remove `total` from views and downloads
@@ -201,7 +249,6 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     // Get views data
     const totalDataViews = [];
     Object.values(views?.total).forEach((viewData: {}) => {
-      // console.log('viewData', viewData);
       // Get only years data
       // @ts-ignore
       if (isUndefined(viewData?.nb_hits)) {
@@ -214,7 +261,6 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     // Get downloads data
     const totalDataDownloads = [];
     Object.values(downloads?.total).forEach((downloadData: {}) => {
-      // console.log('downloadData', downloadData);
       // Get only years data
       // @ts-ignore
       if (isUndefined(downloadData?.nb_hits)) {
@@ -233,14 +279,27 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     this.updateChartData(labelYears, totalDataViews, totalDataDownloads);
   }
 
-  fetchAndProcessMonthsStatistics() {
-    // TODO API call
-    const response = statMonthPeriod?.response;
+  async fetchAndProcessMonthsStatistics() {
+    // Get statistics data from the cache server
+    const response = await this.getStatisticsDataFromCacheServer('?h=' + this.itemRD$.value.handle + '&period=month&date=' + this.actualYear)
+      .then(res => {
+        return res;
+      });
+
+    if (isUndefined(response) || isNull(response)) {
+      console.error('Cannot get the cache-server statistics data.');
+      return;
+    }
 
     // Get views
     const views = response?.views;
     // Get downloads
     const downloads = response?.downloads;
+
+    if (isUndefined(views) || isUndefined(downloads) || isNull(views) || isNull(downloads)) {
+      console.error('The response does not contains the `views` or `downloads` property.');
+      return;
+    }
 
     // Get month labels
     const monthLabels = [];
@@ -253,7 +312,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     // Get views data
     const totalDataViews = [];
     const totalDataDownloads = [];
-    console.log('actual year', this.actualYear);
+
     const viewsForActualYear = views?.total?.[this.actualYear];
     const downloadsForActualYear = downloads?.total?.[this.actualYear];
     this.months.forEach((month, index) => {
@@ -269,7 +328,6 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
         // @ts-ignore
         totalDataViews.push(monthViewData?.nb_hits);
       }
-      // console.log('viewData', monthViewData);
 
       // Download Data
       const monthDownloadData = downloadsForActualYear?.['' + increasedIndex];
@@ -279,7 +337,6 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
         // @ts-ignore
         totalDataDownloads.push(monthDownloadData?.nb_hits);
       }
-      // console.log('downloadData', monthDownloadData);
     });
 
     // Get download files data
@@ -291,24 +348,30 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     this.updateChartData(monthLabels, totalDataViews, totalDataDownloads);
   }
 
-  fetchAndProcessDaysStatistics() {
-    // TODO API call
-    const response = statDayPeriod?.response;
-
-    // Get views
-    // console.log('this.getActualMonthIndex()', this.getActualMonthIndex());
+  async fetchAndProcessDaysStatistics() {
     const actualMonthIndex: number = this.getActualMonthIndex();
-    const actualDayViews = response.views?.total?.[this.actualYear]?.['' + actualMonthIndex];
-    const actualDayDownloads = response.downloads?.total?.[this.actualYear]?.['' + actualMonthIndex];
-    if (isUndefined(actualDayViews)) {
-      // TODO show error notification
+
+    // Get statistics data from the cache server
+    const response = await this.getStatisticsDataFromCacheServer('?h=' + this.itemRD$.value.handle + '&period=day&date=' + this.actualYear + '-' + actualMonthIndex)
+      .then(res => {
+        return res;
+      });
+
+    if (isUndefined(response) || isNull(response)) {
+      console.error('Cannot get the cache-server statistics data.');
       return;
     }
 
-    // console.log('getDaysInHebrewMonth(this.actualYear, --actualMonthIndex)', getDaysInHebrewMonth(this.actualYear, --actualMonthIndex));
-    const daysOfActualMonth = new Date(this.actualYear, actualMonthIndex - 1, 0).getDate();
-    // console.log('daysOfActualMonth', daysOfActualMonth);
+    // Get views
+    const actualDayViews = response.views?.total?.[this.actualYear]?.['' + actualMonthIndex];
+    const actualDayDownloads = response.downloads?.total?.[this.actualYear]?.['' + actualMonthIndex];
+    if (isUndefined(actualDayViews) || isUndefined(actualDayDownloads) || isNull(actualDayViews) ||
+      isNull(actualDayDownloads)) {
+      console.error('The response does not contains the `views` or `downloads` property.');
+      return;
+    }
 
+    const daysOfActualMonth = new Date(Number(this.actualYear), actualMonthIndex - 1, 0).getDate();
     const totalDataViews = [];
     const totalDataDownloads = [];
     const daysArray = [...Array(daysOfActualMonth).keys()];
@@ -343,7 +406,6 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     const filesDownloads = this.countFileDownloads(filesDownloadsResponse);
     this.filesDownloads.next(filesDownloads);
 
-    console.log('actual month: ' + this.actualMonth);
     this.updateChartData(daysArray, totalDataViews, totalDataDownloads);
   }
 
@@ -355,7 +417,6 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
         return;
       }
       Object.keys(yearDownloadFilesData).forEach(fileName => {
-        // console.log('filesDownloads[fileName]', filesDownloads[fileName]);
         const shortenedFileName = this.getFileNameFromFullURI(fileName);
         const actualValue = isUndefined(filesDownloads[shortenedFileName]) ? 0 : filesDownloads[shortenedFileName];
         filesDownloads[shortenedFileName] = actualValue + yearDownloadFilesData[fileName].nb_hits;
@@ -398,31 +459,22 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
   }
 
   fetchDataAndUpdateChart(labelValue) {
-    const apiURL = 'https://api.agify.io/?name=bella';
-    // this.http.get('http://api.ipify.org/?format=json').subscribe((res: any) => {
-    //
-    // });
-
     switch (this.actualPeriod) {
       case this.periodYear:
-        console.log('year period');
         this.fetchAndProcessYearsStatistics();
         break;
       case this.periodMonth:
         this.actualYear = isUndefined(labelValue) ? this.actualYear : labelValue;
-        console.log('month period');
         this.fetchAndProcessMonthsStatistics();
         break;
       case this.periodDay:
         this.actualMonth = labelValue;
-        console.log('day period');
         this.fetchAndProcessDaysStatistics();
         break;
       default:
         this.fetchAndProcessYearsStatistics();
         break;
     }
-    console.log('res', statYearPeriod.response);
   }
 
   updateChartMessage(labels) {
@@ -436,7 +488,6 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
       this.chartMessage += labels[0] + ' - ' + labels[--lastIndexOfLabels];
     } else if (actualPeriodIndex === 1) {
       this.chartMessage += this.actualYear;
-      console.log('Set actual month to:' + this.actualMonth);
     } else {
       this.chartMessage += this.actualMonth + ', ' + this.actualYear;
     }
@@ -447,14 +498,15 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     this.removeLabels();
     this.setLabels(labels);
 
-    console.log('labels', this.chartLabels);
     // Update chart message e.g., `Statistics for years 2022 to 2023`, `Statistics for the year 2022`,..
     this.updateChartMessage(labels);
 
     // Update view data
-    this.chartData[0]?.data = totalDataViews;
+    // @ts-ignore
+    this.chartData?.[0]?.data = totalDataViews;
     // Update downloads data
-    this.chartData[1]?.data = totalDataDownloads;
+    // @ts-ignore
+    this.chartData?.[1]?.data = totalDataDownloads;
     this.chart.update();
   }
 
