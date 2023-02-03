@@ -1,17 +1,46 @@
 <div class="container clarin-shadow remove-padding clarin-home-page-borders">
-    <div class="container bg-white" >
+
+    <div class="container bg-white clarin-fix-to-navbar">
       <div class="row hidden-xs">
-        <div class="col-md-8 pt-3 mt-2 justify-content-center align-self-center pl-3 pb-3">
-            <h5 class="display-3 ">CLARIN-DSpace 7</h5>
+        <div class="col-md-8 justify-content-center align-self-center pl-3 clarin-cut-bottom">
+          <ngb-carousel>
+            <ng-template ngbSlide *ngFor="let slide of slides">
+              <div class="wrapper">
+                <div *ngIf="slide.short === 'LData'">
+                  <img src="assets/images/home-page-glass.png" class="glass-image">
+                  <h3 style="left: 34%; position: absolute; top: 25%; font-size: 24px; margin-top: 20px; margin-bottom: 10px;">Linguistic Data and NLP Tools</h3>
+                  <h5 style="left: 40%; position: absolute; top: 15%; font-size: 14px; margin-top: 10px; margin-bottom: 10px;">Find</h5>
+                  <h5 style="left: 54%; position: absolute; top: 45%; font-size: 14px; margin-top: 10px; margin-bottom: 10px;">Citation Support (with Persistent IDs)</h5>
+                </div>
+                <div *ngIf="slide.short === 'Free Deposit'">
+                  <h3 style="left: 40%; position: absolute; top: 10%; margin-top: 17px; margin-bottom: 10px;" class="h5-font">Deposit Free and Safe</h3>
+                  <h5 style="left: 28%; position: absolute; top: 30%; margin-top: 10px; margin-bottom: 10px; font-size: 14px;" class="h5-font">License of your Choice (Open licenses encouraged)</h5>
+                  <h5 style="left: 32%; position: absolute; top: 42%; margin-top: 10px; margin-bottom: 10px; font-size: 14px;" class="h5-font">Easy to Find</h5>
+                  <h5 style="left: 36%; position: absolute; top: 54%; margin-top: 10px; margin-bottom: 10px; font-size: 14px;" class="h5-font">Easy to Cite</h5>
+                </div>
+                <div *ngIf="slide.short === 'Citation'">
+                  <div style="position: absolute; width: 65%; top: 20%; left: 20%; line-height: 20px;">
+                    <blockquote class="h5-font">
+                      <strong>
+                        <i class="fa fa-quote-left fa-2x pull-left">&nbsp;</i>“There ought to be only one grand dépôt of art in the world, to
+                        which the artist might repair with his works, and on presenting them
+                        receive what he required... ”</strong>
+                      <small>Ludwig van Beethoven, 1801</small>
+                    </blockquote>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-carousel>
         </div>
         <div class="col-md-4">
           <div class="row">
-            <div class="col-md-7" style="height: 160px; position: relative;">
+            <a class="col-md-7" style="height: 160px; position: relative;" href="/home">
               <img alt="LINDAT/CLARIAH-CZ logo" class="logo" style="position: absolute; height: 50%; top: 0px; bottom: 0px; margin: auto;" src="../../assets/images/lindat-logo-new-sm.png">
-            </div>
-            <div class="col-md-5" style="height: 160px; position: relative;">
+            </a>
+            <a class="col-md-5" style="height: 160px; position: relative;" href="http://www.clarin.eu/">
               <img alt="LINDAT/CLARIAH-CZ logo" class="logo" style="position: absolute; height: 50%; top: 0px; bottom: 0px; margin: auto;" src="../../assets/images/clarin-logo.png">
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -20,6 +49,6 @@
       <div class="row hidden-xs lindat-color-line">&nbsp;</div>
     </div>
     <div class="container clarin-home-page-color pt-3">
-        <ds-dev-table></ds-dev-table>
+<!--        <ds-dev-table></ds-dev-table>-->
     </div>
 </div>
