@@ -14,9 +14,9 @@ import {NgbCarouselConfig} from '@ng-bootstrap/ng-bootstrap';
 export class HomePageComponent implements OnInit {
 
   slides = [
-    {name: 'Citation', short: 'Citation'},
+    {name: 'Linguistic Data', short: 'LData'},
     {name: 'Deposit Free And Save', short: 'Free Deposit'},
-    {name: 'Linguistic Data', short: 'LData'}
+    {name: 'Citation', short: 'Citation'}
   ];
 
   site$: Observable<Site>;
@@ -24,7 +24,7 @@ export class HomePageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute, config: NgbCarouselConfig
   ) {
-    config.interval = 500000;
+    config.interval = 5000;
     config.keyboard = false;
     config.showNavigationArrows = false;
     config.showNavigationIndicators = false;
