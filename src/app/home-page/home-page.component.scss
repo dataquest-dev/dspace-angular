@@ -1,7 +1,10 @@
 :host {
   .clarin-home-page-color {
     background-color: #f2f2f2;
+  }
 
+  .clarin-home-page-items-color {
+    background-color: #fafafa;
   }
 
   .clarin-home-page-borders {
@@ -53,6 +56,10 @@
 
   .clarin-cut-bottom {
     margin-bottom: -20px;
+  }
+
+  .clarin-cut-bottom-2 {
+    margin-bottom: -25px;
   }
 
   .h5-font {
@@ -145,6 +152,25 @@
     -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
     box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
   }
+
+  .recent-submissions-head {
+    color: #797dd4;
+    border-bottom: 5px solid #797dd4;
+    font-size: 110%;
+    margin-top: -10px;
+  }
+
+  .top-items-head {
+    color: #ccab28;
+    border-bottom: 5px solid #ccab28;
+    font-size: 120%;
+    margin-top: -10px;
+  }
+
+
+
+
+
 
   @media (max-width: 991.98px) {
     .carousel-ldata-info {

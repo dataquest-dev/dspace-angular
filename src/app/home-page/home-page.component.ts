@@ -24,7 +24,7 @@ export class HomePageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute, config: NgbCarouselConfig
   ) {
-    config.interval = 5000000;
+    config.interval = 5000;
     config.keyboard = false;
     config.showNavigationArrows = false;
     config.showNavigationIndicators = false;

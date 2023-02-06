@@ -45,6 +45,7 @@ import { ClarinRefCitationModalComponent } from './clarin-ref-citation-modal/cla
 import { ClarinMatomoStatisticsComponent } from './clarin-matomo-statistics/clarin-matomo-statistics.component';
 import { ClarinStatisticsButtonComponent } from './clarin-statistics-button/clarin-statistics-button.component';
 import {ChartsModule } from 'ng2-charts';
+import { ClarinItemBoxViewComponent } from './clarin-item-box-view/clarin-item-box-view.component';
 
 
 const ENTRY_COMPONENTS = [
@@ -104,11 +105,13 @@ const DECLARATIONS = [
     ClarinRefFeaturedServicesComponent,
     ClarinRefCitationModalComponent,
     ClarinMatomoStatisticsComponent,
-    ClarinStatisticsButtonComponent
+    ClarinStatisticsButtonComponent,
+    ClarinItemBoxViewComponent
   ],
-  exports: [
-    ...DECLARATIONS
-  ]
+    exports: [
+        ...DECLARATIONS,
+        ClarinItemBoxViewComponent
+    ]
 })
 export class ItemPageModule {
   /**

@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import {NgbCarouselModule} from '@ng-bootstrap/ng-bootstrap';
+import {ItemPageModule} from '../item-page/item-page.module';
 
 const DECLARATIONS = [
   HomePageComponent,
@@ -27,18 +28,19 @@ const DECLARATIONS = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        SharedModule,
-        HomePageRoutingModule,
-        StatisticsModule.forRoot(),
-        MatTableModule,
-        MatTreeModule,
-        MatIconModule,
-        MatButtonModule,
-        ScrollingModule,
-        NgbCarouselModule,
-    ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    HomePageRoutingModule,
+    StatisticsModule.forRoot(),
+    MatTableModule,
+    MatTreeModule,
+    MatIconModule,
+    MatButtonModule,
+    ScrollingModule,
+    NgbCarouselModule,
+    ItemPageModule,
+  ],
   declarations: [
     ...DECLARATIONS,
   ],
