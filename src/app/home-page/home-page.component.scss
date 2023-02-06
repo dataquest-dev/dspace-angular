@@ -84,4 +84,68 @@
     display: inline-block;
     font-size: inherit;
   }
+
+  .carousel-ldata-info {
+    left: 34%; position: absolute; top: 25%; font-size: 24px; margin-top: 20px; margin-bottom: 10px;
+  }
+
+  .carousel-ldata-find {
+    left: 40%; position: absolute; top: 15%; font-size: 14px; margin-top: 10px; margin-bottom: 10px;
+  }
+
+  .carousel-ldata-citation-support {
+    left: 54%; position: absolute; top: 45%; font-size: 14px; margin-top: 10px; margin-bottom: 10px;
+  }
+
+  .carousel-deposit-header {
+    left: 40%; position: absolute; top: 10%; margin-top: 17px; margin-bottom: 10px;
+  }
+
+  .carousel-deposit-info {
+    left: 28%; position: absolute; top: 30%; margin-top: 10px; margin-bottom: 10px; font-size: 14px;
+  }
+
+  .carousel-deposit-find {
+    left: 32%; position: absolute; top: 42%; margin-top: 10px; margin-bottom: 10px; font-size: 14px;
+  }
+
+  .carousel-deposit-cite {
+    left: 36%; position: absolute; top: 54%; margin-top: 10px; margin-bottom: 10px; font-size: 14px;
+  }
+
+  .carousel-deposit-citation {
+    position: absolute; width: 65%; top: 20%; left: 20%; line-height: 20px;
+  }
+
+  @media (max-width: 991.98px) {
+    .carousel-ldata-info {
+      left: 42%;
+      position: absolute;
+      top: 23%; font-size: 24px; margin-top: 20px; margin-bottom: 10px;
+    }
+
+    .carousel-ldata-citation-support {
+      left: 56%; position: absolute; top: 45%; font-size: 14px; margin-top: 10px; margin-bottom: 10px;
+    }
+
+    .carousel-deposit-header {
+      left: 37%; position: absolute; top: 10%; margin-top: 17px; margin-bottom: 10px;
+    }
+
+    .carousel-deposit-info {
+      margin-top: 17px;
+    }
+
+    .carousel-deposit-find {
+      margin-top: 17px;
+    }
+
+    .carousel-deposit-cite {
+      margin-top: 17px;
+    }
+
+    .carousel-deposit-citation {
+      width: 100%;
+    }
+  }
 }
