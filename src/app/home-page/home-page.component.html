@@ -64,13 +64,22 @@
       <div class="col-md-9">
         <div class="row">
           <div class="offset-md-1 col-md-3 border-bottom">
-            <strong>Author</strong>
+            <strong class="border-bottom">Author</strong>
+            <div *ngFor="let authorLink of (authors$| async); let i = index">
+              <span><a [href]="authorLink.url">{{ authorLink.name }} ({{ authorLink.occurrences }})</a></span>
+            </div>
           </div>
           <div class="col-md-3 mx-3 border-bottom">
             <strong>Subject</strong>
+            <div *ngFor="let subjectLink of (subjects$| async); let i = index">
+              <span><a [href]="subjectLink.url">{{ subjectLink.name }} ({{ subjectLink.occurrences }})</a></span>
+            </div>
           </div>
           <div class="col-md-3 px-3 border-bottom">
             <strong>Language (ISO)</strong>
+            <div *ngFor="let languageLink of (languages$| async); let i = index">
+              <span><a [href]="languageLink.url">{{ languageLink.name }} ({{ languageLink.occurrences }})</a></span>
+            </div>
           </div>
         </div>
       </div>
@@ -92,9 +101,7 @@
     <div class="card">
       <div class="card-body">
         <div class="top-items-head">Most Viewed Items</div>
-        <ds-clarin-item-box-view></ds-clarin-item-box-view>
-        <ds-clarin-item-box-view></ds-clarin-item-box-view>
-        <ds-clarin-item-box-view></ds-clarin-item-box-view>
+        <ds-clarin-item-box-view *ngFor="let topItem of (topItems$ | async)" [item$]="topItem"></ds-clarin-item-box-view>
       </div>
     </div>
   </div>

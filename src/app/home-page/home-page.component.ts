@@ -1,9 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import { Site } from '../core/shared/site.model';
 import {NgbCarouselConfig} from '@ng-bootstrap/ng-bootstrap';
+import {SearchService} from '../core/shared/search/search.service';
+import {SearchFilterConfig} from '../shared/search/models/search-filter-config.model';
+import {SearchOptions} from '../shared/search/models/search-options.model';
+import {getFirstSucceededRemoteData, getFirstSucceededRemoteDataPayload} from '../core/shared/operators';
+import {PaginationComponentOptions} from '../shared/pagination/pagination-component-options.model';
+import {FilterType} from '../shared/search/models/filter-type.model';
+import {HALEndpointService} from '../core/shared/hal-endpoint.service';
+import {FacetValue} from '../shared/search/models/facet-value.model';
+import {environment} from '../../environments/environment';
+import {ConfigurationDataService} from '../core/data/configuration-data.service';
+import {ConfigurationProperty} from '../core/shared/configuration-property.model';
+import {Item} from '../core/shared/item.model';
+import {UsageReportService} from '../core/statistics/usage-report-data.service';
+import {SiteDataService} from '../core/data/site-data.service';
+import {UsageReport} from '../core/statistics/models/usage-report.model';
+import {ItemDataService} from '../core/data/item-data.service';
 
 @Component({
   selector: 'ds-home-page',
@@ -21,8 +37,25 @@ export class HomePageComponent implements OnInit {
 
   site$: Observable<Site>;
 
+  authors$: BehaviorSubject<FastSearchLink[]> = new BehaviorSubject<FastSearchLink[]>([]);
+  subjects$: BehaviorSubject<FastSearchLink[]> = new BehaviorSubject<FastSearchLink[]>([]);
+  languages$: BehaviorSubject<FastSearchLink[]> = new BehaviorSubject<FastSearchLink[]>([]);
+
+  newItems$: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>([]);
+  topItems$: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>([]);
+
+  siteId: string;
+
+  baseUrl = '';
+
   constructor(
-    private route: ActivatedRoute, config: NgbCarouselConfig
+    private route: ActivatedRoute, config: NgbCarouselConfig,
+    protected searchService: SearchService,
+    protected halService: HALEndpointService,
+    protected configurationService: ConfigurationDataService,
+    protected usageReportService: UsageReportService,
+    protected siteService: SiteDataService,
+    protected itemService: ItemDataService
   ) {
     config.interval = 5000;
     config.keyboard = false;
@@ -31,10 +64,124 @@ export class HomePageComponent implements OnInit {
     config.pauseOnHover = false;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.assignBaseUrl();
     this.site$ = this.route.data.pipe(
       map((data) => data.site as Site),
     );
+    this.assignSiteId();
+
+    // Load the most used authors, subjects and language (ISO)
+    this.loadAuthors();
+    this.loadSubject();
+    this.loadLanguages();
+
+    // Load the most viewed Items and the new Items
+    await this.loadTopItems();
   }
 
+  private getItemUsageReports(): Promise<any> {
+    const uri = this.halService.getRootHref() + '/core/sites/' + this.siteId;
+
+    return this.usageReportService.searchStatistics(uri, 0, 10)
+      .pipe(take(1)).toPromise();
+  }
+
+  private async loadTopItems() {
+    // http://localhost:8080/server/api/core/sites/0a4987f0-b882-48bf-abfa-0934a445a6e0
+    const top3ItemsId = [];
+    const maxTopItemsCount = 3;
+
+    await this.getItemUsageReports()
+      .then((usageReports: UsageReport[]) => {
+        const usageReport = usageReports?.[0];
+        for (let i = 0; i < maxTopItemsCount; i++) {
+          top3ItemsId.push(usageReport.points?.[i].id);
+        }
+      });
+
+    this.topItems$ = new BehaviorSubject<Item[]>([]);
+    for (let i = 0; i < maxTopItemsCount; i++) {
+      this.itemService.findById(top3ItemsId?.[i], false)
+        .pipe(getFirstSucceededRemoteDataPayload())
+        .subscribe((item: Item) => {
+          console.log('push', item);
+          this.topItems$.next([item]);
+        });
+    }
+
+  }
+
+  private assignSiteId() {
+    this.site$
+      .pipe(take(1))
+      .subscribe((site: Site) => {
+        this.siteId = site.uuid;
+      });
+  }
+
+  private loadAuthors() {
+    const facetName = 'author';
+    this.getFastSearchLinks(facetName, this.authors$);
+  }
+
+  private loadSubject() {
+    const facetName = 'subject';
+    this.getFastSearchLinks(facetName, this.subjects$);
+  }
+
+  private loadLanguages() {
+    const facetName = 'language';
+    this.getFastSearchLinks(facetName, this.languages$);
+  }
+
+  getFastSearchLinks(facetName, behaviorSubject: BehaviorSubject<any>) {
+    const authorFilter: SearchFilterConfig = Object.assign(new SearchFilterConfig(), {
+      name: facetName,
+      filterType: FilterType.text,
+      hasFacets: false,
+      isOpenByDefault: false,
+      pageSize: 5,
+      _links: {
+        self: {
+          href: this.halService.getRootHref() + '/discover/facets/' + facetName
+        },
+      },
+    });
+    const authorFilterOptions: SearchOptions = new SearchOptions({configuration: 'default'});
+    this.searchService.getFacetValuesFor(authorFilter, 1, authorFilterOptions)
+      .pipe(getFirstSucceededRemoteDataPayload())
+      .subscribe(authorStats => {
+        authorStats.page.forEach((facetValue: FacetValue) => {
+          const updatedSearchUrl = facetValue?._links?.search?.href?.replace(this.halService.getRootHref() +
+            '/discover', this.baseUrl);
+          const fastSearchLink: FastSearchLink = Object.assign(new FastSearchLink(), {
+            name: facetValue.value,
+            occurrences: facetValue.count,
+            url: updatedSearchUrl
+          });
+          behaviorSubject.value.push(fastSearchLink);
+        });
+      });
+  }
+
+  async getBaseUrl(): Promise<any> {
+    return this.configurationService.findByPropertyName('dspace.ui.url')
+      .pipe(getFirstSucceededRemoteDataPayload())
+      .toPromise();
+  }
+
+  async assignBaseUrl() {
+    this.baseUrl = await this.getBaseUrl()
+      .then((baseUrlResponse: ConfigurationProperty) => {
+        return baseUrlResponse?.values?.[0];
+      });
+  }
+}
+
+// tslint:disable-next-line:max-classes-per-file
+class FastSearchLink {
+  name: string;
+  occurrences: string;
+  url: string;
 }

@@ -8,7 +8,7 @@ import {Item} from '../../core/shared/item.model';
 })
 export class ClarinItemBoxViewComponent implements OnInit {
 
-  @Input() item: Item = null;
+  @Input() item$: Item = null;
 
   constructor() { }
 

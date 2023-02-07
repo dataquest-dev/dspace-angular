@@ -17,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import {NgbCarouselModule} from '@ng-bootstrap/ng-bootstrap';
 import {ItemPageModule} from '../item-page/item-page.module';
+import {UsageReportService} from '../core/statistics/usage-report-data.service';
 
 const DECLARATIONS = [
   HomePageComponent,
@@ -46,6 +47,9 @@ const DECLARATIONS = [
   ],
   exports: [
     ...DECLARATIONS,
+  ],
+  providers: [
+    UsageReportService,
   ],
 })
 export class HomePageModule {
