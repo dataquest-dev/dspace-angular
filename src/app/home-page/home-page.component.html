@@ -101,7 +101,9 @@
     <div class="card">
       <div class="card-body">
         <div class="top-items-head">Most Viewed Items</div>
-        <ds-clarin-item-box-view *ngFor="let topItem of (topItems$ | async)" [item$]="topItem"></ds-clarin-item-box-view>
+        <ds-clarin-item-box-view
+          *ngFor="let topItem of (topItems$ | async)"
+            [item$]="topItem"></ds-clarin-item-box-view>
       </div>
     </div>
   </div>

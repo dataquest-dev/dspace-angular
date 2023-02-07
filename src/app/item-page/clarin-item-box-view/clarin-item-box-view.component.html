@@ -1,14 +1,14 @@
 <div class="pt-3">
-  <div class="card">
+  <div class="card" *ngIf="item$ != null">
     <div class="card-body pt-0 pb-0">
       <div class="row justify-content-between">
-        <span class="item-type">Corpus</span>
-        <span class="item-community label"><a class="pt-2" href="/community-list">Community</a></span>
+        <span class="item-type">{{ itemType }}</span>
+        <span class="item-community label"><a class="pt-2" [href]="communitySearchRedirect | async">{{ (itemCommunity | async)?.name }}</a></span>
       </div>
       <div class="pl-3">
         <div class="row pt-3 justify-content-between">
           <div class="">
-            <div><a href="/items">ITEM NAME</a></div>
+            <div><a [href]="itemUri">{{ itemName }}</a></div>
             <div class="pt-1"><strong>Author(s):</strong></div>
           </div>
           <div>
@@ -20,17 +20,20 @@
         </div>
         <div class="row d-block">
           <div><strong>Description:</strong></div>
-          <div>Text</div>
+          <div>{{itemDescription}}</div>
         </div>
         <div class="row d-flex">
           <div class="label label-info label-icon"><i class="fas fa-paperclip fa-sm"></i></div>
-          <div class="label label-info"> This item contains 3 files (588.97 MB).</div>
+          <div class="label label-info"> This item contains {{ (itemCountOfFiles | async) }} files ({{(itemFilesSizeBytes | async) | dsFileSize }}). </div>
         </div>
       </div>
       <div class="row justify-content-end pt-3">
-        <span [ngClass]="'label label-license label-PUB rounded text-white pl-1'">
-        Publicly Available
-      </span>
+          <span [ngClass]="'label label-license' + ' label-' + licenseLabel + ' rounded text-white'">
+            {{licenseType }}
+          </span>
+          <div class="d-inline" *ngFor="let icon of licenseLabelIcons">
+            <img [src]="secureImageData(icon)" alt="" width="24px">
+          </div>
       </div>
     </div>
   </div>

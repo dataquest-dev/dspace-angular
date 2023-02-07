@@ -18,6 +18,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import {NgbCarouselModule} from '@ng-bootstrap/ng-bootstrap';
 import {ItemPageModule} from '../item-page/item-page.module';
 import {UsageReportService} from '../core/statistics/usage-report-data.service';
+import {NgxFilesizeModule} from 'ngx-filesize';
 
 const DECLARATIONS = [
   HomePageComponent,
@@ -41,6 +42,7 @@ const DECLARATIONS = [
     ScrollingModule,
     NgbCarouselModule,
     ItemPageModule,
+    NgxFilesizeModule
   ],
   declarations: [
     ...DECLARATIONS,

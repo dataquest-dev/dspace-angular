@@ -64,8 +64,7 @@ export class HomePageComponent implements OnInit {
     config.pauseOnHover = false;
   }
 
-  async ngOnInit(): Promise<void> {
-    await this.assignBaseUrl();
+  ngOnInit(): void {
     this.site$ = this.route.data.pipe(
       map((data) => data.site as Site),
     );
@@ -77,7 +76,7 @@ export class HomePageComponent implements OnInit {
     this.loadLanguages();
 
     // Load the most viewed Items and the new Items
-    await this.loadTopItems();
+    this.loadTopItems();
   }
 
   private getItemUsageReports(): Promise<any> {
@@ -88,7 +87,6 @@ export class HomePageComponent implements OnInit {
   }
 
   private async loadTopItems() {
-    // http://localhost:8080/server/api/core/sites/0a4987f0-b882-48bf-abfa-0934a445a6e0
     const top3ItemsId = [];
     const maxTopItemsCount = 3;
 
@@ -105,11 +103,9 @@ export class HomePageComponent implements OnInit {
       this.itemService.findById(top3ItemsId?.[i], false)
         .pipe(getFirstSucceededRemoteDataPayload())
         .subscribe((item: Item) => {
-          console.log('push', item);
-          this.topItems$.next([item]);
+          this.topItems$.value.push(item);
         });
     }
-
   }
 
   private assignSiteId() {
@@ -135,7 +131,8 @@ export class HomePageComponent implements OnInit {
     this.getFastSearchLinks(facetName, this.languages$);
   }
 
-  getFastSearchLinks(facetName, behaviorSubject: BehaviorSubject<any>) {
+  async getFastSearchLinks(facetName, behaviorSubject: BehaviorSubject<any>) {
+    await this.assignBaseUrl();
     const authorFilter: SearchFilterConfig = Object.assign(new SearchFilterConfig(), {
       name: facetName,
       filterType: FilterType.text,

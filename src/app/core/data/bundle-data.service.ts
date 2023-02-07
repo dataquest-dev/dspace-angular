@@ -77,7 +77,7 @@ export class BundleDataService extends DataService<Bundle> {
    */
   // TODO should be implemented rest side
   findByItemAndName(item: Item, bundleName: string, useCachedVersionIfAvailable = true, reRequestOnStale = true, ...linksToFollow: FollowLinkConfig<Bundle>[]): Observable<RemoteData<Bundle>> {
-    return this.findAllByItem(item, { elementsPerPage: 9999 }, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow).pipe(
+    return this.findAllByItem(item, { elementsPerPage: 1000 }, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow).pipe(
       map((rd: RemoteData<PaginatedList<Bundle>>) => {
         if (hasValue(rd.payload) && hasValue(rd.payload.page)) {
           const matchingBundle = rd.payload.page.find((bundle: Bundle) =>
