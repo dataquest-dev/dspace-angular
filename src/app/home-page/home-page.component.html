@@ -90,9 +90,9 @@
     <div class="card clarin-home-page-items-color">
       <div class="card-body">
         <div class="recent-submissions-head">What's New</div>
-        <ds-clarin-item-box-view></ds-clarin-item-box-view>
-        <ds-clarin-item-box-view></ds-clarin-item-box-view>
-        <ds-clarin-item-box-view></ds-clarin-item-box-view>
+        <ds-clarin-item-box-view
+          *ngFor="let newItem of (newItems$ | async)"
+          [item$]="newItem"></ds-clarin-item-box-view>
       </div>
     </div>
   </div>
@@ -100,7 +100,7 @@
   <div class="container pt-3 pb-5">
     <div class="card">
       <div class="card-body">
-        <div class="top-items-head">Most Viewed Items</div>
+        <div class="top-items-head">Most Viewed Items - Last Month</div>
         <ds-clarin-item-box-view
           *ngFor="let topItem of (topItems$ | async)"
             [item$]="topItem"></ds-clarin-item-box-view>

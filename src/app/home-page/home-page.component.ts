@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {map, take} from 'rxjs/operators';
+import {map, startWith, switchMap, take} from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest as observableCombineLatest, Observable} from 'rxjs';
 import { Site } from '../core/shared/site.model';
 import {NgbCarouselConfig} from '@ng-bootstrap/ng-bootstrap';
 import {SearchService} from '../core/shared/search/search.service';
 import {SearchFilterConfig} from '../shared/search/models/search-filter-config.model';
 import {SearchOptions} from '../shared/search/models/search-options.model';
-import {getFirstSucceededRemoteData, getFirstSucceededRemoteDataPayload} from '../core/shared/operators';
+import {
+  getFirstSucceededRemoteData,
+  getFirstSucceededRemoteDataPayload,
+  toDSpaceObjectListRD
+} from '../core/shared/operators';
 import {PaginationComponentOptions} from '../shared/pagination/pagination-component-options.model';
 import {FilterType} from '../shared/search/models/filter-type.model';
 import {HALEndpointService} from '../core/shared/hal-endpoint.service';
@@ -20,6 +24,15 @@ import {UsageReportService} from '../core/statistics/usage-report-data.service';
 import {SiteDataService} from '../core/data/site-data.service';
 import {UsageReport} from '../core/statistics/models/usage-report.model';
 import {ItemDataService} from '../core/data/item-data.service';
+import {PaginatedSearchOptions} from '../shared/search/models/paginated-search-options.model';
+import {DSpaceObjectType} from '../core/shared/dspace-object-type.model';
+import {RemoteData} from '../core/data/remote-data';
+import {PaginatedList} from '../core/data/paginated-list.model';
+import {SortDirection, SortOptions} from '../core/cache/models/sort-options.model';
+import {paginationID} from '../handle-page/handle-table/handle-table-pagination';
+import {SearchObjects} from '../shared/search/models/search-objects.model';
+import {ItemSearchResult} from '../shared/object-collection/shared/item-search-result.model';
+import {SearchResult} from '../shared/search/models/search-result.model';
 
 @Component({
   selector: 'ds-home-page',
@@ -77,6 +90,7 @@ export class HomePageComponent implements OnInit {
 
     // Load the most viewed Items and the new Items
     this.loadTopItems();
+    this.loadNewItems();
   }
 
   private getItemUsageReports(): Promise<any> {
@@ -84,6 +98,34 @@ export class HomePageComponent implements OnInit {
 
     return this.usageReportService.searchStatistics(uri, 0, 10)
       .pipe(take(1)).toPromise();
+  }
+
+  private loadNewItems() {
+    // this.searchService.search()
+    // const currentPagination$ = this.paginationService.getCurrentPagination(this.paginationConfig.id, this.paginationConfig);
+    // const currentSort$ = this.paginationService.getCurrentSort(this.paginationConfig.id, this.sortConfig);
+    const paginationOptions = Object.assign(new PaginationComponentOptions(), {
+      id: 'new-items',
+      currentPage: 1,
+      pageSize: 3
+    });
+
+    const sortConfiguration = new SortOptions('dc.date.accessioned', SortDirection.DESC);
+
+    this.searchService.search(
+      new PaginatedSearchOptions({
+        pagination: paginationOptions,
+        sort: sortConfiguration,
+        dsoTypes: [DSpaceObjectType.ITEM]
+      }))
+      .pipe(getFirstSucceededRemoteDataPayload())
+      .subscribe((searchObjects: SearchObjects<Item>) => {
+        const searchedItems: Item[] = [];
+        searchObjects?.page?.forEach(searchObject => {
+          searchedItems.push(searchObject?.indexableObject);
+        });
+        this.newItems$.next(searchedItems);
+      });
   }
 
   private async loadTopItems() {

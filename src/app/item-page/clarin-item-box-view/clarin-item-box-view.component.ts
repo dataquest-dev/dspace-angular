@@ -97,7 +97,12 @@ export class ClarinItemBoxViewComponent implements OnInit {
       return;
     }
 
-    const authorsMV: MetadataValue[] = this.item$?.metadata?.['dc.contributor.author'];
+    let authorsMV: MetadataValue[] = this.item$?.metadata?.['dc.contributor.author'];
+    // Harvested Items has authors in the metadata field `dc.creator`.
+    if (isUndefined(authorsMV)) {
+      authorsMV = this.item$?.metadata?.['dc.creator'];
+    }
+
     if (isUndefined(authorsMV)) {
       return null;
     }
@@ -206,9 +211,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
   }
 
   toggleShowEveryAuthor() {
-    console.log('clocked');
     this.showEveryAuthor.next(!this.showEveryAuthor.value);
-    console.log(this.showEveryAuthor.value);
   }
 }
 
