@@ -49,6 +49,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
   itemFilesSizeBytes: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   itemCountOfFiles: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   itemAuthors: BehaviorSubject<AuthorNameLink[]> = new BehaviorSubject<AuthorNameLink[]>([]);
+  showEveryAuthor: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   /**
    * Current License Label e.g. `PUB`
@@ -202,6 +203,12 @@ export class ClarinItemBoxViewComponent implements OnInit {
 
   secureImageData(imageByteArray) {
     return secureImageData(this.sanitizer, imageByteArray);
+  }
+
+  toggleShowEveryAuthor() {
+    console.log('clocked');
+    this.showEveryAuthor.next(!this.showEveryAuthor.value);
+    console.log(this.showEveryAuthor.value);
   }
 }
 
