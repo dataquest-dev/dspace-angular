@@ -16,7 +16,16 @@
           </div>
         </div>
         <div class="row">
-          ARROW + show everyone
+          <div *ngIf="itemAuthors.value.length <= 5">
+            <span *ngFor="let author of (itemAuthors | async); let i = index">
+              <span *ngIf="i > 0 && i < itemAuthors.value.length -1"> ; </span>
+              <span *ngIf="i == itemAuthors.value.length -1"> and </span>
+              <a [href]="author.url">{{ author.name }}</a>
+            </span>
+          </div>
+          <div *ngIf="itemAuthors.value.length > 5">
+            More
+          </div>
         </div>
         <div class="row d-block">
           <div><strong>Description:</strong></div>

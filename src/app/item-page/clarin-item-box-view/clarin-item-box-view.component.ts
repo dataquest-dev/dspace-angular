@@ -10,7 +10,7 @@ import {
   getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteListPayload, getPaginatedListPayload
 } from '../../core/shared/operators';
 import {Collection} from '../../core/shared/collection.model';
-import {isNull} from '../../shared/empty.util';
+import {isNull, isUndefined} from '../../shared/empty.util';
 import {followLink} from '../../shared/utils/follow-link-config.model';
 import {Community} from '../../core/shared/community.model';
 import {BehaviorSubject} from 'rxjs';
@@ -48,6 +48,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
   communitySearchRedirect: BehaviorSubject<string> = new BehaviorSubject<string>('');
   itemFilesSizeBytes: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   itemCountOfFiles: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  itemAuthors: BehaviorSubject<AuthorNameLink[]> = new BehaviorSubject<AuthorNameLink[]>([]);
 
   /**
    * Current License Label e.g. `PUB`
@@ -76,17 +77,40 @@ export class ClarinItemBoxViewComponent implements OnInit {
               private clarinLicenseService: ClarinLicenseDataService,
               private sanitizer: DomSanitizer) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     console.log('initializing item', this.item$);
     this.itemType = this.item$?.metadata?.['dc.type']?.[0]?.value;
     this.itemName = this.item$?.metadata?.['dc.title']?.[0]?.value;
     this.itemUri = this.item$?.metadata?.['dc.identifier.uri']?.[0]?.value;
     this.itemDescription = this.item$?.metadata?.['dc.description']?.[0]?.value;
 
-    this.assignBaseUrl();
+    await this.assignBaseUrl();
     this.getItemCommunity();
     this.loadItemLicense();
     this.getItemFilesSize();
+    this.loadItemAuthors();
+  }
+
+  private loadItemAuthors() {
+    if (isNull(this.item$)) {
+      return;
+    }
+
+    const authorsMV: MetadataValue[] = this.item$?.metadata?.['dc.contributor.author'];
+    if (isUndefined(authorsMV)) {
+      return null;
+    }
+    const itemAuthorsLocal = [];
+    authorsMV.forEach((authorMV: MetadataValue) => {
+      const authorSearchLink = this.baseUrl + '/search/objects?f.author=' + authorMV.value + ',equals';
+      const authorNameLink = Object.assign(new AuthorNameLink(), {
+        name: authorMV.value,
+        url: authorSearchLink
+      });
+      itemAuthorsLocal.push(authorNameLink);
+    });
+    this.itemAuthors.next(itemAuthorsLocal);
+    console.log('itemAuthorsLocal', itemAuthorsLocal);
   }
 
   private getItemFilesSize() {
@@ -121,7 +145,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
           .subscribe((community: Community) => {
             this.itemCommunity.next(community);
             this.communitySearchRedirect.next(this.baseUrl + '/search/objects?f.community=' +
-              this.dsoNameService.getName(community));
+              this.dsoNameService.getName(community) + ',equals');
           });
       });
   }
@@ -179,5 +203,10 @@ export class ClarinItemBoxViewComponent implements OnInit {
   secureImageData(imageByteArray) {
     return secureImageData(this.sanitizer, imageByteArray);
   }
+}
 
+// tslint:disable-next-line:max-classes-per-file
+class AuthorNameLink {
+  name: string;
+  url: string;
 }
