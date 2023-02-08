@@ -150,7 +150,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
           .pipe(getFirstSucceededRemoteDataPayload())
           .subscribe((community: Community) => {
             this.itemCommunity.next(community);
-            this.communitySearchRedirect.next(this.baseUrl + '/search/objects?f.community=' +
+            this.communitySearchRedirect.next(this.baseUrl + '/search/objects?f.items_owning_community=' +
               this.dsoNameService.getName(community) + ',equals');
           });
       });

@@ -3573,6 +3573,10 @@
 
   "search.filters.applied.f.rights": "Rights",
 
+  "search.filters.applied.f.language": "Language (ISO)",
+
+  "search.filters.applied.f.items_owning_community": "Community",
+
 
 
   "search.filters.filter.author.head": "Author",
@@ -3714,6 +3718,10 @@
   "search.filters.filter.submitter.label": "Search submitter",
 
   "search.filters.filter.rights.head": "Rights",
+
+  "search.filters.filter.language.head": "Language (ISO)",
+
+  "search.filters.filter.items_owning_community.head": "Community",
 
 
 
