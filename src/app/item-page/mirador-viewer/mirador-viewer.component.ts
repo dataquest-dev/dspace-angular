@@ -65,7 +65,7 @@ export class MiradorViewerComponent implements OnInit {
    */
   setURL() {
     // The path to the REST manifest endpoint.
-    const manifestApiEndpoint = encodeURIComponent(environment.ui.baseUrl + '/iiif/'
+    const manifestApiEndpoint = encodeURIComponent(environment.rest.baseUrl + '/iiif/'
       + this.object.id + '/manifest');
     // The Express path to Mirador viewer.
     let viewerPath = '/iiif/mirador/index.html?manifest=' + manifestApiEndpoint;

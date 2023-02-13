@@ -46,7 +46,6 @@ import { ClarinMatomoStatisticsComponent } from './clarin-matomo-statistics/clar
 import { ClarinStatisticsButtonComponent } from './clarin-statistics-button/clarin-statistics-button.component';
 import {ChartsModule } from 'ng2-charts';
 import { ClarinItemBoxViewComponent } from './clarin-item-box-view/clarin-item-box-view.component';
-import {NgxFilesizeModule} from 'ngx-filesize';
 
 
 const ENTRY_COMPONENTS = [
@@ -96,8 +95,7 @@ const DECLARATIONS = [
         JournalEntitiesModule.withEntryComponents(),
         ResearchEntitiesModule.withEntryComponents(),
         NgxGalleryModule,
-        ChartsModule,
-        NgxFilesizeModule,
+        ChartsModule
     ],
   declarations: [
     ...DECLARATIONS,
