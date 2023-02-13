@@ -7,8 +7,8 @@ import {
   getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteListPayload
 } from '../../core/shared/operators';
 import { Collection } from '../../core/shared/collection.model';
-import { isNull, isUndefined } from '../../shared/empty.util';
-import { followLink } from '../../shared/utils/follow-link-config.model';
+import { isNull, isUndefined } from '../empty.util';
+import { followLink } from '../utils/follow-link-config.model';
 import { Community } from '../../core/shared/community.model';
 import { BehaviorSubject } from 'rxjs';
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
@@ -18,13 +18,13 @@ import { switchMap } from 'rxjs/operators';
 import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
-import { LicenseType } from '../clarin-license-info/clarin-license-info.component';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
-import { secureImageData } from '../../shared/clarin-shared-util';
+import { secureImageData } from '../clarin-shared-util';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BundleDataService } from '../../core/data/bundle-data.service';
 import { Bundle } from '../../core/shared/bundle.model';
 import { Bitstream } from '../../core/shared/bitstream.model';
+import { LicenseType } from '../../item-page/clarin-license-info/clarin-license-info.component';
 
 /**
  * Show item on the Home/Search page in the customized box with Item's information.

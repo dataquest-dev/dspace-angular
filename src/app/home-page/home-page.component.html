@@ -53,30 +53,30 @@
           <i style="color: #7479B8;" class="fas fa-search fa-lg"></i>
         </span>
         <input type="text" class="form-control" name="query">
-        <button class="btn btn-repository">Search
+        <button class="btn btn-repository">{{'home-page.search' | translate}}
         </button>
       </div>
     </div>
     <div class="row justify-content-center pt-3">
-      <a href="/search">Advanced Search</a>
+      <a href="/search">{{'home-page.advanced-search' | translate}}</a>
     </div>
     <div class="row justify-content-center pt-5">
       <div class="col-md-9">
         <div class="row">
           <div class="offset-md-1 col-md-3 border-bottom">
-            <strong class="border-bottom">Author</strong>
+            <strong>{{'home-page.hyperlink.author.message' | translate}}</strong>
             <div *ngFor="let authorLink of (authors$| async); let i = index">
               <span><a [href]="authorLink.url">{{ authorLink.name }} ({{ authorLink.occurrences }})</a></span>
             </div>
           </div>
           <div class="col-md-3 mx-3 border-bottom">
-            <strong>Subject</strong>
+            <strong>{{'home-page.hyperlink.subject.message' | translate}}</strong>
             <div *ngFor="let subjectLink of (subjects$| async); let i = index">
               <span><a [href]="subjectLink.url">{{ subjectLink.name }} ({{ subjectLink.occurrences }})</a></span>
             </div>
           </div>
           <div class="col-md-3 px-3 border-bottom">
-            <strong>Language (ISO)</strong>
+            <strong>{{'home-page.hyperlink.language.message' | translate}}</strong>
             <div *ngFor="let languageLink of (languages$| async); let i = index">
               <span><a [href]="languageLink.url">{{ languageLink.name }} ({{ languageLink.occurrences }})</a></span>
             </div>
@@ -89,7 +89,7 @@
   <div class="container pt-3">
     <div class="card clarin-home-page-items-color">
       <div class="card-body">
-        <div class="recent-submissions-head">What's New</div>
+        <div class="recent-submissions-head">{{'home-page.whats-new.message' | translate}}</div>
         <ds-clarin-item-box-view
           *ngFor="let newItem of (newItems$ | async)"
           [item$]="newItem"></ds-clarin-item-box-view>
@@ -100,7 +100,7 @@
   <div class="container pt-3 pb-5">
     <div class="card clarin-home-page-items-color">
       <div class="card-body">
-        <div class="top-items-head">Most Viewed Items - Last Month</div>
+        <div class="top-items-head">{{'home-page.new-items.message' | translate}}</div>
         <ds-clarin-item-box-view
           *ngFor="let topItem of (topItems$ | async)"
             [item$]="topItem"></ds-clarin-item-box-view>

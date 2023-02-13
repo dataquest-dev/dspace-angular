@@ -1620,6 +1620,20 @@
 
   "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
 
+  "home-page.search": "Search",
+
+  "home-page.advanced-search": "Advanced Search",
+
+  "home-page.hyperlink.author.message": "Author",
+
+  "home-page.hyperlink.subject.message": "Subject",
+
+  "home-page.hyperlink.language.message": "Language (ISO)",
+
+  "home-page.whats-new.message": "What's New",
+
+  "home-page.new-items.message": "Most Viewed Items - Last Month",
+
 
 
   "handle-table.breadcrumbs": "Handles",
