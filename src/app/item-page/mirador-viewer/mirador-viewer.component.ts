@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Item } from '../../core/shared/item.model';
+import { environment } from '../../../environments/environment';
 import { BitstreamDataService } from '../../core/data/bitstream-data.service';
 import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { MiradorViewerService } from './mirador-viewer.service';
 import { HostWindowService, WidthCategory } from '../../shared/host-window.service';
-import {environment} from '../../../environments/environment.production';
 
 @Component({
   selector: 'ds-mirador-viewer',

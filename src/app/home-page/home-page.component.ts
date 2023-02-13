@@ -1,38 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import {map, startWith, switchMap, take} from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import {BehaviorSubject, combineLatest as observableCombineLatest, Observable} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Site } from '../core/shared/site.model';
-import {NgbCarouselConfig} from '@ng-bootstrap/ng-bootstrap';
-import {SearchService} from '../core/shared/search/search.service';
-import {SearchFilterConfig} from '../shared/search/models/search-filter-config.model';
-import {SearchOptions} from '../shared/search/models/search-options.model';
-import {
-  getFirstSucceededRemoteData,
-  getFirstSucceededRemoteDataPayload,
-  toDSpaceObjectListRD
-} from '../core/shared/operators';
-import {PaginationComponentOptions} from '../shared/pagination/pagination-component-options.model';
-import {FilterType} from '../shared/search/models/filter-type.model';
-import {HALEndpointService} from '../core/shared/hal-endpoint.service';
-import {FacetValue} from '../shared/search/models/facet-value.model';
-import {environment} from '../../environments/environment';
-import {ConfigurationDataService} from '../core/data/configuration-data.service';
-import {ConfigurationProperty} from '../core/shared/configuration-property.model';
-import {Item} from '../core/shared/item.model';
-import {UsageReportService} from '../core/statistics/usage-report-data.service';
-import {SiteDataService} from '../core/data/site-data.service';
-import {UsageReport} from '../core/statistics/models/usage-report.model';
-import {ItemDataService} from '../core/data/item-data.service';
-import {PaginatedSearchOptions} from '../shared/search/models/paginated-search-options.model';
-import {DSpaceObjectType} from '../core/shared/dspace-object-type.model';
-import {RemoteData} from '../core/data/remote-data';
-import {PaginatedList} from '../core/data/paginated-list.model';
-import {SortDirection, SortOptions} from '../core/cache/models/sort-options.model';
-import {paginationID} from '../handle-page/handle-table/handle-table-pagination';
-import {SearchObjects} from '../shared/search/models/search-objects.model';
-import {ItemSearchResult} from '../shared/object-collection/shared/item-search-result.model';
-import {SearchResult} from '../shared/search/models/search-result.model';
+import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import { SearchService } from '../core/shared/search/search.service';
+import { SearchFilterConfig } from '../shared/search/models/search-filter-config.model';
+import { SearchOptions } from '../shared/search/models/search-options.model';
+import { getFirstSucceededRemoteDataPayload } from '../core/shared/operators';
+import { PaginationComponentOptions } from '../shared/pagination/pagination-component-options.model';
+import { FilterType } from '../shared/search/models/filter-type.model';
+import { HALEndpointService } from '../core/shared/hal-endpoint.service';
+import { FacetValue } from '../shared/search/models/facet-value.model';
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { ConfigurationProperty } from '../core/shared/configuration-property.model';
+import { Item } from '../core/shared/item.model';
+import { UsageReportService } from '../core/statistics/usage-report-data.service';
+import { SiteDataService } from '../core/data/site-data.service';
+import { UsageReport } from '../core/statistics/models/usage-report.model';
+import { ItemDataService } from '../core/data/item-data.service';
+import { PaginatedSearchOptions } from '../shared/search/models/paginated-search-options.model';
+import { DSpaceObjectType } from '../core/shared/dspace-object-type.model';
+import { SortDirection, SortOptions } from '../core/cache/models/sort-options.model';
+import { SearchObjects } from '../shared/search/models/search-objects.model';
 
 @Component({
   selector: 'ds-home-page',
@@ -93,17 +83,11 @@ export class HomePageComponent implements OnInit {
     this.loadNewItems();
   }
 
-  private getItemUsageReports(): Promise<any> {
-    const uri = this.halService.getRootHref() + '/core/sites/' + this.siteId;
-
-    return this.usageReportService.searchStatistics(uri, 0, 10)
-      .pipe(take(1)).toPromise();
-  }
-
+  /**
+   * Get the last added Items.
+   * @private
+   */
   private loadNewItems() {
-    // this.searchService.search()
-    // const currentPagination$ = this.paginationService.getCurrentPagination(this.paginationConfig.id, this.paginationConfig);
-    // const currentSort$ = this.paginationService.getCurrentSort(this.paginationConfig.id, this.sortConfig);
     const paginationOptions = Object.assign(new PaginationComponentOptions(), {
       id: 'new-items',
       currentPage: 1,
@@ -128,6 +112,10 @@ export class HomePageComponent implements OnInit {
       });
   }
 
+  /**
+   * Get the most viewed Items from the Solr statistics.
+   * @private
+   */
   private async loadTopItems() {
     const top3ItemsId = [];
     const maxTopItemsCount = 3;
@@ -150,6 +138,17 @@ export class HomePageComponent implements OnInit {
     }
   }
 
+  /**
+   * Get usage reports for the viewing The Most Viewed Items
+   * @private
+   */
+  private getItemUsageReports(): Promise<any> {
+    const uri = this.halService.getRootHref() + '/core/sites/' + this.siteId;
+
+    return this.usageReportService.searchStatistics(uri, 0, 10)
+      .pipe(take(1)).toPromise();
+  }
+
   private assignSiteId() {
     this.site$
       .pipe(take(1))
@@ -158,21 +157,38 @@ export class HomePageComponent implements OnInit {
       });
   }
 
+  /**
+   * Load the most used authors.
+   * @private
+   */
   private loadAuthors() {
     const facetName = 'author';
     this.getFastSearchLinks(facetName, this.authors$);
   }
 
+  /**
+   * Load the most used subjects.
+   * @private
+   */
   private loadSubject() {
     const facetName = 'subject';
     this.getFastSearchLinks(facetName, this.subjects$);
   }
 
+  /**
+   * Load the most used languages.
+   * @private
+   */
   private loadLanguages() {
     const facetName = 'language';
     this.getFastSearchLinks(facetName, this.languages$);
   }
 
+  /**
+   * Get the `authors/subjects/languages` from the Solr statistics.
+   * @param facetName
+   * @param behaviorSubject
+   */
   async getFastSearchLinks(facetName, behaviorSubject: BehaviorSubject<any>) {
     await this.assignBaseUrl();
     const authorFilter: SearchFilterConfig = Object.assign(new SearchFilterConfig(), {
@@ -204,6 +220,9 @@ export class HomePageComponent implements OnInit {
       });
   }
 
+  /**
+   * Load the UI url from the server configuration.
+   */
   async getBaseUrl(): Promise<any> {
     return this.configurationService.findByPropertyName('dspace.ui.url')
       .pipe(getFirstSucceededRemoteDataPayload())
@@ -218,6 +237,9 @@ export class HomePageComponent implements OnInit {
   }
 }
 
+/**
+ * Object for redirecting to the `authors/subjects/languages`
+ */
 // tslint:disable-next-line:max-classes-per-file
 class FastSearchLink {
   name: string;
