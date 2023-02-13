@@ -266,7 +266,7 @@ export class AdminSidebarComponent extends MenuComponent implements OnInit {
 
         /* Statistics */
         {
-          id: 'statistics',
+          id: 'site-stat',
           active: false,
           visible: true,
           model: {
@@ -275,7 +275,7 @@ export class AdminSidebarComponent extends MenuComponent implements OnInit {
             link: '/statistics'
           } as LinkMenuItemModel,
           icon: 'chart-bar',
-          index: 15
+          index: 14
         },
 
         /* Workflow tasks */
