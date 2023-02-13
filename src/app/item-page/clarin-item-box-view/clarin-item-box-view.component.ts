@@ -1,34 +1,34 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Item} from '../../core/shared/item.model';
-import {MetadataMap, MetadataValue} from '../../core/shared/metadata.models';
-import {ItemDataService} from '../../core/data/item-data.service';
-import {CommunityDataService} from '../../core/data/community-data.service';
-import {CollectionDataService} from '../../core/data/collection-data.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { Item } from '../../core/shared/item.model';
+import { MetadataValue } from '../../core/shared/metadata.models';
+import { CollectionDataService } from '../../core/data/collection-data.service';
 import {
   getFirstCompletedRemoteData,
-  getFirstSucceededRemoteData,
-  getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteListPayload, getPaginatedListPayload
+  getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteListPayload
 } from '../../core/shared/operators';
-import {Collection} from '../../core/shared/collection.model';
-import {isNull, isUndefined} from '../../shared/empty.util';
-import {followLink} from '../../shared/utils/follow-link-config.model';
-import {Community} from '../../core/shared/community.model';
-import {BehaviorSubject} from 'rxjs';
-import {DSONameService} from '../../core/breadcrumbs/dso-name.service';
-import {ConfigurationDataService} from '../../core/data/configuration-data.service';
-import {ConfigurationProperty} from '../../core/shared/configuration-property.model';
-import {switchMap} from 'rxjs/operators';
-import {RemoteData} from '../../core/data/remote-data';
-import {PaginatedList} from '../../core/data/paginated-list.model';
-import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
-import {LicenseType} from '../clarin-license-info/clarin-license-info.component';
-import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
+import { Collection } from '../../core/shared/collection.model';
+import { isNull, isUndefined } from '../../shared/empty.util';
+import { followLink } from '../../shared/utils/follow-link-config.model';
+import { Community } from '../../core/shared/community.model';
+import { BehaviorSubject } from 'rxjs';
+import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
+import { switchMap } from 'rxjs/operators';
+import { RemoteData } from '../../core/data/remote-data';
+import { PaginatedList } from '../../core/data/paginated-list.model';
+import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
+import { LicenseType } from '../clarin-license-info/clarin-license-info.component';
+import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
 import { secureImageData } from '../../shared/clarin-shared-util';
-import {DomSanitizer} from '@angular/platform-browser';
-import {BundleDataService} from '../../core/data/bundle-data.service';
-import {Bundle} from '../../core/shared/bundle.model';
-import {Bitstream} from '../../core/shared/bitstream.model';
+import { DomSanitizer } from '@angular/platform-browser';
+import { BundleDataService } from '../../core/data/bundle-data.service';
+import { Bundle } from '../../core/shared/bundle.model';
+import { Bitstream } from '../../core/shared/bitstream.model';
 
+/**
+ * Show item on the Home/Search page in the customized box with Item's information.
+ */
 @Component({
   selector: 'ds-clarin-item-box-view',
   templateUrl: './clarin-item-box-view.component.html',
@@ -36,36 +36,67 @@ import {Bitstream} from '../../core/shared/bitstream.model';
 })
 export class ClarinItemBoxViewComponent implements OnInit {
 
+  /**
+   * Show information of this item.
+   */
   @Input() item$: Item = null;
 
+  /**
+   * UI URL loaded from the server.
+   */
   baseUrl = '';
-
+  /**
+   * Item's description text.
+   */
   itemDescription = '';
+  /**
+   * Items's handle redirection URI.
+   */
   itemUri = '';
+  /**
+   * The subject of the Item e.g., `Article,..`
+   */
   itemType ='';
+  /**
+   * The name of the Item.
+   */
   itemName = '';
+  /**
+   * The Item's owning community.
+   */
   itemCommunity: BehaviorSubject<Community> = new BehaviorSubject<Community>(null);
+  /**
+   * URL for the searching Item's owning community.
+   */
   communitySearchRedirect: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  /**
+   * How kb/mb/gb has Item's files.
+   */
   itemFilesSizeBytes: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  /**
+   * How many files the Item has.
+   */
   itemCountOfFiles: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  /**
+   * Authors of the Item.
+   */
   itemAuthors: BehaviorSubject<AuthorNameLink[]> = new BehaviorSubject<AuthorNameLink[]>([]);
+  /**
+   * If the Item have a lot of authors do not show them all.
+   */
   showEveryAuthor: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
   /**
    * Current License Label e.g. `PUB`
    */
   licenseLabel: string;
-
   /**
    * Current License name e.g. `Awesome License`
    */
   license: string;
-
   /**
    * Current License type e.g. `Publicly Available`
    */
   licenseType: string;
-
   /**
    * Current License Label icon as byte array.
    */
@@ -79,7 +110,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
               private sanitizer: DomSanitizer) { }
 
   async ngOnInit(): Promise<void> {
-    console.log('initializing item', this.item$);
+    // Load Items metadata
     this.itemType = this.item$?.metadata?.['dc.type']?.[0]?.value;
     this.itemName = this.item$?.metadata?.['dc.title']?.[0]?.value;
     this.itemUri = this.item$?.metadata?.['dc.identifier.uri']?.[0]?.value;
@@ -116,7 +147,6 @@ export class ClarinItemBoxViewComponent implements OnInit {
       itemAuthorsLocal.push(authorNameLink);
     });
     this.itemAuthors.next(itemAuthorsLocal);
-    console.log('itemAuthorsLocal', itemAuthorsLocal);
   }
 
   private getItemFilesSize() {
@@ -215,6 +245,9 @@ export class ClarinItemBoxViewComponent implements OnInit {
   }
 }
 
+/**
+ * Redirect the user after clicking on the `Author`.
+ */
 // tslint:disable-next-line:max-classes-per-file
 class AuthorNameLink {
   name: string;

@@ -24,6 +24,9 @@ import { DSpaceObjectType } from '../core/shared/dspace-object-type.model';
 import { SortDirection, SortOptions } from '../core/cache/models/sort-options.model';
 import { SearchObjects } from '../shared/search/models/search-objects.model';
 
+/**
+ * The home page component customized for the CLARIN-DSpace.
+ */
 @Component({
   selector: 'ds-home-page',
   styleUrls: ['./home-page.component.scss'],

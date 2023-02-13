@@ -15,9 +15,9 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import {NgbCarouselModule} from '@ng-bootstrap/ng-bootstrap';
-import {ItemPageModule} from '../item-page/item-page.module';
-import {UsageReportService} from '../core/statistics/usage-report-data.service';
+import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
+import { ItemPageModule } from '../item-page/item-page.module';
+import { UsageReportService } from '../core/statistics/usage-report-data.service';
 
 const DECLARATIONS = [
   HomePageComponent,

@@ -86,17 +86,17 @@ const DECLARATIONS = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        SharedModule.withEntryComponents(),
-        ItemPageRoutingModule,
-        EditItemPageModule,
-        StatisticsModule.forRoot(),
-        JournalEntitiesModule.withEntryComponents(),
-        ResearchEntitiesModule.withEntryComponents(),
-        NgxGalleryModule,
-        ChartsModule
-    ],
+  imports: [
+    CommonModule,
+    SharedModule.withEntryComponents(),
+    ItemPageRoutingModule,
+    EditItemPageModule,
+    StatisticsModule.forRoot(),
+    JournalEntitiesModule.withEntryComponents(),
+    ResearchEntitiesModule.withEntryComponents(),
+    NgxGalleryModule,
+    ChartsModule
+  ],
   declarations: [
     ...DECLARATIONS,
     VersionedItemComponent,
@@ -109,8 +109,7 @@ const DECLARATIONS = [
     ClarinItemBoxViewComponent
   ],
     exports: [
-        ...DECLARATIONS,
-        ClarinItemBoxViewComponent
+        ...DECLARATIONS
     ]
 })
 export class ItemPageModule {
