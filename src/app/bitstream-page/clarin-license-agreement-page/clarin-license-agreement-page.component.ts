@@ -278,7 +278,6 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
               this.error$.value.push('Cannot load the License');
             }
             this.clarinLicense$.next(clarinLicense?.payload);
-            console.log('clarinLicense?.payload?.requiredInfo', clarinLicense?.payload?.requiredInfo);
             // Load required info from ClarinLicense
             // @ts-ignore
             this.requiredInfo$.next(clarinLicense?.payload?.requiredInfo);
@@ -306,7 +305,6 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
           this.error$.value.push('Cannot load userRegistration');
           return;
         }
-        console.log('userRegistrationRD$', userRegistrationRD$);
         // Every user has only one userRegistration record
         const userRegistration = userRegistrationRD$?.payload?.page?.[0];
         if (isEmpty(userRegistration)) {
@@ -319,7 +317,6 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
           .pipe(
             getFirstCompletedRemoteData())
           .subscribe(userMetadata$ => {
-            console.log('userMetadata$', userMetadata$);
             if (hasFailed(userMetadata$.state)) {
               this.error$.value.push('Cannot load userMetadata');
               return;
