@@ -20,23 +20,49 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-xs-12 col-md-4">
-    <ng-container *ngIf="!mediaViewer.image">
-      <ds-metadata-field-wrapper [hideIfNoTextContent]="false">
-        <ds-thumbnail [thumbnail]="object?.thumbnail | async"></ds-thumbnail>
-      </ds-metadata-field-wrapper>
-    </ng-container>
+  <div class="col-xs-12 col-md-12">
+<!--    <ng-container *ngIf="!mediaViewer.image">-->
+<!--      <ds-metadata-field-wrapper [hideIfNoTextContent]="false">-->
+<!--        <ds-thumbnail [thumbnail]="object?.thumbnail | async"></ds-thumbnail>-->
+<!--      </ds-metadata-field-wrapper>-->
+<!--    </ng-container>-->
+    <ds-clarin-ref-box [item]="object"></ds-clarin-ref-box>
     <ng-container *ngIf="mediaViewer.image">
       <ds-media-viewer [item]="object" [videoOptions]="mediaViewer.video"></ds-media-viewer>
     </ng-container>
+    <ds-metadata-representation-list class="ds-item-page-mixed-author-field"
+                                     [parentItem]="object"
+                                     [itemType]="'Person'"
+                                     [metadataFields]="['dc.contributor.author', 'dc.creator']"
+                                     [label]="'relationships.isAuthorOf' | translate">
+    </ds-metadata-representation-list>
+    <ds-item-page-uri-field [item]="object"
+                            [fields]="['dc.identifier.uri']"
+                            [label]="'item.page.uri'">
+    </ds-item-page-uri-field>
+    <ds-item-page-date-field [item]="object"></ds-item-page-date-field>
+    <!-- TODO ADD TYPE -->
+    <div>TYPE</div>
+    <!-- TODO ADD LANGUAGE -->
+    <div>LANGUAGE</div>
+<!--    <ds-item-page-abstract-field [item]="object"></ds-item-page-abstract-field>-->
+    <ds-generic-item-page-field [item]="object"
+                                [fields]="['dc.description']"
+                                [label]="'item.page.description'">
+    </ds-generic-item-page-field>
+    <div>PUBLISHER</div>
+    <ds-generic-item-page-field [item]="object"
+                                [fields]="['dc.subject']"
+                                [separator]="','"
+                                [label]="'item.page.subject'">
+    </ds-generic-item-page-field>
+    <ds-generic-item-page-field [item]="object"
+                                [fields]="['dc.identifier.citation']"
+                                [label]="'item.page.citation'">
+    </ds-generic-item-page-field>
+    <ds-item-page-collections [item]="object"></ds-item-page-collections>
     <ds-themed-item-page-file-section [item]="object"></ds-themed-item-page-file-section>
     <ds-item-page-date-field [item]="object"></ds-item-page-date-field>
-    <ds-metadata-representation-list class="ds-item-page-mixed-author-field"
-      [parentItem]="object"
-      [itemType]="'Person'"
-      [metadataFields]="['dc.contributor.author', 'dc.creator']"
-      [label]="'relationships.isAuthorOf' | translate">
-    </ds-metadata-representation-list>
     <ds-generic-item-page-field [item]="object"
       [fields]="['journal.title']"
       [label]="'item.page.journal-title'">
@@ -53,29 +79,6 @@
       [fields]="['dc.publisher']"
       [label]="'item.page.publisher'">
     </ds-generic-item-page-field>
-  </div>
-  <div class="col-xs-12 col-md-8">
-    <ds-clarin-ref-box [item]="object"></ds-clarin-ref-box>
-    <ds-item-page-abstract-field [item]="object"></ds-item-page-abstract-field>
-    <ds-generic-item-page-field [item]="object"
-      [fields]="['dc.description']"
-      [label]="'item.page.description'">
-    </ds-generic-item-page-field>
-
-    <ds-generic-item-page-field [item]="object"
-      [fields]="['dc.subject']"
-      [separator]="','"
-      [label]="'item.page.subject'">
-    </ds-generic-item-page-field>
-    <ds-generic-item-page-field [item]="object"
-      [fields]="['dc.identifier.citation']"
-      [label]="'item.page.citation'">
-    </ds-generic-item-page-field>
-    <ds-item-page-uri-field [item]="object"
-      [fields]="['dc.identifier.uri']"
-      [label]="'item.page.uri'">
-    </ds-item-page-uri-field>
-    <ds-item-page-collections [item]="object"></ds-item-page-collections>
     <div>
       <a class="btn btn-outline-primary" [routerLink]="[itemPageRoute + '/full']" role="button">
         <i class="fas fa-info-circle"></i> {{"item.page.link.full" | translate}}
