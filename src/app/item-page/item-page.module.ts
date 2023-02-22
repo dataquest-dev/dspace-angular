@@ -87,6 +87,17 @@ const DECLARATIONS = [
   ReplacedTombstoneComponent,
   WithdrawnTombstoneComponent,
   ClarinLicenseInfoComponent,
+  ClarinRefBoxComponent,
+  ClarinRefCitationComponent,
+  ClarinRefFeaturedServicesComponent,
+  ClarinRefCitationModalComponent,
+  ClarinMatomoStatisticsComponent,
+  ClarinStatisticsButtonComponent,
+  ClarinGenericItemFieldComponent,
+  ClarinAuthorItemFieldComponent,
+  ClarinSubjectsItemFieldComponent,
+  ClarinCollectionsItemFieldComponent,
+  ClarinFilesItemFieldComponent
 ];
 
 @NgModule({
@@ -103,18 +114,7 @@ const DECLARATIONS = [
   ],
   declarations: [
     ...DECLARATIONS,
-    VersionedItemComponent,
-    ClarinRefBoxComponent,
-    ClarinRefCitationComponent,
-    ClarinRefFeaturedServicesComponent,
-    ClarinRefCitationModalComponent,
-    ClarinMatomoStatisticsComponent,
-    ClarinStatisticsButtonComponent,
-    ClarinGenericItemFieldComponent,
-    ClarinAuthorItemFieldComponent,
-    ClarinSubjectsItemFieldComponent,
-    ClarinCollectionsItemFieldComponent,
-    ClarinFilesItemFieldComponent,
+    VersionedItemComponent
   ],
     exports: [
         ...DECLARATIONS
