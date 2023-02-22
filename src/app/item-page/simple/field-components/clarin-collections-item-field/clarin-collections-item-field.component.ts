@@ -1,17 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Item} from '../../../../core/shared/item.model';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {Collection} from '../../../../core/shared/collection.model';
-import {CollectionDataService} from '../../../../core/data/collection-data.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { Item } from '../../../../core/shared/item.model';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { Collection } from '../../../../core/shared/collection.model';
+import { CollectionDataService } from '../../../../core/data/collection-data.service';
 import {
   getAllCompletedRemoteData,
   getAllSucceededRemoteDataPayload,
   getFirstSucceededRemoteDataPayload, getPaginatedListPayload
-} from '../../../../core/shared/operators';
-import {map, scan, startWith, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {FindListOptions} from '../../../../core/data/request.models';
-import {PaginatedList} from '../../../../core/data/paginated-list.model';
-import {hasValue} from '../../../../shared/empty.util';
+ } from '../../../../core/shared/operators';
+import { map, scan, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { FindListOptions } from '../../../../core/data/request.models';
+import { PaginatedList } from '../../../../core/data/paginated-list.model';
+import { hasValue } from '../../../../shared/empty.util';
 
 @Component({
   selector: 'ds-clarin-collections-item-field',
@@ -25,6 +25,9 @@ export class ClarinCollectionsItemFieldComponent implements OnInit {
    */
   @Input() item: Item;
 
+  /**
+   * Fontawesome v5. icon name with default settings.
+   */
   @Input() iconName: string;
 
   /**
@@ -33,6 +36,9 @@ export class ClarinCollectionsItemFieldComponent implements OnInit {
    */
   @Input() separator: string;
 
+  /**
+   * Name of the metadata field.
+   */
   label: 'item.page.collections';
 
   /**

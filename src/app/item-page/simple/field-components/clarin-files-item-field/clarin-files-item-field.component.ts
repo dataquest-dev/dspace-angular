@@ -1,14 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Item} from '../../../../core/shared/item.model';
-import {BehaviorSubject} from 'rxjs';
-import {Bitstream} from '../../../../core/shared/bitstream.model';
-import {BitstreamDataService} from '../../../../core/data/bitstream-data.service';
-import {NotificationsService} from '../../../../shared/notifications/notifications.service';
-import {TranslateService} from '@ngx-translate/core';
-import {getFirstCompletedRemoteData} from '../../../../core/shared/operators';
-import {RemoteData} from '../../../../core/data/remote-data';
-import {PaginatedList} from '../../../../core/data/paginated-list.model';
-import {hasValue} from '../../../../shared/empty.util';
+import { Component, Input, OnInit } from '@angular/core';
+import { Item } from '../../../../core/shared/item.model';
+import { BehaviorSubject } from 'rxjs';
+import { Bitstream } from '../../../../core/shared/bitstream.model';
+import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
+import { NotificationsService } from '../../../../shared/notifications/notifications.service';
+import { TranslateService } from '@ngx-translate/core';
+import { getFirstCompletedRemoteData } from '../../../../core/shared/operators';
+import { RemoteData } from '../../../../core/data/remote-data';
+import { PaginatedList } from '../../../../core/data/paginated-list.model';
+import { hasValue } from '../../../../shared/empty.util';
 
 @Component({
   selector: 'ds-clarin-files-item-field',
@@ -22,6 +22,9 @@ export class ClarinFilesItemFieldComponent implements OnInit {
    */
   @Input() item: Item;
 
+  /**
+   * Fontawesome v5. icon name with default settings.
+   */
   @Input() iconName: string;
 
   /**
@@ -30,6 +33,9 @@ export class ClarinFilesItemFieldComponent implements OnInit {
    */
   @Input() separator: string;
 
+  /**
+   * Name of the metadata field.
+   */
   label = 'item.page.files';
 
   bitstreams$: BehaviorSubject<Bitstream[]>;

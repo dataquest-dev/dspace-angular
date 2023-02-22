@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Item} from '../../../../core/shared/item.model';
-import {isNotUndefined} from '../../../../shared/empty.util';
+import { Component, Input, OnInit } from '@angular/core';
+import { Item } from '../../../../core/shared/item.model';
+import { isNotUndefined } from '../../../../shared/empty.util';
 
 @Component({
   selector: 'ds-clarin-generic-item-field',
@@ -14,8 +14,14 @@ export class ClarinGenericItemFieldComponent implements OnInit {
    */
   @Input() item: Item;
 
+  /**
+   * Fontawesome v5. icon name with default settings.
+   */
   @Input() iconName: string;
 
+  /**
+   * For now the specific type could be only 'hyperlink' which redirects to the page from the metadata value.
+   */
   @Input() type: string;
 
   /**
@@ -34,8 +40,10 @@ export class ClarinGenericItemFieldComponent implements OnInit {
    */
   @Input() label: string;
 
+  // tslint:disable-next-line:no-empty
   constructor() { }
 
+  // tslint:disable-next-line:no-empty
   ngOnInit(): void {
   }
 
