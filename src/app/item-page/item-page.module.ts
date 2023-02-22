@@ -46,7 +46,6 @@ import { ClarinMatomoStatisticsComponent } from './clarin-matomo-statistics/clar
 import { ClarinStatisticsButtonComponent } from './clarin-statistics-button/clarin-statistics-button.component';
 import { ChartsModule } from 'ng2-charts';
 import { ClarinGenericItemFieldComponent } from './simple/field-components/clarin-generic-item-field/clarin-generic-item-field.component';
-import { ClarinSubjectsItemFieldComponent } from './simple/field-components/clarin-subjects-item-field/clarin-subjects-item-field.component';
 import { ClarinCollectionsItemFieldComponent } from './simple/field-components/clarin-collections-item-field/clarin-collections-item-field.component';
 import { ClarinFilesItemFieldComponent } from './simple/field-components/clarin-files-item-field/clarin-files-item-field.component';
 
@@ -93,7 +92,6 @@ const DECLARATIONS = [
   ClarinMatomoStatisticsComponent,
   ClarinStatisticsButtonComponent,
   ClarinGenericItemFieldComponent,
-  ClarinSubjectsItemFieldComponent,
   ClarinCollectionsItemFieldComponent,
   ClarinFilesItemFieldComponent
 ];
