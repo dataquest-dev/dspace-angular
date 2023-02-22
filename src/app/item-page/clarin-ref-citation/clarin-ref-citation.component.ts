@@ -79,8 +79,6 @@ export class ClarinRefCitationComponent implements OnInit {
       return textValue !== null;
     });
 
-    console.log('citationArray', citationArray);
-
     this.citationText = citationArray.join(', ');
     this.itemNameText = this.getTitle();
     this.identifierURI = this.getIdentifierUri();
