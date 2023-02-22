@@ -79,6 +79,8 @@ export class ClarinRefCitationComponent implements OnInit {
       return textValue !== null;
     });
 
+    console.log('citationArray', citationArray);
+
     this.citationText = citationArray.join(', ');
     this.itemNameText = this.getTitle();
     this.identifierURI = this.getIdentifierUri();
@@ -131,7 +133,7 @@ export class ClarinRefCitationComponent implements OnInit {
     authorText = authorMetadata[0]?.value;
     // There are more authors for the item
     if (authorMetadata.length > 1) {
-      authorText = '; ' + ET_AL_TEXT;
+      authorText = authorText + '; ' + ET_AL_TEXT;
     }
 
     return authorText;
