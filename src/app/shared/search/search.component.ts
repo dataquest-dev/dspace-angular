@@ -277,7 +277,6 @@ export class SearchComponent implements OnInit {
           sort: sortOption || searchOptions.sort
         });
       const newSearchOptions = new PaginatedSearchOptions(combinedOptions);
-      console.log('newSearchOptions', newSearchOptions);
       // check if search options are changed
       // if so retrieve new related results otherwise skip it
       if (JSON.stringify(newSearchOptions) !== JSON.stringify(this.searchOptions$.value)) {
