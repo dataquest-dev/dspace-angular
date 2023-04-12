@@ -18,7 +18,9 @@ import {
   DynamicPathable,
   parseReviver,
 } from '@ng-dynamic-forms/core';
-import { isObject, isString, mergeWith } from 'lodash';
+import isObject from 'lodash/isObject';
+import isString from 'lodash/isString';
+import mergeWith from 'lodash/mergeWith';
 
 import {
   hasNoValue,
@@ -43,10 +45,6 @@ import { CONCAT_GROUP_SUFFIX, DynamicConcatModel } from './ds-dynamic-form-ui/mo
 import { VIRTUAL_METADATA_PREFIX } from '../../../core/shared/metadata.models';
 import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
 import { getFirstCompletedRemoteData } from '../../../core/shared/operators';
-import {
-  COMPLEX_GROUP_SUFFIX,
-  DynamicComplexModel
-} from './ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 
 @Injectable()
 export class FormBuilderService extends DynamicFormService {
@@ -120,16 +118,8 @@ export class FormBuilderService extends DynamicFormService {
         }
 
         if (this.isConcatGroup(controlModel)) {
-          if (controlModel.id.match(new RegExp(findId + CONCAT_GROUP_SUFFIX + `_\\d+$`))) {
-            result = (controlModel as DynamicConcatModel).group[0];
-            break;
-          }
-        }
-
-        if (this.isComplexGroup(controlModel)) {
-          const regex = new RegExp(findId + COMPLEX_GROUP_SUFFIX);
-          if (controlModel.id.match(regex)) {
-            result = (controlModel as DynamicComplexModel);
+          if (controlModel.id.match(new RegExp(findId + CONCAT_GROUP_SUFFIX))) {
+            result = (controlModel as DynamicConcatModel);
             break;
           }
         }
@@ -292,8 +282,8 @@ export class FormBuilderService extends DynamicFormService {
   modelFromConfiguration(submissionId: string, json: string | SubmissionFormsModel, scopeUUID: string, sectionData: any = {},
                          submissionScope?: string, readOnly = false, typeBindModel = null,
                          isInnerForm = false): DynamicFormControlModel[] | never {
-    let rows: DynamicFormControlModel[] = [];
-    const rawData = typeof json === 'string' ? JSON.parse(json, parseReviver) : json;
+     let rows: DynamicFormControlModel[] = [];
+     const rawData = typeof json === 'string' ? JSON.parse(json, parseReviver) : json;
     if (rawData.rows && !isEmpty(rawData.rows)) {
       rawData.rows.forEach((currentRow) => {
         const rowParsed = this.rowParser.parse(submissionId, currentRow, scopeUUID, sectionData, submissionScope,
@@ -305,17 +295,16 @@ export class FormBuilderService extends DynamicFormService {
             rows.push(rowParsed);
           }
         }
-
-        if (hasNoValue(typeBindModel)) {
-          typeBindModel = this.findById(this.typeField, rows);
-        }
-
-        if (hasValue(typeBindModel)) {
-          this.setTypeBindModel(typeBindModel);
-        }
       });
     }
 
+    if (hasNoValue(typeBindModel)) {
+      typeBindModel = this.findById(this.typeField, rows);
+    }
+
+    if (hasValue(typeBindModel)) {
+      this.setTypeBindModel(typeBindModel);
+    }
     return rows;
   }
 
@@ -346,10 +335,6 @@ export class FormBuilderService extends DynamicFormService {
 
   isConcatGroup(model: DynamicFormControlModel): boolean {
     return this.isCustomGroup(model) && (model.id.indexOf(CONCAT_GROUP_SUFFIX) !== -1);
-  }
-
-  public isComplexGroup(model: DynamicFormControlModel): boolean {
-    return this.isCustomGroup(model) && model.id.indexOf(COMPLEX_GROUP_SUFFIX) !== -1;
   }
 
   isRowGroup(model: DynamicFormControlModel): boolean {

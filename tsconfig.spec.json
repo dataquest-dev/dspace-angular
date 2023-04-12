@@ -5,16 +5,17 @@
     "outDir": "./out-tsc/spec",
     "types": [
       "jasmine",
-      "node"
+      "node",
+      "grecaptcha"
     ]
   },
   "files": [
     "src/test.ts",
-    "src/test-dtq.ts",
     "src/polyfills.ts"
   ],
   "include": [
     "src/**/*.spec.ts",
-    "src/**/*.d.ts"
-  ]
+    "src/**/*.d.ts",
+    "src/themes/**/*.module.ts"
+  ],
 }

@@ -4,7 +4,7 @@ import {
   Component,
   ComponentFactoryResolver,
   ContentChildren,
-  EventEmitter,
+  EventEmitter, Inject,
   Input,
   NgZone,
   OnChanges,
@@ -85,7 +85,7 @@ import { DsDynamicTypeBindRelationService } from './ds-dynamic-type-bind-relatio
 import { SearchResult } from '../../../search/models/search-result.model';
 import { DSpaceObject } from '../../../../core/shared/dspace-object.model';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { RelationshipService } from '../../../../core/data/relationship.service';
+import { RelationshipDataService } from '../../../../core/data/relationship-data.service';
 import { SelectableListService } from '../../../object-list/selectable-list/selectable-list.service';
 import { DsDynamicDisabledComponent } from './models/disabled/dynamic-disabled.component';
 import { DYNAMIC_FORM_CONTROL_TYPE_DISABLED } from './models/disabled/dynamic-disabled.model';
@@ -118,11 +118,8 @@ import { RelationshipOptions } from '../models/relationship-options.model';
 import { FormBuilderService } from '../form-builder.service';
 import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './ds-dynamic-form-constants';
 import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
-import { DsDynamicAutocompleteComponent } from './models/autocomplete/ds-dynamic-autocomplete.component';
-import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/ds-dynamic-autocomplete.model';
-import { DsDynamicSponsorAutocompleteComponent } from './models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
-import { SPONSOR_METADATA_NAME } from './models/ds-dynamic-complex.model';
-import { DsDynamicSponsorScrollableDropdownComponent } from './models/sponsor-scrollable-dropdown/dynamic-sponsor-scrollable-dropdown.component';
+import { APP_CONFIG, AppConfig } from '../../../../../config/app-config.interface';
+import { itemLinksToFollow } from '../../../utils/relation-query.utils';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {
@@ -162,21 +159,10 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
       return DsDynamicOneboxComponent;
 
     case DYNAMIC_FORM_CONTROL_TYPE_SCROLLABLE_DROPDOWN:
-      if (isNotEmpty(model.name) && model.name.startsWith(SPONSOR_METADATA_NAME)) {
-        return DsDynamicSponsorScrollableDropdownComponent;
-      } else {
-        return DsDynamicScrollableDropdownComponent;
-      }
+      return DsDynamicScrollableDropdownComponent;
 
     case DYNAMIC_FORM_CONTROL_TYPE_TAG:
       return DsDynamicTagComponent;
-
-    case DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE:
-      if (isNotEmpty(model.name) && model.name.startsWith(SPONSOR_METADATA_NAME)) {
-        return DsDynamicSponsorAutocompleteComponent;
-      } else {
-        return DsDynamicAutocompleteComponent;
-      }
 
     case DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP:
       return DsDynamicRelationGroupComponent;
@@ -209,7 +195,7 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
 })
 export class DsDynamicFormControlContainerComponent extends DynamicFormControlContainerComponent implements OnInit, OnChanges, OnDestroy {
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
-  // tslint:disable-next-line:no-input-rename
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('templates') inputTemplateList: QueryList<DynamicTemplateDirective>;
   @Input() hasMetadataModel: any;
   @Input() formId: string;
@@ -237,15 +223,20 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    */
   private subs: Subscription[] = [];
 
-  /* tslint:disable:no-output-rename */
+  /* eslint-disable @angular-eslint/no-output-rename */
   @Output('dfBlur') blur: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
   @Output('dfChange') change: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
   @Output('dfFocus') focus: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
   @Output('ngbEvent') customEvent: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
-  /* tslint:enable:no-output-rename */
+  /* eslint-enable @angular-eslint/no-output-rename */
   @ViewChild('componentViewContainer', { read: ViewContainerRef, static: true }) componentViewContainerRef: ViewContainerRef;
 
   private showErrorMessagesPreviousStage: boolean;
+
+  /**
+   * Determines whether to request embedded thumbnail.
+   */
+  fetchThumbnail: boolean;
 
   get componentType(): Type<DynamicFormControl> | null {
     return dsDynamicFormControlMapFn(this.model);
@@ -260,7 +251,7 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
     protected translateService: TranslateService,
     protected relationService: DynamicFormRelationService,
     private modalService: NgbModal,
-    private relationshipService: RelationshipService,
+    private relationshipService: RelationshipDataService,
     private selectableListService: SelectableListService,
     private itemService: ItemDataService,
     private zone: NgZone,
@@ -268,10 +259,12 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
     private submissionObjectService: SubmissionObjectDataService,
     private ref: ChangeDetectorRef,
     private formService: FormService,
-    private formBuilderService: FormBuilderService,
-    private submissionService: SubmissionService
+    public formBuilderService: FormBuilderService,
+    private submissionService: SubmissionService,
+    @Inject(APP_CONFIG) protected appConfig: AppConfig,
   ) {
     super(ref, componentFactoryResolver, layoutService, validationService, dynamicFormComponentService, relationService);
+    this.fetchThumbnail = this.appConfig.browseBy.showThumbnails;
   }
 
   /**
@@ -301,7 +294,6 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
               followLink('rightItem'),
               followLink('relationshipType')
             );
-
             relationshipsRD$.pipe(
               getFirstSucceededRemoteDataPayload(),
               getPaginatedListPayload()
@@ -333,8 +325,10 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
       }
 
       if (hasValue(this.value) && this.value.isVirtual) {
-        const relationship$ = this.relationshipService.findById(this.value.virtualValue, true, true, followLink('leftItem'), followLink('rightItem'), followLink('relationshipType'))
-          .pipe(
+        const relationship$ = this.relationshipService.findById(this.value.virtualValue,
+          true,
+          true,
+          ... itemLinksToFollow(this.fetchThumbnail)).pipe(
             getAllSucceededRemoteData(),
             getRemoteDataPayload());
         this.relationshipValue$ = observableCombineLatest([this.item$.pipe(take(1)), relationship$]).pipe(
@@ -343,7 +337,7 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
               getAllSucceededRemoteData(),
               getRemoteDataPayload(),
               map((leftItem: Item) => {
-                return new ReorderableRelationship(relationship, leftItem.uuid !== item.uuid, this.relationshipService, this.store, this.model.submissionId);
+                return new ReorderableRelationship(relationship, leftItem.uuid !== item.uuid, this.store, this.model.submissionId);
               }),
             )
           ),

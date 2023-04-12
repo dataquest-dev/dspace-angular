@@ -107,7 +107,7 @@
   "admin.registries.bitstream-formats.edit.head": "Tiedostoformaatti: {{ format }}",
 
   // "admin.registries.bitstream-formats.edit.internal.hint": "Formats marked as internal are hidden from the user, and used for administrative purposes.",
-  "admin.registries.bitstream-formats.edit.internal.hint": "Sisäisiksi merkittyjä formaatteja käytetään hallinnollisiin tarkoituksiin, ja ne on piilotettu käyttäjiltä.",
+  "admin.registries.bitstream-formats.edit.internal.hint": "Sisäisiksi merkittyjä formaatteja käytetään ylläpitotarkoituksiin, ja ne on piilotettu käyttäjiltä.",
 
   // "admin.registries.bitstream-formats.edit.internal.label": "Internal",
   "admin.registries.bitstream-formats.edit.internal.label": "Sisäinen",
@@ -157,6 +157,9 @@
   // "admin.registries.bitstream-formats.table.name": "Name",
   "admin.registries.bitstream-formats.table.name": "Nimi",
 
+  // "admin.registries.bitstream-formats.table.id" : "ID",
+  "admin.registries.bitstream-formats.table.id" : "ID",
+
   // "admin.registries.bitstream-formats.table.return": "Return",
   "admin.registries.bitstream-formats.table.return": "Palaa",
 
@@ -205,7 +208,7 @@
   "admin.registries.metadata.schemas.table.delete": "Poista valittu",
 
   // "admin.registries.metadata.schemas.table.id": "ID",
-  "admin.registries.metadata.schemas.table.id": "ID-tunnus",
+  "admin.registries.metadata.schemas.table.id": "ID",
 
   // "admin.registries.metadata.schemas.table.name": "Name",
   "admin.registries.metadata.schemas.table.name": "Nimi",
@@ -235,6 +238,9 @@
 
   // "admin.registries.schema.fields.table.field": "Field",
   "admin.registries.schema.fields.table.field": "Kenttä",
+
+  // "admin.registries.schema.fields.table.id" : "ID",
+  "admin.registries.schema.fields.table.id" : "ID",
 
   // "admin.registries.schema.fields.table.scopenote": "Scope Note",
   "admin.registries.schema.fields.table.scopenote": "Soveltamisala",
@@ -404,7 +410,7 @@
   "admin.access-control.epeople.form.groupsEPersonIsMemberOf": "Jäsenenä näissä ryhmissä:",
 
   // "admin.access-control.epeople.form.table.id": "ID",
-  "admin.access-control.epeople.form.table.id": "ID-tunnus",
+  "admin.access-control.epeople.form.table.id": "ID",
 
   // "admin.access-control.epeople.form.table.name": "Name",
   "admin.access-control.epeople.form.table.name": "Nimi",
@@ -662,7 +668,7 @@
 
 
   // "admin.search.breadcrumbs": "Administrative Search",
-  "admin.search.breadcrumbs": "Hallinnollinen haku",
+  "admin.search.breadcrumbs": "Ylläpitäjän haku",
 
   // "admin.search.collection.edit": "Edit",
   "admin.search.collection.edit": "Muokkaa",
@@ -692,19 +698,19 @@
   "admin.search.item.withdraw": "Poista käytöstä",
 
   // "admin.search.title": "Administrative Search",
-  "admin.search.title": "Hallinnollinen haku",
+  "admin.search.title": "Ylläpitäjän haku",
 
   // "administrativeView.search.results.head": "Administrative Search",
-  "administrativeView.search.results.head": "Hallinnollinen haku",
+  "administrativeView.search.results.head": "Ylläpitäjän haku",
 
 
 
 
   // "admin.workflow.breadcrumbs": "Administer Workflow",
-  "admin.workflow.breadcrumbs": "Hallinnointityönkulku",
+  "admin.workflow.breadcrumbs": "Hallinnoi työnkulkua",
 
   // "admin.workflow.title": "Administer Workflow",
-  "admin.workflow.title": "Hallinnointityönkulku",
+  "admin.workflow.title": "Hallinnoi työnkulkua",
 
   // "admin.workflow.item.workflow": "Workflow",
   "admin.workflow.item.workflow": "Työnkulku",
@@ -2466,8 +2472,8 @@
   // "item.edit.tabs.status.buttons.mappedCollections.label": "Manage mapped collections",
   "item.edit.tabs.status.buttons.mappedCollections.label": "Hallinnoi liitettyjä kokoelmia",
 
-  // "item.edit.tabs.status.buttons.move.button": "Move...",
-  "item.edit.tabs.status.buttons.move.button": "Siirrä...",
+  // "item.edit.tabs.status.buttons.move.button": "Move this Item to a different Collection",
+  "item.edit.tabs.status.buttons.move.button": "Siirrä tämä kohde toiseen kokoelmaan",
 
   // "item.edit.tabs.status.buttons.move.label": "Move item to another collection",
   "item.edit.tabs.status.buttons.move.label": "Siirrä tietue toiseen kokoelmaan",
@@ -2490,8 +2496,8 @@
   // "item.edit.tabs.status.buttons.reinstate.label": "Reinstate item into the repository",
   "item.edit.tabs.status.buttons.reinstate.label": "Palauta tietue arkistoon",
 
-  // "item.edit.tabs.status.buttons.withdraw.button": "Withdraw...",
-  "item.edit.tabs.status.buttons.withdraw.button": "Poista käytöstä...",
+  // "item.edit.tabs.status.buttons.withdraw.button": "Withdraw this item",
+  "item.edit.tabs.status.buttons.withdraw.button": "Poista tämä kohde",
 
   // "item.edit.tabs.status.buttons.withdraw.label": "Withdraw item from the repository",
   "item.edit.tabs.status.buttons.withdraw.label": "Poista tietue käytöstä",
@@ -2506,7 +2512,7 @@
   "item.edit.tabs.status.labels.handle": "Handle-tunnus",
 
   // "item.edit.tabs.status.labels.id": "Item Internal ID",
-  "item.edit.tabs.status.labels.id": "Tietueen sisäinen ID-tunnus",
+  "item.edit.tabs.status.labels.id": "Tietueen sisäinen ID",
 
   // "item.edit.tabs.status.labels.itemPage": "Item Page",
   "item.edit.tabs.status.labels.itemPage": "Tietueen tiedot",
@@ -2954,7 +2960,7 @@
 
 
   // "menu.section.admin_search": "Admin Search",
-  "menu.section.admin_search": "Admin-haku",
+  "menu.section.admin_search": "Ylläpitäjän haku",
 
 
 
@@ -3033,7 +3039,7 @@
   "menu.section.icon.access_control": "Pääsyoikeudet",
 
   // "menu.section.icon.admin_search": "Admin search menu section",
-  "menu.section.icon.admin_search": "Admin-haku",
+  "menu.section.icon.admin_search": "Ylläpitäjän haku",
 
   // "menu.section.icon.control_panel": "Control Panel menu section",
   "menu.section.icon.control_panel": "Hallintapaneeli",
@@ -3168,7 +3174,7 @@
 
 
   // "menu.section.workflow": "Administer Workflow",
-  "menu.section.workflow": "Hallinnointityönkulku",
+  "menu.section.workflow": "Hallinnoi työnkulkua",
 
 
   // "mydspace.description": "",
@@ -3274,7 +3280,7 @@
   "mydspace.status.workspace": "Työtila",
 
   // "mydspace.title": "MyDSpace",
-  "mydspace.title": "Omat tiedot",
+  "mydspace.title": "Oma DSpace",
 
   // "mydspace.upload.upload-failed": "Error creating new workspace. Please verify the content uploaded before retry.",
   "mydspace.upload.upload-failed": "Virhe uutta työtilaa luotaessa. Tarkista ladattava sisältö ennen kuin yrität uudelleen.",
@@ -3347,7 +3353,7 @@
   "orgunit.page.edit": "Muokkaa tietuetta",
 
   // "orgunit.page.id": "ID",
-  "orgunit.page.id": "ID-tunnus",
+  "orgunit.page.id": "ID",
 
   // "orgunit.page.titleprefix": "Organizational Unit: ",
   "orgunit.page.titleprefix": "Organisaatioyksikkö: ",
@@ -3399,7 +3405,7 @@
   "person.page.orcid": "ORCID-tunniste",
 
   // "person.page.staffid": "Staff ID",
-  "person.page.staffid": "Henkilökunnan ID-tunnus",
+  "person.page.staffid": "Henkilökunnan ID",
 
   // "person.page.titleprefix": "Person: ",
   "person.page.titleprefix": "Käyttäjä: ",
@@ -3651,7 +3657,7 @@
   "project.page.funder": "Rahoittajat",
 
   // "project.page.id": "ID",
-  "project.page.id": "ID-tunnus",
+  "project.page.id": "ID",
 
   // "project.page.keyword": "Keywords",
   "project.page.keyword": "Asiasanat",
@@ -3935,7 +3941,7 @@
   "resource-policies.form.eperson-group-list.table.headers.action": "Toimenpide",
 
   // "resource-policies.form.eperson-group-list.table.headers.id": "ID",
-  "resource-policies.form.eperson-group-list.table.headers.id": "ID-tunnus",
+  "resource-policies.form.eperson-group-list.table.headers.id": "ID",
 
   // "resource-policies.form.eperson-group-list.table.headers.name": "Name",
   "resource-policies.form.eperson-group-list.table.headers.name": "Nimi",
@@ -3983,7 +3989,7 @@
   "resource-policies.table.headers.group": "Ryhmä",
 
   // "resource-policies.table.headers.id": "ID",
-  "resource-policies.table.headers.id": "ID-tunnus",
+  "resource-policies.table.headers.id": "ID",
 
   // "resource-policies.table.headers.name": "Name",
   "resource-policies.table.headers.name": "Nimi",
@@ -4120,7 +4126,7 @@
   "search.filters.filter.dateSubmitted.placeholder": "Tallennnusajankohta",
 
   // "search.filters.filter.discoverable.head": "Private",
-  "search.filters.filter.discoverable.head": "Ykstyinen",
+  "search.filters.filter.discoverable.head": "Yksityinen",
 
   // "search.filters.filter.withdrawn.head": "Withdrawn",
   "search.filters.filter.withdrawn.head": "Poistettu käytöstä",
@@ -4345,13 +4351,13 @@
   "statistics.table.title.TotalDownloads": "Tiedostokäyntejä",
 
   // "statistics.table.title.TopCountries": "Top country views",
-  "statistics.table.title.TopCountries": "Eniten latauksia maittain",
+  "statistics.table.title.TopCountries": "Eniten katseluita maittain",
 
   // "statistics.table.title.TopCities": "Top city views",
-  "statistics.table.title.TopCities": "Eniten latauksia kaupungeittain",
+  "statistics.table.title.TopCities": "Eniten katseluita kaupungeittain",
 
   // "statistics.table.header.views": "Views",
-  "statistics.table.header.views": "Latauksia",
+  "statistics.table.header.views": "Katseluita",
 
 
 
@@ -4911,7 +4917,7 @@
   "submission.sections.upload.header.policy.default.withlist": "Yksittäisten tiedostojen pääsyrajoitusten lisäksi {{collectionName}}-kokoelmaan ladatut tiedostot ovat seuraavien ryhmien saatavilla:",
 
   // "submission.sections.upload.info": "Here you will find all the files currently in the item. You can update the file metadata and access conditions or <strong>upload additional files just dragging & dropping them everywhere in the page</strong>",
-  "submission.sections.upload.info": "Tietueen kaikki tiedostot on lueteltu tässä. Voit päivittää tiedoston metadataa ja pääsyehtoja tai <strong>ladata lisää tiedostoja raahaamalla ne mihin hyvänsä sivun kohtaan</strong>",
+  "submission.sections.upload.info": "Tietueen kaikki tiedostot on lueteltu tässä. Voit päivittää tiedoston metadataa ja pääsyehtoja tai <strong>ladata lisää tiedostoja raahaamalla ne mihin hyvänsä sivun kohtaan.</strong>",
 
   // "submission.sections.upload.no-entry": "No",
   "submission.sections.upload.no-entry": "Ei",
@@ -5061,8 +5067,8 @@
   // "uploader.or": ", or ",
   "uploader.or": " tai",
 
-  // "uploader.processing": "Processing",
-  "uploader.processing": "Käsitellään",
+  // "uploader.processing": "Processing uploaded file(s)... (it's now safe to close this page)",
+  "uploader.processing": "Käsitellään ladattuja tiedostoja... (voit sulkea tämän sivun)",
 
   // "uploader.queue-length": "Queue length",
   "uploader.queue-length": "Jonon pituus",
@@ -5079,7 +5085,7 @@
 
 
   // "workflowAdmin.search.results.head": "Administer Workflow",
-  "workflowAdmin.search.results.head": "Hallinnointityönkulku",
+  "workflowAdmin.search.results.head": "Hallinnoi työnkulkua",
 
 
 

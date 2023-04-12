@@ -6,5 +6,6 @@ export enum SectionsType {
   CcLicense = 'cclicense',
   collection = 'collection',
   AccessesCondition = 'accessCondition',
-  clarinLicense = 'clarin-license',
+  SherpaPolicies = 'sherpaPolicy',
+  Identifiers = 'identifiers',
 }
