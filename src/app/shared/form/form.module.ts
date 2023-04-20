@@ -33,6 +33,7 @@ import { DynamicFormsNGBootstrapUIModule } from '@ng-dynamic-forms/ui-ng-bootstr
 import { DsDynamicAutocompleteComponent } from './builder/ds-dynamic-form-ui/models/autocomplete/ds-dynamic-autocomplete.component';
 import { DsDynamicSponsorAutocompleteComponent } from './builder/ds-dynamic-form-ui/models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
 import { DsDynamicSponsorScrollableDropdownComponent } from './builder/ds-dynamic-form-ui/models/sponsor-scrollable-dropdown/dynamic-sponsor-scrollable-dropdown.component';
+import { ClarinNameComponent } from './builder/ds-dynamic-form-ui/models/clarin-name/clarin-name.component';
 
 const COMPONENTS = [
   CustomSwitchComponent,
@@ -64,7 +65,8 @@ const COMPONENTS = [
 
 @NgModule({
   declarations: [
-    ...COMPONENTS
+    ...COMPONENTS,
+    ClarinNameComponent
   ],
   imports: [
     CommonModule,

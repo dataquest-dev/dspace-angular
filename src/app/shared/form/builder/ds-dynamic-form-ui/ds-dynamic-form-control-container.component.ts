@@ -123,6 +123,8 @@ import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/ds
 import { DsDynamicSponsorAutocompleteComponent } from './models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
 import { SPONSOR_METADATA_NAME } from './models/ds-dynamic-complex.model';
 import { DsDynamicSponsorScrollableDropdownComponent } from './models/sponsor-scrollable-dropdown/dynamic-sponsor-scrollable-dropdown.component';
+import {DYNAMIC_FORM_CONTROL_TYPE_CLARIN_NAME} from './models/clarin-name/clarin-name.model';
+import {ClarinNameComponent} from './models/clarin-name/clarin-name.component';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {
@@ -177,6 +179,9 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
       } else {
         return DsDynamicAutocompleteComponent;
       }
+
+    case DYNAMIC_FORM_CONTROL_TYPE_CLARIN_NAME:
+      return ClarinNameComponent;
 
     case DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP:
       return DsDynamicRelationGroupComponent;
