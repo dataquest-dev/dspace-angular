@@ -27,7 +27,6 @@ export interface DsDynamicClarinNameModelConfig extends DynamicConcatModelConfig
  */
 export class DynamicClarinNameModel extends DynamicConcatModel {
 
-  @serializable() separator: string;
   @serializable() hasLanguages = false;
   @serializable() relationship?: RelationshipOptions;
   @serializable() repeatable?: boolean;
@@ -46,7 +45,7 @@ export class DynamicClarinNameModel extends DynamicConcatModel {
   constructor(config: DynamicConcatModelConfig, layout?: DynamicFormControlLayout) {
 
     super(config, layout);
-    this.separator = config.separator + ' ';
+    this.separator = ',';
     this.relationship = config.relationship;
     this.repeatable = config.repeatable;
     this.required = config.required;
@@ -80,9 +79,9 @@ export class DynamicClarinNameModel extends DynamicConcatModel {
     let tempValue: string;
 
     if (typeof value === 'string') {
-      tempValue = value;
+      tempValue = value.replace(/\s/g, '');
     } else {
-      tempValue = value.value;
+      tempValue = value.value.replace(/\s/g, '');
     }
     if (hasNoValue(tempValue)) {
       tempValue = '';

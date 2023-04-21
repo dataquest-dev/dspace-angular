@@ -382,6 +382,20 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
       this.updateItemSponsor(value);
     }
+
+    if (metadata === 'dc.contributor.author') {
+      this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
+      this.reinitializeForm();
+    }
+  }
+
+  private reinitializeForm() {
+    this.isUpdating = true;
+    // update form
+    this.formModel = undefined;
+    this.cdr.detectChanges();
+    this.ngOnInit();
+    this.isUpdating = false;
   }
 
   /**
