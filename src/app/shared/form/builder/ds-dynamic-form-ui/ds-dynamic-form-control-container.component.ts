@@ -180,9 +180,6 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
         return DsDynamicAutocompleteComponent;
       }
 
-    case DYNAMIC_FORM_CONTROL_TYPE_CLARIN_NAME:
-      return ClarinNameComponent;
-
     case DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP:
       return DsDynamicRelationGroupComponent;
 
