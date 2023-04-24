@@ -13,12 +13,12 @@ export const CLARIN_NAME_SECOND_INPUT_SUFFIX = '_CLARIN_NAME_SECOND_INPUT';
 export const AUTHOR_METADATA_FIELD_NAME = 'dc.contributor.author';
 
 /**
- * Configuration for the DsDynamicSponsorAutocompleteModel.
+ * Configuration for the DynamicClarinNameModel.
  */
 export interface DsDynamicClarinNameModelConfig extends DynamicConcatModelConfig {}
 
 /**
- * The Model for the DsDynamicSponsorAutocompleteComponent.
+ * The model which is used for the `author` input field in the submission creating process.
  */
 export class DynamicClarinNameModel extends DynamicConcatModel {
 

@@ -21,7 +21,7 @@ import { TextareaFieldParser } from './textarea-field-parser';
 import { DisabledFieldParser } from './disabled-field-parser';
 import { AutocompleteFieldParser } from './autocomplete-field-parser';
 import { ComplexFieldParser } from './complex-field-parser';
-import {ClarinNameFieldParser} from './clarin-name-field-parser';
+import { ClarinNameFieldParser } from './clarin-name-field-parser';
 
 const fieldParserDeps = [
   SUBMISSION_ID,

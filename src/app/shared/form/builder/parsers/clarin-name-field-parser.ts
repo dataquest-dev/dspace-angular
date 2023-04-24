@@ -16,6 +16,9 @@ import {
 } from '../ds-dynamic-form-ui/models/clarin-name.model';
 import { DsDynamicInputModelConfig } from '../ds-dynamic-form-ui/models/ds-dynamic-input.model';
 
+/**
+ * Parser where is created DynamicClarinNameModel for the `author` input field.
+ */
 export class ClarinNameFieldParser extends FieldParser {
 
   constructor(
