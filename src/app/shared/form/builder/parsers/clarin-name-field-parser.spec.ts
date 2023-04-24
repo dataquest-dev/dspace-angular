@@ -71,13 +71,15 @@ describe('ClarinNameFieldParser test suite', () => {
   });
 
   it('should init parser properly', () => {
-    const parser = new ClarinNameFieldParser(submissionId, field1, initFormValues, parserOptions);
+    const parser = new ClarinNameFieldParser(submissionId, field1, initFormValues, parserOptions, ', ',
+      'form.last-name', 'form.first-name');
 
     expect(parser instanceof ClarinNameFieldParser).toBe(true);
   });
 
   it('should return a DynamicConcatModel object when repeatable option is false', () => {
-    const parser = new ClarinNameFieldParser(submissionId, field2, initFormValues, parserOptions);
+    const parser = new ClarinNameFieldParser(submissionId, field1, initFormValues, parserOptions, ', ',
+      'form.last-name', 'form.first-name');
 
     const fieldModel = parser.parse();
 
@@ -85,11 +87,12 @@ describe('ClarinNameFieldParser test suite', () => {
   });
 
   it('should return a DynamicConcatModel object with the correct separator', () => {
-    const parser = new ClarinNameFieldParser(submissionId, field2, initFormValues, parserOptions);
+    const parser = new ClarinNameFieldParser(submissionId, field1, initFormValues, parserOptions, ', ',
+      'form.last-name', 'form.first-name');
 
     const fieldModel = parser.parse();
 
-    expect((fieldModel as DynamicConcatModel).separator).toBe(', ');
+    expect((fieldModel as DynamicConcatModel).separator).toBe(',');
   });
 
   it('should set init value properly', () => {
@@ -98,7 +101,8 @@ describe('ClarinNameFieldParser test suite', () => {
     };
     const expectedValue = new FormFieldMetadataValueObject('test, name', undefined, undefined, 'test');
 
-    const parser = new ClarinNameFieldParser(submissionId, field1, initFormValues, parserOptions);
+    const parser = new ClarinNameFieldParser(submissionId, field1, initFormValues, parserOptions, ', ',
+      'form.last-name', 'form.first-name');
 
     const fieldModel = parser.parse();
 

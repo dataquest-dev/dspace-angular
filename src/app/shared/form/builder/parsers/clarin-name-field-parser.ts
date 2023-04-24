@@ -1,14 +1,10 @@
 import { Inject } from '@angular/core';
 import { FormFieldModel } from '../models/form-field.model';
-import { ConcatFieldParser } from './concat-field-parser';
-import {CONFIG_DATA, FieldParser, INIT_FORM_VALUES, PARSER_OPTIONS, SUBMISSION_ID} from './field-parser';
+import { CONFIG_DATA, FieldParser, INIT_FORM_VALUES, PARSER_OPTIONS, SUBMISSION_ID } from './field-parser';
 import { ParserOptions } from './parser-options';
-import {FormFieldMetadataValueObject} from '../models/form-field-metadata-value.model';
-import {DynamicFormControlLayout, DynamicInputModel, DynamicInputModelConfig} from '@ng-dynamic-forms/core';
-import { DynamicConcatModel,
-  DynamicConcatModelConfig
-} from '../ds-dynamic-form-ui/models/ds-dynamic-concat.model';
-import {hasNoValue, hasValue, isNotEmpty} from '../../../empty.util';
+import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
+import { DynamicFormControlLayout, DynamicInputModel } from '@ng-dynamic-forms/core';
+import { hasNoValue, hasValue, isNotEmpty } from '../../../empty.util';
 import {
   DsDynamicAutocompleteModel,
   DsDynamicAutocompleteModelConfig
@@ -17,8 +13,8 @@ import {
   CLARIN_NAME_FIRST_INPUT_SUFFIX,
   CLARIN_NAME_GROUP_SUFFIX, CLARIN_NAME_SECOND_INPUT_SUFFIX, DsDynamicClarinNameModelConfig,
   DynamicClarinNameModel
-} from '../ds-dynamic-form-ui/models/clarin-name/clarin-name.model';
-import {DsDynamicInputModelConfig} from '../ds-dynamic-form-ui/models/ds-dynamic-input.model';
+} from '../ds-dynamic-form-ui/models/clarin-name.model';
+import { DsDynamicInputModelConfig } from '../ds-dynamic-form-ui/models/ds-dynamic-input.model';
 
 export class ClarinNameFieldParser extends FieldParser {
 
@@ -28,7 +24,8 @@ export class ClarinNameFieldParser extends FieldParser {
     @Inject(INIT_FORM_VALUES) initFormValues,
     @Inject(PARSER_OPTIONS) parserOptions: ParserOptions,
     protected separator: string,
-    protected placeholders: string[]) {
+    protected firstPlaceholder: string = 'form.last-name',
+    protected secondPlaceholder: string = 'form.first-name') {
     super(submissionId, configData, initFormValues, parserOptions);
     this.separator = separator;
   }
@@ -76,13 +73,13 @@ export class ClarinNameFieldParser extends FieldParser {
       input1ModelConfig.required = true;
     }
 
-    // if (isNotEmpty(this.firstPlaceholder)) {
-    //   input1ModelConfig.placeholder = this.firstPlaceholder;
-    // }
-    //
-    // if (isNotEmpty(this.secondPlaceholder)) {
-    //   input2ModelConfig.placeholder = this.secondPlaceholder;
-    // }
+    if (isNotEmpty(this.firstPlaceholder)) {
+      input1ModelConfig.placeholder = this.firstPlaceholder;
+    }
+
+    if (isNotEmpty(this.secondPlaceholder)) {
+      input2ModelConfig.placeholder = this.secondPlaceholder;
+    }
 
     // Split placeholder if is like 'placeholder1/placeholder2'
     const placeholder = this.configData.label.split('/');

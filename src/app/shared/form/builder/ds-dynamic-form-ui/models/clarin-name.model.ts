@@ -1,21 +1,15 @@
-import { DsDynamicInputModel, DsDynamicInputModelConfig } from '../ds-dynamic-input.model';
-import { AUTOCOMPLETE_OFF, DynamicFormControlLayout, serializable } from '@ng-dynamic-forms/core';
-import { VocabularyOptions } from '../../../../../../core/submission/vocabularies/models/vocabulary-options.model';
-import {hasNoValue, isEmpty, isNotEmpty} from '../../../../../empty.util';
-import {DynamicConcatModel, DynamicConcatModelConfig} from '../ds-dynamic-concat.model';
-import {DynamicComplexModelConfig} from '../ds-dynamic-complex.model';
-import {FormFieldMetadataValueObject} from '../../../models/form-field-metadata-value.model';
-import {RelationshipOptions} from '../../../models/relationship-options.model';
-import {MetadataValue} from '../../../../../../core/shared/metadata.models';
-import {Subject} from 'rxjs';
-
-export const DYNAMIC_FORM_CONTROL_TYPE_CLARIN_NAME = 'CLARIN-NAME';
+import { Subject } from 'rxjs';
+import { DynamicConcatModel, DynamicConcatModelConfig } from './ds-dynamic-concat.model';
+import { DynamicFormControlLayout, serializable } from '@ng-dynamic-forms/core';
+import { RelationshipOptions } from '../../models/relationship-options.model';
+import { MetadataValue } from '../../../../../core/shared/metadata.models';
+import { DsDynamicInputModel } from './ds-dynamic-input.model';
+import { FormFieldMetadataValueObject } from '../../models/form-field-metadata-value.model';
+import { hasNoValue, isNotEmpty } from '../../../../empty.util';
 
 export const CLARIN_NAME_GROUP_SUFFIX = '_CLARIN_NAME_GROUP';
 export const CLARIN_NAME_FIRST_INPUT_SUFFIX = '_CLARIN_NAME_FIRST_INPUT';
 export const CLARIN_NAME_SECOND_INPUT_SUFFIX = '_CLARIN_NAME_SECOND_INPUT';
-
-export const SEPARATOR = ';';
 
 /**
  * Configuration for the DsDynamicSponsorAutocompleteModel.
@@ -36,8 +30,6 @@ export class DynamicClarinNameModel extends DynamicConcatModel {
   @serializable() submissionId: string;
   @serializable() hasSelectableMetadata: boolean;
   @serializable() metadataValue: MetadataValue;
-
-  // @serializable() readonly type: string = DYNAMIC_FORM_CONTROL_TYPE_CLARIN_NAME;
 
   isCustomGroup = true;
   valueUpdates: Subject<string>;
@@ -79,9 +71,9 @@ export class DynamicClarinNameModel extends DynamicConcatModel {
     let tempValue: string;
 
     if (typeof value === 'string') {
-      tempValue = value.replace(/\s/g, '');
+      tempValue = value;
     } else {
-      tempValue = value.value.replace(/\s/g, '');
+      tempValue = value.value;
     }
     if (hasNoValue(tempValue)) {
       tempValue = '';
