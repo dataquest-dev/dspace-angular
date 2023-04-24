@@ -10,6 +10,7 @@ import { hasNoValue, isNotEmpty } from '../../../../empty.util';
 export const CLARIN_NAME_GROUP_SUFFIX = '_CLARIN_NAME_GROUP';
 export const CLARIN_NAME_FIRST_INPUT_SUFFIX = '_CLARIN_NAME_FIRST_INPUT';
 export const CLARIN_NAME_SECOND_INPUT_SUFFIX = '_CLARIN_NAME_SECOND_INPUT';
+export const AUTHOR_METADATA_FIELD_NAME = 'dc.contributor.author';
 
 /**
  * Configuration for the DsDynamicSponsorAutocompleteModel.
