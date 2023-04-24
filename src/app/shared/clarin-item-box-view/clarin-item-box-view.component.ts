@@ -245,7 +245,9 @@ export class ClarinItemBoxViewComponent implements OnInit {
           this.licenseLabelIcons.push(extendedCll?.icon);
         });
         this.licenseLabelIcons.push(clarinLicense?.clarinLicenseLabel?.icon);
+        console.log('view, this.licenseLabelIcons', this.licenseLabelIcons);
       });
+
   }
 
   secureImageData(imageByteArray) {

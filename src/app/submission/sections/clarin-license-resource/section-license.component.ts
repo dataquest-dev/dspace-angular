@@ -34,6 +34,8 @@ import { ItemDataService } from '../../../core/data/item-data.service';
 import { Item } from '../../../core/shared/item.model';
 import { MetadataValue } from '../../../core/shared/metadata.models';
 import { TranslateService } from '@ngx-translate/core';
+import { secureImageData } from 'src/app/shared/clarin-shared-util';
+import {DomSanitizer} from '@angular/platform-browser';
 
 /**
  * This component render resource license step in the submission workflow.
@@ -87,6 +89,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   licenses4Selector: License4Selector[] = [];
 
   /**
+   * Current License Label icon as byte array.
+   */
+  licenseLabelIcons: any[] = [];
+
+  /**
    * The form id
    * @type {string}
    */
@@ -134,6 +141,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * @param {string} injectedCollectionId
    * @param {SectionDataObject} injectedSectionData
    * @param {string} injectedSubmissionId
+   * @param sanitizer
    */
   constructor(protected changeDetectorRef: ChangeDetectorRef,
               protected clarinLicenseService: ClarinLicenseDataService,
@@ -149,7 +157,8 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
               protected sectionService: SectionsService,
               @Inject('collectionIdProvider') public injectedCollectionId: string,
               @Inject('sectionDataProvider') public injectedSectionData: SectionDataObject,
-              @Inject('submissionIdProvider') public injectedSubmissionId: string) {
+              @Inject('submissionIdProvider') public injectedSubmissionId: string,
+              private sanitizer: DomSanitizer) {
     super(injectedCollectionId, injectedSectionData, injectedSubmissionId);
   }
 
@@ -488,16 +497,31 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Map licenses from `license-definitions.json` to the object list.
    */
   private async loadLicenses4Selector(): Promise<any> {
+    const licenseLabelsDist: any = {};
+
     await this.loadAllClarinLicenses()
       .then((clarinLicenseList: ClarinLicense[]) => {
         clarinLicenseList?.forEach(clarinLicense => {
+          // console.log('clarinLicenseList', clarinLicenseList);
           const license4Selector = new License4Selector();
           license4Selector.id = clarinLicense.id;
           license4Selector.name = clarinLicense.name;
           license4Selector.url = clarinLicense.definition;
           this.licenses4Selector.push(license4Selector);
+
+          // Load Clarin License labels
+          clarinLicense.extendedClarinLicenseLabels.forEach(extendedCll => {
+            licenseLabelsDist[extendedCll?.id] = extendedCll?.icon;
+          });
+          licenseLabelsDist[clarinLicense?.id] = clarinLicense?.clarinLicenseLabel?.icon;
         });
       });
+
+    // Get icons from the license labels and push them to the list.
+    Object.keys(licenseLabelsDist).forEach(key => {
+      this.licenseLabelIcons.push(licenseLabelsDist[key]);
+    });
+    console.log('this.licenseLabelIcons', this.licenseLabelIcons);
   }
 
   private loadAllClarinLicenses(): Promise<any> {
@@ -508,5 +532,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     return this.clarinLicenseService.findAll(options, false)
       .pipe(getFirstSucceededRemoteListPayload())
       .toPromise();
+  }
+
+  secureImageData() {
+    // console.log('licenseId', this.licenseLabelIcons[78]);
+    // console.log('licenseId', secureImageData(this.sanitizer, this.licenseLabelIcons[licenseId]));
+    return secureImageData(this.sanitizer, 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABEBJREFUeNrsW4uRmzAQxdcA1wHuAHdgd+B04HTgSQWkA9KBS6AE7ApwB76rwHYFRI+BC8NIuyshfufszE7uLkKw/5+0CoaFSOFO4abGdY0UXBU+FJ7rn4GfwYIgVpgqvCksPWFR7xnNmfCDwtwj0SbM63fNBvaepS3F29SMiEaSuEQj4inU/T4D4tuYuBCyslwfKvyj8Kf4gTAMdrtdsNlsqn/X63WFOvj4+Kjwer0G5/O5wufzafN9iBw/FD6HkHpYe2ORRA6HQ5llWdkXsAf2svQN8STEK2mXSZKU9/u99A3YE3vjHQIm3H0yQUT8fr8vb7dbOTSAEUKN8MIElnhIxIeq20Ke5xJt6M0EMszFcTyK1CltwDcIfELoQnzKET+ErbuAwCRyl+xuEcRbMCGxsfv7koi3YELcS/WjKJot8Q0wPoE1hYjiYFEU5dwBAmKiw8HJ6yMJWQogRDJRwU76UKulAeMPtFpwMj0Aji4NkJ8QppDrPL928Xa7LZcKMFtCC6Juff9tpN/WAoIBxzYDsr62D++bpmmlMbrwiWJJWjOA6bBhPKfTSEhWmoITvqBoM0C76HQ6iV6CdcIytWKqKZyCiToG9olMYDqxR1UjbE0LJEmPZbPiq4LsMgG/S5nYbbxwQDyPlL/KkZ2cH1TetYcHYhs1BqN16i7F4/FIfifMj6oPMhf1YhxM9VLsgY8zSRZrAFhDpd/YB0iZB+UTiGhQhUNtw4NzWCbV16l3t25vt86ANuoNf9PVVC5SEZlhEbjm/Sapmhxno+bdnmGXoLbkKYlKCBdqq/4/KABzXJ6z0ST4F59g+t43l1bR4/HQ/l1JxXovzAF0gDnCGPAWzBTe399fmwEmLXsZBowFbz7V83K5kJLT2btpL8wFXXyHC3gNg1QChdCF8NYOlaZskuo/NnEdEURSFHFh0HsipIvP3WwMBOId1MfpEiFdzYB1VN3CJUKDpsJAU57f5PBUQYVnsQ77UEynNIGoWXJjMSTpBTAdF7YsbqTGtK9Y5Mp2gsHJJOWwbrjiWg5LehbEvnsvDRGomPTjKXsFE6QNEZiGpBag0vZ2X3DwlpjUY3MtMfgWqWBsWmLfsinKTInS/23x7zwYYaRfmM74Wjcn5gpUm40akL70cJTUgqWYgqDDzJ4vTm36+Qs7IFH8PyIjhO0rH5JqIHGd8Y1t84L0OXdtlmTceGtKxwgBCA5KFq4HJcXnhBFzxzYJ4VxynPPC7Q7PGDFeIPVpTow3tcMQjADhFmcHBrszkEkbFc0csM9hajwLVbccnVvZ/MqBEYgOv61uV0XR17UZIFrh3dFX+7pMc2Xm89P6viSu8/waY56wDaa5KkfZ+37soUrIHakfCdM+Yc4HRDa+wSNmwcyu0kZUU8Wjqp+Cmd8hDuuSM/Ms7cMQqr4ayWHugn/X57mTD5iKYsJ6rX++DPlxfwUYAPZR72BU5Ev2AAAAAElFTkSuQmCC');
   }
 }

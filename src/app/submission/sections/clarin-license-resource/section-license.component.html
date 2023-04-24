@@ -43,16 +43,20 @@
     </div>
     <div class="col-md-12">
       <div class="form-group">
-        <select #licenseSelection [(ngModel)]="selectedLicenseFromOptionId" (change)="selectLicense()"
+        <div class="d-inline">
+          <img [src]="secureImageData()" alt="" width="24px">
+        </div>
+        <mat-select #licenseSelection [(ngModel)]="selectedLicenseFromOptionId" (change)="selectLicense()"
                 id="aspect_submission_StepTransformer_field_license"
                 class="form-control" name="license" tabindex="-1" title="">
-          <option [value]="'0'" selected="selected">
+          <mat-option [value]="'0'" selected="selected">
             {{'submission.sections.clarin-license.head.license-select-default-value' | translate}}
-          </option>
-          <option *ngFor="let license of licenses4Selector" [value]="license.id" id="license_option">
-            {{license.name}}
-          </option>
-        </select>
+          </mat-option>
+
+          <mat-option *ngFor="let license of licenses4Selector" [value]="license.id" id="license_option" data-img="https://data.world/api/datadotworld-apps/dataset/python/file/raw/logo.png">
+            <span>{{license.name}}</span>
+          </mat-option>
+        </mat-select>
       </div>
     </div>
     <div class="col-md-12">
