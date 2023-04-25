@@ -95,7 +95,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   /**
    * Licenses loaded from the license-definitions.json and mapped to the object list.
    */
-  licenses4Selector: License4Selector[] = [];
+  licenses4Selector$: Observable<any>;
 
   /**
    * Current License Label icon as byte array.
@@ -463,7 +463,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   private getLicenseNameById(selectionLicenseId) {
     let licenseName = '';
-    this.licenses4Selector.forEach(license4Selector => {
+    this.licenses4Selector$.forEach(license4Selector => {
       if (String(license4Selector.id) === selectionLicenseId) {
         licenseName = license4Selector.name;
         return;
@@ -477,7 +477,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   private getLicenseIdByName(selectionLicenseName) {
     let licenseId = -1;
-    this.licenses4Selector.forEach(license4Selector => {
+    this.licenses4Selector$.forEach(license4Selector => {
       if (license4Selector.name === selectionLicenseName) {
         licenseId = license4Selector.id;
         return;
@@ -528,31 +528,32 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Map licenses from `license-definitions.json` to the object list.
    */
   private async loadLicenses4Selector(): Promise<any> {
-    const licenseLabelsDist: any = {};
-
+    // Show PUB licenses as first.
+    const pubLicense4SelectorArray = [];
+    // Then show ACA and RES licenses.
+    const acaResLicense4SelectorArray = [];
     await this.loadAllClarinLicenses()
       .then((clarinLicenseList: ClarinLicense[]) => {
         clarinLicenseList?.forEach(clarinLicense => {
-          // console.log('clarinLicenseList', clarinLicenseList);
           const license4Selector = new License4Selector();
           license4Selector.id = clarinLicense.id;
           license4Selector.name = clarinLicense.name;
           license4Selector.url = clarinLicense.definition;
-          this.licenses4Selector.push(license4Selector);
-
-          // Load Clarin License labels
-          clarinLicense.extendedClarinLicenseLabels.forEach(extendedCll => {
-            licenseLabelsDist[extendedCll?.id] = extendedCll?.icon;
-          });
-          licenseLabelsDist[clarinLicense?.id] = clarinLicense?.clarinLicenseLabel?.icon;
+          license4Selector.licenseLabel = clarinLicense?.clarinLicenseLabel?.label;
+          if (license4Selector.licenseLabel === 'PUB') {
+            pubLicense4SelectorArray.push(license4Selector);
+          } else {
+            acaResLicense4SelectorArray.push(license4Selector);
+          }
         });
       });
 
-    // Get icons from the license labels and push them to the list.
-    Object.keys(licenseLabelsDist).forEach(key => {
-      this.licenseLabelIcons.push(licenseLabelsDist[key]);
-    });
-    console.log('this.licenseLabelIcons', this.licenseLabelIcons);
+    // Sort acaResLicense4SelectorArray by the license label (ACA, RES)
+    acaResLicense4SelectorArray.sort((a, b) => a.licenseLabel.localeCompare(b.licenseLabel));
+
+    // Concat two array into one.
+    const license4SelectorArray = pubLicense4SelectorArray.concat(acaResLicense4SelectorArray);
+    this.licenses4Selector$ = of(license4SelectorArray);
   }
 
   private loadAllClarinLicenses(): Promise<any> {
