@@ -50,6 +50,7 @@
               "src/styles/startup.scss",
               "src/aai/discojuice/discojuice.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@ng-select/ng-select/themes/default.theme.css",
               {
                 "input": "src/styles/base-theme.scss",
                 "inject": false,

@@ -45,7 +45,8 @@ import { SubmissionSectionAccessesComponent } from './sections/accesses/section-
 import { SubmissionAccessesConfigService } from '../core/config/submission-accesses-config.service';
 import { SectionAccessesService } from './sections/accesses/section-accesses.service';
 import {SubmissionSectionClarinLicenseDistributionComponent} from './sections/clarin-license-distribution/clarin-license-distribution.component';
-import {MatSelectModule} from '@angular/material/select';
+import {NgSelectModule} from '@ng-select/ng-select';
+import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -84,20 +85,21 @@ const DECLARATIONS = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        CoreModule.forRoot(),
-        SharedModule,
-        StoreModule.forFeature('submission', submissionReducers, storeModuleConfig as StoreConfig<SubmissionState, Action>),
-        EffectsModule.forFeature(submissionEffects),
-        JournalEntitiesModule.withEntryComponents(),
-        ResearchEntitiesModule.withEntryComponents(),
-        FormModule,
-        NgbAccordionModule,
-        NgbModalModule,
-        NgToggleModule,
-        MatSelectModule
-    ],
+  imports: [
+    CommonModule,
+    CoreModule.forRoot(),
+    SharedModule,
+    StoreModule.forFeature('submission', submissionReducers, storeModuleConfig as StoreConfig<SubmissionState, Action>),
+    EffectsModule.forFeature(submissionEffects),
+    JournalEntitiesModule.withEntryComponents(),
+    ResearchEntitiesModule.withEntryComponents(),
+    FormModule,
+    NgbAccordionModule,
+    NgbModalModule,
+    NgToggleModule,
+    NgSelectModule,
+    NgOptionHighlightModule
+  ],
   declarations: DECLARATIONS,
   exports: DECLARATIONS,
   providers: [

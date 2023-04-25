@@ -53,6 +53,15 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   @ViewChild('licenseSelection') licenseSelectionRef;
 
+  selectedCar: number;
+
+  cars = [
+    { id: 1, name: 'Volvo' },
+    { id: 2, name: 'Saab' },
+    { id: 3, name: 'Opel' },
+    { id: 4, name: 'Audi' },
+  ];
+
   /**
    * Sometimes do not show validation errors e.g. on Init.
    */
@@ -122,6 +131,27 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * @type {Array}
    */
   protected subs: Subscription[] = [];
+
+  cities = [
+    {
+      id: 1,
+      name: 'Vilnius',
+      avatar: '//www.gravatar.com/avatar/b0d8c6e5ea589e6fc3d3e08afb1873bb?d=retro&r=g&s=30 2x'
+    },
+    { id: 2, name: 'Kaunas', avatar: '//www.gravatar.com/avatar/ddac2aa63ce82315b513be9dc93336e5?d=retro&r=g&s=15' },
+    {
+      id: 3,
+      name: 'Pavilnys',
+      avatar: '//www.gravatar.com/avatar/6acb7abf486516ab7fb0a6efa372042b?d=retro&r=g&s=15'
+    },
+    {
+      id: 4,
+      name: 'Siauliai',
+      avatar: '//www.gravatar.com/avatar/b0d8c6e5ea589e6fc3d3e08afb1873bb?d=retro&r=g&s=30 2x'
+    },
+  ];
+
+  selectedCity = this.cities[2].name;
 
   /**
    * Initialize instance variables
@@ -492,6 +522,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     }
     return '';
   }
+
 
   /**
    * Map licenses from `license-definitions.json` to the object list.
