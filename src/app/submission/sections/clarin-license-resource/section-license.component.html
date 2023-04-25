@@ -1,3 +1,4 @@
+<span id="secret-selected-license-from-license-selector" style="display: none" #licenseSelection></span>
 <button id="secret-change-button" type="button" (click)="changeLicenseNameFromRef()" style="display: none">
 </button>
 <div class="container">
@@ -52,6 +53,7 @@
 
         <ng-select [items]="(licenses4Selector$ | async)"
                    [(ngModel)]="selectedLicenseFromOptionId"
+                   (change)="selectLicense()"
                    bindLabel="name"
                    bindValue="id"
                    id="aspect_submission_StepTransformer_field_license">

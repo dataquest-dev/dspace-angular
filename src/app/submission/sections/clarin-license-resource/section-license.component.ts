@@ -16,7 +16,7 @@ import { Operation } from 'fast-json-patch';
 import { ClarinLicenseDataService } from '../../../core/data/clarin/clarin-license-data.service';
 import { ClarinLicense } from '../../../core/shared/clarin/clarin-license.model';
 import { getFirstCompletedRemoteData, getFirstSucceededRemoteListPayload } from '../../../core/shared/operators';
-import { distinctUntilChanged, filter, find } from 'rxjs/operators';
+import {distinctUntilChanged, filter, find, take} from 'rxjs/operators';
 import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
 import { WorkspaceitemDataService } from '../../../core/submission/workspaceitem-data.service';
@@ -271,7 +271,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Dispatch form operations based on changes.
    */
   async changeLicenseNameFromRef() {
+    // Set up default value.
+    this.selectedLicenseName = '';
     this.selectedLicenseName = this.getLicenseNameFromRef();
+    console.log('this.selectedLicenseName', this.selectedLicenseName);
+    // this.selectedLicenseName = 'The MIT License';
     await this.maintainLicenseSelection();
   }
 
@@ -415,7 +419,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
           this.couldShowValidationErrors = true;
         }
         this.unsupportedLicenseMsgHidden.next(isSupported);
-
+        console.log('isSupported', isSupported);
         let selectedLicenseName = '';
         if (isSupported) {
           selectedLicenseName = this.selectedLicenseName;
@@ -463,11 +467,15 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   private getLicenseNameById(selectionLicenseId) {
     let licenseName = '';
-    this.licenses4Selector$.forEach(license4Selector => {
-      if (String(license4Selector.id) === selectionLicenseId) {
-        licenseName = license4Selector.name;
-        return;
-      }
+    this.licenses4Selector$
+      .pipe(take(1))
+      .subscribe((license4SelectorArray: License4Selector[]) => {
+      license4SelectorArray.forEach(license4Selector => {
+        if (license4Selector.id === selectionLicenseId) {
+          licenseName = license4Selector.name;
+          return;
+        }
+      });
     });
     return licenseName;
   }
@@ -477,12 +485,16 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   private getLicenseIdByName(selectionLicenseName) {
     let licenseId = -1;
-    this.licenses4Selector$.forEach(license4Selector => {
-      if (license4Selector.name === selectionLicenseName) {
-        licenseId = license4Selector.id;
-        return;
-      }
-    });
+    this.licenses4Selector$
+      .pipe(take(1))
+      .subscribe((licenses4SelectorArray: License4Selector[]) => {
+        licenses4SelectorArray.forEach(license4Selector => {
+          if (license4Selector.name === selectionLicenseName) {
+            licenseId = license4Selector.id;
+            return;
+          }
+        });
+      });
     return licenseId;
   }
 
@@ -502,7 +514,13 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     if (isUndefined(this.licenseSelectionRef)) {
       return;
     }
+
+    // Get ID of selected license from the license selector.
     selectedLicenseId = this.licenseSelectionRef.nativeElement.value;
+    if (isUndefined(selectedLicenseId)) {
+      return '';
+    }
+
     let selectedLicense = false;
     selectedLicense = selectedLicenseId.trim().length !== 0;
 
@@ -512,12 +530,22 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
         return;
       }
       let licenseLabel: string;
-      const options = this.licenseSelectionRef.nativeElement.children;
-      for (const item of options) {
-        if (item.value === selectedLicenseId) {
-          licenseLabel = item.label;
-        }
-      }
+
+      // Compare the ID of the selected license with loaded licenses from BE.
+      this.licenses4Selector$
+        .pipe(take(1))
+        .subscribe((license4SelectorArray: License4Selector[]) => {
+          license4SelectorArray.forEach(license4Selector => {
+            if (license4Selector.id === Number(selectedLicenseId)) {
+              licenseLabel = license4Selector.name;
+            }
+          });
+        });
+
+      // Reset selected value from license selector. Because if the user had chosen some clarin license,
+      // and then he select unsupported license the id of previous selected value is still remembered in the helper span
+      // with the id `secret-selected-license-from-license-selector`.
+      this.licenseSelectionRef.nativeElement.value = '';
       return licenseLabel;
     }
     return '';
