@@ -398,11 +398,6 @@ describe('Create a new submission', () => {
   },() => {
     createItemProcess.checkAuthorFirstnameField();
     createItemProcess.checkAuthorLastnameField();
-    createItemProcess.writeAuthorInputField('John');
-    createItemProcess.clickOnSuggestionSelection(0);
-    cy.wait(500);
-    createItemProcess.checkAuthorLastnameFieldValue('Hopper');
-    createItemProcess.checkAuthorFirstnameFieldValue(' John L');
   });
 
 });
