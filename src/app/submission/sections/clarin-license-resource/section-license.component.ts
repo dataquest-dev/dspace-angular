@@ -34,8 +34,7 @@ import { ItemDataService } from '../../../core/data/item-data.service';
 import { Item } from '../../../core/shared/item.model';
 import { MetadataValue } from '../../../core/shared/metadata.models';
 import { TranslateService } from '@ngx-translate/core';
-import { secureImageData } from 'src/app/shared/clarin-shared-util';
-import {DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
 /**
  * This component render resource license step in the submission workflow.
@@ -52,15 +51,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * The license selection dropdown reference.
    */
   @ViewChild('licenseSelection') licenseSelectionRef;
-
-  selectedCar: number;
-
-  cars = [
-    { id: 1, name: 'Volvo' },
-    { id: 2, name: 'Saab' },
-    { id: 3, name: 'Opel' },
-    { id: 4, name: 'Audi' },
-  ];
 
   /**
    * Sometimes do not show validation errors e.g. on Init.
@@ -96,11 +86,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Licenses loaded from the license-definitions.json and mapped to the object list.
    */
   licenses4Selector$: Observable<any>;
-
-  /**
-   * Current License Label icon as byte array.
-   */
-  licenseLabelIcons: any[] = [];
 
   /**
    * The form id

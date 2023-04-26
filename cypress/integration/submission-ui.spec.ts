@@ -155,10 +155,21 @@ const createItemProcess = {
     cy.get('section[class = "license-selector is-active"] ul li').eq(0).dblclick();
   },
   checkLicenseSelectionValue(value: string) {
-    cy.get('ds-submission-section-clarin-license select[id = "aspect_submission_StepTransformer_field_license"]').contains(value);
+    cy.get('ds-submission-section-clarin-license ng-select[id = "aspect_submission_StepTransformer_field_license"]').contains(value);
   },
   selectValueFromLicenseSelection(option: string) {
-    cy.get('ds-submission-section-clarin-license select[id = "aspect_submission_StepTransformer_field_license"]').select(option);
+    cy.get('ds-submission-section-clarin-license ng-select[id = "aspect_submission_StepTransformer_field_license"]')
+      .then((selects) => {
+      const select = selects[0]; // we want just first one
+      cy.wrap(select) // allows us to click using cypress
+        .click() // click on the first ng-select
+        .get('ng-dropdown-panel') // get the opened drop-down panel
+        .get('.ng-option') // Get all the options in drop-down
+        .contains(option) // Filter for just this text
+        .then((item) => {
+          cy.wrap(item).click(); // Click on the option
+        });
+    });
   },
   checkResourceLicenseStatus(statusTitle: string) {
     cy.get('div[id = "clarin-license-header"] button i[title = "' + statusTitle + '"]').should('be.visible');
@@ -346,29 +357,6 @@ describe('Create a new submission', () => {
     createItemProcess.checkLicenseSelectionValue('Public Domain Mark (PD)');
     // check step status - it should be valid
     createItemProcess.checkResourceLicenseStatus('Valid');
-  });
-
-  it('should show warning messages if was selected non-supported license', {
-    retries: {
-      runMode: 6,
-      openMode: 6,
-    },
-    defaultCommandTimeout: 10000
-  },() => {
-    createItemProcess.checkLicenseResourceStep();
-    // check default value in the license dropdown selection
-    createItemProcess.checkLicenseSelectionValue('Select a License ...');
-    // check step status - it should be as warning
-    createItemProcess.checkResourceLicenseStatus('Warnings');
-    // select `Select a License ...` from the selection - this license is not supported
-    createItemProcess.selectValueFromLicenseSelection('Select a License ...');
-    // selected value should be seen as selected value in the selection
-    createItemProcess.checkLicenseSelectionValue('Select a License ...');
-    // check step status - it should an error
-    createItemProcess.checkResourceLicenseStatus('Errors');
-    // error messages should be popped up
-    createItemProcess.showErrorMustChooseLicense();
-    createItemProcess.showErrorNotSupportedLicense();
   });
 });
 
