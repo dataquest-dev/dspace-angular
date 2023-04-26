@@ -228,7 +228,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
             const dcRightsMetadata = item.metadata['dc.rights'];
             if (isUndefined(dcRightsMetadata)) {
               // '0' is a magic constant for a default message `Select a license ...`
-              this.selectedLicenseFromOptionId = '0';
+              this.selectedLicenseFromOptionId = null;
               return;
             }
             this.initializeLicenseFromMetadata(dcRightsMetadata);
@@ -279,7 +279,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       this.selectedLicenseFromOptionId = this.getLicenseIdByName(this.selectedLicenseName);
     } else {
       // 0 option is default value.
-      this.selectedLicenseFromOptionId = 0;
+      this.selectedLicenseFromOptionId = null;
     }
   }
 
@@ -487,7 +487,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * From the license object list get whole object by the Id.
    */
   private getLicenseIdByName(selectionLicenseName) {
-    let licenseId = -1;
+    let licenseId = null;
     this.licenses4Selector$
       .pipe(take(1))
       .subscribe((licenses4SelectorArray: License4Selector[]) => {

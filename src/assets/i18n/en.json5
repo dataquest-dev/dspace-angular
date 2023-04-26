@@ -4405,6 +4405,8 @@
 
   "submission.sections.clarin-license.head.license-dropdown-info": "If you already know under which license you want to distribute your work, please select from the dropdown below.",
 
+  "submission.sections.clarin-license.head.license-dropdown-placeholder": "Select a License",
+
   "submission.sections.clarin-license.head.license-not-supported-message": "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\".",
 
   "submission.sections.clarin-license.head.license-select-default-value": "Select a License ...",
@@ -4426,6 +4428,7 @@
   "submission.sections.clarin-license.toggle.off-text": "Click to accept",
 
   "submission.sections.clarin-license.toggle.on-text": "Accepted",
+
 
 
 

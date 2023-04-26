@@ -44,48 +44,21 @@
     </div>
     <div class="col-md-12">
       <div class="form-group">
-
-        <!-- working -->
-<!--        <ng-select [(ngModel)]="selectedLicenseFromOptionId"-->
-<!--                   (change)="selectLicense()" bindLabel="name" bindValue="id">-->
-<!--          <ng-option *ngFor="let car of licenses4Selector" [value]="car.id">{{car.name}}</ng-option>-->
-<!--        </ng-select>-->
-
         <ng-select [items]="(licenses4Selector$ | async)"
                    [(ngModel)]="selectedLicenseFromOptionId"
                    (change)="selectLicense()"
+                   [placeholder]="'submission.sections.clarin-license.head.license-select-default-value' | translate"
                    bindLabel="name"
                    bindValue="id"
                    id="aspect_submission_StepTransformer_field_license">
           <ng-template ng-label-tmp let-item="item">
             <b>{{item.name}}</b>
           </ng-template>
-
           <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm" id="license_option">
             <span [class]="'label label-' + item.licenseLabel">{{item.licenseLabel}}</span>
             <b [ngOptionHighlight]="search">{{item.name}}</b>
           </ng-template>
         </ng-select>
-
-<!-- OLD -->
-
-<!--        <div class="d-inline">-->
-<!--          <img [src]="secureImageData()" alt="" width="24px">-->
-<!--        </div>-->
-<!--        <select #licenseSelection [(ngModel)]="selectedLicenseFromOptionId" (change)="selectLicense()"-->
-<!--                id="aspect_submission_StepTransformer_field_license"-->
-<!--                class="form-control" name="license" tabindex="-1" title="">-->
-<!--          <option [value]="'0'" selected="selected">-->
-<!--            {{'submission.sections.clarin-license.head.license-select-default-value' | translate}}-->
-<!--          </option>-->
-
-<!--          <option *ngFor="let license of licenses4Selector" [value]="license.id" id="license_option">-->
-<!--            <span>{{license.name}}</span>-->
-<!--          </option>-->
-<!--        </select>-->
-
-
-
       </div>
     </div>
     <div class="col-md-12">
