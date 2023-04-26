@@ -16,7 +16,7 @@ import { Operation } from 'fast-json-patch';
 import { ClarinLicenseDataService } from '../../../core/data/clarin/clarin-license-data.service';
 import { ClarinLicense } from '../../../core/shared/clarin/clarin-license.model';
 import { getFirstCompletedRemoteData, getFirstSucceededRemoteListPayload } from '../../../core/shared/operators';
-import {distinctUntilChanged, filter, find, take} from 'rxjs/operators';
+import { distinctUntilChanged, filter, find, take } from 'rxjs/operators';
 import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
 import { WorkspaceitemDataService } from '../../../core/submission/workspaceitem-data.service';
@@ -263,7 +263,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     if (this.unsupportedLicenseMsgHidden.value) {
       this.selectedLicenseFromOptionId = this.getLicenseIdByName(this.selectedLicenseName);
     } else {
-      // 0 option is default value.
+      // Set to default value - it shows placeholder.
       this.selectedLicenseFromOptionId = null;
     }
   }
@@ -459,10 +459,10 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       .pipe(take(1))
       .subscribe((license4SelectorArray: License4Selector[]) => {
       license4SelectorArray.forEach(license4Selector => {
-        if (license4Selector.id === selectionLicenseId) {
-          licenseName = license4Selector.name;
+        if (license4Selector.id !== selectionLicenseId) {
           return;
         }
+        licenseName = license4Selector.name;
       });
     });
     return licenseName;
@@ -477,10 +477,10 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       .pipe(take(1))
       .subscribe((licenses4SelectorArray: License4Selector[]) => {
         licenses4SelectorArray.forEach(license4Selector => {
-          if (license4Selector.name === selectionLicenseName) {
-            licenseId = license4Selector.id;
+          if (license4Selector.name !== selectionLicenseName) {
             return;
           }
+          licenseId = license4Selector.id;
         });
       });
     return licenseId;
@@ -500,7 +500,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   private getLicenseNameFromRef() {
     let selectedLicenseId: string;
     if (isUndefined(this.licenseSelectionRef)) {
-      return;
+      return '';
     }
 
     // Get ID of selected license from the license selector.
@@ -524,9 +524,10 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
         .pipe(take(1))
         .subscribe((license4SelectorArray: License4Selector[]) => {
           license4SelectorArray.forEach(license4Selector => {
-            if (license4Selector.id === Number(selectedLicenseId)) {
-              licenseLabel = license4Selector.name;
+            if (license4Selector.id !== Number(selectedLicenseId)) {
+              return;
             }
+            licenseLabel = license4Selector.name;
           });
         });
 

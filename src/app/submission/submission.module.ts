@@ -45,8 +45,8 @@ import { SubmissionSectionAccessesComponent } from './sections/accesses/section-
 import { SubmissionAccessesConfigService } from '../core/config/submission-accesses-config.service';
 import { SectionAccessesService } from './sections/accesses/section-accesses.service';
 import {SubmissionSectionClarinLicenseDistributionComponent} from './sections/clarin-license-distribution/clarin-license-distribution.component';
-import {NgSelectModule} from '@ng-select/ng-select';
-import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
