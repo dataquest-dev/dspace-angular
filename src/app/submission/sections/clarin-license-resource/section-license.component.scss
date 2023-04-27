@@ -72,6 +72,12 @@
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }
+
+.scrollable-menu {
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
+}
 //
 //select#gender option[value="male"]   { background-image:url(male.png);   }
 //select#gender option[value="female"] { background-image:url(male.png); }
