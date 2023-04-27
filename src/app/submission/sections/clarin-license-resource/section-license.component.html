@@ -43,14 +43,55 @@
     </div>
     <div class="col-md-12">
       <div class="form-group">
+        <div class="dropdown">
+<!--          <input type="text" class="form-control"-->
+<!--                  id="dropdownMenuButton"-->
+<!--                  data-toggle="dropdown"-->
+<!--                  aria-haspopup="true"-->
+<!--                  [value]="'here'"-->
+<!--                  aria-expanded="false">-->
+
+          <div class="input-group mb-3"
+               id="dropdownMenuButton"
+               data-toggle="dropdown"
+               aria-haspopup="true"
+               aria-expanded="false">
+            <input type="text"
+                   class="custom-select clarin-select-input"
+                   [placeholder]="'submission.sections.clarin-license.head.license-select-default-value' | translate"
+                   [value]=""/>
+          </div>
+
+          <ul class="dropdown-menu"
+              aria-labelledby="dropdownMenuButton">
+            <li class="dropdown-item">
+              <img src=
+                     "https://media.geeksforgeeks.org/wp-content/uploads/20200630132503/iflag.jpg"
+                   width="20" height="15"> India</li>
+            <li class="dropdown-item">
+              <img src=
+                     "https://media.geeksforgeeks.org/wp-content/uploads/20200630132504/uflag.jpg"
+                   width="20" height="15"> USA</li>
+            <li class="dropdown-item">
+              <img src=
+                     "https://media.geeksforgeeks.org/wp-content/uploads/20200630132502/eflag.jpg"
+                   width="20" height="15"> England</li>
+            <li class="dropdown-item">
+              <img src=
+                     "https://media.geeksforgeeks.org/wp-content/uploads/20200630132500/bflag.jpg"
+                   width="20" height="15"> Brazil</li>
+          </ul>
+        </div>
+
         <select #licenseSelection [(ngModel)]="selectedLicenseFromOptionId" (change)="selectLicense()"
                 id="aspect_submission_StepTransformer_field_license"
                 class="form-control" name="license" tabindex="-1" title="">
           <option [value]="'0'" selected="selected">
-            {{'submission.sections.clarin-license.head.license-select-default-value' | translate}}
+            <b>{{'submission.sections.clarin-license.head.license-select-default-value' | translate}}</b>
           </option>
           <option *ngFor="let license of licenses4Selector" [value]="license.id" id="license_option">
-            {{license.name}}
+            <span [class]="'label label-' + license.licenseLabel">{{license.licenseLabel}}</span>
+            <b>{{license.name}}</b>
           </option>
         </select>
       </div>

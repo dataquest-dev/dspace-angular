@@ -488,6 +488,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Map licenses from `license-definitions.json` to the object list.
    */
   private async loadLicenses4Selector(): Promise<any> {
+    // Show PUB licenses as first.
+    const pubLicense4SelectorArray = [];
+    // Then show ACA and RES licenses.
+    const acaResLicense4SelectorArray = [];
+
     await this.loadAllClarinLicenses()
       .then((clarinLicenseList: ClarinLicense[]) => {
         clarinLicenseList?.forEach(clarinLicense => {
@@ -495,9 +500,20 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
           license4Selector.id = clarinLicense.id;
           license4Selector.name = clarinLicense.name;
           license4Selector.url = clarinLicense.definition;
-          this.licenses4Selector.push(license4Selector);
+          license4Selector.licenseLabel = clarinLicense?.clarinLicenseLabel?.label;
+          if (license4Selector.licenseLabel === 'PUB') {
+            pubLicense4SelectorArray.push(license4Selector);
+          } else {
+            acaResLicense4SelectorArray.push(license4Selector);
+          }
         });
       });
+
+    // Sort acaResLicense4SelectorArray by the license label (ACA, RES)
+    acaResLicense4SelectorArray.sort((a, b) => a.licenseLabel.localeCompare(b.licenseLabel));
+
+    // Concat two array into one.
+    this.licenses4Selector = pubLicense4SelectorArray.concat(acaResLicense4SelectorArray);
   }
 
   private loadAllClarinLicenses(): Promise<any> {
