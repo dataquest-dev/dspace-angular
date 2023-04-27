@@ -155,10 +155,13 @@ const createItemProcess = {
     cy.get('section[class = "license-selector is-active"] ul li').eq(0).dblclick();
   },
   checkLicenseSelectionValue(value: string) {
-    cy.get('ds-submission-section-clarin-license select[id = "aspect_submission_StepTransformer_field_license"]').contains(value);
+    cy.get('ds-submission-section-clarin-license input[id = "aspect_submission_StepTransformer_field_license"]').should('have.value', value);
   },
-  selectValueFromLicenseSelection(option: string) {
-    cy.get('ds-submission-section-clarin-license select[id = "aspect_submission_StepTransformer_field_license"]').select(option);
+  selectValueFromLicenseSelection(id: number) {
+    cy.get('ds-submission-section-clarin-license li[value = "' + id + '"]').click();
+  },
+  clickOnLicenseSelectionButton() {
+    cy.get('ds-submission-section-clarin-license input[id = "aspect_submission_StepTransformer_field_license"]').click();
   },
   checkResourceLicenseStatus(statusTitle: string) {
     cy.get('div[id = "clarin-license-header"] button i[title = "' + statusTitle + '"]').should('be.visible');
@@ -340,11 +343,13 @@ describe('Create a new submission', () => {
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
     // check step status - it should be as warning
     createItemProcess.checkResourceLicenseStatus('Warnings');
+    // click on the dropdown button to list options
+    createItemProcess.clickOnLicenseSelectionButton();
     // select `Public Domain Mark (PD)` from the selection
-    createItemProcess.selectValueFromLicenseSelection('Public Domain Mark (PD)');
-    // selected value should be seen as selected value in the selection
-    createItemProcess.checkLicenseSelectionValue('Public Domain Mark (PD)');
-    // check step status - it should be valid
+    createItemProcess.selectValueFromLicenseSelection(2);
+    // // selected value should be seen as selected value in the selection
+    createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
+    // // check step status - it should be valid
     createItemProcess.checkResourceLicenseStatus('Valid');
   });
 
@@ -360,8 +365,10 @@ describe('Create a new submission', () => {
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
     // check step status - it should be as warning
     createItemProcess.checkResourceLicenseStatus('Warnings');
+    // click on the dropdown button to list options
+    createItemProcess.clickOnLicenseSelectionButton();
     // select `Select a License ...` from the selection - this license is not supported
-    createItemProcess.selectValueFromLicenseSelection('Select a License ...');
+    createItemProcess.selectValueFromLicenseSelection(0);
     // selected value should be seen as selected value in the selection
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
     // check step status - it should an error

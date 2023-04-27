@@ -545,7 +545,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
       .toPromise();
   }
 
-  protected searchInClarinLicenses(event) {
+  public searchInClarinLicenses(event) {
     this.filteredLicenses4Selector = this.licenses4Selector
       .filter(license4Selector => license4Selector.name.toLowerCase().includes(event.target.value.toLowerCase()));
   }
