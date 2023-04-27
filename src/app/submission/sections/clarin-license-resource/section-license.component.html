@@ -61,10 +61,10 @@
                          class="form-control border-top-0 border-left-0 border-right-0 no-radius shadow-none"
                          placeholder="Search">
                 </div>
-              <li class="dropdown-item clarin-dropdown-item" value="0" (click)="selectLicense(0)">
+              <li class="dropdown-item clarin-dropdown-item pt-2" value="0" (click)="selectLicense(0)">
                 <b>{{'submission.sections.clarin-license.head.license-select-default-value' | translate}}</b>
               </li>
-              <li class="dropdown-item clarin-dropdown-item"
+              <li class="dropdown-item clarin-dropdown-item pt-2"
                   *ngFor="let license of filteredLicenses4Selector"
                   (click)="selectLicense(license.id)"
                   [value]="license.id"
