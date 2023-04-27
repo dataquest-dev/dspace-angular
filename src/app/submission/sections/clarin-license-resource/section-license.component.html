@@ -56,13 +56,16 @@
                 aria-labelledby="aspect_submission_StepTransformer_field_license">
                 <div class="form-group has-search mb-0">
                   <span class="fa fa-search form-control-feedback"></span>
-                  <input type="search" class="form-control border-top-0 border-left-0 border-right-0 no-radius shadow-none" placeholder="Search">
+                  <input type="search"
+                         (input)="searchInClarinLicenses($event)"
+                         class="form-control border-top-0 border-left-0 border-right-0 no-radius shadow-none"
+                         placeholder="Search">
                 </div>
               <li class="dropdown-item clarin-dropdown-item" (click)="selectLicense(0)">
                 <b>{{'submission.sections.clarin-license.head.license-select-default-value' | translate}}</b>
               </li>
               <li class="dropdown-item clarin-dropdown-item"
-                  *ngFor="let license of licenses4Selector"
+                  *ngFor="let license of filteredLicenses4Selector"
                   (click)="selectLicense(license.id)"
                   [value]="license.id"
                   id="license_option">

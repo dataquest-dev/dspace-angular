@@ -86,6 +86,8 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   licenses4Selector: License4Selector[] = [];
 
+  filteredLicenses4Selector: License4Selector[] = [];
+
   licenseSelectorDefaultValue = '';
 
   /**
@@ -530,6 +532,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
 
     // Concat two array into one.
     this.licenses4Selector = pubLicense4SelectorArray.concat(acaResLicense4SelectorArray);
+    this.filteredLicenses4Selector = this.licenses4Selector;
   }
 
   private loadAllClarinLicenses(): Promise<any> {
@@ -540,5 +543,10 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     return this.clarinLicenseService.findAll(options, false)
       .pipe(getFirstSucceededRemoteListPayload())
       .toPromise();
+  }
+
+  protected searchInClarinLicenses(event) {
+    this.filteredLicenses4Selector = this.licenses4Selector
+      .filter(license4Selector => license4Selector.name.toLowerCase().includes(event.target.value.toLowerCase()));
   }
 }
