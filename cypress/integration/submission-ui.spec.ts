@@ -392,7 +392,7 @@ describe('Create a new submission', () => {
     createItemProcess.showErrorMustChooseLicense();
     createItemProcess.showErrorNotSupportedLicense();
   });
-  
+
   // Author field should consist of two input fields
   it('Author field should consist of two input fields', {
     retries: {
@@ -404,7 +404,7 @@ describe('Create a new submission', () => {
     createItemProcess.checkAuthorFirstnameField();
     createItemProcess.checkAuthorLastnameField();
   });
- 
+
 });
 
 function addEUSponsor(euSponsorOrder) {
