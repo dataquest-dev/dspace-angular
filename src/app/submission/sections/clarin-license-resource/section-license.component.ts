@@ -86,8 +86,14 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   licenses4Selector: License4Selector[] = [];
 
+  /**
+   * Filtered licenses4Selector - after searching.
+   */
   filteredLicenses4Selector: License4Selector[] = [];
 
+  /**
+   * `Select a License` placeholder for the license dropdown button.
+   */
   licenseSelectorDefaultValue = '';
 
   /**
