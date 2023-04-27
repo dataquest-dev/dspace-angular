@@ -86,6 +86,8 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   licenses4Selector: License4Selector[] = [];
 
+  licenseSelectorDefaultValue = '';
+
   /**
    * The form id
    * @type {string}
@@ -154,6 +156,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   }
 
   async ngOnInit() {
+    // Set default value for the license selector.
+    this.licenseSelectorDefaultValue =
+      this.translateService.instant('submission.sections.clarin-license.head.license-select-default-value');
+    this.selectedLicenseName = this.licenseSelectorDefaultValue;
+
     // initialize licenses for license selector
     // It must be before `super.ngOnInit();` because that method loads the metadata from the Item and compare
     // items license with licenses4Selector.
@@ -239,13 +246,9 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   /**
    * Select license by the license Id.
    */
-  async selectLicense() {
-    if (isEmpty(this.selectedLicenseFromOptionId)) {
-      this.selectedLicenseName = '';
-    } else {
-      this.selectedLicenseName = this.getLicenseNameById(this.selectedLicenseFromOptionId);
-    }
-
+  async selectLicense(licenseId) {
+    this.selectedLicenseFromOptionId = licenseId;
+    this.selectedLicenseName = this.getLicenseNameById(this.selectedLicenseFromOptionId);
     await this.maintainLicenseSelection();
   }
 
@@ -348,7 +351,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    */
   private async selectLicenseOnInit(licenseName) {
     if (isEmpty(licenseName)) {
-      this.selectedLicenseName = '';
+      this.selectedLicenseName = this.licenseSelectorDefaultValue;
     } else {
       this.selectedLicenseName = licenseName;
     }
@@ -422,10 +425,10 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   /**
    * From the license object list get whole object by the Id.
    */
-  private getLicenseNameById(selectionLicenseId) {
-    let licenseName = '';
+  protected getLicenseNameById(selectionLicenseId) {
+    let licenseName = this.licenseSelectorDefaultValue;
     this.licenses4Selector.forEach(license4Selector => {
-      if (String(license4Selector.id) === selectionLicenseId) {
+      if (license4Selector.id === selectionLicenseId) {
         licenseName = license4Selector.name;
         return;
       }
@@ -461,9 +464,15 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   private getLicenseNameFromRef() {
     let selectedLicenseId: string;
     if (isUndefined(this.licenseSelectionRef)) {
-      return;
+      return '';
     }
+
+    // Get ID of selected license from the license selector.
     selectedLicenseId = this.licenseSelectionRef.nativeElement.value;
+    if (isUndefined(selectedLicenseId)) {
+      return '';
+    }
+
     let selectedLicense = false;
     selectedLicense = selectedLicenseId.trim().length !== 0;
 
@@ -473,12 +482,19 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
         return;
       }
       let licenseLabel: string;
-      const options = this.licenseSelectionRef.nativeElement.children;
-      for (const item of options) {
-        if (item.value === selectedLicenseId) {
-          licenseLabel = item.label;
-        }
-      }
+
+      // Compare the ID of the selected license with loaded licenses from BE.
+      this.licenses4Selector.forEach(license4Selector => {
+          if (license4Selector.id !== Number(selectedLicenseId)) {
+            return;
+          }
+          licenseLabel = license4Selector.name;
+        });
+
+      // Reset selected value from license selector. Because if the user had chosen some clarin license,
+      // and then he select unsupported license the id of previous selected value is still remembered in the helper span
+      // with the id `secret-selected-license-from-license-selector`.
+      this.licenseSelectionRef.nativeElement.value = '';
       return licenseLabel;
     }
     return '';
