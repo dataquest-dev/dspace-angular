@@ -171,6 +171,21 @@ const createItemProcess = {
   },
   showErrorNotSupportedLicense() {
     cy.get('div[class = "form-group alert alert-danger in"]').contains('The selected license is not supported at the moment. Please follow the procedure described under section "None of these licenses suits your needs".');
+  },
+  checkAuthorLastnameField() {
+    cy.get('ds-dynamic-autocomplete input[placeholder = "Last name"]').should('be.visible');
+  },
+  checkAuthorLastnameFieldValue(value) {
+    cy.get('ds-dynamic-autocomplete input[placeholder = "Last name"]').should('have.value', value);
+  },
+  checkAuthorFirstnameField() {
+    cy.get('dynamic-ng-bootstrap-input input[placeholder = "First name"]').should('be.visible');
+  },
+  checkAuthorFirstnameFieldValue(value) {
+    cy.get('dynamic-ng-bootstrap-input input[placeholder = "First name"]').should('have.value', value);
+  },
+  writeAuthorInputField(value) {
+    cy.get('ds-dynamic-autocomplete input[placeholder = "Last name"]').eq(0).click({force: true}).type(value);
   }
 };
 
@@ -377,6 +392,19 @@ describe('Create a new submission', () => {
     createItemProcess.showErrorMustChooseLicense();
     createItemProcess.showErrorNotSupportedLicense();
   });
+  
+  // Author field should consist of two input fields
+  it('Author field should consist of two input fields', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+    defaultCommandTimeout: 10000
+  },() => {
+    createItemProcess.checkAuthorFirstnameField();
+    createItemProcess.checkAuthorLastnameField();
+  });
+ 
 });
 
 function addEUSponsor(euSponsorOrder) {
