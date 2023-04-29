@@ -19,7 +19,7 @@ import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
-import { secureImageData } from '../clarin-shared-util';
+import {getBaseUrl, secureImageData} from '../clarin-shared-util';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BundleDataService } from '../../core/data/bundle-data.service';
 import { Bundle } from '../../core/shared/bundle.model';
@@ -197,15 +197,8 @@ export class ClarinItemBoxViewComponent implements OnInit {
           });
       });
   }
-
-  async getBaseUrl(): Promise<any> {
-    return this.configurationService.findByPropertyName('dspace.ui.url')
-      .pipe(getFirstSucceededRemoteDataPayload())
-      .toPromise();
-  }
-
   async assignBaseUrl() {
-    this.baseUrl = await this.getBaseUrl()
+    this.baseUrl = await getBaseUrl(this.configurationService)
       .then((baseUrlResponse: ConfigurationProperty) => {
         return baseUrlResponse?.values?.[0];
       });
