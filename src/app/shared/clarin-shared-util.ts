@@ -16,3 +16,16 @@ export function getBaseUrl(configurationService: ConfigurationDataService): Prom
     .pipe(getFirstSucceededRemoteDataPayload())
     .toPromise();
 }
+
+export function convertMetadataFieldIntoSearchType(field: string[]) {
+  switch (true) {
+    case field.includes('dc.contributor.author') || field.includes('dc.creator'):
+      return 'author';
+    case field.includes('dc.type'):
+      return 'itemtype';
+    case field.includes('dc.publisher') || field.includes('creativework.publisher'):
+      return 'publisher';
+    default:
+      return '';
+  }
+}

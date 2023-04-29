@@ -3,7 +3,7 @@ import { Item } from '../../../../core/shared/item.model';
 import { isNotUndefined } from '../../../../shared/empty.util';
 import {ConfigurationProperty} from '../../../../core/shared/configuration-property.model';
 import {DSONameService} from '../../../../core/breadcrumbs/dso-name.service';
-import {getBaseUrl} from '../../../../shared/clarin-shared-util';
+import {convertMetadataFieldIntoSearchType, getBaseUrl} from '../../../../shared/clarin-shared-util';
 import {ConfigurationDataService} from '../../../../core/data/configuration-data.service';
 import {MetadataValue} from '../../../../core/shared/metadata.models';
 
@@ -82,7 +82,9 @@ export class ClarinGenericItemFieldComponent implements OnInit {
         metadataValue = metadataValueArray;
       });
     }
-    return this.baseUrl + '/search/objects?f.author=' + metadataValue + ',equals';
+
+    const searchType = convertMetadataFieldIntoSearchType(this.fields);
+    return this.baseUrl + '/search/objects?f.' + searchType + '=' + metadataValue + ',equals';
   }
 
   async assignBaseUrl() {
