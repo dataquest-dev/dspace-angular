@@ -5,7 +5,6 @@ import {ConfigurationProperty} from '../../../../core/shared/configuration-prope
 import {DSONameService} from '../../../../core/breadcrumbs/dso-name.service';
 import {convertMetadataFieldIntoSearchType, getBaseUrl} from '../../../../shared/clarin-shared-util';
 import {ConfigurationDataService} from '../../../../core/data/configuration-data.service';
-import {MetadataValue} from '../../../../core/shared/metadata.models';
 
 @Component({
   selector: 'ds-clarin-generic-item-field',
@@ -55,8 +54,8 @@ export class ClarinGenericItemFieldComponent implements OnInit {
               protected configurationService: ConfigurationDataService) { }
 
   // tslint:disable-next-line:no-empty
-  ngOnInit(): void {
-    this.assignBaseUrl();
+  async ngOnInit(): Promise<void> {
+    await this.assignBaseUrl();
   }
 
   public hasMetadataValue() {
