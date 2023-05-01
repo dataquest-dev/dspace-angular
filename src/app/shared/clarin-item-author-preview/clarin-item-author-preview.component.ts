@@ -40,6 +40,9 @@ export class ClarinItemAuthorPreviewComponent implements OnInit {
     this.showEveryAuthor.next(!this.showEveryAuthor.value);
   }
 
+  /**
+   * Load base url from the configuration from the BE.
+   */
   async assignBaseUrl() {
     this.baseUrl = await getBaseUrl(this.configurationService)
       .then((baseUrlResponse: ConfigurationProperty) => {

@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../../../core/shared/item.model';
-import {isEmpty, isNotUndefined} from '../../../../shared/empty.util';
-import {ConfigurationProperty} from '../../../../core/shared/configuration-property.model';
-import {DSONameService} from '../../../../core/breadcrumbs/dso-name.service';
-import {convertMetadataFieldIntoSearchType, getBaseUrl} from '../../../../shared/clarin-shared-util';
-import {ConfigurationDataService} from '../../../../core/data/configuration-data.service';
+import { isEmpty, isNotUndefined } from '../../../../shared/empty.util';
+import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
+import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
+import { convertMetadataFieldIntoSearchType, getBaseUrl } from '../../../../shared/clarin-shared-util';
+import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 
 @Component({
   selector: 'ds-clarin-generic-item-field',
@@ -58,12 +58,15 @@ export class ClarinGenericItemFieldComponent implements OnInit {
     await this.assignBaseUrl();
   }
 
+  /**
+   * If the metadata fields has some metadata value - show nothing if the field do not have any value.
+   */
   public hasMetadataValue() {
     return isNotUndefined(this.item.firstMetadataValue(this.fields));
   }
 
   /**
-   * Return current metadata value. The metadata field could have more metadata values, the more often the metadata
+   * Return current metadata value. The metadata field could have more metadata values, often the metadata
    * field has only one metadata value - index is 0, but sometimes it has more values e.g. `Author`.
    * @param index
    */
@@ -81,6 +84,10 @@ export class ClarinGenericItemFieldComponent implements OnInit {
     return this.baseUrl + '/search/objects?f.' + searchType + '=' + metadataValue + ',equals';
   }
 
+  /**
+   * If the metadata field has more than 1 value return the value based on the index.
+   * @param index of the metadata value
+   */
   public getMetadataValue(index) {
     let metadataValue = '';
     if (index === 0) {
@@ -98,13 +105,13 @@ export class ClarinGenericItemFieldComponent implements OnInit {
     return metadataValue;
   }
 
+  /**
+   * Load base url from the configuration from the BE.
+   */
   async assignBaseUrl() {
     this.baseUrl = await getBaseUrl(this.configurationService)
       .then((baseUrlResponse: ConfigurationProperty) => {
         return baseUrlResponse?.values?.[0];
       });
   }
-
-
-
 }
