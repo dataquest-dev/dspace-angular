@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../../../core/shared/item.model';
-import { isNotUndefined } from '../../../../shared/empty.util';
+import {isEmpty, isNotUndefined} from '../../../../shared/empty.util';
 import {ConfigurationProperty} from '../../../../core/shared/configuration-property.model';
 import {DSONameService} from '../../../../core/breadcrumbs/dso-name.service';
 import {convertMetadataFieldIntoSearchType, getBaseUrl} from '../../../../shared/clarin-shared-util';
@@ -68,8 +68,22 @@ export class ClarinGenericItemFieldComponent implements OnInit {
    * field has only one metadata value - index is 0, but sometimes it has more values e.g. `Author`.
    * @param index
    */
-  public getLinkToSearch(index) {
+  public getLinkToSearch(index, value = '') {
     let metadataValue = 'Error: value is empty';
+    if (isEmpty(value)) {
+      // Get metadata value from the Item's metadata field
+      metadataValue = this.getMetadataValue(index);
+    } else {
+      // The metadata value is passed from the parameter.
+      metadataValue = value;
+    }
+
+    const searchType = convertMetadataFieldIntoSearchType(this.fields);
+    return this.baseUrl + '/search/objects?f.' + searchType + '=' + metadataValue + ',equals';
+  }
+
+  public getMetadataValue(index) {
+    let metadataValue = '';
     if (index === 0) {
       // Return first metadata value.
       metadataValue = this.item.firstMetadataValue(this.fields);
@@ -82,9 +96,7 @@ export class ClarinGenericItemFieldComponent implements OnInit {
         metadataValue = metadataValueArray;
       });
     }
-
-    const searchType = convertMetadataFieldIntoSearchType(this.fields);
-    return this.baseUrl + '/search/objects?f.' + searchType + '=' + metadataValue + ',equals';
+    return metadataValue;
   }
 
   async assignBaseUrl() {
@@ -93,5 +105,7 @@ export class ClarinGenericItemFieldComponent implements OnInit {
         return baseUrlResponse?.values?.[0];
       });
   }
+
+
 
 }
