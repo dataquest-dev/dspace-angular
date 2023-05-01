@@ -1,9 +1,9 @@
 <div class="row clarin-item-page-field" *ngIf="hasMetadataValue()">
-  <div class="col-md-2 d-flex">
+  <div class="col-lg-2 d-flex">
     <div><i [class]="'fas ' + iconName + ' fa-xs'"></i></div>
     <div class="pl-1"><b>{{label | translate}}</b></div>
   </div>
-  <div class="col-md-10">
+  <div class="col-lg-10">
     <div>
       <div *ngIf="type === 'author'" class="d-inline">
         <ds-clarin-item-author-preview [item]="item"></ds-clarin-item-author-preview>
