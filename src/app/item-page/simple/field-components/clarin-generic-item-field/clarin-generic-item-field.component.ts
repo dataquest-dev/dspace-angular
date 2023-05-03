@@ -92,16 +92,15 @@ export class ClarinGenericItemFieldComponent implements OnInit {
     let metadataValue = '';
     if (index === 0) {
       // Return first metadata value.
-      metadataValue = this.item.firstMetadataValue(this.fields);
-    } else {
-      // The metadata field has more metadata values - get the actual one
-      this.item.allMetadataValues(this.fields)?.forEach((metadataValueArray, arrayIndex) => {
-        if (index !== arrayIndex) {
-          return;
-        }
-        metadataValue = metadataValueArray;
-      });
+      return this.item.firstMetadataValue(this.fields);
     }
+    // The metadata field has more metadata values - get the actual one
+    this.item.allMetadataValues(this.fields)?.forEach((metadataValueArray, arrayIndex) => {
+      if (index !== arrayIndex) {
+        return metadataValue;
+      }
+      metadataValue = metadataValueArray;
+    });
     return metadataValue;
   }
 
