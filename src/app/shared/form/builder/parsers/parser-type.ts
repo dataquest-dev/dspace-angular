@@ -10,8 +10,5 @@ export enum ParserType {
   Name = 'name',
   Series = 'series',
   Tag = 'tag',
-  Textarea = 'textarea',
-  Autocomplete = 'autocomplete',
-  Complex = 'complex',
-  ClarinName = 'clarin-name'
+  Textarea = 'textarea'
 }

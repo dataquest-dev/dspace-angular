@@ -13,10 +13,14 @@
 version: '3.7'
 networks:
   dspacenet:
+    ipam:
+      config:
+        # Define a custom subnet for our DSpace network, so that we can easily trust requests from host to container.
+        # If you customize this value, be sure to customize the 'proxies.trusted.ipranges' env variable below.
+        - subnet: 172.23.0.0/16
 services:
   # DSpace (backend) webapp container
   dspace:
-    restart: unless-stopped
     container_name: dspace
     environment:
       # Below syntax may look odd, but it is how to override dspace.cfg settings via env variables.
@@ -25,14 +29,17 @@ services:
       # __D__ => "-" (e.g. google__D__metadata => google-metadata)
       # dspace.dir, dspace.server.url, dspace.ui.url and dspace.name
       dspace__P__dir: /dspace
-      dspace__P__server__P__url: ${REST_URL:-http://localhost:8080/server}
-      dspace__P__ui__P__url: ${UI_URL:-http://localhost:4000}
+      dspace__P__server__P__url: http://localhost:8080/server
+      dspace__P__ui__P__url: http://localhost:4000
       dspace__P__name: 'DSpace Started with Docker Compose'
       # db.url: Ensure we are using the 'dspacedb' image for our database
       db__P__url: 'jdbc:postgresql://dspacedb:5432/dspace'
       # solr.server: Ensure we are using the 'dspacesolr' image for Solr
       solr__P__server: http://dspacesolr:8983/solr
-    image: ${DSPACE_REST_IMAGE:-dataquest/dspace:dspace-7_x-test}
+      # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests 
+      # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
+      proxies__P__trusted__P__ipranges: '172.23.0'
+    image: dspace/dspace:dspace-7_x-test
     depends_on:
     - dspacedb
     networks:
@@ -40,8 +47,6 @@ services:
     ports:
     - published: 8080
       target: 8080
-    - published: 8000
-      target: 8000
     stdin_open: true
     tty: true
     volumes:
@@ -58,10 +63,9 @@ services:
     - |
       while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
       /dspace/bin/dspace database migrate
-      custom_run.sh
-  # DSpace database container
+      catalina.sh run
+  # DSpace database container    
   dspacedb:
-    restart: unless-stopped
     container_name: dspacedb
     environment:
       PGDATA: /pgdata
@@ -75,9 +79,8 @@ services:
     tty: true
     volumes:
     - pgdata:/pgdata
-  # DSpace Solr container
+  # DSpace Solr container  
   dspacesolr:
-    restart: unless-stopped
     container_name: dspacesolr
     # Uses official Solr image at https://hub.docker.com/_/solr/
     image: solr:8.11-slim
@@ -115,7 +118,7 @@ services:
       cp -r -u /opt/solr/server/solr/configsets/dspace/search/* search
       precreate-core statistics /opt/solr/server/solr/configsets/dspace/statistics
       cp -r -u /opt/solr/server/solr/configsets/dspace/statistics/* statistics
-      exec solr -f -m 4g
+      exec solr -f
 volumes:
   assetstore:
   pgdata:

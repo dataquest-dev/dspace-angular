@@ -3,26 +3,17 @@
 // `ng test --configuration test` replaces `environment.ts` with `environment.test.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { AppConfig } from '../config/app-config.interface';
+import { BuildConfig } from '../config/build-config.interface';
 
-export const environment: Partial<AppConfig> = {
+export const environment: Partial<BuildConfig> = {
   production: false,
 
   // Angular Universal settings
   universal: {
-    preboot: true,
+    preboot: false,
     async: true,
     time: false
-  },
-
-  // The REST API server settings.
-  rest: {
-    ssl: false,
-    host: 'localhost',
-    port: 8080,
-    // NOTE: Space is capitalized because 'namespace' is a reserved string in TypeScript
-    nameSpace: '/server',
-  },
+  }
 };
 
 /*

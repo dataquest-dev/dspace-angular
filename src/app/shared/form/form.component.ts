@@ -11,14 +11,13 @@ import {
   DynamicFormLayout,
 } from '@ng-dynamic-forms/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { findIndex } from 'lodash';
+import findIndex from 'lodash/findIndex';
 
 import { FormBuilderService } from './builder/form-builder.service';
 import { hasValue, isNotEmpty, isNotNull, isNull } from '../empty.util';
 import { FormService } from './form.service';
 import { FormEntry, FormError } from './form.reducer';
 import { FormFieldMetadataValueObject } from './builder/models/form-field-metadata-value.model';
-import {DsDynamicInputModel} from './builder/ds-dynamic-form-ui/models/ds-dynamic-input.model';
 
 /**
  * The default form component.
@@ -72,12 +71,12 @@ export class FormComponent implements OnDestroy, OnInit {
   @Input() formGroup: FormGroup;
   @Input() formLayout = null as DynamicFormLayout;
 
-  /* tslint:disable:no-output-rename */
+  /* eslint-disable @angular-eslint/no-output-rename */
   @Output('dfBlur') blur: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
   @Output('dfChange') change: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
   @Output('dfFocus') focus: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
   @Output('ngbEvent') customEvent: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
-  /* tslint:enable:no-output-rename */
+  /* eslint-enable @angular-eslint/no-output-rename */
   @Output() addArrayItem: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
   @Output() removeArrayItem: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
 
@@ -192,25 +191,9 @@ export class FormComponent implements OnDestroy, OnInit {
 
               if (field) {
                 const model: DynamicFormControlModel = this.formBuilderService.findById(fieldId, formModel);
-
-                // Check if field has nested input fields
-                if (field instanceof FormGroup && isNotEmpty(field?.controls)) {
-                  // For input field which consist of more input fields e.g. DynamicComplexModel
-                  // add error for every input field
-                  Object.keys(field.controls).forEach((nestedInputName, nestedInputIndex) => {
-                    const nestedInputField = (model as DynamicFormGroupModel).group?.[nestedInputIndex];
-                    const nestedInputFieldInForm = formGroup.get(this.formBuilderService.getPath(nestedInputField));
-                    // Do not add errors for non-mandatory inputs
-                    if (nestedInputField instanceof DsDynamicInputModel && !nestedInputField.required) {
-                      return;
-                    }
-                    this.formService.addErrorToField(nestedInputFieldInForm, nestedInputField, error.message);
-                  });
-                } else {
-                  // Add error to the input field
-                  this.formService.addErrorToField(field, model, error.message);
-                }
+                this.formService.addErrorToField(field, model, error.message);
                 this.changeDetectorRef.detectChanges();
+
               }
             });
 
