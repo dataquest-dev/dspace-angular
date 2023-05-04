@@ -17,7 +17,6 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "extractCss": true,
             "preserveSymlinks": true,
             "customWebpackConfig": {
               "path": "./webpack/webpack.browser.ts",
@@ -26,12 +25,10 @@
               }
             },
             "allowedCommonJsDependencies": [
-              "angular2-text-mask",
               "cerialize",
               "core-js",
               "lodash",
               "jwt-decode",
-              "url-parse",
               "uuid",
               "webfontloader",
               "zone.js"
@@ -48,8 +45,6 @@
             ],
             "styles": [
               "src/styles/startup.scss",
-              "src/aai/discojuice/discojuice.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               {
                 "input": "src/styles/base-theme.scss",
                 "inject": false,
@@ -66,11 +61,8 @@
                 "bundleName": "dspace-theme"
               }
             ],
-            "scripts": [
-              "src/license-selector.js",
-              "src/license-selector-creation.js",
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ]
+            "scripts": [],
+            "baseHref": "/"
           },
           "configurations": {
             "development": {
@@ -86,11 +78,14 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.production.ts"
+                },
+                {
+                  "replace": "src/config/store/devtools.ts",
+                  "with": "src/config/store/devtools.prod.ts"
                 }
               ],
               "optimization": true,
               "outputHashing": "all",
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -141,7 +136,7 @@
                 "loaders": "prepend"
               }
             },
-            "main": "src/test-dtq.ts",
+            "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
@@ -172,19 +167,6 @@
                 }
               ]
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "cypress/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         },
         "e2e": {
@@ -225,6 +207,10 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.production.ts"
+                },
+                {
+                  "replace": "src/config/store/devtools.ts",
+                  "with": "src/config/store/devtools.prod.ts"
                 }
               ]
             }
@@ -274,12 +260,22 @@
             "watch": true,
             "headless": false
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
   "defaultProject": "dspace-angular",
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }
