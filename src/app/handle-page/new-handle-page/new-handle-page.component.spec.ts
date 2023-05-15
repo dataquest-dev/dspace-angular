@@ -76,6 +76,7 @@ describe('NewHandlePageComponent', () => {
     expect((component as any).handleService.create).toHaveBeenCalled();
   });
 
+  // TODO fix this failing test later. It fails in the Github but locally it works.
   // it('should notify after successful request', () => {
   //   component.onClickSubmit('new handle');
   //
