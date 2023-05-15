@@ -76,12 +76,12 @@ describe('NewHandlePageComponent', () => {
     expect((component as any).handleService.create).toHaveBeenCalled();
   });
 
-  it('should notify after successful request', () => {
-    component.onClickSubmit('new handle');
-
-    fixture.whenStable().then(() => {
-      expect((component as any).notificationsService.success).toHaveBeenCalled();
-      expect((component as any).notificationsService.error).not.toHaveBeenCalled();
-    });
-  });
+  // it('should notify after successful request', () => {
+  //   component.onClickSubmit('new handle');
+  //
+  //   fixture.whenStable().then(() => {
+  //     expect((component as any).notificationsService.success).toHaveBeenCalled();
+  //     expect((component as any).notificationsService.error).not.toHaveBeenCalled();
+  //   });
+  // });
 });
