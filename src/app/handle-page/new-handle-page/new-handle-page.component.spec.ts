@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 import { NewHandlePageComponent } from './new-handle-page.component';
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 import { of as observableOf } from 'rxjs';
@@ -13,6 +13,8 @@ import { getMockTranslateService } from '../../shared/mocks/translate.service.mo
 import { Store } from '@ngrx/store';
 import { HandleDataService } from '../../core/data/handle-data.service';
 import { mockCreatedHandleRD$ } from '../../shared/mocks/handle-mock';
+import { PaginationService } from '../../core/pagination/pagination.service';
+import { PaginationServiceStub } from '../../shared/testing/pagination-service.stub';
 
 /**
  * The test class for the NewHandlePageComponent.
@@ -23,6 +25,7 @@ describe('NewHandlePageComponent', () => {
 
   let notificationService: NotificationsServiceStub;
   let handleDataService: HandleDataService;
+  let paginationService: PaginationServiceStub;
 
   const successfulResponse = {
     response: {
@@ -31,6 +34,7 @@ describe('NewHandlePageComponent', () => {
 
   beforeEach(async () => {
     notificationService = new NotificationsServiceStub();
+    paginationService = new PaginationServiceStub();
 
     handleDataService = jasmine.createSpyObj('handleDataService', {
       create: mockCreatedHandleRD$,
@@ -49,6 +53,8 @@ describe('NewHandlePageComponent', () => {
       providers: [
         { provide: NotificationsService, useValue: notificationService },
         { provide: HandleDataService, useValue: handleDataService },
+        { provide: PaginationService, useValue: paginationService },
+        { provide: TranslateService, useValue: getMockTranslateService() },
         {
           provide: Store, useValue: {
             // tslint:disable-next-line:no-empty
@@ -77,12 +83,12 @@ describe('NewHandlePageComponent', () => {
   });
 
   // TODO fix this failing test later. It fails in the Github but locally it works.
-  // it('should notify after successful request', () => {
+  // it('should notify after successful request',waitForAsync(() => {
   //   component.onClickSubmit('new handle');
   //
   //   fixture.whenStable().then(() => {
   //     expect((component as any).notificationsService.success).toHaveBeenCalled();
   //     expect((component as any).notificationsService.error).not.toHaveBeenCalled();
   //   });
-  // });
+  // }));
 });
