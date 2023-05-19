@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NewHandlePageComponent } from './new-handle-page.component';
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 import { of as observableOf } from 'rxjs';
@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { RequestService } from '../../core/data/request.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { getMockTranslateService } from '../../shared/mocks/translate.service.mock';
 import { Store } from '@ngrx/store';
