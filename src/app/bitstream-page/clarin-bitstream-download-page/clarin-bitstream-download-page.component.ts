@@ -116,7 +116,9 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
       } else if ((isAuthorized || isAuthorizedByClarin) && !isLoggedIn) {
         this.downloadStatus.next(RequestEntryState.Success);
         this.hardRedirectService.redirect(bitstreamURL);
-      } else if (!(isAuthorized || isAuthorizedByClarin) && isLoggedIn) {
+      } else if (!(isAuthorized || isAuthorizedByClarin) && isLoggedIn &&
+          this.downloadStatus.value === RequestEntryState.Error) {
+        // this.downloadStatus is `ERROR` - no CLARIN exception is thrown up
         this.downloadStatus.next(HTTP_STATUS_UNAUTHORIZED.toString());
         this.router.navigateByUrl(getForbiddenRoute(), {skipLocationChange: true});
       } else if (!(isAuthorized || isAuthorizedByClarin) && !isLoggedIn && isEmpty(this.downloadStatus.value)) {
