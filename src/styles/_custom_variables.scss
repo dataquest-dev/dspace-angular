@@ -1,7 +1,7 @@
 :root {
 
   --lt-common-navbar-height: 80px;
-  --lt-clarin-purple: #7479b8;
+  --lt-tul-purple: #5948AD;
 
   --lt-clarin-yellow-bg: #fcf8e3;;
   --lt-clarin-yellow-border: #fbeed5;
@@ -36,14 +36,14 @@
   --ds-footer-z-index: 0;
   --ds-sidebar-z-index: 20;
 
-  --ds-header-bg: #{$white};
+  --ds-header-bg: var(--lt-tul-purple);
   --ds-header-logo-height: 50px;
   --ds-header-logo-height-xs: 50px;
-  --ds-header-icon-color: #{$link-color};
+  --ds-header-icon-color: #{$white};
   --ds-header-icon-color-hover: #{$link-hover-color};
   --ds-header-navbar-border-top-color: #{$white};
   --ds-header-navbar-border-bottom-color: #{$gray-400};
-  --ds-navbar-link-color: #{$cyan};
+  --ds-navbar-link-color: white;
   --ds-navbar-link-color-hover: #{darken($cyan, 15%)};
 
   $admin-sidebar-bg: darken(#2B4E72, 17%);
@@ -82,7 +82,7 @@
   --ds-total-sidebar-width: #{$total-sidebar-width};
 
   --ds-top-footer-bg: #{$gray-200};
-  --ds-footer-bg: #{theme-color('primary')};
+  --ds-footer-bg: var(--lt-tul-purple);
   --ds-footer-border: 1px solid var(--bs-gray-400);
   --ds-footer-padding: 0;
   --ds-footer-padding-bottom: 0;

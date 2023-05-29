@@ -11,6 +11,7 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     ::ng-deep a.nav-link {
+        color: black;
         padding-right: var(--bs-spacer);
         padding-left: var(--bs-spacer);
         white-space: nowrap;

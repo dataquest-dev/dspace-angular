@@ -13,7 +13,7 @@
     </div>
   </li>
   <li *ngIf="!(isAuthenticated | async) && (isXsOrSm$ | async)" class="nav-item">
-    <a routerLink="/login" routerLinkActive="active" class="loginLink px-1">
+    <a routerLink="/login" routerLinkActive="active" class="loginLink px-1 nav-item-button">
       {{ 'nav.login' | translate }}<span class="sr-only">(current)</span>
     </a>
   </li>

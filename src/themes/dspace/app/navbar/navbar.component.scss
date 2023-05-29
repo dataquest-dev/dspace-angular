@@ -1,13 +1,17 @@
-nav.navbar {
-  border-top: 1px var(--ds-header-navbar-border-top-color) solid;
-  border-bottom: 5px var(--ds-header-navbar-border-bottom-color) solid;
-  align-items: baseline;
-  color: var(--ds-header-icon-color);
+@font-face {
+  font-family: 'TUL Mono';
+  src: url('/assets/fonts/TULMono-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
-.clarin-logo {
-  height: var(--ds-login-logo-height);
-  width: var(--ds-login-logo-width);
+nav.navbar {
+  background: var(--lt-tul-purple);
+  font-family: 'TUL Mono';
+  border-top: 1px var(--ds-header-navbar-border-top-color) solid;
+  //border-bottom: 5px var(--ds-header-navbar-border-bottom-color) solid;
+  align-items: baseline;
+  color: var(--ds-header-icon-color);
 }
 
 /** Mobile menu styling **/
@@ -49,10 +53,13 @@ nav.navbar {
 }
 
 a.navbar-brand img {
+  width: 7rem;
+  display: block;
   max-height: var(--ds-header-logo-height);
 }
 
 .navbar-nav {
+  font-size: 0.85rem;
   ::ng-deep a.nav-link {
     color: var(--ds-navbar-link-color);
   }
