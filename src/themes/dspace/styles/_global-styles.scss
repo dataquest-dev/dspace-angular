@@ -36,6 +36,10 @@
   color: white !important;
 }
 
+.btn-primary:hover {
+  box-shadow: 0 0 0 0.2rem var(--lt-tul-purple) !important;
+}
+
 .alert-warning {
   background-color: #fcf8e3 !important;
   border: 1px solid #fbeed5 !important;

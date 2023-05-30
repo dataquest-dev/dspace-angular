@@ -93,7 +93,7 @@
   // Links
   //
   // Style anchor elements.
-  --bs-link-color: white;
+  --bs-link-color: #{$link-color};
   --bs-link-decoration: #{$link-decoration};
   --bs-link-hover-color: #{$link-hover-color};
   --bs-link-hover-decoration: #{$link-hover-decoration};
