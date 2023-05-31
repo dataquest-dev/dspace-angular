@@ -3,13 +3,13 @@
   <span *ngIf="(metadataRepresentation.representationType=='plain_text') && !isLink()" class="dont-break-out">
     {{metadataRepresentation.getValue()}}
   </span>
-  <a *ngIf="(metadataRepresentation.representationType=='plain_text') && isLink()" class="dont-break-out"
+  <a *ngIf="(metadataRepresentation.representationType=='plain_text') && isLink()" class="dont-break-out tul-link-hover-style"
   target="_blank" [href]="metadataRepresentation.getValue()">
     {{metadataRepresentation.getValue()}}
   </a>
   <span *ngIf="(metadataRepresentation.representationType=='authority_controlled')" class="dont-break-out">{{metadataRepresentation.getValue()}}</span>
   <a *ngIf="(metadataRepresentation.representationType=='browse_link')"
-     class="dont-break-out ds-browse-link"
+     class="dont-break-out ds-browse-link tul-link-hover-style"
      [routerLink]="['/browse/', metadataRepresentation.browseDefinition.id]"
      [queryParams]="getQueryParams()">
     {{metadataRepresentation.getValue()}}
