@@ -16,6 +16,11 @@
         padding-left: var(--bs-spacer);
         white-space: nowrap;
     }
+
+    ::ng-deep a.nav-link:hover {
+        color: var(--bs-dropdown-link-hover-color) !important;
+        background-color: var(--bs-dropdown-link-hover-bg) !important;
+    }
 }
 
 /** Mobile menu styling **/

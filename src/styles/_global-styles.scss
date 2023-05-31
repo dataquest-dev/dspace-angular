@@ -205,8 +205,11 @@ ds-dynamic-form-control-container.d-none {
 }
 .thumb-font-3 {
   .thumbnail-placeholder {
-    font-size: 1.25rem;
-    padding: 0.5rem;
+      font-size: 1.25rem;
+      padding: 0.5rem;
+    @media screen and (max-width: map-get($grid-breakpoints, sm)) {
+      font-size: 0.5rem;
+    }
   }
 }
 

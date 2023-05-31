@@ -19,7 +19,6 @@ $enable-responsive-font-sizes: true;
 /* Colors */
 $gray-700: #495057 !default;  // Bootstrap $gray-700
 $gray-100: #f8f9fa !default;  //           $gray-100
-$white: #ffffff !default;
 
 /* Reassign color vars to semantic color scheme */
 $blue:   #2B4E72 !default;
@@ -30,17 +29,17 @@ $red:    #CF4444 !default;
 $dark:   darken($blue, 17%) !default;
 
 $theme-colors: (
-        "primary": $blue,
-        "secondary": $gray-700,
-        "success": $green,
-        "info": $cyan,
-        "warning": $yellow,
-        "danger": $red,
-        "light": $gray-100,
-        "dark": $dark
+        primary: $blue,
+        secondary: $gray-700,
+        success: $green,
+        info: $cyan,
+        warning: $yellow,
+        danger: $red,
+        light: $gray-100,
+        dark: $dark
 ) !default;
 /* Fonts */
-$link-color: map-get($theme-colors, "white") !default;
+$link-color: map-get($theme-colors, info) !default;
 
 $navbar-dark-color: rgba(white, .5) !default;
 $navbar-light-color: rgba(black, .5) !default;
