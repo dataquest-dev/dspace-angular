@@ -27,6 +27,7 @@ $cyan:   #006666 !default;
 $yellow: #ec9433 !default;
 $red:    #CF4444 !default;
 $dark:   darken($blue, 17%) !default;
+$tul-purple: #5948AD;
 
 $theme-colors: (
         primary: $blue,
@@ -39,7 +40,7 @@ $theme-colors: (
         dark: $dark
 ) !default;
 /* Fonts */
-$link-color: map-get($theme-colors, info) !default;
+$link-color: $tul-purple !default;
 
 $navbar-dark-color: rgba(white, .5) !default;
 $navbar-light-color: rgba(black, .5) !default;

@@ -22,6 +22,7 @@
     font-size: 1.1rem
   }
 }
+
 .btn-secondary {
   background-color: var(--lt-tul-purple) !important;
 }
@@ -36,7 +37,8 @@
   color: white !important;
 }
 
-.btn-primary:hover {
+
+.btn-primary:hover,.btn-danger:hover, .btn-success:hover, .btn-warning:hover, .btn-info:hover, .btn-primary:hover, .btn-outline-secondary:hover, .btn-secondary:hover {
   box-shadow: 0 0 0 0.2rem var(--lt-tul-purple) !important;
 }
 

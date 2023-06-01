@@ -1,7 +1,7 @@
 :root {
 
   --lt-common-navbar-height: 80px;
-  --lt-tul-purple: #5948AD;
+  --lt-tul-purple: #{$tul-purple};
 
   --lt-clarin-yellow-bg: #fcf8e3;;
   --lt-clarin-yellow-border: #fbeed5;
@@ -44,7 +44,7 @@
   --ds-header-bg-color-hover: rgba(0,0,0,0.5);
   --ds-header-navbar-border-top-color: #{$white};
   --ds-header-navbar-border-bottom-color: #{$gray-400};
-  --ds-navbar-link-color: white;
+  --ds-navbar-link-color: #{$white};
   --ds-navbar-link-color-hover: #d4d5d6;
 
   $admin-sidebar-bg: darken(#2B4E72, 17%);
@@ -95,7 +95,7 @@
   --ds-home-news-background-color: #{$gray-200};
 
   --ds-breadcrumb-bg: #{$gray-200} !important;
-  --ds-breadcrumb-link-color: #{$cyan};
+  --ds-breadcrumb-link-color: var(--lt-tul-purple);
   --ds-breadcrumb-link-active-color: #{darken($cyan, 30%)};
   --ds-breadcrumb-max-length: 200px;
 
