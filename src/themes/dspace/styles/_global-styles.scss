@@ -23,11 +23,20 @@
   }
 }
 
+.btn-secondary {
+  background-color: var(--lt-tul-purple) !important;
+}
+
+.btn-success {
+  background-color: var(--lt-tul-purple) !important;
+}
+
 .btn-danger, .btn-success, .btn-warning, .btn-info, .btn-primary, .btn-outline-secondary, .btn-secondary {
   background-color: var(--lt-tul-purple) !important;
   border: none;
   color: white !important;
 }
+
 
 .btn-primary:hover,.btn-danger:hover, .btn-success:hover, .btn-warning:hover, .btn-info:hover, .btn-primary:hover, .btn-outline-secondary:hover, .btn-secondary:hover {
   box-shadow: 0 0 0 0.2rem var(--lt-tul-purple) !important;

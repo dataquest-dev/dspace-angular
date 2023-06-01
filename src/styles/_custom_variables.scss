@@ -41,10 +41,11 @@
   --ds-header-logo-height-xs: 50px;
   --ds-header-icon-color: #{$white};
   --ds-header-icon-color-hover: #{$link-hover-color};
+  --ds-header-bg-color-hover: rgba(0,0,0,0.5);
   --ds-header-navbar-border-top-color: #{$white};
   --ds-header-navbar-border-bottom-color: #{$gray-400};
   --ds-navbar-link-color: #{$white};
-  --ds-navbar-link-color-hover: #{darken($cyan, 15%)};
+  --ds-navbar-link-color-hover: #d4d5d6;
 
   $admin-sidebar-bg: darken(#2B4E72, 17%);
   $admin-sidebar-active-bg: darken($admin-sidebar-bg, 3%);
