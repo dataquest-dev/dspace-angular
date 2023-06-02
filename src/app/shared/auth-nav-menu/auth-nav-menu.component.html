@@ -13,7 +13,7 @@
     </div>
   </li>
   <li *ngIf="!(isAuthenticated | async) && (isXsOrSm$ | async)" class="nav-item">
-    <a routerLink="/login" routerLinkActive="active" class="loginLink px-1">
+    <a routerLink="/login" routerLinkActive="active" class="loginLink px-1 nav-item-button">
       {{ 'nav.login' | translate }}<span class="sr-only">(current)</span>
     </a>
   </li>
@@ -27,7 +27,7 @@
     </div>
   </li>
   <li *ngIf="(isAuthenticated | async) && (isXsOrSm$ | async)" class="nav-item">
-    <a id="logoutLink" role="button" [attr.aria-label]="'nav.logout' |translate" [title]="'nav.logout' | translate" routerLink="/logout" routerLinkActive="active" class="px-1">
+    <a id="logoutLink" role="button" [attr.aria-label]="'nav.logout' |translate" [title]="'nav.logout' | translate" routerLink="/logout" routerLinkActive="active" class="px-1 nav-item-button">
       <i class="fas fa-sign-out-alt fa-lg fa-fw"></i>
       <span class="sr-only">(current)</span>
     </a>
