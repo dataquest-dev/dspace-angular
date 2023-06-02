@@ -47,7 +47,7 @@
   --ds-navbar-link-color: #{$white};
   --ds-navbar-link-color-hover: #d4d5d6;
 
-  $admin-sidebar-bg: darken(#2B4E72, 17%);
+  $admin-sidebar-bg: black;
   $admin-sidebar-active-bg: darken($admin-sidebar-bg, 3%);
   --ds-admin-sidebar-bg: #{$admin-sidebar-bg};
   --ds-admin-sidebar-active-bg: #{$admin-sidebar-active-bg};
