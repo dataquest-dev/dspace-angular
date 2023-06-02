@@ -29,6 +29,10 @@
   color: white !important;
 }
 
+.btn-primary:focus,.btn-danger:focus, .btn-success:focus, .btn-warning:focus, .btn-info:focus, .btn-primary:focus, .btn-outline-secondary:focus, .btn-secondary:focus {
+  box-shadow: none !important;
+}
+
 .btn-primary:hover,.btn-danger:hover, .btn-success:hover, .btn-warning:hover, .btn-info:hover, .btn-primary:hover, .btn-outline-secondary:hover, .btn-secondary:hover {
   box-shadow: 0 0 0 0.2rem var(--lt-tul-purple) !important;
 }
