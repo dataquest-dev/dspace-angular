@@ -7,15 +7,17 @@ describe('ItemPageCitationFieldComponent', () => {
   let component: ItemPageCitationFieldComponent;
   let fixture: ComponentFixture<ItemPageCitationFieldComponent>;
   let sanitizer: DomSanitizer;
-  const mockHandle = '15240/151431';
+  const mockHandle = '123456789/3';
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ItemPageCitationFieldComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    }).overrideComponent(ItemPageCitationFieldComponent, {
-      set: { changeDetection: ChangeDetectionStrategy.Default }
-    }).compileComponents();
+      declarations: [ItemPageCitationFieldComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideComponent(ItemPageCitationFieldComponent, {
+        set: { changeDetection: ChangeDetectionStrategy.Default },
+      })
+      .compileComponents();
 
     sanitizer = TestBed.inject(DomSanitizer);
   }));
@@ -32,7 +34,11 @@ describe('ItemPageCitationFieldComponent', () => {
   });
 
   it('should set iframeSrc based on handle', () => {
-    const expectedUrl = 'https://www.citacepro.com/api/dspace/citace/oai:dspace.tul.cz:' + mockHandle;
-    expect(component.iframeSrc).toEqual(sanitizer.bypassSecurityTrustResourceUrl(expectedUrl));
+    const expectedUrl =
+      'https://www.citacepro.com/api/dspace/citace/oai:dspace.tul.cz:' +
+      mockHandle;
+    expect(component.iframeSrc).toEqual(
+      sanitizer.bypassSecurityTrustResourceUrl(expectedUrl)
+    );
   });
 });
