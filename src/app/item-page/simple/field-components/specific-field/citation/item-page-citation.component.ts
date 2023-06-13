@@ -37,7 +37,7 @@ export class ItemPageCitationFieldComponent implements OnInit {
     citaceProBaseUrl: string,
     universityUsingDspace: string
   ): SafeResourceUrl | null {
-    const url = `${citaceProBaseUrl}:${universityUsingDspace}:15240/151406`;
+    const url = `${citaceProBaseUrl}:${universityUsingDspace}:${this.handle}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
