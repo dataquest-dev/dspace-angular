@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { combineLatest } from 'rxjs';
 import { ConfigurationDataService } from 'src/app/core/data/configuration-data.service';
 @Component({
   selector: 'ds-item-page-citation-field',
@@ -16,22 +17,22 @@ export class ItemPageCitationFieldComponent implements OnInit {
     private configService: ConfigurationDataService
   ) {}
 
-  ngOnInit() {
-    this.configService.findByPropertyName('citace.pro.url').subscribe((remoteData) => {
-        const citaceProBaseUrl = remoteData.payload.values[0];
-        const universityUsingDspace = remoteData.payload.values[1];
-        this.citaceProURL = this.makeCitaceProURL(
-          citaceProBaseUrl,
-          universityUsingDspace
-        );
-    });
 
-    this.configService.findByPropertyName('citace.pro.status').subscribe((remoteData) => {
-      const citaceProBaseUrl = remoteData.payload.values[0];
-      this.citaceProStatus = citaceProBaseUrl === 'true';
+ngOnInit() {
+  const citaceProUrl$ = this.configService.findByPropertyName('citace.pro.url');
+  const universityUsingDspace$ = this.configService.findByPropertyName('citace.pro.university');
+  const citaceProAllowed$ = this.configService.findByPropertyName('citace.pro.allowed');
+
+  combineLatest([citaceProUrl$, universityUsingDspace$, citaceProAllowed$]).subscribe(([citaceProUrlData, universityData, citaceProAllowedData]) => {
+    const citaceProBaseUrl = citaceProUrlData.payload.values[0];
+    const universityUsingDspace = universityData.payload.values[0];
+    this.citaceProURL = this.makeCitaceProURL(citaceProBaseUrl, universityUsingDspace);
+
+    const citaceProAllowed = citaceProAllowedData.payload.values[0];
+    this.citaceProStatus = citaceProAllowed === 'true';
   });
+}
 
-  }
 
   makeCitaceProURL(
     citaceProBaseUrl: string,
