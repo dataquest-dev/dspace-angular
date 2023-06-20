@@ -1,5 +1,14 @@
 rest:
   ssl: false
-  host: 127.0.0.1
+  host: localhost
   port: 8080
   nameSpace: /server
+
+
+info:
+  # Whether the end user agreement is required before users may use the repository.
+  # If enabled, the user will be required to accept the agreement before they can use the repository.
+  # If disabled, the page will not exist and no agreement is required to use the repository
+  enableEndUserAgreement: false
+  # Whether the privacy statement should exist or not.
+  enablePrivacyStatement: false
