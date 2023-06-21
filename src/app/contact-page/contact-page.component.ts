@@ -1,9 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
 
 @Component({
   selector: 'ds-contact-page',
   styleUrls: ['./contact-page.component.scss'],
   templateUrl: './contact-page.component.html'
 })
-export class ContactPageComponent {
+export class ContactPageComponent implements OnInit {
+  emailToContact: string;
+  constructor(
+    private configService: ConfigurationDataService
+  ) {}
+
+  ngOnInit(): void {
+    this.configService.findByPropertyName('dspace.contact.email').subscribe(remoteData => {
+      this.emailToContact = remoteData.payload.values[0];
+    });
+  }
 }
