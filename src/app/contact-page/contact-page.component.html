@@ -10,10 +10,10 @@
               </div>
               <div class="text-left">
                 <span>{{'contact-us.email' | translate}}</span>
-                <a href="mailto:marketa.trykarova@tul.cz" class="email-text"
+                <a *ngIf="emailToContact" [href]="'mailto:' + emailToContact" class="email-text"
                 >{{emailToContact}}</a>
               </div>
             </div>
-          </div>   
+          </div>
     </div>
   </div>
