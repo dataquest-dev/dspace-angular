@@ -13,7 +13,7 @@ export class ContactPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.configService.findByPropertyName('dspace.contact.email').subscribe(remoteData => {
+    this.configService.findByPropertyName('lr.help.mail').subscribe(remoteData => {
       this.emailToContact = remoteData.payload.values[0];
     });
   }
