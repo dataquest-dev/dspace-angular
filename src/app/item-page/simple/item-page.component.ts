@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Observable} from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { ItemDataService } from '../../core/data/item-data.service';
 import { RemoteData } from '../../core/data/remote-data';
 import { Item } from '../../core/shared/item.model';
@@ -11,10 +12,9 @@ import { getAllSucceededRemoteDataPayload } from '../../core/shared/operators';
 import { ViewMode } from '../../core/shared/view-mode.model';
 import { AuthService } from '../../core/auth/auth.service';
 import { getItemPageRoute } from '../item-page-routing-paths';
-import { isNotEmpty } from '../../shared/empty.util';
-import { FeatureID } from '../../core/data/feature-authorization/feature-id';
-import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { redirectOn4xx } from '../../core/shared/authorized.operators';
+import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+import { FeatureID } from '../../core/data/feature-authorization/feature-id';
 
 /**
  * This component renders a simple item page.
@@ -55,16 +55,6 @@ export class ItemPageComponent implements OnInit {
    */
   isAdmin$: Observable<boolean>;
 
-  /**
-   * If item is withdrawn and has new destination in the metadata: `dc.relation.isreplacedby`
-   */
-  replacedTombstone = false;
-
-  /**
-   * If item is withdrawn and has/doesn't has reason of withdrawal
-   */
-  withdrawnTombstone = false;
-
   itemUrl: string;
 
   constructor(
@@ -89,41 +79,7 @@ export class ItemPageComponent implements OnInit {
       map((item) => getItemPageRoute(item))
     );
 
-    this.showTombstone();
-  }
-
-  showTombstone() {
-    // if the item is withdrawn
-    let isWithdrawn = false;
-    // metadata value from `dc.relation.isreplacedby`
-    let isReplaced = '';
-
-    // load values from item
-    this.itemRD$.pipe(
-      take(1),
-      getAllSucceededRemoteDataPayload())
-      .subscribe((item: Item) => {
-        isWithdrawn = item.isWithdrawn;
-        isReplaced = item.metadata['dc.relation.isreplacedby']?.[0]?.value;
-      });
-
-    // do not show tombstone for non withdrawn items
-    if (!isWithdrawn) {
-      return;
-    }
-
-    // for users navigate to the custom tombstone
-    // for admin stay on the item page with tombstone flag
     this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
-    this.isAdmin$.subscribe(isAdmin => {
-      // do not show tombstone for admin but show it for users
-      if (!isAdmin) {
-        if (isNotEmpty(isReplaced)) {
-          this.replacedTombstone = true;
-        } else {
-          this.withdrawnTombstone = true;
-        }
-      }
-    });
+
   }
 }
