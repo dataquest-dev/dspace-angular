@@ -14,7 +14,6 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/build-scripts/run/
           pwd
-
           touch .env.dev-5 || true
           echo DSPACE_REST_HOST=dev-5.pc > .env.dev-5
           echo REST_URL=http://dev-5.pc:8080/server >> .env.dev-5
