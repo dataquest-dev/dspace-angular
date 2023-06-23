@@ -25,14 +25,25 @@ services:
       # __D__ => "-" (e.g. google__D__metadata => google-metadata)
       # dspace.dir, dspace.server.url, dspace.ui.url and dspace.name
       dspace__P__dir: /dspace
-      dspace__P__server__P__url: ${REST_URL:-http://localhost:8080/server}
-      dspace__P__ui__P__url: ${UI_URL:-http://localhost:4000}
+      dspace__P__server__P__url: ${REST_URL:-http://127.0.0.1:8080/server}
+      dspace__P__ui__P__url: ${UI_URL:-http://127.0.0.1:4000}
       dspace__P__name: 'DSpace Started with Docker Compose'
       # db.url: Ensure we are using the 'dspacedb' image for our database
       db__P__url: 'jdbc:postgresql://dspacedb:5432/dspace'
       # solr.server: Ensure we are using the 'dspacesolr' image for Solr
       solr__P__server: http://dspacesolr:8983/solr
-    image: ${DSPACE_REST_IMAGE:-dataquest/dspace:dspace-7_x-test}
+
+      #S3 config
+      assetstore__P__index__P__primary: ${S3_STORAGE:-0}
+      assetstore__P__s3__P__enabled: ${S3_ENABLED:-false}
+      assetstore__P__s3__P__useRelativePath: ${S3_RELATIVE_PATH:-false}
+      assetstore__P__s3__P__bucketName: ${S3_BUCKET:-bucket-for-dspace}
+      assetstore__P__s3__P__subfolder: ${S3_SUBFOLDER:-}
+      assetstore__P__s3__P__awsAccessKey: ${S3_ACCESS:-}
+      assetstore__P__s3__P__awsSecretKey: ${S3_SECRET:-}
+      assetstore__P__s3__P__awsRegionName: ${S3_REGION_NAME:-}
+
+    image: ${DSPACE_REST_IMAGE:-dataquest/dspace:dtq-dev-7.5}
     depends_on:
     - dspacedb
     networks:
@@ -57,7 +68,7 @@ services:
     - '-c'
     - |
       while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
-      /dspace/bin/dspace database migrate
+      /dspace/bin/dspace database migrate force
       custom_run.sh
   # DSpace database container
   dspacedb:

@@ -1,7 +1,3 @@
-import { Options } from 'cypress-axe';
-import { TEST_SEARCH_TERM } from 'cypress/support';
-import { testA11y } from 'cypress/support/utils';
-
 describe('Search Page', () => {
     it('should redirect to the correct url when query was set and submit button was triggered', () => {
         const queryString = 'Another interesting query string';

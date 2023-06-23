@@ -147,6 +147,9 @@ export class AutoregistrationComponent implements OnInit {
           this.deleteVerificationToken();
           this.store.dispatch(new AuthenticatedAction(authToken));
           this.router.navigate(['home']);
+        } else {
+          this.notificationService.error(this.translateService.instant('clarin.autologin.error.message'));
+          console.error(responseRD$.errorMessage);
         }
       });
   }
@@ -163,9 +166,11 @@ export class AutoregistrationComponent implements OnInit {
    * Retrieve the `ClarinVerificationToken` object by the `verificationToken` value.
    */
   private loadVerificationToken() {
+    console.log('I am here');
     this.verificationTokenService.searchBy('byToken', this.createSearchOptions(this.verificationToken))
       .pipe(getFirstSucceededRemoteListPayload())
       .subscribe(res => {
+        console.log('res', res);
         if (isEmpty(res?.[0])) {
           return;
         }

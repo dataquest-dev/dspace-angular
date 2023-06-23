@@ -3158,6 +3158,8 @@
 
   "clarin.autoregistration.token.not.valid.message": "Verification token is not valid.",
 
+  "clarin.autologin.error.message": "Something went wrong, the user cannot be signed in automatically.",
+
 
   "menu.header.admin": "Management",
 
