@@ -8,7 +8,7 @@ import {
   TEST_SUBMIT_CLARIAH_COLLECTION_UUID,
   TEST_SUBMIT_COLLECTION_UUID
 } from '../support';
-import { createItemProcess, loginProcess } from '../support/commands';
+import { createItemProcess } from '../support/commands';
 
 
 const sideBarMenu = {
@@ -28,11 +28,11 @@ const sideBarMenu = {
 
 describe('Create a new submission', () => {
   beforeEach(() => {
-    cy.visit('/');
-    // Login as admin
-    loginProcess.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
     // Create a new submission
     cy.visit('/submit?collection=' + TEST_SUBMIT_COLLECTION_UUID + '&entityType=none');
+
+    // This page is restricted, so we will be shown the login form. Fill it out & submit.
+    cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
   });
 
   // Test openAIRE - configured more retries because it failed with 3 retries
@@ -255,11 +255,11 @@ describe('Create a new submission', () => {
 
 describe('Create a new submission in the clariah collection', () => {
   beforeEach(() => {
-    cy.visit('/');
-    // Login as admin
-    loginProcess.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
     // Create a new submission
     cy.visit('/submit?collection=' + TEST_SUBMIT_CLARIAH_COLLECTION_UUID + '&entityType=none');
+
+    // This page is restricted, so we will be shown the login form. Fill it out & submit.
+    cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
   });
 
   it('The submission should have the Notice Step', {

@@ -46,22 +46,8 @@
   color: #fff;
   border-radius: 0 0.25em 0.25em 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.label-icon {
-  border-radius: 0.25em 0 0 0.25em;
-}
-
-.label-PUB {
-  background-color: #5cb811;
-}
-
-.label-RES {
-  background-color: #c62d1f;
-}
-
-.label-ACA, .label-PDT {
-  background-color: #ffab23;
+  border: 1px solid #ddd;
+  border-bottom: none;
 }
 
 .label-license {

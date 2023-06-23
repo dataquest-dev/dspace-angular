@@ -11,7 +11,7 @@ import { ClarinVerificationToken } from '../../shared/clarin/clarin-verification
 import { CoreState } from '../../core-state.model';
 import { dataService } from '../base/data-service.decorator';
 import {DeleteData, DeleteDataImpl} from '../base/delete-data';
-import {SearchData} from '../base/search-data';
+import {SearchData, SearchDataImpl} from '../base/search-data';
 import {Observable} from 'rxjs';
 import {RemoteData} from '../remote-data';
 import {NoContent} from '../../shared/NoContent.model';
@@ -42,6 +42,7 @@ export class ClarinVerificationTokenDataService extends IdentifiableDataService<
     protected notificationsService: NotificationsService,
   ) {
     super(linkName, requestService, rdbService, objectCache, halService, undefined);
+    this.searchData = new SearchDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
     this.deleteData = new DeleteDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, notificationsService, this.responseMsToLive, this.constructIdEndpoint);
   }
 
