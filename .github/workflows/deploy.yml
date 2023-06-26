@@ -40,7 +40,7 @@ jobs:
           echo S3_SUBFOLDER=seven-five >> .env.dev-5
           echo S3_ACCESS=${{ secrets.AMAZON_ACCESS }} >> .env.dev-5
           echo S3_SECRET=${{ secrets.AMAZON_SECRET }} >> .env.dev-5
-          echo S3_REGION_NAME=us-east-1 >> .env.dev-5
+          echo S3_REGION_NAME=eu-central-1 >> .env.dev-5
 
           export ENVFILE=$(pwd)/.env.dev-5
           ./start.sh dspace-5
