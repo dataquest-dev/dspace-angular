@@ -43,4 +43,4 @@ jobs:
           echo S3_REGION_NAME=us-east-1 >> .env.dev-5
 
           export ENVFILE=$(pwd)/.env.dev-5
-          ./start.sh
+          ./start.sh dspace-5
