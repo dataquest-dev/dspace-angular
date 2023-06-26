@@ -36,7 +36,7 @@ jobs:
           echo S3_STORAGE=1 >> .env.dev-5
           echo S3_ENABLED=true >> .env.dev-5
           echo S3_RELATIVE_PATH=true >> .env.dev-5
-          echo S3_BUCKET=dev-5 >> .env.dev-5
+          echo S3_BUCKET=dev-5-dspace >> .env.dev-5
           echo S3_SUBFOLDER=seven-five >> .env.dev-5
           echo S3_ACCESS=${{ secrets.AMAZON_ACCESS }} >> .env.dev-5
           echo S3_SECRET=${{ secrets.AMAZON_SECRET }} >> .env.dev-5
