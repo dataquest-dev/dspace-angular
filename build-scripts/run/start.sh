@@ -11,7 +11,7 @@ docker pull $DSPACE_UI_IMAGE
 
 pushd ../..
 docker-compose --env-file $ENVFILE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml pull
-docker-compose --env-file $ENVFILE ${1:-unnamed_dspace} -f docker/docker-compose.yml -f docker/docker-compose-rest.yml up -d --no-build
+docker-compose --env-file $ENVFILE -p ${1:-unnamed_dspace} -f docker/docker-compose.yml -f docker/docker-compose-rest.yml up -d --no-build
 popd
 
 # Create admin user
