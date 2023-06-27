@@ -14,7 +14,7 @@ jobs:
           submodules: false
       - name: erase_db
         run: |
-          echo "Erasing database on instance 6"
+          echo "Erasing database on instance $INSTANCE"
           docker stop dspacedb$INSTANCE dspace$INSTANCE dspace-angular$INSTANCE
           docker rm dspacedb$INSTANCE dspace$INSTANCE dspace-angular$INSTANCE
           docker volume rm dspace-$INSTANCE _pgdata dspace-$INSTANCE _assetstore
