@@ -4,20 +4,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  restart_db:
+    env: 
+      INSTANCE: 6
     runs-on: dspace-dep-1
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: false
-      - name: deploy
-        env: 
-          INSTANCE: 6
+      - name: erase_db
         run: |
           echo "Erasing database on instance 6"
           docker stop dspacedb$INSTANCE dspace$INSTANCE dspace-angular$INSTANCE
           docker rm dspacedb$INSTANCE dspace$INSTANCE dspace-angular$INSTANCE
           docker volume rm dspace-$INSTANCE _pgdata dspace-$INSTANCE _assetstore
+      - name: redeploy
+        run: |
           echo "starting new deploy"
           curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}" --request POST https://api.github.com/repos/dataquest-dev/dspace-angular/actions/workflows/deploy.yml/dispatches --data "{\"ref\":\"refs/heads/internal/multideploy-support\"}"
           echo "new deploy started"
