@@ -31,7 +31,7 @@ jobs:
           echo DOCKER_OWNER=dataquest >> .env.dev-5
           ## echo NODE_ENV="development" >> .env.dev-5
           echo DSPACE_UI_IMAGE="dataquest/dspace-angular:customer-TUL" >> .env.dev-5
-          echo DSPACE_VER=customer-TUL
+          echo DSPACE_VER=customer-TUL >> .env.dev-5
           echo INSTANCE=6 >> .env.dev-5
           
           export ENVFILE=$(pwd)/.env.dev-5
