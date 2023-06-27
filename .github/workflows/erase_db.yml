@@ -19,7 +19,7 @@ jobs:
       - name: remove volumes
         if: '!cancelled()'
         run: |
-          docker volume rm dspace-{$INSTANCE}_pgdata dspace-{$INSTANCE}_assetstore
+          docker volume rm dspace-{{$INSTANCE}}_pgdata dspace-($INSTANCE)_assetstore
       - name: redeploy
         if: '!cancelled()'
         run: |
