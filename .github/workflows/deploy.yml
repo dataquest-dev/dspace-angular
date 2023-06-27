@@ -2,13 +2,6 @@
 name: Deploy DSpace
 
 on:
-  workflow_run:
-    workflows: ["Docker images", "Erase database"]
-    types:
-      - completed
-    branches:
-      - dtq-dev
-      - dtq-dev-present
   workflow_dispatch:
 
 jobs:
