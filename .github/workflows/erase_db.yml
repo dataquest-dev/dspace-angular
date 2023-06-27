@@ -6,7 +6,7 @@ on:
 jobs:
   restart_db:
     env: 
-      INSTANCE: 6
+      INSTANCE: 2
     runs-on: dspace-dep-1
     steps:
       - uses: actions/checkout@v3
