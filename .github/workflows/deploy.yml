@@ -31,6 +31,7 @@ jobs:
           echo DOCKER_OWNER=dataquest >> .env.dev-5
           ## echo NODE_ENV="development" >> .env.dev-5
           echo DSPACE_UI_IMAGE="dataquest/dspace-angular:dtq-dev-7.5" >> .env.dev-5
+          echo DSPACE_VER="dtq-dev-7.5" >> .env.dev-5
           echo INSTANCE=5 >> .env.dev-5
           
           echo S3_STORAGE=1 >> .env.dev-5
