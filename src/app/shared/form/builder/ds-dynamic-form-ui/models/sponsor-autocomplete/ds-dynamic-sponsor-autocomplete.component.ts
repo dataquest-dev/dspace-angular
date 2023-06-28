@@ -72,10 +72,10 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
       fundingProjectCode = this.getProjectCodeFromId(suggestion?.id);
       fundingName = suggestion.metadata?.['project.funder.name']?.[0]?.value;
     } else if (suggestion instanceof  VocabularyEntry) {
-      // the value is in the format: `<FUNDING_TYPE>;<PROJECT_CODE>;<FUND_ORGANIZATION>;<FUNDING_NAME>;`
+      // the value is in the format: `<ORG>;<PROJECT_CODE>;<PROJECT_NAME>;<TYPE>;`
       const fundingFields = suggestion.value?.split(SEPARATOR);
       fundingProjectCode = fundingFields?.[1];
-      fundingName = fundingFields?.[3];
+      fundingName = fundingFields?.[2];
     }
     return DsDynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
   };

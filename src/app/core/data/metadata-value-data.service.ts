@@ -21,7 +21,7 @@ import { BaseDataService } from './base/base-data.service';
 import { dataService } from './base/data-service.decorator';
 import { CoreState } from '../core-state.model';
 import { FindListOptions } from './find-list-options.model';
-import {SearchData} from './base/search-data';
+import { SearchData, SearchDataImpl } from './base/search-data';
 import { FollowLinkConfig } from 'src/app/shared/utils/follow-link-config.model';
 import { RemoteData } from './remote-data';
 
@@ -48,6 +48,8 @@ export class MetadataValueDataService extends BaseDataService<MetadataValue> imp
     protected notificationsService: NotificationsService
   ) {
     super(linkName, requestService, rdbService, objectCache, halService, undefined);
+
+    this.searchData = new SearchDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
   }
 
   searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<MetadataValue>[]): Observable<RemoteData<PaginatedList<MetadataValue>>> {

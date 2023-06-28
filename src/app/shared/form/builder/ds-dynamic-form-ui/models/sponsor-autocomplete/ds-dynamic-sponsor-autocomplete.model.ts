@@ -5,7 +5,7 @@ import { isEmpty } from '../../../../../empty.util';
 
 export const DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE = 'AUTOCOMPLETE';
 export const DEFAULT_MIN_CHARS_TO_AUTOCOMPLETE = 3;
-export const DEFAULT_MAX_CHARS_TO_AUTOCOMPLETE = 200;
+export const DEFAULT_MAX_CHARS_TO_AUTOCOMPLETE = 400;
 
 export const DEFAULT_EU_DISPLAY_VALUE = 'EU';
 export const DEFAULT_EU_STORAGE_VALUE = 'euFunds';

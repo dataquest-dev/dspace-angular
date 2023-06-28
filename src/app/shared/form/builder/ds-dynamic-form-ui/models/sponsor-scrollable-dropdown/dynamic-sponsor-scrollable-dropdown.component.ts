@@ -11,14 +11,10 @@ import { DsDynamicScrollableDropdownComponent } from '../scrollable-dropdown/dyn
 import {
   DynamicScrollableDropdownModel
 } from '../scrollable-dropdown/dynamic-scrollable-dropdown.model';
-import {
-  DEFAULT_EU_DISPLAY_VALUE,
-  DsDynamicSponsorAutocompleteModel
-} from '../sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.model';
-import { DynamicComplexModel, EU_IDENTIFIER_INDEX } from '../ds-dynamic-complex.model';
+import { DsDynamicSponsorAutocompleteModel } from '../sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.model';
+import { DynamicComplexModel } from '../ds-dynamic-complex.model';
 import { DsDynamicInputModel } from '../ds-dynamic-input.model';
 import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from '../autocomplete/ds-dynamic-autocomplete.model';
-import isEqual from 'lodash/isEqual';
 
 const DYNAMIC_INPUT_TYPE = 'INPUT';
 
@@ -75,9 +71,6 @@ export class DsDynamicSponsorScrollableDropdownComponent extends DsDynamicScroll
     }
 
     result.pipe(take(1)).subscribe(resultValue => {
-      if (!this.shouldCleanInputs(resultValue, this.model?.parent)) {
-        return;
-      }
       this.cleanSponsorInputs(resultValue, this.model?.parent);
     });
 
@@ -94,10 +87,6 @@ export class DsDynamicSponsorScrollableDropdownComponent extends DsDynamicScroll
       return;
     }
 
-    if (!this.shouldCleanInputs(fundingTypeValue, complexInputField)) {
-      return;
-    }
-
     // clean inputs
     complexInputField.group.forEach(input => {
       switch (input.type) {
@@ -111,30 +100,5 @@ export class DsDynamicSponsorScrollableDropdownComponent extends DsDynamicScroll
           break;
       }
     });
-  }
-
-  /**
-   * The inputs shouldn't be cleaned after every funding type change.
-   * Change the funding type if the funding type is EU and the complex input field doesn't have EU identifier
-   * `info:eu..`
-   * or the if the funding type is Non EU and the complex input field has EU identifier `info:eu..`
-   * @param fundingTypeValue
-   * @param complexInputField
-   * @private
-   */
-  private shouldCleanInputs(fundingTypeValue, complexInputField) {
-    const euIdentifierValue = (complexInputField?.group?.[EU_IDENTIFIER_INDEX] as DsDynamicInputModel)?.value;
-
-    // if the funding type is EU and doesn't have EU identifier `info:eu..` -> clean inputs
-    if (isEqual(fundingTypeValue, DEFAULT_EU_DISPLAY_VALUE) && isEmpty(euIdentifierValue)) {
-      return true;
-    }
-
-    // if the funding type is Non EU and has EU identifier `info:eu..` -> clean inputs
-    if (!isEqual(fundingTypeValue, DEFAULT_EU_DISPLAY_VALUE) && !isEmpty(euIdentifierValue)) {
-      return true;
-    }
-
-    return false;
   }
 }
