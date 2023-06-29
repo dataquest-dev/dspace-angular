@@ -28,7 +28,8 @@
         </div>
       </div>
       <div class="row justify-content-end pt-3">
-        <div [ngClass]="'d-inline py-1 px-1 label label-license' + ' label-' + licenseLabel + ' rounded text-white'">
+        <div *ngIf="licenseType != null"
+             [ngClass]="'d-inline py-1 px-1 label label-license' + ' label-' + licenseLabel + ' rounded text-white'">
           <span>
             {{licenseType }}
           </span>
