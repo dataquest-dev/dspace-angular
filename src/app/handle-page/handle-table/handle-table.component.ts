@@ -354,8 +354,6 @@ export class HandleTableComponent implements OnInit {
    */
   setSearchOption(event) {
     this.searchOption = event?.target?.innerHTML;
-    this.searchInput.nativeElement.value = '';
-    this.searchHandles('');
   }
 
   /**
