@@ -113,6 +113,7 @@ export class ClarinSearchComponent extends SearchComponent implements OnInit {
         this.initialized$.next(true);
         // retrieve results
         this.retrieveSearchResults(newSearchOptions);
+        this.retrieveFilters(searchOptions);
       }
     });
   }
