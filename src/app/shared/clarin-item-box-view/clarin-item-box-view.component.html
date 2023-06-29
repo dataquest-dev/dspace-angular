@@ -33,8 +33,8 @@
           <span>
             {{licenseType }}
           </span>
-          <div class="d-inline" *ngFor="let icon of licenseLabelIcons">
-            <img [src]="secureImageData(icon)" alt="" width="16px">
+          <div class="d-inline" *ngFor="let icon of (licenseLabelIcons | async)">
+            <img [ngClass]="{'clarin-license-icon-mr':licenseLabelIcons.value.length > 1}" [src]="secureImageData(icon)" alt="" width="16px">
           </div>
         </div>
 
