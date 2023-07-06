@@ -24,11 +24,11 @@ ngOnInit() {
   const citaceProAllowed$ = this.configService.findByPropertyName('citace.pro.allowed');
 
   combineLatest([citaceProUrl$, universityUsingDspace$, citaceProAllowed$]).subscribe(([citaceProUrlData, universityData, citaceProAllowedData]) => {
-    const citaceProBaseUrl = citaceProUrlData.payload.values[0];
-    const universityUsingDspace = universityData.payload.values[0];
+    const citaceProBaseUrl = citaceProUrlData?.payload?.values?.[0];
+    const universityUsingDspace = universityData?.payload?.values?.[0];
     this.citaceProURL = this.makeCitaceProURL(citaceProBaseUrl, universityUsingDspace);
 
-    const citaceProAllowed = citaceProAllowedData.payload.values[0];
+    const citaceProAllowed = citaceProAllowedData?.payload?.values?.[0];
     this.citaceProStatus = citaceProAllowed === 'true';
   });
 }
