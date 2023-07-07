@@ -91,7 +91,11 @@
             </div>
             <div class="footer-sign">
               <p class="theme-by">Theme by</p>
-              <a class="dtq-sign text-white" [href]="(themedByUrl$ | async)?.payload?.values[0]">+ dataquest</a>
+              <a class="dtq-sign text-white"
+                 [href]="(themedByUrl$ | async)?.payload?.values[0]"
+                 [title]="(themedByCompanyName$ | async)?.payload?.values[0]">
+                + dataquest
+              </a>
             </div>
           </div>
         </div>

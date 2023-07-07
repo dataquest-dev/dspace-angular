@@ -23,16 +23,21 @@ export class FooterComponent implements OnInit {
   showEndUserAgreement = environment.info.enableEndUserAgreement;
 
   /**
-   * The mail for the help desk is loaded from the server.
+   * The company url which customized this DSpace with redirection to the DSpace section
    */
   themedByUrl$: Observable<RemoteData<ConfigurationProperty>>;
+
+  /**
+   * The company name which customized this DSpace with redirection to the DSpace section
+   */
+  themedByCompanyName$: Observable<RemoteData<ConfigurationProperty>>;
 
   constructor(@Optional() private cookies: KlaroService,
               protected configurationDataService: ConfigurationDataService) {
   }
 
   ngOnInit(): void {
-    this.loadThemedByUrl();
+    this.loadThemedByProps();
   }
 
   showCookieSettings() {
@@ -42,7 +47,8 @@ export class FooterComponent implements OnInit {
     return false;
   }
 
-  private loadThemedByUrl() {
+  private loadThemedByProps() {
     this.themedByUrl$ = this.configurationDataService.findByPropertyName('themed.by.url');
+    this.themedByCompanyName$ = this.configurationDataService.findByPropertyName('themed.by.company.name');
   }
 }
