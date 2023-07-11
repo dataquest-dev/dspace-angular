@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: false
-      - name: deploy
+      - name: deploy on port 86
         run: |
           cd $GITHUB_WORKSPACE/build-scripts/run/
           pwd
