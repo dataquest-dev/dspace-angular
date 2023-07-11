@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContactPageComponent } from './contact-page.component';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { of } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core'; // Don't forget to import TranslateModule
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ContactPageComponent', () => {
   let component: ContactPageComponent;
@@ -16,7 +16,7 @@ describe('ContactPageComponent', () => {
       declarations: [ ContactPageComponent ],
       imports: [ TranslateModule.forRoot() ], // Add this line
       providers: [
-        { provide: ConfigurationDataService, useValue: mockConfigService }
+        { provide: ConfigurationDataService, useValue: mockConfigService },
       ]
     })
     .compileComponents();
@@ -38,7 +38,7 @@ describe('ContactPageComponent', () => {
   });
 
   it('should call findByPropertyName on init', () => {
-    expect(mockConfigService.findByPropertyName).toHaveBeenCalledWith('dspace.contact.email');
+    expect(mockConfigService.findByPropertyName).toHaveBeenCalledWith('lr.help.mail');
   });
 
   it('should set emailToContact from service on init', () => {

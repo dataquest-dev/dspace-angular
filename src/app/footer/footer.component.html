@@ -53,36 +53,53 @@
   <!-- Grid container -->
 
   <!-- Copyright -->
-  <div class="bottom-footer p-1 d-flex justify-content-center align-items-center text-white">
-    <div class="content-container">
-      <p class="m-0">
-        <a class="text-white"
-           href="http://www.dspace.org/">{{ 'footer.link.dspace' | translate}}</a>
-        {{ 'footer.copyright' | translate:{year: dateObj | date:'y'} }}
-        <a class="text-white"
-           href="https://www.lyrasis.org/">{{ 'footer.link.lyrasis' | translate}}</a>
-      </p>
-      <ul class="footer-info list-unstyled small d-flex justify-content-center mb-0">
-        <li>
-          <a class="text-white" routerLink="/contact">{{ 'footer.link.contact-us' | translate}}</a>
-      </li>
-        <li>
-            <a class="text-white" href="javascript:void(0);"
-             (click)="showCookieSettings()">{{ 'footer.link.cookies' | translate}}</a>
-        </li>
-        <!-- <li *ngIf="showPrivacyPolicy">
-          <a class="text-white"
-             routerLink="info/privacy">{{ 'footer.link.privacy-policy' | translate}}</a>
-        </li> -->
-        <li *ngIf="showEndUserAgreement">
-          <a class="text-white"
-             routerLink="info/end-user-agreement">{{ 'footer.link.end-user-agreement' | translate}}</a>
-        </li>
-        <li>
-          <a class="text-white"
-             routerLink="info/feedback">{{ 'footer.link.feedback' | translate}}</a>
-        </li>
-      </ul>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 d-flex justify-content-end">
+        <!-- col-8.5 -->
+        <div class="col-1" style="width: 70.8333%; flex: 0 0 70.8333%;max-width: 70.8333%;">
+          <div class="bottom-footer p-1 d-flex justify-content-between align-items-center text-white">
+            <div class="content-container">
+              <p class="m-0">
+                <a class="text-white"
+                   href="http://www.dspace.org/">{{ 'footer.link.dspace' | translate}}</a>
+                {{ 'footer.copyright' | translate:{year: dateObj | date:'y'} }}
+                <a class="text-white"
+                   href="https://www.lyrasis.org/">{{ 'footer.link.lyrasis' | translate}}</a>
+              </p>
+              <ul class="footer-info list-unstyled small d-flex justify-content-center mb-0">
+                <li>
+                  <a class="text-white" routerLink="/contact">{{ 'footer.link.contact-us' | translate}}</a>
+                </li>
+                <li>
+                  <a class="text-white" href="javascript:void(0);"
+                     (click)="showCookieSettings()">{{ 'footer.link.cookies' | translate}}</a>
+                </li>
+                <!-- <li *ngIf="showPrivacyPolicy">
+                  <a class="text-white"
+                     routerLink="info/privacy">{{ 'footer.link.privacy-policy' | translate}}</a>
+                </li> -->
+                <li *ngIf="showEndUserAgreement">
+                  <a class="text-white"
+                     routerLink="info/end-user-agreement">{{ 'footer.link.end-user-agreement' | translate}}</a>
+                </li>
+                <li>
+                  <a class="text-white"
+                     routerLink="info/feedback">{{ 'footer.link.feedback' | translate}}</a>
+                </li>
+              </ul>
+            </div>
+            <div class="footer-sign">
+              <p class="theme-by">Theme by</p>
+              <a class="dtq-sign text-white"
+                 [href]="(themedByUrl$ | async)?.payload?.values[0]"
+                 [title]="(themedByCompanyName$ | async)?.payload?.values[0]">
+                + dataquest
+              </a>
+            </div>
+          </div>
+        </div>
+    </div>
     </div>
   </div>
   <!-- Copyright -->
