@@ -15,9 +15,9 @@ import { FooterComponent } from './footer.component';
 
 import { TranslateLoaderMock } from '../shared/mocks/translate-loader.mock';
 import { storeModuleConfig } from '../app.reducer';
-import {ConfigurationDataService} from '../core/data/configuration-data.service';
-import {createSuccessfulRemoteDataObject$} from '../shared/remote-data.utils';
-import {ConfigurationProperty} from '../core/shared/configuration-property.model';
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
+import { ConfigurationProperty } from '../core/shared/configuration-property.model';
 
 let comp: FooterComponent;
 let fixture: ComponentFixture<FooterComponent>;
