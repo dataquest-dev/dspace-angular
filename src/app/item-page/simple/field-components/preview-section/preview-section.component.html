@@ -1,0 +1,30 @@
+<div class="file-preview-box">
+    <div class="file-content">
+        <div class="file-info">
+            <p>Name: {{file.name}}</p>
+            <p>Size: {{file.size}}</p>
+            <p>Format: {{file.format}}</p>
+            <p>Description: {{file.description}}</p>
+            <p>MD5: {{file.md5}}</p>
+            <div class="button-container">
+                <button class="download-btn">Download</button>
+                <button class="preview-btn" (click)="togglePreview()">Preview</button>
+            </div>
+        </div>
+        <img [src]="file.previewImageUrl" alt="Preview" class="preview-image">
+    </div>
+    <div *ngIf="isPreviewVisible" class="file-list">
+        <ng-container *ngTemplateOutlet="recursiveList; context:{ files: fileList }"></ng-container>
+
+        <ng-template #recursiveList let-files="files">
+            <ul>
+                <li *ngFor="let file of files">
+                    {{file.name}} <span *ngIf="file.size">{{file.size}}</span>
+                    <div *ngIf="file.isDirectory">
+                        <ng-container *ngTemplateOutlet="recursiveList; context:{ files: file.sub }"></ng-container>
+                    </div>
+                </li>
+            </ul>
+        </ng-template>
+    </div>
+</div>

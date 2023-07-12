@@ -70,6 +70,7 @@ import { EPerson } from './eperson/models/eperson.model';
 import { Group } from './eperson/models/group.model';
 import { JsonPatchOperationsBuilder } from './json-patch/builder/json-patch-operations-builder';
 import { MetadataField } from './metadata/metadata-field.model';
+import { MetadataBitstream } from './metadata/metadata-bitstream.model';
 import { MetadataSchema } from './metadata/metadata-schema.model';
 import { MetadataService } from './metadata/metadata.service';
 import { RegistryService } from './registry/registry.service';
@@ -138,6 +139,7 @@ import { SiteAdministratorGuard } from './data/feature-authorization/feature-aut
 import { Registration } from './shared/registration.model';
 import { MetadataSchemaDataService } from './data/metadata-schema-data.service';
 import { MetadataFieldDataService } from './data/metadata-field-data.service';
+import { MetadataBitstreamDataService } from './data/metadata-bitstream-data.service';
 import { DsDynamicTypeBindRelationService } from '../shared/form/builder/ds-dynamic-form-ui/ds-dynamic-type-bind-relation.service';
 import { TokenResponseParsingService } from './auth/token-response-parsing.service';
 import { SubmissionCcLicenseDataService } from './submission/submission-cc-license-data.service';
@@ -292,6 +294,7 @@ const PROVIDERS = [
   SiteRegisterGuard,
   MetadataSchemaDataService,
   MetadataFieldDataService,
+  MetadataBitstreamDataService,
   TokenResponseParsingService,
   ReloadGuard,
   EndUserAgreementCurrentUserGuard,
@@ -328,6 +331,7 @@ export const models =
     ResourcePolicy,
     MetadataSchema,
     MetadataField,
+    MetadataBitstream,
     License,
     WorkflowItem,
     WorkspaceItem,

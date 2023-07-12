@@ -48,7 +48,7 @@ import { ChartsModule } from 'ng2-charts';
 import { ClarinGenericItemFieldComponent } from './simple/field-components/clarin-generic-item-field/clarin-generic-item-field.component';
 import { ClarinCollectionsItemFieldComponent } from './simple/field-components/clarin-collections-item-field/clarin-collections-item-field.component';
 import { ClarinFilesItemFieldComponent } from './simple/field-components/clarin-files-item-field/clarin-files-item-field.component';
-
+import { PreviewSectionComponent } from './simple/field-components/preview-section/preview-section.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -93,7 +93,8 @@ const DECLARATIONS = [
   ClarinStatisticsButtonComponent,
   ClarinGenericItemFieldComponent,
   ClarinCollectionsItemFieldComponent,
-  ClarinFilesItemFieldComponent
+  ClarinFilesItemFieldComponent,
+  PreviewSectionComponent
 ];
 
 @NgModule({
