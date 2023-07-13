@@ -25,43 +25,43 @@ export class PreviewSectionComponent implements OnInit {
   constructor(protected registryService: RegistryService) {} // Modified
 
   ngOnInit(): void {
-    // this.registryService
-    //   .getMetadataBitstream('123456789/36', 'ORIGINAL,TEXT,THUMBNAIL')
-    //   .subscribe(
-    //     (remoteData: any) => {
-    //       console.log('Received data:', remoteData);
-    //       if (
-    //         remoteData &&
-    //         remoteData._embedded &&
-    //         remoteData._embedded.metadatabitstreams
-    //       ) {
-    //         this.fileList = this.parseFiles(
-    //           remoteData._embedded.metadatabitstreams[0].fileInfo
-    //         );
-    //       }
-    //     },
-    //     (error: any) => {
-    //       console.log('Received error:', error);
-    //     }
-    //   );
+    this.registryService
+      .getMetadataBitstream('123456789/36', 'ORIGINAL,TEXT,THUMBNAIL')
+      .subscribe(
+        (remoteData: any) => {
+          console.log('Received data:', remoteData);
+          // if (
+          //   remoteData &&
+          //   remoteData._embedded &&
+          //   remoteData._embedded.metadatabitstreams
+          // ) {
+          //   this.fileList = this.parseFiles(
+          //     remoteData._embedded.metadatabitstreams[0].fileInfo
+          //   );
+          // }
+        },
+        (error: any) => {
+          console.log('Received error:', error);
+        }
+      );
   }
 
-  togglePreview() {
-    this.isPreviewVisible = !this.isPreviewVisible;
-  }
+  // togglePreview() {
+  //   this.isPreviewVisible = !this.isPreviewVisible;
+  // }
 
-  parseFiles(files: any[]): any[] {
-    let parsedFiles: any[] = [];
-    for (let file of files) {
-      let parsedFile: any = {};
-      parsedFile.name = file.name;
-      parsedFile.size = file.size;
-      parsedFile.isDirectory = file.isDirectory;
-      if (file.isDirectory && file.sub) {
-        parsedFile.sub = this.parseFiles(Object.values(file.sub));
-      }
-      parsedFiles.push(parsedFile);
-    }
-    return parsedFiles;
-  }
+  // parseFiles(files: any[]): any[] {
+  //   let parsedFiles: any[] = [];
+  //   for (let file of files) {
+  //     let parsedFile: any = {};
+  //     parsedFile.name = file.name;
+  //     parsedFile.size = file.size;
+  //     parsedFile.isDirectory = file.isDirectory;
+  //     if (file.isDirectory && file.sub) {
+  //       parsedFile.sub = this.parseFiles(Object.values(file.sub));
+  //     }
+  //     parsedFiles.push(parsedFile);
+  //   }
+  //   return parsedFiles;
+  // }
 }

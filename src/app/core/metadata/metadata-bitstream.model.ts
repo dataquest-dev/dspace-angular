@@ -1,6 +1,6 @@
-import { autoserialize, deserialize } from 'cerialize';
+import { autoserialize, autoserializeAs, deserialize, deserializeAs } from 'cerialize';
 import { ListableObject } from '../../shared/object-collection/shared/listable-object.model';
-import {    typedObject } from '../cache/builders/build-decorators';
+import { typedObject } from '../cache/builders/build-decorators';
 import { GenericConstructor } from '../shared/generic-constructor';
 import { HALLink } from '../shared/hal-link.model';
 import { HALResource } from '../shared/hal-resource.model';
@@ -9,7 +9,18 @@ import { excludeFromEquals } from '../utilities/equals.decorators';
 import { METADATA_BITSTREAM } from './metadata-bitstream.resource-type';
 
 /**
- * Class the represents a metadata field
+ * Class the represents a File
+ */
+class FileInfo {
+  @autoserialize name: string;
+  @autoserialize content: any;
+  @autoserialize size: string;
+  @autoserialize isDirectory: boolean;
+  @autoserializeAs(FileInfo, 'sub') sub: {[key: string]: FileInfo};
+}
+
+/**
+ * Class that represents a MetadataBitstream
  */
 @typedObject
 export class MetadataBitstream extends ListableObject implements HALResource {
@@ -29,22 +40,51 @@ export class MetadataBitstream extends ListableObject implements HALResource {
   id: number;
 
   /**
-   * The element of this metadata field
+   * The name of this bitstream
    */
   @autoserialize
-  bitstreamRest: any;
+  name: string;
 
   /**
-   * The qualifier of this metadata field
+   * The description of this bitstream
    */
   @autoserialize
-  fileInfo: any;
+  description: string;
 
   /**
-   * The scope note of this metadata field
+   * The fileSize of this bitstream
    */
   @autoserialize
-  href: any;
+  fileSize: string;
+
+  /**
+   * The checksum of this bitstream
+   */
+  @autoserialize
+  checksum: string;
+
+  /**
+   * The fileInfo of this bitstream
+   */
+  @autoserializeAs(FileInfo, 'fileInfo') fileInfo: FileInfo[];
+
+  /**
+   * The format of this bitstream
+   */
+  @autoserialize
+  format: string;
+
+  /**
+   * The href of this bitstream
+   */
+  @autoserialize
+  href: string;
+
+  /**
+   * The canPreview of this bitstream
+   */
+  @autoserialize
+  canPreview: boolean;
 
   /**
    * The {@link HALLink}s for this MetadataField
