@@ -218,7 +218,7 @@ export class RemoteDataBuildService {
     );
 
     const payload$ = this.buildPayload<T>(requestEntry$, href$, ...linksToFollow);
-
+    
     return this.toRemoteDataObservable<T>(requestEntry$, payload$);
   }
 

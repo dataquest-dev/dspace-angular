@@ -20,6 +20,7 @@ import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { CoreState } from '../core.reducers';
 import { ChangeAnalyzer } from './change-analyzer';
+import { tap } from 'rxjs/operators';
 
 /**
  * A service responsible for fetching/sending data from/to the REST API on the metadatafields endpoint
@@ -67,7 +68,7 @@ export class MetadataBitstreamDataService extends DataService<MetadataBitstream>
         new RequestParam('fileGrpType', hasValue(fileGrpType) ? fileGrpType : ''),
       ],
     });
-    return this.searchBy(this.searchByHandleLinkPath, optionParams, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow)
+    return this.searchBy(this.searchByHandleLinkPath, optionParams, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
   }
 
   // /**

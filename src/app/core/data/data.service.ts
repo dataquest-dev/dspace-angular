@@ -457,7 +457,7 @@ export abstract class DataService<T extends CacheableObject> implements UpdateDa
    *                                    requested after the response becomes stale
    * @param linksToFollow               List of {@link FollowLinkConfig} that indicate which
    *                                    {@link HALLink}s should be automatically resolved
-   * @return {Observable<RemoteData<PaginatedList<T>>}
+   * @return {Observable<RemoteData<PaginatedList<T>>>}
    *    Return an observable that emits response from the server
    */
   searchBy(searchMethod: string, options: FindListOptions = {}, useCachedVersionIfAvailable = true, reRequestOnStale = true, ...linksToFollow: FollowLinkConfig<T>[]): Observable<RemoteData<PaginatedList<T>>> {
