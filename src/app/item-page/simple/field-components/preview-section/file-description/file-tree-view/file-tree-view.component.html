@@ -1,5 +1,5 @@
 <li>
-  <span class="foldername" *ngIf="node.isDirectory; else fileTemplate">
+  <span class="foldername collapse show" *ngIf="node.isDirectory; else fileTemplate">
     <a role="button" data-toggle="collapse" href="#folder_{{ node.name }}">
       {{ node.name }}
     </a>
@@ -12,7 +12,7 @@
 
   <ul
     id="folder_{{ node.name }}"
-    class="in"
+    class="in collapse show"
     style="height: auto"
     *ngIf="node.isDirectory && node.sub"
   >

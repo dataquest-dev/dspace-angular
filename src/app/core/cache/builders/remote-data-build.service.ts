@@ -3,22 +3,39 @@ import {
   combineLatest as observableCombineLatest,
   Observable,
   of as observableOf,
-  race as observableRace
+  race as observableRace,
 } from 'rxjs';
-import { map, switchMap, filter, distinctUntilKeyChanged } from 'rxjs/operators';
-import { hasValue, isEmpty, isNotEmpty, hasNoValue, isUndefined } from '../../../shared/empty.util';
+import {
+  map,
+  switchMap,
+  filter,
+  distinctUntilKeyChanged,
+} from 'rxjs/operators';
+import {
+  hasValue,
+  isEmpty,
+  isNotEmpty,
+  hasNoValue,
+  isUndefined,
+} from '../../../shared/empty.util';
 import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
-import { FollowLinkConfig, followLink } from '../../../shared/utils/follow-link-config.model';
+import {
+  FollowLinkConfig,
+  followLink,
+} from '../../../shared/utils/follow-link-config.model';
 import { PaginatedList } from '../../data/paginated-list.model';
 import { RemoteData } from '../../data/remote-data';
 import {
   RequestEntry,
   ResponseState,
   RequestEntryState,
-  hasSucceeded
+  hasSucceeded,
 } from '../../data/request.reducer';
 import { RequestService } from '../../data/request.service';
-import { getRequestFromRequestHref, getRequestFromRequestUUID } from '../../shared/operators';
+import {
+  getRequestFromRequestHref,
+  getRequestFromRequestUUID,
+} from '../../shared/operators';
 import { ObjectCacheService } from '../object-cache.service';
 import { LinkService } from './link.service';
 import { HALLink } from '../../shared/hal-link.model';
@@ -31,10 +48,11 @@ import { getResourceTypeValueFor } from '../object-cache.reducer';
 
 @Injectable()
 export class RemoteDataBuildService {
-  constructor(protected objectCache: ObjectCacheService,
-              protected linkService: LinkService,
-              protected requestService: RequestService) {
-  }
+  constructor(
+    protected objectCache: ObjectCacheService,
+    protected linkService: LinkService,
+    protected requestService: RequestService
+  ) {}
 
   /**
    * Creates an Observable<T> with the payload for a RemoteData object
@@ -48,21 +66,36 @@ export class RemoteDataBuildService {
    *                        should be automatically resolved
    * @private
    */
-  private buildPayload<T>(requestEntry$: Observable<RequestEntry>, href$?: Observable<string>, ...linksToFollow: FollowLinkConfig<any>[]): Observable<T> {
+  private buildPayload<T>(
+    requestEntry$: Observable<RequestEntry>,
+    href$?: Observable<string>,
+    ...linksToFollow: FollowLinkConfig<any>[]
+  ): Observable<T> {
     if (hasNoValue(href$)) {
       href$ = observableOf(undefined);
     }
     return observableCombineLatest([href$, requestEntry$]).pipe(
       switchMap(([href, entry]: [string, RequestEntry]) => {
-        const hasExactMatchInObjectCache = this.hasExactMatchInObjectCache(href, entry);
-        if (hasValue(entry.response) &&
-          (hasExactMatchInObjectCache || this.isCacheablePayload(entry) || this.isUnCacheablePayload(entry))) {
+        const hasExactMatchInObjectCache = this.hasExactMatchInObjectCache(
+          href,
+          entry
+        );
+        if (
+          hasValue(entry.response) &&
+          (hasExactMatchInObjectCache ||
+            this.isCacheablePayload(entry) ||
+            this.isUnCacheablePayload(entry))
+        ) {
           if (hasExactMatchInObjectCache) {
             return this.objectCache.getObjectByHref(href);
           } else if (this.isCacheablePayload(entry)) {
-            return this.objectCache.getObjectByHref(entry.response.payloadLink.href);
+            return this.objectCache.getObjectByHref(
+              entry.response.payloadLink.href
+            );
           } else {
-            return [this.plainObjectToInstance<T>(entry.response.unCacheableObject)];
+            return [
+              this.plainObjectToInstance<T>(entry.response.unCacheableObject),
+            ];
           }
         } else if (hasSucceeded(entry.state)) {
           return [null];
@@ -72,7 +105,9 @@ export class RemoteDataBuildService {
       }),
       switchMap((obj: T) => {
         if (hasValue(obj)) {
-          if (getResourceTypeValueFor((obj as any).type) === PAGINATED_LIST.value) {
+          if (
+            getResourceTypeValueFor((obj as any).type) === PAGINATED_LIST.value
+          ) {
             return this.buildPaginatedList<T>(obj, ...linksToFollow);
           } else if (isNotEmpty(linksToFollow)) {
             return [this.linkService.resolveLinks(obj, ...linksToFollow)];
@@ -109,9 +144,17 @@ export class RemoteDataBuildService {
    * @param entry the request entry the object has to match
    * @private
    */
-  private hasExactMatchInObjectCache(href: string, entry: RequestEntry): boolean {
-    return hasValue(entry) && hasValue(entry.request) && isNotEmpty(entry.request.uuid) &&
-      hasValue(href) && this.objectCache.hasByHref(href, entry.request.uuid);
+  private hasExactMatchInObjectCache(
+    href: string,
+    entry: RequestEntry
+  ): boolean {
+    return (
+      hasValue(entry) &&
+      hasValue(entry.request) &&
+      isNotEmpty(entry.request.uuid) &&
+      hasValue(href) &&
+      this.objectCache.hasByHref(href, entry.request.uuid)
+    );
   }
 
   /**
@@ -120,7 +163,10 @@ export class RemoteDataBuildService {
    * @private
    */
   private isCacheablePayload(entry: RequestEntry): boolean {
-    return hasValue(entry.response.payloadLink) && isNotEmpty(entry.response.payloadLink.href);
+    return (
+      hasValue(entry.response.payloadLink) &&
+      isNotEmpty(entry.response.payloadLink.href)
+    );
   }
 
   /**
@@ -140,26 +186,40 @@ export class RemoteDataBuildService {
    * @param object          A plain object to be turned in to a {@link PaginatedList}
    * @param linksToFollow   List of {@link FollowLinkConfig} that indicate which {@link HALLink}s should be automatically resolved
    */
-  private buildPaginatedList<T>(object: any, ...linksToFollow: FollowLinkConfig<any>[]): Observable<T> {
-    const pageLink = linksToFollow.find((linkToFollow: FollowLinkConfig<any>) => linkToFollow.name === 'page');
-    const otherLinks = linksToFollow.filter((linkToFollow: FollowLinkConfig<any>) => linkToFollow.name !== 'page');
+  private buildPaginatedList<T>(
+    object: any,
+    ...linksToFollow: FollowLinkConfig<any>[]
+  ): Observable<T> {
+    const pageLink = linksToFollow.find(
+      (linkToFollow: FollowLinkConfig<any>) => linkToFollow.name === 'page'
+    );
+    const otherLinks = linksToFollow.filter(
+      (linkToFollow: FollowLinkConfig<any>) => linkToFollow.name !== 'page'
+    );
 
     const paginatedList = Object.assign(new PaginatedList(), object);
 
     if (hasValue(pageLink)) {
       if (isEmpty(paginatedList.page)) {
-        const pageSelfLinks = paginatedList._links.page.map((link: HALLink) => link.href);
-        return this.objectCache.getList(pageSelfLinks).pipe(map((page: any[]) => {
-          paginatedList.page = page
-            .map((obj: any) => this.plainObjectToInstance<T>(obj))
-            .map((obj: any) =>
-              this.linkService.resolveLinks(obj, ...pageLink.linksToFollow)
-            );
-          if (isNotEmpty(otherLinks)) {
-            return this.linkService.resolveLinks(paginatedList, ...otherLinks);
-          }
-          return paginatedList;
-        }));
+        const pageSelfLinks = paginatedList._links.page.map(
+          (link: HALLink) => link.href
+        );
+        return this.objectCache.getList(pageSelfLinks).pipe(
+          map((page: any[]) => {
+            paginatedList.page = page
+              .map((obj: any) => this.plainObjectToInstance<T>(obj))
+              .map((obj: any) =>
+                this.linkService.resolveLinks(obj, ...pageLink.linksToFollow)
+              );
+            if (isNotEmpty(otherLinks)) {
+              return this.linkService.resolveLinks(
+                paginatedList,
+                ...otherLinks
+              );
+            }
+            return paginatedList;
+          })
+        );
       } else {
         // in case the elements of the paginated list were already filled in, because they're UnCacheableObjects
         paginatedList.page = paginatedList.page
@@ -168,7 +228,9 @@ export class RemoteDataBuildService {
             this.linkService.resolveLinks(obj, ...pageLink.linksToFollow)
           );
         if (isNotEmpty(otherLinks)) {
-          return observableOf(this.linkService.resolveLinks(paginatedList, ...otherLinks));
+          return observableOf(
+            this.linkService.resolveLinks(paginatedList, ...otherLinks)
+          );
         }
       }
     }
@@ -181,13 +243,22 @@ export class RemoteDataBuildService {
    * @param requestUUID$      The UUID of the request we want to retrieve
    * @param linksToFollow     List of {@link FollowLinkConfig} that indicate which {@link HALLink}s should be automatically resolved
    */
-  buildFromRequestUUID<T>(requestUUID$: string | Observable<string>, ...linksToFollow: FollowLinkConfig<any>[]): Observable<RemoteData<T>> {
+  buildFromRequestUUID<T>(
+    requestUUID$: string | Observable<string>,
+    ...linksToFollow: FollowLinkConfig<any>[]
+  ): Observable<RemoteData<T>> {
     if (typeof requestUUID$ === 'string') {
       requestUUID$ = observableOf(requestUUID$);
     }
-    const requestEntry$ = requestUUID$.pipe(getRequestFromRequestUUID(this.requestService));
+    const requestEntry$ = requestUUID$.pipe(
+      getRequestFromRequestUUID(this.requestService)
+    );
 
-    const payload$ = this.buildPayload<T>(requestEntry$, undefined, ...linksToFollow);
+    const payload$ = this.buildPayload<T>(
+      requestEntry$,
+      undefined,
+      ...linksToFollow
+    );
 
     return this.toRemoteDataObservable<T>(requestEntry$, payload$);
   }
@@ -198,7 +269,10 @@ export class RemoteDataBuildService {
    * @param href$             self link of object we want to retrieve
    * @param linksToFollow     List of {@link FollowLinkConfig} that indicate which {@link HALLink}s should be automatically resolved
    */
-  buildFromHref<T>(href$: string | Observable<string>, ...linksToFollow: FollowLinkConfig<any>[]): Observable<RemoteData<T>> {
+  buildFromHref<T>(
+    href$: string | Observable<string>,
+    ...linksToFollow: FollowLinkConfig<any>[]
+  ): Observable<RemoteData<T>> {
     if (typeof href$ === 'string') {
       href$ = observableOf(href$);
     }
@@ -207,18 +281,21 @@ export class RemoteDataBuildService {
 
     const requestUUID$ = href$.pipe(
       switchMap((href: string) =>
-        this.objectCache.getRequestUUIDBySelfLink(href)),
+        this.objectCache.getRequestUUIDBySelfLink(href)
+      )
     );
 
     const requestEntry$ = observableRace(
       href$.pipe(getRequestFromRequestHref(this.requestService)),
-      requestUUID$.pipe(getRequestFromRequestUUID(this.requestService)),
-    ).pipe(
-      distinctUntilKeyChanged('lastUpdated')
+      requestUUID$.pipe(getRequestFromRequestUUID(this.requestService))
+    ).pipe(distinctUntilKeyChanged('lastUpdated'));
+
+    const payload$ = this.buildPayload<T>(
+      requestEntry$,
+      href$,
+      ...linksToFollow
     );
 
-    const payload$ = this.buildPayload<T>(requestEntry$, href$, ...linksToFollow);
-    
     return this.toRemoteDataObservable<T>(requestEntry$, payload$);
   }
 
@@ -228,19 +305,23 @@ export class RemoteDataBuildService {
    * @param href$             Observable href of object we want to retrieve
    * @param linksToFollow     List of {@link FollowLinkConfig} that indicate which {@link HALLink}s should be automatically resolved
    */
-  buildSingle<T>(href$: string | Observable<string>, ...linksToFollow: FollowLinkConfig<any>[]): Observable<RemoteData<T>> {
+  buildSingle<T>(
+    href$: string | Observable<string>,
+    ...linksToFollow: FollowLinkConfig<any>[]
+  ): Observable<RemoteData<T>> {
     return this.buildFromHref(href$, ...linksToFollow);
   }
 
-  toRemoteDataObservable<T>(requestEntry$: Observable<RequestEntry>, payload$: Observable<T>) {
-    return observableCombineLatest([
-      requestEntry$,
-      payload$
-    ]).pipe(
-      filter(([entry,payload]: [RequestEntry, T]) =>
-        hasValue(entry) &&
-        // filter out cases where the state is successful, but the payload isn't yet set
-        !(hasSucceeded(entry.state) && isUndefined(payload))
+  toRemoteDataObservable<T>(
+    requestEntry$: Observable<RequestEntry>,
+    payload$: Observable<T>
+  ) {
+    return observableCombineLatest([requestEntry$, payload$]).pipe(
+      filter(
+        ([entry, payload]: [RequestEntry, T]) =>
+          hasValue(entry) &&
+          // filter out cases where the state is successful, but the payload isn't yet set
+          !(hasSucceeded(entry.state) && isUndefined(payload))
       ),
       map(([entry, payload]: [RequestEntry, T]) => {
         let response = entry.response;
@@ -270,8 +351,14 @@ export class RemoteDataBuildService {
    * @param href$             Observable href of objects we want to retrieve
    * @param linksToFollow     List of {@link FollowLinkConfig} that indicate which {@link HALLink}s should be automatically resolved
    */
-  buildList<T extends HALResource>(href$: string | Observable<string>, ...linksToFollow: FollowLinkConfig<T>[]): Observable<RemoteData<PaginatedList<T>>> {
-    return this.buildFromHref<PaginatedList<T>>(href$, followLink('page', { shouldEmbed: false }, ...linksToFollow));
+  buildList<T extends HALResource>(
+    href$: string | Observable<string>,
+    ...linksToFollow: FollowLinkConfig<T>[]
+  ): Observable<RemoteData<PaginatedList<T>>> {
+    return this.buildFromHref<PaginatedList<T>>(
+      href$,
+      followLink('page', { shouldEmbed: false }, ...linksToFollow)
+    );
   }
 
   /**
@@ -284,8 +371,9 @@ export class RemoteDataBuildService {
    *
    * @param input     the array of RemoteData observables to start from
    */
-  aggregate<T>(input: Observable<RemoteData<T>>[]): Observable<RemoteData<T[]>> {
-
+  aggregate<T>(
+    input: Observable<RemoteData<T>>[]
+  ): Observable<RemoteData<T[]>> {
     if (isEmpty(input)) {
       return createSuccessfulRemoteDataObject$([], new Date().getTime());
     }
@@ -294,15 +382,21 @@ export class RemoteDataBuildService {
       map((arr) => {
         const timeCompleted = arr
           .map((d: RemoteData<T>) => d.timeCompleted)
-          .reduce((max: number, current: number) => current > max ? current : max);
+          .reduce((max: number, current: number) =>
+            current > max ? current : max
+          );
 
         const msToLive = arr
           .map((d: RemoteData<T>) => d.msToLive)
-          .reduce((min: number, current: number) => current < min ? current : min);
+          .reduce((min: number, current: number) =>
+            current < min ? current : min
+          );
 
         const lastUpdated = arr
           .map((d: RemoteData<T>) => d.lastUpdated)
-          .reduce((max: number, current: number) => current > max ? current : max);
+          .reduce((max: number, current: number) =>
+            current > max ? current : max
+          );
 
         let state: RequestEntryState;
         if (arr.some((d: RemoteData<T>) => d.isRequestPending)) {
@@ -325,11 +419,13 @@ export class RemoteDataBuildService {
             if (hasValue(e)) {
               return `[${idx}]: ${e}`;
             }
-          }).filter((e: string) => hasValue(e))
+          })
+          .filter((e: string) => hasValue(e))
           .join(', ');
 
-        const statusCodes = new Set(arr
-          .map((d: RemoteData<T>) => d.statusCode));
+        const statusCodes = new Set(
+          arr.map((d: RemoteData<T>) => d.statusCode)
+        );
 
         let statusCode: number;
 
@@ -350,6 +446,7 @@ export class RemoteDataBuildService {
           payload,
           statusCode
         );
-      }));
+      })
+    );
   }
 }
