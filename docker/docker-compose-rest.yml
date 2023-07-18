@@ -50,8 +50,10 @@ services:
     ports:
     - published: 808${INSTANCE}
       target: 8080
+      host_ip: 127.0.0.1
     - published: 800${INSTANCE}
       target: 8000
+      host_ip: 127.0.0.1
     stdin_open: true
     tty: true
     volumes:
@@ -83,6 +85,7 @@ services:
     ports:
     - published: 543${INSTANCE}
       target: 543${INSTANCE}
+      host_ip: 127.0.0.1
     stdin_open: true
     tty: true
     volumes:
@@ -104,6 +107,7 @@ services:
     ports:
     - published: 898${INSTANCE}
       target: 898${INSTANCE}
+      host_ip: 127.0.0.1
     stdin_open: true
     tty: true
     working_dir: /var/solr/data
