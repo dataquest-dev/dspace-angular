@@ -19,6 +19,7 @@ services:
     image: "${DOCKER_OWNER:-dataquest}/dspace-cli:${DSPACE_VER:-dspace-7_x}"
     container_name: dspace-cli
     environment:
+      TZ: ${TIMEZONE:-Europe/Bratislava}
       # Below syntax may look odd, but it is how to override dspace.cfg settings via env variables.
       # See https://github.com/DSpace/DSpace/blob/main/dspace/config/config-definition.xml
       # __P__ => "." (e.g. dspace__P__dir => dspace.dir)

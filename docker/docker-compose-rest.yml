@@ -19,6 +19,7 @@ services:
     restart: unless-stopped
     container_name: dspace${INSTANCE}
     environment:
+      TZ: ${TIMEZONE:-Europe/Bratislava}
       # Below syntax may look odd, but it is how to override dspace.cfg settings via env variables.
       # See https://github.com/DSpace/DSpace/blob/main/dspace/config/config-definition.xml
       # __P__ => "." (e.g. dspace__P__dir => dspace.dir)
@@ -73,6 +74,7 @@ services:
     restart: unless-stopped
     container_name: dspacedb${INSTANCE}
     environment:
+      TZ: ${TIMEZONE:-Europe/Bratislava}
       PGDATA: /pgdata
       POSTGRES_PASSWORD: dspace
     image: dspace/dspace-postgres-pgcrypto
@@ -88,6 +90,8 @@ services:
     command: -p 543${INSTANCE}
   # DSpace Solr container
   dspacesolr:
+    environment:
+      TZ: ${TIMEZONE:-Europe/Bratislava}
     restart: unless-stopped
     container_name: dspacesolr${INSTANCE}
     # Uses official Solr image at https://hub.docker.com/_/solr/

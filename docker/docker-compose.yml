@@ -17,6 +17,7 @@ services:
     restart: unless-stopped
     container_name: dspace-angular${INSTANCE}
     environment:
+      TZ: ${TIMEZONE:-Europe/Bratislava}
       DSPACE_UI_SSL: 'false'
       DSPACE_UI_HOST: dspace-angular
       DSPACE_UI_PORT: 400${INSTANCE}
