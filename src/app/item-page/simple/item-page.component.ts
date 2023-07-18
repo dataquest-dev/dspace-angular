@@ -66,6 +66,11 @@ export class ItemPageComponent implements OnInit {
    */
   withdrawnTombstone = false;
 
+  /**
+   * If download by command button is click, the command line will be shown
+   */
+  isCommandLineVisible = false
+
   constructor(
     protected route: ActivatedRoute,
     private router: Router,
@@ -123,5 +128,10 @@ export class ItemPageComponent implements OnInit {
         }
       }
     });
+  }
+
+  setCommandline() {
+    console.log('Hello');
+    this.isCommandLineVisible = !this.isCommandLineVisible;
   }
 }

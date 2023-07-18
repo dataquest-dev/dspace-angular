@@ -48,6 +48,9 @@
     }
 
     .button-container {
+        a {
+            text-decoration: none;
+        }
         .download-btn, .preview-btn {
             display: inline;
             padding: .2em .6em .3em;
@@ -62,6 +65,10 @@
             color: white;
             cursor: pointer;
             background-color: #5bc0de;
+        }
+
+        .download-btn:hover, .preview-btn:hover {
+            background-color: #31b0d5;
         }
     }
 

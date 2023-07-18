@@ -1,19 +1,75 @@
-<div class="container clarin-shadow remove-padding clarin-home-page-borders clarin-cut-bottom-2 clarin-cut-top-1 pb-2"
-     *ngVar="(itemRD$ | async) as itemRD">
-  <div class="item-page" *ngIf="itemRD?.hasSucceeded && itemRD?.payload as item" @fadeInOut>
-    <div *ngIf="!(isAdmin$ | async)?.valueOf() && (withdrawnTombstone || replacedTombstone)">
+<div
+  class="container clarin-shadow remove-padding clarin-home-page-borders clarin-cut-bottom-2 clarin-cut-top-1 pb-2"
+  *ngVar="itemRD$ | async as itemRD"
+>
+  <div
+    class="item-page"
+    *ngIf="itemRD?.hasSucceeded && itemRD?.payload as item"
+    @fadeInOut
+  >
+    <div
+      *ngIf="
+        !(isAdmin$ | async)?.valueOf() &&
+        (withdrawnTombstone || replacedTombstone)
+      "
+    >
       <ds-tombstone [item]="item"></ds-tombstone>
     </div>
     <div *ngIf="!(withdrawnTombstone || replacedTombstone)">
       <ds-item-alerts [item]="item"></ds-item-alerts>
       <ds-item-versions-notice [item]="item"></ds-item-versions-notice>
       <ds-view-tracker [object]="item"></ds-view-tracker>
-      <ds-listable-object-component-loader [object]="item" [viewMode]="viewMode" class="d-block mb-4"></ds-listable-object-component-loader>
-      <ds-item-versions [item]="item" [displayActions]="false"></ds-item-versions>
-      <ds-clarin-license-info class="mt-3 d-block" [item]="item"></ds-clarin-license-info>
+      <ds-listable-object-component-loader
+        [object]="item"
+        [viewMode]="viewMode"
+        class="d-block mb-4"
+      ></ds-listable-object-component-loader>
+      <ds-item-versions
+        [item]="item"
+        [displayActions]="false"
+      ></ds-item-versions>
+      <h4><i class="fa fa-paperclip">&nbsp;</i>Files in this item</h4>
+      <a class="btn btn-download" (click)="setCommandline()" style="text-decoration: none"
+        ><i class="fa fa-download fa-3x" style="display: block">&nbsp;</i
+        >Download instructions for command line</a
+      >
+      <div id="command-div" *ngIf="isCommandLineVisible">
+        <!-- <button
+          class="repo-copy-btn pull-right"
+          data-clipboard-target="#command-div"
+        ></button> -->
+        <pre style="background-color: #d9edf7; color: #3a87ad">
+curl --remote-name-all https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-5150{{
+            "{"
+          }}/ud-treebanks-v2.12.tgz,/ud-documentation-v2.12.tgz,/ud-tools-v2.12.tgz{{
+            "}"
+          }}</pre
+        >
+      </div>
+      <a
+        xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
+        class="btn btn-download"
+        id="download-all-button"
+        href="#"
+        onclick="$('#download_all_alert').toggle();$('#download_all_alert').focus(); return false;"
+        style="visibility: visible"
+      >
+        <i style="display: block" class="fa fa-download fa-3x">&nbsp;</i
+        >Download all files in item (598.92 MB)</a
+      >
+      <ds-clarin-license-info
+        class="mt-3 d-block"
+        [item]="item"
+      ></ds-clarin-license-info>
       <ds-preview-section [item]="item"></ds-preview-section>
     </div>
   </div>
-  <ds-error *ngIf="itemRD?.hasFailed" message="{{'error.item' | translate}}"></ds-error>
-  <ds-loading *ngIf="itemRD?.isLoading" message="{{'loading.item' | translate}}"></ds-loading>
+  <ds-error
+    *ngIf="itemRD?.hasFailed"
+    message="{{ 'error.item' | translate }}"
+  ></ds-error>
+  <ds-loading
+    *ngIf="itemRD?.isLoading"
+    message="{{ 'loading.item' | translate }}"
+  ></ds-loading>
 </div>
