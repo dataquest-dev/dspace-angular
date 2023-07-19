@@ -3686,7 +3686,7 @@
   "login.form.header" : "Přihlaste se prosím do DSpace",
 
   // "login.form.new-user" : "New user? Click here to register."
-  "login.form.new-user" : "Nový uživatel? Klikněte zde pro registraci.",
+  "login.form.new-user" : "Zaregistrujte se kliknutím sem.",
 
   // "login.form.or-divider" : "or"
   "login.form.or-divider" : "nebo",
