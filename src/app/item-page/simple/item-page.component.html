@@ -38,20 +38,14 @@
           class="repo-copy-btn pull-right"
           data-clipboard-target="#command-div"
         ></button> -->
-        <pre style="background-color: #d9edf7; color: #3a87ad">
-curl --remote-name-all https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-5150{{
-            "{"
-          }}/ud-treebanks-v2.12.tgz,/ud-documentation-v2.12.tgz,/ud-tools-v2.12.tgz{{
-            "}"
-          }}</pre
+        <pre style="background-color: #d9edf7; color: #3a87ad">{{command}}</pre
         >
       </div>
       <a
         xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
         class="btn btn-download"
         id="download-all-button"
-        href="#"
-        onclick="$('#download_all_alert').toggle();$('#download_all_alert').focus(); return false;"
+        (click) = "downloadFiles()"
         style="visibility: visible"
       >
         <i style="display: block" class="fa fa-download fa-3x">&nbsp;</i

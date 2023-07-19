@@ -11,6 +11,11 @@ export class FileDescriptionComponent implements OnInit {
   fileInput: MetadataBitstream;
 
   ngOnInit(): void {
-    console.log(this.fileInput);
+    console.log('fileInput', this.fileInput);
+  }
+
+  public downloadFiles() {
+    //window.location.href = `http://localhost:8080${this.fileInput}`
+    window.location.href = 'http://localhost:8080/server/bitstream/handle/123456789/1128/Folder1.zip?sequence=1&isAllowed=y';
   }
 }
