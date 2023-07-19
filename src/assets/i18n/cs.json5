@@ -6523,4 +6523,45 @@
 
   // "repository.policy.page" : "Change me: policy page"
   "repository.policy.page" : "Změnit mě: stránka zásad",
+
+
+
+  // "navbar.repository": "Repository",
+  "navbar.repository": "Repozitář",
+
+  // "navbar.community-list": "Catalogue",
+  "navbar.community-list": "Katalog",
+
+  // "navbar.education": "Education",
+  "navbar.education": "Vzdělávání",
+
+  // "navbar.project": "Projects",
+  "navbar.project": "Projekty",
+
+  // "navbar.tools": "Tools",
+  "navbar.tools": "Nástroje",
+
+  // "navbar.services": "Services",
+  "navbar.services": "Služby",
+
+  // "navbar.about": "About",
+  "navbar.about": "O nás",
+
+  // "navbar.about.partners": "Partners",
+  "navbar.about.partners": "Partneři",
+
+  // "navbar.about.mission-statement": "Mission Statement",
+  "navbar.about.mission-statement": "Prohlášení o poslání",
+
+  // "navbar.about.clarin": "CLARIN",
+  "navbar.about.clarin": "CLARIN",
+
+  // "navbar.about.dariah": "DARIAH",
+  "navbar.about.dariah": "DARIAH",
+
+  // "navbar.about.service-integrations": "Service integrations",
+  "navbar.about.service-integrations": "Integrace služeb",
+
+  // "navbar.about.project-partnership": "Project partnerships"
+  "navbar.about.project-partnership": "Projektové partnerství"
 }
