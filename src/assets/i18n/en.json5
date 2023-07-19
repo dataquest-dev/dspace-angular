@@ -898,9 +898,9 @@
   "claimed-declined-task-search-result-list-element.title": "Declined, sent back to Review Manager's workflow",
 
   "contact-us.breadcrumbs": "Contact Us",
-  
+
   "contact-us.title": "Contact Us",
-  
+
   "contact-us.description": "DSpace@TUL administrators may be contacted at:",
 
   "contact-us.form": "On-line form: ",
@@ -5775,4 +5775,32 @@
   "admin.system-wide-alert.breadcrumbs": "System-wide Alerts",
 
   "admin.system-wide-alert.title": "System-wide Alerts",
+
+
+
+  "navbar.repository": "Repository",
+
+  "navbar.community-list": "Catalogue",
+
+  "navbar.education": "Education",
+
+  "navbar.project": "Projects",
+
+  "navbar.tools": "Tools",
+
+  "navbar.services": "Services",
+
+  "navbar.about": "About",
+
+  "navbar.about.partners": "Partners",
+
+  "navbar.about.mission-statement": "Mission Statement",
+
+  "navbar.about.clarin": "CLARIN",
+
+  "navbar.about.dariah": "DARIAH",
+
+  "navbar.about.service-integrations": "Service integrations",
+
+  "navbar.about.project-partnership": "Project partnerships"
 }
