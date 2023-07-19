@@ -6,10 +6,6 @@
 # http://www.dspace.org/license/
 #
 
-# Docker Compose for running the DSpace backend for testing/development
-# This is based heavily on the docker-compose.yml that is available in the DSpace/DSpace
-# (Backend) at:
-# https://github.com/DSpace/DSpace/blob/main/docker-compose.yml
 version: '3.7'
 networks:
   dspacenet:
@@ -19,6 +15,7 @@ services:
     restart: unless-stopped
     container_name: dspace${INSTANCE}
     environment:
+      TZ: ${TIMEZONE:-Europe/Bratislava}
       # Below syntax may look odd, but it is how to override dspace.cfg settings via env variables.
       # See https://github.com/DSpace/DSpace/blob/main/dspace/config/config-definition.xml
       # __P__ => "." (e.g. dspace__P__dir => dspace.dir)
@@ -49,8 +46,10 @@ services:
     ports:
     - published: 808${INSTANCE}
       target: 8080
+      host_ip: 127.0.0.1
     - published: 800${INSTANCE}
       target: 8000
+      host_ip: 127.0.0.1
     stdin_open: true
     tty: true
     volumes:
@@ -73,6 +72,7 @@ services:
     restart: unless-stopped
     container_name: dspacedb${INSTANCE}
     environment:
+      TZ: ${TIMEZONE:-Europe/Bratislava}
       PGDATA: /pgdata
       POSTGRES_PASSWORD: dspace
     image: dspace/dspace-postgres-pgcrypto
@@ -81,6 +81,7 @@ services:
     ports:
     - published: 543${INSTANCE}
       target: 543${INSTANCE}
+      host_ip: 127.0.0.1
     stdin_open: true
     tty: true
     volumes:
@@ -88,6 +89,8 @@ services:
     command: -p 543${INSTANCE}
   # DSpace Solr container
   dspacesolr:
+    environment:
+      TZ: ${TIMEZONE:-Europe/Bratislava}
     restart: unless-stopped
     container_name: dspacesolr${INSTANCE}
     # Uses official Solr image at https://hub.docker.com/_/solr/
@@ -100,6 +103,7 @@ services:
     ports:
     - published: 898${INSTANCE}
       target: 898${INSTANCE}
+      host_ip: 127.0.0.1
     stdin_open: true
     tty: true
     working_dir: /var/solr/data
