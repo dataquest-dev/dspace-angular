@@ -16,11 +16,12 @@ describe('Admin Menu Page', () => {
     cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
   });
 
-  it('should pass accessibility tests', () => {
-    // Check handles redirect url in the <a> tag
-    cy.get('.sidebar-top-level-items a[href = "/handle-table"]').scrollIntoView().should('be.visible');
-
-    // Check licenses redirect url in the <a> tag
-    cy.get('.sidebar-top-level-items a[href = "/licenses"]').scrollIntoView().should('be.visible');
-  });
+  // TUL customer doesn't have supported `/licenses` and `/handle` option
+  // it('should pass accessibility tests', () => {
+  //   // Check handles redirect url in the <a> tag
+  //   cy.get('.sidebar-top-level-items a[href = "/handle-table"]').scrollIntoView().should('be.visible');
+  //
+  //   // Check licenses redirect url in the <a> tag
+  //   cy.get('.sidebar-top-level-items a[href = "/licenses"]').scrollIntoView().should('be.visible');
+  // });
 });
