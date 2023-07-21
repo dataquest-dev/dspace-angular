@@ -15,7 +15,6 @@ export class FileDescriptionComponent implements OnInit {
   }
 
   public downloadFiles() {
-    //window.location.href = `http://localhost:8080${this.fileInput}`
-    window.location.href = 'http://localhost:8080/server/bitstream/handle/123456789/1128/Folder1.zip?sequence=1&isAllowed=y';
+    window.location.href = `http://localhost:8080${this.fileInput.href}`
   }
 }
