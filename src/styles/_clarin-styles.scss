@@ -20,3 +20,10 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
+/*
+Override bootstrap badge style
+ */
+.badge {
+  background-color: var(--lt-tul-purple) !important;
+}
