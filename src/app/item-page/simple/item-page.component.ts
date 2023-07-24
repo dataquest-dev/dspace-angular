@@ -1,15 +1,19 @@
-import {map, take} from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { BehaviorSubject, Observable} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ItemDataService } from '../../core/data/item-data.service';
 import { RemoteData } from '../../core/data/remote-data';
 
 import { Item } from '../../core/shared/item.model';
 
 import { fadeInOut } from '../../shared/animations/fade';
-import { getAllSucceededRemoteDataPayload, getAllSucceededRemoteListPayload, redirectOn4xx } from '../../core/shared/operators';
+import {
+  getAllSucceededRemoteDataPayload,
+  getAllSucceededRemoteListPayload,
+  redirectOn4xx,
+} from '../../core/shared/operators';
 import { ViewMode } from '../../core/shared/view-mode.model';
 import { AuthService } from '../../core/auth/auth.service';
 import { getItemPageRoute } from '../item-page-routing-paths';
@@ -18,6 +22,7 @@ import { FeatureID } from '../../core/data/feature-authorization/feature-id';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { RegistryService } from 'src/app/core/registry/registry.service';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
+import { BASE_LOCAL_URL } from 'src/app/core/shared/clarin/constants';
 
 /**
  * This component renders a simple item page.
@@ -29,10 +34,9 @@ import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.mode
   styleUrls: ['./item-page.component.scss'],
   templateUrl: './item-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [fadeInOut]
+  animations: [fadeInOut],
 })
 export class ItemPageComponent implements OnInit {
-
   /**
    * The item's id
    */
@@ -52,14 +56,17 @@ export class ItemPageComponent implements OnInit {
    * Route to the item's page
    */
   itemPageRoute$: Observable<string>;
-   /**
-   * handle of the specific item 
+  /**
+   * handle of the specific item
    */
   itemHandle: string;
-   /**
-   * handle of the specific item 
+  /**
+   * handle of the specific item
    */
   fileName: string;
+  /**
+   * command for the download command feature
+   */
   command: string;
 
   /**
@@ -80,10 +87,15 @@ export class ItemPageComponent implements OnInit {
   /**
    * If download by command button is click, the command line will be shown
    */
-  isCommandLineVisible = false
-  listOfFiles: any;
-
-
+  isCommandLineVisible = false;
+  /**
+   * list of files uploaded by users to this item
+   */
+  listOfFiles: MetadataBitstream[];
+  /**
+   * total size of list of files uploaded by users to this item
+   */
+  totalFileSizes: string;
 
   constructor(
     protected route: ActivatedRoute,
@@ -92,7 +104,7 @@ export class ItemPageComponent implements OnInit {
     private authService: AuthService,
     private authorizationService: AuthorizationDataService,
     protected registryService: RegistryService
-  ) { }
+  ) {}
 
   /**
    * Initialize instance variables
@@ -110,12 +122,41 @@ export class ItemPageComponent implements OnInit {
     this.showTombstone();
 
     this.registryService
-.getMetadataBitstream(this.itemHandle, 'ORIGINAL,TEXT,THUMBNAIL')
+      .getMetadataBitstream(this.itemHandle, 'ORIGINAL,TEXT,THUMBNAIL')
       .pipe(getAllSucceededRemoteListPayload())
       .subscribe((data: MetadataBitstream[]) => {
         this.listOfFiles = data;
         this.generateCurlCommand();
+        this.sumFileSizes();
       });
+  }
+
+  sumFileSizes() {
+    const sizeUnits = {
+      B: 1,
+      KB: 1000,
+      MB: 1000 * 1000,
+      GB: 1000 * 1000 * 1000,
+      TB: 1000 * 1000 * 1000 * 1000,
+    };
+
+    let totalBytes = this.listOfFiles.reduce((total, file) => {
+      const [valueStr, unit] = file.fileSize.split(' ');
+      const value = parseFloat(valueStr);
+      const bytes = value * sizeUnits[unit.toUpperCase()];
+      return total + bytes;
+    }, 0);
+
+    let finalUnit = 'B';
+    for (const unit of ['KB', 'MB', 'GB', 'TB']) {
+      if (totalBytes < 1000) {
+        break;
+      }
+      totalBytes /= 1000;
+      finalUnit = unit;
+    }
+
+    this.totalFileSizes = totalBytes.toFixed(2) + ' ' + finalUnit;
   }
 
   showTombstone() {
@@ -125,9 +166,8 @@ export class ItemPageComponent implements OnInit {
     let isReplaced = '';
 
     // load values from item
-    this.itemRD$.pipe(
-      take(1),
-      getAllSucceededRemoteDataPayload())
+    this.itemRD$
+      .pipe(take(1), getAllSucceededRemoteDataPayload())
       .subscribe((item: Item) => {
         this.itemHandle = item.handle;
         isWithdrawn = item.isWithdrawn;
@@ -141,8 +181,10 @@ export class ItemPageComponent implements OnInit {
 
     // for users navigate to the custom tombstone
     // for admin stay on the item page with tombstone flag
-    this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
-    this.isAdmin$.subscribe(isAdmin => {
+    this.isAdmin$ = this.authorizationService.isAuthorized(
+      FeatureID.AdministratorOf
+    );
+    this.isAdmin$.subscribe((isAdmin) => {
       // do not show tombstone for admin but show it for users
       if (!isAdmin) {
         if (isNotEmpty(isReplaced)) {
@@ -159,14 +201,16 @@ export class ItemPageComponent implements OnInit {
   }
 
   generateCurlCommand() {
-    let fileNames = this.listOfFiles
-    .filter((file: MetadataBitstream) => file.format === 'application/octet-stream' || file.format === 'application/pdf')
-    .map((file: MetadataBitstream) => file.name);
+    let fileNames = this.listOfFiles.map(
+      (file: MetadataBitstream) => file.name
+    );
 
-    this.command =`curl --remote-name-all http://localhost:8080/server/bitstream/handle/${this.itemHandle}/{${fileNames.join(',')}}`;
+    this.command = `curl --remote-name-all ${BASE_LOCAL_URL}/server/bitstream/handle/${
+      this.itemHandle
+    }/{${fileNames.join(',')}}`;
   }
 
   downloadFiles() {
-    window.location.href = `http://localhost:8080/server/bitstream/allzip?handleId=${this.itemHandle}`;
+    window.location.href = `${BASE_LOCAL_URL}/server/bitstream/allzip?handleId=${this.itemHandle}`;
   }
 }

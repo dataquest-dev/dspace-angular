@@ -51,6 +51,7 @@ import { ClarinFilesItemFieldComponent } from './simple/field-components/clarin-
 import { FileDescriptionComponent } from './simple/field-components/preview-section/file-description/file-description.component';
 import { FileTreeViewComponent } from './simple/field-components/preview-section/file-description/file-tree-view/file-tree-view.component';
 import { PreviewSectionComponent } from './simple/field-components/preview-section/preview-section.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -112,6 +113,7 @@ const DECLARATIONS = [
     ResearchEntitiesModule.withEntryComponents(),
     NgxGalleryModule,
     ChartsModule,
+    NgbModule
   ],
   declarations: [...DECLARATIONS, VersionedItemComponent],
   exports: [...DECLARATIONS],

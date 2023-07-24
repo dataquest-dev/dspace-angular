@@ -1,6 +1,9 @@
 <li>
-  <span class="foldername collapse show" *ngIf="node.isDirectory; else fileTemplate">
-    <a role="button" data-toggle="collapse" href="#folder_{{ node.name }}">
+  <span class="foldername" *ngIf="node.isDirectory; else fileTemplate">
+    <a role="button" 
+       (click)="isCollapsed = !isCollapsed" 
+       [attr.aria-expanded]="!isCollapsed" 
+       attr.aria-controls="folder_{{ node.name }}">
       {{ node.name }}
     </a>
   </span>
@@ -12,7 +15,8 @@
 
   <ul
     id="folder_{{ node.name }}"
-    class="in collapse show"
+    [ngbCollapse]="isCollapsed"
+    class="in"
     style="height: auto"
     *ngIf="node.isDirectory && node.sub"
   >

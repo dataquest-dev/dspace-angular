@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FileInfo } from 'src/app/core/metadata/metadata-bitstream.model';
 
 @Component({
@@ -6,15 +6,13 @@ import { FileInfo } from 'src/app/core/metadata/metadata-bitstream.model';
   templateUrl: './file-tree-view.component.html',
   styleUrls: ['./file-tree-view.component.scss'],
 })
-export class FileTreeViewComponent implements OnInit {
+export class FileTreeViewComponent {
   @Input()
   node: FileInfo;
 
+  isCollapsed = false; // add this line
+
   getKeys(obj: any): string[] {
     return Object.keys(obj);
-  }
-
-  ngOnInit(): void {
-    console.log(this.node);
   }
 }

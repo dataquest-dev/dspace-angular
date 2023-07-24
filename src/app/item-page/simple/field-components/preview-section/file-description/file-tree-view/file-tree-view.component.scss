@@ -21,3 +21,11 @@
 .pull-right {
     float: right !important;
 }
+
+.foldername a {
+    cursor: pointer;
+}
+
+.foldername a:hover {
+    text-decoration: underline;
+}
