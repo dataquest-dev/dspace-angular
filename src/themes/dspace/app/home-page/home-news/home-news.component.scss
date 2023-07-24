@@ -2,13 +2,27 @@
   display: block;
   margin-top: calc(var(--ds-content-spacing) * -1);
 
-  div.background-image {
-    color: var($gray-800);
-    background-color: var(--ds-clarin-home-news-background-color);
-    .container {
-      background-color: #f2f2f2;
-      border-bottom: solid 1px #e5e5e5;
-      border-radius: 0 !important;
+  div.background-image-container {
+    color: white;
+    position: relative;
+
+    .background-image > img {
+      background-color: var(--bs-info);
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+
+      .container {
+        position: relative;
+        background-color: #f2f2f2;
+        border-bottom: solid 1px #e5e5e5;
+        border-radius: 0 !important;
+      }
     }
   }
 
