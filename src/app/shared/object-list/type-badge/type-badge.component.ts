@@ -5,6 +5,7 @@ import { getResourceTypeValueFor } from '../../../core/cache/object-cache.reduce
 
 @Component({
   selector: 'ds-type-badge',
+  styleUrls: ['./type-badge.component.scss'],
   templateUrl: './type-badge.component.html'
 })
 /**
