@@ -46,7 +46,7 @@ export class ThumbnailComponent implements OnChanges {
   /**
    * i18n key of HTML placeholder text
    */
-  @Input() placeholder? = 'thumbnail.default.placeholder';
+  @Input() placeholder? = '';
 
   /**
    * Limit thumbnail width to --ds-thumbnail-max-width

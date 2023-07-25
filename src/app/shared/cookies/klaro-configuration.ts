@@ -23,13 +23,17 @@ export const klaroConfiguration: any = {
   storageName: ANONYMOUS_STORAGE_NAME_KLARO,
 
   privacyPolicy: '/info/privacy',
-
   /*
   Setting 'hideLearnMore' to 'true' will hide the "learn more / customize" link in
   the consent notice. We strongly advise against using this under most
   circumstances, as it keeps the user from customizing their consent choices.
   */
   hideLearnMore: false,
+
+  /*
+  Override cookies modal styles according to customer TUL requirements.
+   */
+  stylePrefix: 'klaro tul-cookies',
 
   /*
   Setting 'acceptAll' to 'true' will show an "accept all" button in the notice and
