@@ -19,4 +19,5 @@ RUN yarn install --network-timeout 300000
 # NOTE: At this time it is only possible to run Docker container in Production mode
 # if you have a public IP. See https://github.com/DSpace/dspace-angular/issues/1485
 RUN apk add tzdata
-CMD yarn serve 
+RUN yarn build:prod
+CMD node dist/server/main.js
