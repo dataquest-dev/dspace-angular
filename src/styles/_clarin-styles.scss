@@ -56,3 +56,15 @@ Override bootstrap badge style
 .badge {
   background-color: var(--lt-tul-purple) !important;
 }
+
+a {
+  text-decoration: underline !important;
+
+}
+
+/*
+Do not underline link if it is a button/navbar menu option/facet search option.
+ */
+a.btn, a.nav-link, ds-search-facet-filter-wrapper a {
+  text-decoration: none !important;
+}
