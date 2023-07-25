@@ -49,3 +49,10 @@
     box-shadow: 0 0 0 0.2rem var(--lt-tul-purple) !important;
   }
 }
+
+/*
+Override bootstrap badge style
+ */
+.badge {
+  background-color: var(--lt-tul-purple) !important;
+}
