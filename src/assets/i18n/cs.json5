@@ -1,4 +1,1772 @@
 {
+
+  // "error-page.description.401" : "unauthorized"
+  "error-page.description.401" : "neoprávněné",
+
+  // "error-page.description.403" : "forbidden"
+  "error-page.description.403" : "zakázáno",
+
+  // "error-page.description.500" : "Service Unavailable"
+  "error-page.description.500" : "Služba není k dispozici",
+
+  // "error-page.description.404" : "page not found"
+  "error-page.description.404" : "stránka nebyla nalezena",
+
+  // "error-page.orcid.generic-error" : "An error occurred during login via ORCID. Make sure you have shared your ORCID account email address with DSpace. If the error persists, contact the administrator"
+  "error-page.orcid.generic-error" : "Při přihlašování přes ORCID došlo k chybě. Ujistěte se, že jste sdíleli e-mailovou adresu svého účtu ORCID s DSpace. Pokud chyba přetrvává, kontaktujte správce",
+
+  // "access-status.embargo.listelement.badge" : "Embargo"
+  "access-status.embargo.listelement.badge" : "Embargo",
+
+  // "access-status.metadata.only.listelement.badge" : "Metadata only"
+  "access-status.metadata.only.listelement.badge" : "Pouze metadata",
+
+  // "access-status.open.access.listelement.badge" : "Open Access"
+  "access-status.open.access.listelement.badge" : "Otevřený přístup",
+
+  // "access-status.restricted.listelement.badge" : "Restricted"
+  "access-status.restricted.listelement.badge" : "Omezené",
+
+  // "access-status.unknown.listelement.badge" : "Unknown"
+  "access-status.unknown.listelement.badge" : "Neznámý",
+
+  // "admin.registries.bitstream-formats.table.id" : "ID"
+  "admin.registries.bitstream-formats.table.id" : "ID",
+
+  // "admin.registries.schema.fields.table.id" : "ID"
+  "admin.registries.schema.fields.table.id" : "ID",
+
+  // "admin.access-control.groups.form.tooltip.editGroupPage" : "On this page, you can modify the properties and members of a group. In the top section, you can edit the group name and description, unless this is an admin group for a collection or community, in which case the group name and description are auto-generated and cannot be edited. In the following sections, you can edit group membership. See [the wiki](https://wiki.lyrasis.org/display/DSDOC7x/Create+or+manage+a+user+group) for more details."
+  "admin.access-control.groups.form.tooltip.editGroupPage" : "Na této stránce můžete upravit vlastnosti a členy skupiny. V horní části můžete upravit název a popis skupiny, pokud se nejedná o administrátorskou skupinu pro kolekci nebo komunitu, v takovém případě jsou název a popis skupiny generovány automaticky a nelze je upravovat. V následujících částech můžete upravit členství ve skupině. Další podrobnosti naleznete v části [wiki](https://wiki.lyrasis.org/display/DSDOC7x/Create+nebo+správce+uživatelské+skupiny).",
+
+  // "admin.access-control.groups.form.tooltip.editGroup.addEpeople" : "To add or remove an EPerson to/from this group, either click the 'Browse All' button or use the search bar below to search for users (use the dropdown to the left of the search bar to choose whether to search by metadata or by email). Then click the plus icon for each user you wish to add in the list below, or the trash can icon for each user you wish to remove. The list below may have several pages: use the page controls below the list to navigate to the next pages. Once you are ready, save your changes by clicking the 'Save' button in the top section."
+  "admin.access-control.groups.form.tooltip.editGroup.addEpeople" : "Chcete-li přidat nebo odebrat EPersona do/z této skupiny, klikněte na tlačítko 'Procházet vše', nebo použijte vyhledávací lištu níže pro vyhledávání uživatelů (pomocí rozbalovacího seznamu vlevo na liště vyhledávání vyberte, zda chcete vyhledávat podle metadat, nebo e-mailem). Poté klikněte na ikonu plus pro každého uživatele, kterého si přejete přidat do seznamu níže, nebo na ikonu koše pro každého uživatele, kterého si přejete odstranit. Seznam níže může mít několik stránek: pomocí ovládacích prvků stránky pod seznamem přejděte na další stránky. Jakmile budete připraveni, uložte své změny kliknutím na tlačítko 'Uložit' v horní části.",
+
+  // "admin.access-control.groups.form.tooltip.editGroup.addSubgroups" : "To add or remove a Subgroup to/from this group, either click the 'Browse All' button or use the search bar below to search for users. Then click the plus icon for each user you wish to add in the list below, or the trash can icon for each user you wish to remove. The list below may have several pages: use the page controls below the list to navigate to the next pages. Once you are ready, save your changes by clicking the 'Save' button in the top section."
+  "admin.access-control.groups.form.tooltip.editGroup.addSubgroups" : "Chcete-li přidat nebo odebrat podskupinu do/z této skupiny, klikněte na tlačítko 'Procházet vše', nebo použijte vyhledávací lištu níže pro vyhledávání uživatelů. Poté klikněte na ikonu plus pro každého uživatele, kterého si přejete přidat v seznamu níže, nebo na ikonu koše pro každého uživatele, kterého si přejete odstranit. Seznam níže může mít několik stránek: použijte ovládací prvky stránky pod seznamem pro navigaci na další stránky. Jakmile budete připraveni, uložte své změny kliknutím na tlačítko 'Uložit' v horní části.",
+
+  // "admin.workflow.item.workspace" : "Workspace"
+  "admin.workflow.item.workspace" : "Pracovní prostor",
+
+  // "admin.workflow.item.policies" : "Policies"
+  "admin.workflow.item.policies" : "Zásady",
+
+  // "admin.workflow.item.supervision" : "Supervision"
+  "admin.workflow.item.supervision" : "Dohled",
+
+  // "admin.batch-import.breadcrumbs" : "Import Batch"
+  "admin.batch-import.breadcrumbs" : "Importovat sadu",
+
+  // "admin.batch-import.title" : "Import Batch"
+  "admin.batch-import.title" : "Importovat sadu",
+
+  // "admin.batch-import.page.header" : "Import Batch"
+  "admin.batch-import.page.header" : "Importovat sadu",
+
+  // "admin.batch-import.page.help" : "Select the Collection to import into. Then, drop or browse to a Simple Archive Format (SAF) zip file that includes the Items to import"
+  "admin.batch-import.page.help" : "Vyberte kolekci, do které chcete importovat. Poté potáhněte nebo procházejte do zipového souboru SAF (Simple Archive Format), který obsahuje položky k importu",
+
+  // "admin.batch-import.page.dropMsg" : "Drop a batch ZIP to import"
+  "admin.batch-import.page.dropMsg" : "Potáhněte ZIP dávku pro import",
+
+  // "admin.batch-import.page.dropMsgReplace" : "Drop to replace the batch ZIP to import"
+  "admin.batch-import.page.dropMsgReplace" : "Potáhněte ZIP dávku pro nahrazení k importu",
+
+  // "admin.metadata-import.page.button.select-collection" : "Select Collection"
+  "admin.metadata-import.page.button.select-collection" : "Vybrat kolekci",
+
+  // "admin.batch-import.page.error.addFile" : "Select Zip file first!"
+  "admin.batch-import.page.error.addFile" : "Nejprve vyberte ZIP soubor!",
+
+  // "admin.metadata-import.page.validateOnly" : "Validate Only"
+  "admin.metadata-import.page.validateOnly" : "Pouze ověřit",
+
+  // "admin.metadata-import.page.validateOnly.hint" : "When selected, the uploaded CSV will be validated. You will receive a report of detected changes, but no changes will be saved."
+  "admin.metadata-import.page.validateOnly.hint" : "Po výběru bude nahraný CSV ověřen. Obdržíte zprávu o zjištěných změnách, ale žádné změny se neuloží.",
+
+  // "advanced-workflow-action.rating.form.rating.label" : "Rating"
+  "advanced-workflow-action.rating.form.rating.label" : "Hodnocení",
+
+  // "advanced-workflow-action.rating.form.rating.error" : "You must rate the item"
+  "advanced-workflow-action.rating.form.rating.error" : "Položku musíte ohodnotit",
+
+  // "advanced-workflow-action.rating.form.review.label" : "Review"
+  "advanced-workflow-action.rating.form.review.label" : "Recenze",
+
+  // "advanced-workflow-action.rating.form.review.error" : "You must enter a review to submit this rating"
+  "advanced-workflow-action.rating.form.review.error" : "Před odesláním tohoto hodnocení musíte zadat recenzi",
+
+  // "advanced-workflow-action.rating.description" : "Please select a rating below"
+  "advanced-workflow-action.rating.description" : "Níže vyberte hodnocení",
+
+  // "advanced-workflow-action.rating.description-requiredDescription" : "Please select a rating below and also add a review"
+  "advanced-workflow-action.rating.description-requiredDescription" : "Níže prosím vyberte hodnocení a přidejte recenzi",
+
+  // "advanced-workflow-action.select-reviewer.description-single" : "Please select a single reviewer below before submitting"
+  "advanced-workflow-action.select-reviewer.description-single" : "Před odesláním prosím vyberte jednoho recenzenta níže.",
+
+  // "advanced-workflow-action.select-reviewer.description-multiple" : "Please select one or more reviewers below before submitting"
+  "advanced-workflow-action.select-reviewer.description-multiple" : "Před odesláním prosím vyberte jednoho nebo více recenzentů níže.",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.head" : "EPeople"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.head" : "EPeople",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.head" : "Add EPeople"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.head" : "Přidat EPeople",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.button.see-all" : "Browse All"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.button.see-all" : "Procházet vše",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.headMembers" : "Current Members"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.headMembers" : "Současní členové",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.scope.metadata" : "Metadata"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.scope.metadata" : "Metadata",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.scope.email" : "E-mail (exact)"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.scope.email" : "E-mail (přesný)",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.button" : "Search"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.button" : "Hledat",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.id" : "ID"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.id" : "ID",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.name" : "Name"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.name" : "Název",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.identity" : "Identity"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.identity" : "Identita",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.email" : "Email"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.email" : "E-mail",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.netid" : "NetID"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.netid" : "NetID",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit" : "Remove / Add"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit" : "Odstranit / Přidat",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit.buttons.remove" : "Remove member with name \"{{name}}\""
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit.buttons.remove" : "Odstranit člena \"{{name}}\"",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.success.addMember" : "Successfully added member: \"{{name}}\""
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.success.addMember" : "Člen \"{{name}}\" úspěšně přidán",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.addMember" : "Failed to add member: \"{{name}}\""
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.addMember" : "Nepodařilo se přidat člena: \"{{name}}\"",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.success.deleteMember" : "Successfully deleted member: \"{{name}}\""
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.success.deleteMember" : "Člen \"{{name}}\" úspěšně odstraněn",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.deleteMember" : "Failed to delete member: \"{{name}}\""
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.deleteMember" : "Nepodařilo se odstranit člena \"{{name}}\"",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit.buttons.add" : "Add member with name \"{{name}}\""
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit.buttons.add" : "Přidat člena \"{{name}}\"",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.noActiveGroup" : "No current active group, submit a name first."
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.noActiveGroup" : "Žádná současná aktivní skupina, nejprve uveďte název.",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.no-members-yet" : "No members in group yet, search and add."
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.no-members-yet" : "Ve skupině zatím nejsou žádní členové, vyhledejte je a přidejte.",
+
+  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.no-items" : "No EPeople found in that search"
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.no-items" : "V tomto vyhledávání nebyly nalezeny žádní EPeople",
+
+  // "advanced-workflow-action.select-reviewer.no-reviewer-selected.error" : "No reviewer selected."
+  "advanced-workflow-action.select-reviewer.no-reviewer-selected.error" : "Nebyl vybrán žádný recenzent",
+
+  // "admin.batch-import.page.validateOnly.hint" : "When selected, the uploaded ZIP will be validated. You will receive a report of detected changes, but no changes will be saved."
+  "admin.batch-import.page.validateOnly.hint" : "Po výběru se nahraný ZIP ověří. Obdržíte zprávu o zjištěných změnách, žádné se však neuloží.",
+
+  // "admin.batch-import.page.remove" : "remove"
+  "admin.batch-import.page.remove" : "odstranit",
+
+  // "bitstream.download.page.back" : "Back"
+  "bitstream.download.page.back" : "Zpět",
+
+  // "browse.back.all-results" : "All browse results"
+  "browse.back.all-results" : "Všechny výsledky procházení",
+
+  // "pagination.next.button" : "Next"
+  "pagination.next.button" : "Další",
+
+  // "pagination.previous.button" : "Previous"
+  "pagination.previous.button" : "Předchozí",
+
+  // "pagination.next.button.disabled.tooltip" : "No more pages of results"
+  "pagination.next.button.disabled.tooltip" : "Žádné další stránky s výsledky",
+
+  // "browse.startsWith" : ", starting with {{ startsWith }}"
+  "browse.startsWith" : ", počínaje {{ startsWith }}",
+
+  // "browse.title.page" : "Browsing {{ collection }} by {{ field }} {{ value }}"
+  "browse.title.page" : "Procházení {{ collection }} podle {{ field }} {{ hodnota }}",
+
+  // "search.browse.item-back" : "Back to Results"
+  "search.browse.item-back" : "Zpět na výsledky",
+
+  // "claimed-approved-search-result-list-element.title" : "Approved"
+  "claimed-approved-search-result-list-element.title" : "Schváleno",
+
+  // "claimed-declined-search-result-list-element.title" : "Rejected, sent back to submitter"
+  "claimed-declined-search-result-list-element.title" : "Zamítnuto, zasláno zpět předkladateli",
+
+  // "claimed-declined-task-search-result-list-element.title" : "Declined, sent back to Review Manager's workflow"
+  "claimed-declined-task-search-result-list-element.title" : "Zamítnuto, odesláno zpět do pracovního postupu revizního manažera",
+
+  // "contact-us.breadcrumbs" : "Contact Us"
+  "contact-us.breadcrumbs" : "Kontaktujte nás",
+
+  // "contact-us.title" : "Contact Us"
+  "contact-us.title" : "Kontaktujte nás",
+
+  // "contact-us.description" : "DSpace@TUL administrators may be contacted at:"
+  "contact-us.description" : "Správce DSpace@TUL můžete kontaktovat na adrese:",
+
+  // "contact-us.form" : "On-line form:"
+  "contact-us.form" : "On-line formulář:",
+
+  // "contact-us.feedback" : "Feedback"
+  "contact-us.feedback" : "Zpětná vazba",
+
+  // "contact-us.email" : "Email:"
+  "contact-us.email" : "E-mail:",
+
+  // "collection.edit.item.authorizations.load-bundle-button" : "Load more bundles"
+  "collection.edit.item.authorizations.load-bundle-button" : "Načíst další balíčky",
+
+  // "collection.edit.item.authorizations.load-more-button" : "Load more"
+  "collection.edit.item.authorizations.load-more-button" : "Načíst více",
+
+  // "collection.edit.item.authorizations.show-bitstreams-button" : "Show bitstream policies for bundle"
+  "collection.edit.item.authorizations.show-bitstreams-button" : "Zobrazit zásady bitstreamu pro svazek",
+
+  // "comcol-role.edit.create.error.title" : "Failed to create a group for the '{{ role }}' role"
+  "comcol-role.edit.create.error.title" : "Nepodařilo se vytvořit skupinu pro roli '{{ role }}'",
+
+  // "comcol-role.edit.delete.error.title" : "Failed to delete the '{{ role }}' role's group"
+  "comcol-role.edit.delete.error.title" : "Nepodařilo se odstranit '{{ role }}' roli skupiny",
+
+  // "comcol-role.edit.scorereviewers.name" : "Score Reviewers"
+  "comcol-role.edit.scorereviewers.name" : "Hodnotitelé skóre",
+
+  // "comcol-role.edit.scorereviewers.description" : "Reviewers are able to give a score to incoming submissions, this will define whether the submission will be rejected or not."
+  "comcol-role.edit.scorereviewers.description" : "Hodnotitelé mohou příchozím příspěvkům přidělit bodové hodnocení, které určí, zda bude příspěvek zamítnut, nebo ne.",
+
+  // "cookies.consent.app.disable-all.description" : "Use this switch to enable or disable all services."
+  "cookies.consent.app.disable-all.description" : "Pomocí tohoto přepínače povolte nebo zakažte všechny služby.",
+
+  // "cookies.consent.app.disable-all.title" : "Enable or disable all services"
+  "cookies.consent.app.disable-all.title" : "Povolit nebo zakázat všechny služby",
+
+  // "cookies.consent.ok" : "That's ok"
+  "cookies.consent.ok" : "V pořádku",
+
+  // "cookies.consent.save" : "Save"
+  "cookies.consent.save" : "Uložit",
+
+  // "cookies.consent.content-notice.title" : "Cookie Consent"
+  "cookies.consent.content-notice.title" : "Souhlas s použitím souborů cookie",
+
+  // "cookies.consent.content-notice.description.no-privacy" : "We collect and process your personal information for the following purposes: <strong>Authentication, Preferences, Acknowledgement and Statistics</strong>."
+  "cookies.consent.content-notice.description.no-privacy" : "Vaše osobní údaje shromažďujeme a zpracováváme pro následující účely: <strong>Ověření, Preference, Potvrzení a Statistiky</strong>.",
+
+  // "cookies.consent.content-modal.services" : "services"
+  "cookies.consent.content-modal.services" : "služby",
+
+  // "cookies.consent.content-modal.service" : "service"
+  "cookies.consent.content-modal.service" : "služba",
+
+  // "cookies.consent.app.title.google-recaptcha" : "Google reCaptcha"
+  "cookies.consent.app.title.google-recaptcha" : "Google reCaptcha",
+
+  // "cookies.consent.app.description.google-recaptcha" : "We use google reCAPTCHA service during registration and password recovery"
+  "cookies.consent.app.description.google-recaptcha" : "Při registraci a obnově hesla používáme službu reCAPTCHA společnosti Google.",
+
+  // "cookies.consent.purpose.registration-password-recovery" : "Registration and Password recovery"
+  "cookies.consent.purpose.registration-password-recovery" : "Registrace a obnovení hesla",
+
+  // "cookies.consent.purpose.sharing" : "Sharing"
+  "cookies.consent.purpose.sharing" : "Sdílení",
+
+  // "curation-task.task.citationpage.label" : "Generate Citation Page"
+  "curation-task.task.citationpage.label" : "Vytvořit stránku s citacemi",
+
+  // "curation-task.task.register-doi.label" : "Register DOI"
+  "curation-task.task.register-doi.label" : "Registrovat DOI",
+
+  // "curation.form.submit.error.invalid-handle" : "Couldn't determine the handle for this object"
+  "curation.form.submit.error.invalid-handle" : "Nepodařilo se určit handle tohoto objektu",
+
+  // "dso-selector.create.community.or-divider" : "or"
+  "dso-selector.create.community.or-divider" : "nebo",
+
+  // "dso-selector.export-batch.dspaceobject.head" : "Export Batch (ZIP) from"
+  "dso-selector.export-batch.dspaceobject.head" : "Exportovat dávku (ZIP) z",
+
+  // "dso-selector.import-batch.dspaceobject.head" : "Import batch from"
+  "dso-selector.import-batch.dspaceobject.head" : "Importovat dávku z",
+
+  // "dso-selector.set-scope.community.or-divider" : "or"
+  "dso-selector.set-scope.community.or-divider" : "nebo",
+
+  // "dso-selector.claim.item.head" : "Profile tips"
+  "dso-selector.claim.item.head" : "Tipy k profilu",
+
+  // "dso-selector.claim.item.body" : "These are existing profiles that may be related to you. If you recognize yourself in one of these profiles, select it and on the detail page, among the options, choose to claim it. Otherwise you can create a new profile from scratch using the button below."
+  "dso-selector.claim.item.body" : "Jedná se o existující profily, které s vámi mohou souviset. Pokud se v některém z těchto profilů poznáte, vyberte jej a na stránce s podrobnostmi mezi možnostmi zvolte, zda jej chcete reklamovat. V opačném případě si můžete vytvořit nový profil od začátku pomocí tlačítka níže.",
+
+  // "dso-selector.claim.item.not-mine-label" : "None of these are mine"
+  "dso-selector.claim.item.not-mine-label" : "Žádný z nich není můj",
+
+  // "dso-selector.claim.item.create-from-scratch" : "Create a new one"
+  "dso-selector.claim.item.create-from-scratch" : "Vytvořit nový",
+
+  // "dso-selector.results-could-not-be-retrieved" : "Something went wrong, please refresh again ↻"
+  "dso-selector.results-could-not-be-retrieved" : "Něco se pokazilo, obnovte prosím znovu ↻",
+
+  // "supervision-group-selector.header" : "Supervision Group Selector"
+  "supervision-group-selector.header" : "Výběr dozorčí skupiny",
+
+  // "supervision-group-selector.select.type-of-order.label" : "Select a type of Order"
+  "supervision-group-selector.select.type-of-order.label" : "Vyberte typ objednávky",
+
+  // "supervision-group-selector.select.type-of-order.option.none" : "NONE"
+  "supervision-group-selector.select.type-of-order.option.none" : "ŽÁDNÁ",
+
+  // "supervision-group-selector.select.type-of-order.option.editor" : "EDITOR"
+  "supervision-group-selector.select.type-of-order.option.editor" : "EDITOR",
+
+  // "supervision-group-selector.select.type-of-order.option.observer" : "OBSERVER"
+  "supervision-group-selector.select.type-of-order.option.observer" : "PŘIHLÍŽEJÍCI",
+
+  // "supervision-group-selector.select.group.label" : "Select a Group"
+  "supervision-group-selector.select.group.label" : "Vyberte skupinu",
+
+  // "supervision-group-selector.button.cancel" : "Cancel"
+  "supervision-group-selector.button.cancel" : "Zrušit",
+
+  // "supervision-group-selector.button.save" : "Save"
+  "supervision-group-selector.button.save" : "Uložit",
+
+  // "supervision-group-selector.select.type-of-order.error" : "Please select a type of order"
+  "supervision-group-selector.select.type-of-order.error" : "Vyberte typ objednávky",
+
+  // "supervision-group-selector.select.group.error" : "Please select a group"
+  "supervision-group-selector.select.group.error" : "Vyberte prosím skupinu",
+
+  // "supervision-group-selector.notification.create.success.title" : "Successfully created supervision order for group {{ name }}"
+  "supervision-group-selector.notification.create.success.title" : "Úspěšně vytvořeno pořadí dohledu pro skupinu {{ název }}",
+
+  // "supervision-group-selector.notification.create.failure.title" : "Error"
+  "supervision-group-selector.notification.create.failure.title" : "Chyba",
+
+  // "supervision-group-selector.notification.create.already-existing" : "A supervision order already exists on this item for selected group"
+  "supervision-group-selector.notification.create.already-existing" : "Pro tuto položku již existuje příkaz k dohledu pro vybranou skupinu",
+
+  // "confirmation-modal.export-batch.header" : "Export batch (ZIP) for {{ dsoName }}"
+  "confirmation-modal.export-batch.header" : "Dávka exportu (ZIP) pro {{ dsoName }}",
+
+  // "confirmation-modal.export-batch.info" : "Are you sure you want to export batch (ZIP) for {{ dsoName }}"
+  "confirmation-modal.export-batch.info" : "Jste si jisti, že chcete exportovat dávku (ZIP) pro {{ dsoName }}",
+
+  // "confirmation-modal.export-batch.cancel" : "Cancel"
+  "confirmation-modal.export-batch.cancel" : "Zrušit",
+
+  // "confirmation-modal.export-batch.confirm" : "Export"
+  "confirmation-modal.export-batch.confirm" : "Export",
+
+  // "confirmation-modal.delete-profile.header" : "Delete Profile"
+  "confirmation-modal.delete-profile.header" : "Smazat profil",
+
+  // "confirmation-modal.delete-profile.info" : "Are you sure you want to delete your profile"
+  "confirmation-modal.delete-profile.info" : "Jste si jisti, že chcete odstranit svůj profil?",
+
+  // "confirmation-modal.delete-profile.cancel" : "Cancel"
+  "confirmation-modal.delete-profile.cancel" : "Zrušit",
+
+  // "confirmation-modal.delete-profile.confirm" : "Delete"
+  "confirmation-modal.delete-profile.confirm" : "Odstranit",
+
+  // "confirmation-modal.delete-subscription.header" : "Delete Subscription"
+  "confirmation-modal.delete-subscription.header" : "Odstranění odběru",
+
+  // "confirmation-modal.delete-subscription.info" : "Are you sure you want to delete subscription for \"{{ dsoName }}\""
+  "confirmation-modal.delete-subscription.info" : "Jste si jisti, že chcete odstranit odběr pro \"{{ dsoName }}\"?",
+
+  // "confirmation-modal.delete-subscription.cancel" : "Cancel"
+  "confirmation-modal.delete-subscription.cancel" : "Zrušit",
+
+  // "confirmation-modal.delete-subscription.confirm" : "Delete"
+  "confirmation-modal.delete-subscription.confirm" : "Odstranit",
+
+  // "feed.description" : "Syndication feed"
+  "feed.description" : "Synchronizační kanál",
+
+  // "footer.link.contact-us" : "Contact us"
+  "footer.link.contact-us" : "Kontaktujte nás",
+
+  // "forgot-email.form.email.error.not-email-form" : "Please fill in a valid email address"
+  "forgot-email.form.email.error.not-email-form" : "Vyplňte prosím platnou e-mailovou adresu",
+
+  // "health.breadcrumbs" : "Health"
+  "health.breadcrumbs" : "Stav",
+
+  // "health-page.heading" : "Health"
+  "health-page.heading" : "Stav",
+
+  // "health-page.info-tab" : "Info"
+  "health-page.info-tab" : "Informace",
+
+  // "health-page.status-tab" : "Status"
+  "health-page.status-tab" : "Status",
+
+  // "health-page.error.msg" : "The health check service is temporarily unavailable"
+  "health-page.error.msg" : "Služba kontroly stavu je dočasně nedostupná.",
+
+  // "health-page.property.status" : "Status code"
+  "health-page.property.status" : "Stavový kód",
+
+  // "health-page.section.db.title" : "Database"
+  "health-page.section.db.title" : "Databáze",
+
+  // "health-page.section.geoIp.title" : "GeoIp"
+  "health-page.section.geoIp.title" : "GeoIp",
+
+  // "health-page.section.solrAuthorityCore.title" : "Solr: authority core"
+  "health-page.section.solrAuthorityCore.title" : "Solr: jádro autority",
+
+  // "health-page.section.solrOaiCore.title" : "Solr: oai core"
+  "health-page.section.solrOaiCore.title" : "Solr: jádro oai",
+
+  // "health-page.section.solrSearchCore.title" : "Solr: search core"
+  "health-page.section.solrSearchCore.title" : "Solr: vyhledávací jádro",
+
+  // "health-page.section.solrStatisticsCore.title" : "Solr: statistics core"
+  "health-page.section.solrStatisticsCore.title" : "Solr: statistické jádro",
+
+  // "health-page.section-info.app.title" : "Application Backend"
+  "health-page.section-info.app.title" : "Backend aplikace",
+
+  // "health-page.section-info.java.title" : "Java"
+  "health-page.section-info.java.title" : "Java",
+
+  // "health-page.status" : "Status"
+  "health-page.status" : "Stav",
+
+  // "health-page.status.ok.info" : "Operational"
+  "health-page.status.ok.info" : "Provozní",
+
+  // "health-page.status.error.info" : "Problems detected"
+  "health-page.status.error.info" : "Zjištěné problémy",
+
+  // "health-page.status.warning.info" : "Possible issues detected"
+  "health-page.status.warning.info" : "Zjištěné možné problémy",
+
+  // "health-page.title" : "Health"
+  "health-page.title" : "Stav",
+
+  // "health-page.section.no-issues" : "No issues detected"
+  "health-page.section.no-issues" : "Nebyly zjištěny žádné problémy",
+
+  // "item.edit.identifiers.doi.status.UNKNOWN" : "Unknown"
+  "item.edit.identifiers.doi.status.UNKNOWN" : "Neznámý",
+
+  // "item.edit.identifiers.doi.status.TO_BE_REGISTERED" : "Queued for registration"
+  "item.edit.identifiers.doi.status.TO_BE_REGISTERED" : "Zařazeno do fronty na registraci",
+
+  // "item.edit.identifiers.doi.status.TO_BE_RESERVED" : "Queued for reservation"
+  "item.edit.identifiers.doi.status.TO_BE_RESERVED" : "Ve frontě na rezervaci",
+
+  // "item.edit.identifiers.doi.status.IS_REGISTERED" : "Registered"
+  "item.edit.identifiers.doi.status.IS_REGISTERED" : "Registrováno",
+
+  // "item.edit.identifiers.doi.status.IS_RESERVED" : "Reserved"
+  "item.edit.identifiers.doi.status.IS_RESERVED" : "Rezervováno",
+
+  // "item.edit.identifiers.doi.status.UPDATE_RESERVED" : "Reserved (update queued)"
+  "item.edit.identifiers.doi.status.UPDATE_RESERVED" : "Rezervováno (aktualizace zařazena do fronty)",
+
+  // "item.edit.identifiers.doi.status.UPDATE_REGISTERED" : "Registered (update queued)"
+  "item.edit.identifiers.doi.status.UPDATE_REGISTERED" : "Registrováno (aktualizace zařazena do fronty)",
+
+  // "item.edit.identifiers.doi.status.UPDATE_BEFORE_REGISTRATION" : "Queued for update and registration"
+  "item.edit.identifiers.doi.status.UPDATE_BEFORE_REGISTRATION" : "Ve frontě na aktualizaci a registraci",
+
+  // "item.edit.identifiers.doi.status.TO_BE_DELETED" : "Queued for deletion"
+  "item.edit.identifiers.doi.status.TO_BE_DELETED" : "Ve frontě na smazání",
+
+  // "item.edit.identifiers.doi.status.DELETED" : "Deleted"
+  "item.edit.identifiers.doi.status.DELETED" : "Odstraněno",
+
+  // "item.edit.identifiers.doi.status.PENDING" : "Pending (not registered)"
+  "item.edit.identifiers.doi.status.PENDING" : "Čeká na vyřízení (neregistrováno)",
+
+  // "item.edit.identifiers.doi.status.MINTED" : "Minted (not registered)"
+  "item.edit.identifiers.doi.status.MINTED" : "Vytvořené (neregistrované)",
+
+  // "item.edit.tabs.status.buttons.register-doi.label" : "Register a new or pending DOI"
+  "item.edit.tabs.status.buttons.register-doi.label" : "Registrovat nového nebo čekajícího DOI",
+
+  // "item.edit.tabs.status.buttons.register-doi.button" : "Register DOI..."
+  "item.edit.tabs.status.buttons.register-doi.button" : "Registrovat DOI...",
+
+  // "item.edit.register-doi.header" : "Register a new or pending DOI"
+  "item.edit.register-doi.header" : "Registrovat nového nebo nevyřízeného DOI",
+
+  // "item.edit.register-doi.description" : "Review any pending identifiers and item metadata below and click Confirm to proceed with DOI registration, or Cancel to back out"
+  "item.edit.register-doi.description" : "Zkontrolujte všechny čekající identifikátory a metadata položky níže. Kliknutím na tlačítko Potvrdit pokračujte v registraci DOI nebo Zrušit se vraťte zpět.",
+
+  // "item.edit.register-doi.confirm" : "Confirm"
+  "item.edit.register-doi.confirm" : "Potvrdit",
+
+  // "item.edit.register-doi.cancel" : "Cancel"
+  "item.edit.register-doi.cancel" : "Zrušit",
+
+  // "item.edit.register-doi.success" : "DOI queued for registration successfully."
+  "item.edit.register-doi.success" : "DOI úspěšně zařazen do fronty pro registraci.",
+
+  // "item.edit.register-doi.error" : "Error registering DOI"
+  "item.edit.register-doi.error" : "Chyba při registraci DOI",
+
+  // "item.edit.register-doi.to-update" : "The following DOI has already been minted and will be queued for registration online"
+  "item.edit.register-doi.to-update" : "Následující DOI již byl vyražen a bude zařazen do fronty pro registraci online",
+
+  // "item.edit.metadata.edit.buttons.confirm" : "Confirm"
+  "item.edit.metadata.edit.buttons.confirm" : "Potvrdit",
+
+  // "item.edit.metadata.edit.buttons.drag" : "Drag to reorder"
+  "item.edit.metadata.edit.buttons.drag" : "Potáhnutím změníte pořadí",
+
+  // "item.edit.metadata.edit.buttons.virtual" : "This is a virtual metadata value, i.e. a value inherited from a related entity. It can’t be modified directly. Add or remove the corresponding relationship in the "Relationships" tab"
+  "item.edit.metadata.edit.buttons.virtual" : "Jedná se o hodnotu virtuálních metadat, tj. hodnotu zděděnou od příbuzné entity. Nelze ji přímo upravovat. Přidejte nebo odstraňte odpovídající relaci na karte „Relace“",
+
+  // "item.edit.metadata.metadatafield.error" : "An error occurred validating the metadata field"
+  "item.edit.metadata.metadatafield.error" : "Při ověřování pole metadat došlo k chybě.",
+
+  // "item.edit.metadata.reset-order-button" : "Undo reorder"
+  "item.edit.metadata.reset-order-button" : "Zrušit změny pořadí",
+
+  // "item.orcid.return" : "Back"
+  "item.orcid.return" : "Zpět",
+
+  // "item.truncatable-part.show-more" : "Show more"
+  "item.truncatable-part.show-more" : "Zobrazit více",
+
+  // "item.truncatable-part.show-less" : "Collapse"
+  "item.truncatable-part.show-less" : "Sbalit",
+
+  // "workflow-item.search.result.delete-supervision.modal.header" : "Delete Supervision Order"
+  "workflow-item.search.result.delete-supervision.modal.header" : "Vymazat příkaz dohledu",
+
+  // "workflow-item.search.result.delete-supervision.modal.info" : "Are you sure you want to delete Supervision Order"
+  "workflow-item.search.result.delete-supervision.modal.info" : "Jste si jisti, že chcete odstranit příkaz k dohledu?",
+
+  // "workflow-item.search.result.delete-supervision.modal.cancel" : "Cancel"
+  "workflow-item.search.result.delete-supervision.modal.cancel" : "Zrušit",
+
+  // "workflow-item.search.result.delete-supervision.modal.confirm" : "Delete"
+  "workflow-item.search.result.delete-supervision.modal.confirm" : "Odstranit",
+
+  // "workflow-item.search.result.notification.deleted.success" : "Successfully deleted supervision order \"{{name}}\""
+  "workflow-item.search.result.notification.deleted.success" : "Úspěšně odstraněn příkaz k dohledu \"{{name}}\".",
+
+  // "workflow-item.search.result.notification.deleted.failure" : "Failed to delete supervision order \"{{name}}\""
+  "workflow-item.search.result.notification.deleted.failure" : "Nepodařilo se odstranit příkaz k dohledu \"{{name}}\".",
+
+  // "workflow-item.search.result.list.element.supervised-by" : "Supervised by:"
+  "workflow-item.search.result.list.element.supervised-by" : "Pod dohledem:",
+
+  // "workflow-item.search.result.list.element.supervised.remove-tooltip" : "Remove supervision group"
+  "workflow-item.search.result.list.element.supervised.remove-tooltip" : "Odebrat dozorčí skupinu",
+
+  // "item.page.orcid.title" : "ORCID"
+  "item.page.orcid.title" : "ORCID",
+
+  // "item.page.orcid.tooltip" : "Open ORCID setting page"
+  "item.page.orcid.tooltip" : "Otevřít stránku nastavení ORCID",
+
+  // "item.page.claim.button" : "Claim"
+  "item.page.claim.button" : "Reklamace",
+
+  // "item.page.claim.tooltip" : "Claim this item as profile"
+  "item.page.claim.tooltip" : "Prohlásit tuto položku za profil",
+
+  // "item.preview.dc.type" : "Type:"
+  "item.preview.dc.type" : "Typ:",
+
+  // "item.preview.oaire.citation.issue" : "Issue"
+  "item.preview.oaire.citation.issue" : "Vydání",
+
+  // "item.preview.oaire.citation.volume" : "Volume"
+  "item.preview.oaire.citation.volume" : "Svazek",
+
+  // "item.preview.dc.relation.issn" : "ISSN"
+  "item.preview.dc.relation.issn" : "ISSN",
+
+  // "item.preview.dc.identifier.isbn" : "ISBN"
+  "item.preview.dc.identifier.isbn" : "ISBN",
+
+  // "item.preview.dc.identifier" : "Identifier:"
+  "item.preview.dc.identifier" : "Identifikátor:",
+
+  // "item.preview.dc.relation.ispartof" : "Journal or Serie"
+  "item.preview.dc.relation.ispartof" : "Časopis nebo série",
+
+  // "item.preview.dc.identifier.doi" : "DOI"
+  "item.preview.dc.identifier.doi" : "DOI",
+
+  // "item.version.create.modal.submitted.header" : "Creating new version..."
+  "item.version.create.modal.submitted.header" : "Vytváření nové verze...",
+
+  // "item.version.create.modal.submitted.text" : "The new version is being created. This may take some time if the item has a lot of relationships."
+  "item.version.create.modal.submitted.text" : "Vytváří se nová verze. Pokud má položka mnoho relací, může to nějakou dobu trvat",
+
+  // "itemtemplate.edit.metadata.add-button" : "Add"
+  "itemtemplate.edit.metadata.add-button" : "Přidat",
+
+  // "itemtemplate.edit.metadata.discard-button" : "Discard"
+  "itemtemplate.edit.metadata.discard-button" : "Zahodit",
+
+  // "itemtemplate.edit.metadata.edit.buttons.confirm" : "Confirm"
+  "itemtemplate.edit.metadata.edit.buttons.confirm" : "Potvrdit",
+
+  // "itemtemplate.edit.metadata.edit.buttons.drag" : "Drag to reorder"
+  "itemtemplate.edit.metadata.edit.buttons.drag" : "Potáhnutím změníte pořadí",
+
+  // "itemtemplate.edit.metadata.edit.buttons.edit" : "Edit"
+  "itemtemplate.edit.metadata.edit.buttons.edit" : "Upravit",
+
+  // "itemtemplate.edit.metadata.edit.buttons.remove" : "Remove"
+  "itemtemplate.edit.metadata.edit.buttons.remove" : "Odstranit",
+
+  // "itemtemplate.edit.metadata.edit.buttons.undo" : "Undo changes"
+  "itemtemplate.edit.metadata.edit.buttons.undo" : "Vrátit změny",
+
+  // "itemtemplate.edit.metadata.edit.buttons.unedit" : "Stop editing"
+  "itemtemplate.edit.metadata.edit.buttons.unedit" : "Zastavit úpravy",
+
+  // "itemtemplate.edit.metadata.empty" : "The item template currently doesn't contain any metadata. Click Add to start adding a metadata value."
+  "itemtemplate.edit.metadata.empty" : "Šablona položky aktuálně neobsahuje žádná metadata. Kliknutím na tlačítko Přidat začnete přidávat hodnotu metadat.",
+
+  // "itemtemplate.edit.metadata.headers.edit" : "Edit"
+  "itemtemplate.edit.metadata.headers.edit" : "Upravit",
+
+  // "itemtemplate.edit.metadata.headers.field" : "Field"
+  "itemtemplate.edit.metadata.headers.field" : "Pole",
+
+  // "itemtemplate.edit.metadata.headers.language" : "Lang"
+  "itemtemplate.edit.metadata.headers.language" : "Lang",
+
+  // "itemtemplate.edit.metadata.headers.value" : "Value"
+  "itemtemplate.edit.metadata.headers.value" : "Hodnota",
+
+  // "itemtemplate.edit.metadata.metadatafield.error" : "An error occurred validating the metadata field"
+  "itemtemplate.edit.metadata.metadatafield.error" : "Při ověřování pole metadat došlo k chybě",
+
+  // "itemtemplate.edit.metadata.metadatafield.invalid" : "Please choose a valid metadata field"
+  "itemtemplate.edit.metadata.metadatafield.invalid" : "Vyberte prosím platné pole metadat",
+
+  // "itemtemplate.edit.metadata.notifications.discarded.content" : "Your changes were discarded. To reinstate your changes click the 'Undo' button"
+  "itemtemplate.edit.metadata.notifications.discarded.content" : "Změny byly zahozeny. Chcete-li změny obnovit, klikněte na tlačítko Zpět.",
+
+  // "itemtemplate.edit.metadata.notifications.discarded.title" : "Changed discarded"
+  "itemtemplate.edit.metadata.notifications.discarded.title" : "Změny vyřazeny",
+
+  // "itemtemplate.edit.metadata.notifications.error.title" : "An error occurred"
+  "itemtemplate.edit.metadata.notifications.error.title" : "Došlo k chybě",
+
+  // "itemtemplate.edit.metadata.notifications.invalid.content" : "Your changes were not saved. Please make sure all fields are valid before you save."
+  "itemtemplate.edit.metadata.notifications.invalid.content" : "Vaše změny nebyly uloženy. Před uložením se ujistěte, že jsou všechna pole platná.",
+
+  // "itemtemplate.edit.metadata.notifications.invalid.title" : "Metadata invalid"
+  "itemtemplate.edit.metadata.notifications.invalid.title" : "Neplatná metadata",
+
+  // "itemtemplate.edit.metadata.notifications.outdated.content" : "The item template you're currently working on has been changed by another user. Your current changes are discarded to prevent conflicts"
+  "itemtemplate.edit.metadata.notifications.outdated.content" : "Šablona položky, na které právě pracujete, byla změněna jiným uživatelem. Vaše aktuální změny jsou zahozeny, aby se předešlo konfliktům",
+
+  // "itemtemplate.edit.metadata.notifications.outdated.title" : "Changed outdated"
+  "itemtemplate.edit.metadata.notifications.outdated.title" : "Změny zastaralé",
+
+  // "itemtemplate.edit.metadata.notifications.saved.content" : "Your changes to this item template's metadata were saved."
+  "itemtemplate.edit.metadata.notifications.saved.content" : "Vaše změny v metadatech této šablony položky byly uloženy",
+
+  // "itemtemplate.edit.metadata.notifications.saved.title" : "Metadata saved"
+  "itemtemplate.edit.metadata.notifications.saved.title" : "Metadata uložena",
+
+  // "itemtemplate.edit.metadata.reinstate-button" : "Undo"
+  "itemtemplate.edit.metadata.reinstate-button" : "Zpět",
+
+  // "itemtemplate.edit.metadata.reset-order-button" : "Undo reorder"
+  "itemtemplate.edit.metadata.reset-order-button" : "Zrušit změny pořadí",
+
+  // "itemtemplate.edit.metadata.save-button" : "Save"
+  "itemtemplate.edit.metadata.save-button" : "Uložit",
+
+  // "journal-relationships.search.results.head" : "Journal Search Results"
+  "journal-relationships.search.results.head" : "Výsledky vyhledávání v časopisech",
+
+  // "login.form.orcid" : "Log in with ORCID"
+  "login.form.orcid" : "Přihlásit se pomocí ORCID",
+
+  // "clarin.autologin.error.message" : "Something went wrong, the user cannot be signed in automatically."
+  "clarin.autologin.error.message" : "Něco se pokazilo, uživatele nelze automaticky přihlásit.",
+
+  // "menu.section.export_batch" : "Batch Export (ZIP)"
+  "menu.section.export_batch" : "Dávkový export (ZIP)",
+
+  // "menu.section.icon.health" : "Health check menu section"
+  "menu.section.icon.health" : "Menu sekce kontrola stavu",
+
+  // "menu.section.health" : "Health"
+  "menu.section.health" : "Stav",
+
+  // "metadata-export-search.tooltip" : "Export search results as CSV"
+  "metadata-export-search.tooltip" : "Exportovat výsledky hledání jako CSV",
+
+  // "metadata-export-search.submit.success" : "The export was started successfully"
+  "metadata-export-search.submit.success" : "Export byl úspěšně zahájen",
+
+  // "metadata-export-search.submit.error" : "Starting the export has failed"
+  "metadata-export-search.submit.error" : "Spuštění exportu se nezdařilo",
+
+  // "mydspace.show.supervisedWorkspace" : "Supervised items"
+  "mydspace.show.supervisedWorkspace" : "Kontrolované položky",
+
+  // "nav.context-help-toggle" : "Toggle context help"
+  "nav.context-help-toggle" : "Přepnout kontextovou nápovědu",
+
+  // "nav.user-profile-menu-and-logout" : "User profile menu and Log Out"
+  "nav.user-profile-menu-and-logout" : "Menu uživatelského profilu a Odhlásit se",
+
+  // "nav.subscriptions" : "Subscriptions"
+  "nav.subscriptions" : "Odběry",
+
+  // "orgunit.listelement.no-title" : "Untitled"
+  "orgunit.listelement.no-title" : "Bez názvu",
+
+  // "person.page.name" : "Name"
+  "person.page.name" : "Jméno",
+
+  // "person-relationships.search.results.head" : "Person Search Results"
+  "person-relationships.search.results.head" : "Výsledky vyhledávání osob",
+
+  // "process.detail.actions" : "Actions"
+  "process.detail.actions" : "Akce",
+
+  // "process.detail.delete.button" : "Delete process"
+  "process.detail.delete.button" : "Smazat proces",
+
+  // "process.detail.delete.header" : "Delete process"
+  "process.detail.delete.header" : "Smazat proces",
+
+  // "process.detail.delete.body" : "Are you sure you want to delete the current process?"
+  "process.detail.delete.body" : "Opravdu chcete smazat aktuální proces?",
+
+  // "process.detail.delete.cancel" : "Cancel"
+  "process.detail.delete.cancel" : "Zrušit",
+
+  // "process.detail.delete.confirm" : "Delete process"
+  "process.detail.delete.confirm" : "Smazat proces",
+
+  // "process.detail.delete.success" : "The process was successfully deleted."
+  "process.detail.delete.success" : "Proces byl úspěšně odstraněn.",
+
+  // "process.detail.delete.error" : "Something went wrong when deleting the process"
+  "process.detail.delete.error" : "Při odstraňování procesu se něco pokazilo",
+
+  // "process.overview.table.actions" : "Actions"
+  "process.overview.table.actions" : "Akce",
+
+  // "process.overview.delete" : "Delete {{count}} processes"
+  "process.overview.delete" : "Odstranění procesů {{count}}",
+
+  // "process.overview.delete.clear" : "Clear delete selection"
+  "process.overview.delete.clear" : "Vymazat výběr mazání",
+
+  // "process.overview.delete.processing" : "{{count}} process(es) are being deleted. Please wait for the deletion to fully complete. Note that this can take a while."
+  "process.overview.delete.processing" : "{{count}} proces(y) je (sou) mazán(y). Počkejte prosím na úplné dokončení mazání. Upozorňujeme, že to může chvíli trvat.",
+
+  // "process.overview.delete.body" : "Are you sure you want to delete {{count}} process(es)?"
+  "process.overview.delete.body" : "Opravdu chcete smazat procesy {{count}} ?",
+
+  // "process.overview.delete.header" : "Delete processes"
+  "process.overview.delete.header" : "Smazat procesy",
+
+  // "process.bulk.delete.error.head" : "Error on deleteing process"
+  "process.bulk.delete.error.head" : "Chyba při mazání procesu",
+
+  // "process.bulk.delete.error.body" : "The process with ID {{processId}} could not be deleted. The remaining processes will continue being deleted."
+  "process.bulk.delete.error.body" : "Proces s ID {{processId}} se nepodařilo odstranit. Zbývající procesy budou nadále mazány.",
+
+  // "process.bulk.delete.success" : "{{count}} process(es) have been succesfully deleted"
+  "process.bulk.delete.success" : "{{count}} proces(y) byl(y) úspěšně smazán(y)",
+
+  // "profile.special.groups.head" : "Authorization special groups you belong to"
+  "profile.special.groups.head" : "Autorizace speciálních skupin, do kterých patříte",
+
+  // "profile.security.form.label.current-password" : "Current password"
+  "profile.security.form.label.current-password" : "Aktuální heslo",
+
+  // "profile.security.form.notifications.error.change-failed" : "An error occurred while trying to change the password. Please check if the current password is correct."
+  "profile.security.form.notifications.error.change-failed" : "Při pokusu o změnu hesla došlo k chybě. Zkontrolujte, zda je aktuální heslo správné.",
+
+  // "profile.security.form.notifications.error.general" : "Please fill required fields of security form."
+  "profile.security.form.notifications.error.general" : "Vyplňte prosím povinná pole bezpečnostního formuláře.",
+
+  // "profile.card.researcher" : "Researcher Profile"
+  "profile.card.researcher" : "Profil výzkumníka",
+
+  // "project-relationships.search.results.head" : "Project Search Results"
+  "project-relationships.search.results.head" : "Výsledky vyhledávání projektů",
+
+  // "publication-relationships.search.results.head" : "Publication Search Results"
+  "publication-relationships.search.results.head" : "Výsledky vyhledávání publikací",
+
+  // "register-page.registration.email.error.not-email-form" : "Please fill in a valid email address."
+  "register-page.registration.email.error.not-email-form" : "Vyplňte prosím platnou e-mailovou adresu.",
+
+  // "register-page.registration.email.error.not-valid-domain" : "Use email with allowed domains: {{ domains }}"
+  "register-page.registration.email.error.not-valid-domain" : "Používejte e-mail s povolenými doménami: {{ domains }}",
+
+  // "register-page.registration.error.recaptcha" : "Error when trying to authenticate with recaptcha"
+  "register-page.registration.error.recaptcha" : "Chyba při pokusu o ověření pomocí recaptcha",
+
+  // "register-page.registration.google-recaptcha.must-accept-cookies" : "In order to register you must accept the <b>Registration and Password recovery</b> (Google reCaptcha) cookies."
+  "register-page.registration.google-recaptcha.must-accept-cookies" : "Abyste se mohli zaregistrovat, musíte přijmout soubory cookie <b>Registrace a obnovení hesla</b> (Google reCaptcha).",
+
+  // "register-page.registration.error.maildomain" : "This email address is not on the list of domains who can register. Allowed domains are {{ domains }}"
+  "register-page.registration.error.maildomain" : "Tato e-mailová adresa není na seznamu domén, které lze registrovat. Povolené domény jsou {{ domains }}",
+
+  // "register-page.registration.google-recaptcha.open-cookie-settings" : "Open cookie settings"
+  "register-page.registration.google-recaptcha.open-cookie-settings" : "Otevřít nastavení cookie",
+
+  // "register-page.registration.google-recaptcha.notification.title" : "Google reCaptcha"
+  "register-page.registration.google-recaptcha.notification.title" : "Google reCaptcha",
+
+  // "register-page.registration.google-recaptcha.notification.message.error" : "An error occurred during reCaptcha verification"
+  "register-page.registration.google-recaptcha.notification.message.error" : "Při ověřování reCaptcha došlo k chybě",
+
+  // "register-page.registration.google-recaptcha.notification.message.expired" : "Verification expired. Please verify again."
+  "register-page.registration.google-recaptcha.notification.message.expired" : "Platnost ověření vypršela. Zopakujte prosím akci",
+
+  // "register-page.registration.info.maildomain" : "Accounts can be registered for mail addresses of the domains"
+  "register-page.registration.info.maildomain" : "Účty lze registrovat pro poštovní adresy domén.",
+
+  // "resource-policies.edit.page.target-failure.content" : "An error occurred while editing the target (ePerson or group) of the resource policy."
+  "resource-policies.edit.page.target-failure.content" : "Při úpravě cíle zásady prostředků (ePersona nebo skupiny) došlo k chybě.",
+
+  // "resource-policies.edit.page.other-failure.content" : "An error occurred while editing the resource policy. The target (ePerson or group) has been successfully updated."
+  "resource-policies.edit.page.other-failure.content" : "Při úpravě zásad prostředků došlo k chybě. Cíl (ePerson nebo skupina) byl úspěšně aktualizován",
+
+  // "resource-policies.form.eperson-group-list.modal.header" : "Cannot change type"
+  "resource-policies.form.eperson-group-list.modal.header" : "Typ nelze změnit",
+
+  // "resource-policies.form.eperson-group-list.modal.text1.toGroup" : "It is not possible to replace an ePerson with a group."
+  "resource-policies.form.eperson-group-list.modal.text1.toGroup" : "ePersona nelze nahradit skupinou",
+
+  // "resource-policies.form.eperson-group-list.modal.text1.toEPerson" : "It is not possible to replace a group with an ePerson."
+  "resource-policies.form.eperson-group-list.modal.text1.toEPerson" : "Skupinu není možné nahradit ePersonem",
+
+  // "resource-policies.form.eperson-group-list.modal.text2" : "Delete the current resource policy and create a new one with the desired type."
+  "resource-policies.form.eperson-group-list.modal.text2" : "Odstraňte aktuální zásadu prostředků a vytvořte novou s požadovaným typem",
+
+  // "resource-policies.form.eperson-group-list.modal.close" : "Ok"
+  "resource-policies.form.eperson-group-list.modal.close" : "Ok",
+
+  // "search.filters.applied.f.supervisedBy" : "Supervised by"
+  "search.filters.applied.f.supervisedBy" : "Pod dohledem",
+
+  // "search.filters.filter.show-tree" : "Browse {{ name }} tree"
+  "search.filters.filter.show-tree" : "Procházet strom {{ name }}",
+
+  // "search.filters.filter.supervisedBy.head" : "Supervised By"
+  "search.filters.filter.supervisedBy.head" : "Pod dohledem",
+
+  // "search.filters.filter.supervisedBy.placeholder" : "Supervised By"
+  "search.filters.filter.supervisedBy.placeholder" : "Pod dohledem",
+
+  // "search.filters.filter.supervisedBy.label" : "Search Supervised By"
+  "search.filters.filter.supervisedBy.label" : "Vyhledat dohlížené",
+
+  // "search.results.view-result" : "View"
+  "search.results.view-result" : "Zobrazit",
+
+  // "search.results.response.500" : "An error occurred during query execution, please try again later"
+  "search.results.response.500" : "Při provádění dotazu došlo k chybě, zkuste to prosím později",
+
+  // "default-relationships.search.results.head" : "Search Results"
+  "default-relationships.search.results.head" : "Výsledky vyhledávání",
+
+  // "submission.import-external.source.ads" : "NASA/ADS"
+  "submission.import-external.source.ads" : "NASA/ADS",
+
+  // "submission.import-external.source.cinii" : "CiNii"
+  "submission.import-external.source.cinii" : "CiNii",
+
+  // "submission.import-external.source.crossref" : "CrossRef"
+  "submission.import-external.source.crossref" : "CrossRef",
+
+  // "submission.import-external.source.datacite" : "DataCite"
+  "submission.import-external.source.datacite" : "DataCite",
+
+  // "submission.import-external.source.scielo" : "SciELO"
+  "submission.import-external.source.scielo" : "SciELO",
+
+  // "submission.import-external.source.scopus" : "Scopus"
+  "submission.import-external.source.scopus" : "Scopus",
+
+  // "submission.import-external.source.vufind" : "VuFind"
+  "submission.import-external.source.vufind" : "VuFind",
+
+  // "submission.import-external.source.wos" : "Web Of Science"
+  "submission.import-external.source.wos" : "Web of Science",
+
+  // "submission.import-external.source.orcidWorks" : "ORCID"
+  "submission.import-external.source.orcidWorks" : "ORCID",
+
+  // "submission.import-external.source.epo" : "European Patent Office (EPO)"
+  "submission.import-external.source.epo" : "Evropský patentový úřad (EPO)",
+
+  // "submission.import-external.source.pubmedeu" : "Pubmed Europe"
+  "submission.import-external.source.pubmedeu" : "Pubmed Europe",
+
+  // "submission.import-external.preview.title.Publication" : "Publication Preview"
+  "submission.import-external.preview.title.Publication" : "Náhled publikace",
+
+  // "submission.import-external.preview.title.none" : "Item Preview"
+  "submission.import-external.preview.title.none" : "Náhled položky",
+
+  // "submission.import-external.preview.title.Journal" : "Journal Preview"
+  "submission.import-external.preview.title.Journal" : "Náhled časopisu",
+
+  // "submission.import-external.preview.title.OrgUnit" : "Organizational Unit Preview"
+  "submission.import-external.preview.title.OrgUnit" : "Náhled organizační jednotky",
+
+  // "submission.import-external.preview.title.Person" : "Person Preview"
+  "submission.import-external.preview.title.Person" : "Náhled osoby",
+
+  // "submission.import-external.preview.title.Project" : "Project Preview"
+  "submission.import-external.preview.title.Project" : "Náhled projektu",
+
+  // "submission.sections.describe.relationship-lookup.external-source.import-button-title.none" : "Import remote item"
+  "submission.sections.describe.relationship-lookup.external-source.import-button-title.none" : "Import dálkové položky",
+
+  // "submission.sections.describe.relationship-lookup.external-source.import-button-title.Event" : "Import remote event"
+  "submission.sections.describe.relationship-lookup.external-source.import-button-title.Event" : "Import dálkové události",
+
+  // "submission.sections.describe.relationship-lookup.external-source.import-button-title.Product" : "Import remote product"
+  "submission.sections.describe.relationship-lookup.external-source.import-button-title.Product" : "Import dálkového produktu",
+
+  // "submission.sections.describe.relationship-lookup.external-source.import-button-title.Equipment" : "Import remote equipment"
+  "submission.sections.describe.relationship-lookup.external-source.import-button-title.Equipment" : "Import dálkového zařízení",
+
+  // "submission.sections.describe.relationship-lookup.external-source.import-button-title.OrgUnit" : "Import remote organizational unit"
+  "submission.sections.describe.relationship-lookup.external-source.import-button-title.OrgUnit" : "Import dálkové organizační jednotky",
+
+  // "submission.sections.describe.relationship-lookup.external-source.import-button-title.Funding" : "Import remote fund"
+  "submission.sections.describe.relationship-lookup.external-source.import-button-title.Funding" : "Import dálkového fondu",
+
+  // "submission.sections.describe.relationship-lookup.external-source.import-button-title.Person" : "Import remote person"
+  "submission.sections.describe.relationship-lookup.external-source.import-button-title.Person" : "Import dálkové osoby",
+
+  // "submission.sections.describe.relationship-lookup.external-source.import-button-title.Patent" : "Import remote patent"
+  "submission.sections.describe.relationship-lookup.external-source.import-button-title.Patent" : "Import dálkového patentu",
+
+  // "submission.sections.describe.relationship-lookup.external-source.import-button-title.Project" : "Import remote project"
+  "submission.sections.describe.relationship-lookup.external-source.import-button-title.Project" : "Import dálkového projektu",
+
+  // "submission.sections.describe.relationship-lookup.external-source.import-button-title.Publication" : "Import remote publication"
+  "submission.sections.describe.relationship-lookup.external-source.import-button-title.Publication" : "Import dálkové publikace",
+
+  // "submission.sections.describe.relationship-lookup.search-tab.tab-title.isPublicationOfAuthor" : "Publication of the Author"
+  "submission.sections.describe.relationship-lookup.search-tab.tab-title.isPublicationOfAuthor" : "Publikace autora",
+
+  // "submission.sections.describe.relationship-lookup.title.isPublicationOfAuthor" : "Publication"
+  "submission.sections.describe.relationship-lookup.title.isPublicationOfAuthor" : "Publikace",
+
+  // "submission.sections.describe.relationship-lookup.selection-tab.title.crossref" : "Search Results"
+  "submission.sections.describe.relationship-lookup.selection-tab.title.crossref" : "Výsledky vyhledávání",
+
+  // "submission.sections.describe.relationship-lookup.selection-tab.title.epo" : "Search Results"
+  "submission.sections.describe.relationship-lookup.selection-tab.title.epo" : "Výsledky vyhledávání",
+
+  // "submission.sections.describe.relationship-lookup.selection-tab.title.scopus" : "Search Results"
+  "submission.sections.describe.relationship-lookup.selection-tab.title.scopus" : "Výsledky vyhledávání",
+
+  // "submission.sections.describe.relationship-lookup.selection-tab.title.scielo" : "Search Results"
+  "submission.sections.describe.relationship-lookup.selection-tab.title.scielo" : "Výsledky vyhledávání",
+
+  // "submission.sections.describe.relationship-lookup.selection-tab.title.wos" : "Search Results"
+  "submission.sections.describe.relationship-lookup.selection-tab.title.wos" : "Výsledky vyhledávání",
+
+  // "submission.sections.describe.relationship-lookup.selection-tab.title" : "Search Results"
+  "submission.sections.describe.relationship-lookup.selection-tab.title" : "Výsledky vyhledávání",
+
+  // "submission.sections.general.cannot_deposit" : "Deposit cannot be completed due to errors in the form.<br>Please fill out all required fields to complete the deposit."
+  "submission.sections.general.cannot_deposit" : "Vklad nelze dokončit kvůli chybám ve formuláři.<br>Pro dokončení vkladu vyplňte všechna požadovaná pole.",
+
+  // "submission.sections.identifiers.info" : "The following identifiers will be created for your item:"
+  "submission.sections.identifiers.info" : "Pro vaši položku budou vytvořeny následující identifikátory:",
+
+  // "submission.sections.identifiers.no_handle" : "No handles have been minted for this item."
+  "submission.sections.identifiers.no_handle" : "K této položce nebyly vyraženy žádné handles.",
+
+  // "submission.sections.identifiers.no_doi" : "No DOIs have been minted for this item."
+  "submission.sections.identifiers.no_doi" : "Pro tuto položku nebyly vyraženy žádné DOI.",
+
+  // "submission.sections.identifiers.handle_label" : "Handle:"
+  "submission.sections.identifiers.handle_label" : "Handle:",
+
+  // "submission.sections.identifiers.doi_label" : "DOI:"
+  "submission.sections.identifiers.doi_label" : "DOI:",
+
+  // "submission.sections.identifiers.otherIdentifiers_label" : "Other identifiers:"
+  "submission.sections.identifiers.otherIdentifiers_label" : "Další identifikátory:",
+
+  // "submission.sections.submit.progressbar.identifiers" : "Identifiers"
+  "submission.sections.submit.progressbar.identifiers" : "Identifikátory",
+
+  // "submission.sections.submit.progressbar.sherpapolicy" : "Sherpa policies"
+  "submission.sections.submit.progressbar.sherpapolicy" : "Zásady sherpa",
+
+  // "submission.sections.submit.progressbar.sherpaPolicies" : "Publisher open access policy information"
+  "submission.sections.submit.progressbar.sherpaPolicies" : "Informace o zásadách otevřeného přístupu vydavatele",
+
+  // "submission.sections.sherpa-policy.title-empty" : "No publisher policy information available. If your work has an associated ISSN, please enter it above to see any related publisher open access policies."
+  "submission.sections.sherpa-policy.title-empty" : "Informace o zásadách vydavatele nejsou k dispozici. Pokud je k vaší práci přiřazeno ISSN, zadejte ho výše, abyste viděli všechny související zásady otevřeného přístupu vydavatele.",
+
+  // "submission.sections.status.info.title" : "Additional Information"
+  "submission.sections.status.info.title" : "Další informace",
+
+  // "submission.sections.status.info.aria" : "Additional Information"
+  "submission.sections.status.info.aria" : "Další informace",
+
+  // "submission.sections.license.granted-label" : "I confirm the license above"
+  "submission.sections.license.granted-label" : "Potvrzuji výše uvedenou licenci",
+
+  // "submission.sections.license.required" : "You must accept the license"
+  "submission.sections.license.required" : "Musíte přijmout licenci",
+
+  // "submission.sections.license.notgranted" : "You must accept the license"
+  "submission.sections.license.notgranted" : "Musíte přijmout licenci",
+
+  // "submission.sections.sherpa.publication.information" : "Publication information"
+  "submission.sections.sherpa.publication.information" : "Informace o publikaci",
+
+  // "submission.sections.sherpa.publication.information.title" : "Title"
+  "submission.sections.sherpa.publication.information.title" : "Název",
+
+  // "submission.sections.sherpa.publication.information.issns" : "ISSNs"
+  "submission.sections.sherpa.publication.information.issns" : "ISSN",
+
+  // "submission.sections.sherpa.publication.information.url" : "URL"
+  "submission.sections.sherpa.publication.information.url" : "ADRESA URL",
+
+  // "submission.sections.sherpa.publication.information.publishers" : "Publisher"
+  "submission.sections.sherpa.publication.information.publishers" : "Vydavatel",
+
+  // "submission.sections.sherpa.publication.information.romeoPub" : "Romeo Pub"
+  "submission.sections.sherpa.publication.information.romeoPub" : "Romeo Pub",
+
+  // "submission.sections.sherpa.publication.information.zetoPub" : "Zeto Pub"
+  "submission.sections.sherpa.publication.information.zetoPub" : "Zeto Pub",
+
+  // "submission.sections.sherpa.publisher.policy" : "Publisher Policy"
+  "submission.sections.sherpa.publisher.policy" : "Zásady vydavatele",
+
+  // "submission.sections.sherpa.publisher.policy.description" : "The below information was found via Sherpa Romeo. Based on the policies of your publisher, it provides advice regarding whether an embargo may be necessary and/or which files you are allowed to upload. If you have questions, please contact your site administrator via the feedback form in the footer."
+  "submission.sections.sherpa.publisher.policy.description" : "Níže uvedené informace byly nalezeny prostřednictvím aplikace Sherpa Romeo. Na základě zásad vašeho vydavatele poskytuje rady ohledně toho, zda může být embargo nezbytné a/nebo jaké soubory smíte nahrávat. Máte-li dotazy, kontaktujte prosím správce svého webu prostřednictvím formuláře pro zpětnou vazbu v zápatí.",
+
+  // "submission.sections.sherpa.publisher.policy.openaccess" : "Open Access pathways permitted by this journal's policy are listed below by article version. Click on a pathway for a more detailed view"
+  "submission.sections.sherpa.publisher.policy.openaccess" : "Cesty otevřeného přístupu povolené zásadami tohoto časopisu jsou uvedeny níže podle verzí článků. Kliknutím na cestu získáte podrobnější zobrazení",
+
+  // "submission.sections.sherpa.publisher.policy.more.information" : "For more information, please see the following links:"
+  "submission.sections.sherpa.publisher.policy.more.information" : "Další informace naleznete na následujících odkazech:",
+
+  // "submission.sections.sherpa.publisher.policy.version" : "Version"
+  "submission.sections.sherpa.publisher.policy.version" : "Verze",
+
+  // "submission.sections.sherpa.publisher.policy.embargo" : "Embargo"
+  "submission.sections.sherpa.publisher.policy.embargo" : "Embargo",
+
+  // "submission.sections.sherpa.publisher.policy.noembargo" : "No Embargo"
+  "submission.sections.sherpa.publisher.policy.noembargo" : "Žádné embargo",
+
+  // "submission.sections.sherpa.publisher.policy.nolocation" : "None"
+  "submission.sections.sherpa.publisher.policy.nolocation" : "Žádné",
+
+  // "submission.sections.sherpa.publisher.policy.license" : "License"
+  "submission.sections.sherpa.publisher.policy.license" : "Licence",
+
+  // "submission.sections.sherpa.publisher.policy.prerequisites" : "Prerequisites"
+  "submission.sections.sherpa.publisher.policy.prerequisites" : "Předpoklady",
+
+  // "submission.sections.sherpa.publisher.policy.location" : "Location"
+  "submission.sections.sherpa.publisher.policy.location" : "Umístění",
+
+  // "submission.sections.sherpa.publisher.policy.conditions" : "Conditions"
+  "submission.sections.sherpa.publisher.policy.conditions" : "Podmínky",
+
+  // "submission.sections.sherpa.publisher.policy.refresh" : "Refresh"
+  "submission.sections.sherpa.publisher.policy.refresh" : "Obnovit",
+
+  // "submission.sections.sherpa.record.information" : "Record Information"
+  "submission.sections.sherpa.record.information" : "Informace o záznamu",
+
+  // "submission.sections.sherpa.record.information.id" : "ID"
+  "submission.sections.sherpa.record.information.id" : "ID",
+
+  // "submission.sections.sherpa.record.information.date.created" : "Date Created"
+  "submission.sections.sherpa.record.information.date.created" : "Datum vytvoření",
+
+  // "submission.sections.sherpa.record.information.date.modified" : "Last Modified"
+  "submission.sections.sherpa.record.information.date.modified" : "Poslední změna",
+
+  // "submission.sections.sherpa.record.information.uri" : "URI"
+  "submission.sections.sherpa.record.information.uri" : "URI",
+
+  // "submission.sections.sherpa.error.message" : "There was an error retrieving sherpa informations"
+  "submission.sections.sherpa.error.message" : "Došlo k chybě při načítání informací o šerpách",
+
+  // "submission.workflow.generic.submit_select_reviewer" : "Select Reviewer"
+  "submission.workflow.generic.submit_select_reviewer" : "Vybrat recenzenta",
+
+  // "submission.workflow.generic.submit_select_reviewer-help": "",
+  "submission.workflow.generic.submit_select_reviewer-help" : "",
+
+  // "submission.workflow.generic.submit_score" : "Rate"
+  "submission.workflow.generic.submit_score" : "Hodnotit",
+
+  // "submission.workflow.generic.submit_score-help": "",
+  "submission.workflow.generic.submit_score-help": "",
+
+  // "submission.workflow.tasks.claimed.decline" : "Decline"
+  "submission.workflow.tasks.claimed.decline" : "",
+
+  // "submission.workflow.tasks.claimed.decline_help": "",
+  "submission.workflow.tasks.claimed.decline_help": "",
+
+  // "submission.workspace.generic.view" : "View"
+  "submission.workspace.generic.view" : "Zobrazit",
+
+  // "submission.workspace.generic.view-help" : "Select this option to view the item's metadata."
+  "submission.workspace.generic.view-help" : "Chcete-li zobrazit metadata položky, vyberte tuto možnost",
+
+  // "subscriptions.title" : "Subscriptions"
+  "subscriptions.title" : "Odběry",
+
+  // "subscriptions.item" : "Subscriptions for items"
+  "subscriptions.item" : "Odběry pro položky",
+
+  // "subscriptions.collection" : "Subscriptions for collections"
+  "subscriptions.collection" : "Odběry pro kolekce",
+
+  // "subscriptions.community" : "Subscriptions for communities"
+  "subscriptions.community" : "Odběry pro komunity",
+
+  // "subscriptions.subscription_type" : "Subscription type"
+  "subscriptions.subscription_type" : "Typ odběru",
+
+  // "subscriptions.frequency" : "Subscription frequency"
+  "subscriptions.frequency" : "Frekvence odběru",
+
+  // "subscriptions.frequency.D" : "Daily"
+  "subscriptions.frequency.D" : "Denně",
+
+  // "subscriptions.frequency.M" : "Monthly"
+  "subscriptions.frequency.M" : "Měsíčně",
+
+  // "subscriptions.frequency.W" : "Weekly"
+  "subscriptions.frequency.W" : "Týdně",
+
+  // "subscriptions.tooltip" : "Subscribe"
+  "subscriptions.tooltip" : "Přihlásit se k odběru",
+
+  // "subscriptions.modal.title" : "Subscriptions"
+  "subscriptions.modal.title" : "Odběry",
+
+  // "subscriptions.modal.type-frequency" : "Type and frequency"
+  "subscriptions.modal.type-frequency" : "Typ a frekvence",
+
+  // "subscriptions.modal.close" : "Close"
+  "subscriptions.modal.close" : "Zavřít",
+
+  // "subscriptions.modal.delete-info" : "To remove this subscription, please visit the "Subscriptions" page under your user profile"
+  "subscriptions.modal.delete-info" : "Chcete-li odběr zrušit, navštivte stránku \"Odběry\" ve svém uživatelském profilu.",
+
+  // "subscriptions.modal.new-subscription-form.type.content" : "Content"
+  "subscriptions.modal.new-subscription-form.type.content" : "Obsah",
+
+  // "subscriptions.modal.new-subscription-form.frequency.D" : "Daily"
+  "subscriptions.modal.new-subscription-form.frequency.D" : "Denně",
+
+  // "subscriptions.modal.new-subscription-form.frequency.W" : "Weekly"
+  "subscriptions.modal.new-subscription-form.frequency.W" : "Týdně",
+
+  // "subscriptions.modal.new-subscription-form.frequency.M" : "Monthly"
+  "subscriptions.modal.new-subscription-form.frequency.M" : "Měsíčně",
+
+  // "subscriptions.modal.new-subscription-form.submit" : "Submit"
+  "subscriptions.modal.new-subscription-form.submit" : "Odeslat",
+
+  // "subscriptions.modal.new-subscription-form.processing" : "Processing..."
+  "subscriptions.modal.new-subscription-form.processing" : "Zpracování...",
+
+  // "subscriptions.modal.create.success" : "Subscribed to {{ type }} successfully."
+  "subscriptions.modal.create.success" : "Úspěšně přihlášen k odběru {{ type }} .",
+
+  // "subscriptions.modal.delete.success" : "Subscription deleted successfully"
+  "subscriptions.modal.delete.success" : "Odběr byl úspěšně odstraněn",
+
+  // "subscriptions.modal.update.success" : "Subscription to {{ type }} updated successfully"
+  "subscriptions.modal.update.success" : "Přihlášení k odběru {{ type }} úspěšně aktualizováno",
+
+  // "subscriptions.modal.create.error" : "An error occurs during the subscription creation"
+  "subscriptions.modal.create.error" : "Při vytváření odběru došlo k chybě",
+
+  // "subscriptions.modal.delete.error" : "An error occurs during the subscription delete"
+  "subscriptions.modal.delete.error" : "Při odstraňování odběru došlo k chybě",
+
+  // "subscriptions.modal.update.error" : "An error occurs during the subscription update"
+  "subscriptions.modal.update.error" : "Během aktualizace odběru došlo k chybě",
+
+  // "subscriptions.table.dso" : "Subject"
+  "subscriptions.table.dso" : "Předmět",
+
+  // "subscriptions.table.subscription_type" : "Subscription Type"
+  "subscriptions.table.subscription_type" : "Typ odběru",
+
+  // "subscriptions.table.subscription_frequency" : "Subscription Frequency"
+  "subscriptions.table.subscription_frequency" : "Frekvence odběru",
+
+  // "subscriptions.table.action" : "Action"
+  "subscriptions.table.action" : "Akce",
+
+  // "subscriptions.table.edit" : "Edit"
+  "subscriptions.table.edit" : "Upravit",
+
+  // "subscriptions.table.delete" : "Delete"
+  "subscriptions.table.delete" : "Odstranit",
+
+  // "subscriptions.table.not-available" : "Not available"
+  "subscriptions.table.not-available" : "Není k dispozici",
+
+  // "subscriptions.table.not-available-message" : "The subscribed item has been deleted, or you don't currently have the permission to view it"
+  "subscriptions.table.not-available-message" : "Odebíraná položka byla smazána, nebo nemáte aktuálně oprávnění k jejímu zobrazení",
+
+  // "subscriptions.table.empty.message" : "You do not have any subscriptions at this time. To subscribe to email updates for a Community or Collection, use the subscription button on the object's page."
+  "subscriptions.table.empty.message" : "V tuto chvíli nemáte žádné odběry. Chcete-li se přihlásit k odběru e-mailových aktualizací pro komunitu nebo sbírku, použijte tlačítko pro odběr na stránce objektu.",
+
+  // "vocabulary-treeview.info" : "Select a subject to add as search filter"
+  "vocabulary-treeview.info" : "Vyberte předmět, který chcete přidat jako vyhledávací filtr",
+
+  // "supervisedWorkspace.search.results.head" : "Supervised Items"
+  "supervisedWorkspace.search.results.head" : "Kontrolované položky",
+
+  // "supervision.search.results.head" : "Workflow and Workspace tasks"
+  "supervision.search.results.head" : "Úlohy pracovních postupů a pracovního prostoru",
+
+  // "workspace-item.view.breadcrumbs" : "Workspace View"
+  "workspace-item.view.breadcrumbs" : "Zobrazení pracovního prostoru",
+
+  // "workspace-item.view.title" : "Workspace View"
+  "workspace-item.view.title" : "Zobrazení pracovního prostoru",
+
+  // "workflow-item.advanced.title" : "Advanced workflow"
+  "workflow-item.advanced.title" : "Pokročilý pracovní postup",
+
+  // "workflow-item.selectrevieweraction.notification.success.title" : "Selected reviewer"
+  "workflow-item.selectrevieweraction.notification.success.title" : "Vybraný recenzent",
+
+  // "workflow-item.selectrevieweraction.notification.success.content" : "The reviewer for this workflow item has been successfully selected"
+  "workflow-item.selectrevieweraction.notification.success.content" : "Recenzent pro tuto položku pracovního postupu byl úspěšně vybrán.",
+
+  // "workflow-item.selectrevieweraction.notification.error.title" : "Something went wrong"
+  "workflow-item.selectrevieweraction.notification.error.title" : "Něco se pokazilo",
+
+  // "workflow-item.selectrevieweraction.notification.error.content" : "Couldn't select the reviewer for this workflow item"
+  "workflow-item.selectrevieweraction.notification.error.content" : "Nepodařilo se vybrat recenzenta pro tuto položku pracovního postupu",
+
+  // "workflow-item.selectrevieweraction.title" : "Select Reviewer"
+  "workflow-item.selectrevieweraction.title" : "Vybrat recenzenta",
+
+  // "workflow-item.selectrevieweraction.header" : "Select Reviewer"
+  "workflow-item.selectrevieweraction.header" : "Vybrat recenzenta",
+
+  // "workflow-item.selectrevieweraction.button.cancel" : "Cancel"
+  "workflow-item.selectrevieweraction.button.cancel" : "Zrušit",
+
+  // "workflow-item.selectrevieweraction.button.confirm" : "Confirm"
+  "workflow-item.selectrevieweraction.button.confirm" : "Potvrdit",
+
+  // "workflow-item.scorereviewaction.notification.success.title" : "Rating review"
+  "workflow-item.scorereviewaction.notification.success.title" : "Hodnocení",
+
+  // "workflow-item.scorereviewaction.notification.success.content" : "The rating for this item workflow item has been successfully submitted"
+  "workflow-item.scorereviewaction.notification.success.content" : "Hodnocení této položky pracovního postupu byla úspěšně odeslána",
+
+  // "workflow-item.scorereviewaction.notification.error.title" : "Something went wrong"
+  "workflow-item.scorereviewaction.notification.error.title" : "Něco se pokazilo",
+
+  // "workflow-item.scorereviewaction.notification.error.content" : "Couldn't rate this item"
+  "workflow-item.scorereviewaction.notification.error.content" : "Nelze ohodnotit tuto položku",
+
+  // "workflow-item.scorereviewaction.title" : "Rate this item"
+  "workflow-item.scorereviewaction.title" : "Ohodnotit tuto položku",
+
+  // "workflow-item.scorereviewaction.header" : "Rate this item"
+  "workflow-item.scorereviewaction.header" : "Ohodnotit tuto položku",
+
+  // "workflow-item.scorereviewaction.button.cancel" : "Cancel"
+  "workflow-item.scorereviewaction.button.cancel" : "Zrušit",
+
+  // "workflow-item.scorereviewaction.button.confirm" : "Confirm"
+  "workflow-item.scorereviewaction.button.confirm" : "Potvrdit",
+
+  // "researcher.profile.action.processing" : "Processing..."
+  "researcher.profile.action.processing" : "Zpracování...",
+
+  // "researcher.profile.associated" : "Researcher profile associated"
+  "researcher.profile.associated" : "Profil výzkumného pracovníka byl přidružen",
+
+  // "researcher.profile.change-visibility.fail" : "An unexpected error occurs while changing the profile visibility"
+  "researcher.profile.change-visibility.fail" : "Při změně viditelnosti profilu došlo k neočekávané chybě",
+
+  // "researcher.profile.create.new" : "Create new"
+  "researcher.profile.create.new" : "Vytvořit nový",
+
+  // "researcher.profile.create.success" : "Researcher profile created successfully"
+  "researcher.profile.create.success" : "Profil výzkumníka byl úspěšně vytvořen",
+
+  // "researcher.profile.create.fail" : "An error occurs during the researcher profile creation"
+  "researcher.profile.create.fail" : "Při vytváření profilu výzkumníka došlo k chybě",
+
+  // "researcher.profile.delete" : "Delete"
+  "researcher.profile.delete" : "Odstranit",
+
+  // "researcher.profile.expose" : "Expose"
+  "researcher.profile.expose" : "Odkrýt",
+
+  // "researcher.profile.hide" : "Hide"
+  "researcher.profile.hide" : "Skrýt",
+
+  // "researcher.profile.not.associated" : "Researcher profile not yet associated"
+  "researcher.profile.not.associated" : "Profil výzkumníka zatím není přidružen",
+
+  // "researcher.profile.view" : "View"
+  "researcher.profile.view" : "Zobrazit",
+
+  // "researcher.profile.private.visibility" : "PRIVATE"
+  "researcher.profile.private.visibility" : "SOUKROMÉ",
+
+  // "researcher.profile.public.visibility" : "PUBLIC"
+  "researcher.profile.public.visibility" : "VEŘEJNÉ",
+
+  // "researcher.profile.status" : "Status:"
+  "researcher.profile.status" : "Stav:",
+
+  // "researcherprofile.claim.not-authorized" : "You are not authorized to claim this item. For more details contact the administrator(s)."
+  "researcherprofile.claim.not-authorized" : "K reklamaci této položky nemáte oprávnění. Další informace získáte u správce (správců).",
+
+  // "researcherprofile.error.claim.body" : "An error occurred while claiming the profile, please try again later"
+  "researcherprofile.error.claim.body" : "Při nárokování profilu došlo k chybě, zkuste to prosím později",
+
+  // "researcherprofile.error.claim.title" : "Error"
+  "researcherprofile.error.claim.title" : "Chyba",
+
+  // "researcherprofile.success.claim.body" : "Profile claimed with success"
+  "researcherprofile.success.claim.body" : "",
+
+  // "researcherprofile.success.claim.title" : "Success"
+  "researcherprofile.success.claim.title" : "Úspěch",
+
+  // "person.page.orcid.create" : "Create an ORCID ID"
+  "person.page.orcid.create" : "Vytvořit ID ORCID",
+
+  // "person.page.orcid.granted-authorizations" : "Granted authorizations"
+  "person.page.orcid.granted-authorizations" : "Udělená povolení",
+
+  // "person.page.orcid.grant-authorizations" : "Grant authorizations"
+  "person.page.orcid.grant-authorizations" : "Povolení grantů",
+
+  // "person.page.orcid.link" : "Connect to ORCID ID"
+  "person.page.orcid.link" : "Připojit k ID ORCID",
+
+  // "person.page.orcid.link.processing" : "Linking profile to ORCID..."
+  "person.page.orcid.link.processing" : "Propojení profilu s ORCID...",
+
+  // "person.page.orcid.link.error.message" : "Something went wrong while connecting the profile with ORCID. If the problem persists, contact the administrator."
+  "person.page.orcid.link.error.message" : "Při propojování profilu s ORCID se něco pokazilo. Pokud problém přetrvává, kontaktujte správce.",
+
+  // "person.page.orcid.orcid-not-linked-message" : "The ORCID iD of this profile ({{ orcid }}) has not yet been connected to an account on the ORCID registry or the connection is expired."
+  "person.page.orcid.orcid-not-linked-message" : "ID ORCID tohoto profilu ({{ orcid }}) ještě nebylo připojeno k účtu v registru ORCID nebo platnost připojení vypršela.",
+
+  // "person.page.orcid.unlink" : "Disconnect from ORCID"
+  "person.page.orcid.unlink" : "Odpojit od ORCID",
+
+  // "person.page.orcid.unlink.processing" : "Processing..."
+  "person.page.orcid.unlink.processing" : "Zpracování...",
+
+  // "person.page.orcid.missing-authorizations" : "Missing authorizations"
+  "person.page.orcid.missing-authorizations" : "Chybějící oprávnění",
+
+  // "person.page.orcid.missing-authorizations-message" : "The following authorizations are missing:"
+  "person.page.orcid.missing-authorizations-message" : "Chybí následující oprávnění:",
+
+  // "person.page.orcid.no-missing-authorizations-message" : "Great! This box is empty, so you have granted all access rights to use all functions offers by your institution."
+  "person.page.orcid.no-missing-authorizations-message" : "Skvělé! Toto pole je prázdné, takže jste udělili všechna přístupová práva k využívání všech funkcí, které vaše instituce nabízí.",
+
+  // "person.page.orcid.no-orcid-message" : "No ORCID iD associated yet. By clicking on the button below it is possible to link this profile with an ORCID account."
+  "person.page.orcid.no-orcid-message" : "Zatím není přidruženo žádné ID ORCID. Kliknutím na tlačítko níže je možné tento profil propojit s účtem ORCID.",
+
+  // "person.page.orcid.profile-preferences" : "Profile preferences"
+  "person.page.orcid.profile-preferences" : "Předvolby profilu",
+
+  // "person.page.orcid.funding-preferences" : "Funding preferences"
+  "person.page.orcid.funding-preferences" : "Preference financování",
+
+  // "person.page.orcid.publications-preferences" : "Publication preferences"
+  "person.page.orcid.publications-preferences" : "Publikační preference",
+
+  // "person.page.orcid.remove-orcid-message" : "If you need to remove your ORCID, please contact the repository administrator"
+  "person.page.orcid.remove-orcid-message" : "Pokud potřebujete odebrat svůj ORCID, kontaktujte správce úložiště.",
+
+  // "person.page.orcid.save.preference.changes" : "Update settings"
+  "person.page.orcid.save.preference.changes" : "Aktualizovat nastavení",
+
+  // "person.page.orcid.sync-profile.affiliation" : "Affiliation"
+  "person.page.orcid.sync-profile.affiliation" : "Příslušnost",
+
+  // "person.page.orcid.sync-profile.biographical" : "Biographical data"
+  "person.page.orcid.sync-profile.biographical" : "Biografické údaje",
+
+  // "person.page.orcid.sync-profile.education" : "Education"
+  "person.page.orcid.sync-profile.education" : "Vzdělání",
+
+  // "person.page.orcid.sync-profile.identifiers" : "Identifiers"
+  "person.page.orcid.sync-profile.identifiers" : "Identifikátory",
+
+  // "person.page.orcid.sync-fundings.all" : "All fundings"
+  "person.page.orcid.sync-fundings.all" : "Všechny finanční prostředky",
+
+  // "person.page.orcid.sync-fundings.mine" : "My fundings"
+  "person.page.orcid.sync-fundings.mine" : "Moje financování",
+
+  // "person.page.orcid.sync-fundings.my_selected" : "Selected fundings"
+  "person.page.orcid.sync-fundings.my_selected" : "Vybrané financování",
+
+  // "person.page.orcid.sync-fundings.disabled" : "Disabled"
+  "person.page.orcid.sync-fundings.disabled" : "",
+
+  // "person.page.orcid.sync-publications.all" : "All publications"
+  "person.page.orcid.sync-publications.all" : "Všechny publikace",
+
+  // "person.page.orcid.sync-publications.mine" : "My publications"
+  "person.page.orcid.sync-publications.mine" : "Moje publikace",
+
+  // "person.page.orcid.sync-publications.my_selected" : "Selected publications"
+  "person.page.orcid.sync-publications.my_selected" : "Vybrané publikace",
+
+  // "person.page.orcid.sync-publications.disabled" : "Disabled"
+  "person.page.orcid.sync-publications.disabled" : "",
+
+  // "person.page.orcid.sync-queue.discard" : "Discard the change and do not synchronize with the ORCID registry"
+  "person.page.orcid.sync-queue.discard" : "Změnu zahoďte a nesynchronizujte s registrem ORCID",
+
+  // "person.page.orcid.sync-queue.discard.error" : "The discarding of the ORCID queue record failed"
+  "person.page.orcid.sync-queue.discard.error" : "Vyřazení záznamu z fronty ORCID se nezdařilo",
+
+  // "person.page.orcid.sync-queue.discard.success" : "The ORCID queue record have been discarded successfully"
+  "person.page.orcid.sync-queue.discard.success" : "Záznam fronty ORCID byl úspěšně vyřazen",
+
+  // "person.page.orcid.sync-queue.empty-message" : "The ORCID queue registry is empty"
+  "person.page.orcid.sync-queue.empty-message" : "Registr fronty ORCID je prázdný",
+
+  // "person.page.orcid.sync-queue.table.header.type" : "Type"
+  "person.page.orcid.sync-queue.table.header.type" : "Typ",
+
+  // "person.page.orcid.sync-queue.table.header.description" : "Description"
+  "person.page.orcid.sync-queue.table.header.description" : "Popis",
+
+  // "person.page.orcid.sync-queue.table.header.action" : "Action"
+  "person.page.orcid.sync-queue.table.header.action" : "Akce",
+
+  // "person.page.orcid.sync-queue.description.affiliation" : "Affiliations"
+  "person.page.orcid.sync-queue.description.affiliation" : "Přidružení",
+
+  // "person.page.orcid.sync-queue.description.country" : "Country"
+  "person.page.orcid.sync-queue.description.country" : "Země",
+
+  // "person.page.orcid.sync-queue.description.education" : "Educations"
+  "person.page.orcid.sync-queue.description.education" : "Vzdělání",
+
+  // "person.page.orcid.sync-queue.description.external_ids" : "External ids"
+  "person.page.orcid.sync-queue.description.external_ids" : "Externí ids",
+
+  // "person.page.orcid.sync-queue.description.other_names" : "Other names"
+  "person.page.orcid.sync-queue.description.other_names" : "Další názvy",
+
+  // "person.page.orcid.sync-queue.description.qualification" : "Qualifications"
+  "person.page.orcid.sync-queue.description.qualification" : "Kvalifikace",
+
+  // "person.page.orcid.sync-queue.description.researcher_urls" : "Researcher urls"
+  "person.page.orcid.sync-queue.description.researcher_urls" : "URL adresa výzkumného pracovníka",
+
+  // "person.page.orcid.sync-queue.description.keywords" : "Keywords"
+  "person.page.orcid.sync-queue.description.keywords" : "Klíčová slova",
+
+  // "person.page.orcid.sync-queue.tooltip.insert" : "Add a new entry in the ORCID registry"
+  "person.page.orcid.sync-queue.tooltip.insert" : "Přidat nový záznam do registru ORCID",
+
+  // "person.page.orcid.sync-queue.tooltip.update" : "Update this entry on the ORCID registry"
+  "person.page.orcid.sync-queue.tooltip.update" : "Aktualizovat tuto položku v registru ORCID",
+
+  // "person.page.orcid.sync-queue.tooltip.delete" : "Remove this entry from the ORCID registry"
+  "person.page.orcid.sync-queue.tooltip.delete" : "Odstranit tuto položku z registru ORCID",
+
+  // "person.page.orcid.sync-queue.tooltip.publication" : "Publication"
+  "person.page.orcid.sync-queue.tooltip.publication" : "Publikace",
+
+  // "person.page.orcid.sync-queue.tooltip.project" : "Project"
+  "person.page.orcid.sync-queue.tooltip.project" : "Projekt",
+
+  // "person.page.orcid.sync-queue.tooltip.affiliation" : "Affiliation"
+  "person.page.orcid.sync-queue.tooltip.affiliation" : "Přidružení",
+
+  // "person.page.orcid.sync-queue.tooltip.education" : "Education"
+  "person.page.orcid.sync-queue.tooltip.education" : "Vzdělání",
+
+  // "person.page.orcid.sync-queue.tooltip.qualification" : "Qualification"
+  "person.page.orcid.sync-queue.tooltip.qualification" : "Kvalifikace",
+
+  // "person.page.orcid.sync-queue.tooltip.other_names" : "Other name"
+  "person.page.orcid.sync-queue.tooltip.other_names" : "Jiný název",
+
+  // "person.page.orcid.sync-queue.tooltip.country" : "Country"
+  "person.page.orcid.sync-queue.tooltip.country" : "Země",
+
+  // "person.page.orcid.sync-queue.tooltip.keywords" : "Keyword"
+  "person.page.orcid.sync-queue.tooltip.keywords" : "Klíčové slovo",
+
+  // "person.page.orcid.sync-queue.tooltip.external_ids" : "External identifier"
+  "person.page.orcid.sync-queue.tooltip.external_ids" : "Externí identifikátor",
+
+  // "person.page.orcid.sync-queue.tooltip.researcher_urls" : "Researcher url"
+  "person.page.orcid.sync-queue.tooltip.researcher_urls" : "URL adresa výzkumného pracovníka",
+
+  // "person.page.orcid.sync-queue.send" : "Synchronize with ORCID registry"
+  "person.page.orcid.sync-queue.send" : "Synchronizovat s registrem ORCID",
+
+  // "person.page.orcid.sync-queue.send.unauthorized-error.title" : "The submission to ORCID failed for missing authorizations."
+  "person.page.orcid.sync-queue.send.unauthorized-error.title" : "Odeslání na ORCID se nezdařilo kvůli chybějícím autorizacím.",
+
+  // "person.page.orcid.sync-queue.send.unauthorized-error.content" : "Click <a href='{{orcid}}'>here</a> to grant again the required permissions. If the problem persists, contact the administrator"
+  "person.page.orcid.sync-queue.send.unauthorized-error.content" : "Klikněte na <a href='{{orcid}}'>zde</a> pro opětovné udělení požadovaných oprávnění. Pokud problém přetrvá, obraťte se na správce",
+
+  // "person.page.orcid.sync-queue.send.bad-request-error" : "The submission to ORCID failed because the resource sent to ORCID registry is not valid"
+  "person.page.orcid.sync-queue.send.bad-request-error" : "Podání do ORCID se nezdařilo, protože odeslaný zdroj není platný.",
+
+  // "person.page.orcid.sync-queue.send.error" : "The submission to ORCID failed"
+  "person.page.orcid.sync-queue.send.error" : "Podání na ORCID se nezdařilo",
+
+  // "person.page.orcid.sync-queue.send.conflict-error" : "The submission to ORCID failed because the resource is already present on the ORCID registry"
+  "person.page.orcid.sync-queue.send.conflict-error" : "Odeslání do ORCID se nezdařilo, protože zdroj je již v registru ORCID přítomen.",
+
+  // "person.page.orcid.sync-queue.send.not-found-warning" : "The resource does not exists anymore on the ORCID registry."
+  "person.page.orcid.sync-queue.send.not-found-warning" : "Zdroj již v registru ORCID neexistuje.",
+
+  // "person.page.orcid.sync-queue.send.success" : "The submission to ORCID was completed successfully"
+  "person.page.orcid.sync-queue.send.success" : "Odeslání na ORCID bylo úspěšně dokončeno",
+
+  // "person.page.orcid.sync-queue.send.validation-error" : "The data that you want to synchronize with ORCID is not valid"
+  "person.page.orcid.sync-queue.send.validation-error" : "Data, která chcete synchronizovat s ORCID, nejsou platná.",
+
+  // "person.page.orcid.sync-queue.send.validation-error.amount-currency.required" : "The amount's currency is required"
+  "person.page.orcid.sync-queue.send.validation-error.amount-currency.required" : "Je vyžadována měna částky",
+
+  // "person.page.orcid.sync-queue.send.validation-error.external-id.required" : "The resource to be sent requires at least one identifier"
+  "person.page.orcid.sync-queue.send.validation-error.external-id.required" : "Odesílaný zdroj vyžaduje alespoň jeden identifikátor",
+
+  // "person.page.orcid.sync-queue.send.validation-error.title.required" : "The title is required"
+  "person.page.orcid.sync-queue.send.validation-error.title.required" : "Název je povinný",
+
+  // "person.page.orcid.sync-queue.send.validation-error.type.required" : "The dc.type is required"
+  "person.page.orcid.sync-queue.send.validation-error.type.required" : "Je požadován údaj dc.typ",
+
+  // "person.page.orcid.sync-queue.send.validation-error.start-date.required" : "The start date is required"
+  "person.page.orcid.sync-queue.send.validation-error.start-date.required" : "Je nutné uvést datum zahájení",
+
+  // "person.page.orcid.sync-queue.send.validation-error.funder.required" : "The funder is required"
+  "person.page.orcid.sync-queue.send.validation-error.funder.required" : "Je vyžadován sponzor",
+
+  // "person.page.orcid.sync-queue.send.validation-error.country.invalid" : "Invalid 2 digits ISO 3166 country"
+  "person.page.orcid.sync-queue.send.validation-error.country.invalid" : "Neplatné 2 číslice ISO 3166 země",
+
+  // "person.page.orcid.sync-queue.send.validation-error.organization.required" : "The organization is required"
+  "person.page.orcid.sync-queue.send.validation-error.organization.required" : "Organizace je povinná",
+
+  // "person.page.orcid.sync-queue.send.validation-error.organization.name-required" : "The organization's name is required"
+  "person.page.orcid.sync-queue.send.validation-error.organization.name-required" : "Vyžaduje se název organizace",
+
+  // "person.page.orcid.sync-queue.send.validation-error.publication.date-invalid" : "The publication date must be one year after 1900"
+  "person.page.orcid.sync-queue.send.validation-error.publication.date-invalid" : "Datum zveřejnění musí být jeden rok po roce 1901",
+
+  // "person.page.orcid.sync-queue.send.validation-error.organization.address-required" : "The organization to be sent requires an address"
+  "person.page.orcid.sync-queue.send.validation-error.organization.address-required" : "Organizace, která má být odeslána, vyžaduje adresu",
+
+  // "person.page.orcid.sync-queue.send.validation-error.organization.city-required" : "The address of the organization to be sent requires a city"
+  "person.page.orcid.sync-queue.send.validation-error.organization.city-required" : "Adresa organizace, která má být zaslána, vyžaduje město",
+
+  // "person.page.orcid.sync-queue.send.validation-error.organization.country-required" : "The address of the organization to be sent requires a valid 2 digits ISO 3166 country"
+  "person.page.orcid.sync-queue.send.validation-error.organization.country-required" : "Adresa organizace, která má být odeslána, vyžaduje platnou dvoumístnou adresu země podle ISO 3166.",
+
+  // "person.page.orcid.sync-queue.send.validation-error.disambiguated-organization.required" : "An identifier to disambiguate organizations is required. Supported ids are GRID, Ringgold, Legal Entity identifiers (LEIs) and Crossref Funder Registry identifiers"
+  "person.page.orcid.sync-queue.send.validation-error.disambiguated-organization.required" : "Je vyžadován identifikátor pro rozlišení organizací. Podporovány jsou identifikátory GRID, Ringgold, identifikátory právnických osob (LEI) a identifikátory Crossref Funder Registry.",
+
+  // "person.page.orcid.sync-queue.send.validation-error.disambiguated-organization.value-required" : "The organization's identifiers requires a value"
+  "person.page.orcid.sync-queue.send.validation-error.disambiguated-organization.value-required" : "Identifikátory organizace vyžadují hodnotu",
+
+  // "person.page.orcid.sync-queue.send.validation-error.disambiguation-source.required" : "The organization's identifiers requires a source"
+  "person.page.orcid.sync-queue.send.validation-error.disambiguation-source.required" : "Identifikátory organizace vyžadují zdroj",
+
+  // "person.page.orcid.sync-queue.send.validation-error.disambiguation-source.invalid" : "The source of one of the organization identifiers is invalid. Supported sources are RINGGOLD, GRID, LEI and FUNDREF"
+  "person.page.orcid.sync-queue.send.validation-error.disambiguation-source.invalid" : "Zdroj jednoho z identifikátorů organizace je neplatný. Podporované zdroje jsou RINGGOLD, GRID, LEI a FUNDREF.",
+
+  // "person.page.orcid.synchronization-mode" : "Synchronization mode"
+  "person.page.orcid.synchronization-mode" : "Režim synchronizace",
+
+  // "person.page.orcid.synchronization-mode.batch" : "Batch"
+  "person.page.orcid.synchronization-mode.batch" : "Dávka",
+
+  // "person.page.orcid.synchronization-mode.label" : "Synchronization mode"
+  "person.page.orcid.synchronization-mode.label" : "Režim synchronizace",
+
+  // "person.page.orcid.synchronization-mode-message" : "Please select how you would like synchronization to ORCID to occur. The options include "Manual" (you must send your data to ORCID manually), or "Batch" (the system will send your data to ORCID via a scheduled script)."
+  "person.page.orcid.synchronization-mode-message" : "Zvolte prosím, jakým způsobem chcete synchronizaci s ORCID provádět. Na výběr je možnost \"Ručně\" (data musíte do ORCID odeslat ručně) nebo \"Dávkově\" (systém odešle vaše data do ORCID prostřednictvím naplánovaného skriptu).",
+
+  // "person.page.orcid.synchronization-mode-funding-message" : "Select whether to send your linked Project entities to your ORCID record's list of funding information."
+  "person.page.orcid.synchronization-mode-funding-message" : "Zvolte, zda se mají propojené entity projektu odeslat do seznamu informací o financování vašeho záznamu ORCID.",
+
+  // "person.page.orcid.synchronization-mode-publication-message" : "Select whether to send your linked Publication entities to your ORCID record's list of works."
+  "person.page.orcid.synchronization-mode-publication-message" : "Zvolte, zda se mají propojené entity publikací odeslat do seznamu děl vašeho záznamu ORCID.",
+
+  // "person.page.orcid.synchronization-mode-profile-message" : "Select whether to send your biographical data or personal identifiers to your ORCID record."
+  "person.page.orcid.synchronization-mode-profile-message" : "Zvolte, zda chcete do záznamu ORCID odeslat své životopisné údaje nebo osobní identifikátory.",
+
+  // "person.page.orcid.synchronization-settings-update.success" : "The synchronization settings have been updated successfully"
+  "person.page.orcid.synchronization-settings-update.success" : "Synchronizační nastavení bylo úspěšně aktualizováno",
+
+  // "person.page.orcid.synchronization-settings-update.error" : "The update of the synchronization settings failed"
+  "person.page.orcid.synchronization-settings-update.error" : "Aktualizace synchronizačních nastavení se nezdařila",
+
+  // "person.page.orcid.synchronization-mode.manual" : "Manual"
+  "person.page.orcid.synchronization-mode.manual" : "Manuální",
+
+  // "person.page.orcid.scope.authenticate" : "Get your ORCID iD"
+  "person.page.orcid.scope.authenticate" : "Získejte své ID ORCID",
+
+  // "person.page.orcid.scope.read-limited" : "Read your information with visibility set to Trusted Parties"
+  "person.page.orcid.scope.read-limited" : "Čtěte své informace s viditelností nastavenou na Důvěryhodné strany",
+
+  // "person.page.orcid.scope.activities-update" : "Add/update your research activities"
+  "person.page.orcid.scope.activities-update" : "Přidejte/aktualizujte své výzkumné aktivity",
+
+  // "person.page.orcid.scope.person-update" : "Add/update other information about you"
+  "person.page.orcid.scope.person-update" : "Přidat/aktualizovat další informace o vás",
+
+  // "person.page.orcid.unlink.success" : "The disconnection between the profile and the ORCID registry was successful"
+  "person.page.orcid.unlink.success" : "Odpojení profilu od registru ORCID proběhlo úspěšně.",
+
+  // "person.page.orcid.unlink.error" : "An error occurred while disconnecting between the profile and the ORCID registry. Try again"
+  "person.page.orcid.unlink.error" : "Při odpojování profilu od registru ORCID došlo k chybě. Zkuste to znovu",
+
+  // "person.orcid.sync.setting" : "ORCID Synchronization settings"
+  "person.orcid.sync.setting" : "Nastavení synchronizace ORCID",
+
+  // "person.orcid.registry.queue" : "ORCID Registry Queue"
+  "person.orcid.registry.queue" : "Fronta registru ORCID",
+
+  // "person.orcid.registry.auth" : "ORCID Authorizations"
+  "person.orcid.registry.auth" : "Oprávnění ORCID",
+
+  // "home.recent-submissions.head" : "Recent Submissions"
+  "home.recent-submissions.head" : "Nedávné příspěvky",
+
+  // "listable-notification-object.default-message" : "This object couldn't be retrieved"
+  "listable-notification-object.default-message" : "Tento objekt se nepodařilo načíst",
+
+  // "system-wide-alert-banner.retrieval.error" : "Something went wrong retrieving the system-wide alert banner"
+  "system-wide-alert-banner.retrieval.error" : "Při načítání celosystémového výstražného banneru došlo k chybě.",
+
+  // "system-wide-alert-banner.countdown.prefix" : "In"
+  "system-wide-alert-banner.countdown.prefix" : "Na adrese",
+
+  // "system-wide-alert-banner.countdown.days" : "{{days}} day(s),"
+  "system-wide-alert-banner.countdown.days" : "{{days}} den(y),",
+
+  // "system-wide-alert-banner.countdown.hours" : "{{hours}} hour(s) and"
+  "system-wide-alert-banner.countdown.hours" : "{{hours}} hodina(y) a",
+
+  // "system-wide-alert-banner.countdown.minutes" : "{{minutes}} minute(s):"
+  "system-wide-alert-banner.countdown.minutes" : "{{minutes}} minut(y):",
+
+  // "menu.section.system-wide-alert" : "System-wide Alert"
+  "menu.section.system-wide-alert" : "Celosystémové upozornění",
+
+  // "system-wide-alert.form.header" : "System-wide Alert"
+  "system-wide-alert.form.header" : "Celosystémové upozornění",
+
+  // "system-wide-alert-form.retrieval.error" : "Something went wrong retrieving the system-wide alert"
+  "system-wide-alert-form.retrieval.error" : "Při načítání celosystémové výstrahy došlo k chybě",
+
+  // "system-wide-alert.form.cancel" : "Cancel"
+  "system-wide-alert.form.cancel" : "Zrušit",
+
+  // "system-wide-alert.form.save" : "Save"
+  "system-wide-alert.form.save" : "Uložit",
+
+  // "system-wide-alert.form.label.active" : "ACTIVE"
+  "system-wide-alert.form.label.active" : "AKTIVNÍ",
+
+  // "system-wide-alert.form.label.inactive" : "INACTIVE"
+  "system-wide-alert.form.label.inactive" : "NEAKTIVNÍ",
+
+  // "system-wide-alert.form.error.message" : "The system wide alert must have a message"
+  "system-wide-alert.form.error.message" : "Celosystémové upozornění musí obsahovat zprávu",
+
+  // "system-wide-alert.form.label.message" : "Alert message"
+  "system-wide-alert.form.label.message" : "Výstražná zpráva",
+
+  // "system-wide-alert.form.label.countdownTo.enable" : "Enable a countdown timer"
+  "system-wide-alert.form.label.countdownTo.enable" : "Povolit odpočítávání",
+
+  // "system-wide-alert.form.label.countdownTo.hint" : "Hint: Set a countdown timer. When enabled, a date can be set in the future and the system-wide alert banner will perform a countdown to the set date. When this timer ends, it will disappear from the alert. The server will NOT be automatically stopped."
+  "system-wide-alert.form.label.countdownTo.hint" : "Tip: Nastavte časovač odpočítávání. Je-li povolen, lze v budoucnu nastavit datum a celosystémový nápis výstrah provede odpočítávání k nastavenému datu. Když časovač skončí, zmizí z výstrahy. Server NEBUDE automaticky zastaven.",
+
+  // "system-wide-alert.form.label.preview" : "System-wide alert preview"
+  "system-wide-alert.form.label.preview" : "Celosystémový náhled výstrahy",
+
+  // "system-wide-alert.form.update.success" : "The system-wide alert was successfully updated"
+  "system-wide-alert.form.update.success" : "Celosystémové upozornění bylo úspěšně aktualizováno",
+
+  // "system-wide-alert.form.update.error" : "Something went wrong when updating the system-wide alert"
+  "system-wide-alert.form.update.error" : "Při aktualizaci celosystémového upozornění došlo k chybě",
+
+  // "system-wide-alert.form.create.success" : "The system-wide alert was successfully created"
+  "system-wide-alert.form.create.success" : "Celosystémové upozornění bylo úspěšně vytvořeno",
+
+  // "system-wide-alert.form.create.error" : "Something went wrong when creating the system-wide alert"
+  "system-wide-alert.form.create.error" : "Při vytváření celosystémového upozornění došlo k chybě",
+
+  // "admin.system-wide-alert.breadcrumbs" : "System-wide Alerts"
+  "admin.system-wide-alert.breadcrumbs" : "Celosystémové výstrahy",
+
+  // "admin.system-wide-alert.title" : "System-wide Alerts"
+  "admin.system-wide-alert.title" : "Celosystémové výstrahy",
+
   // "401.help" : "You're not authorized to access this page. You can use the button below to get back to the home page."
   "401.help" : "Nemáte oprávnění k přístupu na tuto stránku. Pomocí níže uvedeného tlačítka se můžete vrátit na domovskou stránku.",
 
@@ -86,7 +1854,7 @@
   // "admin.registries.bitstream-formats.edit.breadcrumbs" : "Bitstream format"
   "admin.registries.bitstream-formats.edit.breadcrumbs" : "Formát bitstreamu",
 
-  // "admin.registries.bitstream-formats.edit.description.hint": "",
+  // "admin.registries.bitstream-formats.edit.description.hint": ""
   "admin.registries.bitstream-formats.edit.description.hint": "",
 
   // "admin.registries.bitstream-formats.edit.description.label" : "Description"
@@ -221,7 +1989,7 @@
   // "admin.registries.schema.breadcrumbs" : "Metadata schema"
   "admin.registries.schema.breadcrumbs" : "Schéma metadat",
 
-  // "admin.registries.schema.description" : "This is the metadata schema for \"{{namespace}}\"."
+  // "admin.registries.schema.description" : "This is the metadata schema for "{{namespace}}"."
   "admin.registries.schema.description" : "Toto je schéma metadat pro \"{{namespace}}\".",
 
   // "admin.registries.schema.fields.head" : "Schema metadata fields"
@@ -506,8 +2274,8 @@
   // "admin.access-control.groups.form.alert.permanent" : "This group is permanent, so it can't be edited or deleted. You can still add and remove group members using this page."
   "admin.access-control.groups.form.alert.permanent" : "Tato skupina je trvalá, takže ji nelze upravit ani odstranit. Přesto můžete členy skupiny přidávat a odebírat pomocí této stránky.",
 
-  // "admin.access-control.groups.form.alert.workflowGroup" : "This group can’t be modified or deleted because it corresponds to a role in the submission and workflow process in the \"{{name}}\" {{comcol}}. You can delete it from the <a href='{{comcolEditRolesRoute}}'>\"assign roles\"</a> tab on the edit {{comcol}} page. You can still add and remove group members using this page."
-  "admin.access-control.groups.form.alert.workflowGroup" : "Tuto skupinu nelze změnit ani odstranit, protože odpovídá roli v procesu odesílání a pracovního postupu v \"{{jméno}}\" {{comcol}}. Můžete ji odstranit z <a href='{{comcolEditRolesRoute}}\">\"přiřadit role\"</a> na stránce editace {{comcol}}. Pomocí této stránky můžete stále přidávat a odebírat členy skupiny.",
+  // "admin.access-control.groups.form.alert.workflowGroup" : "This group can’t be modified or deleted because it corresponds to a role in the submission and workflow process in the \"{{name}}\" {{comcol}}. You can delete it from the <a href='{{comcolEditRolesRoute}}'>"assign roles"</a> tab on the edit {{comcol}} page. You can still add and remove group members using this page."
+  "admin.access-control.groups.form.alert.workflowGroup" : "Tuto skupinu nelze změnit ani odstranit, protože odpovídá roli v procesu odesílání a pracovního postupu v \"{{name}}\" {{comcol}}. Můžete ji odstranit z <a href='{{comcolEditRolesRoute}}'>\"přiřadit role\"</a> na stránce editace {{comcol}}. Pomocí této stránky můžete stále přidávat a odebírat členy skupiny.",
 
   // "admin.access-control.groups.form.head.create" : "Create group"
   "admin.access-control.groups.form.head.create" : "Vytvořit skupinu",
@@ -713,10 +2481,10 @@
   // "admin.search.item.edit" : "Edit"
   "admin.search.item.edit" : "Upravit",
 
-  // "admin.search.item.make-private" : "Make Private"
+  // "admin.search.item.make-private" : "Make non-discoverable"
   "admin.search.item.make-private" : "Udělat soukromé",
 
-  // "admin.search.item.make-public" : "Make Public"
+  // "admin.search.item.make-public" : "Make discoverable"
   "admin.search.item.make-public" : "Zveřejnit",
 
   // "admin.search.item.move" : "Move"
@@ -797,7 +2565,7 @@
   // "clarin.license.agreement.header.info" : "The requested content is distributed under one or more licence(s). You have to agree to the licence(s) below before you can obtain the content. Please, view the licence(s) by clicking on the button(s) and read it carefully. The data filled below might be shared with the submitter of the item and/or for creating statistics."
   "clarin.license.agreement.header.info" : "Požadovaný obsah je šířen pod jednou nebo více licencemi. Před získáním obsahu musíte souhlasit s níže uvedenými licencemi. Prohlédněte si prosím licenci (e) kliknutím na tlačítko(a) a pečlivě si ji (je) přečtěte. Níže vyplněné údaje mohou být sdíleny s předkladatelem položky a/nebo pro vytváření statistik.",
 
-  // "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
+  // "clarin.license.agreement.signer.header.info": "['The information below identifies you, the SIGNER. If the information is incorrect, please contact our', 'Help Desk.', 'This information will be stored as part of the electronic signatures.']"
   "clarin.license.agreement.signer.header.info": ["Informace uvedené níže vás, PODEPSANÉHO, identifikují. Pokud jsou tyto informace nesprávné, kontaktujte prosím", "poradnu.", "Tyto informace budou uloženy spolu se záznamem o souhlasu."],
 
   // "clarin.license.agreement.item.handle" : "Item handle"
@@ -827,13 +2595,13 @@
   // "clarin.license.agreement.notification.error.required.info" : "You must fill in required info."
   "clarin.license.agreement.notification.error.required.info" : "Musíte vyplnit požadované informace.",
 
-  // "clarin.license.agreement.error.message.cannot.download": ["Something went wrong and you cannot download this bitstream, please contact", " Help Desk."],
-  "clarin.license.agreement.error.message.cannot.download": ["Error: Nelze stáhnout tento bitstream, prosím kontaktujte", "poradnu."],
+  // "clarin.license.agreement.error.message.cannot.download": "['Something went wrong and you cannot download this bitstream, please contact', ' Help Desk.']"
+  "clarin.license.agreement.error.message.cannot.download": ["Error: Nelze stáhnout tento bitstream, prosím kontaktujte:", "poradnu.:"],
 
   // "clarin.license.agreement.notification.check.email" : "You will receive email with download link."
   "clarin.license.agreement.notification.check.email" : "Obdržíte e-mail s odkazem ke stažení.",
 
-  // "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
+  // "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email."
   "clarin.license.agreement.notification.cannot.send.email": "Error: Nelze odeslat email.",
 
   // "bitstream.edit.authorizations.link" : "Edit bitstream's Policies"
@@ -848,7 +2616,7 @@
   // "bitstream.edit.bitstream" : "Bitstream:"
   "bitstream.edit.bitstream" : "Bitstream",
 
-  // "bitstream.edit.form.description.hint" : "Optionally, provide a brief description of the file, for example \"<i>Main article</i>\" or \"<i>Experiment data readings</i>\"."
+  // "bitstream.edit.form.description.hint" : "Optionally, provide a brief description of the file, for example "<i>Main article</i>" or "<i>Experiment data readings</i>"."
   "bitstream.edit.form.description.hint" : "Volitelně uveďte stručný popis souboru, například \"<i>Hlavní článek</i>\" nebo \"<i>Odčítání dat z experimentu</i>\".",
 
   // "bitstream.edit.form.description.label" : "Description"
@@ -869,13 +2637,13 @@
   // "bitstream.edit.form.newFormat.label" : "Describe new format"
   "bitstream.edit.form.newFormat.label" : "Popište nový formát",
 
-  // "bitstream.edit.form.newFormat.hint" : "The application you used to create the file, and the version number (for example, \"<i>ACMESoft SuperApp version 1.5</i>\")."
+  // "bitstream.edit.form.newFormat.hint" : "The application you used to create the file, and the version number (for example, "<i>ACMESoft SuperApp version 1.5</i>")."
   "bitstream.edit.form.newFormat.hint" : "Aplikace, kterou jste použili k vytvoření souboru, a číslo verze (například \"<i>ACMESoft SuperApp verze 1.5</i>\").",
 
   // "bitstream.edit.form.primaryBitstream.label" : "Primary bitstream"
   "bitstream.edit.form.primaryBitstream.label" : "Primární bitstream",
 
-  // "bitstream.edit.form.selectedFormat.hint" : "If the format is not in the above list, <b>select \"format not in list\" above</b> and describe it under \"Describe new format\"."
+  // "bitstream.edit.form.selectedFormat.hint" : "If the format is not in the above list, <b>select "format not in list" above</b> and describe it under "Describe new format"."
   "bitstream.edit.form.selectedFormat.hint" : "Pokud formát není ve výše uvedeném seznamu, <b>vyberte \"formát není v seznamu\" výše</b> a popište jej v části \"Popsat nový formát\".",
 
   // "bitstream.edit.form.selectedFormat.label" : "Selected Format"
@@ -1034,7 +2802,7 @@
   // "browse.startsWith.choose_year.label" : "Choose the issue year"
   "browse.startsWith.choose_year.label" : "Zvolte rok vydání",
 
-  // "browse.startsWith.jump" : "Jump to a point in the index:"
+  // "browse.startsWith.jump" : "Filter results by year or month"
   "browse.startsWith.jump" : "Skok na bod v indexu:",
 
   // "browse.startsWith.months.april" : "April"
@@ -1082,16 +2850,16 @@
   // "browse.startsWith.submit" : "Browse"
   "browse.startsWith.submit" : "Procházet",
 
-  // "browse.startsWith.type_date" : "Or type in a date (year-month) and click 'Browse'"
+  // "browse.startsWith.type_date" : "Filter results by date"
   "browse.startsWith.type_date" : "Nebo zadejte datum (rok-měsíc) a klikněte na tlačítko \"Procházet\".",
 
   // "browse.startsWith.type_date.label" : "Or type in a date (year-month) and click on the Browse button"
   "browse.startsWith.type_date.label" : "Nebo zadejte datum (rok-měsíc) a klikněte na tlačítko Procházet.",
 
-  // "browse.startsWith.type_text" : "Type the first few letters and click on the Browse button"
+  // "browse.startsWith.type_text" : "Filter results by typing the first few letters"
   "browse.startsWith.type_text" : "Zadejte několik prvních písmen a klikněte na tlačítko Procházet.",
 
-  // "browse.title" : "Browsing {{ collection }} by {{ field }} {{ value }}"
+  // "browse.title" : "Browsing {{ collection }} by {{ field }}{{ startsWith }} {{ value }}"
   "browse.title" : "Procházení {{ collection }} podle {{ field }} {{ hodnota }}",
 
   // "chips.remove" : "Remove chip"
@@ -1148,7 +2916,7 @@
   // "collection.edit.item-mapper.cancel" : "Cancel"
   "collection.edit.item-mapper.cancel" : "Zrušit",
 
-  // "collection.edit.item-mapper.collection" : "Collection: \"<b>{{name}}</b>\""
+  // "collection.edit.item-mapper.collection" : "Collection: "<b>{{name}}</b>""
   "collection.edit.item-mapper.collection" : "Sbírka: \"<b>{{name}}</b>\"",
 
   // "collection.edit.item-mapper.confirm" : "Map selected items"
@@ -1292,7 +3060,7 @@
   // "collection.edit.tabs.source.notifications.discarded.content" : "Your changes were discarded. To reinstate your changes click the 'Undo' button"
   "collection.edit.tabs.source.notifications.discarded.content" : "Změny byly zahozeny. Chcete-li změny obnovit, klikněte na tlačítko Zpět.",
 
-  // "collection.edit.tabs.source.notifications.discarded.title" : "Changed discarded"
+  // "collection.edit.tabs.source.notifications.discarded.title" : "Changes discarded"
   "collection.edit.tabs.source.notifications.discarded.title" : "Změny vyřazené",
 
   // "collection.edit.tabs.source.notifications.invalid.content" : "Your changes were not saved. Please make sure all fields are valid before you save."
@@ -1781,9 +3549,8 @@
   // "cookies.consent.purpose.statistical" : "Statistical"
   "cookies.consent.purpose.statistical" : "Statistické",
 
-
-  // "curation-task.task.checklinks.label":  "Check Links in Metadata",
-  "curation-task.task.checklinks.label":  "Zkontrolujte linky v metadatech.",
+  // "curation-task.task.checklinks.label": "Check Links in Metadata"
+  "curation-task.task.checklinks.label": "Zkontrolujte linky v metadatech.",
 
   // "curation-task.task.noop.label" : "NOOP"
   "curation-task.task.noop.label" : "NOOP",
@@ -1824,7 +3591,7 @@
   // "curation.form.handle.hint" : "Hint: Enter [your-handle-prefix]/0 to run a task across entire site (not all tasks may support this capability)"
   "curation.form.handle.hint" : "Tip: Zadejte [your-handle-prefix]/0 pro spuštění úlohy na celém webu (ne všechny úlohy mohou tuto schopnost podporovat)",
 
-  // "deny-request-copy.email.message" : "Dear {{ recipientName }},\nIn response to your request I regret to inform you that it's not possible to send you a copy of the file(s) you have requested, concerning the document: \"{{ itemUrl }}\" ({{ itemName }}), of which I am an author.\n\nBest regards,\n{{ authorName }} <{{ authorEmail }}>"
+  // "deny-request-copy.email.message" : "Dear {{ recipientName }}, In response to your request I regret to inform you that it's not possible to send you a copy of the file(s) you have requested, concerning the document: "{{ itemUrl }}" ({{ itemName }}), of which I am an author. Best regards,{{ authorName }} <{{ authorEmail }}>"
   "deny-request-copy.email.message" : "Vážený {{ jméno příjemce }},\nV reakci na Vaši žádost Vám bohužel musím sdělit, že Vám není možné zaslat kopii souboru(ů), který(é) jste požadoval(y), týkající se dokumentu: \"{{ itemUrl }}\" ({{ itemName }}), jehož jsem autorem.\n\nS pozdravem,\n{{ authorName }} <{{ authorEmail }}>",
 
   // "deny-request-copy.email.subject" : "Request copy of document"
@@ -1962,7 +3729,7 @@
   // "error.search-results" : "Error fetching search results"
   "error.search-results" : "Chyba při načítání výsledků hledání",
 
-  // "error.invalid-search-query" : "Search query is not valid. Please check <a href=\"https://solr.apache.org/guide/query-syntax-and-parsing.html\" target=\"_blank\">Solr query syntax</a> best practices for further information about this error."
+  // "error.invalid-search-query" : "Search query is not valid. Please check <a href="https://solr.apache.org/guide/query-syntax-and-parsing.html" target="_blank">Solr query syntax</a> best practices for further information about this error."
   "error.invalid-search-query" : "Vyhledávací dotaz není platný. Další informace o této chybě naleznete v <a href=\"https://solr.apache.org/guide/query-syntax-and-parsing.html\" target=\"_blank\">Syntaxi dotazů Solr</a>.",
 
   // "error.sub-collections" : "Error fetching sub-collections"
@@ -2019,16 +3786,16 @@
   // "footer.link.privacy-policy" : "Privacy policy"
   "footer.link.privacy-policy" : "Zásady ochrany osobních údajů",
 
-  // "footer.link.end-user-agreement":"End User Agreement",
+  // "footer.link.end-user-agreement":"End User Agreement"
   "footer.link.end-user-agreement":"Smlouva pro koncového uživatele.",
 
-  // "footer.link.feedback":"Send Feedback",
+  // "footer.link.feedback":"Send Feedback"
   "footer.link.feedback":"Odeslat zpětnou vazbu",
 
   // "forgot-email.form.header" : "Forgot Password"
   "forgot-email.form.header" : "Zapomenuté heslo",
 
-  // "forgot-email.form.info" : "Enter Register an account to subscribe to collections for email updates, and submit new items to DSpace."
+  // "forgot-email.form.info" : "Enter the email address associated with the account."
   "forgot-email.form.info" : "Zadejte Zaregistrovat účet pro přihlášení ke sbírkám pro e-mailové aktualizace a odeslat nové položky do DSpace.",
 
   // "forgot-email.form.email" : "Email Address *"
@@ -2040,7 +3807,7 @@
   // "forgot-email.form.email.error.pattern" : "Please fill in a valid email address"
   "forgot-email.form.email.error.pattern" : "Vyplňte prosím platnou e-mailovou adresu",
 
-  // "forgot-email.form.email.hint" : "This address will be verified and used as your login name."
+  // "forgot-email.form.email.hint" : "An email will be sent to this address with a further instructions."
   "forgot-email.form.email.hint" : "Tato adresa bude ověřena a použita jako vaše přihlašovací jméno.",
 
   // "forgot-email.form.submit" : "Save"
@@ -2055,7 +3822,7 @@
   // "forgot-email.form.error.head" : "Error when trying to register email"
   "forgot-email.form.error.head" : "Chyba při pokusu o registraci e-mailu",
 
-  // "forgot-email.form.error.content" : "An error occured when registering the following email address: {{ email }}"
+  // "forgot-email.form.error.content" : "An error occured when attempting to reset the password for the account associated with the following email address: {{ email }}"
   "forgot-email.form.error.content" : "Při registraci následující e-mailové adresy došlo k chybě: {{ email }}",
 
   // "forgot-password.title" : "Forgot Password"
@@ -2064,7 +3831,7 @@
   // "forgot-password.form.head" : "Forgot Password"
   "forgot-password.form.head" : "Zapomenuté heslo",
 
-  // "forgot-password.form.info" : "Enter a new password in the box below, and confirm it by typing it again into the second box. It should be at least six characters long."
+  // "forgot-password.form.info" : "Enter a new password in the box below, and confirm it by typing it again into the second box."
   "forgot-password.form.info" : "Do níže uvedeného pole zadejte nové heslo a potvrďte ho opětovným zadáním do druhého pole. Mělo by mít alespoň šest znaků.",
 
   // "forgot-password.form.card.security" : "Security"
@@ -2163,7 +3930,7 @@
   // "form.no-value" : "No value entered"
   "form.no-value" : "Nebyla zadána žádná hodnota",
 
-  // "form.other-information": {},
+  // "form.other-information": {}
   "form.other-information": {},
 
   // "form.remove" : "Remove"
@@ -2232,8 +3999,8 @@
   // "grant-deny-request-copy.processed" : "This request has already been processed. You can use the button below to get back to the home page."
   "grant-deny-request-copy.processed" : "Tato žádost již byla zpracována. Tlačítkem níže se můžete vrátit na domovskou stránku.",
 
-  // "grant-request-copy.email.message" : "Dear {{ recipientName }},\nIn response to your request I have the pleasure to send you in attachment a copy of the file(s) concerning the document: \"{{ itemUrl }}\" ({{ itemName }}), of which I am an author.\n\nBest regards,\n{{ authorName }} <{{ authorEmail }}>"
-  "grant-request-copy.email.message" : "Vážený {{ recipientName }},\nV reakci na Vaši žádost si Vám dovoluji zaslat v příloze kopii souboru(ů) týkající se dokumentu: \{{ itemUrl }}\" ({{ itemName }}), jehož jsem autorem.\n\nS pozdravem,\n{{ authorName }} <{{ authorEmail }}>",
+  // "grant-request-copy.email.message" : "Dear {{ recipientName }},\nIn response to your request I have the pleasure to send you in attachment a copy of the file(s) concerning the document: "{{ itemUrl }}" ({{ itemName }}), of which I am an author.\n\nBest regards,\n{{ authorName }} <{{ authorEmail }}>"
+  "grant-request-copy.email.message" : "Vážený {{ recipientName }},\nV reakci na Vaši žádost si Vám dovoluji zaslat v příloze kopii souboru(ů) týkající se dokumentu: \"{{ itemUrl }}\" ({{ itemName }}), jehož jsem autorem.\n\nS pozdravem,\n{{ authorName }} <{{ authorEmail }}>",
 
   // "grant-request-copy.email.subject" : "Request copy of document"
   "grant-request-copy.email.subject" : "Vyžádat si kopii dokumentu",
@@ -2250,7 +4017,7 @@
   // "grant-request-copy.success" : "Successfully granted item request"
   "grant-request-copy.success" : "Úspěšně schválená žádost o položku",
 
-  // "home.description": "",
+  // "home.description": "DSpace is a digital service that collects, preserves, and distributes digital material. Repositories are important tools for preserving an organization's legacy; they facilitate digital preservation and scholarly communication."
   "home.description": "",
 
   // "home.breadcrumbs" : "Home"
@@ -2268,55 +4035,53 @@
   // "home.top-level-communities.help" : "Select a community to browse its collections."
   "home.top-level-communities.help" : "Vyberte komunitu pro procházení jejích sbírek.",
 
-
-  // "home-page.carousel.ldata.info": "Linguistic Data and NLP Tools",
+  // "home-page.carousel.ldata.info": "Linguistic Data and NLP Tools"
   "home-page.carousel.ldata.info": "Lingvistická data a nástroje",
 
-  // "home-page.carousel.ldata.find": "Find",
+  // "home-page.carousel.ldata.find": "Find"
   "home-page.carousel.ldata.find": "Vyhledávání",
 
-  // "home-page.carousel.ldata.citation-support": "Citation Support (with Persistent IDs)",
+  // "home-page.carousel.ldata.citation-support": "Citation Support (with Persistent IDs)"
   "home-page.carousel.ldata.citation-support": "Podpora citací (persistentní identifikátory)",
 
-  // "home-page.carousel.deposit.header": "Deposit Free and Safe",
+  // "home-page.carousel.deposit.header": "Deposit Free and Safe"
   "home-page.carousel.deposit.header": "Úschova zdarma a bezpečně",
 
-  // "home-page.carousel.deposit.info": "License of your Choice (Open licenses encouraged)",
+  // "home-page.carousel.deposit.info": "License of your Choice (Open licenses encouraged)"
   "home-page.carousel.deposit.info": "Volitelné licence (avšak preferujeme otevřené)",
 
-  // "home-page.carousel.deposit.find": "Easy to Find",
+  // "home-page.carousel.deposit.find": "Easy to Find"
   "home-page.carousel.deposit.find": "Snadné hledání",
 
-  // "home-page.carousel.deposit.cite": "Easy to Cite",
+  // "home-page.carousel.deposit.cite": "Easy to Cite"
   "home-page.carousel.deposit.cite": "Snadná citace",
 
   // "home-page.carousel.deposit.citation": "“There ought to be only one grand dépôt of art in the world, to\n                        which the artist might repair with his works, and on presenting them\n                        receive what he required... ”",
   "home-page.carousel.deposit.citation": "“Na světě by mělo být jen jedno velké úložiště umění,\n                        které by umělec obohatil svými díly a při prezentaci\n                        získal přesně, co žádal... ”",
 
-  // "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
+  // "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801"
   "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
 
-  // "home-page.search": "Search",
+  // "home-page.search": "Search"
   "home-page.search": "Hledat",
 
-  // "home-page.advanced-search": "Advanced Search",
+  // "home-page.advanced-search": "Advanced Search"
   "home-page.advanced-search": "Rozšířené hledání",
 
-  // "home-page.hyperlink.author.message": "Author",
+  // "home-page.hyperlink.author.message": "Author"
   "home-page.hyperlink.author.message": "Autor",
 
-  // "home-page.hyperlink.subject.message": "Subject",
+  // "home-page.hyperlink.subject.message": "Subject"
   "home-page.hyperlink.subject.message": "Klíčové slovo",
 
-  // "home-page.hyperlink.language.message": "Language (ISO)",
+  // "home-page.hyperlink.language.message": "Language (ISO)"
   "home-page.hyperlink.language.message": "Jazyk",
 
-  // "home-page.whats-new.message": "What's New",
+  // "home-page.whats-new.message": "What's New"
   "home-page.whats-new.message": "Nově přidané",
 
-  // "home-page.new-items.message": "Most Viewed Items - Last Month",
+  // "home-page.new-items.message": "Most Viewed Items - Last Month"
   "home-page.new-items.message": "Nejnavštěvovanější záznamy - za poslední měsíc",
-
 
   // "handle-table.breadcrumbs" : "Handles"
   "handle-table.breadcrumbs" : "Handle",
@@ -2522,22 +4287,22 @@
   // "info.feedback.email-label" : "Your Email"
   "info.feedback.email-label" : "Váš e-mail",
 
-  // "info.feedback.create.success" : "Feedback Sent Successfully!",
+  // "info.feedback.create.success" : "Feedback Sent Successfully!"
   "info.feedback.create.success" : "Zpětná vazba úspěšně odeslána!",
 
-  // "info.feedback.error.email.required" : "A valid email address is required",
+  // "info.feedback.error.email.required" : "A valid email address is required"
   "info.feedback.error.email.required" : "Je vyžadována platná e-mailová adresa.",
 
-  // "info.feedback.error.message.required" : "A comment is required",
+  // "info.feedback.error.message.required" : "A comment is required"
   "info.feedback.error.message.required" : "Je vyžadován komentář.",
 
-  // "info.feedback.page-label" : "Page",
+  // "info.feedback.page-label" : "Page"
   "info.feedback.page-label" : "Stránka",
 
-  // "info.feedback.page_help" : "Tha page related to your feedback",
+  // "info.feedback.page_help" : "Tha page related to your feedback"
   "info.feedback.page_help" : "Stránka související se zpětnou vazbou.",
 
-  // "item.alerts.private" : "This item is private"
+  // "item.alerts.private" : "This item is non-discoverable"
   "item.alerts.private" : "Tato položka je soukromá",
 
   // "item.alerts.withdrawn" : "This item has been withdrawn"
@@ -2549,7 +4314,7 @@
   // "item.edit.authorizations.title" : "Edit item's Policies"
   "item.edit.authorizations.title" : "Upravit zásady položky",
 
-  // "item.badge.private" : "Private"
+  // "item.badge.private" : "Non-discoverable"
   "item.badge.private" : "Soukromé",
 
   // "item.badge.withdrawn" : "Withdrawn"
@@ -2558,13 +4323,13 @@
   // "item.bitstreams.upload.bundle" : "Bundle"
   "item.bitstreams.upload.bundle" : "Svazek",
 
-  // "item.bitstreams.upload.bundle.placeholder" : "Select a bundle"
+  // "item.bitstreams.upload.bundle.placeholder" : "Select a bundle or input new bundle name"
   "item.bitstreams.upload.bundle.placeholder" : "Vybrat svazek",
 
   // "item.bitstreams.upload.bundle.new" : "Create bundle"
   "item.bitstreams.upload.bundle.new" : "Vytvořit svazek",
 
-  // "item.bitstreams.upload.bundles.empty" : "This item doesn\'t contain any bundles to upload a bitstream to."
+  // "item.bitstreams.upload.bundles.empty" : "This item doesn't contain any bundles to upload a bitstream to."
   "item.bitstreams.upload.bundles.empty" : "Tato položka neobsahuje žádné svazky, do kterých by bylo možné nahrát bitstream.",
 
   // "item.bitstreams.upload.cancel" : "Cancel"
@@ -2726,7 +4491,7 @@
   // "item.edit.item-mapper.head" : "Item Mapper - Map Item to Collections"
   "item.edit.item-mapper.head" : "Mapovač položek - Mapování položek do sbírek",
 
-  // "item.edit.item-mapper.item" : "Item: \"<b>{{name}}</b>\""
+  // "item.edit.item-mapper.item" : "Item: "<b>{{name}}</b>""
   "item.edit.item-mapper.item" : "Položka: \"<b>{{name}}</b>\"",
 
   // "item.edit.item-mapper.no-search" : "Please enter a query to search"
@@ -2804,7 +4569,7 @@
   // "item.edit.metadata.notifications.discarded.content" : "Your changes were discarded. To reinstate your changes click the 'Undo' button"
   "item.edit.metadata.notifications.discarded.content" : "Vaše změny byly zamítnuty. Chcete-li změny obnovit, klikněte na tlačítko \"Vrátit zpět\".",
 
-  // "item.edit.metadata.notifications.discarded.title" : "Changed discarded"
+  // "item.edit.metadata.notifications.discarded.title" : "Changes discarded"
   "item.edit.metadata.notifications.discarded.title" : "Změny neaktuální",
 
   // "item.edit.metadata.notifications.error.title" : "An error occurred"
@@ -2819,7 +4584,7 @@
   // "item.edit.metadata.notifications.outdated.content" : "The item you're currently working on has been changed by another user. Your current changes are discarded to prevent conflicts"
   "item.edit.metadata.notifications.outdated.content" : "Položka, na které právě pracujete, byla změněna jiným uživatelem. Vaše aktuální změny jsou vyřazeny, aby se zabránilo konfliktům.",
 
-  // "item.edit.metadata.notifications.outdated.title" : "Changed outdated"
+  // "item.edit.metadata.notifications.outdated.title" : "Changes outdated"
   "item.edit.metadata.notifications.outdated.title" : "Změny neaktuální",
 
   // "item.edit.metadata.notifications.saved.content" : "Your changes to this item's metadata were saved."
@@ -2885,37 +4650,37 @@
   // "item.edit.private.cancel" : "Cancel"
   "item.edit.private.cancel" : "Zrušit",
 
-  // "item.edit.private.confirm" : "Make it Private"
+  // "item.edit.private.confirm" : "Make it non-discoverable"
   "item.edit.private.confirm" : "Udělat položku soukromnou",
 
-  // "item.edit.private.description" : "Are you sure this item should be made private in the archive?"
+  // "item.edit.private.description" : "Are you sure this item should be made non-discoverable in the archive?"
   "item.edit.private.description" : "Jste si jisti, že by tato položka měla být v archivu soukromá?",
 
-  // "item.edit.private.error" : "An error occurred while making the item private"
+  // "item.edit.private.error" : "An error occurred while making the item non-discoverable"
   "item.edit.private.error" : "Při vytváření soukromé položky došlo k chybě",
 
-  // "item.edit.private.header" : "Make item private: {{ id }}"
+  // "item.edit.private.header" : "Make item non-discoverable: {{ id }}"
   "item.edit.private.header" : "Udělat položku soukromou: {{ id }}",
 
-  // "item.edit.private.success" : "The item is now private"
+  // "item.edit.private.success" : "The item is now non-discoverable"
   "item.edit.private.success" : "Položka je nyní soukromá",
 
   // "item.edit.public.cancel" : "Cancel"
   "item.edit.public.cancel" : "Zrušit",
 
-  // "item.edit.public.confirm" : "Make it Public"
+  // "item.edit.public.confirm" : "Make it discoverable"
   "item.edit.public.confirm" : "Zveřejnit",
 
-  // "item.edit.public.description" : "Are you sure this item should be made public in the archive?"
+  // "item.edit.public.description" : "Are you sure this item should be made discoverable in the archive?"
   "item.edit.public.description" : "Jste si jisti, že by tato položka měla být v archivu zveřejněna?",
 
-  // "item.edit.public.error" : "An error occurred while making the item public"
+  // "item.edit.public.error" : "An error occurred while making the item discoverable"
   "item.edit.public.error" : "Při zveřejňování položky došlo k chybě",
 
-  // "item.edit.public.header" : "Make item public: {{ id }}"
+  // "item.edit.public.header" : "Make item discoverable: {{ id }}"
   "item.edit.public.header" : "Zveřejnit položku: {{ id }}",
 
-  // "item.edit.public.success" : "The item is now public"
+  // "item.edit.public.success" : "The item is now discoverable"
   "item.edit.public.success" : "Položka je nyní veřejná",
 
   // "item.edit.reinstate.cancel" : "Cancel"
@@ -3026,22 +4791,22 @@
   // "item.edit.tabs.status.buttons.mappedCollections.label" : "Manage mapped collections"
   "item.edit.tabs.status.buttons.mappedCollections.label" : "Spravovat mapované sbírky",
 
-  // "item.edit.tabs.status.buttons.move.button" : "Move..."
+  // "item.edit.tabs.status.buttons.move.button" : "Move this Item to a different Collection"
   "item.edit.tabs.status.buttons.move.button" : "Přesunout...",
 
   // "item.edit.tabs.status.buttons.move.label" : "Move item to another collection"
   "item.edit.tabs.status.buttons.move.label" : "Přesunout položku do jiné sbírky",
 
-  // "item.edit.tabs.status.buttons.private.button" : "Make it private..."
+  // "item.edit.tabs.status.buttons.private.button" : "Make it non-discoverable..."
   "item.edit.tabs.status.buttons.private.button" : "Ať je to soukromé...",
 
-  // "item.edit.tabs.status.buttons.private.label" : "Make item private"
+  // "item.edit.tabs.status.buttons.private.label" : "Make item non-discoverable"
   "item.edit.tabs.status.buttons.private.label" : "Nastavit položku jako soukromou",
 
-  // "item.edit.tabs.status.buttons.public.button" : "Make it public..."
+  // "item.edit.tabs.status.buttons.public.button" : "Make it discoverable..."
   "item.edit.tabs.status.buttons.public.button" : "Zveřejněte to...",
 
-  // "item.edit.tabs.status.buttons.public.label" : "Make item public"
+  // "item.edit.tabs.status.buttons.public.label" : "Make item discoverable"
   "item.edit.tabs.status.buttons.public.label" : "Zveřejnit položku",
 
   // "item.edit.tabs.status.buttons.reinstate.button" : "Reinstate..."
@@ -3053,7 +4818,7 @@
   // "item.edit.tabs.status.buttons.unauthorized" : "You're not authorized to perform this action"
   "item.edit.tabs.status.buttons.unauthorized" : "K provedení této akce nejste oprávněni",
 
-  // "item.edit.tabs.status.buttons.withdraw.button" : "Withdraw..."
+  // "item.edit.tabs.status.buttons.withdraw.button" : "Withdraw this item"
   "item.edit.tabs.status.buttons.withdraw.button" : "Stažení...",
 
   // "item.edit.tabs.status.buttons.withdraw.label" : "Withdraw item from the repository"
@@ -3140,23 +4905,23 @@
   // "item.search.title" : "Item Search"
   "item.search.title" : "Vyhledávání položek",
 
-  // "item.page.project-url": "Project URL",
-  "item.page.project-url": "Project URL",
+  // "item.page.project-url":"Project URL"
+  "item.page.project-url":"Project URL",
 
-  // "item.page.referenced-by": "Referenced by",
-  "item.page.referenced-by": "Referenced by",
+  // "item.page.referenced-by":"Referenced by"
+  "item.page.referenced-by":"Referenced by",
 
-  // "item.page.type": "Type",
-  "item.page.type": "Typ",
+  // "item.page.type":"Type"
+  "item.page.type":"Typ",
 
-  // "item.page.size-info": "Size",
-  "item.page.size-info": "Velikost",
+  // "item.page.size-info":"Size"
+  "item.page.size-info":"Velikost",
 
-  // "item.page.language": "Language(s)",
-  "item.page.language": "Jazyky",
+  // "item.page.language":"Language(s)"
+  "item.page.language":"Jazyky",
 
-  // "item.page.sponsor": "Acknowledgement",
-  "item.page.sponsor": "Sponzoři",
+  // "item.page.sponsor":"Acknowledgement"
+  "item.page.sponsor":"Sponzoři",
 
   // "item.page.abstract" : "Abstract"
   "item.page.abstract" : "Abstrakt",
@@ -3206,7 +4971,7 @@
   // "item.page.journal.search.title" : "Articles in this journal"
   "item.page.journal.search.title" : "Články v tomto časopise",
 
-  // "item.page.link.full" : "Full item page"
+  // "item.page.link.full" : "Show full item record"
   "item.page.link.full" : "Stránka celé položky",
 
   // "item.page.link.simple" : "Simple item page"
@@ -3233,10 +4998,10 @@
   // "item.page.relationships.isOrgUnitOfProject" : "Research Projects"
   "item.page.relationships.isOrgUnitOfProject" : "Výzkumné projekty",
 
-  // "item.page.subject" : "Keywords"
+  // "item.page.subject" : "Subject(s)"
   "item.page.subject" : "Klíčová slova",
 
-  // "item.page.uri" : "URI"
+  // "item.page.uri" : "Item identifier"
   "item.page.uri" : "URI",
 
   // "item.page.bitstreams.view-more" : "Show more"
@@ -3245,10 +5010,10 @@
   // "item.page.bitstreams.collapse" : "Collapse"
   "item.page.bitstreams.collapse" : "Selhání",
 
-  // "item.page.filesection.original.bundle" : "Original bundle",
+  // "item.page.filesection.original.bundle" : "Original bundle"
   "item.page.filesection.original.bundle" : "Original bundle",
 
-  // "item.page.filesection.license.bundle" : "License bundle",
+  // "item.page.filesection.license.bundle" : "License bundle"
   "item.page.filesection.license.bundle" : "License bundle",
 
   // "item.page.return" : "Back"
@@ -3260,8 +5025,8 @@
   // "item.page.version.hasDraft" : "A new version cannot be created because there is an inprogress submission in the version history"
   "item.page.version.hasDraft" : "Nová verze nemůže být vytvořena, protože v historii verzí je odeslání v procesu.",
 
-  // "item.page.license.message": ['This item is', 'and licensed under:'],
-  "item.page.license.message": ['Licenční kategorie', 'Licence'],
+  // "item.page.license.message": "['This item is', 'and licensed under:']"
+  "item.page.license.message": ["Licenční kategorie:", "Licence:"],
 
   // "item.page.matomo-statistics.views.button" : "Views"
   "item.page.matomo-statistics.views.button" : "Zobrazení",
@@ -3320,13 +5085,13 @@
   // "item.preview.oaire.fundingStream" : "Funding Stream:"
   "item.preview.oaire.fundingStream" : "Proud financování:",
 
-  // "item.preview.authors.show.everyone": "Show everyone",
+  // "item.preview.authors.show.everyone": "Show everyone"
   "item.preview.authors.show.everyone": "Zobraz všechny autory",
 
-  // "item.preview.authors.et.al": " ; et al.",
-  "item.preview.authors.et.al": " ; et al.",
+  // "item.preview.authors.et.al": "; et al."
+  "item.preview.authors.et.al": "; et al.",
 
-  // "item.refbox.modal.copy.instruction": ["Press", "ctrl + c", "to copy"],
+  // "item.refbox.modal.copy.instruction": "['Press', 'ctrl + c', 'to copy']"
   "item.refbox.modal.copy.instruction": ["Stiskněte", "ctrl + c", "pro kopírování"],
 
   // "item.refbox.modal.submit" : "Ok"
@@ -3455,13 +5220,13 @@
   // "item.version.create.modal.form.summary.placeholder" : "Insert the summary for the new version"
   "item.version.create.modal.form.summary.placeholder" : "Vložte souhrn pro novou verzi",
 
-  // "item.version.create.notification.success" : "New version has been created with version number {{version}}",
+  // "item.version.create.notification.success" : "New version has been created with version number {{version}}"
   "item.version.create.notification.success" : "Byla vytvořena nová verze s číslem verze {{version}}",
 
-  // "item.version.create.notification.failure" : "New version has not been created",
+  // "item.version.create.notification.failure" : "New version has not been created"
   "item.version.create.notification.failure" : "Nová verze nebyla vytvořena.",
 
-  // "item.version.create.notification.inProgress" : "A new version cannot be created because there is an inprogress submission in the version history",
+  // "item.version.create.notification.inProgress" : "A new version cannot be created because there is an inprogress submission in the version history"
   "item.version.create.notification.inProgress" : "Nová verze nemůže být vytvořena, protože někdo se už pokouší vytvořit novou verzi Itemu.",
 
   // "item.version.delete.modal.header" : "Delete version"
@@ -3482,16 +5247,16 @@
   // "item.version.delete.modal.button.cancel.tooltip" : "Do not delete this version"
   "item.version.delete.modal.button.cancel.tooltip" : "Tuto verzi neodstraňujte",
 
-  // "item.version.delete.notification.success" : "Version number {{version}} has been deleted",
+  // "item.version.delete.notification.success" : "Version number {{version}} has been deleted"
   "item.version.delete.notification.success" : "Verze číslo {{version}} byla smazána",
 
-  // "item.version.delete.notification.failure" : "Version number {{version}} has not been deleted",
+  // "item.version.delete.notification.failure" : "Version number {{version}} has not been deleted"
   "item.version.delete.notification.failure" : "Verze číslo {{version}} nebyla smazána",
 
-  // "item.version.edit.notification.success" : "The summary of version number {{version}} has been changed",
+  // "item.version.edit.notification.success" : "The summary of version number {{version}} has been changed"
   "item.version.edit.notification.success" : "Souhrn pro verzi číslo {{version}} byla změněna",
 
-  // "item.version.edit.notification.failure" : "The summary of version number {{version}} has not been changed",
+  // "item.version.edit.notification.failure" : "The summary of version number {{version}} has not been changed"
   "item.version.edit.notification.failure" : "Souhrn pro verzi číslo {{version}} nebyla změněna",
 
   // "item.tombstone.withdrawn.message" : "This item is withdrawn"
@@ -3506,17 +5271,17 @@
   // "item.tombstone.withdrawal.reason.default.value" : "The reason wasn't specified."
   "item.tombstone.withdrawal.reason.default.value" : "Důvod nebyl upřesněn.",
 
-  // "item.tombstone.restricted.contact.help": ["Your user account does not have the credentials to view this item. Please contact the", "Help Desk", "if you have any questions."],
-  "item.tombstone.restricted.contact.help": ["Váš účet nemá potřebná oprávnění pro zobrazení tohoto záznamu. Obraťte se na", "poradnu", ", jestli máte jakékoliv nejasnosti."],
-
+  // "item.tombstone.restricted.contact.help": "['Your user account does not have the credentials to view this item. Please contact the', 'Help Desk', 'if you have any questions.']"
+  "item.tombstone.restricted.contact.help": ['Váš účet nemá potřebná oprávnění pro zobrazení tohoto záznamu. Obraťte se na', 'poradnu', ', jestli máte jakékoliv nejasnosti.'],
   // "item.tombstone.replaced.another-repository.message" : "This item is managed by another repository"
   "item.tombstone.replaced.another-repository.message" : "Tato položka je spravována jiným úložištěm",
 
   // "item.tombstone.replaced.locations.message" : "You will find this item at the following location(s):"
   "item.tombstone.replaced.locations.message" : "Tuto položku najdete na následujících místech:",
 
-  // "item.tombstone.replaced.help-desk.message": ["The author(s) asked us to hide this submission.", "We still keep all the data and metadata of the original submission but the submission", "is now located at the above url(s). If you need the contents of the original submission, contact us at our", "Help Desk."],
-  "item.tombstone.replaced.help-desk.message": ["Autoři tohoto záznamu nás požádali o jeho skrytí.", "Stále máme všechna data i metadata původního záznamu.", "K záznamu by mělo být přistupováno výhradně přes výše uvedené url. Pokud z nějakého důvodu potřebujete původní záznam, kontaktujte naši", "poradnu"],
+  // "item.tombstone.replaced.help-desk.message": "['The author(s) asked us to hide this submission.', 'We still keep all the data and metadata of the original submission but the submission', 'is now located at the above url(s). If you need the contents of the original submission, contact us at our', 'Help Desk.']"
+  "item.tombstone.replaced.help-desk.message": ['Autoři tohoto záznamu nás požádali o jeho skrytí.', 'Stále máme všechna data i metadata původního záznamu.', 'K záznamu by mělo být přistupováno výhradně přes výše uvedené url. Pokud z nějakého důvodu potřebujete původní záznam, kontaktujte naši', 'poradnu'],
+
   // "journal.listelement.badge" : "Journal"
   "journal.listelement.badge" : "Časopis",
 
@@ -3730,14 +5495,14 @@
   // "clarin.auth-failed.warning.important.message" : "Important!"
   "clarin.auth-failed.warning.important.message" : "Důležité!",
 
-  // "clarin.auth-failed.warning.no-email.message": ["Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.", "If you have any question contact the ","Help Desk."],
-  "clarin.auth-failed.warning.no-email.message": ["Váš IDP (domovská organizace) nám neposkytl vaši emailovou adresu. Pokud chcete přidávat záznamy do repozitáře, stahovat veřejně nedostupné záznamy, případně se přihlásit k zásílání statistik a novinek, vyplňte a ověřte váš email.", "V případě jakýchkoli dotazů se můžete obrátit na naši","poradnu"],
+  // "clarin.auth-failed.warning.no-email.message": "['Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.', 'If you have any question contact the ', 'Help Desk.']"
+  "clarin.auth-failed.warning.no-email.message": ['Váš IDP (domovská organizace) nám neposkytl vaši emailovou adresu. Pokud chcete přidávat záznamy do repozitáře, stahovat veřejně nedostupné záznamy, případně se přihlásit k zásílání statistik a novinek, vyplňte a ověřte váš email.', 'V případě jakýchkoli dotazů se můžete obrátit na naši', 'poradnu'],
 
   // "clarin.auth-failed.warning.email-info" : "This address will be verified and remembered until your IDP provides a different one. You will still sign in through your IDP."
   "clarin.auth-failed.warning.email-info" : "Tato adresa bude ověřena a zapamatována, dokud IDP nezadá jinou adresu. Stále se budete přihlašovat prostřednictvím svého IDP.",
 
-  // "clarin.auth-failed.warning.has-email.message": ["Your IDP (home organization) has not provided your email address.", "You are registered by the e-mail: ", ". Try to login with that e-mail.", " If you have any login issues contact the ", "Help Desk."],
-  "clarin.auth-failed.warning.has-email.message": ["Váš IDP (domovská organizace) nám neposkytl vaši emailovou adresu.", "Jste registrován/a pomocí e-mailu: ", ". Zkuste se přihlásit s tímto e-mailem", " V případě jakýchkoli dotazů se můžete obrátit na naši ", "poradnu"],
+  // "clarin.auth-failed.warning.has-email.message": "['Your IDP (home organization) has not provided your email address.', 'You are registered by the e-mail: ', '. Try to login with that e-mail.', ' If you have any login issues contact the ', 'Help Desk.']"
+  "clarin.auth-failed.warning.has-email.message": ['Váš IDP (domovská organizace) nám neposkytl vaši emailovou adresu.', 'Jste registrován/a pomocí e-mailu: ', '. Zkuste se přihlásit s tímto e-mailem', ' V případě jakýchkoli dotazů se můžete obrátit na naši ', 'poradnu'],
 
   // "clarin.auth-failed.netid" : "netid"
   "clarin.auth-failed.netid" : "NetID",
@@ -3790,8 +5555,8 @@
   // "clarin.autoregistration.table.value" : "Value"
   "clarin.autoregistration.table.value" : "Hodnota",
 
-  // "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in","However we may log the attributes and keep them for a time period."],
-  "clarin.autoregistration.repository.policy.message": ["Používáme pouze povinné attributy tak jak jsou zmíněny v","Atributy jsou nějaký čas uchovány v záznamech."],
+  // "clarin.autoregistration.repository.policy.message": "['We use only the required attributes as stated in', 'However we may log the attributes and keep them for a time period.']"
+  "clarin.autoregistration.repository.policy.message": ['Používáme pouze povinné attributy tak jak jsou zmíněny v', 'Atributy jsou nějaký čas uchovány v záznamech.'],
 
   // "clarin.autoregistration.button.continue.to.login" : "Continue to login"
   "clarin.autoregistration.button.continue.to.login" : "Pokračovat v přihlašování",
@@ -3916,7 +5681,7 @@
   // "menu.section.icon.pin" : "Pin sidebar"
   "menu.section.icon.pin" : "Postranní panel s kolíky",
 
-  // "menu.section.icon.processes" : "Processes menu section"
+  // "menu.section.icon.processes" : "Processes Health"
   "menu.section.icon.processes" : "Menu sekce Procesy",
 
   // "menu.section.icon.registries" : "Registries menu section"
@@ -3925,10 +5690,10 @@
   // "menu.section.icon.statistics_task" : "Statistics Task menu section"
   "menu.section.icon.statistics_task" : "Menu sekce Statistická úloha",
 
-  // "menu.section.icon.statistics": "Show site statistics",
+  // "menu.section.icon.statistics": "Show site statistics"
   "menu.section.icon.statistics": "Zobrazit statistiky stránky",
 
-  // "menu.section.icon.submissions": "Show my submissions",
+  // "menu.section.icon.submissions": "Show my submissions"
   "menu.section.icon.submissions": "Zobrazit moje záznamy",
 
   // "menu.section.icon.workflow" : "Administer workflow menu section"
@@ -3988,7 +5753,7 @@
   // "menu.section.statistics_task" : "Statistics Task"
   "menu.section.statistics_task" : "Úkol statistiky",
 
-  // "menu.section.submissions": "Submissions",
+  // "menu.section.submissions": "Submissions"
   "menu.section.submissions": "Příspěvky",
 
   // "menu.section.toggle.access_control" : "Toggle Access Control section"
@@ -4045,7 +5810,7 @@
   // "mydspace.breadcrumbs" : "MyDSpace"
   "mydspace.breadcrumbs" : "MyDSpace",
 
-  // "mydspace.description": "",
+  // "mydspace.description": ""
   "mydspace.description": "",
 
   // "mydspace.general.text-here" : "here"
@@ -4183,7 +5948,7 @@
   // "nav.login" : "Log In"
   "nav.login" : "Přihlásit se",
 
-  // "nav.logout" : "User profile menu and Log Out"
+  // "nav.logout" : "Log Out"
   "nav.logout" : "Menu profilu uživatele a Odhlášení",
 
   // "nav.main.description" : "Main navigation bar"
@@ -4204,10 +5969,10 @@
   // "nav.stop-impersonating" : "Stop impersonating EPerson"
   "nav.stop-impersonating" : "Přestat vystupovat jako EPerson",
 
-  // "nav.toggle" : "Toggle navigation",
+  // "nav.toggle" : "Toggle navigation"
   "nav.toggle" : "Přepnout navigaci",
 
-  // "nav.user.description" : "User profile bar",
+  // "nav.user.description" : "User profile bar"
   "nav.user.description" : "Uživatelský profil",
 
   // "none.listelement.badge" : "Item"
@@ -4351,60 +6116,59 @@
   // "process.new.breadcrumbs" : "Create a new process"
   "process.new.breadcrumbs" : "Vytvořit nový proces",
 
-  // "process.detail.arguments" : "Arguments",
+  // "process.detail.arguments" : "Arguments"
   "process.detail.arguments" : "Argumenty",
 
-  // "process.detail.arguments.empty" : "This process doesn't contain any arguments",
+  // "process.detail.arguments.empty" : "This process doesn't contain any arguments"
   "process.detail.arguments.empty" : "Tento proces neobsahuje žádné argumenty.",
 
-  // "process.detail.back" : "Back",
+  // "process.detail.back" : "Back"
   "process.detail.back" : "Zpět",
 
-  // "process.detail.output" : "Process Output",
+  // "process.detail.output" : "Process Output"
   "process.detail.output" : "Výstup z procesu.",
 
-  // "process.detail.output-files" : "Output Files",
+  // "process.detail.output-files" : "Output Files"
   "process.detail.output-files" : "Výstupní soubory.",
 
-  // "process.detail.output-files.empty" : "This process doesn't contain any output files",
+  // "process.detail.output-files.empty" : "This process doesn't contain any output files"
   "process.detail.output-files.empty" : "Tento proces neobsahuje žádné výstupní soubory.",
 
-  // "process.detail.script" : "Script",
+  // "process.detail.script" : "Script"
   "process.detail.script" : "Skript",
 
-  // "process.detail.title" : "Process: {{ id }} - {{ name }}",
+  // "process.detail.title" : "Process: {{ id }} - {{ name }}"
   "process.detail.title" : "Proces: {{ id }} - {{ name }}",
 
-  // "process.detail.start-time" : "Start time",
+  // "process.detail.start-time" : "Start time"
   "process.detail.start-time" : "Čas začátku",
 
-  // "process.detail.end-time" : "Finish time",
+  // "process.detail.end-time" : "Finish time"
   "process.detail.end-time" : "Čas ukončení",
 
-  // "process.detail.status" : "Status",
+  // "process.detail.status" : "Status"
   "process.detail.status" : "Stav",
 
-  // "process.detail.create" : "Create similar process",
+  // "process.detail.create" : "Create similar process"
   "process.detail.create" : "Vytvořit podobný proces.",
 
-  // "process.overview.table.finish" : "Finish time (UTC)",
+  // "process.overview.table.finish" : "Finish time (UTC)"
   "process.overview.table.finish" : "Čas ukončení (UTC)",
 
-  // "process.overview.table.id" : "Process ID",
+  // "process.overview.table.id" : "Process ID"
   "process.overview.table.id" : "Proces ID",
 
-  // "process.overview.table.name" : "Name",
+  // "process.overview.table.name" : "Name"
   "process.overview.table.name" : "Název",
 
-  // "process.overview.table.start" : "Start time (UTC)",
+  // "process.overview.table.start" : "Start time (UTC)"
   "process.overview.table.start" : "Čas začátku (UTC)",
 
-  // "process.overview.table.status" : "Status",
+  // "process.overview.table.status" : "Status"
   "process.overview.table.status" : "Stav",
 
-  // "process.overview.table.user" : "User",
+  // "process.overview.table.user" : "User"
   "process.overview.table.user" : "Uživatel",
-
 
   // "process.detail.logs.button" : "Retrieve process output"
   "process.detail.logs.button" : "Získání výstupu procesu",
@@ -4481,7 +6245,7 @@
   // "profile.security.form.error.password-length" : "The password should be at least 6 characters long."
   "profile.security.form.error.password-length" : "Heslo by mělo mít alespoň 6 znaků.",
 
-  // "profile.security.form.info" : "Optionally, you can enter a new password in the box below, and confirm it by typing it again into the second box. It should be at least six characters long."
+  // "profile.security.form.info" : "Optionally, you can enter a new password in the box below, and confirm it by typing it again into the second box."
   "profile.security.form.info" : "Volitelně můžete zadat nové heslo do políčka níže a potvrdit ho opětovným zadáním do druhého políčka. Mělo by mít alespoň šest znaků.",
 
   // "profile.security.form.label.password" : "Password"
@@ -4613,7 +6377,7 @@
   // "register-page.create-profile.security.header" : "Security"
   "register-page.create-profile.security.header" : "Zabezpečení",
 
-  // "register-page.create-profile.security.info" : "Please enter a password in the box below, and confirm it by typing it again into the second box. It should be at least six characters long."
+  // "register-page.create-profile.security.info" : "Please enter a password in the box below, and confirm it by typing it again into the second box."
   "register-page.create-profile.security.info" : "Zadejte prosím heslo do níže uvedeného pole a potvrďte jej opětovným zadáním do druhého pole. Mělo by mít alespoň šest znaků.",
 
   // "register-page.create-profile.security.label.password" : "Password *"
@@ -4940,10 +6704,10 @@
   // "clarin-license.button.delete-license" : "Delete License"
   "clarin-license.button.delete-license" : "Odstranit licenci",
 
-  // "clarin-license.button.search": "Search",
+  // "clarin-license.button.search": "Search"
   "clarin-license.button.search": "Hledat",
 
-  // "clarin-license.button.search.placeholder": "Search by the license name ...",
+  // "clarin-license.button.search.placeholder": "Search by the license name ..."
   "clarin-license.button.search.placeholder": "Hledat podle názvu licence ...",
 
   // "clarin-license.define-license-form.form-name" : "Define new license"
@@ -5009,7 +6773,7 @@
   // "search.switch-configuration.title" : "Show"
   "search.switch-configuration.title" : "Zobrazit",
 
-  // "search.description": "",
+  // "search.description": ""
   "search.description": "",
 
   // "search.title" : "Search"
@@ -5033,7 +6797,7 @@
   // "search.filters.applied.f.dateSubmitted" : "Date submitted"
   "search.filters.applied.f.dateSubmitted" : "Datum předložení",
 
-  // "search.filters.applied.f.discoverable" : "Private"
+  // "search.filters.applied.f.discoverable" : "Non-discoverable"
   "search.filters.applied.f.discoverable" : "Soukromé",
 
   // "search.filters.applied.f.entityType" : "Item Type"
@@ -5069,13 +6833,13 @@
   // "search.filters.applied.f.rights" : "Rights"
   "search.filters.applied.f.rights" : "Práva",
 
-  // "search.filters.applied.f.language": "Language (ISO)",
+  // "search.filters.applied.f.language": "Language (ISO)"
   "search.filters.applied.f.language": "Jazyk (ISO)",
 
-  // "search.filters.applied.f.items_owning_community": "Community",
+  // "search.filters.applied.f.items_owning_community": "Community"
   "search.filters.applied.f.items_owning_community": "Komunita",
 
-  // "search.filters.applied.f.publisher": "Publisher",
+  // "search.filters.applied.f.publisher": "Publisher"
   "search.filters.applied.f.publisher": "Vydavatel",
 
   // "search.filters.filter.author.head" : "Author"
@@ -5159,7 +6923,7 @@
   // "search.filters.filter.dateSubmitted.label" : "Search date submitted"
   "search.filters.filter.dateSubmitted.label" : "Vyhledat datum odeslání",
 
-  // "search.filters.filter.discoverable.head" : "Private"
+  // "search.filters.filter.discoverable.head" : "Non-discoverable"
   "search.filters.filter.discoverable.head" : "Soukromé",
 
   // "search.filters.filter.withdrawn.head" : "Withdrawn"
@@ -5288,10 +7052,10 @@
   // "search.filters.filter.rights.head" : "Rights"
   "search.filters.filter.rights.head" : "Práva",
 
-  // "search.filters.filter.language.head": "Language (ISO)",
+  // "search.filters.filter.language.head": "Language (ISO)"
   "search.filters.filter.language.head": "Jazyk (ISO)",
 
-  // "search.filters.filter.items_owning_community.head": "Community",
+  // "search.filters.filter.items_owning_community.head": "Community"
   "search.filters.filter.items_owning_community.head": "Komunita",
 
   // "search.filters.entityType.JournalIssue" : "Journal Issue"
@@ -5939,7 +7703,7 @@
   // "submission.sections.describe.relationship-lookup.selection-tab.title.arxiv" : "Search Results"
   "submission.sections.describe.relationship-lookup.selection-tab.title.arxiv" : "Vyhledat výsledky",
 
-  // "submission.sections.describe.relationship-lookup.name-variant.notification.content" : "Would you like to save \"{{ value }}\" as a name variant for this person so you and others can reuse it for future submissions? If you don\'t you can still use it for this submission."
+  // "submission.sections.describe.relationship-lookup.name-variant.notification.content" : "Would you like to save "{{ value }}" as a name variant for this person so you and others can reuse it for future submissions? If you don't you can still use it for this submission."
   "submission.sections.describe.relationship-lookup.name-variant.notification.content" : "Chcete uložit \"{{ value }}\" jako variantu jména pro tuto osobu, abyste ji vy i ostatní mohli znovu použít pro budoucí záznam? Pokud ne, můžete ji stále použít pro tento záznam.",
 
   // "submission.sections.describe.relationship-lookup.name-variant.notification.confirm" : "Save a new name variant"
@@ -6041,7 +7805,7 @@
   // "submission.sections.submit.progressbar.upload" : "Upload files"
   "submission.sections.submit.progressbar.upload" : "Nahrát soubory",
 
-  // "submission.sections.submit.progressbar.clarin-notice": "Notice",
+  // "submission.sections.submit.progressbar.clarin-notice": "Notice"
   "submission.sections.submit.progressbar.clarin-notice": "Oznámení",
 
   // "submission.sections.status.errors.title" : "Errors"
@@ -6143,7 +7907,7 @@
   // "submission.sections.upload.header.policy.default.withlist" : "Please note that uploaded files in the {{collectionName}} collection will be accessible, in addition to what is explicitly decided for the single file, with the following group(s):"
   "submission.sections.upload.header.policy.default.withlist" : "Vezměte prosím na vědomí, že nahrané soubory ve sbírce {{collectionName}} budou přístupné, kromě toho, co je výslovně určen pro samostatný soubor, s následujícími skupinami:",
 
-  // "submission.sections.upload.info" : "Here you will find all the files currently in the item. You can update the file metadata and access conditions or <strong>upload additional files just dragging & dropping them everywhere in the page</strong>"
+  // "submission.sections.upload.info" : "Here you will find all the files currently in the item. You can update the file metadata and access conditions or <strong>upload additional files by dragging & dropping them anywhere on the page.</strong>"
   "submission.sections.upload.info" : "Zde naleznete všechny soubory, které jsou aktuálně v položce. Můžete aktualizovat metadata souborů a přístupové podmínky nebo <strong>přidat další soubory pouhým potáhnutím kamkoli na stránce</strong>.",
 
   // "submission.sections.upload.no-entry" : "No"
@@ -6224,14 +7988,14 @@
   // "submission.sections.clarin-license.head.license-decision-message" : "By checking this box, you agree to the Distribution License Agreement for this repository to reproduce, translate and distribute your submissions worldwide."
   "submission.sections.clarin-license.head.license-decision-message" : "Zaškrtnutím tohoto políčka vyjadřujete souhlas s licenční smlouvou o distribuci, která umožňuje tomuto úložišti reprodukovat, překládat a distribuovat vaše příspěvky celosvětově.",
 
-  // "submission.sections.clarin-license.head.license-question-help-desk": ["If you have questions regarding this licence please contact the", "Help Desk"],
-  "submission.sections.clarin-license.head.license-question-help-desk": ["Pokud máte dotazy týkající se této licence, prosím kontaktujte", "poradnu"],
+  // "submission.sections.clarin-license.head.license-question-help-desk": "['If you have questions regarding this licence please contact the', 'Help Desk']"
+  "submission.sections.clarin-license.head.license-question-help-desk": ['Pokud máte dotazy týkající se této licence, prosím kontaktujte', 'poradnu'],
 
   // "submission.sections.clarin-license.head.license-select-resource" : "Select the resource license"
   "submission.sections.clarin-license.head.license-select-resource" : "Vyberte licenci zdroje",
 
-  // "submission.sections.clarin-license.head.license-select-providing": ["The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ", "License List Page", "."],
-  "submission.sections.clarin-license.head.license-select-providing": ["License Selector vám pomůže vybrat nejvhodnější licenci pro vaše data nebo software. Momentálně pouze v angličtině ", "Seznam Licencii", "."],
+  // "submission.sections.clarin-license.head.license-select-providing": "['The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ', 'License List Page', '.']"
+  "submission.sections.clarin-license.head.license-select-providing": ['License Selector vám pomůže vybrat nejvhodnější licenci pro vaše data nebo software. Momentálně pouze v angličtině ', 'Seznam Licencii', '.'],
 
   // "submission.sections.clarin-license.head.license-open-selector" : "OPEN License Selector"
   "submission.sections.clarin-license.head.license-open-selector" : "Výběr licence OPEN",
@@ -6242,7 +8006,7 @@
   // "submission.sections.clarin-license.head.license-dropdown-info" : "If you already know under which license you want to distribute your work, please select from the dropdown below."
   "submission.sections.clarin-license.head.license-dropdown-info" : "Pokud již víte, pod jakou licencí chcete své dílo šířit, vyberte si z rozbalovacího seznamu níže.",
 
-  // "submission.sections.clarin-license.head.license-not-supported-message" : "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\"."
+  // "submission.sections.clarin-license.head.license-not-supported-message" : "The selected license is not supported at the moment. Please follow the procedure described under section "None of these licenses suits your needs"."
   "submission.sections.clarin-license.head.license-not-supported-message" : "Vybraná licence není v současnosti podporována. Postupujte podle postupu popsaného v části \"Žádná z těchto licencí nevyhovuje vašim potřebám\".",
 
   // "submission.sections.clarin-license.head.license-select-default-value" : "Select a License ..."
@@ -6260,8 +8024,8 @@
   // "submission.sections.clarin-license.head.license-not-offer-proceed-link" : "Obtain a link (or a copy) to the license."
   "submission.sections.clarin-license.head.license-not-offer-proceed-link" : "Získejte odkaz (nebo kopii) na licenci.",
 
-  // "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Send an email to", "Help Desk", "with the license details."],
-  "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Pošlete", "nám", "e-mail s detaily licence."],
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-email" : "['Send an email to', 'Help Desk', 'with the license details.']"
+  "submission.sections.clarin-license.head.license-not-offer-proceed-email": ['Pošlete', 'nám', 'e-mail s detaily licence.'],
 
   // "submission.sections.clarin-license.head.license-not-offer-proceed-wait" : "Save the unfinished submission and wait. We will add the license to the selection list and contact you."
   "submission.sections.clarin-license.head.license-not-offer-proceed-wait" : "Uložte nedokončený záznam a počkejte. Licenci přidáme do výběrového seznamu a budeme vás kontaktovat.",
@@ -6275,8 +8039,8 @@
   // "submission.sections.clarin-license.toggle.on-text" : "Accepted"
   "submission.sections.clarin-license.toggle.on-text" : "Přijato",
 
-  // "submission.sections.clarin-notice.message": ["The submission process for this collection (\"","\") is still being fine-tuned. If you find yourself unable to continue the submission because you can't provide the required information, because the required format for a field is too strict, because there's no appropriate field for your information, or for any other reason", "let us know"],
-  "submission.sections.clarin-notice.message": ["Proces přidávání záznamů do této kolekce (\"","\") stále ladíme. Pokud se vám nedaří přidat záznam, protože nemáte požadované informace, nebo protože některé z polí má příliš přísné požadavky na formát, nebo protože chybí pole, do kterého by se dala vaše informace zachytit, nebo z jakéhokoliv jiného důvodu,", "kontaktujte nás"],
+  // "submission.sections.clarin-notice.message" : "['The submission process for this collection ("', '") is still being fine-tuned. If you find yourself unable to continue the submission because you can\'t provide the required information, because the required format for a field is too strict, because there\'s no appropriate field for your information, or for any other reason', 'let us know']"
+  "submission.sections.clarin-notice.message": ['Proces přidávání záznamů do této kolekce (\"', '\") stále ladíme. Pokud se vám nedaří přidat záznam, protože nemáte požadované informace, nebo protože některé z polí má příliš přísné požadavky na formát, nebo protože chybí pole, do kterého by se dala vaše informace zachytit, nebo z jakéhokoliv jiného důvodu,', 'kontaktujte nás'],
 
   // "submission.submit.breadcrumbs" : "New submission"
   "submission.submit.breadcrumbs" : "Nový příspěvek",
@@ -6287,7 +8051,7 @@
   // "submission.workflow.generic.delete" : "Delete"
   "submission.workflow.generic.delete" : "Odstranit",
 
-  // "submission.workflow.generic.delete-help" : "If you would to discard this item, select \"Delete\".  You will then be asked to confirm it."
+  // "submission.workflow.generic.delete-help" : "If you would to discard this item, select "Delete".  You will then be asked to confirm it."
   "submission.workflow.generic.delete-help" : "Pokud chcete tuto položku vyřadit, vyberte možnost \"Delete\". Poté budete vyzváni k jejímu potvrzení.",
 
   // "submission.workflow.generic.edit" : "Edit"
@@ -6305,7 +8069,7 @@
   // "submission.workflow.tasks.claimed.approve" : "Approve"
   "submission.workflow.tasks.claimed.approve" : "Schválit",
 
-  // "submission.workflow.tasks.claimed.approve_help" : "If you have reviewed the item and it is suitable for inclusion in the collection, select \"Approve\"."
+  // "submission.workflow.tasks.claimed.approve_help" : "If you have reviewed the item and it is suitable for inclusion in the collection, select "Approve"."
   "submission.workflow.tasks.claimed.approve_help" : "Pokud jste položku prohlédli a je vhodná pro zařazení do sbírky, vyberte možnost \"Approve\".",
 
   // "submission.workflow.tasks.claimed.edit" : "Edit"
@@ -6329,7 +8093,7 @@
   // "submission.workflow.tasks.claimed.reject.submit" : "Reject"
   "submission.workflow.tasks.claimed.reject.submit" : "Zamítnout",
 
-  // "submission.workflow.tasks.claimed.reject_help" : "If you have reviewed the item and found it is <strong>not</strong> suitable for inclusion in the collection, select \"Reject\".  You will then be asked to enter a message indicating why the item is unsuitable, and whether the submitter should change something and resubmit."
+  // "submission.workflow.tasks.claimed.reject_help" : "If you have reviewed the item and found it is <strong>not</strong> suitable for inclusion in the collection, select "Reject".  You will then be asked to enter a message indicating why the item is unsuitable, and whether the submitter should change something and resubmit."
   "submission.workflow.tasks.claimed.reject_help" : "Pokud jste položku zkontrolovali a zjistili, že je <strong>not</strong> vhodná pro zařazení do sbírky, vyberte možnost \"Reject\".  Poté budete vyzváni k zadání zprávy, ve které uvedete, proč je položka nevhodná a zda by měl předkladatel něco změnit a znovu předložit.",
 
   // "submission.workflow.tasks.claimed.return" : "Return to pool"
@@ -6422,7 +8186,7 @@
   // "uploader.or" : ", or"
   "uploader.or" : ", nebo",
 
-  // "uploader.processing" : "Processing"
+  // "uploader.processing" : "Processing uploaded file(s)... (it's now safe to close this page)"
   "uploader.processing" : "Zpracování",
 
   // "uploader.queue-length" : "Queue length"
@@ -6524,44 +8288,42 @@
   // "repository.policy.page" : "Change me: policy page"
   "repository.policy.page" : "Změnit mě: stránka zásad",
 
-
-
-  // "navbar.repository": "Repository",
+  // "navbar.repository": "Repository"
   "navbar.repository": "Repozitář",
 
-  // "navbar.community-list": "Catalogue",
+  // "navbar.community-list": "Catalogue"
   "navbar.community-list": "Katalog",
 
-  // "navbar.education": "Education",
+  // "navbar.education": "Education"
   "navbar.education": "Vzdělávání",
 
-  // "navbar.project": "Projects",
+  // "navbar.project": "Projects"
   "navbar.project": "Projekty",
 
-  // "navbar.tools": "Tools",
+  // "navbar.tools": "Tools"
   "navbar.tools": "Nástroje",
 
-  // "navbar.services": "Services",
+  // "navbar.services": "Services"
   "navbar.services": "Služby",
 
-  // "navbar.about": "About",
+  // "navbar.about": "About"
   "navbar.about": "O nás",
 
-  // "navbar.about.partners": "Partners",
+  // "navbar.about.partners": "Partners"
   "navbar.about.partners": "Partneři",
 
-  // "navbar.about.mission-statement": "Mission Statement",
+  // "navbar.about.mission-statement": "Mission Statement"
   "navbar.about.mission-statement": "Prohlášení o poslání",
 
-  // "navbar.about.clarin": "CLARIN",
+  // "navbar.about.clarin": "CLARIN"
   "navbar.about.clarin": "CLARIN",
 
-  // "navbar.about.dariah": "DARIAH",
+  // "navbar.about.dariah": "DARIAH"
   "navbar.about.dariah": "DARIAH",
 
-  // "navbar.about.service-integrations": "Service integrations",
+  // "navbar.about.service-integrations": "Service integrations"
   "navbar.about.service-integrations": "Integrace služeb",
 
   // "navbar.about.project-partnership": "Project partnerships"
-  "navbar.about.project-partnership": "Projektové partnerství"
+  "navbar.about.project-partnership": "Projektové partnerství",
 }
