@@ -21,6 +21,42 @@
   cursor: pointer;
 }
 
+.tul-cookies {
+  .cm-modal {
+    background-color: #fff !important;
+    box-shadow: 0 10px 15px 0 rgba(0,0,0,0.2), 10px 10px 10px 2px rgba(0,0,0,0.19) !important;
+    border: 1px var(--bs-secondary) solid !important;
+    border-radius: var(--border-radius, 10px) !important;
+  }
+
+  .cm-header span, .cm-list-title {
+    color: #343a40 !important;
+  }
+
+  .slider.round.active {
+    background-color: var(--lt-tul-purple) !important;
+  }
+
+  .cm-caret a {
+    color: var(--lt-tul-purple) !important;
+  }
+
+  button.cm-btn {
+    background-color: var(--lt-tul-purple) !important;
+  }
+
+  button.cm-btn:hover {
+    box-shadow: 0 0 0 0.2rem var(--lt-tul-purple) !important;
+  }
+}
+
+/*
+Override bootstrap badge style
+ */
+.badge {
+  background-color: var(--lt-tul-purple) !important;
+}
+
 a {
   text-decoration: underline !important;
 
