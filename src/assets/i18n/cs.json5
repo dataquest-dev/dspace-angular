@@ -2059,7 +2059,7 @@
   "admin.registries.schema.return" : "Návrat",
 
   // "admin.registries.schema.title" : "Metadata Schema Registry"
-  "admin.registries.schema.title" : "DSpace Angular :: Registr schémat metadat",
+  "admin.registries.schema.title" : "Registr schémat metadat",
 
   // "admin.access-control.epeople.actions.delete" : "Delete EPerson"
   "admin.access-control.epeople.actions.delete" : "Smazat EOsobu",
@@ -4024,10 +4024,10 @@
   "home.breadcrumbs" : "Domov",
 
   // "home.search-form.placeholder" : "Search the repository ..."
-  "home.search-form.placeholder" : "Prohledat repozitář ...",
+  "home.search-form.placeholder" : "Hledat v repozitáři ...",
 
   // "home.title" : "Home"
-  "home.title" : "DSpace Angular :: Domů",
+  "home.title" : "Domů",
 
   // "home.top-level-communities.head" : "Communities in DSpace"
   "home.top-level-communities.head" : "Komunity v Digitální knihovně",
@@ -6430,7 +6430,7 @@
   "register-page.registration.email.hint" : "Tato adresa bude ověřena a použita jako vaše přihlašovací jméno.",
 
   // "register-page.registration.submit" : "Register"
-  "register-page.registration.submit" : "Registr",
+  "register-page.registration.submit" : "Registrovat",
 
   // "register-page.registration.success.head" : "Verification email sent"
   "register-page.registration.success.head" : "Ověřovací e-mail odeslán",
@@ -7108,10 +7108,10 @@
   "search.results.head" : "Výsledky hledání",
 
   // "search.results.no-results" : "Your search returned no results. Having trouble finding what you're looking for? Try putting"
-  "search.results.no-results" : "Nebyli nalezeny žádné výsledky",
+  "search.results.no-results" : "Nebyli nalezeny žádné výsledky, kolem hledaného textu skuste ",
 
   // "search.results.no-results-link" : "quotes around it"
-  "search.results.no-results-link" : "citace kolem ní",
+  "search.results.no-results-link" : "vložit citace",
 
   // "search.results.empty" : "Your search returned no results."
   "search.results.empty" : "Vaše hledání nevrátilo žádné výsledky.",
