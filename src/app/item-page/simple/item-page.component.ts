@@ -205,15 +205,13 @@ export class ItemPageComponent implements OnInit {
   }
 
   generateCurlCommand() {
-    let fileNames = this.listOfFiles.map(
-      (file: MetadataBitstream) => {
-        if (!file.canPreview) {
-          this.canDownloadAllFiles = file.canPreview;
-        }
-
-        return file.name;
+    const fileNames = this.listOfFiles.map((file: MetadataBitstream) => {
+      if (!file.canPreview) {
+        this.canDownloadAllFiles = file.canPreview;
       }
-    );
+
+      return file.name;
+    });
 
     this.command = `curl --remote-name-all ${BASE_LOCAL_URL}/server/bitstream/handle/${
       this.itemHandle

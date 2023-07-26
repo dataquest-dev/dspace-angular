@@ -18,6 +18,7 @@ import { createSuccessfulRemoteDataObject, createSuccessfulRemoteDataObject$ } f
 import { AuthService } from '../../core/auth/auth.service';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+import { RegistryService } from 'src/app/core/registry/registry.service';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
@@ -41,13 +42,12 @@ const metadataServiceStub = {
 describe('FullItemPageComponent', () => {
   let comp: FullItemPageComponent;
   let fixture: ComponentFixture<FullItemPageComponent>;
+  let registryService: RegistryService;
 
   let authService: AuthService;
   let routeStub: ActivatedRouteStub;
   let routeData;
   const authorizationService = jasmine.createSpyObj('authorizationService', ['isAuthorized']);
-
-
 
   beforeEach(waitForAsync(() => {
     authService = jasmine.createSpyObj('authService', {
@@ -77,6 +77,7 @@ describe('FullItemPageComponent', () => {
         { provide: MetadataService, useValue: metadataServiceStub },
         { provide: AuthService, useValue: authService },
         { provide: AuthorizationDataService, useValue: authorizationService },
+        RegistryService
       ],
 
       schemas: [NO_ERRORS_SCHEMA]
@@ -86,6 +87,7 @@ describe('FullItemPageComponent', () => {
   }));
 
   beforeEach(waitForAsync(() => {
+    registryService = TestBed.inject(RegistryService);
     fixture = TestBed.createComponent(FullItemPageComponent);
     comp = fixture.componentInstance;
     fixture.detectChanges();
