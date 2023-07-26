@@ -23,7 +23,7 @@ languages:
     active: false
   - code: cs
     label: Čeština
-    active: false
+    active: true
   - code: de
     label: Deutsch
     active: false
