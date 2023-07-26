@@ -65,6 +65,10 @@ export class ItemPageComponent implements OnInit {
    */
   fileName: string;
   /**
+   * determine to show download all zip button or not
+   */
+  canDownloadAllFiles = true;
+  /**
    * command for the download command feature
    */
   command: string;
@@ -202,7 +206,13 @@ export class ItemPageComponent implements OnInit {
 
   generateCurlCommand() {
     let fileNames = this.listOfFiles.map(
-      (file: MetadataBitstream) => file.name
+      (file: MetadataBitstream) => {
+        if (!file.canPreview) {
+          this.canDownloadAllFiles = file.canPreview;
+        }
+
+        return file.name;
+      }
     );
 
     this.command = `curl --remote-name-all ${BASE_LOCAL_URL}/server/bitstream/handle/${

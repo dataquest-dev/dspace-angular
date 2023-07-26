@@ -29,7 +29,11 @@
         [displayActions]="false"
       ></ds-item-versions>
       <h4><i class="fa fa-paperclip">&nbsp;</i>Files in this item</h4>
-      <a class="btn btn-download" (click)="setCommandline()" style="text-decoration: none"
+      <a
+        class="btn btn-download"
+        (click)="setCommandline()"
+        style="text-decoration: none"
+        *ngIf="canDownloadAllFiles"
         ><i class="fa fa-download fa-3x" style="display: block">&nbsp;</i
         >Download instructions for command line</a
       >
@@ -38,18 +42,20 @@
           class="repo-copy-btn pull-right"
           data-clipboard-target="#command-div"
         ></button> -->
-        <pre style="background-color: #d9edf7; color: #3a87ad">{{command}}</pre
-        >
+        <pre style="background-color: #d9edf7; color: #3a87ad">{{
+          command
+        }}</pre>
       </div>
       <a
         xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
+        *ngIf="canDownloadAllFiles"
         class="btn btn-download"
         id="download-all-button"
-        (click) = "downloadFiles()"
+        (click)="downloadFiles()"
         style="visibility: visible"
       >
         <i style="display: block" class="fa fa-download fa-3x">&nbsp;</i
-        >Download all files in item ({{totalFileSizes}})</a
+        >Download all files in item ({{ totalFileSizes }})</a
       >
       <ds-clarin-license-info
         class="mt-3 d-block"

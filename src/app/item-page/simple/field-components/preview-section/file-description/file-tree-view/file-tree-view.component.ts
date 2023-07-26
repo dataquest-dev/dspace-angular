@@ -10,7 +10,7 @@ export class FileTreeViewComponent {
   @Input()
   node: FileInfo;
 
-  isCollapsed = false; // add this line
+  isCollapsed = false;
 
   getKeys(obj: any): string[] {
     return Object.keys(obj);
