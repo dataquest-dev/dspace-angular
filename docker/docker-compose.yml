@@ -19,7 +19,7 @@ services:
       DSPACE_UI_HOST: dspace-angular
       DSPACE_UI_PORT: 400${INSTANCE}
       DSPACE_UI_NAMESPACE: /
-      DSPACE_REST_SSL: 'false'
+      DSPACE_REST_SSL: 'true'
       DSPACE_REST_HOST: ${DSPACE_REST_HOST:-localhost}
       DSPACE_REST_PORT: 8${INSTANCE}
       DSPACE_REST_NAMESPACE: /server
