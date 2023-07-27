@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateLoaderMock } from '../../shared/mocks/translate-loader.mock';
 import { ItemDataService } from '../../core/data/item-data.service';
 import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from '@angular/core';
@@ -12,7 +12,7 @@ import { Item } from '../../core/shared/item.model';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { createRelationshipsObservable } from './item-types/shared/item.component.spec';
-import { of as observableOf } from 'rxjs';
+import { of as observableOf, of } from 'rxjs';
 import {
   createFailedRemoteDataObject$,
   createPendingRemoteDataObject$,
@@ -23,6 +23,12 @@ import { AuthService } from '../../core/auth/auth.service';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { RegistryService } from 'src/app/core/registry/registry.service';
+import { Store } from '@ngrx/store';
+import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
+import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-data.service';
+import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.service';
+import { MetadataBitstreamDataService } from 'src/app/core/data/metadata-bitstream-data.service';
+import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
@@ -34,6 +40,7 @@ describe('ItemPageComponent', () => {
   let comp: ItemPageComponent;
   let fixture: ComponentFixture<ItemPageComponent>;
   let authService: AuthService;
+  let translateService: TranslateService;
   let registryService: RegistryService;
   const authorizationService = jasmine.createSpyObj('authorizationService', [
     'isAuthorized',
@@ -48,11 +55,17 @@ describe('ItemPageComponent', () => {
     data: observableOf({ dso: createSuccessfulRemoteDataObject(mockItem) }),
   });
 
+  const mockMetadataBitstreamDataService = {
+    searchByHandleParams: () => of({}) // Returns a mock Observable
+  };
+
   beforeEach(waitForAsync(() => {
     authService = jasmine.createSpyObj('authService', {
       isAuthenticated: observableOf(true),
       setRedirectUrl: {},
     });
+
+    translateService = getMockTranslateService();
 
     TestBed.configureTestingModule({
       imports: [
@@ -72,6 +85,11 @@ describe('ItemPageComponent', () => {
         { provide: Router, useValue: {} },
         { provide: AuthService, useValue: authService },
         { provide: AuthorizationDataService, useValue: authorizationService },
+        { provide: Store, useValue: {} },
+        { provide: NotificationsService, useValue: {} },
+        { provide: MetadataSchemaDataService, useValue: {} },
+        { provide: MetadataFieldDataService, useValue: {} },
+        { provide: MetadataBitstreamDataService, useValue: mockMetadataBitstreamDataService },
         RegistryService,
       ],
 

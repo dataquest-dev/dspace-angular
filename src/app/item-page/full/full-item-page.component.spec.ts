@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { ItemDataService } from '../../core/data/item-data.service';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateLoaderMock } from '../../shared/mocks/translate-loader.mock';
 import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from '@angular/core';
 import { TruncatePipe } from '../../shared/utils/truncate.pipe';
@@ -11,7 +11,7 @@ import { ActivatedRouteStub } from '../../shared/testing/active-router.stub';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Item } from '../../core/shared/item.model';
-import { of as observableOf } from 'rxjs';
+import { of as observableOf, of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { createSuccessfulRemoteDataObject, createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
@@ -19,6 +19,12 @@ import { AuthService } from '../../core/auth/auth.service';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { RegistryService } from 'src/app/core/registry/registry.service';
+import { Store } from '@ngrx/store';
+import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
+import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.service';
+import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-data.service';
+import { MetadataBitstreamDataService } from 'src/app/core/data/metadata-bitstream-data.service';
+import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
@@ -43,7 +49,7 @@ describe('FullItemPageComponent', () => {
   let comp: FullItemPageComponent;
   let fixture: ComponentFixture<FullItemPageComponent>;
   let registryService: RegistryService;
-
+  let translateService: TranslateService;
   let authService: AuthService;
   let routeStub: ActivatedRouteStub;
   let routeData;
@@ -63,6 +69,11 @@ describe('FullItemPageComponent', () => {
       data: observableOf(routeData)
     });
 
+    const mockMetadataBitstreamDataService = {
+      searchByHandleParams: () => of({}) // Returns a mock Observable
+    };
+
+    translateService = getMockTranslateService();
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot({
         loader: {
@@ -77,6 +88,11 @@ describe('FullItemPageComponent', () => {
         { provide: MetadataService, useValue: metadataServiceStub },
         { provide: AuthService, useValue: authService },
         { provide: AuthorizationDataService, useValue: authorizationService },
+        { provide: MetadataBitstreamDataService, useValue: mockMetadataBitstreamDataService },
+        { provide: Store, useValue: {} },
+        { provide: NotificationsService, useValue: {} },
+        { provide: MetadataSchemaDataService, useValue: {} },
+        { provide: MetadataFieldDataService, useValue: {} },
         RegistryService
       ],
 
