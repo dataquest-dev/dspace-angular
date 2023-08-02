@@ -1909,7 +1909,7 @@
   "admin.registries.bitstream-formats.edit.supportLevel.label" : "Úroveň podpory",
 
   // "admin.registries.bitstream-formats.head" : "Bitstream Format Registry"
-  "admin.registries.bitstream-formats.head" : "Registr formátů souborů",
+  "admin.registries.bitstream-formats.head" : "DSpace Angular :: Registr formátů souborů",
 
   // "admin.registries.bitstream-formats.no-items" : "No bitstream formats to show."
   "admin.registries.bitstream-formats.no-items" : "Žádné bitstream formáty.",
@@ -4027,7 +4027,7 @@
   "home.search-form.placeholder" : "Hledat v repozitáři ...",
 
   // "home.title" : "Home"
-  "home.title" : "Domů",
+  "home.title" : "Domov",
 
   // "home.top-level-communities.head" : "Communities in DSpace"
   "home.top-level-communities.head" : "Komunity v Digitální knihovně",
@@ -6511,7 +6511,7 @@
   "repository.image.logo" : "Logo úložiště",
 
   // "repository.title.prefix" : "DSpace Angular ::"
-  "repository.title.prefix" : "DSpace Angular :: ",
+  "repository.title.prefix" : "DSpace Angular ::",
 
   // "repository.title.prefixDSpace" : "DSpace Angular ::"
   "repository.title.prefixDSpace" : "DSpace Angular ::",
