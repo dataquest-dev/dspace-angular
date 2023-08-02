@@ -6511,10 +6511,10 @@
   "repository.image.logo" : "Logo úložiště",
 
   // "repository.title.prefix" : "DSpace Angular ::"
-  "repository.title.prefix" : "",
+  "repository.title.prefix" : "DSpace Angular :: ",
 
   // "repository.title.prefixDSpace" : "DSpace Angular ::"
-  "repository.title.prefixDSpace" : "",
+  "repository.title.prefixDSpace" : "DSpace Angular ::",
 
   // "resource-policies.add.button" : "Add"
   "resource-policies.add.button" : "Přidat",
