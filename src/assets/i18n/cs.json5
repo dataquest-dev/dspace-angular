@@ -1909,7 +1909,7 @@
   "admin.registries.bitstream-formats.edit.supportLevel.label" : "Úroveň podpory",
 
   // "admin.registries.bitstream-formats.head" : "Bitstream Format Registry"
-  "admin.registries.bitstream-formats.head" : "DSpace Angular :: Registr formátů souborů",
+  "admin.registries.bitstream-formats.head" : "Registr formátů souborů",
 
   // "admin.registries.bitstream-formats.no-items" : "No bitstream formats to show."
   "admin.registries.bitstream-formats.no-items" : "Žádné bitstream formáty.",
@@ -1945,7 +1945,7 @@
   "admin.registries.bitstream-formats.table.supportLevel.head" : "Úroveň podpory",
 
   // "admin.registries.bitstream-formats.title" : "Bitstream Format Registry"
-  "admin.registries.bitstream-formats.title" : "Registr formátů souborů",
+  "admin.registries.bitstream-formats.title" : "DSpace Angular :: Registr formátů souborů",
 
   // "admin.registries.metadata.breadcrumbs" : "Metadata registry"
   "admin.registries.metadata.breadcrumbs" : "Registr metadat",
@@ -4021,13 +4021,13 @@
   "home.description": "",
 
   // "home.breadcrumbs" : "Home"
-  "home.breadcrumbs" : "Domů",
+  "home.breadcrumbs" : "Domov",
 
   // "home.search-form.placeholder" : "Search the repository ..."
   "home.search-form.placeholder" : "Hledat v repozitáři ...",
 
   // "home.title" : "Home"
-  "home.title" : "Domov",
+  "home.title" : "Domů",
 
   // "home.top-level-communities.head" : "Communities in DSpace"
   "home.top-level-communities.head" : "Komunity v Digitální knihovně",
