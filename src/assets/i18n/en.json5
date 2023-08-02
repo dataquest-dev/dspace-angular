@@ -3927,9 +3927,9 @@
 
   "repository.image.logo": "Repository logo",
 
-  "repository.title.prefix": "DSpace Angular :: ",
+  "repository.title.prefix": "",
 
-  "repository.title.prefixDSpace": "DSpace Angular ::",
+  "repository.title.prefixDSpace": "",
 
 
   "resource-policies.add.button": "Add",
