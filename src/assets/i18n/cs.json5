@@ -4021,7 +4021,7 @@
   "home.description": "",
 
   // "home.breadcrumbs" : "Home"
-  "home.breadcrumbs" : "Domov",
+  "home.breadcrumbs" : "Domů",
 
   // "home.search-form.placeholder" : "Search the repository ..."
   "home.search-form.placeholder" : "Hledat v repozitáři ...",
