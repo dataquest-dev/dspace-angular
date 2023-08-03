@@ -1945,7 +1945,7 @@
   "admin.registries.bitstream-formats.table.supportLevel.head" : "Úroveň podpory",
 
   // "admin.registries.bitstream-formats.title" : "Bitstream Format Registry"
-  "admin.registries.bitstream-formats.title" : "DSpace Angular :: Registr formátů souborů",
+  "admin.registries.bitstream-formats.title" : "Registr formátů souborů",
 
   // "admin.registries.metadata.breadcrumbs" : "Metadata registry"
   "admin.registries.metadata.breadcrumbs" : "Registr metadat",
@@ -6511,10 +6511,10 @@
   "repository.image.logo" : "Logo úložiště",
 
   // "repository.title.prefix" : "DSpace Angular ::"
-  "repository.title.prefix" : "DSpace Angular ::",
+  "repository.title.prefix" : "",
 
   // "repository.title.prefixDSpace" : "DSpace Angular ::"
-  "repository.title.prefixDSpace" : "DSpace Angular ::",
+  "repository.title.prefixDSpace" : "",
 
   // "resource-policies.add.button" : "Add"
   "resource-policies.add.button" : "Přidat",
