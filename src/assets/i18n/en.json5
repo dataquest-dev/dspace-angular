@@ -3927,9 +3927,9 @@
 
   "repository.image.logo": "Repository logo",
 
-  "repository.title.prefix": "",
+  "repository.title.prefix": "DSpace :: ",
 
-  "repository.title.prefixDSpace": "",
+  "repository.title.prefixDSpace": "DSpace :: ",
 
 
   "resource-policies.add.button": "Add",
