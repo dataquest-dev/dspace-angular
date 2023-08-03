@@ -24,6 +24,8 @@ services:
       DSPACE_REST_PORT: 8${INSTANCE}
       DSPACE_REST_NAMESPACE: /server
     image: ${DSPACE_UI_IMAGE:-dataquest/dspace-angular:dspace-7_x}
+    volumes:
+    - ./config.prod.yml:/app/config/config.prod.yml
     build:
       context: ..
       dockerfile: Dockerfile
