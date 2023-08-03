@@ -20,4 +20,4 @@ RUN yarn install --network-timeout 300000
 # if you have a public IP. See https://github.com/DSpace/dspace-angular/issues/1485
 RUN apk add tzdata
 RUN yarn build:prod
-CMD node dist/server/main.js
+CMD /bin/sh -c "pm2 start dspace-ui.json && pm2 logs"
