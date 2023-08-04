@@ -11,6 +11,7 @@
       <ds-listable-object-component-loader *ngIf="!item.isWithdrawn || (isAdmin$|async)" [object]="item" [viewMode]="viewMode"></ds-listable-object-component-loader>
       <ds-item-versions class="mt-2" [item]="item" [displayActions]="false"></ds-item-versions>
       <ds-clarin-license-info class="mt-3 d-block" [item]="item"></ds-clarin-license-info>
+      <ds-preview-section [item]="item"></ds-preview-section>
     </div>
   </div>
   <ds-error *ngIf="itemRD?.hasFailed" message="{{'error.item' | translate}}"></ds-error>

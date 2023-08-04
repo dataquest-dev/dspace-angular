@@ -16,6 +16,7 @@ import {
   ItemPageAbstractFieldComponent
 } from './simple/field-components/specific-field/abstract/item-page-abstract-field.component';
 import { ItemPageUriFieldComponent } from './simple/field-components/specific-field/uri/item-page-uri-field.component';
+import { ItemPageTitleFieldComponent } from './simple/field-components/specific-field/title/item-page-title-field.component';
 import { ItemPageFieldComponent } from './simple/field-components/specific-field/item-page-field.component';
 import { CollectionsComponent } from './field-components/collections/collections.component';
 import { FullItemPageComponent } from './full/full-item-page.component';
@@ -68,11 +69,14 @@ import { FileSectionComponent } from './simple/field-components/file-section/fil
 import { ItemSharedModule } from './item-shared.module';
 import { DsoPageModule } from '../shared/dso-page/dso-page.module';
 
+import { FileDescriptionComponent } from './simple/field-components/preview-section/file-description/file-description.component';
+import { FileTreeViewComponent } from './simple/field-components/preview-section/file-description/file-tree-view/file-tree-view.component';
+import { PreviewSectionComponent } from './simple/field-components/preview-section/preview-section.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
   PublicationComponent,
-  UntypedItemComponent
+  UntypedItemComponent,
 ];
 
 const DECLARATIONS = [
@@ -118,7 +122,10 @@ const DECLARATIONS = [
   ClarinStatisticsButtonComponent,
   ClarinGenericItemFieldComponent,
   ClarinCollectionsItemFieldComponent,
-  ClarinFilesItemFieldComponent
+  ClarinFilesItemFieldComponent,
+  PreviewSectionComponent,
+  FileDescriptionComponent,
+  FileTreeViewComponent,
 ];
 
 @NgModule({

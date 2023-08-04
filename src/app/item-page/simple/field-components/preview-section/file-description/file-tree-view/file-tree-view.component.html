@@ -1,0 +1,24 @@
+<li>
+  <span class="foldername collapse show" *ngIf="node.isDirectory; else fileTemplate">
+    <a role="button" data-toggle="collapse" href="#folder_{{ node.name }}">
+      {{ node.name }}
+    </a>
+  </span>
+
+  <ng-template #fileTemplate>
+    <span class="filename">{{ node.name }}</span
+    ><span class="size pull-right">{{ node.size }}</span>
+  </ng-template>
+
+  <ul
+    id="folder_{{ node.name }}"
+    class="in collapse show"
+    style="height: auto"
+    *ngIf="node.isDirectory && node.sub"
+  >
+    <ds-file-tree-view
+      *ngFor="let subNodeKey of getKeys(node.sub)"
+      [node]="node.sub[subNodeKey]"
+    ></ds-file-tree-view>
+  </ul>
+</li>
