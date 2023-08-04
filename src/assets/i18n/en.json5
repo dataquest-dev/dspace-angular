@@ -897,6 +897,17 @@
 
   "claimed-declined-task-search-result-list-element.title": "Declined, sent back to Review Manager's workflow",
 
+  "contact-us.breadcrumbs": "Contact Us",
+
+  "contact-us.title": "Contact Us",
+
+  "contact-us.description": "DSpace@TUL administrators may be contacted at:",
+
+  "contact-us.form": "On-line form: ",
+
+  "contact-us.feedback": "Feedback",
+
+  "contact-us.email": "Email: ",
 
   "collection.create.head": "Create a Collection",
 
@@ -1675,6 +1686,8 @@
 
   "footer.link.feedback":"Send Feedback",
 
+  "footer.link.contact-us":"Contact us",
+
 
 
   "forgot-email.form.header": "Forgot Password",
@@ -1874,7 +1887,7 @@
   "health-page.section.no-issues": "No issues detected",
 
 
-  "home.description": "",
+  "home.description": "DSpace is a digital service that collects, preserves, and distributes digital material. Repositories are important tools for preserving an organization's legacy; they facilitate digital preservation and scholarly communication.",
 
   "home.breadcrumbs": "Home",
 
@@ -1995,8 +2008,6 @@
   "handle-table.button.delete-handle": "Delete handle",
 
   "handle-table.dropdown.search-option": "Search option",
-
-  "handle-table.dropdown.search-button": "Search",
 
 
 
@@ -2758,11 +2769,6 @@
   "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
 
 
-  "item.view.box.author.message": "Author(s):",
-
-  "item.view.box.files.message": ["This item contains", "files"],
-
-  "item.view.box.no-files.message": "This item contains no files.",
 
 
   "item.select.confirm": "Confirm selected",
@@ -3125,11 +3131,6 @@
   "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
 
   "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
-
-  "clarin.auth-failed.duplicate-user.header.message": "Authentication Failed",
-
-  "clarin.auth-failed.duplicate-user.error.message": ["Your email", "is already associated with a different user. It is also possible that you used a different identity provider to before. For more information please contact our", "Help Desk"],
-
 
 
   "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
@@ -3926,9 +3927,9 @@
 
   "repository.image.logo": "Repository logo",
 
-  "repository.title.prefix": "DSpace Angular :: ",
+  "repository.title.prefix": "DSpace :: ",
 
-  "repository.title.prefixDSpace": "DSpace Angular ::",
+  "repository.title.prefixDSpace": "DSpace :: ",
 
 
   "resource-policies.add.button": "Add",
@@ -5774,4 +5775,32 @@
   "admin.system-wide-alert.breadcrumbs": "System-wide Alerts",
 
   "admin.system-wide-alert.title": "System-wide Alerts",
+
+
+
+  "navbar.repository": "Repository",
+
+  "navbar.community-list": "Catalogue",
+
+  "navbar.education": "Education",
+
+  "navbar.project": "Projects",
+
+  "navbar.tools": "Tools",
+
+  "navbar.services": "Services",
+
+  "navbar.about": "About",
+
+  "navbar.about.partners": "Partners",
+
+  "navbar.about.mission-statement": "Mission Statement",
+
+  "navbar.about.clarin": "CLARIN",
+
+  "navbar.about.dariah": "DARIAH",
+
+  "navbar.about.service-integrations": "Service integrations",
+
+  "navbar.about.project-partnership": "Project partnerships"
 }
