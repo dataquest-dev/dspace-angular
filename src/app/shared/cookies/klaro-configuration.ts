@@ -23,6 +23,7 @@ export const klaroConfiguration: any = {
   storageName: ANONYMOUS_STORAGE_NAME_KLARO,
 
   privacyPolicy: '/info/privacy',
+
   /*
   Setting 'hideLearnMore' to 'true' will hide the "learn more / customize" link in
   the consent notice. We strongly advise against using this under most
