@@ -4,7 +4,7 @@
            "name": "dspace-ui",
            "cwd": "/app",
            "script": "dist/server/main.js",
-           "instances": "3",
+           "instances": "7",
            "exec_mode": "cluster",
            "node_args": "--max_old_space_size=4096",
            "env": {
