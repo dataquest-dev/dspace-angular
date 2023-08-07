@@ -10,9 +10,6 @@ import {
   ItemPageAuthorFieldComponent
 } from './simple/field-components/specific-field/author/item-page-author-field.component';
 import {
-  ItemPageCitationFieldComponent
-} from './simple/field-components/specific-field/citation/item-page-citation.component';
-import {
   ItemPageDateFieldComponent
 } from './simple/field-components/specific-field/date/item-page-date-field.component';
 import {
@@ -87,7 +84,6 @@ const DECLARATIONS = [
   ThemedFullItemPageComponent,
   MetadataUriValuesComponent,
   ItemPageAuthorFieldComponent,
-  ItemPageCitationFieldComponent,
   ItemPageDateFieldComponent,
   ItemPageAbstractFieldComponent,
   ItemPageUriFieldComponent,

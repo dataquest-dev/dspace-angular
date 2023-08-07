@@ -263,7 +263,7 @@ export class DefaultAppConfig implements AppConfig {
       sortField: 'dc.date.accessioned',
     },
     topLevelCommunityList: {
-      pageSize: 15
+      pageSize: 5
     }
   };
 

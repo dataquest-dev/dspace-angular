@@ -120,14 +120,12 @@ describe('New Submission page', () => {
         // cy.get('input#granted').check( {force: true} );
         // CLARIN
         createItemProcess.clickOnDistributionLicenseToggle();
-
-        // CLARIN license step is commented out for the TUL customer
-        // // click on the dropdown button to list options
-        // createItemProcess.clickOnLicenseSelectionButton();
-        // // select `Public Domain Mark (PD)` from the selection
-        // createItemProcess.selectValueFromLicenseSelection(2);
-        // // // selected value should be seen as selected value in the selection
-        // createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
+        // click on the dropdown button to list options
+        createItemProcess.clickOnLicenseSelectionButton();
+        // select `Public Domain Mark (PD)` from the selection
+        createItemProcess.selectValueFromLicenseSelection(2);
+        // // selected value should be seen as selected value in the selection
+        createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
         // CLARIN
 
         // Before using Cypress drag & drop, we have to manually trigger the "dragover" event.

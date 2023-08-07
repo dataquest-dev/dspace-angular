@@ -1,6 +1,3 @@
-.nav-item-button{
-  color: white;
-}
 .loginDropdownMenu, .logoutDropdownMenu {
   min-width: 330px;
   z-index: 1002;
@@ -16,12 +13,9 @@
 }
 
 .dropdown-toggle {
-  font-size: 0.85rem;
   color: var(--ds-header-icon-color);
 
   &:hover, &:focus {
     color: var(--ds-header-icon-color-hover);
-    color: #d4d5d6 !important;
-    background: rgba(0,0,0,0.5);
   }
 }

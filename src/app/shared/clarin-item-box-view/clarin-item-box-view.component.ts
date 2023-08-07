@@ -97,7 +97,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
   /**
    * Current License Label icon as byte array.
    */
-  licenseLabelIcons: any[] = [];
+  licenseLabelIcons: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   constructor(protected collectionService: CollectionDataService,
               protected bundleService: BundleDataService,
@@ -200,11 +200,11 @@ export class ClarinItemBoxViewComponent implements OnInit {
         getFirstCompletedRemoteData(),
         switchMap((clList: RemoteData<PaginatedList<ClarinLicense>>) => clList?.payload?.page))
       .subscribe(clarinLicense => {
+        let iconsList = [];
         clarinLicense.extendedClarinLicenseLabels.forEach(extendedCll => {
-          this.licenseLabelIcons.push(extendedCll?.icon);
+          iconsList.push(extendedCll?.icon);
         });
-        // For now show only extended CLL icons
-        // this.licenseLabelIcons.push(clarinLicense?.clarinLicenseLabel?.icon);
+        this.licenseLabelIcons.next(iconsList);
       });
   }
 

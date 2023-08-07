@@ -1,38 +1,38 @@
 nav.navbar {
-  border-bottom: 1px var(--ds-header-navbar-border-bottom-color) solid;
-  align-items: baseline;
-  background-color: var(--lt-tul-purple);
+    border-bottom: 1px var(--ds-header-navbar-border-bottom-color) solid;
+    align-items: baseline;
 }
 
 /** Mobile menu styling **/
 @media screen and (max-width: map-get($grid-breakpoints, md)-0.02) {
-  .navbar {
-    width: 100%;
-    position: absolute;
-    overflow: hidden;
-    height: 0;
-    &.open {
-      height: auto;
-      min-height: 100vh; //doesn't matter because wrapper is sticky
+    .navbar {
+        width: 100%;
+        background-color: var(--bs-white);
+        position: absolute;
+        overflow: hidden;
+        height: 0;
+        &.open {
+          height: auto;
+          min-height: 100vh; //doesn't matter because wrapper is sticky
+        }
     }
-  }
 }
 
 @media screen and (min-width: map-get($grid-breakpoints, md)) {
-  .reset-padding-md {
-    margin-left: calc(var(--bs-spacer) / -2);
-    margin-right: calc(var(--bs-spacer) / -2);
-  }
+    .reset-padding-md {
+        margin-left: calc(var(--bs-spacer) / -2);
+        margin-right: calc(var(--bs-spacer) / -2);
+    }
 }
 
 /* TODO remove when https://github.com/twbs/bootstrap/issues/24726 is fixed */
 .navbar-expand-md.navbar-container {
-  @media screen and (max-width: map-get($grid-breakpoints, md)-0.02) {
-    > .navbar-inner-container {
-      padding: 0 var(--bs-spacer);
+    @media screen and (max-width: map-get($grid-breakpoints, md)-0.02) {
+        > .navbar-inner-container {
+            padding: 0 var(--bs-spacer);
+        }
+        padding: 0;
     }
-    padding: 0;
-  }
 }
 
 .navbar-nav {

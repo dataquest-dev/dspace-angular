@@ -20,7 +20,9 @@ import { AuthTokenInfo } from '../../core/auth/models/auth-token-info.model';
 import { isEmpty } from '../../shared/empty.util';
 import { CoreState } from 'src/app/core/core-state.model';
 import { hasSucceeded } from 'src/app/core/data/request-entry-state.model';
-import {FindListOptions} from '../../core/data/find-list-options.model';
+import { FindListOptions } from '../../core/data/find-list-options.model';
+import { getBaseUrl } from '../../shared/clarin-shared-util';
+import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
 
 /**
  * This component is showed up when the user has clicked on the `verification token`.
@@ -55,6 +57,11 @@ export class AutoregistrationComponent implements OnInit {
    */
   shibHeaders$: BehaviorSubject<ShibHeader[]> = new BehaviorSubject<ShibHeader[]>(null);
 
+  /**
+   * UI URL loaded from the server.
+   */
+  baseUrl = '';
+
   constructor(protected router: Router,
     public route: ActivatedRoute,
     private requestService: RequestService,
@@ -67,13 +74,14 @@ export class AutoregistrationComponent implements OnInit {
     private store: Store<CoreState>
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Retrieve the token from the request param
     this.verificationToken = this.route?.snapshot?.queryParams?.['verification-token'];
     // Load the repository name for the welcome message
     this.loadRepositoryName();
     // Load the `ClarinVerificationToken` based on the `verificationToken` value
     this.loadVerificationToken();
+    await this.assignBaseUrl();
   }
 
   /**
@@ -224,6 +232,13 @@ export class AutoregistrationComponent implements OnInit {
       .pipe(getFirstCompletedRemoteData())
       .subscribe(res => {
         this.dspaceName$.next(res?.payload?.values?.[0]);
+      });
+  }
+
+  async assignBaseUrl() {
+    this.baseUrl = await getBaseUrl(this.configurationService)
+      .then((baseUrlResponse: ConfigurationProperty) => {
+        return baseUrlResponse?.values?.[0];
       });
   }
 }

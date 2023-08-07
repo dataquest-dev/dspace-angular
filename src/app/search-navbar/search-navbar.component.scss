@@ -14,7 +14,7 @@ a.submit-icon {
 
   color: var(--ds-header-icon-color);
   &:hover, &:focus {
-    background: var(--ds-header-bg-color-hover);
+    color: var(--ds-header-icon-color-hover);
   }
 }
 

@@ -1,18 +1,13 @@
-@font-face {
-  font-family: 'TUL Mono';
-  src: url('/assets/fonts/TULMono-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
 nav.navbar {
-  background: var(--lt-tul-purple);
-  font-size: 0.85rem;
-  font-family: 'TUL Mono', sans-serif;
   border-top: 1px var(--ds-header-navbar-border-top-color) solid;
-  //border-bottom: 5px var(--ds-header-navbar-border-bottom-color) solid;
+  border-bottom: 5px var(--ds-header-navbar-border-bottom-color) solid;
   align-items: baseline;
   color: var(--ds-header-icon-color);
+}
+
+.clarin-logo {
+  height: var(--ds-login-logo-height);
+  width: var(--ds-login-logo-width);
 }
 
 /** Mobile menu styling **/
@@ -54,26 +49,14 @@ nav.navbar {
 }
 
 a.navbar-brand img {
-  width: 7rem;
-  display: block;
   max-height: var(--ds-header-logo-height);
 }
 
-
-a.navbar-brand:hover {
-  background: var(--ds-header-bg-color-hover);
-}
-
 .navbar-nav {
-  font-size: 0.85rem;
   ::ng-deep a.nav-link {
     color: var(--ds-navbar-link-color);
-    padding: 0;
-    margin-left: 8px;
-    margin-right: 8px;
   }
   ::ng-deep a.nav-link:hover {
-    color: #d4d5d6 !important;
-    background: var(--ds-header-bg-color-hover);
+    color: var(--ds-navbar-link-color-hover);
   }
 }

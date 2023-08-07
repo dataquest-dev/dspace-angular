@@ -12,12 +12,12 @@ import { ClarinUserRegistration } from '../../shared/clarin/clarin-user-registra
 import { BaseDataService } from '../base/base-data.service';
 import { dataService } from '../base/data-service.decorator';
 import { CoreState } from '../../core-state.model';
-import {SearchData} from '../base/search-data';
-import {FindListOptions} from '../find-list-options.model';
-import {FollowLinkConfig} from '../../../shared/utils/follow-link-config.model';
-import {Observable} from 'rxjs';
-import {RemoteData} from '../remote-data';
-import {PaginatedList} from '../paginated-list.model';
+import { SearchData, SearchDataImpl } from '../base/search-data';
+import { FindListOptions } from '../find-list-options.model';
+import { FollowLinkConfig } from '../../../shared/utils/follow-link-config.model';
+import { Observable } from 'rxjs';
+import { RemoteData } from '../remote-data';
+import { PaginatedList } from '../paginated-list.model';
 
 export const linkName = 'clarinuserregistrations';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -42,6 +42,7 @@ export class ClarinUserRegistrationDataService extends BaseDataService<ClarinUse
     protected notificationsService: NotificationsService,
   ) {
     super(linkName, requestService, rdbService, objectCache, halService, undefined);
+    this.searchData = new SearchDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
   }
 
   searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<ClarinUserRegistration>[]): Observable<RemoteData<PaginatedList<ClarinUserRegistration>>> {

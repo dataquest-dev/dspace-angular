@@ -6,6 +6,10 @@
 # http://www.dspace.org/license/
 #
 
+# Docker Compose for running the DSpace backend for testing/development
+# This is based heavily on the docker-compose.yml that is available in the DSpace/DSpace
+# (Backend) at:
+# https://github.com/DSpace/DSpace/blob/main/docker-compose.yml
 version: '3.7'
 networks:
   dspacenet:
@@ -38,6 +42,8 @@ services:
       assetstore__P__s3__P__awsAccessKey: ${S3_ACCESS:-}
       assetstore__P__s3__P__awsSecretKey: ${S3_SECRET:-}
       assetstore__P__s3__P__awsRegionName: ${S3_REGION_NAME:-}
+      assetstore__P__s3__P__pathStyleAccessEnabled: ${S3_PATH_STYLE_ACCESS:-false}
+      assetstore__P__s3__P__endpoint: ${S3_ENDPOINT:-}
     image: ${DSPACE_REST_IMAGE:-dataquest/dspace:dtq-dev-7.5}
     depends_on:
     - dspacedb

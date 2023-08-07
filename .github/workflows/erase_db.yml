@@ -5,8 +5,8 @@ on:
 
 jobs:
   restart_db:
-    env: 
-      INSTANCE: 6
+    env:
+      INSTANCE: 5
     runs-on: dspace-dep-1
     steps:
       - uses: actions/checkout@v3
@@ -23,5 +23,5 @@ jobs:
       - name: redeploy
         if: '!cancelled()'
         run: |
-          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}" --request POST https://api.github.com/repos/dataquest-dev/dspace-angular/actions/workflows/deploy.yml/dispatches --data "{\"ref\":\"refs/heads/customer/TUL\"}"
-          
+          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}" --request POST https://api.github.com/repos/dataquest-dev/dspace-angular/actions/workflows/deploy.yml/dispatches --data "{\"ref\":\"refs/heads/dtq-dev\"}"
+

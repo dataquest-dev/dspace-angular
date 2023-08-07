@@ -91,7 +91,7 @@ describe('DsoEditMenuSectionComponent', () => {
     });
 
     it('should show a button with the icon', () => {
-      const button = fixture.debugElement.query(By.css('.btn-primary'));
+      const button = fixture.debugElement.query(By.css('.btn-dark'));
       expect(button.nativeElement.innerHTML).toContain('fa-' + iconString);
     });
     describe('when the section model in a disabled link or text', () => {
@@ -115,7 +115,7 @@ describe('DsoEditMenuSectionComponent', () => {
       it('should call the activate method when clicking the button', () => {
         spyOn(component, 'activate');
 
-        const button = fixture.debugElement.query(By.css('.btn-primary'));
+        const button = fixture.debugElement.query(By.css('.btn-dark'));
         button.triggerEventHandler('click', null);
 
         expect(component.activate).toHaveBeenCalled();
