@@ -9,9 +9,9 @@ import { environment } from '../../../../../../environments/environment';
 import { APP_CONFIG } from '../../../../../../config/app-config.interface';
 import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-definition-data.service';
 import { BrowseDefinitionDataServiceStub } from '../../../../../shared/testing/browse-definition-data-service.stub';
-import {ConfigurationDataService} from '../../../../../core/data/configuration-data.service';
-import {createSuccessfulRemoteDataObject$} from '../../../../../shared/remote-data.utils';
-import {ConfigurationProperty} from '../../../../../core/shared/configuration-property.model';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { createSuccessfulRemoteDataObject$ } from '../../../../../shared/remote-data.utils';
+import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
 
 let comp: ItemPageUriFieldComponent;
 let fixture: ComponentFixture<ItemPageUriFieldComponent>;
