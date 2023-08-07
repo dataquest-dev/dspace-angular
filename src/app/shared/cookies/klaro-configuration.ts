@@ -33,7 +33,7 @@ export const klaroConfiguration: any = {
   /*
   Override cookies modal styles according to customer TUL requirements.
    */
-  stylePrefix: 'klaro tul-cookies',
+  stylePrefix: 'klaro customer-cookies',
 
   /*
   Setting 'acceptAll' to 'true' will show an "accept all" button in the notice and

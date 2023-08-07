@@ -6,14 +6,9 @@ $sidebar-items-width: 250px !default;
 $total-sidebar-width: $collapsed-sidebar-width + $sidebar-items-width !default;
 
 /* Fonts */
-// Starting this url with a caret (^) allows it to be a relative path based on UI's deployment path
-// See https://github.com/angular/angular-cli/issues/12797#issuecomment-598534241
-$fa-font-path: "^assets/fonts" !default;
+$fa-font-path: "/assets/fonts" !default;
 /* Images */
 $image-path: "../assets/images" !default;
-
-// enable-responsive-font-sizes allows text to scale more naturally across device and viewport sizes
-$enable-responsive-font-sizes: true;
 
 /** Bootstrap Variables **/
 /* Colors */
@@ -27,7 +22,6 @@ $cyan:   #006666 !default;
 $yellow: #ec9433 !default;
 $red:    #CF4444 !default;
 $dark:   darken($blue, 17%) !default;
-$tul-purple: #5948AD;
 
 $theme-colors: (
         primary: $blue,
@@ -40,7 +34,7 @@ $theme-colors: (
         dark: $dark
 ) !default;
 /* Fonts */
-$link-color: $tul-purple !default;
+$link-color: map-get($theme-colors, info) !default;
 
 $navbar-dark-color: rgba(white, .5) !default;
 $navbar-light-color: rgba(black, .5) !default;

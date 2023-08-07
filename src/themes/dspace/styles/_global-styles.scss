@@ -22,27 +22,18 @@
     font-size: 1.1rem
   }
 }
-
 .btn-secondary {
-  background-color: var(--lt-tul-purple) !important;
+  background-color: var(--lt-clarin-purple) !important;
 }
 
 .btn-success {
-  background-color: var(--lt-tul-purple) !important;
+  background-color: var(--lt-clarin-purple) !important;
 }
 
-.btn-danger, .btn-success, .btn-warning, .btn-info, .btn-primary, .btn-outline-secondary, .btn-secondary, .btn-dark {
-  background-color: var(--lt-tul-purple) !important;
-  border: none;
+.btn-danger, .btn-success, .btn-warning, .btn-info, .btn-primary, .btn-outline-secondary, .btn-secondary {
+  background-color: var(--lt-clarin-purple) !important;
+  border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25) !important;
   color: white !important;
-}
-
-.btn-primary:focus,.btn-danger:focus, .btn-success:focus, .btn-warning:focus, .btn-info:focus, .btn-primary:focus, .btn-outline-secondary:focus, .btn-secondary:focus, .btn-dark:focus {
-  box-shadow: none !important;
-}
-
-.btn-primary:hover,.btn-danger:hover, .btn-success:hover, .btn-warning:hover, .btn-info:hover, .btn-primary:hover, .btn-outline-secondary:hover, .btn-secondary:hover, .btn-dark:hover {
-  box-shadow: 0 0 0 0.2rem var(--lt-tul-purple) !important;
 }
 
 .alert-warning {
@@ -69,4 +60,14 @@
   cursor: default !important;
   background-color: #428bca !important;
   border-color: #428bca !important;
+}
+
+header {
+  li > .navbar-section,
+  li > .expandable-navbar-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
 }
