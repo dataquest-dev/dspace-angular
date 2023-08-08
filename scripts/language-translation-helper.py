@@ -1,5 +1,4 @@
-## This script helps me to find out which messages should be translated. `en.json5` to `cs.json5`
-## I know this script is really ugly - it's only for internal purposes, but it could help you.
+## This script could help to find out which messages should be translated. `en.json5` to `cs.json5`.
 import csv
 import json5
 
