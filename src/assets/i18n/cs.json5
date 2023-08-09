@@ -1702,7 +1702,7 @@
   "system-wide-alert-banner.retrieval.error" : "Při načítání celosystémového výstražného banneru došlo k chybě.",
 
   // "system-wide-alert-banner.countdown.prefix" : "In"
-  "system-wide-alert-banner.countdown.prefix" : "Na adrese",
+  "system-wide-alert-banner.countdown.prefix" : "Za",
 
   // "system-wide-alert-banner.countdown.days" : "{{days}} day(s),"
   "system-wide-alert-banner.countdown.days" : "{{days}} den(y),",
