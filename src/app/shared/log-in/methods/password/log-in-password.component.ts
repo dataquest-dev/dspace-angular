@@ -10,7 +10,7 @@ import {
 } from '../../../../core/auth/auth.actions';
 
 import { getAuthenticationError, getAuthenticationInfo, } from '../../../../core/auth/selectors';
-import { isNotEmpty, isNotNull } from '../../../empty.util';
+import { isNotEmpty } from '../../../empty.util';
 import { fadeOut } from '../../../animations/fade';
 import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
 import { renderAuthMethodFor } from '../log-in.methods-decorator';
@@ -22,6 +22,7 @@ import { ActivatedRoute , Router} from '@angular/router';
 import { getBaseUrl } from '../../../clarin-shared-util';
 import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
+import {ScriptLoaderService} from '../../../../clarin-navbar-top/script-loader-service';
 
 /**
  * /users/sign-in
@@ -104,6 +105,7 @@ export class LogInPasswordComponent implements OnInit {
     private route: ActivatedRoute,
     protected router: Router,
     protected configurationService: ConfigurationDataService,
+    private scriptLoader: ScriptLoaderService,
   ) {
     this.authMethod = injectedAuthMethodModel;
   }
@@ -140,10 +142,27 @@ export class LogInPasswordComponent implements OnInit {
     // Load `dspace.ui.url` into `baseUrl` property.
     await this.assignBaseUrl();
 
+    // At first load DiscoJuice, second AAI and at last AAIConfig
+    this.loadDiscoJuice().then(() => {
+      this.loadAAI().then(() => {
+        this.loadAAIConfig().catch(error => console.log(error));
+      }).catch(error => console.log(error));
+    }).catch(error => console.log(error));
+
     // Store the `redirectUrl` value from the url and then remove that value from url.
-    if (isNotNull(this.route.snapshot.queryParams?.redirectUrl)) {
+    if (isNotEmpty(this.route.snapshot.queryParams?.redirectUrl)) {
+      console.log('this.redirectUrl', this.redirectUrl);
       this.redirectUrl = this.route.snapshot.queryParams?.redirectUrl;
       void this.router.navigate([LOGIN_ROUTE]);
+    } else {
+      // Pop up discojuice login.
+      console.log('document',document.getElementById('clarin-signon-discojuice'));
+      // document.getElementsByClassName('signon').item(0).firstElementChild.parentElement.click();
+      // document.querySelector('.signon').click();
+      setTimeout(() => {
+        // click to refresh table data because without click it still shows wrong data
+        document.getElementById('clarin-signon-discojuice').click();
+      }, 250);
     }
   }
 
@@ -196,5 +215,17 @@ export class LogInPasswordComponent implements OnInit {
         return baseUrlResponse?.values?.[0];
       });
   }
+
+  private loadDiscoJuice = (): Promise<any> => {
+    return this.scriptLoader.load('discojuice');
+  };
+
+  private loadAAI = (): Promise<any> => {
+    return this.scriptLoader.load('aai');
+  };
+
+  private loadAAIConfig = (): Promise<any> => {
+    return this.scriptLoader.load('aaiConfig');
+  };
 
 }
