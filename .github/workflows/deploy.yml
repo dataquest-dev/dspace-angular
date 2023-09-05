@@ -26,6 +26,7 @@ jobs:
           ## echo NODE_ENV="development" >> .env.dev-5
           echo DSPACE_UI_IMAGE="dataquest/dspace-angular:dspace-7_x" >> .env.dev-5
           echo DSPACE_VER="dspace-7_x" >> .env.dev-5
+
           echo INSTANCE=5 >> .env.dev-5
 
           echo S3_STORAGE=1 >> .env.dev-5
