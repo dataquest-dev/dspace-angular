@@ -10,7 +10,7 @@ import {
 } from '../../../../core/auth/auth.actions';
 
 import { getAuthenticationError, getAuthenticationInfo, } from '../../../../core/auth/selectors';
-import { isNotEmpty } from '../../../empty.util';
+import { isNotEmpty, isNotNull } from '../../../empty.util';
 import { fadeOut } from '../../../animations/fade';
 import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
 import { renderAuthMethodFor } from '../log-in.methods-decorator';
@@ -210,5 +210,4 @@ export class LogInPasswordComponent implements OnInit {
       document?.getElementById('clarin-signon-discojuice')?.click();
     }, 250);
   }
-
 }
