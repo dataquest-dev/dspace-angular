@@ -208,7 +208,7 @@ export class LogInPasswordComponent implements OnInit {
   private popUpDiscoJuiceLogin() {
     setTimeout(() => {
       document?.getElementById('clarin-signon-discojuice')?.click();
-    });
+    }, 250);
   }
 
 }
