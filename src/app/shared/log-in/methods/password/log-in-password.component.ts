@@ -103,7 +103,7 @@ export class LogInPasswordComponent implements OnInit {
     private store: Store<CoreState>,
     private route: ActivatedRoute,
     protected router: Router,
-    protected configurationService: ConfigurationDataService
+    protected configurationService: ConfigurationDataService,
   ) {
     this.authMethod = injectedAuthMethodModel;
   }
