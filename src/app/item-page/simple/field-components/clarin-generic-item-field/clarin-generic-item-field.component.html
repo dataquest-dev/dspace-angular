@@ -12,7 +12,7 @@
         <a *ngIf="type === 'hyperlink'" [href]="mdValue.value">{{mdValue.value}}</a>
         <span *ngIf="type === 'search'">
           <a [href]="getLinkToSearch(i)">{{mdValue.value}}</a>
-          <span *ngIf="!last" [innerHTML]="separator" class="pr-1"></span>
+          <span *ngIf="!last" [innerHTML]="separator" class="pr-1">,</span>
         </span>
         <span *ngIf="type === 'subject'">
           <a class="badge badge-info text-white cursor-pointer mr-1"
