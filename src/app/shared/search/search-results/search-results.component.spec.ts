@@ -61,35 +61,37 @@ describe('SearchResultsComponent', () => {
     expect(fixture.debugElement.query(By.css('ds-error'))).not.toBeNull();
   });
 
-  it('should display link with new search where query is quoted if search return a error 400', () => {
-    (comp as any).searchResults = createFailedRemoteDataObject('Error', 400);
-    (comp as any).searchConfig = { query: 'foobar' };
-    fixture.detectChanges();
+  // TUL customer doesn't want this feature.
+  // it('should display link with new search where query is quoted if search return a error 400', () => {
+  //   (comp as any).searchResults = createFailedRemoteDataObject('Error', 400);
+  //   (comp as any).searchConfig = { query: 'foobar' };
+  //   fixture.detectChanges();
+  //
+  //   const linkDes = fixture.debugElement.queryAll(By.directive(QueryParamsDirectiveStub));
+  //
+  //   // get attached link directive instances
+  //   // using each DebugElement's injector
+  //   const routerLinkQuery = linkDes.map((de) => de.injector.get(QueryParamsDirectiveStub));
+  //
+  //   expect(routerLinkQuery.length).toBe(1, 'should have 1 router link with query params');
+  //   expect(routerLinkQuery[0].queryParams.query).toBe('"foobar"', 'query params should be "foobar"');
+  // });
 
-    const linkDes = fixture.debugElement.queryAll(By.directive(QueryParamsDirectiveStub));
-
-    // get attached link directive instances
-    // using each DebugElement's injector
-    const routerLinkQuery = linkDes.map((de) => de.injector.get(QueryParamsDirectiveStub));
-
-    expect(routerLinkQuery.length).toBe(1, 'should have 1 router link with query params');
-    expect(routerLinkQuery[0].queryParams.query).toBe('"foobar"', 'query params should be "foobar"');
-  });
-
-  it('should display link with new search where query is quoted if search result is empty', () => {
-    (comp as any).searchResults = { payload: { page: { length: 0 } } };
-    (comp as any).searchConfig = { query: 'foobar' };
-    fixture.detectChanges();
-
-    const linkDes = fixture.debugElement.queryAll(By.directive(QueryParamsDirectiveStub));
-
-    // get attached link directive instances
-    // using each DebugElement's injector
-    const routerLinkQuery = linkDes.map((de) => de.injector.get(QueryParamsDirectiveStub));
-
-    expect(routerLinkQuery.length).toBe(1, 'should have 1 router link with query params');
-    expect(routerLinkQuery[0].queryParams.query).toBe('"foobar"', 'query params should be "foobar"');
-  });
+  // TUL customer doesn't want this feature.
+  // it('should display link with new search where query is quoted if search result is empty', () => {
+  //   (comp as any).searchResults = { payload: { page: { length: 0 } } };
+  //   (comp as any).searchConfig = { query: 'foobar' };
+  //   fixture.detectChanges();
+  //
+  //   const linkDes = fixture.debugElement.queryAll(By.directive(QueryParamsDirectiveStub));
+  //
+  //   // get attached link directive instances
+  //   // using each DebugElement's injector
+  //   const routerLinkQuery = linkDes.map((de) => de.injector.get(QueryParamsDirectiveStub));
+  //
+  //   expect(routerLinkQuery.length).toBe(1, 'should have 1 router link with query params');
+  //   expect(routerLinkQuery[0].queryParams.query).toBe('"foobar"', 'query params should be "foobar"');
+  // });
 
   it('should add quotes around the given string', () => {
     expect(comp.surroundStringWithQuotes('teststring')).toEqual('"teststring"');

@@ -69,6 +69,14 @@
       [fields]="['dc.identifier.uri', 'dc.identifier.doi']"
       [label]="'item.page.uri'">
     </ds-item-page-uri-field>
+    <ds-generic-item-page-field [item]="object"
+                                [fields]="['dc.identifier.issn']"
+                                [label]="'item.preview.dc.relation.issn'">
+    </ds-generic-item-page-field>
+    <ds-generic-item-page-field [item]="object"
+                                [fields]="['dc.identifier.isbn']"
+                                [label]="'item.preview.dc.identifier.isbn'">
+    </ds-generic-item-page-field>
     <ds-item-page-collections [item]="object"></ds-item-page-collections>
     <div>
       <a class="btn btn-primary" [routerLink]="[itemPageRoute + '/full']" role="button">

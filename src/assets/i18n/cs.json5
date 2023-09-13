@@ -5077,7 +5077,7 @@
   "item.preview.oaire.awardNumber" : "ID financování:",
 
   // "item.preview.dc.title.alternative" : "Acronym:"
-  "item.preview.dc.title.alternative" : "Zkratka:",
+  "item.preview.dc.title.alternative" : "Alternativní název:",
 
   // "item.preview.dc.coverage.spatial" : "Jurisdiction:"
   "item.preview.dc.coverage.spatial" : "Příslušnost:",
@@ -7108,7 +7108,7 @@
   "search.results.head" : "Výsledky hledání",
 
   // "search.results.no-results" : "Your search returned no results. Having trouble finding what you're looking for? Try putting"
-  "search.results.no-results" : "Nebyli nalezeny žádné výsledky, kolem hledaného textu skuste ",
+  "search.results.no-results" : "Nebyly nalezeny žádné výsledky, zkuste dotaz přeformulovat.",
 
   // "search.results.no-results-link" : "quotes around it"
   "search.results.no-results-link" : "vložit citace",
