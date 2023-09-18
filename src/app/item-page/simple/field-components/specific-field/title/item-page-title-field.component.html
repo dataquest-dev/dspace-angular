@@ -4,7 +4,7 @@
   </div>
   <span class="dont-break-out">{{ dsoNameService.getName(item) }}</span>
 </h2>
-<h6>
+<h6 *ngIf="item.firstMetadataValue('dc.title.alternative')">
   <span><b>{{ 'item.preview.dc.title.alternative' | translate }}</b></span>
   <span class="dont-break-out pl-1">{{item.firstMetadataValue('dc.title.alternative')}}</span>
 </h6>
