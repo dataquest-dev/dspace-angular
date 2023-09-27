@@ -12,12 +12,12 @@ import { Item } from '../../core/shared/item.model';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { createRelationshipsObservable } from './item-types/shared/item.component.spec';
-import { of as observableOf, of } from 'rxjs';
+import { of as observableOf } from 'rxjs';
 import {
   createFailedRemoteDataObject$,
   createPendingRemoteDataObject$,
   createSuccessfulRemoteDataObject,
-  createSuccessfulRemoteDataObject$,
+  createSuccessfulRemoteDataObject$
 } from '../../shared/remote-data.utils';
 import { AuthService } from '../../core/auth/auth.service';
 import { createPaginatedList } from '../../shared/testing/utils.test';
@@ -33,7 +33,7 @@ import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
   metadata: [],
-  relationships: createRelationshipsObservable(),
+  relationships: createRelationshipsObservable()
 });
 
 const mockWithdrawnItem: Item = Object.assign(new Item(), {
@@ -61,17 +61,17 @@ describe('ItemPageComponent', () => {
     /* eslint-enable no-empty, @typescript-eslint/no-empty-function */
   };
   const mockRoute = Object.assign(new ActivatedRouteStub(), {
-    data: observableOf({ dso: createSuccessfulRemoteDataObject(mockItem) }),
+    data: observableOf({ dso: createSuccessfulRemoteDataObject(mockItem) })
   });
 
   const mockMetadataBitstreamDataService = {
-    searchByHandleParams: () => of({}) // Returns a mock Observable
+    searchByHandleParams: () => observableOf({}) // Returns a mock Observable
   };
 
   beforeEach(waitForAsync(() => {
     authService = jasmine.createSpyObj('authService', {
       isAuthenticated: observableOf(true),
-      setRedirectUrl: {},
+      setRedirectUrl: {}
     });
 
     translateService = getMockTranslateService();
@@ -80,15 +80,12 @@ describe('ItemPageComponent', () => {
     });
 
     TestBed.configureTestingModule({
-      imports: [
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useClass: TranslateLoaderMock,
-          },
-        }),
-        BrowserAnimationsModule,
-      ],
+      imports: [TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useClass: TranslateLoaderMock
+        }
+      }), BrowserAnimationsModule],
       declarations: [ItemPageComponent, VarDirective],
       providers: [
         { provide: ActivatedRoute, useValue: mockRoute },
@@ -106,12 +103,10 @@ describe('ItemPageComponent', () => {
         { provide: AuthorizationDataService, useValue: authorizationDataService },
       ],
 
-      schemas: [NO_ERRORS_SCHEMA],
-    })
-      .overrideComponent(ItemPageComponent, {
-        set: { changeDetection: ChangeDetectionStrategy.Default },
-      })
-      .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).overrideComponent(ItemPageComponent, {
+      set: { changeDetection: ChangeDetectionStrategy.Default }
+    }).compileComponents();
   }));
 
   beforeEach(waitForAsync(() => {

@@ -31,7 +31,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./item-page.component.scss'],
   templateUrl: './item-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [fadeInOut],
+  animations: [fadeInOut]
 })
 export class ItemPageComponent implements OnInit {
   /**
@@ -107,7 +107,8 @@ export class ItemPageComponent implements OnInit {
     private authService: AuthService,
     private authorizationService: AuthorizationDataService,
     protected registryService: RegistryService
-  ) {}
+  ) {
+  }
 
   /**
    * Initialize instance variables
@@ -169,8 +170,9 @@ export class ItemPageComponent implements OnInit {
     let isReplaced = '';
 
     // load values from item
-    this.itemRD$
-      .pipe(take(1), getAllSucceededRemoteDataPayload())
+    this.itemRD$.pipe(
+      take(1),
+      getAllSucceededRemoteDataPayload())
       .subscribe((item: Item) => {
         this.itemHandle = item.handle;
         isWithdrawn = item.isWithdrawn;
@@ -184,10 +186,8 @@ export class ItemPageComponent implements OnInit {
 
     // for users navigate to the custom tombstone
     // for admin stay on the item page with tombstone flag
-    this.isAdmin$ = this.authorizationService.isAuthorized(
-      FeatureID.AdministratorOf
-    );
-    this.isAdmin$.subscribe((isAdmin) => {
+    this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
+    this.isAdmin$.subscribe(isAdmin => {
       // do not show tombstone for admin but show it for users
       if (!isAdmin) {
         if (isNotEmpty(isReplaced)) {
