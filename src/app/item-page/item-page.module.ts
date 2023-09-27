@@ -82,7 +82,7 @@ import {
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
   PublicationComponent,
-  UntypedItemComponent,
+  UntypedItemComponent
 ];
 
 const DECLARATIONS = [
@@ -154,8 +154,13 @@ const DECLARATIONS = [
     ChartsModule,
     NgbModule
   ],
-  declarations: [...DECLARATIONS],
-  exports: [...DECLARATIONS],
+  declarations: [
+    ...DECLARATIONS,
+
+  ],
+  exports: [
+    ...DECLARATIONS
+  ]
 })
 export class ItemPageModule {
   /**
@@ -165,7 +170,8 @@ export class ItemPageModule {
   static withEntryComponents() {
     return {
       ngModule: ItemPageModule,
-      providers: ENTRY_COMPONENTS.map((component) => ({ provide: component })),
+      providers: ENTRY_COMPONENTS.map((component) => ({provide: component}))
     };
   }
+
 }
