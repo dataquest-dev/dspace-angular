@@ -2,7 +2,11 @@ import { combineLatest as observableCombineLatest, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { RemoteData } from '../data/remote-data';
 import { PaginatedList } from '../data/paginated-list.model';
-import { hasValue, hasValueOperator, isNotEmptyOperator } from '../../shared/empty.util';
+import {
+  hasValue,
+  hasValueOperator,
+  isNotEmptyOperator,
+} from '../../shared/empty.util';
 import { getFirstSucceededRemoteDataPayload } from '../shared/operators';
 import { createSelector, select, Store } from '@ngrx/store';
 import { AppState } from '../../app.reducer';

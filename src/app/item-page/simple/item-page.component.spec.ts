@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateLoaderMock } from '../../shared/mocks/translate-loader.mock';
 import { ItemDataService } from '../../core/data/item-data.service';
 import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from '@angular/core';
@@ -12,21 +12,28 @@ import { Item } from '../../core/shared/item.model';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { createRelationshipsObservable } from './item-types/shared/item.component.spec';
-import { of as observableOf } from 'rxjs';
+import { of as observableOf, of } from 'rxjs';
 import {
   createFailedRemoteDataObject$,
   createPendingRemoteDataObject$,
   createSuccessfulRemoteDataObject,
-  createSuccessfulRemoteDataObject$
+  createSuccessfulRemoteDataObject$,
 } from '../../shared/remote-data.utils';
 import { AuthService } from '../../core/auth/auth.service';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+import { RegistryService } from 'src/app/core/registry/registry.service';
+import { Store } from '@ngrx/store';
+import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
+import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-data.service';
+import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.service';
+import { MetadataBitstreamDataService } from 'src/app/core/data/metadata-bitstream-data.service';
+import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
   metadata: [],
-  relationships: createRelationshipsObservable()
+  relationships: createRelationshipsObservable(),
 });
 
 const mockWithdrawnItem: Item = Object.assign(new Item(), {
@@ -40,6 +47,11 @@ describe('ItemPageComponent', () => {
   let comp: ItemPageComponent;
   let fixture: ComponentFixture<ItemPageComponent>;
   let authService: AuthService;
+  let translateService: TranslateService;
+  let registryService: RegistryService;
+  const authorizationService = jasmine.createSpyObj('authorizationService', [
+    'isAuthorized',
+  ]);
   let authorizationDataService: AuthorizationDataService;
 
   const mockMetadataService = {
@@ -49,25 +61,34 @@ describe('ItemPageComponent', () => {
     /* eslint-enable no-empty, @typescript-eslint/no-empty-function */
   };
   const mockRoute = Object.assign(new ActivatedRouteStub(), {
-    data: observableOf({ dso: createSuccessfulRemoteDataObject(mockItem) })
+    data: observableOf({ dso: createSuccessfulRemoteDataObject(mockItem) }),
   });
+
+  const mockMetadataBitstreamDataService = {
+    searchByHandleParams: () => of({}) // Returns a mock Observable
+  };
 
   beforeEach(waitForAsync(() => {
     authService = jasmine.createSpyObj('authService', {
       isAuthenticated: observableOf(true),
-      setRedirectUrl: {}
+      setRedirectUrl: {},
     });
+
+    translateService = getMockTranslateService();
     authorizationDataService = jasmine.createSpyObj('authorizationDataService', {
       isAuthorized: observableOf(false),
     });
 
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useClass: TranslateLoaderMock
-        }
-      }), BrowserAnimationsModule],
+      imports: [
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useClass: TranslateLoaderMock,
+          },
+        }),
+        BrowserAnimationsModule,
+      ],
       declarations: [ItemPageComponent, VarDirective],
       providers: [
         { provide: ActivatedRoute, useValue: mockRoute },
@@ -75,16 +96,26 @@ describe('ItemPageComponent', () => {
         { provide: MetadataService, useValue: mockMetadataService },
         { provide: Router, useValue: {} },
         { provide: AuthService, useValue: authService },
+        { provide: AuthorizationDataService, useValue: authorizationService },
+        { provide: Store, useValue: {} },
+        { provide: NotificationsService, useValue: {} },
+        { provide: MetadataSchemaDataService, useValue: {} },
+        { provide: MetadataFieldDataService, useValue: {} },
+        { provide: MetadataBitstreamDataService, useValue: mockMetadataBitstreamDataService },
+        RegistryService,
         { provide: AuthorizationDataService, useValue: authorizationDataService },
       ],
 
-      schemas: [NO_ERRORS_SCHEMA]
-    }).overrideComponent(ItemPageComponent, {
-      set: { changeDetection: ChangeDetectionStrategy.Default }
-    }).compileComponents();
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideComponent(ItemPageComponent, {
+        set: { changeDetection: ChangeDetectionStrategy.Default },
+      })
+      .compileComponents();
   }));
 
   beforeEach(waitForAsync(() => {
+    registryService = TestBed.inject(RegistryService);
     fixture = TestBed.createComponent(ItemPageComponent);
     comp = fixture.componentInstance;
     fixture.detectChanges();

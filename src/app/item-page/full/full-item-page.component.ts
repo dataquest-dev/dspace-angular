@@ -16,6 +16,7 @@ import { hasValue } from '../../shared/empty.util';
 import { AuthService } from '../../core/auth/auth.service';
 import { Location } from '@angular/common';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+import { RegistryService } from 'src/app/core/registry/registry.service';
 
 
 /**
@@ -48,8 +49,9 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
               items: ItemDataService,
               authService: AuthService,
               authorizationService: AuthorizationDataService,
+              protected registryService: RegistryService,
               private _location: Location) {
-    super(route, router, items, authService, authorizationService);
+    super(route, router, items, authService, authorizationService, registryService);
   }
 
   /*** AoT inheritance fix, will hopefully be resolved in the near future **/

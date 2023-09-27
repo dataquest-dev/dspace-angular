@@ -6,6 +6,7 @@ import { RegistryService } from 'src/app/core/registry/registry.service';
 import { PreviewSectionComponent } from './preview-section.component';
 import { ResourceType } from 'src/app/core/shared/resource-type';
 import { HALLink } from 'src/app/core/shared/hal-link.model';
+import { Item } from 'src/app/core/shared/item.model';
 
 describe('PreviewSectionComponent', () => {
   let component: PreviewSectionComponent;
@@ -50,6 +51,9 @@ describe('PreviewSectionComponent', () => {
     mockRegistryService.getMetadataBitstream.and.returnValue(
       of(bitstreamStream)
     );
+
+    component.item = new Item();
+    component.item.handle = '12345';
 
     fixture.detectChanges();
   });

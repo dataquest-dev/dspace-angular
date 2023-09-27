@@ -1,9 +1,12 @@
 <div class="file-preview-box">
-  <div style="text-align: left;" *ngIf = "fileInput.format === 'video/mp4'">
+  <div style="text-align: left" *ngIf="fileInput.format === 'video/mp4'">
     <video preload="none" controls="controls" height="240">
-    <source src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4" type="video/mp4">
-                      Your browser does not support the video tag.
-                    </video>
+      <source
+        src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+        type="video/mp4"
+      />
+      Your browser does not support the video tag.
+    </video>
   </div>
   <div class="file-content">
     <dl class="dl-horizontal">
@@ -32,25 +35,27 @@
       </dd>
     </dl>
     <img
-      *ngIf = "fileInput.format !== 'video/mp4'"
+      *ngIf="fileInput.format !== 'video/mp4'"
       src="https://lindat.mff.cuni.cz/repository/xmlui/themes/UFAL/images/mime/application-x-gzip.png"
       alt="Preview"
       class="preview-image"
     />
   </div>
   <div class="button-container">
-    <a
-      class="download-btn"
-    >
+    <a class="download-btn" (click)="downloadFiles()">
       <i class="fa fa-chevron-circle-down">&nbsp;</i>Download file</a
     >
     <a
       xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
       data-toggle="collapse"
-      *ngIf = "fileInput.format !== 'video/mp4'"
+      *ngIf="
+        fileInput.format === 'text/plain' ||
+        fileInput.format === 'text/html' ||
+        (fileInput.format === 'application/zip' && fileInput.canPreview)
+      "
       role="button"
       class="preview-btn collapsed"
-      href="#file_file_{{fileInput.id}}"
+      href="#file_file_{{ fileInput.id }}"
     >
       <i class="fa fa-eye">&nbsp;</i>Preview</a
     >
@@ -58,7 +63,7 @@
   <div
     xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
     class="in collapse"
-    id="file_file_{{fileInput.id}}"
+    id="file_file_{{ fileInput.id }}"
     style="height: auto"
   >
     <div style="margin: 5px 1px 1px 1px" class="panel panel-info">
@@ -71,18 +76,31 @@
           class="pull-right collapsed"
           data-toggle="collapse"
           role="button"
-          href="#file_file_{{fileInput.id}}"
+          href="#file_file_{{ fileInput.id }}"
         >
           <i class="fa fa-remove">&nbsp;</i>
         </a>
       </div>
       <div style="max-height: 200px; overflow: scroll" class="panel-body">
         <ul class="treeview in collapse show">
-          <ng-container *ngIf="fileInput.format === 'application/pdf'">
-            <ds-file-tree-view *ngFor="let node of fileInput.fileInfo" [node]="node"></ds-file-tree-view>
+          <ng-container *ngIf="fileInput.format === 'application/zip'">
+            <ds-file-tree-view
+              *ngFor="let node of fileInput.fileInfo"
+              [node]="node"
+            ></ds-file-tree-view>
           </ng-container>
           <ng-container *ngIf="fileInput.format === 'text/plain'">
-            <pre>{{fileInput.fileInfo[0].content}}</pre>
+            <pre>{{ fileInput.fileInfo[0].content }}</pre>
+          </ng-container>
+          <ng-container *ngIf="fileInput.format === 'text/html'">
+            <iframe
+              width="100%"
+              height="500"
+              scrolling="yes"
+              frameborder="0"
+              src="https://fr.wikipedia.org/wiki/Main_Page"
+            >
+            </iframe>
           </ng-container>
         </ul>
       </div>

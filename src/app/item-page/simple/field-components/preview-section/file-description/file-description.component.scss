@@ -38,16 +38,19 @@
                 margin-left: 180px;
             }
         }
-        
+
 
         .preview-image {
             width: 10%;
             height: 10%;
         }
-        
+
     }
 
     .button-container {
+        a {
+            text-decoration: none;
+        }
         .download-btn, .preview-btn {
             display: inline;
             padding: .2em .6em .3em;
@@ -63,6 +66,10 @@
             cursor: pointer;
             background-color: #5bc0de;
         }
+
+        .download-btn:hover, .preview-btn:hover {
+            background-color: #31b0d5;
+        }
     }
 
     .panel {
@@ -71,11 +78,11 @@
         border-radius: 4px;
         box-shadow: 0 1px 1px rgba(0,0,0,0.05);
     }
-    
+
     .panel-info {
         border-color: #bce8f1;
     }
-    
+
     .panel-info>.panel-heading {
         color: #3a87ad;
         background-color: #d9edf7;
