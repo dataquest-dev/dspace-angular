@@ -45,14 +45,15 @@
                                   [iconName]="'fa-link'">
     </ds-clarin-generic-item-field>
     <ds-clarin-generic-item-field [item]="object"
-                                  [fields]="['dc.date.issued']"
+                                  [fields]="['dc.date.issued', 'local.approximateDate.issued']"
                                   [label]="'item.page.date'"
                                   [iconName]="'fa-calendar'">
     </ds-clarin-generic-item-field>
     <ds-clarin-generic-item-field [item]="object"
-                                  [fields]="['dc.type']"
+                                  [fields]="['dc.type', 'metashare.ResourceInfo#ContentInfo.mediaType']"
                                   [label]="'item.page.type'"
                                   [iconName]="'fa-tag'"
+                                  [separator]="','"
                                   [type]="'search'">
     </ds-clarin-generic-item-field>
     <ds-clarin-generic-item-field [item]="object"
@@ -61,7 +62,7 @@
                                   [iconName]="'fa-arrows'">
     </ds-clarin-generic-item-field>
     <ds-clarin-generic-item-field [item]="object"
-                                  [fields]="['dc.language.iso']"
+                                  [fields]="['local.language.name']"
                                   [label]="'item.page.language'"
                                   [iconName]="'fa-flag'"
                                   [separator]="','"
