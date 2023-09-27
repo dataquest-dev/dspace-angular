@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { hasValue } from '../../shared/empty.util';
-import { PaginatedList } from './paginated-list.model';
 import { RemoteData } from './remote-data';
 import { RequestService } from './request.service';
 import { RemoteDataBuildService } from '../cache/builders/remote-data-build.service';
@@ -8,31 +7,33 @@ import { HALEndpointService } from '../shared/hal-endpoint.service';
 import { FollowLinkConfig } from '../../shared/utils/follow-link-config.model';
 import { Observable } from 'rxjs';
 import { RequestParam } from '../cache/models/request-param.model';
-import { NoContent } from '../shared/NoContent.model';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { ObjectCacheService } from '../cache/object-cache.service';
 import { METADATA_BITSTREAM } from '../metadata/metadata-bitstream.resource-type';
-import { FindListOptions } from './request.models';
-import { dataService } from '../cache/builders/build-decorators';
 import { MetadataBitstream } from '../metadata/metadata-bitstream.model';
-import { DataService } from './data.service';
 import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
-import { CoreState } from '../core.reducers';
 import { ChangeAnalyzer } from './change-analyzer';
-import { tap } from 'rxjs/operators';
+import { IdentifiableDataService } from './base/identifiable-data.service';
+import { SearchData, SearchDataImpl } from './base/search-data';
+import { CoreState } from '../core-state.model';
+import { dataService } from './base/data-service.decorator';
+import { FindListOptions } from './find-list-options.model';
+import { linkName } from './clarin/clarin-license-data.service';
+import { PaginatedList } from './paginated-list.model';
 
 /**
  * A service responsible for fetching/sending data from/to the REST API on the metadatafields endpoint
  */
 @Injectable()
 @dataService(METADATA_BITSTREAM)
-export class MetadataBitstreamDataService extends DataService<MetadataBitstream> {
+export class MetadataBitstreamDataService extends IdentifiableDataService<MetadataBitstream> implements SearchData<MetadataBitstream> {
   protected store: Store<CoreState>;
   protected http: HttpClient;
   protected comparator: ChangeAnalyzer<MetadataBitstream>;
   protected linkPath = 'metadatabitstreams';
   protected searchByHandleLinkPath = 'byHandle';
+  private searchData: SearchData<MetadataBitstream>;
 
   constructor(
     protected requestService: RequestService,
@@ -41,7 +42,8 @@ export class MetadataBitstreamDataService extends DataService<MetadataBitstream>
     protected halService: HALEndpointService,
     protected notificationsService: NotificationsService
   ) {
-    super();
+    super(linkName, requestService, rdbService, objectCache, halService, undefined);
+    this.searchData = new SearchDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
   }
 
   /**
@@ -78,5 +80,9 @@ export class MetadataBitstreamDataService extends DataService<MetadataBitstream>
       reRequestOnStale,
       ...linksToFollow
     );
+  }
+
+  searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<MetadataBitstream>[]): Observable<RemoteData<PaginatedList<MetadataBitstream>>> {
+    return this.searchData.searchBy(searchMethod, options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
   }
 }
