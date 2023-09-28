@@ -8,13 +8,14 @@
         justify-content: space-between;
 
         .dl-horizontal {
-            margin-bottom: 0;
+          margin-bottom: 0;
         }
 
         .thumbnails dl {
             padding: 5px;
             display: table;
         }
+
 
         @media (min-width: 768px){
             .dl-horizontal dt {
@@ -33,13 +34,13 @@
                 margin-left: 180px;
             }
         }
-        
+
 
         .preview-image {
             width: 10%;
             height: 10%;
         }
-        
+
     }
 
     .button-container {
@@ -66,7 +67,7 @@
         border-radius: 4px;
         box-shadow: 0 1px 1px rgba(0,0,0,0.05);
     }
-    
+
     .panel-info {
         border-color: #bce8f1;
     }

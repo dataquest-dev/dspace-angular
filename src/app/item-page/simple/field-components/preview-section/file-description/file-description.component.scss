@@ -54,7 +54,7 @@
         .download-btn, .preview-btn {
             display: inline;
             padding: .2em .6em .3em;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             line-height: 1;
             text-align: center;
@@ -111,3 +111,15 @@
         float: right !important;
     }
 }
+
+.dl-horizontal {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.428571429 !important;
+  color: #333 !important;
+}
+
+dd {
+  margin-bottom: 0;
+}
+
