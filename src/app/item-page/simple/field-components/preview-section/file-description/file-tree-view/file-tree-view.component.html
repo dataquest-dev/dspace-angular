@@ -1,5 +1,6 @@
 <li>
-  <span class="foldername" *ngIf="node.isDirectory; else fileTemplate">
+  <span *ngIf="node.isDirectory; else fileTemplate">
+    <i class="fas fa-folder fa-sm" style="color: #a0a0a0"></i>
     <a role="button"
        (click)="isCollapsed = !isCollapsed"
        [attr.aria-expanded]="!isCollapsed"
@@ -9,8 +10,9 @@
   </span>
 
   <ng-template #fileTemplate>
-    <span class="filename">{{ node.name }}</span
-    ><span class="size pull-right">{{ node.size }}</span>
+    <i class="far fa-file fa-sm pr-1" style="color: #a0a0a0"></i>
+    <span>{{ node.name }}</span>
+    <span class="size pull-right">{{ node.size }}</span>
   </ng-template>
 
   <ul

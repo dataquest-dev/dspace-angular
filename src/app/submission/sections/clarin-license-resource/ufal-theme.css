@@ -1426,19 +1426,6 @@ div.modal-scrollbar {
     list-style: none;
 }
 
-.treeview .foldername:before {
-        font-family: FontAwesome;
-        content: '\f07b';
-        margin-right: 5px;
-        color: #A0A0A0;
-}
-
-.treeview .filename:before {
-        font-family: FontAwesome;
-        content: '\f016';
-        margin-right: 5px;
-        color: #A0A0A0;
-}
 
 .filebutton {
         font-size: 12px;
