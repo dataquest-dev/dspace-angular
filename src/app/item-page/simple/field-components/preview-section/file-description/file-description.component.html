@@ -81,7 +81,7 @@
           <i class="fa fa-remove">&nbsp;</i>
         </a>
       </div>
-      <div style="max-height: 200px; overflow: scroll" class="panel-body">
+      <div style="max-height: 500px; overflow: hidden; padding: 0px;" class="panel-body">
         <ul class="treeview in collapse show">
           <ng-container *ngIf="fileInput.format === 'application/zip'">
             <ds-file-tree-view
@@ -96,7 +96,6 @@
             <iframe
               width="100%"
               height="500"
-              scrolling="yes"
               frameborder="0"
               src="https://fr.wikipedia.org/wiki/Main_Page"
             >
