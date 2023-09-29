@@ -65,3 +65,4 @@ cache:
       # When set to false, after timeToLive expires, the next request will wait on SSR to complete & receive a fresh page (which is then saved to cache).
       # This ensures stale pages (older than timeToLive) are never returned from the cache, but some users will wait on SSR.
       allowStale: true
+      
