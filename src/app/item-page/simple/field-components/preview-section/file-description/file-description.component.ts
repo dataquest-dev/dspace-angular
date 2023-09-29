@@ -17,4 +17,15 @@ export class FileDescriptionComponent implements OnInit {
   public downloadFiles() {
     window.location.href = `${BASE_LOCAL_URL}${this.fileInput.href}`;
   }
+
+  public isTxt() {
+    return this.fileInput?.format === 'text/plain';
+  }
+
+  /**
+   * Show scrollbar in the `.txt` preview, but it should be hidden in the other formats.
+   */
+  public dynamicOverflow() {
+    return this.isTxt() ? 'overflow: scroll' : 'overflow: hidden';
+  }
 }

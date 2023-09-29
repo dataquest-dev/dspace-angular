@@ -81,7 +81,8 @@
           <i class="fa fa-remove">&nbsp;</i>
         </a>
       </div>
-      <div style="max-height: 500px; overflow: hidden; padding: 0px;" class="panel-body">
+      <div [style]="'max-height: 500px; padding: 0px; ' + dynamicOverflow()" class="
+      panel-body">
         <ul class="treeview in collapse show">
           <ng-container *ngIf="fileInput.format === 'application/zip'">
             <ds-file-tree-view
@@ -89,7 +90,7 @@
               [node]="node"
             ></ds-file-tree-view>
           </ng-container>
-          <ng-container *ngIf="fileInput.format === 'text/plain'">
+          <ng-container *ngIf="isTxt()">
             <pre>{{ fileInput.fileInfo[0].content }}</pre>
           </ng-container>
           <ng-container *ngIf="fileInput.format === 'text/html'">
