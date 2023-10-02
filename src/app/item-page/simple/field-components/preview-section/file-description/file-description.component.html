@@ -49,11 +49,7 @@
     <span class="pl-1">
       <a class="preview-btn collapsed"
                data-toggle="collapse"
-               *ngIf="
-                 fileInput.format === 'text/plain' ||
-                 fileInput.format === 'text/html' ||
-                 (fileInput.format === 'application/zip' && fileInput.canPreview)
-               "
+               *ngIf="couldPreview()"
                role="button"
                href="#file_file_{{ fileInput.id }}">
         <i class="fa fa-eye">&nbsp;</i>Preview
@@ -91,7 +87,7 @@
             ></ds-file-tree-view>
           </ng-container>
           <ng-container *ngIf="isTxt()">
-            <pre>{{ fileInput.fileInfo[0].content }}</pre>
+            <pre>{{ fileInput.fileInfo[0]?.content }}</pre>
           </ng-container>
           <ng-container *ngIf="fileInput.format === 'text/html'">
             <iframe

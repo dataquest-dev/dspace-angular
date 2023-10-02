@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
 import { BASE_LOCAL_URL } from 'src/app/core/shared/clarin/constants';
 
+const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip'];
 @Component({
   selector: 'ds-file-description',
   templateUrl: './file-description.component.html',
@@ -27,5 +28,16 @@ export class FileDescriptionComponent implements OnInit {
    */
   public dynamicOverflow() {
     return this.isTxt() ? 'overflow: scroll' : 'overflow: hidden';
+  }
+
+  /**
+   * Supported Preview formats are: `text/plain`, `text/html`, `application/zip`
+   */
+  public couldPreview() {
+    if (this.fileInput.canPreview === false) {
+      return false;
+    }
+
+    return allowedPreviewFormats.includes(this.fileInput.format);
   }
 }
