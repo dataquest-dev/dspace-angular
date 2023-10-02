@@ -1,11 +1,9 @@
 import {
-  TEST_SUBMIT_USER,
-  TEST_SUBMIT_USER_PASSWORD,
-  TEST_SUBMIT_COLLECTION_NAME,
+  TEST_ADMIN_PASSWORD, TEST_ADMIN_USER, TEST_SUBMIT_COLLECTION_NAME,
   TEST_SUBMIT_COLLECTION_UUID,
-  TEST_ADMIN_USER, TEST_ADMIN_PASSWORD
-}
-  from 'cypress/support';
+  TEST_SUBMIT_USER,
+  TEST_SUBMIT_USER_PASSWORD
+} from 'cypress/support/e2e';
 import { createItemProcess } from '../support/commands';
 
 describe('New Submission page', () => {

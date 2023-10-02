@@ -2,7 +2,7 @@
 //   TEST_SUBMIT_USER_PASSWORD,
 //   TEST_SUBMIT_COLLECTION_NAME,
 //   TEST_SUBMIT_USER
-// } from 'cypress/support';
+// } from 'cypress/support/e2e';
 
 // CLARIN - When the user is redirected into /mydspace the default search configuration is for
 // supervisedItems and the yourSubmission is missing. TODO fix this

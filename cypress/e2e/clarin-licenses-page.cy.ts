@@ -1,4 +1,4 @@
-import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from '../support';
+import { TEST_ADMIN_PASSWORD, TEST_ADMIN_USER } from '../support/e2e';
 
 /**
  * Test to check if the license administration page is loaded after redirecting.

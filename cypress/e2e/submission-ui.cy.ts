@@ -7,7 +7,7 @@ import {
   TEST_ADMIN_USER,
   TEST_SUBMIT_CLARIAH_COLLECTION_UUID,
   TEST_SUBMIT_COLLECTION_UUID
-} from '../support';
+} from '../support/e2e';
 import { createItemProcess } from '../support/commands';
 
 

@@ -2,7 +2,7 @@ import {
   TEST_ADMIN_PASSWORD,
   TEST_ADMIN_USER,
   TEST_SUBMIT_COLLECTION_UUID,
-} from '../support';
+} from '../support/e2e';
 
 /**
  * Test menu options for admin
