@@ -15,16 +15,11 @@
     <span class="size pull-right">{{ node.size }}</span>
   </ng-template>
 
-  <ul
-    id="folder_{{ node.name }}"
-    [ngbCollapse]="isCollapsed"
-    class="in"
-    style="height: auto"
-    *ngIf="node.isDirectory && node.sub"
-  >
+  <ul id="folder_{{ node.name }}" [ngbCollapse]="isCollapsed" class="in" style="height: auto"
+      *ngIf="node.isDirectory && node.sub">
     <ds-file-tree-view
       *ngFor="let subNodeKey of getKeys(node.sub)"
-      [node]="node.sub[subNodeKey]"
-    ></ds-file-tree-view>
+      [node]="node.sub[subNodeKey]">
+    </ds-file-tree-view>
   </ul>
 </li>

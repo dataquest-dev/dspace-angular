@@ -17,6 +17,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { Location } from '@angular/common';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { RegistryService } from 'src/app/core/registry/registry.service';
+import {ConfigurationDataService} from '../../core/data/configuration-data.service';
 
 
 /**
@@ -50,13 +51,14 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
               authService: AuthService,
               authorizationService: AuthorizationDataService,
               protected registryService: RegistryService,
-              private _location: Location) {
-    super(route, router, items, authService, authorizationService, registryService);
+              private _location: Location,
+              protected configurationService: ConfigurationDataService) {
+    super(route, router, items, authService, authorizationService, registryService, configurationService);
   }
 
   /*** AoT inheritance fix, will hopefully be resolved in the near future **/
-  ngOnInit(): void {
-    super.ngOnInit();
+  async ngOnInit(): Promise<void> {
+    await super.ngOnInit();
     this.metadata$ = this.itemRD$.pipe(
       map((rd: RemoteData<Item>) => rd.payload),
       filter((item: Item) => hasValue(item)),

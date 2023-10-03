@@ -117,22 +117,9 @@ export class RegistryService {
    * @param linksToFollow               List of {@link FollowLinkConfig} that indicate which
    *                                    {@link HALLink}s should be automatically resolved
    */
-  public getMetadataBitstream(
-    handle: string,
-    fileGrpType: string,
-    options: FindListOptions = {},
-    useCachedVersionIfAvailable = true,
-    reRequestOnStale = true,
-    ...linksToFollow: FollowLinkConfig<MetadataBitstream>[]
-  ): Observable<RemoteData<any>> {
-    return this.metadataBitstreamDataService.searchByHandleParams(
-      handle,
-      fileGrpType,
-      options,
-      useCachedVersionIfAvailable,
-      reRequestOnStale,
-      ...linksToFollow
-    );
+  public getMetadataBitstream(handle: string, fileGrpType: string, options: FindListOptions = {}, useCachedVersionIfAvailable = true, reRequestOnStale = true, ...linksToFollow: FollowLinkConfig<MetadataBitstream>[]): Observable<RemoteData<any>> {
+    return this.metadataBitstreamDataService.searchByHandleParams(handle, fileGrpType, options,
+      useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
   }
 
   public editMetadataSchema(schema: MetadataSchema) {

@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
-import { BASE_LOCAL_URL } from 'src/app/core/shared/clarin/constants';
+import { getBaseUrl } from '../../../../../shared/clarin-shared-util';
+import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 
 const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip'];
 @Component({
@@ -12,11 +14,19 @@ export class FileDescriptionComponent implements OnInit {
   @Input()
   fileInput: MetadataBitstream;
 
-  ngOnInit(): void {
-    console.log(this.fileInput);
+  /**
+   * UI URL loaded from the server.
+   */
+  baseUrl = '';
+
+  constructor(protected configurationService: ConfigurationDataService) { }
+
+  async ngOnInit(): Promise<void> {
+    await this.assignBaseUrl();
   }
+
   public downloadFiles() {
-    window.location.href = `${BASE_LOCAL_URL}${this.fileInput.href}`;
+    window.location.href = this.baseUrl.replace('/server','') + `${this.fileInput.href}`;
   }
 
   public isTxt() {
@@ -39,5 +49,15 @@ export class FileDescriptionComponent implements OnInit {
     }
 
     return allowedPreviewFormats.includes(this.fileInput.format);
+  }
+
+  /**
+   * Load base url from the configuration from the BE.
+   */
+  async assignBaseUrl() {
+    this.baseUrl = await getBaseUrl(this.configurationService)
+      .then((baseUrlResponse: ConfigurationProperty) => {
+        return baseUrlResponse?.values?.[0];
+      });
   }
 }

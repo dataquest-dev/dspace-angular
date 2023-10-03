@@ -2,7 +2,6 @@ import {
   autoserialize,
   autoserializeAs,
   deserialize,
-  deserializeAs,
 } from 'cerialize';
 import { ListableObject } from '../../shared/object-collection/shared/listable-object.model';
 import { typedObject } from '../cache/builders/build-decorators';
@@ -13,17 +12,6 @@ import { ResourceType } from '../shared/resource-type';
 import { excludeFromEquals } from '../utilities/equals.decorators';
 import { METADATA_BITSTREAM } from './metadata-bitstream.resource-type';
 import { FileInfo } from './file-info.model';
-
-/**
- * Class the represents a File
- */
-// export class FileInfo {
-//   @autoserialize name: string;
-//   @autoserialize content: any;
-//   @autoserialize size: string;
-//   @autoserialize isDirectory: boolean;
-//   @autoserializeAs('sub') sub: { [key: string]: FileInfo };
-// }
 
 /**
  * Class that represents a MetadataBitstream

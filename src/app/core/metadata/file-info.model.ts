@@ -1,5 +1,8 @@
 import { autoserialize, autoserializeAs } from 'cerialize';
 
+/**
+ * This class is used to store the information about a file or a directory
+ */
 export class FileInfo {
   @autoserialize name: string;
   @autoserialize content: any;

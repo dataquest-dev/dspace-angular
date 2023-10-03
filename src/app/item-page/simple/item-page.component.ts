@@ -18,8 +18,10 @@ import { AuthorizationDataService } from '../../core/data/feature-authorization/
 import { redirectOn4xx } from '../../core/shared/authorized.operators';
 import { RegistryService } from 'src/app/core/registry/registry.service';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
-import { BASE_LOCAL_URL } from 'src/app/core/shared/clarin/constants';
 import { Observable } from 'rxjs';
+import { getBaseUrl } from '../../shared/clarin-shared-util';
+import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 
 /**
  * This component renders a simple item page.
@@ -34,6 +36,7 @@ import { Observable } from 'rxjs';
   animations: [fadeInOut]
 })
 export class ItemPageComponent implements OnInit {
+
   /**
    * The item's id
    */
@@ -100,20 +103,27 @@ export class ItemPageComponent implements OnInit {
 
   itemUrl: string;
 
+  /**
+   * UI URL loaded from the server.
+   */
+  baseUrl = '';
+
   constructor(
     protected route: ActivatedRoute,
     private router: Router,
     private items: ItemDataService,
     private authService: AuthService,
     private authorizationService: AuthorizationDataService,
-    protected registryService: RegistryService
+    protected registryService: RegistryService,
+    protected configurationService: ConfigurationDataService
   ) {
   }
 
   /**
    * Initialize instance variables
    */
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.assignBaseUrl();
     this.itemRD$ = this.route.data.pipe(
       map((data) => data.dso as RemoteData<Item>),
       redirectOn4xx(this.router, this.authService)
@@ -212,12 +222,22 @@ export class ItemPageComponent implements OnInit {
       return file.name;
     });
 
-    this.command = `curl --remote-name-all ${BASE_LOCAL_URL}/server/bitstream/handle/${
+    this.command = `curl --remote-name-all` + this.baseUrl + `/bitstream/handle/${
       this.itemHandle
     }/{${fileNames.join(',')}}`;
   }
 
   downloadFiles() {
-    window.location.href = `${BASE_LOCAL_URL}/server/bitstream/allzip?handleId=${this.itemHandle}`;
+    window.location.href = this.baseUrl + `/bitstream/allzip?handleId=${this.itemHandle}`;
+  }
+
+  /**
+   * Load base url from the configuration from the BE.
+   */
+  async assignBaseUrl() {
+    this.baseUrl = await getBaseUrl(this.configurationService)
+      .then((baseUrlResponse: ConfigurationProperty) => {
+        return baseUrlResponse?.values?.[0];
+      });
   }
 }

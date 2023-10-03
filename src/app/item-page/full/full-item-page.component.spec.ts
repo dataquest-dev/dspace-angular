@@ -11,7 +11,7 @@ import { ActivatedRouteStub } from '../../shared/testing/active-router.stub';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Item } from '../../core/shared/item.model';
-import {BehaviorSubject, of, of as observableOf} from 'rxjs';
+import { BehaviorSubject, of, of as observableOf } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { createSuccessfulRemoteDataObject, createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';

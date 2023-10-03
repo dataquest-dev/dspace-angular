@@ -13,9 +13,7 @@ import { getAllSucceededRemoteListPayload } from 'src/app/core/shared/operators'
 export class PreviewSectionComponent implements OnInit {
   @Input() item: Item;
 
-  listOfFiles: BehaviorSubject<MetadataBitstream[]> = new BehaviorSubject<
-    MetadataBitstream[]
-  >([] as any);
+  listOfFiles: BehaviorSubject<MetadataBitstream[]> = new BehaviorSubject<MetadataBitstream[]>([] as any);
 
   constructor(protected registryService: RegistryService) {} // Modified
 

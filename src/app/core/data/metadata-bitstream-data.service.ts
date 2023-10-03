@@ -56,14 +56,7 @@ export class MetadataBitstreamDataService extends IdentifiableDataService<Metada
    * @param reRequestOnStale  Whether or not the request should automatically be re-requested after the response becomes stale
    * @param linksToFollow List of {@link FollowLinkConfig} that indicate which {@link HALLink}s should be automatically resolved
    */
-  searchByHandleParams(
-    handle: string,
-    fileGrpType: string,
-    options: FindListOptions = {},
-    useCachedVersionIfAvailable = true,
-    reRequestOnStale = true,
-    ...linksToFollow: FollowLinkConfig<any>[]
-  ): Observable<RemoteData<any>> {
+  searchByHandleParams(handle: string, fileGrpType: string, options: FindListOptions = {}, useCachedVersionIfAvailable = true, reRequestOnStale = true, ...linksToFollow: FollowLinkConfig<any>[]): Observable<RemoteData<any>> {
     const optionParams = Object.assign(new FindListOptions(), options, {
       searchParams: [
         new RequestParam('handle', hasValue(handle) ? handle : ''),
@@ -73,13 +66,8 @@ export class MetadataBitstreamDataService extends IdentifiableDataService<Metada
         ),
       ],
     });
-    return this.searchBy(
-      this.searchByHandleLinkPath,
-      optionParams,
-      useCachedVersionIfAvailable,
-      reRequestOnStale,
-      ...linksToFollow
-    );
+    return this.searchBy(this.searchByHandleLinkPath, optionParams, useCachedVersionIfAvailable, reRequestOnStale,
+      ...linksToFollow);
   }
 
   searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<MetadataBitstream>[]): Observable<RemoteData<PaginatedList<MetadataBitstream>>> {
