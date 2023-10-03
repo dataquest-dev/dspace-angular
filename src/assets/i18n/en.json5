@@ -2776,6 +2776,26 @@
   "item.view.box.no-files.message": "This item contains no files.",
 
 
+  "item.file.description.not.supported.video": "Your browser does not support the video tag.",
+
+  "item.file.description.name": "Name",
+
+  "item.file.description.size": "Size",
+
+  "item.file.description.format": "Format",
+
+  "item.file.description.description": "Description",
+
+  "item.file.description.checksum": "MD5",
+
+  "item.file.description.download.file": "Download file",
+
+  "item.file.description.preview": "Preview",
+
+  "item.file.description.file.preview": "File Preview",
+
+
+
   "item.select.confirm": "Confirm selected",
 
   "item.select.empty": "No items to show",
