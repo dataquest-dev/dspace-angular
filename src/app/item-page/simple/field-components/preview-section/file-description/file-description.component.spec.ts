@@ -11,11 +11,13 @@ import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-transla
 import { TranslateLoaderMock } from '../../../../../shared/mocks/translate-loader.mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
 
 describe('FileDescriptionComponent', () => {
   let component: FileDescriptionComponent;
   let fixture: ComponentFixture<FileDescriptionComponent>;
   let translateService: TranslateService;
+  let halService: HALEndpointService;
 
   beforeEach(async () => {
     const configurationDataService = jasmine.createSpyObj('configurationDataService', {
@@ -25,6 +27,10 @@ describe('FileDescriptionComponent', () => {
           'org.dspace.ctask.general.ProfileFormats = test'
         ]
       }))
+    });
+
+    halService = jasmine.createSpyObj('authService', {
+      getRootHref: 'root url',
     });
 
     translateService = getMockTranslateService();
@@ -37,7 +43,8 @@ describe('FileDescriptionComponent', () => {
         }), RouterTestingModule.withRoutes([]), BrowserAnimationsModule],
       declarations: [FileDescriptionComponent],
       providers: [
-        { provide: ConfigurationDataService, useValue: configurationDataService }
+        { provide: ConfigurationDataService, useValue: configurationDataService },
+        { provide: HALEndpointService, useValue: halService }
       ]
     }).compileComponents();
   });

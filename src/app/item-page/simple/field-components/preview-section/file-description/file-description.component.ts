@@ -1,8 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
-import { getBaseUrl } from '../../../../../shared/clarin-shared-util';
-import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
-import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
 
 const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip'];
 @Component({
@@ -10,23 +8,15 @@ const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip'];
   templateUrl: './file-description.component.html',
   styleUrls: ['./file-description.component.scss'],
 })
-export class FileDescriptionComponent implements OnInit {
+export class FileDescriptionComponent {
   @Input()
   fileInput: MetadataBitstream;
 
-  /**
-   * UI URL loaded from the server.
-   */
-  baseUrl = '';
-
-  constructor(protected configurationService: ConfigurationDataService) { }
-
-  async ngOnInit(): Promise<void> {
-    await this.assignBaseUrl();
-  }
+  constructor(protected halService: HALEndpointService) { }
 
   public downloadFiles() {
-    window.location.href = this.baseUrl.replace('/server','') + `${this.fileInput.href}`;
+    console.log('${this.fileInput.href}', `${this.fileInput.href}`);
+    window.location.href = this.halService.getRootHref().replace('/server/api', '') + `${this.fileInput.href}`;
   }
 
   public isTxt() {
@@ -49,15 +39,5 @@ export class FileDescriptionComponent implements OnInit {
     }
 
     return allowedPreviewFormats.includes(this.fileInput.format);
-  }
-
-  /**
-   * Load base url from the configuration from the BE.
-   */
-  async assignBaseUrl() {
-    this.baseUrl = await getBaseUrl(this.configurationService)
-      .then((baseUrlResponse: ConfigurationProperty) => {
-        return baseUrlResponse?.values?.[0];
-      });
   }
 }

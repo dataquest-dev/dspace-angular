@@ -12,16 +12,14 @@ import {
 import { ViewMode } from '../../core/shared/view-mode.model';
 import { AuthService } from '../../core/auth/auth.service';
 import { getItemPageRoute } from '../item-page-routing-paths';
-import { isNotEmpty } from '../../shared/empty.util';
+import { isNotEmpty} from '../../shared/empty.util';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { redirectOn4xx } from '../../core/shared/authorized.operators';
 import { RegistryService } from 'src/app/core/registry/registry.service';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
-import { Observable } from 'rxjs';
-import { getBaseUrl } from '../../shared/clarin-shared-util';
-import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
-import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { Observable} from 'rxjs';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 
 /**
  * This component renders a simple item page.
@@ -67,7 +65,7 @@ export class ItemPageComponent implements OnInit {
   /**
    * determine to show download all zip button or not
    */
-  canDownloadAllFiles = true;
+  canDownloadAllFiles = false;
   /**
    * command for the download command feature
    */
@@ -103,10 +101,7 @@ export class ItemPageComponent implements OnInit {
 
   itemUrl: string;
 
-  /**
-   * UI URL loaded from the server.
-   */
-  baseUrl = '';
+  canShowCurlDownload = false;
 
   constructor(
     protected route: ActivatedRoute,
@@ -115,15 +110,14 @@ export class ItemPageComponent implements OnInit {
     private authService: AuthService,
     private authorizationService: AuthorizationDataService,
     protected registryService: RegistryService,
-    protected configurationService: ConfigurationDataService
+    protected halService: HALEndpointService,
   ) {
   }
 
   /**
    * Initialize instance variables
    */
-  async ngOnInit(): Promise<void> {
-    await this.assignBaseUrl();
+  ngOnInit(): void {
     this.itemRD$ = this.route.data.pipe(
       map((data) => data.dso as RemoteData<Item>),
       redirectOn4xx(this.router, this.authService)
@@ -215,29 +209,26 @@ export class ItemPageComponent implements OnInit {
 
   generateCurlCommand() {
     const fileNames = this.listOfFiles.map((file: MetadataBitstream) => {
-      if (!file.canPreview) {
+      // Show `Download All Files` only if there are more files.
+      if (file.canPreview && this.listOfFiles.length > 1) {
         this.canDownloadAllFiles = file.canPreview;
+      }
+
+      if (file.canPreview) {
+        this.canShowCurlDownload = true;
       }
 
       return file.name;
     });
 
-    this.command = `curl --remote-name-all` + this.baseUrl + `/bitstream/handle/${
+    this.command = `curl --remote-name-all ` + this.halService.getRootHref() + `/core/bitstreams/handle/${
       this.itemHandle
     }/{${fileNames.join(',')}}`;
   }
 
   downloadFiles() {
-    window.location.href = this.baseUrl + `/bitstream/allzip?handleId=${this.itemHandle}`;
+    window.location.href = this.halService.getRootHref() + `/core/bitstreams/allzip?handleId=${this.itemHandle}`;
   }
 
-  /**
-   * Load base url from the configuration from the BE.
-   */
-  async assignBaseUrl() {
-    this.baseUrl = await getBaseUrl(this.configurationService)
-      .then((baseUrlResponse: ConfigurationProperty) => {
-        return baseUrlResponse?.values?.[0];
-      });
-  }
+
 }

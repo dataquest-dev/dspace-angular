@@ -29,8 +29,8 @@ import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-dat
 import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.service';
 import { MetadataBitstreamDataService } from 'src/app/core/data/metadata-bitstream-data.service';
 import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
-import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
@@ -51,6 +51,7 @@ describe('ItemPageComponent', () => {
   let authService: AuthService;
   let translateService: TranslateService;
   let registryService: RegistryService;
+  let halService: HALEndpointService;
   const authorizationService = jasmine.createSpyObj('authorizationService', [
     'isAuthorized',
   ]);
@@ -90,6 +91,10 @@ describe('ItemPageComponent', () => {
       }))
     });
 
+    halService = jasmine.createSpyObj('authService', {
+      getRootHref: 'root url',
+    });
+
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot({
         loader: {
@@ -112,7 +117,7 @@ describe('ItemPageComponent', () => {
         { provide: MetadataBitstreamDataService, useValue: mockMetadataBitstreamDataService },
         RegistryService,
         { provide: AuthorizationDataService, useValue: authorizationDataService },
-        { provide: ConfigurationDataService, useValue: configurationDataService }
+        { provide: HALEndpointService, useValue: halService }
       ],
 
       schemas: [NO_ERRORS_SCHEMA]

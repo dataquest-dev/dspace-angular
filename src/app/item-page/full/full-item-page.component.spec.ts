@@ -27,8 +27,9 @@ import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.
 import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-data.service';
 import { MetadataBitstreamDataService } from 'src/app/core/data/metadata-bitstream-data.service';
 import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
-import { ConfigurationDataService} from '../../core/data/configuration-data.service';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { cold } from 'jasmine-marbles';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
@@ -97,6 +98,11 @@ describe('FullItemPageComponent', () => {
       }))
     });
 
+    let halService: HALEndpointService;
+    halService = jasmine.createSpyObj('halService', {
+      'getEndpoint': cold('a', { a: 'endpointURL' })
+    });
+
 
     translateService = getMockTranslateService();
     TestBed.configureTestingModule({
@@ -118,7 +124,7 @@ describe('FullItemPageComponent', () => {
         { provide: NotificationsService, useValue: {} },
         { provide: MetadataSchemaDataService, useValue: {} },
         { provide: MetadataFieldDataService, useValue: {} },
-        { provide: ConfigurationDataService, useValue: configurationDataService },
+        { provide: HALEndpointService, useValue: halService },
         RegistryService
       ],
 
