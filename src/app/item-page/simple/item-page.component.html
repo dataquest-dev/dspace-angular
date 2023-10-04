@@ -11,13 +11,13 @@
       <ds-listable-object-component-loader *ngIf="!item.isWithdrawn || (isAdmin$|async)" [object]="item" [viewMode]="viewMode"></ds-listable-object-component-loader>
       <ds-item-versions class="mt-2" [item]="item" [displayActions]="false"></ds-item-versions>
       <ds-clarin-license-info class="mt-3 d-block" [item]="item"></ds-clarin-license-info>
-      <h6><i class="fa fa-paperclip">&nbsp;</i>Files in this item</h6>
+      <h6><i class="fa fa-paperclip">&nbsp;</i>{{'item.page.files.head' | translate}}</h6>
       <div class="pb-3">
         <span class="pr-1">
           <a class="btn btn-download" (click)="setCommandline()" style="text-decoration: none"
              *ngIf="canShowCurlDownload">
             <i class="fa fa-download fa-3x" style="display: block">&nbsp;</i>
-          Download instructions for command line
+            {{'item.page.download.button.command.line' | translate}}
           </a>
         </span>
         <div id="command-div" *ngIf="isCommandLineVisible">
@@ -28,7 +28,7 @@
           <a *ngIf="canDownloadAllFiles" class="btn btn-download" id="download-all-button" (click)="downloadFiles()"
                        style="visibility: visible">
             <i style="display: block" class="fa fa-download fa-3x">&nbsp;</i>
-            Download all files in item ({{ totalFileSizes }})
+            {{'item.page.download.button.all.files.zip' | translate}} ({{ totalFileSizes }})
           </a>
         </span>
       </div>

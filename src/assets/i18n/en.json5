@@ -2794,6 +2794,11 @@
 
   "item.file.description.file.preview": "File Preview",
 
+  "item.page.files.head": "Files in this item",
+
+  "item.page.download.button.command.line": "Download instructions for command line",
+
+  "item.page.download.button.all.files.zip": "Download all files in item",
 
 
   "item.select.confirm": "Confirm selected",

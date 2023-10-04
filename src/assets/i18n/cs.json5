@@ -5153,6 +5153,15 @@
 //  "item.file.description.file.preview": "File Preview",
   "item.file.description.file.preview": "Náhled souboru",
 
+  //  "item.page.files.head": "Files in this item",
+  "item.page.files.head": "Soubory tohoto záznamu",
+
+  // "item.page.download.button.command.line": "Download instructions for command line",
+  "item.page.download.button.command.line": "Instrukce pro stažení z příkazové řádky",
+
+  // "item.page.download.button.all.files.zip": "Download all files in item",
+  "item.page.download.button.all.files.zip": "Stáhnout všechny soubory záznamu",
+
 
   // "item.select.confirm" : "Confirm selected"
   "item.select.confirm" : "Potvrdit vybrané",
