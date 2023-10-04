@@ -1,9 +1,6 @@
 <div class="file-preview-box rounded pt-2">
   <div style="text-align: left" *ngIf="fileInput.format === 'video/mp4'">
     <video preload="none" controls="controls" height="240">
-      <source
-        src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
-        type="video/mp4"/>
       {{'item.file.description.not.supported.video' | translate}}
     </video>
   </div>
@@ -32,7 +29,7 @@
     </dl>
     <img
       *ngIf="fileInput.format !== 'video/mp4'"
-        src="https://lindat.mff.cuni.cz/repository/xmlui/themes/UFAL/images/mime/application-x-gzip.png"
+        src="assets/images/application-x-gzip.png"
       alt="Preview"
       class="preview-image"/>
   </div>
