@@ -163,6 +163,8 @@ describe('RegistryService', () => {
         { provide: NotificationsService, useValue: new NotificationsServiceStub() },
         { provide: MetadataSchemaDataService, useValue: metadataSchemaService },
         { provide: MetadataFieldDataService, useValue: metadataFieldService },
+        { provide: MetadataFieldDataService, useValue: metadataFieldService },
+        { provide: MetadataBitstreamDataService, useValue: metadataBitstreamDataService },
         RegistryService
       ]
     });

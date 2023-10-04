@@ -29,6 +29,8 @@ import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-dat
 import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.service';
 import { MetadataBitstreamDataService } from 'src/app/core/data/metadata-bitstream-data.service';
 import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
@@ -79,6 +81,15 @@ describe('ItemPageComponent', () => {
       isAuthorized: observableOf(false),
     });
 
+    const configurationDataService = jasmine.createSpyObj('configurationDataService', {
+      findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
+        name: 'test',
+        values: [
+          'org.dspace.ctask.general.ProfileFormats = test'
+        ]
+      }))
+    });
+
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot({
         loader: {
@@ -101,6 +112,7 @@ describe('ItemPageComponent', () => {
         { provide: MetadataBitstreamDataService, useValue: mockMetadataBitstreamDataService },
         RegistryService,
         { provide: AuthorizationDataService, useValue: authorizationDataService },
+        { provide: ConfigurationDataService, useValue: configurationDataService }
       ],
 
       schemas: [NO_ERRORS_SCHEMA]

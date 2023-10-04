@@ -27,6 +27,8 @@ import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.
 import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-data.service';
 import { MetadataBitstreamDataService } from 'src/app/core/data/metadata-bitstream-data.service';
 import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
+import { ConfigurationDataService} from '../../core/data/configuration-data.service';
+import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
@@ -86,6 +88,16 @@ describe('FullItemPageComponent', () => {
       searchByHandleParams: () => of({}) // Returns a mock Observable
     };
 
+    const configurationDataService = jasmine.createSpyObj('configurationDataService', {
+      findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
+        name: 'test',
+        values: [
+          'org.dspace.ctask.general.ProfileFormats = test'
+        ]
+      }))
+    });
+
+
     translateService = getMockTranslateService();
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot({
@@ -106,6 +118,7 @@ describe('FullItemPageComponent', () => {
         { provide: NotificationsService, useValue: {} },
         { provide: MetadataSchemaDataService, useValue: {} },
         { provide: MetadataFieldDataService, useValue: {} },
+        { provide: ConfigurationDataService, useValue: configurationDataService },
         RegistryService
       ],
 
@@ -130,19 +143,23 @@ describe('FullItemPageComponent', () => {
   });
 
   it('should show simple view button when not originated from workflow item', () => {
-    expect(comp.fromSubmissionObject).toBe(false);
-    const simpleViewBtn = fixture.debugElement.query(By.css('.simple-view-link'));
-    expect(simpleViewBtn).toBeTruthy();
+    waitForAsync(() => {
+      expect(comp.fromSubmissionObject).toBe(false);
+      const simpleViewBtn = fixture.debugElement.query(By.css('.simple-view-link'));
+      expect(simpleViewBtn).toBeTruthy();
+    });
   });
 
   it('should not show simple view button when originated from workflow', fakeAsync(() => {
     routeData.wfi = createSuccessfulRemoteDataObject$({ id: 'wfiId'});
     comp.ngOnInit();
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(comp.fromSubmissionObject).toBe(true);
-      const simpleViewBtn = fixture.debugElement.query(By.css('.simple-view-link'));
-      expect(simpleViewBtn).toBeFalsy();
+    waitForAsync(() => {
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(comp.fromSubmissionObject).toBe(true);
+        const simpleViewBtn = fixture.debugElement.query(By.css('.simple-view-link'));
+        expect(simpleViewBtn).toBeFalsy();
+      });
     });
   }));
 

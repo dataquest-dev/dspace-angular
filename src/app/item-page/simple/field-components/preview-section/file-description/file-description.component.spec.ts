@@ -3,14 +3,42 @@ import { By } from '@angular/platform-browser';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
 import { ResourceType } from 'src/app/core/shared/resource-type';
 import { FileDescriptionComponent } from './file-description.component';
+import { createSuccessfulRemoteDataObject$ } from '../../../../../shared/remote-data.utils';
+import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { getMockTranslateService } from '../../../../../shared/mocks/translate.service.mock';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateLoaderMock } from '../../../../../shared/mocks/translate-loader.mock';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('FileDescriptionComponent', () => {
   let component: FileDescriptionComponent;
   let fixture: ComponentFixture<FileDescriptionComponent>;
+  let translateService: TranslateService;
 
   beforeEach(async () => {
+    const configurationDataService = jasmine.createSpyObj('configurationDataService', {
+      findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
+        name: 'test',
+        values: [
+          'org.dspace.ctask.general.ProfileFormats = test'
+        ]
+      }))
+    });
+
+    translateService = getMockTranslateService();
     await TestBed.configureTestingModule({
+        imports: [TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useClass: TranslateLoaderMock
+          }
+        }), RouterTestingModule.withRoutes([]), BrowserAnimationsModule],
       declarations: [FileDescriptionComponent],
+      providers: [
+        { provide: ConfigurationDataService, useValue: configurationDataService }
+      ]
     }).compileComponents();
   });
 

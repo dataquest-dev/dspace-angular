@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FileInfo, MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
 import { FileTreeViewComponent } from './file-tree-view.component';
@@ -45,8 +45,10 @@ describe('FileTreeViewComponent', () => {
   });
 
   it('should display the node name', () => {
-    const nodeNameElement = fixture.debugElement.query(By.css('.foldername')).nativeElement;
-    expect(nodeNameElement.textContent).toContain('TestFolder');
+    waitForAsync(() => {
+      const nodeNameElement = fixture.debugElement.query(By.css('#folderName')).nativeElement;
+      expect(nodeNameElement.textContent).toContain('TestFolder');
+    });
   });
 
   it('should correctly get the keys of the sub object', () => {
