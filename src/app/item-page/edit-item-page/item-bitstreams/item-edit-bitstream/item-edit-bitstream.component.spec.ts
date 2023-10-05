@@ -1,5 +1,5 @@
 import { ItemEditBitstreamComponent } from './item-edit-bitstream.component';
-import {ComponentFixture, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import { ObjectUpdatesService } from '../../../../core/data/object-updates/object-updates.service';
 import { of as observableOf } from 'rxjs';
 import { Bitstream } from '../../../../core/shared/bitstream.model';
