@@ -2952,9 +2952,9 @@
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
 "@yarnpkg/parsers@^3.0.0-rc.18":
-  version "3.0.0-rc.53"
-  resolved "https://registry.yarnpkg.com/@yarnpkg/parsers/-/parsers-3.0.0-rc.53.tgz#9b5eba91567d8c0f1f5224b1c4477036ea285622"
-  integrity sha512-kprOp3hV9l7B9oqjgTQIM04mmEaYBYcccUXVIM1NFFf10HqnD9joTfZ1cAqx9lpccWzgUnHkrhVwhhlGjPzyIw==
+  version "3.0.0-rc.32"
+  resolved "https://registry.yarnpkg.com/@yarnpkg/parsers/-/parsers-3.0.0-rc.32.tgz#0aef0bd1b9e9954173c01a7cbd35f98765e39e7d"
+  integrity sha512-Sz2g88b3iAu2jpMnhtps2bRX2GAAOvanOxGcVi+o7ybGjLetxK23o2cHskXKypvXxtZTsJegel5pUWSPpYphww==
   dependencies:
     js-yaml "^3.10.0"
     tslib "^2.4.0"
