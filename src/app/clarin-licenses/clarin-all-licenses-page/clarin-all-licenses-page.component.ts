@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {RemoteData} from '../../core/data/remote-data';
-import {PaginatedList} from '../../core/data/paginated-list.model';
 import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
 import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
 import {getFirstSucceededRemoteListPayload} from '../../core/shared/operators';
@@ -33,9 +31,33 @@ export class ClarinAllLicensesPageComponent implements OnInit {
     return this.clarinLicenseService.findAll(options, false)
       .pipe(getFirstSucceededRemoteListPayload())
       .subscribe(res => {
-        console.log('res', res);
-        this.licensesRD$.next(res);
+        this.licensesRD$.next(this.filterLicensesByLicenseLabel(res));
       });
+  }
+
+  /**
+   * Show PUB licenses at first, then ACA and RES
+   * @private
+   */
+  private filterLicensesByLicenseLabel(clarinLicensesResponse: ClarinLicense[]) {
+    // Show PUB licenses as first.
+    const pubLicenseArray = [];
+    // Then show ACA and RES licenses.
+    const acaResLicenseArray = [];
+
+    clarinLicensesResponse?.forEach(clarinLicense => {
+      if (clarinLicense?.clarinLicenseLabel?.label === 'PUB') {
+        pubLicenseArray.push(clarinLicense);
+      } else {
+        acaResLicenseArray.push(clarinLicense);
+      }
+    });
+
+    // Sort acaResLicenseArray by the license label (ACA, RES)
+    acaResLicenseArray.sort((a, b) => a.clarinLicenseLabel?.label?.localeCompare(b.clarinLicenseLabel?.label));
+
+    // Concat two array into one.
+    return pubLicenseArray.concat(acaResLicenseArray);
   }
 
 }
