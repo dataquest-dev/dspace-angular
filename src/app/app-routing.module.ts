@@ -249,7 +249,6 @@ import {STATIC_PAGE_PATH} from './static-page/static-page-routing-paths';
           {
             path: LICENSES_MODULE_PATH,
             loadChildren: () => import('./clarin-licenses/clarin-license.module').then((m) => m.ClarinLicenseModule),
-            canActivate: [SiteAdministratorGuard],
           },
           {
             path: CONTRACT_PAGE_MODULE_PATH,
