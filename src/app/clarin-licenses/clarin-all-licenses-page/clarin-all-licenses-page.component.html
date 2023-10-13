@@ -1,9 +1,10 @@
 <div class="container">
   <div class="card">
     <h5 class="card-header">{{ 'clarin.license.all-page.title' | translate }}</h5>
+    <ds-loading *ngIf="isLoading" class="text-center"></ds-loading>
     <div class="card-body" *ngFor="let clarinLicense of (licensesRD$ | async)">
-      <h6 class="card-header"><a [href]="clarinLicense.definition">{{ clarinLicense.name }}</a></h6>
-      <div class="card-body" style="background-color: white; border: 1px solid #e3e3e3; border-radius: 4px;">
+      <h6 class="card-header border-bottom-0 license-card-border"><a [href]="clarinLicense.definition">{{ clarinLicense.name }}</a></h6>
+      <div class="card-body rounded-bottom license-card-border">
         <div>
           <div><b>Source: </b></div>
           <div><a [href]="clarinLicense.definition">{{ clarinLicense.definition }}</a></div>

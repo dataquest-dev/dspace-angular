@@ -17,6 +17,11 @@ export class ClarinAllLicensesPageComponent implements OnInit {
    */
   licensesRD$: BehaviorSubject<ClarinLicense[]> = new BehaviorSubject<ClarinLicense[]>(null);
 
+  /**
+   * If the request isn't processed show to loading bar.
+   */
+  isLoading = false;
+
   constructor(private clarinLicenseService: ClarinLicenseDataService) { }
 
   ngOnInit(): void {
@@ -24,6 +29,8 @@ export class ClarinAllLicensesPageComponent implements OnInit {
   }
 
   loadAllLicenses() {
+    this.isLoading = true;
+
     const options = new FindListOptions();
     options.currentPage = 0;
     // Load all licenses
@@ -32,6 +39,7 @@ export class ClarinAllLicensesPageComponent implements OnInit {
       .pipe(getFirstSucceededRemoteListPayload())
       .subscribe(res => {
         this.licensesRD$.next(this.filterLicensesByLicenseLabel(res));
+        this.isLoading = false;
       });
   }
 
