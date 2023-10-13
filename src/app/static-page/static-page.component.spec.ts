@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StaticPageComponent } from './static-page.component';
-import {HtmlContentService} from '../shared/html-content.service';
-import {Router} from '@angular/router';
-import {RouterMock} from '../shared/mocks/router.mock';
-import {LocaleService} from '../core/locale/locale.service';
-import {of} from 'rxjs';
+import { HtmlContentService } from '../shared/html-content.service';
+import { Router } from '@angular/router';
+import { RouterMock } from '../shared/mocks/router.mock';
+import { LocaleService } from '../core/locale/locale.service';
 
 describe('StaticPageComponent', () => {
   let component: StaticPageComponent;

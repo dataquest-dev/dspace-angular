@@ -44,7 +44,7 @@ import { MenuResolver } from './menu.resolver';
 import { ThemedPageErrorComponent } from './page-error/themed-page-error.component';
 import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
 import { StaticPageModule } from './static-page/static-page.module';
-import {STATIC_PAGE_PATH} from './static-page/static-page-routing-paths';
+import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
 
 @NgModule({
   imports: [
@@ -277,7 +277,6 @@ import {STATIC_PAGE_PATH} from './static-page/static-page-routing-paths';
       preloadingStrategy: NoPreloading,
       onSameUrlNavigation: 'reload',
 }),
-    StaticPageModule
   ],
   exports: [RouterModule],
 })

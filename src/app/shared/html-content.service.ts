@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {catchError} from 'rxjs/operators';
-import {of as observableOf} from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { of as observableOf } from 'rxjs';
 
 @Injectable()
 export class HtmlContentService {

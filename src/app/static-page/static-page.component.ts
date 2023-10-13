@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {HtmlContentService} from '../shared/html-content.service';
-import {BehaviorSubject, firstValueFrom} from 'rxjs';
-import {Router} from '@angular/router';
-import {isEmpty, isNotEmpty} from '../shared/empty.util';
-import {LocaleService} from '../core/locale/locale.service';
-import {STATIC_FILES_DEFAULT_ERROR_PAGE_PATH, STATIC_FILES_PROJECT_PATH} from './static-page-routing-paths';
+import { Component, OnInit } from '@angular/core';
+import { HtmlContentService } from '../shared/html-content.service';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
+import { isEmpty, isNotEmpty } from '../shared/empty.util';
+import { LocaleService } from '../core/locale/locale.service';
+import { STATIC_FILES_DEFAULT_ERROR_PAGE_PATH, STATIC_FILES_PROJECT_PATH } from './static-page-routing-paths';
 
 @Component({
   selector: 'ds-static-page',

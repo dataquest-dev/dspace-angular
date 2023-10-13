@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {ClarinLicense} from '../../core/shared/clarin/clarin-license.model';
-import {ClarinLicenseDataService} from '../../core/data/clarin/clarin-license-data.service';
-import {getFirstSucceededRemoteListPayload} from '../../core/shared/operators';
-import {FindListOptions} from '../../core/data/find-list-options.model';
+import { BehaviorSubject } from 'rxjs';
+import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
+import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
+import { getFirstSucceededRemoteListPayload } from '../../core/shared/operators';
+import { FindListOptions } from '../../core/data/find-list-options.model';
 
 @Component({
   selector: 'ds-clarin-all-licenses-page',

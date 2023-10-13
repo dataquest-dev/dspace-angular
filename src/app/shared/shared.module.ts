@@ -274,7 +274,7 @@ import {
 import { EpersonGroupListComponent } from './eperson-group-list/eperson-group-list.component';
 import { EpersonSearchBoxComponent } from './eperson-group-list/eperson-search-box/eperson-search-box.component';
 import { GroupSearchBoxComponent } from './eperson-group-list/group-search-box/group-search-box.component';
-import {HtmlContentService} from './html-content.service';
+import { HtmlContentService } from './html-content.service';
 
 const MODULES = [
   CommonModule,
