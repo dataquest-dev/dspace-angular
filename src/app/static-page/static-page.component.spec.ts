@@ -1,22 +1,43 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StaticPageComponent } from './static-page.component';
+import {HtmlContentService} from '../shared/html-content.service';
+import {Router} from '@angular/router';
+import {RouterMock} from '../shared/mocks/router.mock';
+import {LocaleService} from '../core/locale/locale.service';
+import {of} from 'rxjs';
 
 describe('StaticPageComponent', () => {
   let component: StaticPageComponent;
   let fixture: ComponentFixture<StaticPageComponent>;
 
+  let htmlContentService: HtmlContentService;
+  let localeService: any;
+
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ StaticPageComponent ]
-    })
-    .compileComponents();
+    htmlContentService = jasmine.createSpyObj('htmlContentService', {
+      fetchHtmlContent: '<div>TEST MESSAGE</div>'
+    });
+    localeService = jasmine.createSpyObj('LocaleService', {
+      getCurrentLanguageCode: jasmine.createSpy('getCurrentLanguageCode'),
+    });
+
+    TestBed.configureTestingModule({
+      declarations: [ StaticPageComponent ],
+      providers: [
+        { provide: HtmlContentService, useValue: htmlContentService },
+        { provide: Router, useValue: new RouterMock() },
+        { provide: LocaleService, useValue: localeService }
+      ]
+    });
+
+    localeService = TestBed.inject(LocaleService);
+    localeService.getCurrentLanguageCode.and.returnValue('en');
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StaticPageComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
