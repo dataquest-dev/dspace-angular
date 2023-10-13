@@ -702,6 +702,9 @@
   "bitstream.download.page.back": "Back" ,
 
 
+  "clarin.license.all-page.title": "Licenses",
+
+
   "bitstream.edit.authorizations.link": "Edit bitstream's Policies",
 
   "bitstream.edit.authorizations.title": "Edit bitstream's Policies",
@@ -2041,7 +2044,9 @@
 
 
 
-  "licenses.breadcrumbs": "License administration",
+  "licenses.manage-table.breadcrumbs": "License administration",
+
+  "licenses.breadcrumbs": "Licenses",
 
 
 

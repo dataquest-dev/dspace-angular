@@ -16,14 +16,18 @@ import { LICENSES_MANAGE_TABLE_PATH } from '../app-routing-paths';
         children: [
           {
             path: '',
+            resolve: { breadcrumb: I18nBreadcrumbResolver },
             component: ClarinAllLicensesPageComponent,
+            data: {
+              breadcrumbKey: 'licenses',
+            }
           },
           {
             path: LICENSES_MANAGE_TABLE_PATH,
             component: ClarinLicensePageComponent,
             resolve: { breadcrumb: I18nBreadcrumbResolver },
             data: {
-              breadcrumbKey: 'licenses',
+              breadcrumbKey: 'licenses.manage-table',
             },
             canActivate: [SiteAdministratorGuard],
           },
