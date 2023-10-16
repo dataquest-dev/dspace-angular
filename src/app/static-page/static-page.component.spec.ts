@@ -5,6 +5,8 @@ import { HtmlContentService } from '../shared/html-content.service';
 import { Router } from '@angular/router';
 import { RouterMock } from '../shared/mocks/router.mock';
 import { LocaleService } from '../core/locale/locale.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
 describe('StaticPageComponent', () => {
   let component: StaticPageComponent;
@@ -15,7 +17,7 @@ describe('StaticPageComponent', () => {
 
   beforeEach(async () => {
     htmlContentService = jasmine.createSpyObj('htmlContentService', {
-      fetchHtmlContent: '<div>TEST MESSAGE</div>'
+      fetchHtmlContent: of('<div>TEST MESSAGE</div>')
     });
     localeService = jasmine.createSpyObj('LocaleService', {
       getCurrentLanguageCode: jasmine.createSpy('getCurrentLanguageCode'),
@@ -23,6 +25,9 @@ describe('StaticPageComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [ StaticPageComponent ],
+      imports: [
+        TranslateModule.forRoot()
+      ],
       providers: [
         { provide: HtmlContentService, useValue: htmlContentService },
         { provide: Router, useValue: new RouterMock() },
@@ -41,5 +46,11 @@ describe('StaticPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  // Load `TEST MESSAGE`
+  it('should load html file content', async () => {
+    await component.ngOnInit();
+    expect(component.htmlContent.value).toBe('<div>TEST MESSAGE</div>');
   });
 });
