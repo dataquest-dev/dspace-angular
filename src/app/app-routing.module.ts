@@ -43,7 +43,6 @@ import { ServerCheckGuard } from './core/server-check/server-check.guard';
 import { MenuResolver } from './menu.resolver';
 import { ThemedPageErrorComponent } from './page-error/themed-page-error.component';
 import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
-import { StaticPageModule } from './static-page/static-page.module';
 import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
 
 @NgModule({
