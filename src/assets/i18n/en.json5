@@ -714,12 +714,7 @@
 
 
 
-
-
-
-
-
-  "bitstream.edit.authorizations.link",: "Edit bitstream's Policies",
+  "bitstream.edit.authorizations.link": "Edit bitstream's Policies",
 
   "bitstream.edit.authorizations.title": "Edit bitstream's Policies",
 
