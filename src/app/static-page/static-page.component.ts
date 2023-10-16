@@ -6,6 +6,10 @@ import { isEmpty, isNotEmpty } from '../shared/empty.util';
 import { LocaleService } from '../core/locale/locale.service';
 import { STATIC_FILES_DEFAULT_ERROR_PAGE_PATH, STATIC_FILES_PROJECT_PATH } from './static-page-routing-paths';
 
+/**
+ * Component which load and show static files from the `static-files` folder.
+ * E.g., `<UI_URL>/static/test_file.html will load the file content from the `static-files/test_file.html`/
+ */
 @Component({
   selector: 'ds-static-page',
   templateUrl: './static-page.component.html',
@@ -50,6 +54,10 @@ export class StaticPageComponent implements OnInit {
     await this.loadErrorPage();
   }
 
+  /**
+   * Load file name from the URL - `static/FILE_NAME.html`
+   * @private
+   */
   private getHtmlFileName() {
     let urlInList = this.router.url?.split('/');
     // Filter empty elements
@@ -60,9 +68,14 @@ export class StaticPageComponent implements OnInit {
       return null;
     }
 
+    // If the url is too long take just the first string after `/static` prefix.
     return urlInList[1];
   }
 
+  /**
+   * Load `static-files/error.html`
+   * @private
+   */
   private async loadErrorPage() {
     let errorPage = await firstValueFrom(this.htmlContentService.fetchHtmlContent(STATIC_FILES_DEFAULT_ERROR_PAGE_PATH));
     if (isEmpty(errorPage)) {

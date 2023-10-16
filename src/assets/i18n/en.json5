@@ -704,8 +704,22 @@
 
   "clarin.license.all-page.title": "Available Licenses",
 
+  "clarin.license.all-page.source": "Source:",
 
-  "bitstream.edit.authorizations.link": "Edit bitstream's Policies",
+  "clarin.license.all-page.labels": "Labels:",
+
+  "clarin.license.all-page.extra-information": "Extra information required:",
+
+  "clarin.license.all-page.extra-information.default": "NONE",
+
+
+
+
+
+
+
+
+  "bitstream.edit.authorizations.link",: "Edit bitstream's Policies",
 
   "bitstream.edit.authorizations.title": "Edit bitstream's Policies",
 
