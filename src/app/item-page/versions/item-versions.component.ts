@@ -42,6 +42,7 @@ import { Version } from '../../core/shared/version.model';
 import { PaginatedSearchOptions } from '../../shared/search/models/paginated-search-options.model';
 import { followLink } from '../../shared/utils/follow-link-config.model';
 import { hasValue, hasValueOperator, isNotNull } from '../../shared/empty.util';
+import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 
 @Component({
   selector: 'ds-item-versions',
@@ -180,6 +181,7 @@ export class ItemVersionsComponent implements OnInit {
               private workspaceItemDataService: WorkspaceitemDataService,
               private workflowItemDataService: WorkflowItemDataService,
               private configurationService: ConfigurationDataService,
+              private dsoNameService: DSONameService
   ) {
   }
 
@@ -533,6 +535,20 @@ export class ItemVersionsComponent implements OnInit {
 
       this.showSubmitter();
     }
+  }
+
+  getItemNameFromVersion(version: Version) {
+    return version.item
+      .pipe(
+        getFirstSucceededRemoteDataPayload(),
+        map((item: Item) => this.dsoNameService.getName(item)));
+  }
+
+  getItemHandleFromVersion(version: Version) {
+    return version.item
+      .pipe(
+        getFirstSucceededRemoteDataPayload(),
+        map((item: Item) => item.firstMetadataValue('dc.identifier.uri')));
   }
 
   ngOnDestroy(): void {
