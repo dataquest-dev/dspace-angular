@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {
   getAllSucceededRemoteData,
   getAllSucceededRemoteDataPayload,
@@ -41,8 +41,11 @@ import { PaginationService } from 'src/app/core/pagination/pagination.service';
 import { Version } from '../../core/shared/version.model';
 import { PaginatedSearchOptions } from '../../shared/search/models/paginated-search-options.model';
 import { followLink } from '../../shared/utils/follow-link-config.model';
-import { hasValue, hasValueOperator, isNotNull } from '../../shared/empty.util';
+import {hasValue, hasValueOperator, isEmpty, isNotEmpty, isNotNull} from '../../shared/empty.util';
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
+import isEqual from 'lodash/isEqual';
+// eslint-disable-next-line lodash/import-scope
+import _ from 'lodash';
 
 @Component({
   selector: 'ds-item-versions',
@@ -162,10 +165,14 @@ export class ItemVersionsComponent implements OnInit {
   canCreateVersion$: Observable<boolean>;
   createVersionTitle$: Observable<string>;
 
+  relations: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+
   /**
    * Show `Editor` column in the table.
    */
   showSubmitter$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
+
+  allVersions: BehaviorSubject<VersionWithRelations[]> = new BehaviorSubject<VersionWithRelations[]>([]);
 
   constructor(private versionHistoryService: VersionHistoryDataService,
               private versionService: VersionDataService,
@@ -551,10 +558,10 @@ export class ItemVersionsComponent implements OnInit {
         map((item: Item) => item.firstMetadataValue('dc.identifier.uri')));
   }
 
-  ngOnDestroy(): void {
-    this.cleanupSubscribes();
-    this.paginationService.clearPagination(this.options.id);
+  getVersionsFromMetadata(version: Version) {
+    return '';
   }
+
 
   /**
    * Unsub all subscriptions
@@ -563,4 +570,144 @@ export class ItemVersionsComponent implements OnInit {
     this.subs.filter((sub) => hasValue(sub)).forEach((sub) => sub.unsubscribe());
   }
 
+  getItemFromVersion(version: Version) {
+    return version.item
+      .pipe(
+        getFirstSucceededRemoteDataPayload(),
+        map((item: Item) => item)
+      );
+  }
+
+  gelAllVersions(versions: Version[]) {
+    this.allVersions.next([]);
+    // Get item from current version and check `dc.relation.replaces` and `dc.relation.isreplacedby`
+    console.log('len', versions.length);
+    // let newVersionItem: Item;
+
+    versions.forEach((version: Version) => {
+      version.item
+        .pipe(getFirstSucceededRemoteDataPayload())
+        .subscribe((item: Item) => {
+          let allReplaces = [];
+          console.log('item', item);
+
+          // Store version
+          // Store replaces
+          let relationReplaces: RelationNameHandle[] = [];
+          item.allMetadataValues('dc.relation.replaces').forEach((metadataValue: string) => {
+            // if (isEqual(metadataValue, item.firstMetadataValue('dc.relation.replaces'))) {
+            //   return;
+            // }
+            const newRelationReplaces: RelationNameHandle = {
+              name: '',
+              handle: metadataValue
+            };
+            // newRelationReplaces.handle = metadataValue;
+            // Get name of the item with handle TODO
+            relationReplaces.push(newRelationReplaces);
+          });
+          // Store isreplacedby
+          let relationIsReplacedBy: RelationNameHandle[] = [];
+          const allReplacedBy = [];
+          // const isReplacedByMetadataValues
+          item.allMetadataValues('dc.relation.isreplacedby').forEach((metadataValue: string) => {
+            allReplacedBy.push(metadataValue);
+            // if (isEqual(metadataValue, item.firstMetadataValue('dc.relation.isreplacedby'))) {
+            //   return;
+            // }
+            const newRelationIsReplacedBy: RelationNameHandle = {
+              name: '',
+              handle: metadataValue
+            };
+            // Get name of the item with handle TODO
+            relationIsReplacedBy.push(newRelationIsReplacedBy);
+          });
+          const newVersionWithRelations: VersionWithRelations = {
+            version: version,
+            replaces: relationReplaces,
+            isreplacedby: relationIsReplacedBy,
+            handle: item.firstMetadataValue('dc.identifier.uri')
+          };
+          if (allReplacedBy.includes(this.item.firstMetadataValue('dc.identifier.uri'))) {
+            newVersionWithRelations.isreplacedby = [];
+          }
+          const updatedArray = this.allVersions.value;
+          updatedArray.push(newVersionWithRelations);
+          this.allVersions.next(updatedArray);
+          console.log('this.allVersions', this.allVersions.value);
+          // newVersionItem = item;
+        });
+    });
+
+    const filteredVersions: VersionWithRelations[] = [];
+    // Filter all versions table: Remove record from the table where the item:
+    // 1. has previous version handle the same as in the `dc.relation.replaces`
+    // 2. has new version handle the same the as in the `dc.relation.isreplacedby`
+    const allReplaces = [];
+    const allIsReplacedBy = [];
+    this.allVersions.value.forEach((currentVersion: VersionWithRelations, index) => {
+      let previousVersion: VersionWithRelations;
+      let newestVersion: VersionWithRelations;
+
+      if (isNotNull(this.allVersions.value?.[index - 1])) {
+        newestVersion = this.allVersions.value?.[index - 1];
+      }
+      if (isNotNull(this.allVersions.value?.[index + 1])) {
+        previousVersion = this.allVersions.value?.[index + 1];
+      }
+
+      // Process previous versions
+      if (isNotEmpty(previousVersion)) {
+        const newReplaces = [];
+        currentVersion.replaces.forEach((relationNameHandle: RelationNameHandle) => {
+          if (isEqual(previousVersion.handle, relationNameHandle.handle)) {
+            return;
+          }
+          newReplaces.push(relationNameHandle);
+        });
+        currentVersion.replaces = newReplaces;
+      }
+
+      // Process newest versions
+      if (isNotEmpty(newestVersion)) {
+        const newIsReplacedBy = [];
+        currentVersion.isreplacedby.forEach((relationNameHandle: RelationNameHandle) => {
+          if (isEqual(newestVersion.handle, relationNameHandle.handle)) {
+            return;
+          }
+          newIsReplacedBy.push(relationNameHandle);
+        });
+        currentVersion.isreplacedby = newIsReplacedBy;
+      }
+      filteredVersions.push(currentVersion);
+
+
+
+      console.log('current', currentVersion);
+      console.log('newestVersion', newestVersion);
+      console.log('previousVersion', previousVersion);
+      // if (isEqual(metadataValue, item.firstMetadataValue('dc.relation.replaces'))) {}
+    });
+    this.allVersions.next(filteredVersions);
+
+    return this.allVersions;
+  }
+
+  ngOnDestroy(): void {
+    this.cleanupSubscribes();
+    this.paginationService.clearPagination(this.options.id);
+  }
+
+}
+
+export interface VersionWithRelations {
+  version: Version;
+  handle: string,
+  replaces: RelationNameHandle[];
+  isreplacedby: RelationNameHandle[];
+}
+
+export interface RelationNameHandle {
+  name: string,
+  handle: string
 }

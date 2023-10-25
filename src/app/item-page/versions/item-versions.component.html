@@ -21,24 +21,31 @@
             <th scope="col">{{'item.version.history.table.handle' | translate}}</th>
           </tr>
           </thead>
-          <tbody>
-          <tr *ngFor="let version of versions?.page" [id]="'version-row-' + version.id">
+          <tbody *ngFor="let versionWithRelations of (gelAllVersions(versions?.page) | async)" [id]="'version-row-' + versionWithRelations?.version.id">
+          <tr *ngFor="let relationNameHandle of versionWithRelations?.isreplacedby">
+            <ng-container *ngIf="versionWithRelations?.isreplacedby?.length != 0">
+              <td></td>
+              <td>{{relationNameHandle.name}}</td>
+              <td><a [href]="relationNameHandle.handle">{{relationNameHandle.handle}}</a></td>
+            </ng-container>
+          </tr>
+          <tr>
             <td class="version-row-element-version">
               <!-- Get the ID of the workspace/workflow item (`undefined` if they don't exist).
               Conditionals inside *ngVar are needed in order to avoid useless calls. -->
-              <ng-container *ngVar="((hasDraftVersion$ | async) ? getWorkspaceId(version?.item) : undefined) as workspaceId$">
-                <ng-container *ngVar=" ((workspaceId$ | async) ? undefined : getWorkflowId(version?.item)) as workflowId$">
+              <ng-container *ngVar="((hasDraftVersion$ | async) ? getWorkspaceId(versionWithRelations?.version?.item) : undefined) as workspaceId$">
+                <ng-container *ngVar=" ((workspaceId$ | async) ? undefined : getWorkflowId(versionWithRelations?.version?.item)) as workflowId$">
 
                   <div class="left-column">
 
                     <span *ngIf="(workspaceId$ | async) || (workflowId$ | async); then versionNumberWithoutLink else versionNumberWithLink"></span>
                     <ng-template #versionNumberWithLink>
-                      <a [routerLink]="getVersionRoute(version.id)">{{version.version}}</a>
+                      <a [routerLink]="getVersionRoute(versionWithRelations?.version.id)">{{versionWithRelations?.version.version}}</a>
                     </ng-template>
                     <ng-template #versionNumberWithoutLink>
-                      {{version.version}}
+                      {{versionWithRelations?.version.version}}
                     </ng-template>
-                    <span *ngIf="version?.id === itemVersion?.id">*</span>
+                    <span *ngIf="versionWithRelations?.version?.id === itemVersion?.id">*</span>
 
                     <span *ngIf="workspaceId$ | async" class="text-light badge badge-primary ml-3">
                       {{ "item.version.history.table.workspaceItem" | translate }}
@@ -64,17 +71,17 @@
                       <ng-container *ngIf="canCreateVersion$ | async">
                         <button class="btn btn-outline-primary btn-sm version-row-element-create"
                                 [disabled]="isAnyBeingEdited() || (hasDraftVersion$ | async)"
-                                (click)="createNewVersion(version)"
+                                (click)="createNewVersion(versionWithRelations?.version)"
                                 title="{{createVersionTitle$ | async | translate }}">
                           <i class="fas fa-code-branch fa-fw"></i>
                         </button>
                       </ng-container>
                       <!--DELETE-->
-                      <ng-container *ngIf="canDeleteVersion$(version) | async">
+                      <ng-container *ngIf="canDeleteVersion$(versionWithRelations?.version) | async">
                         <button class="btn btn-sm version-row-element-delete"
                                 [ngClass]="isAnyBeingEdited() ? 'btn-outline-primary' : 'btn-outline-danger'"
                                 [disabled]="isAnyBeingEdited()"
-                                (click)="deleteVersion(version, version.id==itemVersion.id)"
+                                (click)="deleteVersion(versionWithRelations?.version, versionWithRelations?.version.id==itemVersion.id)"
                                 title="{{'item.version.history.table.action.deleteVersion' | translate}}">
                           <i class="fas fa-trash fa-fw"></i>
                         </button>
@@ -88,14 +95,21 @@
             </td>
             <td class="version-row-element-name">
               <span>
-                <a [href]="(getItemHandleFromVersion(version) | async)">
-                  {{getItemNameFromVersion(version) | async }}
+                <a [href]="(getItemHandleFromVersion(versionWithRelations?.version) | async)">
+                  {{getItemNameFromVersion(versionWithRelations?.version) | async }}
                 </a>
               </span>
             </td>
-            <td class="version-row-element-handle" *ngVar="(getItemHandleFromVersion(version) | async) as itemHandle">
+            <td class="version-row-element-handle" *ngVar="(getItemHandleFromVersion(versionWithRelations?.version) | async) as itemHandle">
               <span><a [href]="itemHandle">{{itemHandle}}</a></span>
             </td>
+          </tr>
+          <tr *ngFor="let relationNameHandle of versionWithRelations?.replaces" >
+            <ng-container *ngIf="versionWithRelations?.replaces?.length != 0 " >
+              <td></td>
+              <td>{{relationNameHandle.name}}</td>
+              <td><a [href]="relationNameHandle.handle">{{relationNameHandle.handle}}</a></td>
+            </ng-container>
           </tr>
           </tbody>
         </table>
