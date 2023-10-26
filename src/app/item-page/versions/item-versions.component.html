@@ -21,11 +21,11 @@
             <th scope="col">{{'item.version.history.table.handle' | translate}}</th>
           </tr>
           </thead>
-          <tbody *ngFor="let versionWithRelations of (gelAllVersions(versions?.page) | async)" [id]="'version-row-' + versionWithRelations?.version.id">
+          <tbody *ngFor="let versionWithRelations of gelAllVersions(versions?.page)?.value" [id]="'version-row-' + versionWithRelations?.version.id">
           <tr *ngFor="let relationNameHandle of versionWithRelations?.isreplacedby">
             <ng-container *ngIf="versionWithRelations?.isreplacedby?.length != 0">
               <td></td>
-              <td>{{relationNameHandle.name}}</td>
+              <td><a [href]="relationNameHandle.handle">{{getName(relationNameHandle.handle)}}</a></td>
               <td><a [href]="relationNameHandle.handle">{{relationNameHandle.handle}}</a></td>
             </ng-container>
           </tr>
@@ -107,7 +107,7 @@
           <tr *ngFor="let relationNameHandle of versionWithRelations?.replaces" >
             <ng-container *ngIf="versionWithRelations?.replaces?.length != 0 " >
               <td></td>
-              <td>{{relationNameHandle.name}}</td>
+              <td><a [href]="relationNameHandle.handle">{{getName(relationNameHandle.handle)}}</a></td>
               <td><a [href]="relationNameHandle.handle">{{relationNameHandle.handle}}</a></td>
             </ng-container>
           </tr>
