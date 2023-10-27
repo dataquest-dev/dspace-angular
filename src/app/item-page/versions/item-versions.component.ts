@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {BehaviorSubject, combineLatest, firstValueFrom, lastValueFrom, Observable, of, Subscription} from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import {
   getAllSucceededRemoteData,
   getAllSucceededRemoteDataPayload,
@@ -8,7 +8,7 @@ import {
   getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteListPayload,
   getRemoteDataPayload
 } from '../../core/shared/operators';
-import {filter, map, mergeMap, startWith, switchMap, take, tap} from 'rxjs/operators';
+import { map, mergeMap, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {
   getItemEditVersionhistoryRoute,
   getItemPageRoute,
@@ -41,13 +41,11 @@ import { PaginationService } from 'src/app/core/pagination/pagination.service';
 import { Version } from '../../core/shared/version.model';
 import { PaginatedSearchOptions } from '../../shared/search/models/paginated-search-options.model';
 import { followLink } from '../../shared/utils/follow-link-config.model';
-import {hasValue, hasValueOperator, isEmpty, isNotEmpty, isNotNull} from '../../shared/empty.util';
+import { hasValue, hasValueOperator, isNotEmpty, isNotNull } from '../../shared/empty.util';
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 import isEqual from 'lodash/isEqual';
-// eslint-disable-next-line lodash/import-scope
-import _ from 'lodash';
-import {RequestParam} from '../../core/cache/models/request-param.model';
-import {FindListOptions} from '../../core/data/find-list-options.model';
+import { RequestParam } from '../../core/cache/models/request-param.model';
+import { FindListOptions } from '../../core/data/find-list-options.model';
 
 @Component({
   selector: 'ds-item-versions',
@@ -167,17 +165,23 @@ export class ItemVersionsComponent implements OnInit {
   canCreateVersion$: Observable<boolean>;
   createVersionTitle$: Observable<string>;
 
-  relations: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
-
   /**
    * Show `Editor` column in the table.
    */
   showSubmitter$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 
-  name: BehaviorSubject<string> = new BehaviorSubject<string>('');
-
+  /**
+   * If the version table is empty load the versions from the metadata `dc.relation.replaces` and
+   * `dc.relation.isreplacedby`
+   */
   versionsFromMetadata: BehaviorSubject<RelationNameHandle[]> = new BehaviorSubject<RelationNameHandle[]>([]);
 
+  /**
+   * Loading of the name from the items handles for the items which are stored in the metadata dc.relation.replaces` and
+   * `dc.relation.isreplacedby`
+   * Names are stored in this dict to avoid endless calling rest API to get the name of the Item.
+   * @private
+   */
   private nameCache: { [handle: string]: string } = {};
 
   constructor(private versionHistoryService: VersionHistoryDataService,
@@ -571,40 +575,49 @@ export class ItemVersionsComponent implements OnInit {
     this.subs.filter((sub) => hasValue(sub)).forEach((sub) => sub.unsubscribe());
   }
 
+  /**
+   * The Item from the current version could have linked another versions in the metadata `dc.relation.replaces` and
+   * `dc.relation.isreplacedby`. Get all this linked versions and show `name` and `handle` of that Items.
+   * @param versions
+   */
   gelAllVersions(versions: Version[]) {
     let allVersions: BehaviorSubject<VersionWithRelations[]> = new BehaviorSubject<VersionWithRelations[]>([]);
-    // Get item from current version and check `dc.relation.replaces` and `dc.relation.isreplacedby`
+    // Get item from current version and get all linked versions from the metadata `dc.relation.replaces`
+    // and `dc.relation.isreplacedby`
     versions.forEach((version: Version) => {
+      // Send request to DSpace API to get item from the version.
       version.item
         .pipe(getFirstSucceededRemoteDataPayload())
         .subscribe((item: Item) => {
           let relationReplaces: RelationNameHandle[] = [];
+          // Get all metadatavalues from `dc.relation.replaces`
           for (const metadataValue of item.allMetadataValues('dc.relation.replaces')) {
             const newRelationReplaces: RelationNameHandle = {
               name: '',
               handle: metadataValue
             };
-            // Get name of the item with handle TODO
             relationReplaces.push(newRelationReplaces);
           }
           // Store isreplacedby
           let relationIsReplacedBy: RelationNameHandle[] = [];
           const allReplacedBy = [];
+          // Get all metadatavalues from `dc.relation.isreplacedby`
           item.allMetadataValues('dc.relation.isreplacedby').forEach((metadataValue: string) => {
             allReplacedBy.push(metadataValue);
             const newRelationIsReplacedBy: RelationNameHandle = {
               name: '',
               handle: metadataValue
             };
-            // Get name of the item with handle TODO
             relationIsReplacedBy.push(newRelationIsReplacedBy);
           });
+          // Add all linked versions to the VersionWithRelations object.
           const newVersionWithRelations: VersionWithRelations = {
             version: version,
             replaces: relationReplaces,
             isreplacedby: relationIsReplacedBy,
             handle: item.firstMetadataValue('dc.identifier.uri')
           };
+          // Ignore handle from the metadata if it is handle of current Item which is fetched from the version.
           if (allReplacedBy.includes(this.item.firstMetadataValue('dc.identifier.uri'))) {
             newVersionWithRelations.isreplacedby = [];
           }
@@ -618,13 +631,16 @@ export class ItemVersionsComponent implements OnInit {
     return allVersions;
   }
 
+  /**
+   * If the VersionsRD$ object is empty - there is not data in the database, but the Item has metadata
+   * `dc.relation.replaces` and `dc.relation.isreplacedby` show Item's info from that metadata fields.
+   */
   getVersionsFromMetadata(item: Item) {
     let relations = item.allMetadataValues('dc.relation.replaces');
     // Merge two arrays into one
     relations.push(...item.allMetadataValues('dc.relation.isreplacedby'));
 
     relations.forEach((value: string, index) => {
-
       const newRelationNameHandle: RelationNameHandle = {
         name: this.getNameFromHandle(value),
         handle: value
@@ -636,6 +652,9 @@ export class ItemVersionsComponent implements OnInit {
     return this.versionsFromMetadata;
   }
 
+  /**
+   * Remove duplicities from the replaces and isreplacedby arrays.
+   */
   filterVersions(allVersions: VersionWithRelations[]) {
     const filteredVersions: VersionWithRelations[] = [];
     // Filter all versions table: Remove record from the table where the item:
@@ -681,13 +700,19 @@ export class ItemVersionsComponent implements OnInit {
     return filteredVersions;
   }
 
+  /**
+   * Call rest API to get Item's name following its handle.
+   * The names are stored in the dictionary to avoid endless API calling.
+   */
   getNameFromHandle(handle) {
     if (!this.nameCache[handle]) {
+      // Create params for the request
       const params = [new RequestParam('handle', handle)];
       const paramOptions = Object.assign(new FindListOptions(), {
         searchParams: [...params]
       });
 
+      // Send request and process the async response
       this.itemService
         .searchBy('byHandle', paramOptions, false, true)
         .pipe(
@@ -706,6 +731,10 @@ export class ItemVersionsComponent implements OnInit {
 
 }
 
+/**
+ * It is override of the `Version` class. We need to show all replaces and isreplacedby metadata values
+ * for the current Version.
+ */
 export interface VersionWithRelations {
   version: Version;
   handle: string,
@@ -713,6 +742,10 @@ export interface VersionWithRelations {
   isreplacedby: RelationNameHandle[];
 }
 
+/**
+ * Show handle and name of the Item which is fetched from the `dc.relation.replaces` and `dc.relation.isreplacedby`
+ * metadata of the current version.
+ */
 export interface RelationNameHandle {
   name: string,
   handle: string
