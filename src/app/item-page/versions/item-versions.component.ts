@@ -174,9 +174,9 @@ export class ItemVersionsComponent implements OnInit {
    */
   showSubmitter$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 
-  // allVersions: BehaviorSubject<VersionWithRelations[]> = new BehaviorSubject<VersionWithRelations[]>([]);
-
   name: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  versionsFromMetadata: BehaviorSubject<RelationNameHandle[]> = new BehaviorSubject<RelationNameHandle[]>([]);
 
   private nameCache: { [handle: string]: string } = {};
 
@@ -564,11 +564,6 @@ export class ItemVersionsComponent implements OnInit {
         map((item: Item) => item.firstMetadataValue('dc.identifier.uri')));
   }
 
-  getVersionsFromMetadata(version: Version) {
-    return '';
-  }
-
-
   /**
    * Unsub all subscriptions
    */
@@ -576,56 +571,27 @@ export class ItemVersionsComponent implements OnInit {
     this.subs.filter((sub) => hasValue(sub)).forEach((sub) => sub.unsubscribe());
   }
 
-  getItemFromVersion(version: Version) {
-    return version.item
-      .pipe(
-        getFirstSucceededRemoteDataPayload(),
-        map((item: Item) => item)
-      );
-  }
-
   gelAllVersions(versions: Version[]) {
     let allVersions: BehaviorSubject<VersionWithRelations[]> = new BehaviorSubject<VersionWithRelations[]>([]);
-    // allVersions.next([]);
     // Get item from current version and check `dc.relation.replaces` and `dc.relation.isreplacedby`
-    console.log('len', versions.length);
-    // let newVersionItem: Item;
-
     versions.forEach((version: Version) => {
       version.item
         .pipe(getFirstSucceededRemoteDataPayload())
         .subscribe((item: Item) => {
-          let allReplaces = [];
-          console.log('item', item);
-
-          // Store version
-          // Store replaces
           let relationReplaces: RelationNameHandle[] = [];
           for (const metadataValue of item.allMetadataValues('dc.relation.replaces')) {
-            // Example
-            // Example
-
-
-            // if (isEqual(metadataValue, item.firstMetadataValue('dc.relation.replaces'))) {
-            //   return;
-            // }
             const newRelationReplaces: RelationNameHandle = {
               name: '',
               handle: metadataValue
             };
-            // newRelationReplaces.handle = metadataValue;
             // Get name of the item with handle TODO
             relationReplaces.push(newRelationReplaces);
           }
           // Store isreplacedby
           let relationIsReplacedBy: RelationNameHandle[] = [];
           const allReplacedBy = [];
-          // const isReplacedByMetadataValues
           item.allMetadataValues('dc.relation.isreplacedby').forEach((metadataValue: string) => {
             allReplacedBy.push(metadataValue);
-            // if (isEqual(metadataValue, item.firstMetadataValue('dc.relation.isreplacedby'))) {
-            //   return;
-            // }
             const newRelationIsReplacedBy: RelationNameHandle = {
               name: '',
               handle: metadataValue
@@ -646,15 +612,28 @@ export class ItemVersionsComponent implements OnInit {
           updatedArray.push(newVersionWithRelations);
           updatedArray = this.filterVersions(updatedArray);
           allVersions.next(updatedArray);
-          console.log('allVersions', allVersions.value);
-          // newVersionItem = item;
         });
     });
 
-
-    // allVersions.next(filteredVersions);
-
     return allVersions;
+  }
+
+  getVersionsFromMetadata(item: Item) {
+    let relations = item.allMetadataValues('dc.relation.replaces');
+    // Merge two arrays into one
+    relations.push(...item.allMetadataValues('dc.relation.isreplacedby'));
+
+    relations.forEach((value: string, index) => {
+
+      const newRelationNameHandle: RelationNameHandle = {
+        name: this.getNameFromHandle(value),
+        handle: value
+      };
+      const currentVersionsFromMetadata = this.versionsFromMetadata.value;
+      currentVersionsFromMetadata[index] = newRelationNameHandle;
+      this.versionsFromMetadata.next(currentVersionsFromMetadata);
+    });
+    return this.versionsFromMetadata;
   }
 
   filterVersions(allVersions: VersionWithRelations[]) {
@@ -662,8 +641,6 @@ export class ItemVersionsComponent implements OnInit {
     // Filter all versions table: Remove record from the table where the item:
     // 1. has previous version handle the same as in the `dc.relation.replaces`
     // 2. has new version handle the same the as in the `dc.relation.isreplacedby`
-    const allReplaces = [];
-    const allIsReplacedBy = [];
     for (const currentVersion of allVersions) {
       const index = allVersions.indexOf(currentVersion);
       let previousVersion: VersionWithRelations;
@@ -683,12 +660,6 @@ export class ItemVersionsComponent implements OnInit {
           if (isEqual(previousVersion.handle, relationNameHandle.handle)) {
             return;
           }
-          // this.getName(currentVersion.handle)
-          //   .pipe(take(1))
-          //   .subscribe(value => {
-          //     relationNameHandle.name = value;
-          //     console.log('fwef', value);
-          //   });
           newReplaces.push(relationNameHandle);
         });
         currentVersion.replaces = newReplaces;
@@ -701,59 +672,16 @@ export class ItemVersionsComponent implements OnInit {
           if (isEqual(newestVersion.handle, relationNameHandle.handle)) {
             return;
           }
-          // this.getName(currentVersion.handle)
-          //   .pipe(take(1))
-          //   .subscribe(value => {
-          //     relationNameHandle.name = value;
-          //     console.log('fwef', value);
-          //   });
           newIsReplacedBy.push(relationNameHandle);
         });
         currentVersion.isreplacedby = newIsReplacedBy;
       }
       filteredVersions.push(currentVersion);
-
-      // filteredVersions.forEach((blablaVersion: VersionWithRelations) => {
-      //   blablaVersion.isreplacedby.forEach((isreplacedby: RelationNameHandle) => {
-      //     this.getName(isreplacedby.handle)
-      //       .pipe(take(1))
-      //       .subscribe(value => {
-      //         isreplacedby.name = value;
-      //         console.log('isreplacedby', value);
-      //       });
-      //   });
-      //   blablaVersion.replaces.forEach((replaces: RelationNameHandle) => {
-      //     this.getName(replaces.handle)
-      //       .pipe(take(1))
-      //       .subscribe(value => {
-      //         replaces.name = value;
-      //         console.log('replaces', value);
-      //       });
-      //   });
-      // });
-      // this.getName(currentVersion.handle).then((r: Item[]) => {
-      //   console.log('itemResponse', r);
-      //   currentVersion.handle = r[0].id;
-      //   filteredVersions.push(currentVersion);
-      // });
-
-      // Update name for the relations
-
-
-      // .subscribe(value => {
-      //   console.log('value', value);
-      // });
-      // console.log('current', currentVersion);
-      // console.log('getName', );
-      // console.log('newestVersion', newestVersion);
-      // console.log('previousVersion', previousVersion);
-      // if (isEqual(metadataValue, item.firstMetadataValue('dc.relation.replaces'))) {}
     }
     return filteredVersions;
   }
 
-  getName(handle) {
-    console.log('getName called with, ', handle);
+  getNameFromHandle(handle) {
     if (!this.nameCache[handle]) {
       const params = [new RequestParam('handle', handle)];
       const paramOptions = Object.assign(new FindListOptions(), {
@@ -765,22 +693,9 @@ export class ItemVersionsComponent implements OnInit {
         .pipe(
           getFirstSucceededRemoteListPayload())
         .subscribe((itemList: Item[]) => {
-          console.log('itemList', itemList);
           this.nameCache[handle] = this.dsoNameService.getName(itemList?.[0]);
         });
-      // this.nameCache[handle].subscribe(value => {
-      //   console.log('this.nameCache[handle]', value);
-      // });
     }
-    console.log('heeereeee', Object.keys(this.nameCache));
-    // void firstValueFrom(this.nameCache[handle]).then(value => {
-    //   console.log('vvwewe', value);
-    // });
-    // this.nameCache[handle].subscribe(value => {
-    //   console.log('this.nameCache[handle]', value);
-    // });
-
-
     return this.nameCache[handle];
   }
 
