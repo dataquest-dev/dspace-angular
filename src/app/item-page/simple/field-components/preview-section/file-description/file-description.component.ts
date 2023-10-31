@@ -16,32 +16,18 @@ export class FileDescriptionComponent {
   constructor(protected halService: HALEndpointService, private router: Router) { }
 
   public downloadFiles() {
-    console.log('${this.fileInput.href}', `${this.fileInput.href}`);
-    console.log('gile', this.fileInput);
-    // console.log('this.halService.getRootHref()', );
-    // const href$ = this.halService.getEndpoint('bitstreams');
-    this.router.navigateByUrl('bitstreams/' + this.fileInput.id + '/download');
-    // href$.pipe(
-    //   find((href: string) => hasValue(href)),
-    // ).subscribe((endpoint: string) => {
-    //   console.log('endpoint', endpoint + '/' + this.fileInput.id + '/download');
-    // });
-    // window.location.href = this.halService.getRootHref()
+    void this.router.navigateByUrl('bitstreams/' + this.fileInput.id + '/download');
   }
 
   public isTxt() {
     return this.fileInput?.format === 'text/plain';
   }
 
-  public isHtml() {
-    return this.fileInput?.format === 'text/html';
-  }
-
   /**
    * Show scrollbar in the `.txt` preview, but it should be hidden in the other formats.
    */
   public dynamicOverflow() {
-    return (this.isTxt() || this.isHtml()) ? 'overflow: scroll' : 'overflow: hidden';
+    return this.isTxt() ? 'overflow: scroll' : 'overflow: hidden';
   }
 
   /**
