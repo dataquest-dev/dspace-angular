@@ -140,6 +140,14 @@ export class LogInPasswordComponent implements OnInit {
     // Load `dspace.ui.url` into `baseUrl` property.
     await this.assignBaseUrl();
 
+    this.authService.getRedirectUrl().subscribe(url => {
+      // If has some redirect, add it into query params
+      // clear redirect url
+      //
+      console.log('url', url);
+    });
+    console.log('here');
+
     // Store the `redirectUrl` value from the url and then remove that value from url.
     if (isNotEmpty(this.route.snapshot.queryParams?.redirectUrl)) {
       this.redirectUrl = this.route.snapshot.queryParams?.redirectUrl;
