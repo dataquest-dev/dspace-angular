@@ -15,7 +15,7 @@ import {
   MISSING_LICENSE_AGREEMENT_EXCEPTION
 } from '../../core/shared/clarin/constants';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
-import { hasValue, isEmpty, isNotEmpty, isNotNull, isUndefined } from '../../shared/empty.util';
+import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined, isUndefined} from '../../shared/empty.util';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { AuthrnBitstream } from '../../core/shared/clarin/bitstream-authorization.model';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
@@ -41,26 +41,30 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
   bitstream$: Observable<Bitstream>;
   bitstreamRD$: Observable<RemoteData<Bitstream>>;
   downloadStatus: BehaviorSubject<string> = new BehaviorSubject('');
+  zipDownloadLink: BehaviorSubject<string> = new BehaviorSubject('');
   dtoken: string;
 
   constructor(
-    private route: ActivatedRoute,
+    protected route: ActivatedRoute,
     protected router: Router,
-    private auth: AuthService,
+    protected auth: AuthService,
     protected authorizationService: AuthorizationDataService,
-    private hardRedirectService: HardRedirectService,
-    private requestService: RequestService,
+    protected hardRedirectService: HardRedirectService,
+    protected requestService: RequestService,
     protected rdbService: RemoteDataBuildService,
     protected halService: HALEndpointService,
-    private fileService: FileService,
+    protected fileService: FileService,
   ) { }
 
   ngOnInit(): void {
     // Get dtoken
     this.dtoken = isUndefined(this.route.snapshot.queryParams.dtoken) ? null : this.route.snapshot.queryParams.dtoken;
 
-    this.bitstreamRD$ = this.route.data.pipe(
-      map((data) => data.bitstream));
+    if (isUndefined(this.bitstreamRD$)) {
+      this.bitstreamRD$ = this.route.data.pipe(
+        filter((data) => hasValue(data.bitstream)),
+        map((data) => data.bitstream));
+    }
 
     this.bitstream$ = this.bitstreamRD$.pipe(
       redirectOn4xx(this.router, this.auth),
@@ -109,7 +113,11 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
         } else {
           fileLink = isNotNull(this.dtoken) ? fileLink + '?dtoken=' + this.dtoken : fileLink;
         }
-        bitstreamURL = isNotNull(this.dtoken) ? bitstreamURL + '?dtoken=' + this.dtoken : bitstreamURL ;
+        bitstreamURL = isNotNull(this.dtoken) ? bitstreamURL + '?dtoken=' + this.dtoken : bitstreamURL;
+      }
+      if (isNotEmpty(this.zipDownloadLink.getValue())) {
+        fileLink = this.zipDownloadLink.getValue();
+        bitstreamURL = this.zipDownloadLink.getValue();
       }
       if ((isAuthorized || isAuthorizedByClarin) && isLoggedIn && isNotEmpty(fileLink)) {
         this.downloadStatus.next(RequestEntryState.Success);

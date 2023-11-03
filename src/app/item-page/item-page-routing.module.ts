@@ -26,6 +26,12 @@ import { REQUEST_COPY_MODULE_PATH } from '../app-routing-paths';
 import { OrcidPageComponent } from './orcid-page/orcid-page.component';
 import { OrcidPageGuard } from './orcid-page/orcid-page.guard';
 import { DSOEditMenuResolver } from '../shared/dso-page/dso-edit-menu.resolver';
+import {
+  ClarinBitstreamDownloadPageComponent
+} from '../bitstream-page/clarin-bitstream-download-page/clarin-bitstream-download-page.component';
+import {
+  ClarinZipDownloadPageComponent
+} from '../bitstream-page/clarin-zip-download-page/clarin-zip-download-page.component';
 
 @NgModule({
   imports: [
@@ -77,7 +83,17 @@ import { DSOEditMenuResolver } from '../shared/dso-page/dso-edit-menu.resolver';
             path: ORCID_PATH,
             component: OrcidPageComponent,
             canActivate: [AuthenticatedGuard, OrcidPageGuard]
-          }
+          },
+          {
+            path: 'download',
+            component: ClarinZipDownloadPageComponent,
+            resolve: {
+              dso: ItemPageResolver,
+            },
+            data: {
+              zipDownloadLink: 'This is downlaod link'
+            }
+          },
         ],
         data: {
           menu: {
