@@ -116,9 +116,12 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
         bitstreamURL = isNotNull(this.dtoken) ? bitstreamURL + '?dtoken=' + this.dtoken : bitstreamURL;
       }
       if (isNotEmpty(this.zipDownloadLink.getValue())) {
-        fileLink = this.zipDownloadLink.getValue();
+        const authToken = fileLink.substring(fileLink.indexOf('authentication-token'));
+        fileLink = this.zipDownloadLink.getValue() + '&' + authToken;
         bitstreamURL = this.zipDownloadLink.getValue();
       }
+      // fileLink = 'http://localhost:8080/server/api/core/bitstreams/d9a41f84-a470-495a-8821-20e0a18e9276/content';
+      // bitstreamURL = 'http://localhost:8080/server/api/core/bitstreams/d9a41f84-a470-495a-8821-20e0a18e9276/content';
       if ((isAuthorized || isAuthorizedByClarin) && isLoggedIn && isNotEmpty(fileLink)) {
         this.downloadStatus.next(RequestEntryState.Success);
         this.hardRedirectService.redirect(fileLink);
