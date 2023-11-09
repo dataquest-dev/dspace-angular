@@ -5879,5 +5879,8 @@
 
   "navbar.about.service-integrations": "Service integrations",
 
-  "navbar.about.project-partnership": "Project partnerships"
+  "navbar.about.project-partnership": "Project partnerships",
+
+  "vocabulary-treeview.search.form.add": "Add",
+
 }

@@ -280,6 +280,15 @@ export class VocabularyTreeviewComponent implements OnDestroy, OnInit {
     this.searchText = '';
   }
 
+  add() {
+    const userVocabularyEntry = {
+      value: this.searchText,
+      display: this.searchText,
+    } as VocabularyEntryDetail;
+    this.select.emit(userVocabularyEntry);
+  }
+
+
   /**
    * Unsubscribe from all subscriptions
    */
