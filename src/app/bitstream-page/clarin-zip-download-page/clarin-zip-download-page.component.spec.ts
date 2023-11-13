@@ -1,27 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ClarinZipDownloadPageComponent } from './clarin-zip-download-page.component';
-import {TranslateModule} from '@ngx-translate/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AuthService} from '../../core/auth/auth.service';
-import {FileService} from '../../core/shared/file.service';
-import {AuthorizationDataService} from '../../core/data/feature-authorization/authorization-data.service';
-import {HardRedirectService} from '../../core/services/hard-redirect.service';
-import {Bitstream} from '../../core/shared/bitstream.model';
-import {of as observableOf} from 'rxjs';
-import {createSuccessfulRemoteDataObject} from '../../shared/remote-data.utils';
-import {CommonModule} from '@angular/common';
-import {RequestService} from '../../core/data/request.service';
-import {HALEndpointService} from '../../core/shared/hal-endpoint.service';
-import {BitstreamFormatDataService} from '../../core/data/bitstream-format-data.service';
-import {RemoteDataBuildService} from '../../core/cache/builders/remote-data-build.service';
-import {BitstreamDataService} from '../../core/data/bitstream-data.service';
-import {getMockRequestService} from '../../shared/mocks/request.service.mock';
-import {HALEndpointServiceStub} from '../../shared/testing/hal-endpoint-service.stub';
-import {getMockRemoteDataBuildService} from '../../shared/mocks/remote-data-build.service.mock';
-import {ObjectCacheService} from '../../core/cache/object-cache.service';
-import {NotificationsService} from '../../shared/notifications/notifications.service';
-import {NotificationsServiceStub} from '../../shared/testing/notifications-service.stub';
+import { TranslateModule } from '@ngx-translate/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../core/auth/auth.service';
+import { FileService } from '../../core/shared/file.service';
+import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+import { HardRedirectService } from '../../core/services/hard-redirect.service';
+import { Bitstream } from '../../core/shared/bitstream.model';
+import { of as observableOf } from 'rxjs';
+import { createSuccessfulRemoteDataObject } from '../../shared/remote-data.utils';
+import { CommonModule } from '@angular/common';
+import { RequestService } from '../../core/data/request.service';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { BitstreamFormatDataService } from '../../core/data/bitstream-format-data.service';
+import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
+import { BitstreamDataService } from '../../core/data/bitstream-data.service';
+import { getMockRequestService } from '../../shared/mocks/request.service.mock';
+import { HALEndpointServiceStub } from '../../shared/testing/hal-endpoint-service.stub';
+import { getMockRemoteDataBuildService } from '../../shared/mocks/remote-data-build.service.mock';
+import { ObjectCacheService } from '../../core/cache/object-cache.service';
+import { NotificationsService } from '../../shared/notifications/notifications.service';
+import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 
 describe('ClarinZipDownloadPageComponent', () => {
   let component: ClarinZipDownloadPageComponent;

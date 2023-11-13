@@ -15,7 +15,7 @@ import {
   MISSING_LICENSE_AGREEMENT_EXCEPTION
 } from '../../core/shared/clarin/constants';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
-import {hasValue, isEmpty, isNotEmpty, isNotNull, isNotUndefined, isUndefined} from '../../shared/empty.util';
+import { hasValue, isEmpty, isNotEmpty, isNotNull, isUndefined } from '../../shared/empty.util';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { AuthrnBitstream } from '../../core/shared/clarin/bitstream-authorization.model';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
