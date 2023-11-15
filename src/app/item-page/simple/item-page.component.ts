@@ -228,7 +228,6 @@ export class ItemPageComponent implements OnInit {
 
   downloadFiles() {
     void this.router.navigateByUrl(this.router.url + '/download');
-    // window.location.href = this.halService.getRootHref() + `/core/bitstreams/allzip?handleId=${this.itemHandle}`;
   }
 
 
