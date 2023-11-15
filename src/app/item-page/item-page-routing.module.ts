@@ -88,7 +88,7 @@ import {
               dso: ItemPageResolver,
             },
             data: {
-              zipDownloadLink: 'This is downlaod link'
+              zipDownloadLink: 'This is download link'
             }
           },
         ],

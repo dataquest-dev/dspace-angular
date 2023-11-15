@@ -227,8 +227,9 @@ export class ItemPageComponent implements OnInit {
   }
 
   downloadFiles() {
-    void this.router.navigateByUrl(this.router.url + '/download');
+    this.itemRD$.pipe(
+      take(1),
+      getAllSucceededRemoteDataPayload())
+      .subscribe((item: Item) => void this.router.navigate([getItemPageRoute(item), 'download']));
   }
-
-
 }
