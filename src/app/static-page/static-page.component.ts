@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { HtmlContentService } from '../shared/html-content.service';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { isEmpty, isNotEmpty } from '../shared/empty.util';
 import { LocaleService } from '../core/locale/locale.service';
 import { STATIC_FILES_DEFAULT_ERROR_PAGE_PATH, STATIC_FILES_PROJECT_PATH } from './static-page-routing-paths';
+import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 
 /**
  * Component which load and show static files from the `static-files` folder.
@@ -17,15 +18,17 @@ import { STATIC_FILES_DEFAULT_ERROR_PAGE_PATH, STATIC_FILES_PROJECT_PATH } from 
 })
 export class StaticPageComponent implements OnInit {
   htmlContent: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  htmlFileName: string;
 
   constructor(private htmlContentService: HtmlContentService,
               private router: Router,
-              private localeService: LocaleService) { }
+              private localeService: LocaleService,
+              @Inject(APP_CONFIG) protected appConfig?: AppConfig) { }
 
   async ngOnInit(): Promise<void> {
     let url = '';
     // Fetch html file name from the url path. `static/some_file.html`
-    let htmlFileName = this.getHtmlFileName();
+    this.htmlFileName = this.getHtmlFileName();
 
     // Get current language
     let language = this.localeService.getCurrentLanguageCode();
@@ -35,7 +38,7 @@ export class StaticPageComponent implements OnInit {
     // Try to find the html file in the translated package. `static-files/language_code/some_file.html`
     // Compose url
     url = STATIC_FILES_PROJECT_PATH;
-    url += isEmpty(language) ? '/' + htmlFileName : '/' + language + '/' + htmlFileName;
+    url += isEmpty(language) ? '/' + this.htmlFileName : '/' + language + '/' + this.htmlFileName;
     let potentialContent = await firstValueFrom(this.htmlContentService.fetchHtmlContent(url));
     if (isNotEmpty(potentialContent)) {
       this.htmlContent.next(potentialContent);
@@ -43,7 +46,7 @@ export class StaticPageComponent implements OnInit {
     }
 
     // If the file wasn't find, get the non-translated file from the default package.
-    url = STATIC_FILES_PROJECT_PATH + '/' + htmlFileName;
+    url = STATIC_FILES_PROJECT_PATH + '/' + this.htmlFileName;
     potentialContent = await firstValueFrom(this.htmlContentService.fetchHtmlContent(url));
     if (isNotEmpty(potentialContent)) {
       this.htmlContent.next(potentialContent);
@@ -52,6 +55,22 @@ export class StaticPageComponent implements OnInit {
 
     // Show error page
     await this.loadErrorPage();
+  }
+
+  processLinks(e) {
+    const element: HTMLElement = e.target;
+    if (element.nodeName === 'A') {
+      e.preventDefault();
+      let href = element.getAttribute('href');
+      href = href.replace('/', '');
+      // start with `#` - redirect to the fragment
+      if (href.startsWith('#')) {
+        window.location.href = window.location.origin + this.appConfig.ui.nameSpace + '/static/' + this.htmlFileName + href;
+      } else {
+        // normal redirect
+        window.location.href = window.location.origin + this.appConfig.ui.nameSpace + '/static/' + href + '.html';
+      }
+    }
   }
 
   /**
@@ -69,7 +88,7 @@ export class StaticPageComponent implements OnInit {
     }
 
     // If the url is too long take just the first string after `/static` prefix.
-    return urlInList[1];
+    return urlInList[1]?.split('#')?.[0];
   }
 
   /**
