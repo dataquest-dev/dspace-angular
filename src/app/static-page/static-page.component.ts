@@ -61,15 +61,20 @@ export class StaticPageComponent implements OnInit {
     const element: HTMLElement = e.target;
     if (element.nodeName === 'A') {
       e.preventDefault();
-      let href = element.getAttribute('href');
-      href = href.replace('/', '');
-      // start with `#` - redirect to the fragment
+      const href = element.getAttribute('href')?.replace('/', '');
+      let redirectUrl = window.location.origin + this.appConfig.ui.nameSpace + '/static/';
+      // Start with `#` - redirect to the fragment
       if (href.startsWith('#')) {
-        window.location.href = window.location.origin + this.appConfig.ui.nameSpace + '/static/' + this.htmlFileName + href;
+        redirectUrl += this.htmlFileName + href;
+      } else if (href.startsWith('.')) {
+        // Redirect using namespace e.g. `./test.html` -> `<UI_PATH>/namespace/static/test.html`
+        redirectUrl +=  href.replace('.', '') + '.html';
       } else {
-        // normal redirect
-        window.location.href = window.location.origin + this.appConfig.ui.nameSpace + '/static/' + href + '.html';
+        // Redirect without using namespace e.g. `/test.html` -> `<UI_PATH>/test.html`
+        redirectUrl = redirectUrl.replace(this.appConfig.ui.nameSpace, '') + href;
       }
+      // Call redirect
+      window.location.href = redirectUrl;
     }
   }
 
