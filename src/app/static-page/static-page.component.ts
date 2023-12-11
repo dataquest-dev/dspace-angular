@@ -4,7 +4,11 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { isEmpty, isNotEmpty } from '../shared/empty.util';
 import { LocaleService } from '../core/locale/locale.service';
-import { STATIC_FILES_DEFAULT_ERROR_PAGE_PATH, STATIC_FILES_PROJECT_PATH } from './static-page-routing-paths';
+import {
+  HTML_SUFFIX,
+  STATIC_FILES_DEFAULT_ERROR_PAGE_PATH,
+  STATIC_FILES_PROJECT_PATH, STATIC_PAGE_PATH
+} from './static-page-routing-paths';
 import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 
 /**
@@ -39,6 +43,8 @@ export class StaticPageComponent implements OnInit {
     // Compose url
     url = STATIC_FILES_PROJECT_PATH;
     url += isEmpty(language) ? '/' + this.htmlFileName : '/' + language + '/' + this.htmlFileName;
+    // Add `.html` suffix to get the current html file
+    url = url.includes(HTML_SUFFIX) ? url : url + HTML_SUFFIX;
     let potentialContent = await firstValueFrom(this.htmlContentService.fetchHtmlContent(url));
     if (isNotEmpty(potentialContent)) {
       this.htmlContent.next(potentialContent);
@@ -61,17 +67,27 @@ export class StaticPageComponent implements OnInit {
     const element: HTMLElement = e.target;
     if (element.nodeName === 'A') {
       e.preventDefault();
-      const href = element.getAttribute('href')?.replace('/', '');
-      let redirectUrl = window.location.origin + this.appConfig.ui.nameSpace + '/static/';
-      // Start with `#` - redirect to the fragment
+      // Get <a href="..."> attribute
+      const href = element.getAttribute('href');
+      // Check if the DSpace instance has configured namespace and if so, add it to the redirect url
+      const namespace = this.appConfig.ui.nameSpace === '/' ? '' : this.appConfig.ui.nameSpace;
+      // Compose redirect url using static page path
+      let redirectUrl = window.location.origin + namespace + '/' + STATIC_PAGE_PATH + '/';
+
+      // Update redirect url based on the href value
       if (href.startsWith('#')) {
+        // Start with `#` - redirect to the fragment
         redirectUrl += this.htmlFileName + href;
       } else if (href.startsWith('.')) {
         // Redirect using namespace e.g. `./test.html` -> `<UI_PATH>/namespace/static/test.html`
-        redirectUrl +=  href.replace('.', '') + '.html';
+        redirectUrl += href.replace('./', '');
+      } else if (href.startsWith('http') || href.startsWith('www')) {
+        // Redirect to external url
+        window.location.replace(href);
+        return;
       } else {
         // Redirect without using namespace e.g. `/test.html` -> `<UI_PATH>/test.html`
-        redirectUrl = redirectUrl.replace(this.appConfig.ui.nameSpace, '') + href;
+        redirectUrl = redirectUrl.replace(namespace, '') + href.replace('/', '');
       }
       // Call redirect
       window.location.href = redirectUrl;
