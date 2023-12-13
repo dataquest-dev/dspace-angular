@@ -1,4 +1,4 @@
-import { map } from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -21,8 +21,6 @@ import { ActivatedRoute , Router} from '@angular/router';
 import { getBaseUrl } from '../../../clarin-shared-util';
 import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
-import { CookieService } from '../../../../core/services/cookie.service';
-import { CookieAttributes } from 'js-cookie';
 
 /**
  * /users/sign-in
@@ -104,7 +102,6 @@ export class LogInPasswordComponent implements OnInit {
     private route: ActivatedRoute,
     protected router: Router,
     protected configurationService: ConfigurationDataService,
-    protected storage: CookieService,
   ) {
     this.authMethod = injectedAuthMethodModel;
   }
@@ -166,18 +163,7 @@ export class LogInPasswordComponent implements OnInit {
   }
 
   private toggleDiscojuiceLogin() {
-    const DISCOJUICE_TOGGLE_POPUP_COOKIE = 'discojuice-popup-toggle';
-    const cookieValue = this.storage.get(DISCOJUICE_TOGGLE_POPUP_COOKIE);
-    // Add 1 hour to the current date
-    const expireDate = Date.now() + (1000 * 60 * 60);
-
-    // Set the cookie expire date
-    const expires = new Date(expireDate);
-    const options: CookieAttributes = {expires: expires};
-    console.log('cookieValue: ' + cookieValue);
-    if (cookieValue === false) {
-      this.storage.set(DISCOJUICE_TOGGLE_POPUP_COOKIE, true, options);
-    } else {
+    if (isEmpty(this.route.snapshot.queryParams?.redirectUrl)) {
       this.popUpDiscoJuiceLogin();
     }
   }
@@ -207,10 +193,16 @@ export class LogInPasswordComponent implements OnInit {
     email.trim();
     password.trim();
 
-    // Local authentication redirects to /login page and the user should be redirected to the page from where
-    // was the login initiated.
     if (!this.isStandalonePage || isNotEmpty(this.redirectUrl)) {
-      this.authService.setRedirectUrl(this.redirectUrl.replace(this.baseUrl, ''));
+      // Create a URLSearchParams object
+      const urlParams = new URLSearchParams(this.redirectUrl.split('?')[1]);
+      // Get the value of the 'redirectUrl' parameter
+      let redirectUrl = urlParams.get('redirectUrl');
+      if (isEmpty(redirectUrl)) {
+        redirectUrl = this.redirectUrl;
+      }
+
+      this.authService.setRedirectUrl(redirectUrl.replace(this.baseUrl, ''));
     } else {
       this.authService.setRedirectUrlIfNotSet('/');
     }
