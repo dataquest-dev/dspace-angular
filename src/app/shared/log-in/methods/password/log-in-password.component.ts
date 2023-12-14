@@ -1,4 +1,4 @@
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
