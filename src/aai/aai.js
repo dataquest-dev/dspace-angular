@@ -72,7 +72,6 @@
               case 'local':
                 // DiscoJuice.UI.setScreen(opts.localauth);
                 // jQuery('input#login').focus();
-
                 window.location = window.location.origin + (namespace === '' ? namespace : '/' + namespace) + "/login?redirectUrl=" + window.location.href;
                 break;
               //case 'saml':
@@ -96,22 +95,6 @@
         return djc;
       } //if jQuery(selector)
     };
-  }
-
-  function getCookie(name) {
-    var cookies = document.cookie.split(';');
-
-    for (var i = 0; i < cookies.length; i++) {
-      var cookie = cookies[i].trim();
-      // Check if this cookie has the specified name
-      if (cookie.startsWith(name + '=')) {
-        // Extract and return the cookie value
-        return cookie.substring(name.length + 1);
-      }
-    }
-
-    // Return null if the cookie with the specified name is not found
-    return null;
   }
 
   if (!window.aai) {
