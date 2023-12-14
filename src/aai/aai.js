@@ -72,10 +72,6 @@
               case 'local':
                 // DiscoJuice.UI.setScreen(opts.localauth);
                 // jQuery('input#login').focus();
-                var expires = new Date();
-                expires.setTime(expires.getTime() + 1 * 24 * 60 * 60 * 1000);
-                var cookieString = "dsRedirectUrl=" + getCookie('dsRedirectUrl') + ";expires=" + expires.toUTCString() + ";path=/";
-                document.cookie = cookieString;
 
                 window.location = window.location.origin + (namespace === '' ? namespace : '/' + namespace) + "/login?redirectUrl=" + window.location.href;
                 break;
