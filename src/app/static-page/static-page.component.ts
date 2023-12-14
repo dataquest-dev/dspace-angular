@@ -44,7 +44,7 @@ export class StaticPageComponent implements OnInit {
     url = STATIC_FILES_PROJECT_PATH;
     url += isEmpty(language) ? '/' + this.htmlFileName : '/' + language + '/' + this.htmlFileName;
     // Add `.html` suffix to get the current html file
-    url = url.includes(HTML_SUFFIX) ? url : url + HTML_SUFFIX;
+    url = url.endsWith(HTML_SUFFIX) ? url : url + HTML_SUFFIX;
     let potentialContent = await firstValueFrom(this.htmlContentService.fetchHtmlContent(url));
     if (isNotEmpty(potentialContent)) {
       this.htmlContent.next(potentialContent);
@@ -63,35 +63,70 @@ export class StaticPageComponent implements OnInit {
     await this.loadErrorPage();
   }
 
-  processLinks(e) {
-    const element: HTMLElement = e.target;
-    if (element.nodeName === 'A') {
-      e.preventDefault();
-      // Get <a href="..."> attribute
-      const href = element.getAttribute('href');
-      // Check if the DSpace instance has configured namespace and if so, add it to the redirect url
-      const namespace = this.appConfig.ui.nameSpace === '/' ? '' : this.appConfig.ui.nameSpace;
-      // Compose redirect url using static page path
-      let redirectUrl = window.location.origin + namespace + '/' + STATIC_PAGE_PATH + '/';
+  /**
+   * Handle click on links in the static page.
+   * @param event
+   */
+  processLinks(event: Event): void {
+    const targetElement = event.target as HTMLElement;
 
-      // Update redirect url based on the href value
-      if (href.startsWith('#')) {
-        // Start with `#` - redirect to the fragment
-        redirectUrl += this.htmlFileName + href;
-      } else if (href.startsWith('.')) {
-        // Redirect using namespace e.g. `./test.html` -> `<UI_PATH>/namespace/static/test.html`
-        redirectUrl += href.replace('./', '');
-      } else if (href.startsWith('http') || href.startsWith('www')) {
-        // Redirect to external url
-        window.location.replace(href);
-        return;
-      } else {
-        // Redirect without using namespace e.g. `/test.html` -> `<UI_PATH>/test.html`
-        redirectUrl = redirectUrl.replace(namespace, '') + href.replace('/', '');
-      }
-      // Call redirect
-      window.location.href = redirectUrl;
+    if (targetElement.nodeName !== 'A') {
+      return;
     }
+
+    event.preventDefault();
+
+    const href = targetElement.getAttribute('href');
+    const { nameSpace } = this.appConfig.ui;
+    const namespacePrefix = nameSpace === '/' ? '' : nameSpace;
+
+    const redirectUrl = this.composeRedirectUrl(href, namespacePrefix);
+
+    if (this.isFragmentLink(href)) {
+      this.redirectToFragment(redirectUrl, href);
+    } else if (this.isRelativeLink(href)) {
+      this.redirectToRelativeLink(redirectUrl, href);
+    } else if (this.isExternalLink(href)) {
+      this.redirectToExternalLink(href);
+    } else {
+      this.redirectToAbsoluteLink(redirectUrl, href, namespacePrefix);
+    }
+  }
+
+  private composeRedirectUrl(href: string | null, namespacePrefix: string): string {
+    const staticPagePath = STATIC_PAGE_PATH;
+    const baseUrl = new URL(window.location.origin);
+    baseUrl.pathname = `${namespacePrefix}/${staticPagePath}/`;
+    return baseUrl.href;
+  }
+
+  private isFragmentLink(href: string | null): boolean {
+    return href?.startsWith('#') ?? false;
+  }
+
+  private redirectToFragment(redirectUrl: string, href: string | null): void {
+    window.location.href = `${redirectUrl}${this.htmlFileName}${href}`;
+  }
+
+  private isRelativeLink(href: string | null): boolean {
+    return href?.startsWith('.') ?? false;
+  }
+
+  private redirectToRelativeLink(redirectUrl: string, href: string | null): void {
+    window.location.href = new URL(href, redirectUrl).href;
+  }
+
+  private isExternalLink(href: string | null): boolean {
+    return (href?.startsWith('http') || href?.startsWith('www')) ?? false;
+  }
+
+  private redirectToExternalLink(href: string | null): void {
+    window.location.replace(href);
+  }
+
+  private redirectToAbsoluteLink(redirectUrl: string, href: string | null, namespacePrefix: string): void {
+    const absoluteUrl = new URL(href, redirectUrl.replace(namespacePrefix, ''));
+    window.location.href = absoluteUrl.href;
   }
 
   /**
