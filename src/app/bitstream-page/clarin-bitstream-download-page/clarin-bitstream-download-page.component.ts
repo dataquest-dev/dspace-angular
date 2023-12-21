@@ -85,7 +85,7 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
         this.requestService.send(headRequest);
 
         const clarinIsAuthorized$ = this.rdbService.buildFromRequestUUID(requestId);
-        // Clarin authorization check into dtoken parameter from the request
+        // Clarin authorization will check dtoken parameter from the request
         const dtoken = isNotEmpty(this.dtoken) ? '?dtoken=' + this.dtoken : '';
         const isAuthorized$ = this.authorizationService.isAuthorized(FeatureID.CanDownload, isNotEmpty(bitstream) ? bitstream.self + dtoken : undefined);
         const isLoggedIn$ = this.auth.isAuthenticated();
