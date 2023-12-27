@@ -53,6 +53,26 @@
         <span class="text-center">
           <i [class]="bitstream.storeNumber === syncStoresNumber ? 'fas fa-check' : 'fas fa-times'"></i>
         </span>
+        <div [ngTemplateOutlet]="checksum"></div>
+
     </div>
+  </div>
+</ng-template>
+
+<ng-template #checksum>
+  <div class="hover-container" (mouseenter)="showText = true" (mouseleave)="showText = false">
+<!--    <span class="question-mark" *ngIf="!showText">&#63;</span>-->
+
+<!--    <div>-->
+<!--      <span class="text-center">-->
+<!--        <i [class]="bitstream.storeNumber === syncStoresNumber ? 'fas fa-check' : 'fas fa-times'"></i>-->
+<!--      </span>-->
+<!--    </div>-->
+    <span>|</span>
+    <i class="fas fa-times"></i>
+    <i class="fas fa-question" placement="top"
+       triggers="mouseenter:mouseleave"
+       ngbPopover="Angular ng bootstrap"
+       popoverTitle="GeeksforGeeks"></i>
   </div>
 </ng-template>

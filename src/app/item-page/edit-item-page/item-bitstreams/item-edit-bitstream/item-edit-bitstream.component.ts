@@ -4,12 +4,20 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ObjectUpdatesService } from '../../../../core/data/object-updates/object-updates.service';
 import { Observable } from 'rxjs';
 import { BitstreamFormat } from '../../../../core/shared/bitstream-format.model';
-import { getRemoteDataPayload, getFirstSucceededRemoteData } from '../../../../core/shared/operators';
+import {
+  getRemoteDataPayload,
+  getFirstSucceededRemoteData,
+  getFirstCompletedRemoteData
+} from '../../../../core/shared/operators';
 import { ResponsiveTableSizes } from '../../../../shared/responsive-table-sizes/responsive-table-sizes';
 import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
 import { FieldUpdate } from '../../../../core/data/object-updates/field-update.model';
 import { FieldChangeType } from '../../../../core/data/object-updates/field-change-type.model';
 import { getBitstreamDownloadRoute } from '../../../../app-routing-paths';
+import {GetRequest} from '../../../../core/data/request.models';
+import {RequestService} from '../../../../core/data/request.service';
+import {RemoteDataBuildService} from '../../../../core/cache/builders/remote-data-build.service';
+import {BitstreamChecksum} from '../../../../core/shared/bitstream-checksum.model';
 
 @Component({
   selector: 'ds-item-edit-bitstream',
@@ -68,8 +76,14 @@ export class ItemEditBitstreamComponent implements OnChanges, OnInit {
    */
   syncStoresNumber = SYNCHRONIZED_STORES_NUMBER;
 
+  showText = false;
+
+  checkSum$: Observable<BitstreamChecksum>;
+
   constructor(private objectUpdatesService: ObjectUpdatesService,
               private dsoNameService: DSONameService,
+              protected requestService: RequestService,
+              protected rdbService: RemoteDataBuildService,
               private viewContainerRef: ViewContainerRef) {
   }
 
@@ -83,12 +97,18 @@ export class ItemEditBitstreamComponent implements OnChanges, OnInit {
    */
   ngOnChanges(changes: SimpleChanges): void {
     this.bitstream = cloneDeep(this.fieldUpdate.field) as Bitstream;
+    console.log(this.bitstream);
     this.bitstreamName = this.dsoNameService.getName(this.bitstream);
     this.bitstreamDownloadUrl = getBitstreamDownloadRoute(this.bitstream);
     this.format$ = this.bitstream.format.pipe(
       getFirstSucceededRemoteData(),
       getRemoteDataPayload()
     );
+    this.bitstream.checksum.pipe(
+      getFirstCompletedRemoteData(),
+      getRemoteDataPayload()
+    ).subscribe((checksum) => { console.log('checksum', checksum); });
+
   }
 
   /**
