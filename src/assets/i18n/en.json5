@@ -2216,6 +2216,16 @@
 
   "item.edit.bitstreams.upload-button": "Upload",
 
+  "item.edit.bitstreams.checksum.algorithm": "Algorithm: ",
+
+  "item.edit.bitstreams.checksum.value": "Value: ",
+
+  "item.edit.bitstreams.checksum.database": "DB",
+
+  "item.edit.bitstreams.checksum.active-store": "Active store",
+
+  "item.edit.bitstreams.checksum.sync-store": "Sync store",
+
 
 
   "item.edit.delete.cancel": "Cancel",

@@ -55,13 +55,15 @@
         </span>
         <span class="pl-1">|</span>
         <div class="pl-1" [ngTemplateOutlet]="checksum"></div>
-
     </div>
   </div>
 </ng-template>
 
 <ng-template #checksum>
-  <div class="hover-container" (mouseenter)="showText = true" (mouseleave)="showText = false" *ngVar="(checkSum$ | async) as bitstreamChecksum">
+  <div class="hover-container"
+       (mouseenter)="showText = true"
+       (mouseleave)="showText = false"
+       *ngVar="(checkSum$ | async) as bitstreamChecksum">
     <i [class]="checksumsAreEqual(bitstreamChecksum) ? 'fas fa-check' : 'fas fa-times'"></i>
     <i class="pl-2 fas fa-info-circle"
        triggers="mouseenter:mouseleave"
@@ -73,19 +75,37 @@
 <ng-template #checksumPopover>
   <div *ngVar="(checkSum$ | async) as bitstreamChecksum">
     <div>
-      <div class="font-weight-bold text-decoration-underline">DB</div>
-      <div>Algorithm: {{bitstreamChecksum.databaseChecksum.checkSumAlgorithm}}</div>
-      <div>Value: {{ bitstreamChecksum.databaseChecksum.value }}</div>
+      <div class="font-weight-bold text-decoration-underline">
+        {{'item.edit.bitstreams.checksum.database' | translate}}
+      </div>
+      <div>
+        {{'item.edit.bitstreams.checksum.algorithm' | translate}} {{bitstreamChecksum.databaseChecksum.checkSumAlgorithm}}
+      </div>
+      <div>
+        {{'item.edit.bitstreams.checksum.value' | translate}} {{ bitstreamChecksum.databaseChecksum.value }}
+      </div>
     </div>
     <div>
-      <div class="font-weight-bold text-decoration-underline">Active store</div>
-      <div>Algorithm: {{bitstreamChecksum.activeStore.checkSumAlgorithm}}</div>
-      <div>Value: {{ bitstreamChecksum.activeStore.value }}</div>
+      <div class="font-weight-bold text-decoration-underline">
+        {{'item.edit.bitstreams.checksum.active-store' | translate}}
+      </div>
+      <div>
+        {{'item.edit.bitstreams.checksum.algorithm' | translate}} {{bitstreamChecksum.activeStore.checkSumAlgorithm}}
+      </div>
+      <div>
+        {{'item.edit.bitstreams.checksum.value' | translate}} {{ bitstreamChecksum.activeStore.value }}
+      </div>
     </div>
     <div *ngIf="isBitstreamSynchronized()">
-      <div class="font-weight-bold text-decoration-underline">Sync store</div>
-      <div>Algorithm: {{bitstreamChecksum.synchronizedStore.checkSumAlgorithm}}</div>
-      <div>Value: {{ bitstreamChecksum.synchronizedStore.value }}</div>
+      <div class="font-weight-bold text-decoration-underline">
+        {{'item.edit.bitstreams.checksum.sync-store' | translate}}
+      </div>
+      <div>
+        {{'item.edit.bitstreams.checksum.algorithm' | translate}} {{bitstreamChecksum.synchronizedStore.checkSumAlgorithm}}
+      </div>
+      <div>
+        {{'item.edit.bitstreams.checksum.value' | translate}} {{ bitstreamChecksum.synchronizedStore.value }}
+      </div>
     </div>
   </div>
 </ng-template>

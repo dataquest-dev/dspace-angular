@@ -3270,6 +3270,18 @@
   "item.edit.bitstreams.upload-button" : "Nahrát",
 
 
+//  "item.edit.bitstreams.checksum.algorithm": "Algorithm: ",
+  "item.edit.bitstreams.checksum.algorithm": "Algoritmus: ",
+
+  "item.edit.bitstreams.checksum.value": "Hodnota: ",
+
+  "item.edit.bitstreams.checksum.database": "DB",
+
+  "item.edit.bitstreams.checksum.active-store": "Aktívne úložisko",
+
+  "item.edit.bitstreams.checksum.sync-store": "Sync úložisko",
+
+
 
   // "item.edit.delete.cancel": "Cancel",
   "item.edit.delete.cancel" : "Zrušit",
