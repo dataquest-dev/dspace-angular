@@ -1,19 +1,19 @@
-import {BITSTREAM_CHECKSUM} from './bitstream-checksum.resource';
-import {excludeFromEquals} from '../utilities/equals.decorators';
-import {autoserialize, deserialize} from 'cerialize';
-import {ResourceType} from './resource-type';
-import {HALLink} from './hal-link.model';
-import {typedObject} from '../cache/builders/build-decorators';
-import {TypedObject} from '../cache/typed-object.model';
+import { BITSTREAM_CHECKSUM } from './bitstream-checksum.resource';
+import { excludeFromEquals } from '../utilities/equals.decorators';
+import { autoserialize, deserialize } from 'cerialize';
+import { ResourceType } from './resource-type';
+import { HALLink } from './hal-link.model';
+import { typedObject } from '../cache/builders/build-decorators';
+import { TypedObject } from '../cache/typed-object.model';
 
 
 /**
- * Class which is user do wrap Authorization response data for endpoint `/api/authrn`
+ * Model class containing the checksums of a bitstream (local, S3, DB)
  */
 @typedObject
 export class BitstreamChecksum extends TypedObject {
   /**
-   * The `bitstreamSyncChecksum` object type.
+   * The `bitstreamchecksum` object type.
    */
   static type = BITSTREAM_CHECKSUM;
 
@@ -25,20 +25,26 @@ export class BitstreamChecksum extends TypedObject {
   type: ResourceType;
 
   /**
-   * The identifier of this Clarin License
-   // */
+   * The identifier of this BitstreamChecksum object
+   */
   @autoserialize
   id: string;
 
   /**
-   * The name of this Clarin License object
+   * The checksum of the active store (local/S3)
    */
   @autoserialize
   activeStore: CheckSum;
 
+  /**
+   * The checksum from the database
+   */
   @autoserialize
   databaseChecksum: CheckSum;
 
+  /**
+   * The checksum of the synchronized store (S3, local)
+   */
   @autoserialize
   synchronizedStore: CheckSum;
 
@@ -48,6 +54,9 @@ export class BitstreamChecksum extends TypedObject {
   };
 }
 
+/**
+ * Model class containing a checksum value and algorithm
+ */
 export interface CheckSum {
   checkSumAlgorithm: string;
   value: string;

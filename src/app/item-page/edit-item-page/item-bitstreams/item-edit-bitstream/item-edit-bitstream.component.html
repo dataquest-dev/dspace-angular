@@ -61,8 +61,8 @@
 
 <ng-template #checksum>
   <div class="hover-container"
-       (mouseenter)="showText = true"
-       (mouseleave)="showText = false"
+       (mouseenter)="showChecksumValues = true"
+       (mouseleave)="showChecksumValues = false"
        *ngVar="(checkSum$ | async) as bitstreamChecksum">
     <i [class]="checksumsAreEqual(bitstreamChecksum) ? 'fas fa-check' : 'fas fa-times'"></i>
     <i class="pl-2 fas fa-info-circle"
