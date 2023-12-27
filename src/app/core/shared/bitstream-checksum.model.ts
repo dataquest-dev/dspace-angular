@@ -17,9 +17,6 @@ export class BitstreamChecksum extends TypedObject {
    */
   static type = BITSTREAM_CHECKSUM;
 
-  // /**
-  //  * The object type
-  //  */
   /**
    * The object type
    */
@@ -49,13 +46,9 @@ export class BitstreamChecksum extends TypedObject {
   _links: {
     self: HALLink
   };
-
-  // getRenderTypes(): (string | GenericConstructor<ListableObject>)[] {
-  //   return [this.constructor as GenericConstructor<ListableObject>];
-  // }
 }
 
-interface CheckSum {
+export interface CheckSum {
   checkSumAlgorithm: string;
   value: string;
 }

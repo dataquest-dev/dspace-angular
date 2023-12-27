@@ -14,10 +14,9 @@ import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
 import { FieldUpdate } from '../../../../core/data/object-updates/field-update.model';
 import { FieldChangeType } from '../../../../core/data/object-updates/field-change-type.model';
 import { getBitstreamDownloadRoute } from '../../../../app-routing-paths';
-import {GetRequest} from '../../../../core/data/request.models';
 import {RequestService} from '../../../../core/data/request.service';
 import {RemoteDataBuildService} from '../../../../core/cache/builders/remote-data-build.service';
-import {BitstreamChecksum} from '../../../../core/shared/bitstream-checksum.model';
+import {BitstreamChecksum, CheckSum} from '../../../../core/shared/bitstream-checksum.model';
 
 @Component({
   selector: 'ds-item-edit-bitstream',
@@ -104,11 +103,10 @@ export class ItemEditBitstreamComponent implements OnChanges, OnInit {
       getFirstSucceededRemoteData(),
       getRemoteDataPayload()
     );
-    this.bitstream.checksum.pipe(
+    this.checkSum$ = this.bitstream.checksum.pipe(
       getFirstCompletedRemoteData(),
       getRemoteDataPayload()
-    ).subscribe((checksum) => { console.log('checksum', checksum); });
-
+    );
   }
 
   /**
@@ -137,6 +135,25 @@ export class ItemEditBitstreamComponent implements OnChanges, OnInit {
    */
   canUndo(): boolean {
     return this.fieldUpdate.changeType >= 0;
+  }
+
+  compareChecksums(checksum1: CheckSum, checksum2: CheckSum): boolean {
+    return checksum1.value === checksum2.value && checksum1.checkSumAlgorithm === checksum2.checkSumAlgorithm;
+  }
+
+  checksumsAreEqual(bitstreamChecksum: BitstreamChecksum): boolean {
+    if (this.isBitstreamSynchronized()) {
+      // Compare DB and Active store checksums
+      // Compare DB and Synchronized and Active store checksums
+      return this.compareChecksums(bitstreamChecksum.databaseChecksum, bitstreamChecksum.activeStore) &&
+        this.compareChecksums(bitstreamChecksum.synchronizedStore, bitstreamChecksum.activeStore);
+    }
+    // Compare DB and Active store checksums
+    return this.compareChecksums(bitstreamChecksum.databaseChecksum, bitstreamChecksum.activeStore);
+  }
+
+  isBitstreamSynchronized() {
+    return this.bitstream?.storeNumber === SYNCHRONIZED_STORES_NUMBER;
   }
 
 }
