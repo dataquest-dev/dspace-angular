@@ -14,8 +14,6 @@ import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
 import { FieldUpdate } from '../../../../core/data/object-updates/field-update.model';
 import { FieldChangeType } from '../../../../core/data/object-updates/field-change-type.model';
 import { getBitstreamDownloadRoute } from '../../../../app-routing-paths';
-import { RequestService } from '../../../../core/data/request.service';
-import { RemoteDataBuildService } from '../../../../core/cache/builders/remote-data-build.service';
 import { BitstreamChecksum, CheckSum } from '../../../../core/shared/bitstream-checksum.model';
 
 @Component({
@@ -82,8 +80,6 @@ export class ItemEditBitstreamComponent implements OnChanges, OnInit {
 
   constructor(private objectUpdatesService: ObjectUpdatesService,
               private dsoNameService: DSONameService,
-              protected requestService: RequestService,
-              protected rdbService: RemoteDataBuildService,
               private viewContainerRef: ViewContainerRef) {
   }
 
