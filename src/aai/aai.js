@@ -20,7 +20,7 @@
     this.setup = function(options) {
       var opts = jQuery.extend({}, this.defaults, options),
           defaultCallback = function(e) {
-            window.location = opts.host + '/Shibboleth.sso/Login?SAMLDS=1&target=' + opts.target + '&entityID=' + window.encodeURIComponent(e.entityID);
+            window.location = opts.host + '/Shibboleth.sso/Login?SAMLDS=1&target=' + opts.target + '?redirectUrl=' + window.location.href + '&entityID=' + window.encodeURIComponent(e.entityID);
           };
       //console.log(opts);
       if(!opts.target){
@@ -33,7 +33,7 @@
           opts.ourEntityID,
           opts.responseUrl,
           [ ],
-          opts.host + '/Shibboleth.sso/Login?SAMLDS=1&target='+opts.target+'&entityID=');
+          opts.host + '/Shibboleth.sso/Login?SAMLDS=1&target=' + opts.target + '?redirectUrl=' + window.location.href + '&entityID=');
         djc.discoPath = window.location.origin + (namespace === '' ? namespace : '/' + namespace) + "/assets/";
         djc.metadata = [opts.metadataFeed];
         djc.subtitle = "Login via Your home institution (e.g. university)";
