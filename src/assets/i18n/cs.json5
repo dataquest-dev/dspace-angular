@@ -1039,6 +1039,10 @@
 
   // "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
   "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
+
+  // "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
+  "clarin.bitstream.expired.dtoken.message": "Platnost tokenu pro stahování vypršel, budete přesměrováni na stránku stahování.",
+
   // "bitstream.download.page.back": "Back" ,
   "bitstream.download.page.back" : "Zpět",
 
@@ -1513,7 +1517,7 @@
 
 
   // "collection.edit.tabs.curate.head": "Curate",
-  "collection.edit.tabs.curate.head" : "",
+  "collection.edit.tabs.curate.head" : "Kurátor",
 
   // "collection.edit.tabs.curate.title": "Collection Edit - Curate",
   "collection.edit.tabs.curate.title" : "Úprava kolekce - kurátor",
@@ -2164,7 +2168,7 @@
   "curation-task.task.vscan.label" : "Virová kontrola",
 
   // "curation-task.task.register-doi.label": "Register DOI",
-  "curation-task.task.register-doi.label" : "Registrovat DOI",
+  "curation-task.task.registerdoi.label" : "Registrovat DOI",
 
 
 
@@ -3208,6 +3212,9 @@
   // "item.edit.bitstreams.empty": "This item doesn't contain any bitstreams. Click the upload button to create one.",
   "item.edit.bitstreams.empty" : "Tato položka neobsahuje žádné bitstreamy. Klikněte na tlačítko pro nahrání a jeden vytvořte.",
 
+  // "item.edit.bitstreams.headers.synchronized": "Synchronized",
+  "item.edit.bitstreams.headers.synchronized": "Synchronizováno",
+
   // "item.edit.bitstreams.headers.actions": "Actions",
   "item.edit.bitstreams.headers.actions" : "Akce",
 
@@ -3261,6 +3268,22 @@
 
   // "item.edit.bitstreams.upload-button": "Upload",
   "item.edit.bitstreams.upload-button" : "Nahrát",
+
+
+//  "item.edit.bitstreams.checksum.algorithm": "Algorithm: ",
+  "item.edit.bitstreams.checksum.algorithm": "Algoritmus: ",
+
+//  "item.edit.bitstreams.checksum.value": "Value: ",
+  "item.edit.bitstreams.checksum.value": "Hodnota: ",
+
+//  "item.edit.bitstreams.checksum.database": "DB",
+  "item.edit.bitstreams.checksum.database": "DB",
+
+//  "item.edit.bitstreams.checksum.active-store": "Active store",
+  "item.edit.bitstreams.checksum.active-store": "Aktivní úložiště",
+
+//  "item.edit.bitstreams.checksum.sync-store": "Sync store",
+  "item.edit.bitstreams.checksum.sync-store": "Sync úložiště",
 
 
 
@@ -7499,6 +7522,9 @@
 
   // "submission.sections.upload.upload-successful": "Upload successful",
   "submission.sections.upload.upload-successful" : "Úspěšné nahrání",
+
+  // "submission.sections.upload.upload-failed.size-limit-exceeded": "File size exceeds the maximum upload size",
+  "submission.sections.upload.upload-failed.size-limit-exceeded": "Soubor přesahuje maximální povolenou velikost",
 
   // "submission.sections.accesses.form.discoverable-description": "When checked, this item will be discoverable in search/browse. When unchecked, the item will only be available via a direct link and will never appear in search/browse.",
   "submission.sections.accesses.form.discoverable-description" : "Pokud je tato položka zaškrtnuta, bude ji možné hledat ve vyhledávání/prohlížení. Pokud není zaškrtnuta, bude položka dostupná pouze prostřednictvím přímého odkazu a nikdy se nezobrazí ve vyhledávání/prohlížení.",

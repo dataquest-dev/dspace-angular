@@ -699,6 +699,9 @@
   "clarin.license.agreement.notification.check.email": "You will receive email with download link.",
 
   "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
+
+  "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
+
   "bitstream.download.page.back": "Back" ,
 
 
@@ -1462,7 +1465,7 @@
 
   "curation-task.task.vscan.label": "Virus Scan",
 
-  "curation-task.task.register-doi.label": "Register DOI",
+  "curation-task.task.registerdoi.label": "Register DOI",
 
 
 
@@ -2175,6 +2178,8 @@
 
   "item.edit.bitstreams.empty": "This item doesn't contain any bitstreams. Click the upload button to create one.",
 
+  "item.edit.bitstreams.headers.synchronized": "Sync | Checksum",
+
   "item.edit.bitstreams.headers.actions": "Actions",
 
   "item.edit.bitstreams.headers.bundle": "Bundle",
@@ -2210,6 +2215,16 @@
   "item.edit.bitstreams.save-button": "Save",
 
   "item.edit.bitstreams.upload-button": "Upload",
+
+  "item.edit.bitstreams.checksum.algorithm": "Algorithm: ",
+
+  "item.edit.bitstreams.checksum.value": "Value: ",
+
+  "item.edit.bitstreams.checksum.database": "DB",
+
+  "item.edit.bitstreams.checksum.active-store": "Active store",
+
+  "item.edit.bitstreams.checksum.sync-store": "Sync store",
 
 
 
