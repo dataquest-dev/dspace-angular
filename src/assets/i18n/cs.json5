@@ -3280,10 +3280,10 @@
   "item.edit.bitstreams.checksum.database": "DB",
 
 //  "item.edit.bitstreams.checksum.active-store": "Active store",
-  "item.edit.bitstreams.checksum.active-store": "Aktívne úložisko",
+  "item.edit.bitstreams.checksum.active-store": "Aktivní úložiště",
 
 //  "item.edit.bitstreams.checksum.sync-store": "Sync store",
-  "item.edit.bitstreams.checksum.sync-store": "Sync úložisko",
+  "item.edit.bitstreams.checksum.sync-store": "Sync úložiště",
 
 
 
