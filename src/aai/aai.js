@@ -114,24 +114,6 @@
         return djc;
       } //if jQuery(selector)
     };
-
-    function getCookie(cookieName) {
-      // Split the cookie string into individual cookies
-      var cookies = document.cookie.split(';');
-
-      // Loop through the cookies to find the one with the specified name
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i].trim(); // Remove leading and trailing whitespaces
-        // Check if the cookie starts with the desired name
-        if (cookie.indexOf(cookieName + '=') === 0) {
-          // Return the value of the cookie
-          return cookie.substring(cookieName.length + 1);
-        }
-      }
-
-      // Return null if the cookie with the specified name is not found
-      return null;
-    }
   }
 
   if (!window.aai) {
