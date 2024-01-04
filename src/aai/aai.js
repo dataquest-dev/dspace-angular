@@ -3,7 +3,7 @@
   function AAI() {
     var host = 'https://' + window.location.hostname,
         ourEntityID = host.match("lindat.mff.cuni.cz") ? "https://ufal-point.mff.cuni.cz" : host;
-    var namespace = ''
+    var namespace = '';
     this.defaults = {
       //host : 'https://ufal-point.mff.cuni.cz',
       host : host, //better default (useful when testing on ufal-point-dev)
@@ -21,7 +21,24 @@
       var targetUrl = '';
       var opts = jQuery.extend({}, this.defaults, options),
           defaultCallback = function(e) {
-            targetUrl = opts.target + '?redirectUrl=' + window.location.href;
+            targetUrl = opts.target + '?redirectUrl=';
+            var redirectUrl = '';
+
+            // Redirection could be initiated from the login page; in that case,
+            // we need to retrieve the redirect URL from the URL parameters
+            var urlParams = new URLSearchParams(window.location.href.split('?')[1]);
+            var redirectUrlFromLogin = urlParams.get('redirectUrl') || null;
+
+            if (redirectUrlFromLogin == null || redirectUrlFromLogin === '') {
+              // E.g. Item page
+              redirectUrl = window.location.href;
+            } else {
+              // Redirect from the login page with retrieved redirect URL
+              redirectUrl = window.location.origin + (namespace === '' ? namespace : '/' + namespace) + redirectUrlFromLogin;
+            }
+
+            // Encode the redirect URL
+            targetUrl += window.encodeURIComponent(redirectUrl);
             window.location = opts.host + '/Shibboleth.sso/Login?SAMLDS=1&target=' + targetUrl + '&entityID=' + window.encodeURIComponent(e.entityID);
           };
       //console.log(opts);
@@ -97,6 +114,24 @@
         return djc;
       } //if jQuery(selector)
     };
+
+    function getCookie(cookieName) {
+      // Split the cookie string into individual cookies
+      var cookies = document.cookie.split(';');
+
+      // Loop through the cookies to find the one with the specified name
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim(); // Remove leading and trailing whitespaces
+        // Check if the cookie starts with the desired name
+        if (cookie.indexOf(cookieName + '=') === 0) {
+          // Return the value of the cookie
+          return cookie.substring(cookieName.length + 1);
+        }
+      }
+
+      // Return null if the cookie with the specified name is not found
+      return null;
+    }
   }
 
   if (!window.aai) {
