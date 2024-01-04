@@ -26,9 +26,15 @@
             var redirectUrl = window.location.href;
 
             // Redirection could be initiated from the login page; in that case,
-            // we need to retrieve the redirect URL from the URL parameters
-            var urlParams = new URLSearchParams(window.location.href.split('?')[1]);
-            var redirectUrlFromLogin = urlParams.get('redirectUrl') || null;
+            // we need to retrieve the redirect URL from the URL parameters.
+            var urlParams = '';
+            var redirectUrlFromLogin = '';
+            var splitQMarks = window.location.href.split('?');
+            if (splitQMarks.length > 1) {
+              // The redirect URL is in the `1` index of the array in the Shibboleth redirect from the login page
+              urlParams = new URLSearchParams(splitQMarks[1]);
+              redirectUrlFromLogin = urlParams.get('redirectUrl') || null;
+            }
 
             if (redirectUrlFromLogin != null && redirectUrlFromLogin !== '') {
               // Redirect from the login page with retrieved redirect URL
