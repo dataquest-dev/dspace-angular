@@ -22,17 +22,15 @@
       var opts = jQuery.extend({}, this.defaults, options),
           defaultCallback = function(e) {
             targetUrl = opts.target + '?redirectUrl=';
-            var redirectUrl = '';
+            // E.g. Redirect to Item page
+            var redirectUrl = window.location.href;
 
             // Redirection could be initiated from the login page; in that case,
             // we need to retrieve the redirect URL from the URL parameters
             var urlParams = new URLSearchParams(window.location.href.split('?')[1]);
             var redirectUrlFromLogin = urlParams.get('redirectUrl') || null;
 
-            if (redirectUrlFromLogin == null || redirectUrlFromLogin === '') {
-              // E.g. Item page
-              redirectUrl = window.location.href;
-            } else {
+            if (redirectUrlFromLogin != null && redirectUrlFromLogin !== '') {
               // Redirect from the login page with retrieved redirect URL
               redirectUrl = window.location.origin + (namespace === '' ? namespace : '/' + namespace) + redirectUrlFromLogin;
             }
