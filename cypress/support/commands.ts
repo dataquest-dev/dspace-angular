@@ -105,9 +105,6 @@ Cypress.on('uncaught:exception', (err, runnable) => {
  * @param password password to login as
  */
  function loginViaForm(email: string, password: string): void {
-    // Cancel discojuice login - only if it is popped up
-    // cy.wait(500);
-    // cy.get('.discojuice_close').should('exist').click();
     // Enter email
     cy.get('ds-log-in [data-test="email"]').type(email);
     // Enter password
