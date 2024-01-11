@@ -40,6 +40,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/build-scripts/run/
           pwd
+
           touch .env.dev-5 || true
           echo INSTANCE=5 >> .env.dev-5
           echo DSPACE_HOST=dev-5.pc >> .env.dev-5
@@ -85,6 +86,8 @@ jobs:
         run: |
           ./start.sh dspace-$INSTANCE
           /bin/bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://dev-5.pc:8$INSTANCE/server/api)" != "200" ]]; do sleep 5; done'
+
+
 
   import-8:
     runs-on: dspace-dep-1
