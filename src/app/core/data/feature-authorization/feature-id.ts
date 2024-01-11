@@ -27,11 +27,18 @@ export enum FeatureID {
   CanDeleteVersion = 'canDeleteVersion',
   CanCreateVersion = 'canCreateVersion',
   CanViewUsageStatistics = 'canViewUsageStatistics',
+<<<<<<< HEAD
+=======
+  CanSendFeedback = 'canSendFeedback',
+>>>>>>> dspace-7.6.1
   CanClaimItem = 'canClaimItem',
   CanSynchronizeWithORCID = 'canSynchronizeWithORCID',
   CanSubmit = 'canSubmit',
   CanEditItem = 'canEditItem',
   CanRegisterDOI = 'canRegisterDOI',
   CanSubscribe = 'canSubscribeDso',
+<<<<<<< HEAD
   CanSendFeedback = 'canSendFeedback'
+=======
+>>>>>>> dspace-7.6.1
 }

@@ -12,7 +12,10 @@ import { getMockLinkService } from '../../../../mocks/link-service.mock';
 import { VarDirective } from '../../../../utils/var.directive';
 import { TruncatableService } from '../../../../truncatable/truncatable.service';
 import { LinkService } from '../../../../../core/cache/builders/link.service';
+<<<<<<< HEAD
 import { MyDspaceItemStatusType } from '../../../../object-collection/shared/mydspace-item-status/my-dspace-item-status-type';
+=======
+>>>>>>> dspace-7.6.1
 import { DSONameService } from '../../../../../core/breadcrumbs/dso-name.service';
 import { DSONameServiceMock } from '../../../../mocks/dso-name.service.mock';
 import { APP_CONFIG } from '../../../../../../config/app-config.interface';
@@ -102,8 +105,11 @@ describe('ClaimedDeclinedTaskSearchResultListElementComponent', () => {
     });
   });
 
+<<<<<<< HEAD
   it('should have properly status', () => {
     expect(component.status).toEqual(MyDspaceItemStatusType.DECLINED_TASk);
   });
 
+=======
+>>>>>>> dspace-7.6.1
 });

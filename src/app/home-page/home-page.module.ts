@@ -12,13 +12,18 @@ import { ThemedHomePageComponent } from './themed-home-page.component';
 import { RecentItemListComponent } from './recent-item-list/recent-item-list.component';
 import { JournalEntitiesModule } from '../entity-groups/journal-entities/journal-entities.module';
 import { ResearchEntitiesModule } from '../entity-groups/research-entities/research-entities.module';
+<<<<<<< HEAD
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
+=======
+import { ThemedTopLevelCommunityListComponent } from './top-level-community-list/themed-top-level-community-list.component';
+>>>>>>> dspace-7.6.1
 
 const DECLARATIONS = [
   HomePageComponent,
   ThemedHomePageComponent,
   TopLevelCommunityListComponent,
+  ThemedTopLevelCommunityListComponent,
   ThemedHomeNewsComponent,
   HomeNewsComponent,
   RecentItemListComponent

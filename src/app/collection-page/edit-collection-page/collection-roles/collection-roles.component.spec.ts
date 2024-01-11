@@ -15,6 +15,11 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComcolModule } from '../../../shared/comcol/comcol.module';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
 import { NotificationsServiceStub } from '../../../shared/testing/notifications-service.stub';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
+import { DSONameServiceMock } from '../../../shared/mocks/dso-name.service.mock';
+>>>>>>> dspace-7.6.1
 
 describe('CollectionRolesComponent', () => {
 
@@ -79,6 +84,7 @@ describe('CollectionRolesComponent', () => {
       ],
       providers: [
         { provide: ActivatedRoute, useValue: route },
+        { provide: DSONameService, useValue: new DSONameServiceMock() },
         { provide: RequestService, useValue: requestService },
         { provide: GroupDataService, useValue: groupDataService },
         { provide: NotificationsService, useClass: NotificationsServiceStub }

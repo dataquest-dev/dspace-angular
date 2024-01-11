@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { EditBitstreamPageComponent } from './edit-bitstream-page/edit-bitstream-page.component';
 import { AuthenticatedGuard } from '../core/auth/authenticated.guard';
 import { BitstreamPageResolver } from './bitstream-page.resolver';
 import { BitstreamDownloadPageComponent } from './bitstream-download-page/bitstream-download-page.component';
@@ -13,7 +12,11 @@ import { LegacyBitstreamUrlResolver } from './legacy-bitstream-url.resolver';
 import { BitstreamBreadcrumbResolver } from '../core/breadcrumbs/bitstream-breadcrumb.resolver';
 import { BitstreamBreadcrumbsService } from '../core/breadcrumbs/bitstream-breadcrumbs.service';
 import { I18nBreadcrumbResolver } from '../core/breadcrumbs/i18n-breadcrumb.resolver';
+<<<<<<< HEAD
 import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page/clarin-bitstream-download-page.component';
+=======
+import { ThemedEditBitstreamPageComponent } from './edit-bitstream-page/themed-edit-bitstream-page.component';
+>>>>>>> dspace-7.6.1
 
 const EDIT_BITSTREAM_PATH = ':id/edit';
 const EDIT_BITSTREAM_AUTHORIZATIONS_PATH = ':id/authorizations';
@@ -52,7 +55,7 @@ const EDIT_BITSTREAM_AUTHORIZATIONS_PATH = ':id/authorizations';
       },
       {
         path: EDIT_BITSTREAM_PATH,
-        component: EditBitstreamPageComponent,
+        component: ThemedEditBitstreamPageComponent,
         resolve: {
           bitstream: BitstreamPageResolver,
           breadcrumb: BitstreamBreadcrumbResolver,

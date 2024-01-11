@@ -1,10 +1,24 @@
+<<<<<<< HEAD
 <div class="container" *ngVar="(processRD$ | async)?.payload as process">
     <div class="d-flex">
         <h2 class="flex-grow-1">{{'process.detail.title' | translate:{
             id: process?.processId,
             name: process?.scriptName
         } }}</h2>
+=======
+<div class="container" *ngIf="(processRD$ | async)?.payload as process">
+    <div class="row">
+      <div class="col-10">
+        <h2 class="flex-grow-1">
+          {{ 'process.detail.title' | translate:{ id: process?.processId, name: process?.scriptName } }}
+        </h2>
+      </div>
+      <div *ngIf="refreshCounter$ | async as seconds" class="col-2 refresh-counter">
+        Refreshing in {{ seconds }}s <i class="fas fa-sync-alt fa-spin"></i>
+      </div>
+>>>>>>> dspace-7.6.1
     </div>
+
     <ds-process-detail-field id="process-name" [title]="'process.detail.script'">
         <div>{{ process?.scriptName }}</div>
     </ds-process-detail-field>
@@ -17,10 +31,19 @@
     <div *ngVar="(filesRD$ | async)?.payload?.page as files">
         <ds-process-detail-field *ngIf="files && files?.length > 0" id="process-files"
                                  [title]="'process.detail.output-files'">
+<<<<<<< HEAD
             <ds-themed-file-download-link *ngFor="let file of files; let last=last;" [bitstream]="file">
                 <span>{{getFileName(file)}}</span>
                 <span>({{(file?.sizeBytes) | dsFileSize }})</span>
             </ds-themed-file-download-link>
+=======
+          <div class="d-flex flex-column">
+            <ds-themed-file-download-link *ngFor="let file of files; let last=last;" [bitstream]="file">
+              <span>{{getFileName(file)}}</span>
+              <span>({{(file?.sizeBytes) | dsFileSize }})</span>
+            </ds-themed-file-download-link>
+          </div>
+>>>>>>> dspace-7.6.1
         </ds-process-detail-field>
     </div>
 
@@ -70,7 +93,11 @@
 
 <ng-template #deleteModal >
 
+<<<<<<< HEAD
     <div *ngVar="(processRD$ | async)?.payload as process">
+=======
+    <div *ngIf="(processRD$ | async)?.payload as process">
+>>>>>>> dspace-7.6.1
 
         <div class="modal-header">
             <div>

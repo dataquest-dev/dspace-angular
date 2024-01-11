@@ -18,7 +18,11 @@ import { PaginationServiceStub } from '../../shared/testing/pagination-service.s
 import { AuthService } from '../../core/auth/auth.service';
 import { VersionDataService } from '../../core/data/version-data.service';
 import { ItemDataService } from '../../core/data/item-data.service';
+<<<<<<< HEAD:src/app/item-page/versions/item-versions.component.spec.ts
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+=======
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+>>>>>>> dspace-7.6.1:src/app/shared/item/item-versions/item-versions.component.spec.ts
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
@@ -140,7 +144,7 @@ describe('ItemVersionsComponent', () => {
       imports: [TranslateModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, BrowserModule, ItemSharedModule],
       providers: [
         {provide: PaginationService, useValue: new PaginationServiceStub()},
-        {provide: FormBuilder, useValue: new FormBuilder()},
+        {provide: UntypedFormBuilder, useValue: new UntypedFormBuilder()},
         {provide: NotificationsService, useValue: new NotificationsServiceStub()},
         {provide: AuthService, useValue: authenticationServiceSpy},
         {provide: AuthorizationDataService, useValue: authorizationServiceSpy},

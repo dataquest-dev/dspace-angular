@@ -59,8 +59,15 @@ export class MetadataRepresentationListComponent extends AbstractIncrementalList
    */
   total: number;
 
+<<<<<<< HEAD
   constructor(public relationshipService: RelationshipDataService,
               private browseDefinitionDataService: BrowseDefinitionDataService) {
+=======
+  constructor(
+    public relationshipService: RelationshipDataService,
+    protected browseDefinitionDataService: BrowseDefinitionDataService,
+  ) {
+>>>>>>> dspace-7.6.1
     super();
   }
 

@@ -33,6 +33,7 @@ services:
       # db.url: Ensure we are using the 'dspacedb' image for our database
       db__P__url: 'jdbc:postgresql://dspacedb:543${INSTANCE}/dspace'
       # solr.server: Ensure we are using the 'dspacesolr' image for Solr
+<<<<<<< HEAD
       solr__P__server: http://dspacesolr:898${INSTANCE}/solr
       #S3 config
       assetstore__P__index__P__primary: ${S3_STORAGE:-0}
@@ -46,6 +47,13 @@ services:
       assetstore__P__s3__P__pathStyleAccessEnabled: ${S3_PATH_STYLE_ACCESS:-false}
       assetstore__P__s3__P__endpoint: ${S3_ENDPOINT:-}
     image: ${DSPACE_REST_IMAGE:-dataquest/dspace:dtq-dev-7.5}
+=======
+      solr__P__server: http://dspacesolr:8983/solr
+      # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests 
+      # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
+      proxies__P__trusted__P__ipranges: '172.23.0'
+    image: "${DOCKER_OWNER:-dspace}/dspace:${DSPACE_VER:-dspace-7_x-test}"
+>>>>>>> dspace-7.6.1
     depends_on:
     - dspacedb
     networks:
@@ -98,12 +106,17 @@ services:
     command: -p 543${INSTANCE}
   # DSpace Solr container
   dspacesolr:
+<<<<<<< HEAD
     environment:
       TZ: ${TIMEZONE:-Europe/Bratislava}
     restart: unless-stopped
     container_name: dspacesolr${INSTANCE}
     # Uses official Solr image at https://hub.docker.com/_/solr/
     image: solr:8.11-slim
+=======
+    container_name: dspacesolr
+    image: "${DOCKER_OWNER:-dspace}/dspace-solr:${DSPACE_VER:-dspace-7_x}"
+>>>>>>> dspace-7.6.1
     # Needs main 'dspace' container to start first to guarantee access to solr_configs
     depends_on:
     - dspace
@@ -117,21 +130,20 @@ services:
     tty: true
     working_dir: /var/solr/data
     volumes:
-    # Mount our "solr_configs" volume available under the Solr's configsets folder (in a 'dspace' subfolder)
-    # This copies the Solr configs from main 'dspace' container into 'dspacesolr' via that volume
-    - solr_configs:/opt/solr/server/solr/configsets/dspace
     # Keep Solr data directory between reboots
     - solr_data:/var/solr/data
     - solr_logs:/var/solr/logs
     # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
     # * First, run precreate-core to create the core (if it doesn't yet exist). If exists already, this is a no-op
-    # * Second, copy updated configs from mounted configsets to this core. If it already existed, this updates core
-    #   to the latest configs. If it's a newly created core, this is a no-op.
+    # * Second, copy configsets to this core:
+    #   Updates to Solr configs require the container to be rebuilt/restarted:
+    #   `docker-compose -p d7 -f docker/docker-compose.yml -f docker/docker-compose-rest.yml up -d --build dspacesolr`
     entrypoint:
     - /bin/bash
     - '-c'
     - |
       init-var-solr
+<<<<<<< HEAD
       precreate-core authority /opt/solr/server/solr/configsets/dspace/authority
       cp -r -u /opt/solr/server/solr/configsets/dspace/authority/* authority
       precreate-core oai /opt/solr/server/solr/configsets/dspace/oai
@@ -141,6 +153,17 @@ services:
       precreate-core statistics /opt/solr/server/solr/configsets/dspace/statistics
       cp -r -u /opt/solr/server/solr/configsets/dspace/statistics/* statistics
       exec solr -p 898${INSTANCE} -f -m 4g
+=======
+      precreate-core authority /opt/solr/server/solr/configsets/authority
+      cp -r /opt/solr/server/solr/configsets/authority/* authority
+      precreate-core oai /opt/solr/server/solr/configsets/oai
+      cp -r /opt/solr/server/solr/configsets/oai/* oai
+      precreate-core search /opt/solr/server/solr/configsets/search
+      cp -r /opt/solr/server/solr/configsets/search/* search
+      precreate-core statistics /opt/solr/server/solr/configsets/statistics
+      cp -r /opt/solr/server/solr/configsets/statistics/* statistics
+      exec solr -f
+>>>>>>> dspace-7.6.1
 volumes:
   assetstore:
   pgdata:

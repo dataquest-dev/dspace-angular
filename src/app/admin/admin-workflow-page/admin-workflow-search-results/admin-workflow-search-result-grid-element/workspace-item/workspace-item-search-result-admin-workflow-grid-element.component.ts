@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { Component, ComponentFactoryResolver, ElementRef, ViewChild } from '@angular/core';
+=======
+import { Component, ComponentFactoryResolver, ElementRef, ViewChild, OnInit } from '@angular/core';
+>>>>>>> dspace-7.6.1
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, mergeMap, take, tap } from 'rxjs/operators';
@@ -36,6 +40,10 @@ import { DSpaceObject } from '../../../../../core/shared/dspace-object.model';
 import { SupervisionOrder } from '../../../../../core/supervision-order/models/supervision-order.model';
 import { PaginatedList } from '../../../../../core/data/paginated-list.model';
 import { SupervisionOrderDataService } from '../../../../../core/supervision-order/supervision-order-data.service';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../../../../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 @listableObjectComponent(WorkspaceItemSearchResult, ViewMode.GridElement, Context.AdminWorkflowSearch)
 @Component({
@@ -46,7 +54,11 @@ import { SupervisionOrderDataService } from '../../../../../core/supervision-ord
 /**
  * The component for displaying a grid element for an workflow item on the admin workflow search page
  */
+<<<<<<< HEAD
 export class WorkspaceItemSearchResultAdminWorkflowGridElementComponent extends SearchResultGridElementComponent<WorkspaceItemSearchResult, WorkspaceItem> {
+=======
+export class WorkspaceItemSearchResultAdminWorkflowGridElementComponent extends SearchResultGridElementComponent<WorkspaceItemSearchResult, WorkspaceItem> implements OnInit {
+>>>>>>> dspace-7.6.1
 
   /**
    * The item linked to the workspace item
@@ -79,6 +91,10 @@ export class WorkspaceItemSearchResultAdminWorkflowGridElementComponent extends 
   @ViewChild('buttons', { static: true }) buttons: ElementRef;
 
   constructor(
+<<<<<<< HEAD
+=======
+    public dsoNameService: DSONameService,
+>>>>>>> dspace-7.6.1
     private componentFactoryResolver: ComponentFactoryResolver,
     private linkService: LinkService,
     protected truncatableService: TruncatableService,
@@ -86,7 +102,11 @@ export class WorkspaceItemSearchResultAdminWorkflowGridElementComponent extends 
     protected bitstreamDataService: BitstreamDataService,
     protected supervisionOrderDataService: SupervisionOrderDataService,
   ) {
+<<<<<<< HEAD
     super(truncatableService, bitstreamDataService);
+=======
+    super(dsoNameService, truncatableService, bitstreamDataService);
+>>>>>>> dspace-7.6.1
   }
 
   /**

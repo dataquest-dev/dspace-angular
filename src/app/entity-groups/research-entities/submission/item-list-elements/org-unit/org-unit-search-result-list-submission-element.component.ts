@@ -49,7 +49,11 @@ export class OrgUnitSearchResultListSubmissionElementComponent extends SearchRes
               private itemDataService: ItemDataService,
               private bitstreamDataService: BitstreamDataService,
               private selectableListService: SelectableListService,
+<<<<<<< HEAD
               protected dsoNameService: DSONameService,
+=======
+              public dsoNameService: DSONameService,
+>>>>>>> dspace-7.6.1
               @Inject(APP_CONFIG) protected appConfig: AppConfig
   ) {
     super(truncatableService, dsoNameService, appConfig);

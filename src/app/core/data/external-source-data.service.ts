@@ -74,7 +74,16 @@ export class ExternalSourceDataService extends IdentifiableDataService<ExternalS
     );
 
     // TODO create a dedicated ExternalSourceEntryDataService and move this entire method to it. Then the "as any"s won't be necessary
+<<<<<<< HEAD:src/app/core/data/external-source-data.service.ts
     return this.findListByHref(href$, undefined, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow as any) as any;
+=======
+
+    return this.hasCachedErrorResponse(href$).pipe(
+      switchMap((hasCachedErrorResponse) => {
+        return this.findListByHref(href$, undefined, !hasCachedErrorResponse, reRequestOnStale, ...linksToFollow as any);
+      })
+    ) as any;
+>>>>>>> dspace-7.6.1:src/app/core/data/external-source.service.ts
   }
 
   /**

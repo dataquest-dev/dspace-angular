@@ -31,7 +31,11 @@ export class BrowseBySwitcherComponent implements OnInit {
    */
   ngOnInit(): void {
     this.browseByComponent = this.route.data.pipe(
+<<<<<<< HEAD
       map((data: { browseDefinition: BrowseDefinition }) => this.getComponentByBrowseByType(data.browseDefinition.dataType, this.themeService.getThemeName()))
+=======
+      map((data: { browseDefinition: BrowseDefinition }) => this.getComponentByBrowseByType(data.browseDefinition.getRenderType(), this.themeService.getThemeName()))
+>>>>>>> dspace-7.6.1
     );
   }
 

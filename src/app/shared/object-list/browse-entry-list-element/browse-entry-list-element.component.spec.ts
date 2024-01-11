@@ -7,6 +7,11 @@ import { BrowseEntry } from '../../../core/shared/browse-entry.model';
 import { PaginationService } from '../../../core/pagination/pagination.service';
 import { RouteService } from '../../../core/services/route.service';
 import { of as observableOf } from 'rxjs';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
+import { DSONameServiceMock } from '../../mocks/dso-name.service.mock';
+>>>>>>> dspace-7.6.1
 let browseEntryListElementComponent: BrowseEntryListElementComponent;
 let fixture: ComponentFixture<BrowseEntryListElementComponent>;
 
@@ -34,6 +39,10 @@ describe('BrowseEntryListElementComponent', () => {
     TestBed.configureTestingModule({
       declarations: [BrowseEntryListElementComponent, TruncatePipe],
       providers: [
+<<<<<<< HEAD
+=======
+        { provide: DSONameService, useValue: new DSONameServiceMock() },
+>>>>>>> dspace-7.6.1
         { provide: 'objectElementProvider', useValue: { mockValue } },
         {provide: PaginationService, useValue: paginationService},
         {provide: RouteService, useValue: routeService},

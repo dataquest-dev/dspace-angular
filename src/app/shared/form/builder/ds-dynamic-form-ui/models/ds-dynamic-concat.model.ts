@@ -46,6 +46,7 @@ export class DynamicConcatModel extends DynamicFormGroupModel {
   @serializable() submissionId: string;
   @serializable() hasSelectableMetadata: boolean;
   @serializable() metadataValue: MetadataValue;
+  @serializable() readOnly?: boolean;
 
   isCustomGroup = true;
   valueUpdates: Subject<string>;
@@ -65,6 +66,10 @@ export class DynamicConcatModel extends DynamicFormGroupModel {
     this.valueUpdates = new Subject<string>();
     this.valueUpdates.subscribe((value: string) => this.value = value);
     this.typeBindRelations = config.typeBindRelations ? config.typeBindRelations : [];
+<<<<<<< HEAD
+=======
+    this.readOnly = config.disabled;
+>>>>>>> dspace-7.6.1
   }
 
   get value() {

@@ -1,6 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
+<<<<<<< HEAD
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+=======
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+>>>>>>> dspace-7.6.1
 
 import { BehaviorSubject, combineLatest, from, shareReplay } from 'rxjs';
 import { map, mergeMap, take, tap } from 'rxjs/operators';
@@ -17,6 +21,10 @@ import { RemoteData } from '../../../core/data/remote-data';
 import { getFirstCompletedRemoteData, getFirstSucceededRemoteDataPayload } from '../../../core/shared/operators';
 import { AuthService } from '../../../core/auth/auth.service';
 import { isNotEmpty } from '../../empty.util';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 @Component({
   selector: 'ds-subscription-modal',
@@ -57,7 +65,11 @@ export class SubscriptionModalComponent implements OnInit {
   /**
    * Reactive form group that will be used to add/edit subscriptions
    */
+<<<<<<< HEAD
   subscriptionForm: FormGroup;
+=======
+  subscriptionForm: UntypedFormGroup;
+>>>>>>> dspace-7.6.1
 
   /**
    * Used to show validation errors when user submits
@@ -84,13 +96,21 @@ export class SubscriptionModalComponent implements OnInit {
   @Output() updateSubscription: EventEmitter<Subscription> = new EventEmitter<Subscription>();
 
   constructor(
+<<<<<<< HEAD
     private formBuilder: FormBuilder,
+=======
+    private formBuilder: UntypedFormBuilder,
+>>>>>>> dspace-7.6.1
     private modalService: NgbModal,
     private notificationsService: NotificationsService,
     private subscriptionService: SubscriptionsDataService,
     public activeModal: NgbActiveModal,
     private authService: AuthService,
     private translate: TranslateService,
+<<<<<<< HEAD
+=======
+    public dsoNameService: DSONameService,
+>>>>>>> dspace-7.6.1
   ) {
   }
 
@@ -121,6 +141,7 @@ export class SubscriptionModalComponent implements OnInit {
   }
 
   initFormByAllSubscriptions(): void {
+<<<<<<< HEAD
     this.subscriptionForm = new FormGroup({});
     for (let t of this.subscriptionDefaultTypes) {
       const formGroup = new FormGroup({});
@@ -128,6 +149,15 @@ export class SubscriptionModalComponent implements OnInit {
       formGroup.addControl('frequencies', this.formBuilder.group({}));
       for (let f of this.frequencyDefaultValues) {
         (formGroup.controls.frequencies as FormGroup).addControl(f, this.formBuilder.control(false));
+=======
+    this.subscriptionForm = new UntypedFormGroup({});
+    for (let t of this.subscriptionDefaultTypes) {
+      const formGroup = new UntypedFormGroup({});
+      formGroup.addControl('subscriptionId', this.formBuilder.control(''));
+      formGroup.addControl('frequencies', this.formBuilder.group({}));
+      for (let f of this.frequencyDefaultValues) {
+        (formGroup.controls.frequencies as UntypedFormGroup).addControl(f, this.formBuilder.control(false));
+>>>>>>> dspace-7.6.1
       }
       this.subscriptionForm.addControl(t, formGroup);
     }
@@ -139,6 +169,7 @@ export class SubscriptionModalComponent implements OnInit {
    * If the subscription is passed start the form with the information of subscription
    */
   initFormByGivenSubscription(): void {
+<<<<<<< HEAD
     const formGroup = new FormGroup({});
     formGroup.addControl('subscriptionId', this.formBuilder.control(this.subscription.id));
     formGroup.addControl('frequencies', this.formBuilder.group({}));
@@ -146,6 +177,15 @@ export class SubscriptionModalComponent implements OnInit {
     for (let f of this.frequencyDefaultValues) {
       const value = findIndex(this.subscription.subscriptionParameterList, ['value', f]) !== -1;
       (formGroup.controls.frequencies as FormGroup).addControl(f, this.formBuilder.control(value));
+=======
+    const formGroup = new UntypedFormGroup({});
+    formGroup.addControl('subscriptionId', this.formBuilder.control(this.subscription.id));
+    formGroup.addControl('frequencies', this.formBuilder.group({}));
+    (formGroup.get('frequencies') as UntypedFormGroup).addValidators(Validators.required);
+    for (let f of this.frequencyDefaultValues) {
+      const value = findIndex(this.subscription.subscriptionParameterList, ['value', f]) !== -1;
+      (formGroup.controls.frequencies as UntypedFormGroup).addControl(f, this.formBuilder.control(value));
+>>>>>>> dspace-7.6.1
     }
 
     this.subscriptionForm = this.formBuilder.group({
@@ -167,11 +207,19 @@ export class SubscriptionModalComponent implements OnInit {
           this.showDeleteInfo$.next(true);
           for (let subscription of res.page) {
             const type = subscription.subscriptionType;
+<<<<<<< HEAD
             const subscriptionGroup: FormGroup = this.subscriptionForm.get(type) as FormGroup;
             if (isNotEmpty(subscriptionGroup)) {
               subscriptionGroup.controls.subscriptionId.setValue(subscription.id);
               for (let parameter of subscription.subscriptionParameterList.filter((p) => p.name === 'frequency')) {
                 (subscriptionGroup.controls.frequencies as FormGroup).controls[parameter.value]?.setValue(true);
+=======
+            const subscriptionGroup: UntypedFormGroup = this.subscriptionForm.get(type) as UntypedFormGroup;
+            if (isNotEmpty(subscriptionGroup)) {
+              subscriptionGroup.controls.subscriptionId.setValue(subscription.id);
+              for (let parameter of subscription.subscriptionParameterList.filter((p) => p.name === 'frequency')) {
+                (subscriptionGroup.controls.frequencies as UntypedFormGroup).controls[parameter.value]?.setValue(true);
+>>>>>>> dspace-7.6.1
               }
             }
           }
@@ -194,12 +242,20 @@ export class SubscriptionModalComponent implements OnInit {
     const subscriptionsToBeUpdated = [];
 
     subscriptionTypes.forEach((subscriptionType: string) => {
+<<<<<<< HEAD
       const subscriptionGroup: FormGroup = this.subscriptionForm.controls[subscriptionType] as FormGroup;
+=======
+      const subscriptionGroup: UntypedFormGroup = this.subscriptionForm.controls[subscriptionType] as UntypedFormGroup;
+>>>>>>> dspace-7.6.1
       if (subscriptionGroup.touched && subscriptionGroup.dirty) {
         const body = this.createBody(
           subscriptionGroup.controls.subscriptionId.value,
           subscriptionType,
+<<<<<<< HEAD
           subscriptionGroup.controls.frequencies as FormGroup
+=======
+          subscriptionGroup.controls.frequencies as UntypedFormGroup
+>>>>>>> dspace-7.6.1
         );
 
         if (isNotEmpty(body.id)) {
@@ -257,7 +313,11 @@ export class SubscriptionModalComponent implements OnInit {
 
   }
 
+<<<<<<< HEAD
   private createBody(subscriptionId: string, subscriptionType: string, frequencies: FormGroup): Partial<any> {
+=======
+  private createBody(subscriptionId: string, subscriptionType: string, frequencies: UntypedFormGroup): Partial<any> {
+>>>>>>> dspace-7.6.1
     const body = {
       id: (isNotEmpty(subscriptionId) ? subscriptionId : null),
       subscriptionType: subscriptionType,

@@ -8,8 +8,11 @@ import {
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+<<<<<<< HEAD
 
 declare const require: any;
+=======
+>>>>>>> dspace-7.6.1
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
@@ -24,8 +27,11 @@ jasmine.getEnv().afterEach(() => {
   // Close any leftover modals
   getTestBed().inject(NgbModal, null)?.dismissAll?.();
 });
+<<<<<<< HEAD
 
 // Then we find all the tests.
 const context = require.context('./', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
+=======
+>>>>>>> dspace-7.6.1

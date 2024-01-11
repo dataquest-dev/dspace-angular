@@ -3,7 +3,10 @@ import 'reflect-metadata';
 import 'core-js/es/reflect';
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+<<<<<<< HEAD
 import { load as loadWebFont } from 'webfontloader';
+=======
+>>>>>>> dspace-7.6.1
 
 import { BrowserAppModule } from './modules/app/browser-app.module';
 
@@ -14,6 +17,17 @@ import { enableProdMode } from '@angular/core';
 
 const bootstrap = () => platformBrowserDynamic()
   .bootstrapModule(BrowserAppModule, {});
+<<<<<<< HEAD
+
+/**
+ * We use this to determine have been serven SSR HTML or not.
+ *
+ * At this point, {@link environment} may not be in sync with the configuration.
+ * Therefore, we cannot depend on it to determine how to bootstrap the app.
+ */
+const hasTransferState = document.querySelector('script#dspace-angular-state') !== null;
+=======
+>>>>>>> dspace-7.6.1
 
 /**
  * We use this to determine have been serven SSR HTML or not.
@@ -24,14 +38,6 @@ const bootstrap = () => platformBrowserDynamic()
 const hasTransferState = document.querySelector('script#dspace-angular-state') !== null;
 
 const main = () => {
-  // Load fonts async
-  // https://github.com/typekit/webfontloader#configuration
-  loadWebFont({
-    google: {
-      families: ['Droid Sans']
-    }
-  });
-
   if (environment.production) {
     enableProdMode();
   }

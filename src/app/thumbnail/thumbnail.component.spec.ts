@@ -134,7 +134,11 @@ describe('ThumbnailComponent', () => {
       const img = fixture.debugElement.query(By.css('img.thumbnail-content'));
       img.nativeNode.onerror = null;
 
+<<<<<<< HEAD
       comp.ngOnChanges();
+=======
+      comp.ngOnChanges({});
+>>>>>>> dspace-7.6.1
       setSrcSpy = spyOn(comp, 'setSrc').and.callThrough();
     });
 
@@ -261,14 +265,22 @@ describe('ThumbnailComponent', () => {
 
     describe('if content can be loaded', () => {
       it('should display an image', () => {
+<<<<<<< HEAD
         comp.ngOnChanges();
+=======
+        comp.ngOnChanges({});
+>>>>>>> dspace-7.6.1
         fixture.detectChanges();
         const image: HTMLElement = fixture.debugElement.query(By.css('img')).nativeElement;
         expect(image.getAttribute('src')).toBe(thumbnail._links.content.href);
       });
 
       it('should include the alt text', () => {
+<<<<<<< HEAD
         comp.ngOnChanges();
+=======
+        comp.ngOnChanges({});
+>>>>>>> dspace-7.6.1
         fixture.detectChanges();
         const image: HTMLElement = fixture.debugElement.query(By.css('img')).nativeElement;
         expect(image.getAttribute('alt')).toBe('TRANSLATED ' + comp.alt);
@@ -290,8 +302,12 @@ describe('ThumbnailComponent', () => {
         bundle: { href: 'bundle.url' },
         format: { href: 'format.url' },
         content: { href: CONTENT },
+<<<<<<< HEAD
         thumbnail: undefined,
         checksum: undefined
+=======
+        thumbnail: undefined
+>>>>>>> dspace-7.6.1
       };
     });
 
@@ -302,14 +318,22 @@ describe('ThumbnailComponent', () => {
 
       describe('if content can be loaded', () => {
         it('should display an image', () => {
+<<<<<<< HEAD
           comp.ngOnChanges();
+=======
+          comp.ngOnChanges({});
+>>>>>>> dspace-7.6.1
           fixture.detectChanges();
           const image: HTMLElement = de.query(By.css('img')).nativeElement;
           expect(image.getAttribute('src')).toBe(thumbnail._links.content.href);
         });
 
         it('should display the alt text', () => {
+<<<<<<< HEAD
           comp.ngOnChanges();
+=======
+          comp.ngOnChanges({});
+>>>>>>> dspace-7.6.1
           fixture.detectChanges();
           const image: HTMLElement = de.query(By.css('img')).nativeElement;
           expect(image.getAttribute('alt')).toBe('TRANSLATED ' + comp.alt);
@@ -328,7 +352,11 @@ describe('ThumbnailComponent', () => {
 
       it('should show the default image', () => {
         comp.defaultImage = 'default/image.jpg';
+<<<<<<< HEAD
         comp.ngOnChanges();
+=======
+        comp.ngOnChanges({});
+>>>>>>> dspace-7.6.1
         expect(comp.src$.getValue()).toBe('default/image.jpg');
       });
     });

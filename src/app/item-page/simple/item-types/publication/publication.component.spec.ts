@@ -151,6 +151,51 @@ describe('PublicationComponent', () => {
     beforeEach(waitForAsync(() => {
       const iiifEnabledMap: MetadataMap = {
         'dspace.iiif.enabled': [getIIIFEnabled(true)],
+<<<<<<< HEAD
+        'iiif.search.enabled': [getIIIFSearchEnabled(true)],
+      };
+      TestBed.overrideProvider(RouteService, {useValue: localMockRouteService});
+=======
+        'iiif.search.enabled': [getIIIFSearchEnabled(false)],
+      };
+>>>>>>> dspace-7.6.1
+      TestBed.compileComponents();
+      fixture = TestBed.createComponent(PublicationComponent);
+      comp = fixture.componentInstance;
+      comp.object = getItem(iiifEnabledMap);
+      fixture.detectChanges();
+    }));
+
+    it('should contain an iiif viewer component', () => {
+      const fields = fixture.debugElement.queryAll(By.css('ds-mirador-viewer'));
+      expect(fields.length).toBeGreaterThanOrEqual(1);
+    });
+    it('should not retrieve the query term for previous route', fakeAsync((): void => {
+      //tick(10)
+      expect(comp.iiifQuery$).toBeFalsy();
+    }));
+
+    it('should retrieve the query term for previous route', fakeAsync((): void => {
+      expect(comp.iiifQuery$.subscribe(result => expect(result).toEqual('test query')));
+    }));
+
+  });
+
+<<<<<<< HEAD
+  describe('with IIIF viewer and search but no previous search query', () => {
+    const localMockRouteService = {
+      getPreviousUrl(): Observable<string> {
+        return of('/item');
+=======
+    const localMockRouteService = {
+      getPreviousUrl(): Observable<string> {
+        return of('/search?query=test%20query&fakeParam=true');
+>>>>>>> dspace-7.6.1
+      }
+    };
+    beforeEach(waitForAsync(() => {
+      const iiifEnabledMap: MetadataMap = {
+        'dspace.iiif.enabled': [getIIIFEnabled(true)],
         'iiif.search.enabled': [getIIIFSearchEnabled(true)],
       };
       TestBed.overrideProvider(RouteService, {useValue: localMockRouteService});
@@ -166,6 +211,16 @@ describe('PublicationComponent', () => {
       expect(fields.length).toBeGreaterThanOrEqual(1);
     });
 
+<<<<<<< HEAD
+    it('should not retrieve the query term for previous route', fakeAsync( () => {
+      let emitted;
+      comp.iiifQuery$.subscribe(result => emitted = result);
+      tick(10);
+      expect(emitted).toBeUndefined();
+    }));
+
+  });
+=======
     it('should retrieve the query term for previous route', fakeAsync((): void => {
       expect(comp.iiifQuery$.subscribe(result => expect(result).toEqual('test query')));
     }));
@@ -204,4 +259,5 @@ describe('PublicationComponent', () => {
     }));
 
   });
+>>>>>>> dspace-7.6.1
 });

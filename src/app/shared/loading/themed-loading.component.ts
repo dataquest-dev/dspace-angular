@@ -14,8 +14,13 @@ import { ThemeService } from '../theme-support/theme.service';
 export class ThemedLoadingComponent extends ThemedComponent<LoadingComponent> {
 
   @Input() message: string;
+<<<<<<< HEAD
   @Input() showMessage = true;
   @Input() spinner = false;
+=======
+  @Input() showMessage: boolean;
+  @Input() spinner: boolean;
+>>>>>>> dspace-7.6.1
 
   protected inAndOutputNames: (keyof LoadingComponent & keyof this)[] = ['message', 'showMessage', 'spinner'];
 

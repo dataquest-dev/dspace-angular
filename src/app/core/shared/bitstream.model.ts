@@ -10,11 +10,14 @@ import { HALLink } from './hal-link.model';
 import {BUNDLE} from './bundle.resource-type';
 import {Bundle} from './bundle.model';
 import { ChildHALResource } from './child-hal-resource.model';
+<<<<<<< HEAD
 import { BITSTREAM_CHECKSUM } from './bitstream-checksum.resource';
 import { BitstreamChecksum } from './bitstream-checksum.model';
 
 // Store number if the bitstream is stored in the both stores (S3 and local)
 export const SYNCHRONIZED_STORES_NUMBER = 77;
+=======
+>>>>>>> dspace-7.6.1
 
 @typedObject
 @inheritSerialization(DSpaceObject)
@@ -79,12 +82,15 @@ export class Bitstream extends DSpaceObject implements ChildHALResource {
   @link(BUNDLE)
   bundle?: Observable<RemoteData<Bundle>>;
 
+<<<<<<< HEAD
   /**
    * The checksum values fetched from the DB, local and S3 store.
    */
   @link(BITSTREAM_CHECKSUM)
   checksum?: Observable<RemoteData<BitstreamChecksum>>;
 
+=======
+>>>>>>> dspace-7.6.1
   getParentLinkKey(): keyof this['_links'] {
     return 'format';
   }

@@ -1,5 +1,5 @@
 import { URLCombiner } from '../core/url-combiner/url-combiner';
-import { getWorkflowItemModuleRoute } from '../app-routing-paths';
+import { getWorkflowItemModuleRoute, getWorkspaceItemModuleRoute } from '../app-routing-paths';
 
 export function getWorkflowItemPageRoute(wfiId: string) {
   return new URLCombiner(getWorkflowItemModuleRoute(), wfiId).toString();
@@ -24,8 +24,19 @@ export function getAdvancedWorkflowRoute(wfiId: string) {
   return new URLCombiner(getWorkflowItemModuleRoute(), wfiId, ADVANCED_WORKFLOW_PATH).toString();
 }
 
+<<<<<<< HEAD
+=======
+export function getWorkspaceItemDeleteRoute(wsiId: string) {
+  return new URLCombiner(getWorkspaceItemModuleRoute(), wsiId, WORKSPACE_ITEM_DELETE_PATH).toString();
+}
+
+>>>>>>> dspace-7.6.1
 export const WORKFLOW_ITEM_EDIT_PATH = 'edit';
 export const WORKFLOW_ITEM_DELETE_PATH = 'delete';
 export const WORKFLOW_ITEM_VIEW_PATH = 'view';
 export const WORKFLOW_ITEM_SEND_BACK_PATH = 'sendback';
 export const ADVANCED_WORKFLOW_PATH = 'advanced';
+<<<<<<< HEAD
+=======
+export const WORKSPACE_ITEM_DELETE_PATH = 'delete';
+>>>>>>> dspace-7.6.1

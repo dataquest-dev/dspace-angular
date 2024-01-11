@@ -32,11 +32,19 @@ export class ItemSearchResultGridElementComponent extends SearchResultGridElemen
   dsoTitle: string;
 
   constructor(
+<<<<<<< HEAD
     protected truncatableService: TruncatableService,
     protected bitstreamDataService: BitstreamDataService,
     private dsoNameService: DSONameService,
   ) {
     super(truncatableService, bitstreamDataService);
+=======
+    public dsoNameService: DSONameService,
+    protected truncatableService: TruncatableService,
+    protected bitstreamDataService: BitstreamDataService,
+  ) {
+    super(dsoNameService, truncatableService, bitstreamDataService);
+>>>>>>> dspace-7.6.1
   }
 
   ngOnInit(): void {

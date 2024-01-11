@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* eslint-disable max-classes-per-file */
+=======
+>>>>>>> dspace-7.6.1
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RemoteDataBuildService } from '../cache/builders/remote-data-build.service';

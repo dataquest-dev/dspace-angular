@@ -28,12 +28,16 @@ describe('SearchFormComponent', () => {
   const searchService = new SearchServiceStub();
   const paginationService = new PaginationServiceStub();
   const searchConfigService = { paginationID: 'test-id' };
+<<<<<<< HEAD
+=======
+  const firstPage = { 'spc.page': 1 };
+>>>>>>> dspace-7.6.1
   const dspaceObjectService = {
     findById: () => createSuccessfulRemoteDataObject$(undefined),
   };
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+    return TestBed.configureTestingModule({
       imports: [FormsModule, RouterTestingModule, TranslateModule.forRoot()],
       providers: [
         { provide: Router, useValue: router },
@@ -96,7 +100,7 @@ describe('SearchFormComponent', () => {
     tick();
     const scopeSelect = de.query(By.css('.scope-button')).nativeElement;
 
-    expect(scopeSelect.textContent).toBe(testCommunity.name);
+    expect(scopeSelect.textContent).toContain('Sample Community');
   }));
 
   describe('updateSearch', () => {
@@ -104,16 +108,28 @@ describe('SearchFormComponent', () => {
     const scope = 'MCU';
     let searchQuery = {};
 
+<<<<<<< HEAD
     it('should navigate to the search page even when no parameters are provided', () => {
       comp.updateSearch(searchQuery);
 
       expect(router.navigate).toHaveBeenCalledWith(comp.getSearchLinkParts(), {
         queryParams: searchQuery,
+=======
+    it('should navigate to the search first page even when no parameters are provided', () => {
+      comp.updateSearch(searchQuery);
+
+      expect(router.navigate).toHaveBeenCalledWith(comp.getSearchLinkParts(), {
+        queryParams: { ...searchQuery, ...firstPage },
+>>>>>>> dspace-7.6.1
         queryParamsHandling: 'merge'
       });
     });
 
+<<<<<<< HEAD
     it('should navigate to the search page with parameters only query if only query is provided', () => {
+=======
+    it('should navigate to the search first page with parameters only query if only query is provided', () => {
+>>>>>>> dspace-7.6.1
       searchQuery = {
         query: query
       };
@@ -121,12 +137,20 @@ describe('SearchFormComponent', () => {
       comp.updateSearch(searchQuery);
 
       expect(router.navigate).toHaveBeenCalledWith(comp.getSearchLinkParts(), {
+<<<<<<< HEAD
         queryParams: searchQuery,
+=======
+        queryParams: { ...searchQuery, ...firstPage },
+>>>>>>> dspace-7.6.1
         queryParamsHandling: 'merge'
       });
     });
 
+<<<<<<< HEAD
     it('should navigate to the search page with parameters only query if only scope is provided', () => {
+=======
+    it('should navigate to the search first page with parameters only query if only scope is provided', () => {
+>>>>>>> dspace-7.6.1
       searchQuery = {
         scope: scope
       };
@@ -134,7 +158,11 @@ describe('SearchFormComponent', () => {
       comp.updateSearch(searchQuery);
 
       expect(router.navigate).toHaveBeenCalledWith(comp.getSearchLinkParts(), {
+<<<<<<< HEAD
         queryParams: searchQuery,
+=======
+        queryParams: {...searchQuery, ...firstPage},
+>>>>>>> dspace-7.6.1
         queryParamsHandling: 'merge'
       });
     });
@@ -172,6 +200,7 @@ describe('SearchFormComponent', () => {
       expect(comp.updateSearch).toHaveBeenCalledWith(searchQuery);
     });
   });
+<<<<<<< HEAD
 
   // it('should call updateSearch when clicking the submit button with correct parameters', fakeAsync(() => {
   //   comp.query = 'Test String'
@@ -198,6 +227,11 @@ describe('SearchFormComponent', () => {
 });
 
 export const objects: DSpaceObject[] = [
+=======
+});
+
+const objects: DSpaceObject[] = [
+>>>>>>> dspace-7.6.1
   Object.assign(new Community(), {
     logo: {
       self: {

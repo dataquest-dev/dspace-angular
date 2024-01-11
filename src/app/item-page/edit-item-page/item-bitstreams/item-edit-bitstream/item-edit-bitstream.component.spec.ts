@@ -13,8 +13,12 @@ import { createSuccessfulRemoteDataObject$ } from '../../../../shared/remote-dat
 import { getBitstreamDownloadRoute } from '../../../../app-routing-paths';
 import { By } from '@angular/platform-browser';
 import { BrowserOnlyMockPipe } from '../../../../shared/testing/browser-only-mock.pipe';
+<<<<<<< HEAD
 import { RouterLinkDirectiveStub } from '../../../../shared/testing/router-link-directive.stub';
 import { BitstreamChecksum } from '../../../../core/shared/bitstream-checksum.model';
+=======
+import { RouterTestingModule } from '@angular/router/testing';
+>>>>>>> dspace-7.6.1
 
 let comp: ItemEditBitstreamComponent;
 let fixture: ComponentFixture<ItemEditBitstreamComponent>;
@@ -55,8 +59,12 @@ const bitstream = Object.assign(new Bitstream(), {
     content: { href: 'content-link' }
   },
 
+<<<<<<< HEAD
   format: createSuccessfulRemoteDataObject$(format),
   checksum: createSuccessfulRemoteDataObject$(checksum)
+=======
+  format: createSuccessfulRemoteDataObject$(format)
+>>>>>>> dspace-7.6.1
 });
 const fieldUpdate = {
   field: bitstream,
@@ -92,12 +100,22 @@ describe('ItemEditBitstreamComponent', () => {
     );
 
     TestBed.configureTestingModule({
+<<<<<<< HEAD
       imports: [TranslateModule.forRoot()],
+=======
+      imports: [
+        RouterTestingModule.withRoutes([]),
+        TranslateModule.forRoot(),
+      ],
+>>>>>>> dspace-7.6.1
       declarations: [
         ItemEditBitstreamComponent,
         VarDirective,
         BrowserOnlyMockPipe,
+<<<<<<< HEAD
         RouterLinkDirectiveStub
+=======
+>>>>>>> dspace-7.6.1
       ],
       providers: [
         { provide: ObjectUpdatesService, useValue: objectUpdatesService },
@@ -152,11 +170,16 @@ describe('ItemEditBitstreamComponent', () => {
   describe('when the component loads', () => {
     it('should contain download button with a valid link to the bitstreams download page', () => {
       fixture.detectChanges();
+<<<<<<< HEAD
       const linkDes = fixture.debugElement.queryAll(By.directive(RouterLinkDirectiveStub));
       const routerLinkQuery = linkDes.map((de) => de.injector.get(RouterLinkDirectiveStub));
 
       expect(routerLinkQuery.length).toBe(2);
       expect(routerLinkQuery[0].routerLink).toBe(comp.bitstreamDownloadUrl);
+=======
+      const downloadBtnHref = fixture.debugElement.query(By.css('[data-test="download-button"]')).nativeElement.getAttribute('href');
+      expect(downloadBtnHref).toEqual(comp.bitstreamDownloadUrl);
+>>>>>>> dspace-7.6.1
     });
   });
 

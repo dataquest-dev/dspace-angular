@@ -169,7 +169,11 @@
   // "admin.registries.bitstream-formats.table.name": "Name",
   "admin.registries.bitstream-formats.table.name": "Namn",
   // TODO New key - Add a translation
+<<<<<<< HEAD
   "admin.registries.bitstream-formats.table.id" : "ID",
+=======
+  "admin.registries.bitstream-formats.table.id": "ID",
+>>>>>>> dspace-7.6.1
 
   // "admin.registries.bitstream-formats.table.return": "Back",
   "admin.registries.bitstream-formats.table.return": "Tillbaka",
@@ -248,7 +252,11 @@
   // "admin.registries.schema.fields.table.field": "Field",
   "admin.registries.schema.fields.table.field": "Fält",
   // TODO New key - Add a translation
+<<<<<<< HEAD
   "admin.registries.schema.fields.table.id" : "ID",
+=======
+  "admin.registries.schema.fields.table.id": "ID",
+>>>>>>> dspace-7.6.1
 
   // "admin.registries.schema.fields.table.scopenote": "Scope Note",
   "admin.registries.schema.fields.table.scopenote": "Anmärkning (scope note)",
@@ -1017,7 +1025,11 @@
   // "pagination.previous.button": "Föregående",
   "pagination.previous.button": "Föregående",
 
+<<<<<<< HEAD
  // "browse.startsWith.choose_start": "(Choose start)",
+=======
+  // "browse.startsWith.choose_start": "(Choose start)",
+>>>>>>> dspace-7.6.1
   "browse.startsWith.choose_start": "(Välj startdatum)",
 
   // "browse.startsWith.choose_year": "(Välj årtal)",
@@ -1092,7 +1104,11 @@
 
 
 
+<<<<<<< HEAD
  // "collection.create.head": "Create a Collection",
+=======
+  // "collection.create.head": "Create a Collection",
+>>>>>>> dspace-7.6.1
   "collection.create.head": "Skapa samling",
 
   // "collection.create.notifications.success": "Successfully created the Collection",
@@ -1418,7 +1434,11 @@
   "collection.select.table.title": "Titel",
 
 
+<<<<<<< HEAD
  // "collection.source.controls.head": "Harvest Controls",
+=======
+  // "collection.source.controls.head": "Harvest Controls",
+>>>>>>> dspace-7.6.1
   "collection.source.controls.head": "Inställningar för höstning",
 
   // "collection.source.controls.test.submit.error": "Something went wrong with initiating the testing of the settings",
@@ -1833,7 +1853,11 @@
 
 
   // "curation-task.task.checklinks.label":  "Check Links in Metadata",
+<<<<<<< HEAD
   "curation-task.task.checklinks.label":  "Kontrollera länkar i metadata",
+=======
+  "curation-task.task.checklinks.label": "Kontrollera länkar i metadata",
+>>>>>>> dspace-7.6.1
 
   // "curation-task.task.noop.label": "NOOP",
   "curation-task.task.noop.label": "NOOP",
@@ -1961,7 +1985,11 @@
 
 
 
+<<<<<<< HEAD
  // "confirmation-modal.export-metadata.header": "Export metadata for {{ dsoName }}",
+=======
+  // "confirmation-modal.export-metadata.header": "Export metadata for {{ dsoName }}",
+>>>>>>> dspace-7.6.1
   "confirmation-modal.export-metadata.header": "Exportera metadata från {{ dsoName }}",
 
   // "confirmation-modal.export-metadata.info": "Are you sure you want to export metadata for {{ dsoName }}",
@@ -2084,10 +2112,17 @@
 
   // "footer.link.end-user-agreement":"End User Agreement",
   // TODO New key - Add a translation
+<<<<<<< HEAD
   "footer.link.end-user-agreement":"End User Agreement",
 
   // "footer.link.feedback":"Send Feedback",
   "footer.link.feedback":"Skicka feedback",
+=======
+  "footer.link.end-user-agreement": "End User Agreement",
+
+  // "footer.link.feedback":"Send Feedback",
+  "footer.link.feedback": "Skicka feedback",
+>>>>>>> dspace-7.6.1
 
 
 
@@ -2232,9 +2267,12 @@
   // "form.no-value": "No value entered",
   "form.no-value": "Inget värde har angivits",
 
+<<<<<<< HEAD
   // "form.other-information": {},
   "form.other-information": {},
 
+=======
+>>>>>>> dspace-7.6.1
   // "form.remove": "Remove",
   "form.remove": "Ta bort",
 
@@ -2404,6 +2442,7 @@
   "info.feedback.email-label": "Din e-postadress",
 
   // "info.feedback.create.success" : "Feedback Sent Successfully!",
+<<<<<<< HEAD
   "info.feedback.create.success" : "Feedback har skickats!",
 
   // "info.feedback.error.email.required" : "A valid email address is required",
@@ -2417,6 +2456,21 @@
 
   // "info.feedback.page_help" : "Tha page related to your feedback",
   "info.feedback.page_help" : "Den är sidan är relaterad till din feedback",
+=======
+  "info.feedback.create.success": "Feedback har skickats!",
+
+  // "info.feedback.error.email.required" : "A valid email address is required",
+  "info.feedback.error.email.required": "Du måste ange en giltig e-postadress",
+
+  // "info.feedback.error.message.required" : "A comment is required",
+  "info.feedback.error.message.required": "Du måste skriva en kommentar",
+
+  // "info.feedback.page-label" : "Page",
+  "info.feedback.page-label": "Sida",
+
+  // "info.feedback.page_help" : "Tha page related to your feedback",
+  "info.feedback.page_help": "Den är sidan är relaterad till din feedback",
+>>>>>>> dspace-7.6.1
 
 
 
@@ -2453,7 +2507,11 @@
   // "item.bitstreams.upload.bundle.new": "Create bundle",
   "item.bitstreams.upload.bundle.new": "Skapa bunt",
 
+<<<<<<< HEAD
   // "item.bitstreams.upload.bundles.empty": "This item doesn\'t contain any bundles to upload a bitstream to.",
+=======
+  // "item.bitstreams.upload.bundles.empty": "This item doesn't contain any bundles to upload a bitstream to.",
+>>>>>>> dspace-7.6.1
   "item.bitstreams.upload.bundles.empty": "Denna post innehåller inga buntar som man kan ladda upp filer i.",
 
   // "item.bitstreams.upload.cancel": "Cancel",
@@ -2743,7 +2801,11 @@
 
 
 
+<<<<<<< HEAD
    // "item.edit.move.cancel": "Back",
+=======
+  // "item.edit.move.cancel": "Back",
+>>>>>>> dspace-7.6.1
   "item.edit.move.cancel": "Tillbaka",
 
   // "item.edit.move.save-button": "Save",
@@ -3142,11 +3204,19 @@
 
   // "item.page.filesection.original.bundle" : "Original bundle",
   // TODO New key - Add a translation
+<<<<<<< HEAD
   "item.page.filesection.original.bundle" : "Original bundle",
 
   // "item.page.filesection.license.bundle" : "License bundle",
   // TODO New key - Add a translation
   "item.page.filesection.license.bundle" : "License bundle",
+=======
+  "item.page.filesection.original.bundle": "Original bundle",
+
+  // "item.page.filesection.license.bundle" : "License bundle",
+  // TODO New key - Add a translation
+  "item.page.filesection.license.bundle": "License bundle",
+>>>>>>> dspace-7.6.1
 
   // "item.page.return": "Back",
   "item.page.return": "Tillbaka",
@@ -3321,6 +3391,7 @@
   "item.version.create.modal.form.summary.placeholder": "Lägg till sammanfattning av den nya versionen",
 
   // "item.version.create.notification.success" : "New version has been created with version number {{version}}",
+<<<<<<< HEAD
   "item.version.create.notification.success" : "En ny version med nummer {{version}} har skapats",
 
   // "item.version.create.notification.failure" : "New version has not been created",
@@ -3329,6 +3400,16 @@
   // "item.version.create.notification.inProgress" : "A new version cannot be created because there is an inprogress submission in the version history",
   // TODO New key - Add a translation
   "item.version.create.notification.inProgress" : "A new version cannot be created because there is an inprogress submission in the version history",
+=======
+  "item.version.create.notification.success": "En ny version med nummer {{version}} har skapats",
+
+  // "item.version.create.notification.failure" : "New version has not been created",
+  "item.version.create.notification.failure": "Ny version har inte skapats",
+
+  // "item.version.create.notification.inProgress" : "A new version cannot be created because there is an inprogress submission in the version history",
+  // TODO New key - Add a translation
+  "item.version.create.notification.inProgress": "A new version cannot be created because there is an inprogress submission in the version history",
+>>>>>>> dspace-7.6.1
 
 
   // "item.version.delete.modal.header": "Delete version",
@@ -3350,6 +3431,7 @@
   "item.version.delete.modal.button.cancel.tooltip": "Radera inte denna version",
 
   // "item.version.delete.notification.success" : "Version number {{version}} has been deleted",
+<<<<<<< HEAD
   "item.version.delete.notification.success" : "Version {{version}} har raderats",
 
   // "item.version.delete.notification.failure" : "Version number {{version}} has not been deleted",
@@ -3361,6 +3443,19 @@
 
   // "item.version.edit.notification.failure" : "The summary of version number {{version}} has not been changed",
   "item.version.edit.notification.failure" : "Sammanfattningen av version {{version}} har inte ändrats",
+=======
+  "item.version.delete.notification.success": "Version {{version}} har raderats",
+
+  // "item.version.delete.notification.failure" : "Version number {{version}} has not been deleted",
+  "item.version.delete.notification.failure": "Version {{version}} har inte raderats",
+
+
+  // "item.version.edit.notification.success" : "The summary of version number {{version}} has been changed",
+  "item.version.edit.notification.success": "Sammanfattningen av version {{version}} har ändrats",
+
+  // "item.version.edit.notification.failure" : "The summary of version number {{version}} has not been changed",
+  "item.version.edit.notification.failure": "Sammanfattningen av version {{version}} har inte ändrats",
+>>>>>>> dspace-7.6.1
 
 
 
@@ -3757,7 +3852,11 @@
 
 
 
+<<<<<<< HEAD
  // "menu.section.new": "New",
+=======
+  // "menu.section.new": "New",
+>>>>>>> dspace-7.6.1
   "menu.section.new": "Ny",
 
   // "menu.section.new_collection": "Collection",
@@ -3937,6 +4036,7 @@
   // "mydspace.show.workspace": "Your Submissions",
   "mydspace.show.workspace": "Dina registreringar",
 
+<<<<<<< HEAD
   // "mydspace.status.archived": "Archived",
   "mydspace.status.archived": "I arkivet",
 
@@ -3951,6 +4051,22 @@
 
   // "mydspace.status.workspace": "Workspace",
   "mydspace.status.workspace": "I arbetsflödet",
+=======
+  // "mydspace.status.mydspaceArchived": "Archived",
+  "mydspace.status.mydspaceArchived": "I arkivet",
+
+  // "mydspace.status.mydspaceValidation": "Validation",
+  "mydspace.status.mydspaceValidation": "Validering",
+
+  // "mydspace.status.mydspaceWaitingController": "Waiting for controller",
+  "mydspace.status.mydspaceWaitingController": "Väntar på kontrollant",
+
+  // "mydspace.status.mydspaceWorkflow": "Workflow",
+  "mydspace.status.mydspaceWorkflow": "Arbetsflöde",
+
+  // "mydspace.status.mydspaceWorkspace": "Workspace",
+  "mydspace.status.mydspaceWorkspace": "I arbetsflödet",
+>>>>>>> dspace-7.6.1
 
   // "mydspace.title": "MyDSpace",
   "mydspace.title": "Mitt DSpace",
@@ -4013,11 +4129,19 @@
 
   // "nav.toggle" : "Toggle navigation",
   // TODO New key - Add a translation
+<<<<<<< HEAD
   "nav.toggle" : "Toggle navigation",
 
   // "nav.user.description" : "User profile bar",
   // TODO New key - Add a translation
   "nav.user.description" : "User profile bar",
+=======
+  "nav.toggle": "Toggle navigation",
+
+  // "nav.user.description" : "User profile bar",
+  // TODO New key - Add a translation
+  "nav.user.description": "User profile bar",
+>>>>>>> dspace-7.6.1
 
   // "none.listelement.badge": "Item",
   // TODO New key - Add a translation
@@ -4203,6 +4327,7 @@
 
   // "process.detail.arguments" : "Arguments",
   // TODO New key - Add a translation
+<<<<<<< HEAD
   "process.detail.arguments" : "Arguments",
 
   // "process.detail.arguments.empty" : "This process doesn't contain any arguments",
@@ -4216,6 +4341,21 @@
   // "process.detail.output" : "Process Output",
   // TODO New key - Add a translation
   "process.detail.output" : "Process Output",
+=======
+  "process.detail.arguments": "Arguments",
+
+  // "process.detail.arguments.empty" : "This process doesn't contain any arguments",
+  // TODO New key - Add a translation
+  "process.detail.arguments.empty": "This process doesn't contain any arguments",
+
+  // "process.detail.back" : "Back",
+  // TODO New key - Add a translation
+  "process.detail.back": "Back",
+
+  // "process.detail.output" : "Process Output",
+  // TODO New key - Add a translation
+  "process.detail.output": "Process Output",
+>>>>>>> dspace-7.6.1
 
   // "process.detail.logs.button": "Retrieve process output",
   // TODO New key - Add a translation
@@ -4231,6 +4371,7 @@
 
   // "process.detail.output-files" : "Output Files",
   // TODO New key - Add a translation
+<<<<<<< HEAD
   "process.detail.output-files" : "Output Files",
 
   // "process.detail.output-files.empty" : "This process doesn't contain any output files",
@@ -4259,10 +4400,41 @@
   // "process.detail.create" : "Create similar process",
   // TODO New key - Add a translation
   "process.detail.create" : "Create similar process",
+=======
+  "process.detail.output-files": "Output Files",
+
+  // "process.detail.output-files.empty" : "This process doesn't contain any output files",
+  // TODO New key - Add a translation
+  "process.detail.output-files.empty": "This process doesn't contain any output files",
+
+  // "process.detail.script" : "Script",
+  // TODO New key - Add a translation
+  "process.detail.script": "Script",
+
+  // "process.detail.title" : "Process: {{ id }} - {{ name }}",
+  // TODO New key - Add a translation
+  "process.detail.title": "Process: {{ id }} - {{ name }}",
+
+  // "process.detail.start-time" : "Start time",
+  // TODO New key - Add a translation
+  "process.detail.start-time": "Start time",
+
+  // "process.detail.end-time" : "Finish time",
+  // TODO New key - Add a translation
+  "process.detail.end-time": "Finish time",
+
+  // "process.detail.status" : "Status",
+  "process.detail.status": "Status",
+
+  // "process.detail.create" : "Create similar process",
+  // TODO New key - Add a translation
+  "process.detail.create": "Create similar process",
+>>>>>>> dspace-7.6.1
 
 
 
   // "process.overview.table.finish" : "Finish time (UTC)",
+<<<<<<< HEAD
   "process.overview.table.finish" : "Sluttid (UTC)",
 
   // "process.overview.table.id" : "Process ID",
@@ -4279,6 +4451,24 @@
 
   // "process.overview.table.user" : "User",
   "process.overview.table.user" : "Användare",
+=======
+  "process.overview.table.finish": "Sluttid (UTC)",
+
+  // "process.overview.table.id" : "Process ID",
+  "process.overview.table.id": "Process ID",
+
+  // "process.overview.table.name" : "Name",
+  "process.overview.table.name": "Namn",
+
+  // "process.overview.table.start" : "Start time (UTC)",
+  "process.overview.table.start": "Starttid (UTC)",
+
+  // "process.overview.table.status" : "Status",
+  "process.overview.table.status": "Status",
+
+  // "process.overview.table.user" : "User",
+  "process.overview.table.user": "Användare",
+>>>>>>> dspace-7.6.1
 
   // "process.overview.title": "Processes Overview",
   "process.overview.title": "Processer översikt",
@@ -4570,7 +4760,11 @@
 
 
 
+<<<<<<< HEAD
    // "relationships.add.error.relationship-type.content": "No suitable match could be found for relationship type {{ type }} between the two items",
+=======
+  // "relationships.add.error.relationship-type.content": "No suitable match could be found for relationship type {{ type }} between the two items",
+>>>>>>> dspace-7.6.1
   "relationships.add.error.relationship-type.content": "Det gick inte att hitta något som matchade relationstyp {{ type }} mellan dessa poster",
 
   // "relationships.add.error.server.content": "The server returned an error",
@@ -5752,7 +5946,11 @@
   // "submission.sections.describe.relationship-lookup.selection-tab.title.arxiv": "Search Results",
   "submission.sections.describe.relationship-lookup.selection-tab.title.arxiv": "Sökresultat",
 
+<<<<<<< HEAD
   // "submission.sections.describe.relationship-lookup.name-variant.notification.content": "Would you like to save \"{{ value }}\" as a name variant for this person so you and others can reuse it for future submissions? If you don\'t you can still use it for this submission.",
+=======
+  // "submission.sections.describe.relationship-lookup.name-variant.notification.content": "Would you like to save \"{{ value }}\" as a name variant for this person so you and others can reuse it for future submissions? If you don't you can still use it for this submission.",
+>>>>>>> dspace-7.6.1
   "submission.sections.describe.relationship-lookup.name-variant.notification.content": "Vill du spara \"{{ value }}\" som en namnvariation för denna person? Om inte så kan du fortfarande använda det i detta bidrag.",
 
   // "submission.sections.describe.relationship-lookup.name-variant.notification.confirm": "Save a new name variant",
@@ -6116,7 +6314,11 @@
 
 
 
+<<<<<<< HEAD
  // "thumbnail.default.alt": "Thumbnail Image",
+=======
+  // "thumbnail.default.alt": "Thumbnail Image",
+>>>>>>> dspace-7.6.1
   "thumbnail.default.alt": "Bild (thumbnail)",
 
   // "thumbnail.default.placeholder": "No Thumbnail Available",
@@ -6281,6 +6483,10 @@
   "idle-modal.log-out": "Logga ut",
 
   // "idle-modal.extend-session": "Extend session"
+<<<<<<< HEAD
   "idle-modal.extend-session": "Fortsätt"
+=======
+  "idle-modal.extend-session": "Fortsätt",
+>>>>>>> dspace-7.6.1
 
 }

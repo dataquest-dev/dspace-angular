@@ -38,6 +38,7 @@ package-lock.json
 .env
 /nbproject/
 
+<<<<<<< HEAD
 # import data python module
 python_data_import/debug.log.txt
 python_data_import/logs.txt
@@ -45,3 +46,8 @@ python_data_import/date.txt
 */__pycache__/
 
 junit.xml
+=======
+junit.xml
+
+/src/mirador-viewer/config.local.js
+>>>>>>> dspace-7.6.1

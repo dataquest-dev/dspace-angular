@@ -31,7 +31,12 @@ import { GoogleAnalyticsService } from '../../app/statistics/google-analytics.se
 import { AuthRequestService } from '../../app/core/auth/auth-request.service';
 import { BrowserAuthRequestService } from '../../app/core/auth/browser-auth-request.service';
 import { BrowserInitService } from './browser-init.service';
+<<<<<<< HEAD
 import { VocabularyTreeviewService } from 'src/app/shared/form/vocabulary-treeview/vocabulary-treeview.service';
+=======
+import { ReferrerService } from '../../app/core/services/referrer.service';
+import { BrowserReferrerService } from '../../app/core/services/browser.referrer.service';
+>>>>>>> dspace-7.6.1
 
 export const REQ_KEY = makeStateKey<string>('req');
 
@@ -109,12 +114,19 @@ export function getRequest(transferState: TransferState): any {
       useClass: BrowserAuthRequestService,
     },
     {
+      provide: ReferrerService,
+      useClass: BrowserReferrerService,
+    },
+    {
       provide: LocationToken,
       useFactory: locationProvider,
+<<<<<<< HEAD
     },
     {
       provide: VocabularyTreeviewService,
       useClass: VocabularyTreeviewService,
+=======
+>>>>>>> dspace-7.6.1
     }
   ]
 })

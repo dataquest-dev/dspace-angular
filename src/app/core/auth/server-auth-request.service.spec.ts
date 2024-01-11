@@ -8,7 +8,11 @@ import { PostRequest } from '../data/request.models';
 import {
   XSRF_REQUEST_HEADER,
   XSRF_RESPONSE_HEADER
+<<<<<<< HEAD
 } from '../xsrf/xsrf.interceptor';
+=======
+} from '../xsrf/xsrf.constants';
+>>>>>>> dspace-7.6.1
 
 describe(`ServerAuthRequestService`, () => {
   let href: string;

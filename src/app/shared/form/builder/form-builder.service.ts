@@ -1,5 +1,9 @@
 import {Injectable, Optional} from '@angular/core';
+<<<<<<< HEAD
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+=======
+import { AbstractControl, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+>>>>>>> dspace-7.6.1
 
 import {
   DYNAMIC_FORM_CONTROL_TYPE_ARRAY,
@@ -45,10 +49,13 @@ import { CONCAT_GROUP_SUFFIX, DynamicConcatModel } from './ds-dynamic-form-ui/mo
 import { VIRTUAL_METADATA_PREFIX } from '../../../core/shared/metadata.models';
 import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
 import { getFirstCompletedRemoteData } from '../../../core/shared/operators';
+<<<<<<< HEAD
 import {
   COMPLEX_GROUP_SUFFIX,
   DynamicComplexModel
 } from './ds-dynamic-form-ui/models/ds-dynamic-complex.model';
+=======
+>>>>>>> dspace-7.6.1
 
 @Injectable()
 export class FormBuilderService extends DynamicFormService {
@@ -63,7 +70,11 @@ export class FormBuilderService extends DynamicFormService {
   /**
    * This map contains the active forms control groups
    */
+<<<<<<< HEAD
   private formGroups: Map<string, FormGroup>;
+=======
+  private formGroups: Map<string, UntypedFormGroup>;
+>>>>>>> dspace-7.6.1
 
   /**
    * This is the field to use for type binding
@@ -87,7 +98,11 @@ export class FormBuilderService extends DynamicFormService {
 
   }
 
+<<<<<<< HEAD
   createDynamicFormControlEvent(control: FormControl, group: FormGroup, model: DynamicFormControlModel, type: string): DynamicFormControlEvent {
+=======
+  createDynamicFormControlEvent(control: UntypedFormControl, group: UntypedFormGroup, model: DynamicFormControlModel, type: string): DynamicFormControlEvent {
+>>>>>>> dspace-7.6.1
     const $event = {
       value: (model as any).value,
       autoSave: false
@@ -124,6 +139,7 @@ export class FormBuilderService extends DynamicFormService {
         if (this.isConcatGroup(controlModel)) {
           if (controlModel.id.match(new RegExp(findId + CONCAT_GROUP_SUFFIX))) {
             result = (controlModel as DynamicConcatModel);
+<<<<<<< HEAD
             break;
           }
         }
@@ -132,6 +148,8 @@ export class FormBuilderService extends DynamicFormService {
           const regex = new RegExp(findId + COMPLEX_GROUP_SUFFIX);
           if (controlModel.id.match(regex)) {
             result = (controlModel as DynamicComplexModel);
+=======
+>>>>>>> dspace-7.6.1
             break;
           }
         }
@@ -385,12 +403,16 @@ export class FormBuilderService extends DynamicFormService {
     return model.type === DYNAMIC_FORM_CONTROL_TYPE_INPUT;
   }
 
-  getFormControlById(id: string, formGroup: FormGroup, groupModel: DynamicFormControlModel[], index = 0): AbstractControl {
+  getFormControlById(id: string, formGroup: UntypedFormGroup, groupModel: DynamicFormControlModel[], index = 0): AbstractControl {
     const fieldModel = this.findById(id, groupModel, index);
     return isNotEmpty(fieldModel) ? formGroup.get(this.getPath(fieldModel)) : null;
   }
 
+<<<<<<< HEAD
   getFormControlByModel(formGroup: FormGroup, fieldModel: DynamicFormControlModel): AbstractControl {
+=======
+  getFormControlByModel(formGroup: UntypedFormGroup, fieldModel: DynamicFormControlModel): AbstractControl {
+>>>>>>> dspace-7.6.1
     return isNotEmpty(fieldModel) ? formGroup.get(this.getPath(fieldModel)) : null;
   }
 
@@ -428,7 +450,11 @@ export class FormBuilderService extends DynamicFormService {
    * @param id id of model
    * @param formGroup FormGroup
    */
+<<<<<<< HEAD
   addFormGroups(id: string, formGroup: FormGroup): void {
+=======
+  addFormGroups(id: string, formGroup: UntypedFormGroup): void {
+>>>>>>> dspace-7.6.1
     this.formGroups.set(id, formGroup);
   }
 

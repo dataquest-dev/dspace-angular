@@ -35,6 +35,11 @@ import { ServerAuthRequestService } from '../../app/core/auth/server-auth-reques
 import { ServerInitService } from './server-init.service';
 import { XhrFactory } from '@angular/common';
 import { ServerXhrService } from '../../app/core/services/server-xhr.service';
+<<<<<<< HEAD
+=======
+import { ReferrerService } from '../../app/core/services/referrer.service';
+import { ServerReferrerService } from '../../app/core/services/server.referrer.service';
+>>>>>>> dspace-7.6.1
 
 export function createTranslateLoader(transferState: TransferState) {
   return new TranslateServerLoader(transferState, 'dist/server/assets/i18n/', '.json');
@@ -110,6 +115,13 @@ export function createTranslateLoader(transferState: TransferState) {
       provide: XhrFactory,
       useClass: ServerXhrService,
     },
+<<<<<<< HEAD
+=======
+    {
+      provide: ReferrerService,
+      useClass: ServerReferrerService,
+    },
+>>>>>>> dspace-7.6.1
   ]
 })
 export class ServerAppModule {

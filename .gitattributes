@@ -13,4 +13,8 @@
 *.css eol=lf
 *.scss eol=lf
 *.html eol=lf
+<<<<<<< HEAD
 *.svg eol=lf
+=======
+*.svg eol=lf
+>>>>>>> dspace-7.6.1

@@ -41,6 +41,10 @@ describe('MenuService', () => {
   let routeDataMenuSection: MenuSection;
   let routeDataMenuSectionResolved: MenuSection;
   let routeDataMenuChildSection: MenuSection;
+<<<<<<< HEAD
+=======
+  let routeDataMenuOverwrittenChildSection: MenuSection;
+>>>>>>> dspace-7.6.1
   let toBeRemovedMenuSection: MenuSection;
   let alreadyPresentMenuSection: MenuSection;
   let route;
@@ -127,6 +131,20 @@ describe('MenuService', () => {
         link: ''
       } as LinkMenuItemModel
     };
+<<<<<<< HEAD
+=======
+    routeDataMenuOverwrittenChildSection = {
+      id: 'mockChildSection',
+      parentID: 'mockSection',
+      active: false,
+      visible: true,
+      model: {
+        type: MenuItemType.LINK,
+        text: 'menu.section.mockChildOverwrittenSection',
+        link: ''
+      } as LinkMenuItemModel
+    };
+>>>>>>> dspace-7.6.1
     toBeRemovedMenuSection = {
       id: 'toBeRemovedSection',
       active: false,
@@ -167,7 +185,21 @@ describe('MenuService', () => {
                 [MenuID.PUBLIC]: routeDataMenuChildSection
               }
             }
+<<<<<<< HEAD
           }
+=======
+          },
+          firstChild: {
+            snapshot: {
+              data: {
+                menu: {
+                  [MenuID.PUBLIC]: routeDataMenuOverwrittenChildSection
+                }
+              }
+            }
+          }
+
+>>>>>>> dspace-7.6.1
         }
       }
     };
@@ -541,7 +573,11 @@ describe('MenuService', () => {
   });
 
   describe('buildRouteMenuSections', () => {
+<<<<<<< HEAD
     it('should add and remove menu sections depending on the current route', () => {
+=======
+    it('should add and remove menu sections depending on the current route and overwrite menu sections when they have the same ID with the child route version', () => {
+>>>>>>> dspace-7.6.1
       spyOn(service, 'addSection');
       spyOn(service, 'removeSection');
 
@@ -550,7 +586,12 @@ describe('MenuService', () => {
       service.buildRouteMenuSections(MenuID.PUBLIC);
 
       expect(service.addSection).toHaveBeenCalledWith(MenuID.PUBLIC, routeDataMenuSectionResolved);
+<<<<<<< HEAD
       expect(service.addSection).toHaveBeenCalledWith(MenuID.PUBLIC, routeDataMenuChildSection);
+=======
+      expect(service.addSection).not.toHaveBeenCalledWith(MenuID.PUBLIC, routeDataMenuChildSection);
+      expect(service.addSection).toHaveBeenCalledWith(MenuID.PUBLIC, routeDataMenuOverwrittenChildSection);
+>>>>>>> dspace-7.6.1
       expect(service.addSection).not.toHaveBeenCalledWith(MenuID.PUBLIC, alreadyPresentMenuSection);
       expect(service.removeSection).toHaveBeenCalledWith(MenuID.PUBLIC, toBeRemovedMenuSection.id);
     });
@@ -567,4 +608,44 @@ describe('MenuService', () => {
     });
   });
 
+<<<<<<< HEAD
+=======
+  describe(`resolveSubstitutions`, () => {
+    let linkPrefix;
+    let link;
+    let uuid;
+
+    beforeEach(() => {
+      linkPrefix = 'statistics_collection_';
+      link = `${linkPrefix}:id`;
+      uuid = 'f7cc3ca4-3c2c-464d-8af8-add9f84f711c';
+    });
+
+    it(`shouldn't do anything when there are no params`, () => {
+      let result = (service as any).resolveSubstitutions(link, undefined);
+      expect(result).toEqual(link);
+      result = (service as any).resolveSubstitutions(link, null);
+      expect(result).toEqual(link);
+      result = (service as any).resolveSubstitutions(link, {});
+      expect(result).toEqual(link);
+    });
+
+    it(`should replace link params that are also route params`, () => {
+      const result = (service as any).resolveSubstitutions(link,{ 'id': uuid });
+      expect(result).toEqual(linkPrefix + uuid);
+    });
+
+    it(`should not replace link params that aren't route params`, () => {
+      const result = (service as any).resolveSubstitutions(link,{ 'something': 'else' });
+      expect(result).toEqual(link);
+    });
+
+    it(`should gracefully deal with routes that contain the name of the route param`, () => {
+      const selfReferentialParam = `:id:something`;
+      const result = (service as any).resolveSubstitutions(link,{ 'id': selfReferentialParam });
+      expect(result).toEqual(linkPrefix + selfReferentialParam);
+    });
+  });
+
+>>>>>>> dspace-7.6.1
 });

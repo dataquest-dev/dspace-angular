@@ -82,7 +82,11 @@ export class SupervisionOrderGroupSelectorComponent {
         getFirstCompletedRemoteData(),
       ).subscribe((rd: RemoteData<SupervisionOrder>) => {
         if (rd.state === 'Success') {
+<<<<<<< HEAD
           this.notificationsService.success(this.translateService.get('supervision-group-selector.notification.create.success.title', { name: this.selectedGroup.name }));
+=======
+          this.notificationsService.success(this.translateService.get('supervision-group-selector.notification.create.success.title', { name: this.dsoNameService.getName(this.selectedGroup) }));
+>>>>>>> dspace-7.6.1
           this.create.emit(rd.payload);
           this.close();
         } else {

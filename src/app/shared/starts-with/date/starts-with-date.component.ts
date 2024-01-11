@@ -131,7 +131,10 @@ export class StartsWithDateComponent extends StartsWithAbstractComponent {
     } else {
       this.startsWithYear = +startsWith;
     }
+<<<<<<< HEAD
     this.setStartsWithParam(false);
+=======
+>>>>>>> dspace-7.6.1
   }
 
   /**

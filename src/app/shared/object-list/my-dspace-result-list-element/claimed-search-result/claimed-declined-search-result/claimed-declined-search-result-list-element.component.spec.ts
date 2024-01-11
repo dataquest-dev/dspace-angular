@@ -14,11 +14,14 @@ import { getMockLinkService } from '../../../../mocks/link-service.mock';
 import { VarDirective } from '../../../../utils/var.directive';
 import { TruncatableService } from '../../../../truncatable/truncatable.service';
 import { LinkService } from '../../../../../core/cache/builders/link.service';
-import { MyDspaceItemStatusType } from '../../../../object-collection/shared/mydspace-item-status/my-dspace-item-status-type';
 import { DSONameService } from '../../../../../core/breadcrumbs/dso-name.service';
 import { DSONameServiceMock } from '../../../../mocks/dso-name.service.mock';
 import { APP_CONFIG } from '../../../../../../config/app-config.interface';
 import { environment } from '../../../../../../environments/environment';
+<<<<<<< HEAD:src/app/shared/object-list/my-dspace-result-list-element/claimed-search-result/claimed-declined-search-result/claimed-declined-search-result-list-element.component.spec.ts
+=======
+import { Context } from '../../../../../core/shared/context.model';
+>>>>>>> dspace-7.6.1:src/app/shared/object-list/my-dspace-result-list-element/claimed-search-result/claimed-declined-search-result/claimed-declided-search-result-list-element.component.spec.ts
 import { TranslateModule } from '@ngx-translate/core';
 
 let component: ClaimedDeclinedSearchResultListElementComponent;
@@ -104,8 +107,8 @@ describe('ClaimedDeclinedSearchResultListElementComponent', () => {
     });
   });
 
-  it('should have properly status', () => {
-    expect(component.status).toEqual(MyDspaceItemStatusType.DECLINED);
+  it('should have the correct badge context', () => {
+    expect(component.badgeContext).toEqual(Context.MyDSpaceDeclined);
   });
 
 });

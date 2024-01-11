@@ -10,9 +10,12 @@ import {
   ItemPageAuthorFieldComponent
 } from './simple/field-components/specific-field/author/item-page-author-field.component';
 import {
+<<<<<<< HEAD
   ItemPageCitationFieldComponent
 } from './simple/field-components/specific-field/citation/item-page-citation.component';
 import {
+=======
+>>>>>>> dspace-7.6.1
   ItemPageDateFieldComponent
 } from './simple/field-components/specific-field/date/item-page-date-field.component';
 import {
@@ -37,12 +40,16 @@ import { ResearchEntitiesModule } from '../entity-groups/research-entities/resea
 import { ThemedItemPageComponent } from './simple/themed-item-page.component';
 import { ThemedFullItemPageComponent } from './full/themed-full-item-page.component';
 import { MediaViewerComponent } from './media-viewer/media-viewer.component';
+import { ThemedMediaViewerComponent } from './media-viewer/themed-media-viewer.component';
 import { MediaViewerVideoComponent } from './media-viewer/media-viewer-video/media-viewer-video.component';
+import { ThemedMediaViewerVideoComponent } from './media-viewer/media-viewer-video/themed-media-viewer-video.component';
 import { MediaViewerImageComponent } from './media-viewer/media-viewer-image/media-viewer-image.component';
+import { ThemedMediaViewerImageComponent } from './media-viewer/media-viewer-image/themed-media-viewer-image.component';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { MiradorViewerComponent } from './mirador-viewer/mirador-viewer.component';
 import { VersionPageComponent } from './version-page/version-page/version-page.component';
 import { ThemedFileSectionComponent } from './simple/field-components/file-section/themed-file-section.component';
+<<<<<<< HEAD
 import { TombstoneComponent } from './tombstone/tombstone.component';
 import { ReplacedTombstoneComponent } from './tombstone/replaced-tombstone/replaced-tombstone.component';
 import { WithdrawnTombstoneComponent } from './tombstone/withdrawn-tombstone/withdrawn-tombstone.component';
@@ -57,6 +64,8 @@ import { ChartsModule } from 'ng2-charts';
 import { ClarinGenericItemFieldComponent } from './simple/field-components/clarin-generic-item-field/clarin-generic-item-field.component';
 import { ClarinCollectionsItemFieldComponent } from './simple/field-components/clarin-collections-item-field/clarin-collections-item-field.component';
 import { ClarinFilesItemFieldComponent } from './simple/field-components/clarin-files-item-field/clarin-files-item-field.component';
+=======
+>>>>>>> dspace-7.6.1
 import { OrcidAuthComponent } from './orcid-page/orcid-auth/orcid-auth.component';
 import { OrcidPageComponent } from './orcid-page/orcid-page.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
@@ -70,6 +79,7 @@ import { BitstreamRequestACopyPageComponent } from './bitstreams/request-a-copy/
 import { FileSectionComponent } from './simple/field-components/file-section/file-section.component';
 import { ItemSharedModule } from './item-shared.module';
 import { DsoPageModule } from '../shared/dso-page/dso-page.module';
+<<<<<<< HEAD
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {PreviewSectionComponent} from './simple/field-components/preview-section/preview-section.component';
 import {
@@ -78,6 +88,12 @@ import {
 import {
   FileTreeViewComponent
 } from './simple/field-components/preview-section/file-description/file-tree-view/file-tree-view.component';
+=======
+import { ThemedItemAlertsComponent } from './alerts/themed-item-alerts.component';
+import {
+  ThemedFullFileSectionComponent
+} from './full/field-components/file-section/themed-full-file-section.component';
+>>>>>>> dspace-7.6.1
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -101,14 +117,18 @@ const DECLARATIONS = [
   ItemPageFieldComponent,
   CollectionsComponent,
   FullFileSectionComponent,
+  ThemedFullFileSectionComponent,
   PublicationComponent,
   UntypedItemComponent,
   ItemComponent,
   UploadBitstreamComponent,
   AbstractIncrementalListComponent,
   MediaViewerComponent,
+  ThemedMediaViewerComponent,
   MediaViewerVideoComponent,
+  ThemedMediaViewerVideoComponent,
   MediaViewerImageComponent,
+  ThemedMediaViewerImageComponent,
   MiradorViewerComponent,
   VersionPageComponent,
   OrcidPageComponent,
@@ -116,6 +136,7 @@ const DECLARATIONS = [
   OrcidSyncSettingsComponent,
   OrcidQueueComponent,
   ItemAlertsComponent,
+<<<<<<< HEAD
   BitstreamRequestACopyPageComponent,
   TombstoneComponent,
   ReplacedTombstoneComponent,
@@ -133,6 +154,10 @@ const DECLARATIONS = [
   PreviewSectionComponent,
   FileDescriptionComponent,
   FileTreeViewComponent,
+=======
+  ThemedItemAlertsComponent,
+  BitstreamRequestACopyPageComponent,
+>>>>>>> dspace-7.6.1
 ];
 
 @NgModule({
@@ -151,15 +176,18 @@ const DECLARATIONS = [
     ResultsBackButtonModule,
     UploadModule,
     DsoPageModule,
+<<<<<<< HEAD
     ChartsModule,
     NgbModule
+=======
+>>>>>>> dspace-7.6.1
   ],
   declarations: [
     ...DECLARATIONS,
 
   ],
   exports: [
-    ...DECLARATIONS
+    ...DECLARATIONS,
   ]
 })
 export class ItemPageModule {

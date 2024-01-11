@@ -7,6 +7,11 @@ import { I18nBreadcrumbResolver } from '../core/breadcrumbs/i18n-breadcrumb.reso
 import { ThemedFullItemPageComponent } from '../item-page/full/themed-full-item-page.component';
 import { ItemFromWorkspaceResolver } from './item-from-workspace.resolver';
 import { WorkspaceItemPageResolver } from './workspace-item-page.resolver';
+<<<<<<< HEAD
+=======
+import { WorkspaceItemsDeletePageComponent } from './workspaceitems-delete-page/workspaceitems-delete-page.component';
+import { ThemedWorkspaceItemsDeletePageComponent } from './workspaceitems-delete-page/themed-workspaceitems-delete-page.component';
+>>>>>>> dspace-7.6.1
 
 @NgModule({
   imports: [
@@ -34,7 +39,31 @@ import { WorkspaceItemPageResolver } from './workspace-item-page.resolver';
               breadcrumb: I18nBreadcrumbResolver
             },
             data: { title: 'workspace-item.view.title', breadcrumbKey: 'workspace-item.view' }
+<<<<<<< HEAD
           }
+=======
+          },
+          {
+            canActivate: [AuthenticatedGuard],
+            path: 'delete',
+            component: WorkspaceItemsDeletePageComponent,
+            resolve: {
+              dso: ItemFromWorkspaceResolver,
+              breadcrumb: I18nBreadcrumbResolver
+            },
+            data: { title: 'workspace-item.delete', breadcrumbKey: 'workspace-item.delete' }
+          },
+          {
+            canActivate: [AuthenticatedGuard],
+            path: 'delete',
+            component: ThemedWorkspaceItemsDeletePageComponent,
+            resolve: {
+              dso: ItemFromWorkspaceResolver,
+              breadcrumb: I18nBreadcrumbResolver
+            },
+            data: { title: 'workspace-item.delete', breadcrumbKey: 'workspace-item.delete' }
+          },
+>>>>>>> dspace-7.6.1
         ]
       }
     ])

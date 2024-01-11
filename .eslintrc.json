@@ -7,7 +7,12 @@
     "eslint-plugin-jsdoc",
     "eslint-plugin-deprecation",
     "unused-imports",
+<<<<<<< HEAD
     "eslint-plugin-lodash"
+=======
+    "eslint-plugin-lodash",
+    "eslint-plugin-jsonc"
+>>>>>>> dspace-7.6.1
   ],
   "overrides": [
     {
@@ -224,6 +229,45 @@
         "@angular-eslint/template/no-negated-async": "off",
         "@angular-eslint/template/eqeqeq": "off"
       }
+<<<<<<< HEAD
+=======
+    },
+    {
+      "files": [
+        "*.json5"
+      ],
+      "extends": [
+        "plugin:jsonc/recommended-with-jsonc"
+      ],
+      "rules": {
+        "no-irregular-whitespace": "error",
+        "no-trailing-spaces": "error",
+        "jsonc/comma-dangle": [
+          "error",
+          "always-multiline"
+        ],
+        "jsonc/indent": [
+          "error",
+          2
+        ],
+        "jsonc/key-spacing": [
+          "error",
+          {
+            "beforeColon": false,
+            "afterColon": true,
+            "mode": "strict"
+          }
+        ],
+        "jsonc/no-dupe-keys": "off",
+        "jsonc/quotes": [
+          "error",
+          "double",
+          {
+            "avoidEscape": false
+          }
+        ]
+      }
+>>>>>>> dspace-7.6.1
     }
   ]
 }

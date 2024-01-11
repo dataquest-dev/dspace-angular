@@ -1,9 +1,17 @@
 <div>
+<<<<<<< HEAD
   <a *ngIf="(metadataRepresentation.representationType=='browse_link')"
      target="_blank" class="dont-break-out"
      [routerLink]="['/browse/', metadataRepresentation.browseDefinition.id]"
      [queryParams]="getQueryParams()">
     {{metadataRepresentation.getValue()}}
+=======
+  <a *ngIf="(mdRepresentation.representationType=='browse_link')"
+     target="_blank" class="dont-break-out"
+     [routerLink]="['/browse/', mdRepresentation.browseDefinition.id]"
+     [queryParams]="getQueryParams()">
+    {{mdRepresentation.getValue()}}
+>>>>>>> dspace-7.6.1
   </a>
   <b>(new browse link page)</b>
 </div>

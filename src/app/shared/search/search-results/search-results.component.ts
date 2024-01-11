@@ -53,6 +53,14 @@ export class SearchResultsComponent {
   @Input() showCsvExport = false;
 
   /**
+<<<<<<< HEAD
+=======
+   * Whether to show the thumbnail preview
+   */
+  @Input() showThumbnails;
+
+  /**
+>>>>>>> dspace-7.6.1
    * The current sorting configuration of the search
    */
   @Input() sortConfig: SortOptions;

@@ -1,12 +1,20 @@
 import { APP_BASE_HREF, CommonModule, DOCUMENT } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+<<<<<<< HEAD
 import { NgModule} from '@angular/core';
+=======
+import { NgModule } from '@angular/core';
+>>>>>>> dspace-7.6.1
 import { BrowserModule } from '@angular/platform-browser';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
+<<<<<<< HEAD
 import { MetaReducer, StoreModule, USER_PROVIDED_META_REDUCERS} from '@ngrx/store';
+=======
+import { MetaReducer, StoreModule, USER_PROVIDED_META_REDUCERS } from '@ngrx/store';
+>>>>>>> dspace-7.6.1
 import { TranslateModule } from '@ngx-translate/core';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { DYNAMIC_MATCHER_PROVIDERS } from '@ng-dynamic-forms/core';
@@ -27,12 +35,18 @@ import { LocaleInterceptor } from './core/locale/locale.interceptor';
 import { XsrfInterceptor } from './core/xsrf/xsrf.interceptor';
 import { LogInterceptor } from './core/log/log.interceptor';
 import { EagerThemesModule } from '../themes/eager-themes.module';
+<<<<<<< HEAD
 
 import { APP_CONFIG, AppConfig } from '../config/app-config.interface';
 import { StoreDevModules } from '../config/store/devtools';
 import { RootModule } from './root.module';
 import { ScriptLoaderService } from './clarin-navbar-top/script-loader-service';
 
+=======
+import { APP_CONFIG, AppConfig } from '../config/app-config.interface';
+import { StoreDevModules } from '../config/store/devtools';
+import { RootModule } from './root.module';
+>>>>>>> dspace-7.6.1
 
 export function getConfig() {
   return environment;
@@ -82,7 +96,10 @@ const PROVIDERS = [
     useClass: DSpaceRouterStateSerializer
   },
   ClientCookieService,
+<<<<<<< HEAD
   ScriptLoaderService,
+=======
+>>>>>>> dspace-7.6.1
   // register AuthInterceptor as HttpInterceptor
   {
     provide: HTTP_INTERCEPTORS,

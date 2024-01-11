@@ -21,7 +21,10 @@ import { SectionUploadService } from './sections/upload/section-upload.service';
 import { SubmissionUploadFilesComponent } from './form/submission-upload-files/submission-upload-files.component';
 import { SubmissionSectionLicenseComponent } from './sections/license/section-license.component';
 import { SubmissionUploadsConfigDataService } from '../core/config/submission-uploads-config-data.service';
+<<<<<<< HEAD
 import { SubmissionSectionClarinLicenseComponent } from './sections/clarin-license-resource/section-license.component';
+=======
+>>>>>>> dspace-7.6.1
 import { SubmissionEditComponent } from './edit/submission-edit.component';
 import { SubmissionSectionUploadFileComponent } from './sections/upload/file/section-upload-file.component';
 import {
@@ -51,6 +54,7 @@ import { ResearchEntitiesModule } from '../entity-groups/research-entities/resea
 import { ThemedSubmissionEditComponent } from './edit/themed-submission-edit.component';
 import { ThemedSubmissionSubmitComponent } from './submit/themed-submission-submit.component';
 import { ThemedSubmissionImportExternalComponent } from './import-external/themed-submission-import-external.component';
+import { ThemedSubmissionSectionUploadFileComponent } from './sections/upload/file/themed-section-upload-file.component';
 import { FormModule } from '../shared/form/form.module';
 import { NgbAccordionModule, NgbCollapseModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionSectionAccessesComponent } from './sections/accesses/section-accesses.component';
@@ -68,8 +72,11 @@ import {
 } from './sections/sherpa-policies/metadata-information/metadata-information.component';
 import { SectionFormOperationsService } from './sections/form/section-form-operations.service';
 import {SubmissionSectionIdentifiersComponent} from './sections/identifiers/section-identifiers.component';
+<<<<<<< HEAD
 import {SubmissionSectionClarinLicenseDistributionComponent} from './sections/clarin-license-distribution/clarin-license-distribution.component';
 import {SubmissionSectionClarinNoticeComponent} from './sections/clarin-notice/clarin-notice.component';
+=======
+>>>>>>> dspace-7.6.1
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -79,9 +86,12 @@ const ENTRY_COMPONENTS = [
   SubmissionSectionClarinLicenseComponent,
   SubmissionSectionCcLicensesComponent,
   SubmissionSectionAccessesComponent,
+<<<<<<< HEAD
   SubmissionSectionUploadFileEditComponent,
   SubmissionSectionClarinLicenseDistributionComponent,
   SubmissionSectionClarinNoticeComponent,
+=======
+>>>>>>> dspace-7.6.1
   SubmissionSectionSherpaPoliciesComponent,
 ];
 
@@ -112,6 +122,10 @@ const DECLARATIONS = [
   PublisherPolicyComponent,
   PublicationInformationComponent,
   MetadataInformationComponent,
+<<<<<<< HEAD
+=======
+  ThemedSubmissionSectionUploadFileComponent,
+>>>>>>> dspace-7.6.1
 ];
 
 @NgModule({
@@ -128,8 +142,11 @@ const DECLARATIONS = [
     NgbCollapseModule,
     NgbAccordionModule,
     UploadModule,
+<<<<<<< HEAD
     NgbModalModule,
     NgToggleModule
+=======
+>>>>>>> dspace-7.6.1
   ],
   declarations: DECLARATIONS,
   exports: [

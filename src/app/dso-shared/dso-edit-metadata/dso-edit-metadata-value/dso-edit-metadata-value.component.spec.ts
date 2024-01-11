@@ -68,7 +68,11 @@ describe('DsoEditMetadataValueComponent', () => {
   });
 
   it('should not show a badge', () => {
+<<<<<<< HEAD
     expect(fixture.debugElement.query(By.css('ds-type-badge'))).toBeNull();
+=======
+    expect(fixture.debugElement.query(By.css('ds-themed-type-badge'))).toBeNull();
+>>>>>>> dspace-7.6.1
   });
 
   describe('when no changes have been made', () => {
@@ -134,7 +138,11 @@ describe('DsoEditMetadataValueComponent', () => {
     });
 
     it('should show a badge', () => {
+<<<<<<< HEAD
       expect(fixture.debugElement.query(By.css('ds-type-badge'))).toBeTruthy();
+=======
+      expect(fixture.debugElement.query(By.css('ds-themed-type-badge'))).toBeTruthy();
+>>>>>>> dspace-7.6.1
     });
 
     assertButton(EDIT_BTN, true, true);

@@ -12,7 +12,11 @@
   background-color: transparent !important;
 }
 
+<<<<<<< HEAD
 .dropdown-toggle {
+=======
+.loginLink, .dropdownLogin, .logoutLink, .dropdownLogout {
+>>>>>>> dspace-7.6.1
   color: var(--ds-header-icon-color);
 
   &:hover, &:focus {

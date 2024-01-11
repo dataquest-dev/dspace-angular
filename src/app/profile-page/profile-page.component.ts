@@ -18,6 +18,10 @@ import { AuthorizationDataService } from '../core/data/feature-authorization/aut
 import { FeatureID } from '../core/data/feature-authorization/feature-id';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { ConfigurationProperty } from '../core/shared/configuration-property.model';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 @Component({
   selector: 'ds-profile-page',
@@ -85,7 +89,13 @@ export class ProfilePageComponent implements OnInit {
               private translate: TranslateService,
               private epersonService: EPersonDataService,
               private authorizationService: AuthorizationDataService,
+<<<<<<< HEAD
               private configurationService: ConfigurationDataService) {
+=======
+              private configurationService: ConfigurationDataService,
+              public dsoNameService: DSONameService,
+  ) {
+>>>>>>> dspace-7.6.1
   }
 
   ngOnInit(): void {

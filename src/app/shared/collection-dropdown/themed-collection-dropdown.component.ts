@@ -11,11 +11,19 @@ export class ThemedCollectionDropdownComponent extends ThemedComponent<Collectio
 
   @Input() entityType: string;
 
+<<<<<<< HEAD
   @Output() searchComplete = new EventEmitter<any>();
 
   @Output() theOnlySelectable = new EventEmitter<CollectionListEntry>();
 
   @Output() selectionChange = new EventEmitter<CollectionListEntry>();
+=======
+  @Output() searchComplete: EventEmitter<any> = new EventEmitter();
+
+  @Output() theOnlySelectable: EventEmitter<CollectionListEntry> = new EventEmitter();
+
+  @Output() selectionChange = new EventEmitter();
+>>>>>>> dspace-7.6.1
 
   protected inAndOutputNames: (keyof CollectionDropdownComponent & keyof this)[] = ['entityType', 'searchComplete', 'theOnlySelectable', 'selectionChange'];
 

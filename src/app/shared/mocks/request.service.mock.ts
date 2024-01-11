@@ -14,6 +14,11 @@ export function getMockRequestService(requestEntry$: Observable<RequestEntry> = 
     removeByHrefSubstring: observableOf(true),
     setStaleByHrefSubstring: observableOf(true),
     setStaleByUUID: observableOf(true),
+<<<<<<< HEAD
     hasByHref$: observableOf(false)
+=======
+    hasByHref$: observableOf(false),
+    shouldDispatchRequest: true
+>>>>>>> dspace-7.6.1
   });
 }

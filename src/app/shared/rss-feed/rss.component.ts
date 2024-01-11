@@ -32,7 +32,11 @@ import { RemoteData } from '../../core/data/remote-data';
 })
 export class RSSComponent implements OnInit, OnDestroy  {
 
+<<<<<<< HEAD
   route$: BehaviorSubject<string>;
+=======
+  route$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+>>>>>>> dspace-7.6.1
 
   isEnabled$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 
@@ -99,7 +103,11 @@ export class RSSComponent implements OnInit, OnDestroy  {
         rel: 'search',
         title: 'Dspace'
       });
+<<<<<<< HEAD
       this.route$ = new BehaviorSubject<string>(route);
+=======
+      this.route$.next(route);
+>>>>>>> dspace-7.6.1
     }));
   }
 

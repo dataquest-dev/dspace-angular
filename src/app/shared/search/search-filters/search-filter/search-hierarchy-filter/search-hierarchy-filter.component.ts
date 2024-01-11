@@ -3,7 +3,10 @@ import { renderFacetFor } from '../search-filter-type-decorator';
 import { FilterType } from '../../../models/filter-type.model';
 import { facetLoad, SearchFacetFilterComponent } from '../search-facet-filter/search-facet-filter.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+<<<<<<< HEAD
 import { VocabularyTreeviewComponent } from '../../../../form/vocabulary-treeview/vocabulary-treeview.component';
+=======
+>>>>>>> dspace-7.6.1
 import {
   VocabularyEntryDetail
 } from '../../../../../core/submission/vocabularies/models/vocabulary-entry-detail.model';
@@ -26,6 +29,10 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { PageInfo } from '../../../../../core/shared/page-info.model';
 import { environment } from '../../../../../../environments/environment';
 import { addOperatorToFilterValue } from '../../../search.utils';
+<<<<<<< HEAD
+=======
+import { VocabularyTreeviewModalComponent } from '../../../../form/vocabulary-treeview-modal/vocabulary-treeview-modal.component';
+>>>>>>> dspace-7.6.1
 
 @Component({
   selector: 'ds-search-hierarchy-filter',
@@ -83,7 +90,11 @@ export class SearchHierarchyFilterComponent extends SearchFacetFilterComponent i
    * When an entry is selected, add the filter query to the search options.
    */
   showVocabularyTree() {
+<<<<<<< HEAD
     const modalRef: NgbModalRef = this.modalService.open(VocabularyTreeviewComponent, {
+=======
+    const modalRef: NgbModalRef = this.modalService.open(VocabularyTreeviewModalComponent, {
+>>>>>>> dspace-7.6.1
       size: 'lg',
       windowClass: 'treeview'
     });
@@ -91,7 +102,11 @@ export class SearchHierarchyFilterComponent extends SearchFacetFilterComponent i
       name: this.getVocabularyEntry(),
       closed: true
     };
+<<<<<<< HEAD
     modalRef.componentInstance.select.subscribe((detail: VocabularyEntryDetail) => {
+=======
+    modalRef.result.then((detail: VocabularyEntryDetail) => {
+>>>>>>> dspace-7.6.1
       this.selectedValues$
         .pipe(take(1))
         .subscribe((selectedValues) => {
@@ -106,7 +121,11 @@ export class SearchHierarchyFilterComponent extends SearchFacetFilterComponent i
             },
           );
         });
+<<<<<<< HEAD
     });
+=======
+    }).catch();
+>>>>>>> dspace-7.6.1
   }
 
   /**

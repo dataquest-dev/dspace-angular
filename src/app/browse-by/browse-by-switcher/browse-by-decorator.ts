@@ -26,7 +26,11 @@ const map = new Map();
  * @param browseByType  The type of page
  * @param theme The optional theme for the component
  */
+<<<<<<< HEAD
 export function rendersBrowseBy(browseByType: BrowseByDataType, theme = DEFAULT_THEME) {
+=======
+export function rendersBrowseBy(browseByType: string, theme = DEFAULT_THEME) {
+>>>>>>> dspace-7.6.1
   return function decorator(component: any) {
     if (hasNoValue(map.get(browseByType))) {
       map.set(browseByType, new Map());

@@ -59,7 +59,11 @@ export class WorkspaceItemSearchResultAdminWorkflowListElementComponent extends 
   public supervisionOrder$: BehaviorSubject<SupervisionOrder[]> = new BehaviorSubject<SupervisionOrder[]>([]);
 
   constructor(private linkService: LinkService,
+<<<<<<< HEAD
               protected dsoNameService: DSONameService,
+=======
+              public dsoNameService: DSONameService,
+>>>>>>> dspace-7.6.1
               protected supervisionOrderDataService: SupervisionOrderDataService,
               protected truncatableService: TruncatableService,
               @Inject(APP_CONFIG) protected appConfig: AppConfig

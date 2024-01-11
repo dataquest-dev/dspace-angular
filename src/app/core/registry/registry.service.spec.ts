@@ -30,7 +30,10 @@ import { createPaginatedList } from '../../shared/testing/utils.test';
 import { RemoteData } from '../data/remote-data';
 import { NoContent } from '../shared/NoContent.model';
 import { FindListOptions } from '../data/find-list-options.model';
+<<<<<<< HEAD
 import { MetadataBitstreamDataService } from '../data/metadata-bitstream-data.service';
+=======
+>>>>>>> dspace-7.6.1
 
 @Component({ template: '' })
 class DummyComponent {

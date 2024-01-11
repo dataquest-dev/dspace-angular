@@ -1,4 +1,5 @@
-import { globalCSSImports, projectRoot } from './helpers';
+import { globalCSSImports, projectRoot, getFileHashes, calculateFileHash } from './helpers';
+import { EnvironmentPlugin } from 'webpack';
 
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
@@ -18,8 +19,14 @@ export const copyWebpackOptions = {
         // use [\/|\\] to match both POSIX and Windows separators
         const matches = absoluteFilename.match(/.*[\/|\\]assets[\/|\\](.+)\.json5$/);
         if (matches) {
+<<<<<<< HEAD
           // matches[1] is the relative path from src/assets to the JSON5 file, without the extension
           return path.join('assets', matches[1] + '.json');
+=======
+          const fileHash: string = process.env.NODE_ENV === 'production' ? `.${calculateFileHash(absoluteFilename)}` : '';
+          // matches[1] is the relative path from src/assets to the JSON5 file, without the extension
+          return path.join('assets', `${matches[1]}${fileHash}.json`);
+>>>>>>> dspace-7.6.1
         }
       },
       transform(content) {
@@ -49,6 +56,7 @@ export const copyWebpackOptions = {
     {
       from: path.join(__dirname, '..', 'src', 'robots.txt.ejs'),
       to: 'assets/robots.txt.ejs'
+<<<<<<< HEAD
     },
     {
       from: path.join(__dirname, '..', 'src', 'aai', 'aai.js'),
@@ -65,6 +73,8 @@ export const copyWebpackOptions = {
     {
       from: path.join(__dirname, '..', 'src', 'static-files'),
       to: 'static-files'
+=======
+>>>>>>> dspace-7.6.1
     }
   ]
 };
@@ -93,6 +103,12 @@ const SCSS_LOADERS = [
 
 export const commonExports = {
   plugins: [
+<<<<<<< HEAD
+=======
+    new EnvironmentPlugin({
+      languageHashes: getFileHashes(path.join(__dirname, '..', 'src', 'assets', 'i18n'), /.*\.json5/g),
+    }),
+>>>>>>> dspace-7.6.1
     new CopyWebpackPlugin(copyWebpackOptions),
   ],
   module: {

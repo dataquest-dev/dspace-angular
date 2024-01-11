@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { AlertType } from '../../../shared/alert/aletr-type';
+=======
+import { AlertType } from '../../../shared/alert/alert-type';
+>>>>>>> dspace-7.6.1
 import { Component, Inject } from '@angular/core';
 
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';

@@ -12,7 +12,11 @@ import {
 } from '../../../core/shared/operators';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { VersionHistoryDataService } from '../../../core/data/version-history-data.service';
+<<<<<<< HEAD:src/app/item-page/versions/notice/item-versions-notice.component.ts
 import { AlertType } from '../../../shared/alert/aletr-type';
+=======
+import { AlertType } from '../../../shared/alert/alert-type';
+>>>>>>> dspace-7.6.1:src/app/shared/item/item-versions/notice/item-versions-notice.component.ts
 import { getItemPageRoute } from '../../item-page-routing-paths';
 
 @Component({

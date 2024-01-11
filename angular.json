@@ -63,11 +63,15 @@
                 "bundleName": "dspace-theme"
               }
             ],
+<<<<<<< HEAD
             "scripts": [
               "src/license-selector.js",
               "src/license-selector-creation.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
+=======
+            "scripts": [],
+>>>>>>> dspace-7.6.1
             "baseHref": "/"
           },
           "configurations": {
@@ -272,16 +276,34 @@
           "options": {
             "lintFilePatterns": [
               "src/**/*.ts",
+<<<<<<< HEAD
               "src/**/*.html"
+=======
+              "src/**/*.html",
+              "src/**/*.json5"
+>>>>>>> dspace-7.6.1
             ]
           }
         }
       }
     }
   },
-  "defaultProject": "dspace-angular",
   "cli": {
     "analytics": false,
+<<<<<<< HEAD
     "defaultCollection": "@angular-eslint/schematics"
+=======
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
+  },
+  "schematics": {
+    "@angular-eslint/schematics:application": {
+      "setParserOptionsProject": true
+    },
+    "@angular-eslint/schematics:library": {
+      "setParserOptionsProject": true
+    }
+>>>>>>> dspace-7.6.1
   }
 }

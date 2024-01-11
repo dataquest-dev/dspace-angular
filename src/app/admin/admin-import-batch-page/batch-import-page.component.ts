@@ -8,7 +8,11 @@ import { ProcessParameter } from '../../process-page/processes/process-parameter
 import { getFirstCompletedRemoteData } from '../../core/shared/operators';
 import { RemoteData } from '../../core/data/remote-data';
 import { Process } from '../../process-page/processes/process.model';
+<<<<<<< HEAD
 import { isNotEmpty } from '../../shared/empty.util';
+=======
+import { isEmpty, isNotEmpty } from '../../shared/empty.util';
+>>>>>>> dspace-7.6.1
 import { getProcessDetailRoute } from '../../process-page/process-page-routing.paths';
 import {
   ImportBatchSelectorComponent
@@ -32,11 +36,28 @@ export class BatchImportPageComponent {
    * The validate only flag
    */
   validateOnly = true;
+<<<<<<< HEAD
+=======
+
+>>>>>>> dspace-7.6.1
   /**
    * dso object for community or collection
    */
   dso: DSpaceObject = null;
 
+<<<<<<< HEAD
+=======
+  /**
+   * The flag between upload and url
+   */
+  isUpload = true;
+
+  /**
+   * File URL when flag is for url
+   */
+  fileURL: string;
+
+>>>>>>> dspace-7.6.1
   public constructor(private location: Location,
                      protected translate: TranslateService,
                      protected notificationsService: NotificationsService,
@@ -72,6 +93,7 @@ export class BatchImportPageComponent {
    * Starts import-metadata script with --zip fileName (and the selected file)
    */
   public importMetadata() {
+<<<<<<< HEAD
     if (this.fileObject == null) {
       this.notificationsService.error(this.translate.get('admin.metadata-import.page.error.addFile'));
     } else {
@@ -79,6 +101,24 @@ export class BatchImportPageComponent {
         Object.assign(new ProcessParameter(), { name: '--zip', value: this.fileObject.name }),
         Object.assign(new ProcessParameter(), { name: '--add' })
       ];
+=======
+    if (this.fileObject == null && isEmpty(this.fileURL)) {
+      if (this.isUpload) {
+        this.notificationsService.error(this.translate.get('admin.metadata-import.page.error.addFile'));
+      } else {
+        this.notificationsService.error(this.translate.get('admin.metadata-import.page.error.addFileUrl'));
+      }
+    } else {
+      const parameterValues: ProcessParameter[] = [
+        Object.assign(new ProcessParameter(), { name: '--add' })
+      ];
+      if (this.isUpload) {
+        parameterValues.push(Object.assign(new ProcessParameter(), { name: '--zip', value: this.fileObject.name }));
+      } else {
+        this.fileObject = null;
+        parameterValues.push(Object.assign(new ProcessParameter(), { name: '--url', value: this.fileURL }));
+      }
+>>>>>>> dspace-7.6.1
       if (this.dso) {
         parameterValues.push(Object.assign(new ProcessParameter(), { name: '--collection', value: this.dso.uuid }));
       }
@@ -97,9 +137,21 @@ export class BatchImportPageComponent {
             this.router.navigateByUrl(getProcessDetailRoute(rd.payload.processId));
           }
         } else {
+<<<<<<< HEAD
           const title = this.translate.get('process.new.notification.error.title');
           const content = this.translate.get('process.new.notification.error.content');
           this.notificationsService.error(title, content);
+=======
+          if (rd.statusCode === 413) {
+            const title = this.translate.get('process.new.notification.error.title');
+            const content = this.translate.get('process.new.notification.error.max-upload.content');
+            this.notificationsService.error(title, content);
+          } else {
+            const title = this.translate.get('process.new.notification.error.title');
+            const content = this.translate.get('process.new.notification.error.content');
+            this.notificationsService.error(title, content);
+          }
+>>>>>>> dspace-7.6.1
         }
       });
     }
@@ -121,4 +173,14 @@ export class BatchImportPageComponent {
   removeDspaceObject(): void {
     this.dso = null;
   }
+<<<<<<< HEAD
+=======
+
+  /**
+   * toggle the flag between upload and url
+   */
+  toggleUpload() {
+    this.isUpload = !this.isUpload;
+  }
+>>>>>>> dspace-7.6.1
 }

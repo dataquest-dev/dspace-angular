@@ -177,7 +177,11 @@
   // "admin.registries.bitstream-formats.table.name": "Name",
   "admin.registries.bitstream-formats.table.name": "Nom",
   // TODO New key - Add a translation
+<<<<<<< HEAD
   "admin.registries.bitstream-formats.table.id" : "ID",
+=======
+  "admin.registries.bitstream-formats.table.id": "ID",
+>>>>>>> dspace-7.6.1
 
   // "admin.registries.bitstream-formats.table.return": "Back",
   "admin.registries.bitstream-formats.table.return": "Retour",
@@ -254,7 +258,11 @@
   // "admin.registries.schema.fields.table.field": "Field",
   "admin.registries.schema.fields.table.field": "Champ",
   // TODO New key - Add a translation
+<<<<<<< HEAD
   "admin.registries.schema.fields.table.id" : "ID",
+=======
+  "admin.registries.schema.fields.table.id": "ID",
+>>>>>>> dspace-7.6.1
 
   // "admin.registries.schema.fields.table.scopenote": "Scope Note",
   "admin.registries.schema.fields.table.scopenote": "Note d'application",
@@ -807,10 +815,17 @@
 
   // "bitstream.download.page": "Now downloading {{bitstream}}..." ,
   "bitstream.download.page": "Téléchargement de {{bitstream}} en cours...",
+<<<<<<< HEAD
 
   // "bitstream.download.page.back": "Back" ,
   "bitstream.download.page.back": "Retour",
 
+=======
+
+  // "bitstream.download.page.back": "Back" ,
+  "bitstream.download.page.back": "Retour",
+
+>>>>>>> dspace-7.6.1
   // "bitstream.edit.authorizations.link": "Edit bitstream's Policies",
   "bitstream.edit.authorizations.link": "Éditer les politiques de Bitstream",
 
@@ -897,6 +912,7 @@
 
   // "bitstream-request-a-copy.alert.canDownload1": "You already have access to this file. If you want to download the file, click ",
   "bitstream-request-a-copy.alert.canDownload1": "Vous avez déjà accès à ce fichier. Si vous voulez télécharger le fichier, cliquer sur ",
+<<<<<<< HEAD
 
   // "bitstream-request-a-copy.alert.canDownload2": "here",
   "bitstream-request-a-copy.alert.canDownload2": "ici",
@@ -951,6 +967,65 @@
 
   // "bitstream-request-a-copy.submit.error": "Something went wrong with submitting the item request.",
   "bitstream-request-a-copy.submit.error": "Un problème est survenu lors de la soumission de la demande d'Item",
+=======
+
+  // "bitstream-request-a-copy.alert.canDownload2": "here",
+  "bitstream-request-a-copy.alert.canDownload2": "ici",
+
+  // "bitstream-request-a-copy.header": "Request a copy of the file",
+  "bitstream-request-a-copy.header": "Demander une copie du fichier",
+
+  // "bitstream-request-a-copy.intro": "Enter the following information to request a copy for the following item: ",
+  "bitstream-request-a-copy.intro": "Entrer les informations suivantes pour demander une copie de l'élément suivant : ",
+
+  // "bitstream-request-a-copy.intro.bitstream.one": "Requesting the following file: ",
+  "bitstream-request-a-copy.intro.bitstream.one": "Demander les fichiers suivants : ",
+
+  // "bitstream-request-a-copy.intro.bitstream.all": "Requesting all files. ",
+  "bitstream-request-a-copy.intro.bitstream.all": "Demander tous les fichiers",
+
+  // "bitstream-request-a-copy.name.label": "Name *",
+  "bitstream-request-a-copy.name.label": "Nom *",
+
+  // "bitstream-request-a-copy.name.error": "The name is required",
+  "bitstream-request-a-copy.name.error": "Le nom est obligatoire",
+
+  // "bitstream-request-a-copy.email.label": "Your e-mail address *",
+  "bitstream-request-a-copy.email.label": "Votre adresse électronique *",
+
+  // "bitstream-request-a-copy.email.hint": "This email address is used for sending the file.",
+  "bitstream-request-a-copy.email.hint": "Cette adresse électronique est utilisée pour l'envoi du fichier.",
+
+  // "bitstream-request-a-copy.email.error": "Please enter a valid email address.",
+  "bitstream-request-a-copy.email.error": "Veuillez saisir une adresse électronique valide.",
+
+  // "bitstream-request-a-copy.allfiles.label": "Files",
+  "bitstream-request-a-copy.allfiles.label": "Fichiers",
+
+  // "bitstream-request-a-copy.files-all-false.label": "Only the requested file",
+  "bitstream-request-a-copy.files-all-false.label": "Seulement le fichier demandé",
+
+  // "bitstream-request-a-copy.files-all-true.label": "All files (of this item) in restricted access",
+  "bitstream-request-a-copy.files-all-true.label": "Tous les fichiers (de cet Item) en accès restreint",
+
+  // "bitstream-request-a-copy.message.label": "Message",
+  "bitstream-request-a-copy.message.label": "Message",
+
+  // "bitstream-request-a-copy.return": "Back",
+  "bitstream-request-a-copy.return": "Retour",
+
+  // "bitstream-request-a-copy.submit": "Request copy",
+  "bitstream-request-a-copy.submit": "Demander une copie",
+
+  // "bitstream-request-a-copy.submit.success": "The item request was submitted successfully.",
+  "bitstream-request-a-copy.submit.success": "Votre demande de copie a été envoyée avec succès.",
+
+  // "bitstream-request-a-copy.submit.error": "Something went wrong with submitting the item request.",
+  "bitstream-request-a-copy.submit.error": "Un problème est survenu lors de la soumission de la demande d'Item",
+
+  //"browse.back.all-results": "All browse results",
+  "browse.back.all-results": "Tous les résultats",
+>>>>>>> dspace-7.6.1
 
   // "browse.comcol.by.author": "By Author",
   "browse.comcol.by.author": "Auteur",
@@ -1010,7 +1085,7 @@
   "browse.startsWith.choose_year.label": "Choisir l'année de publication",
 
   // "browse.startsWith.jump": "Jump to a point in the index:",
-  "browse.startsWith.jump": "Aller directement à une entrée de l'index :",
+  "browse.startsWith.jump": "Aller directement à une entrée de l'index:",
 
   // "browse.startsWith.months.april": "April",
   "browse.startsWith.months.april": "Avril",
@@ -1058,6 +1133,7 @@
   "browse.startsWith.submit": "Valider",
 
   // "browse.startsWith.type_date": "Or type in a date (year-month) and click 'Browse'",
+<<<<<<< HEAD
   "browse.startsWith.type_date": "Ou saisir une date (année-mois) puis cliquer sur « Parcourir par »",
 
   // "browse.startsWith.type_date.label": "Or type in a date (year-month) and click on the Browse button",
@@ -1068,10 +1144,34 @@
 
   // "browse.title": "Browsing {{ collection }} by {{ field }} {{ value }}",
   "browse.title": "Parcourir la collection {{ collection }} par {{ field }} {{ value }}",
+=======
+  "browse.startsWith.type_date": "Ou saisir une date (année-mois) puis cliquer sur « Parcourir par »",
+
+  // "browse.startsWith.type_date.label": "Or type in a date (year-month) and click on the Browse button",
+  "browse.startsWith.type_date.label": "Ou saisir une date (année-mois) puis cliquer sur le bouton « Parcourir »",
+
+  // "browse.startsWith.type_text": "Type the first few letters and click on the Browse button",
+  "browse.startsWith.type_text": "Ou saisir les premières lettres puis cliquer sur le bouton « Parcourir »",
+
+  // "browse.title": "Browsing {{ collection }} by {{ field }} {{ value }}",
+  "browse.title": "Parcourir la collection {{ collection }} par {{ field }} {{ value }}",
+
+  //"browse.title.page": "Browsing {{ collection }} by {{ field }} {{ value }}",
+  "browse.title.page": "Parcourir la collection {{ collection }} par {{ field }} {{ value }}",
+
+  //"search.browse.item-back": "Back to Results",
+  "search.browse.item-back": "Retour aux résultats",
+>>>>>>> dspace-7.6.1
 
   // "chips.remove": "Remove chip",
   "chips.remove": "Supprimer fragment",
 
+<<<<<<< HEAD
+=======
+  //"claimed-approved-search-result-list-element.title": "Approved",
+  "claimed-approved-search-result-list-element.title": "Approuvé",
+
+>>>>>>> dspace-7.6.1
   // "collection.create.head": "Create a Collection",
   "collection.create.head": "Créer une collection",
 
@@ -1124,7 +1224,7 @@
   "collection.edit.item-mapper.cancel": "Annuler",
 
   // "collection.edit.item-mapper.collection": "Collection: \"<b>{{name}}</b>\"",
-  "collection.edit.item-mapper.collection": "Collection : « <b>{{name}}</b> »",
+  "collection.edit.item-mapper.collection": "Collection: « <b>{{name}}</b> »",
 
   // "collection.edit.item-mapper.confirm": "Map selected items",
   "collection.edit.item-mapper.confirm": "Associer les Items sélectionnés",
@@ -1219,6 +1319,7 @@
   // "collection.edit.tabs.authorizations.title": "Collection Edit - Authorizations",
   "collection.edit.tabs.authorizations.title": "Édition de collection - Autorisations",
 
+<<<<<<< HEAD
    //"collection.edit.item.authorizations.load-bundle-button": "Load more bundles",
   "collection.edit.item.authorizations.load-bundle-button": "Charger plus de Bundles",
   
@@ -1230,6 +1331,19 @@
 
   
   
+=======
+  //"collection.edit.item.authorizations.load-bundle-button": "Load more bundles",
+  "collection.edit.item.authorizations.load-bundle-button": "Charger plus de Bundles",
+
+  //"collection.edit.item.authorizations.load-more-button": "Load more",
+  "collection.edit.item.authorizations.load-more-button": "Charger plus",
+
+  //"collection.edit.item.authorizations.show-bitstreams-button": "Show bitstream policies for bundle",
+  "collection.edit.item.authorizations.show-bitstreams-button": "Afficher les politiques de Bitstream pour le Bundle",
+
+
+
+>>>>>>> dspace-7.6.1
   // "collection.edit.tabs.metadata.head": "Edit Metadata",
   "collection.edit.tabs.metadata.head": "Éditer les Métadonnées",
 
@@ -1391,6 +1505,7 @@
 
   // "collection.source.controls.head": "Harvest Controls",
   "collection.source.controls.head": "Paramétrage du moissonnage",
+<<<<<<< HEAD
   
   // "collection.source.controls.test.submit.error": "Something went wrong with initiating the testing of the settings",
   "collection.source.controls.test.submit.error": "Un problème est survenu lors du lancement du test des paramètres.",
@@ -1410,11 +1525,33 @@
   // "collection.source.controls.import.submit.success": "The import has been successfully initiated",
   "collection.source.controls.import.submit.success": "L'importation a été lancée avec succès",
   
+=======
+
+  // "collection.source.controls.test.submit.error": "Something went wrong with initiating the testing of the settings",
+  "collection.source.controls.test.submit.error": "Un problème est survenu lors du lancement du test des paramètres.",
+
+  // "collection.source.controls.test.failed": "The script to test the settings has failed",
+  "collection.source.controls.test.failed": "Le script pour tester les paramètres a échoué",
+
+  // "collection.source.controls.test.completed": "The script to test the settings has successfully finished",
+  "collection.source.controls.test.completed": "Le script pour tester les paramètres s'est terminé avec succès",
+
+  // "collection.source.controls.test.submit": "Test configuration",
+  "collection.source.controls.test.submit": "Test de configuration",
+
+  // "collection.source.controls.test.running": "Testing configuration...",
+  "collection.source.controls.test.running": "Test de la configuration lancé...",
+
+  // "collection.source.controls.import.submit.success": "The import has been successfully initiated",
+  "collection.source.controls.import.submit.success": "L'importation a été lancée avec succès",
+
+>>>>>>> dspace-7.6.1
   // "collection.source.controls.import.submit.error": "Something went wrong with initiating the import",
   "collection.source.controls.import.submit.error": "Un problème est survenu lors du lancement de l'importation",
 
   // "collection.source.controls.import.submit": "Import now",
   "collection.source.controls.import.submit": "Lancer l'importation",
+<<<<<<< HEAD
   
   // "collection.source.controls.import.running": "Importing...",
   "collection.source.controls.import.running": "Importation lancée...",
@@ -1455,6 +1592,48 @@
   // "collection.source.controls.harvest.message": "Harvest info:",
   "collection.source.controls.harvest.message": "Détails du moissonnage :",
   
+=======
+
+  // "collection.source.controls.import.running": "Importing...",
+  "collection.source.controls.import.running": "Importation lancée...",
+
+  // "collection.source.controls.import.failed": "An error occurred during the import",
+  "collection.source.controls.import.failed": "Un problème est survenu lors de l'importation",
+
+  // "collection.source.controls.import.completed": "The import completed",
+  "collection.source.controls.import.completed": "Importation complétée",
+
+  // "collection.source.controls.reset.submit.success": "The reset and reimport has been successfully initiated",
+  "collection.source.controls.reset.submit.success": "La réinitialisation et la réimportation ont été lancées avec succès.",
+
+  // "collection.source.controls.reset.submit.error": "Something went wrong with initiating the reset and reimport",
+  "collection.source.controls.reset.submit.error": "Un problème est survenu lors du lancement de la réinitialisation et de la réimportation. ",
+
+  // "collection.source.controls.reset.failed": "An error occurred during the reset and reimport",
+  "collection.source.controls.reset.failed": "Une erreur s'est produite pendant la réinitialisation et la réimportation.",
+
+  // "collection.source.controls.reset.completed": "The reset and reimport completed",
+  "collection.source.controls.reset.completed": "La réinitialisation et la réimportation sont terminées",
+
+  // "collection.source.controls.reset.submit": "Reset and reimport",
+  "collection.source.controls.reset.submit": "Réinitialisation et réimportation",
+
+  // "collection.source.controls.reset.running": "Resetting and reimporting...",
+  "collection.source.controls.reset.running": "Réinitialisation et réimportation...",
+
+  // "collection.source.controls.harvest.status": "Harvest status:",
+  "collection.source.controls.harvest.status": "État du moissonnage",
+
+  // "collection.source.controls.harvest.start": "Harvest start time:",
+  "collection.source.controls.harvest.start": "Heure de début du moissonnage :",
+
+  // "collection.source.controls.harvest.last": "Last time harvested:",
+  "collection.source.controls.harvest.last": "Dernier moissonnage en date du :",
+
+  // "collection.source.controls.harvest.message": "Harvest info:",
+  "collection.source.controls.harvest.message": "Détails du moissonnage :",
+
+>>>>>>> dspace-7.6.1
   // "collection.source.controls.harvest.no-information": "N/A",
   "collection.source.controls.harvest.no-information": "Non disponible",
 
@@ -1517,10 +1696,17 @@
 
   // "community.edit.breadcrumbs": "Edit Community",
   "community.edit.breadcrumbs": "Éditer une communauté",
+<<<<<<< HEAD
 
   // "community.edit.logo.delete.title": "Delete logo",
   "community.edit.logo.delete.title": "Supprimer le logo",
 
+=======
+
+  // "community.edit.logo.delete.title": "Delete logo",
+  "community.edit.logo.delete.title": "Supprimer le logo",
+
+>>>>>>> dspace-7.6.1
   // "community.edit.logo.delete-undo.title": "Undo delete",
   "community.edit.logo.delete-undo.title": "Annuler la suppression",
 
@@ -1719,6 +1905,9 @@
   // "cookies.consent.decline": "Decline",
   "cookies.consent.decline": "Refuser",
 
+  //"cookies.consent.ok": "That's ok",
+  "cookies.consent.ok": "Accepter",
+
   // "cookies.consent.content-notice.description": "We collect and process your personal information for the following purposes: <strong>Authentication, Preferences, Acknowledgement and Statistics</strong>. <br/> To learn more, please read our {privacyPolicy}.",
   "cookies.consent.content-notice.description": "Vos données personnelles sont récupérées et utilisées dans les contextes suivants : <strong>authentification, préférences, consentement et statistiques</strong>. <br/> Pour plus d'informations, veuillez vous référer à la {privacyPolicy}.",
 
@@ -1768,7 +1957,7 @@
   "cookies.consent.purpose.statistical": "Statistique",
 
   // "curation-task.task.checklinks.label":  "Check Links in Metadata",
-  "curation-task.task.checklinks.label":  "Vérification des liens dans les métadonnées",
+  "curation-task.task.checklinks.label": "Vérification des liens dans les métadonnées",
 
   // "curation-task.task.noop.label": "NOOP",
   "curation-task.task.noop.label": "NOOP",
@@ -1884,6 +2073,12 @@
   // "dso-selector.set-scope.community.button": "Search all of DSpace",
   "dso-selector.set-scope.community.button": "Chercher dans toutes les collections",
 
+<<<<<<< HEAD
+=======
+  //"dso-selector.set-scope.community.or-divider": "or",
+  "dso-selector.set-scope.community.or-divider": "ou",
+
+>>>>>>> dspace-7.6.1
   // "dso-selector.set-scope.community.input-header": "Search for a community or collection",
   "dso-selector.set-scope.community.input-header": "Chercher une communauté ou une collection",
 
@@ -1957,7 +2152,11 @@
   "error.sub-communities": "Erreur lors de la récupération des sous-communautés",
 
   // "error.submission.sections.init-form-error": "An error occurred during section initialize, please check your input-form configuration. Details are below : <br> <br>",
+<<<<<<< HEAD
   "error.submission.sections.init-form-error": "Une erreur s'est produite dans la section d'initialisation, veuillez vérifier la configuration de votre formulaire de dépôt. Plus de détails sont disponibles ci-dessous : <br> <br>",
+=======
+  "error.submission.sections.init-form-error": "Une erreur s'est produite dans la section d'initialisation, veuillez vérifier la configuration de votre formulaire de dépôt. Plus de détails sont disponibles ci-dessous: <br> <br>",
+>>>>>>> dspace-7.6.1
 
   // "error.top-level-communities": "Error fetching top-level communities",
   "error.top-level-communities": "Erreur lors de la récupération des communautés de 1er niveau",
@@ -2002,7 +2201,11 @@
   "footer.link.privacy-policy": "Politique de protection de la vie privée",
 
   // "footer.link.end-user-agreement":"End User Agreement",
+<<<<<<< HEAD
   "footer.link.end-user-agreement":"Licence de l'utilisateur final",
+=======
+  "footer.link.end-user-agreement": "Licence de l'utilisateur final",
+>>>>>>> dspace-7.6.1
 
   // "footer.link.feedback":"Send Feedback",
   "footer.link.feedback": "Envoyer un commentaire",
@@ -2145,9 +2348,6 @@
   // "form.no-value": "No value entered",
   "form.no-value": "Aucune valeur entrée",
 
-  // "form.other-information": {},
-  "form.other-information": {},
-
   // "form.remove": "Remove",
   "form.remove": "Supprimer",
 
@@ -2189,6 +2389,7 @@
 
   // "grant-deny-request-copy.email.send": "Send",
   "grant-deny-request-copy.email.send": "Envoyer",
+<<<<<<< HEAD
 
   // "grant-deny-request-copy.email.subject": "Subject",
   "grant-deny-request-copy.email.subject": "Sujet",
@@ -2214,6 +2415,33 @@
   // "grant-deny-request-copy.processed": "This request has already been processed. You can use the button below to get back to the home page.",
   "grant-deny-request-copy.processed": "Cette demande a déjà été traitée. Vous pouvez utiliser le bouton ci-dessous pour revenir à la page d'accueil.",
 
+=======
+
+  // "grant-deny-request-copy.email.subject": "Subject",
+  "grant-deny-request-copy.email.subject": "Sujet",
+
+  // "grant-deny-request-copy.email.subject.empty": "Please enter a subject",
+  "grant-deny-request-copy.email.subject.empty": "Veuillez entrer un sujet",
+
+  // "grant-deny-request-copy.grant": "Send copy",
+  "grant-deny-request-copy.grant": "Envoyer une copie",
+
+  // "grant-deny-request-copy.header": "Document copy request",
+  "grant-deny-request-copy.header": "Demande de copie de document",
+
+  // "grant-deny-request-copy.home-page": "Take me to the home page",
+  "grant-deny-request-copy.home-page": "Aller à la page d'accueil",
+
+  // "grant-deny-request-copy.intro1": "If you are one of the authors of the document <a href='{{ url }}'>{{ name }}</a>, then please use one of the options below to respond to the user's request.",
+  "grant-deny-request-copy.intro1": "Si vous êtes l'un des auteurs du document <a href='{{ url }}'>{{ name }}</a>, veuillez utiliser l'une des options ci-dessous pour répondre à la demande de l'utilisateur.",
+
+  // "grant-deny-request-copy.intro2": "After choosing an option, you will be presented with a suggested email reply which you may edit.",
+  "grant-deny-request-copy.intro2": "Après avoir choisi une option, une proposition de message de réponse par courrier électronique vous sera présentée, que vous pourrez modifier.",
+
+  // "grant-deny-request-copy.processed": "This request has already been processed. You can use the button below to get back to the home page.",
+  "grant-deny-request-copy.processed": "Cette demande a déjà été traitée. Vous pouvez utiliser le bouton ci-dessous pour revenir à la page d'accueil.",
+
+>>>>>>> dspace-7.6.1
   // "grant-request-copy.email.message": "Dear {{ recipientName }},\nIn response to your request I have the pleasure to send you in attachment a copy of the file(s) concerning the document: \"{{ itemUrl }}\" ({{ itemName }}), of which I am an author.\n\nBest regards,\n{{ authorName }} <{{ authorEmail }}>",
   "grant-request-copy.email.message": "Cher {{ recipientName }},\nEn réponse à votre demande, j'ai le plaisir de vous envoyer en pièce jointe une copie du ou des fichiers constituant le document : \"{{ itemUrl }}\" ({{ itemName }}), dont je suis l'auteur.\n\nCordialement,\n{{ authorName }} <{{ authorEmail }}>",
 
@@ -2285,6 +2513,7 @@
 
   // "info.feedback.breadcrumbs": "Feedback",
   "info.feedback.breadcrumbs": "Votre avis",
+<<<<<<< HEAD
 
   // "info.feedback.head": "Feedback",
   "info.feedback.head": "Votre avis",
@@ -2310,6 +2539,33 @@
   // "info.feedback.create.success": "Feedback Sent Successfully!",
   "info.feedback.create.success": "Commentaires envoyés avec succès !",
 
+=======
+
+  // "info.feedback.head": "Feedback",
+  "info.feedback.head": "Votre avis",
+
+  // "info.feedback.title": "Feedback",
+  "info.feedback.title": "Votre avis",
+
+  // "info.feedback.info": "Thanks for sharing your feedback about the DSpace system. Your comments are appreciated!",
+  "info.feedback.info": "Merci de nous faire part de votre avis sur le système DSpace. Vos commentaires sont appréciés !",
+
+  // "info.feedback.email_help": "This address will be used to follow up on your feedback.",
+  "info.feedback.email_help": "Cette adresse sera utilisée pour donner suite à vos commentaires.",
+
+  // "info.feedback.send": "Send Feedback",
+  "info.feedback.send": "Envoyer un commentaire",
+
+  // "info.feedback.comments": "Comments",
+  "info.feedback.comments": "Commentaires",
+
+  // "info.feedback.email-label": "Your Email",
+  "info.feedback.email-label": "Votre adresse électronique",
+
+  // "info.feedback.create.success": "Feedback Sent Successfully!",
+  "info.feedback.create.success": "Commentaires envoyés avec succès !",
+
+>>>>>>> dspace-7.6.1
   // "info.feedback.error.email.required": "A valid email address is required",
   "info.feedback.error.email.required": "Une adresse électronique valide est requise",
 
@@ -2317,8 +2573,13 @@
   "info.feedback.error.message.required": "Un contenu est requis",
 
   // "info.feedback.page-label": "Page",
+<<<<<<< HEAD
  "info.feedback.page-label": "Page",
  
+=======
+  "info.feedback.page-label": "Page",
+
+>>>>>>> dspace-7.6.1
   // "info.feedback.page_help": "The page related to your feedback",
   "info.feedback.page_help": "La page relative à vos commentaires",
 
@@ -2349,7 +2610,11 @@
   // "item.bitstreams.upload.bundle.new": "Create bundle",
   "item.bitstreams.upload.bundle.new": "Créer un Bundle",
 
+<<<<<<< HEAD
   // "item.bitstreams.upload.bundles.empty": "This item doesn\'t contain any bundles to upload a bitstream to.",
+=======
+  // "item.bitstreams.upload.bundles.empty": "This item doesn't contain any bundles to upload a bitstream to.",
+>>>>>>> dspace-7.6.1
   "item.bitstreams.upload.bundles.empty": "Il n'existe pas, au niveau de cet Item, de Bundle dans lequel un Bitstream pourrait être téléchargé.",
 
   // "item.bitstreams.upload.cancel": "Cancel",
@@ -2470,7 +2735,11 @@
   "item.edit.delete.confirm": "Supprimer",
 
   // "item.edit.delete.description": "Are you sure this item should be completely deleted? Caution: At present, no tombstone would be left.",
+<<<<<<< HEAD
   "item.edit.delete.description": "Êtes-vous certain(e) de vouloir complètement supprimer cet Item ? Attention, il n'y aura pas de retour en arrière possible.",
+=======
+  "item.edit.delete.description": "Êtes-vous certain(e) de vouloir complètement supprimer cet Item? Attention, il n'y aura pas de retour en arrière possible.",
+>>>>>>> dspace-7.6.1
 
   // "item.edit.delete.error": "An error occurred while deleting the item",
   "item.edit.delete.error": "Une erreur s'est produite lors de la suppression de l'Item",
@@ -2495,6 +2764,74 @@
 
   // "item.edit.tabs.item-mapper.title": "Item Edit - Collection Mapper",
   "item.edit.tabs.item-mapper.title": "Édition d'Item - Association de collection",
+<<<<<<< HEAD
+=======
+
+  // "item.edit.identifiers.doi.status.UNKNOWN": "Unknown",
+  "item.edit.identifiers.doi.status.UNKNOWN": "Inconnu",
+
+  // "item.edit.identifiers.doi.status.TO_BE_REGISTERED": "Queued for registration",
+  "item.edit.identifiers.doi.status.TO_BE_REGISTERED": "En attente d'inscription",
+
+  // "item.edit.identifiers.doi.status.TO_BE_RESERVED": "Queued for reservation",
+  "item.edit.identifiers.doi.status.TO_BE_RESERVED": "En attente de réservation",
+
+  // "item.edit.identifiers.doi.status.IS_REGISTERED": "Registered",
+  "item.edit.identifiers.doi.status.IS_REGISTERED": "Inscrit",
+
+  // "item.edit.identifiers.doi.status.IS_RESERVED": "Reserved",
+  "item.edit.identifiers.doi.status.IS_RESERVED": "Réservé",
+
+  // "item.edit.identifiers.doi.status.UPDATE_RESERVED": "Reserved (update queued)",
+  "item.edit.identifiers.doi.status.UPDATE_RESERVED": "Réservé (en attente)",
+
+  // "item.edit.identifiers.doi.status.UPDATE_REGISTERED": "Registered (update queued)",
+  "item.edit.identifiers.doi.status.UPDATE_REGISTERED": "Inscrit (en attente)",
+
+  // "item.edit.identifiers.doi.status.UPDATE_BEFORE_REGISTRATION": "Queued for update and registration",
+  "item.edit.identifiers.doi.status.UPDATE_BEFORE_REGISTRATION": "En attente pour la mise à jour et l'inscription",
+
+  // "item.edit.identifiers.doi.status.TO_BE_DELETED": "Queued for deletion",
+  "item.edit.identifiers.doi.status.TO_BE_DELETED": "En attente pour la suppression",
+
+  // "item.edit.identifiers.doi.status.DELETED": "Deleted",
+  "item.edit.identifiers.doi.status.DELETED": "Supprimé",
+
+  // "item.edit.identifiers.doi.status.PENDING": "Pending (not registered)",
+  "item.edit.identifiers.doi.status.PENDING": "En attente (non inscrit)",
+
+  // "item.edit.identifiers.doi.status.MINTED": "Minted (not registered)",
+  "item.edit.identifiers.doi.status.MINTED": "Émis (non inscrit)",
+
+  // "item.edit.tabs.status.buttons.register-doi.label": "Register a new or pending DOI",
+  "item.edit.tabs.status.buttons.register-doi.label": "Inscrire un nouveau DOI ou un DOI en attente",
+
+  // "item.edit.tabs.status.buttons.register-doi.button": "Register DOI...",
+  "item.edit.tabs.status.buttons.register-doi.button": "Inscrire le DOI...",
+
+  // "item.edit.register-doi.header": "Register a new or pending DOI",
+  "item.edit.register-doi.header": "Inscrire un nouveau DOI ou un DOI en attente",
+
+  // "item.edit.register-doi.description": "Review any pending identifiers and item metadata below and click Confirm to proceed with DOI registration, or Cancel to back out",
+  "item.edit.register-doi.description": "Réviser les identifiants en attente et les métadonnées ci-dessous puis cliquer sur Confirmer afin de lancer l'inscription du DOI ou sur Annuler pour interrompre l'inscription",
+
+  // "item.edit.register-doi.confirm": "Confirm",
+  "item.edit.register-doi.confirm": "Confirmer",
+
+  // "item.edit.register-doi.cancel": "Cancel",
+  "item.edit.register-doi.cancel": "Annuler",
+
+  // "item.edit.register-doi.success": "DOI queued for registration successfully.",
+  "item.edit.register-doi.success": "DOI mis en attente pour l'inscription.",
+
+  // "item.edit.register-doi.error": "Error registering DOI",
+  "item.edit.register-doi.error": "Erreur lors de l'inscription du DOI",
+
+  // "item.edit.register-doi.to-update": "The following DOI has already been minted and will be queued for registration online",
+  "item.edit.register-doi.to-update": "Le DOI suivant a déjà été généré et sera mis en attente pour être inscrit",
+
+
+>>>>>>> dspace-7.6.1
 
   // "item.edit.item-mapper.buttons.add": "Map item to selected collections",
   "item.edit.item-mapper.buttons.add": "Associer l'Item aux collections sélectionnées",
@@ -2674,7 +3011,11 @@
   "item.edit.private.confirm": "Définir comme privé",
 
   // "item.edit.private.description": "Are you sure this item should be made private in the archive?",
+<<<<<<< HEAD
   "item.edit.private.description": "Êtes-vous certain(e) de vouloir définir cet Item comme privé ?",
+=======
+  "item.edit.private.description": "Êtes-vous certain(e) de vouloir définir cet Item comme privé?",
+>>>>>>> dspace-7.6.1
 
   // "item.edit.private.error": "An error occurred while making the item private",
   "item.edit.private.error": "Une erreur s'est produite lors de la privatisation de l'Item",
@@ -2692,7 +3033,11 @@
   "item.edit.public.confirm": "Définir comme public",
 
   // "item.edit.public.description": "Are you sure this item should be made public in the archive?",
+<<<<<<< HEAD
   "item.edit.public.description": "Êtes-vous certain(e) de vouloir définir cet Item comme public ?",
+=======
+  "item.edit.public.description": "Êtes-vous certain(e) de vouloir définir cet Item comme public?",
+>>>>>>> dspace-7.6.1
 
   // "item.edit.public.error": "An error occurred while making the item public",
   "item.edit.public.error": "Une erreur s'est produite lors de la définition de l'Item en tant qu'Item public",
@@ -2710,7 +3055,11 @@
   "item.edit.reinstate.confirm": "Réintégrer",
 
   // "item.edit.reinstate.description": "Are you sure this item should be reinstated to the archive?",
+<<<<<<< HEAD
   "item.edit.reinstate.description": "Êtes-vous certain(e) de vouloir réintégrer cet Item ?",
+=======
+  "item.edit.reinstate.description": "Êtes-vous certain(e) de vouloir réintégrer cet Item?",
+>>>>>>> dspace-7.6.1
 
   // "item.edit.reinstate.error": "An error occurred while reinstating the item",
   "item.edit.reinstate.error": "Une erreur s'est produite lors de la réintégration de l'Item",
@@ -2834,10 +3183,17 @@
 
   // "item.edit.tabs.status.buttons.reinstate.label": "Reinstate item into the repository",
   "item.edit.tabs.status.buttons.reinstate.label": "Réintégrer l'Item dans le dépôt",
+<<<<<<< HEAD
 
   // "item.edit.tabs.status.buttons.unauthorized": "You're not authorized to perform this action",
   "item.edit.tabs.status.buttons.unauthorized": "Vous n'êtes pas autorisé à effectuer cette action",
 
+=======
+
+  // "item.edit.tabs.status.buttons.unauthorized": "You're not authorized to perform this action",
+  "item.edit.tabs.status.buttons.unauthorized": "Vous n'êtes pas autorisé à effectuer cette action",
+
+>>>>>>> dspace-7.6.1
   // "item.edit.tabs.status.buttons.withdraw.button": "Withdraw this item",
   "item.edit.tabs.status.buttons.withdraw.button": "Retirer cet article",
 
@@ -2887,7 +3243,7 @@
   "item.edit.withdraw.confirm": "Retirer",
 
   // "item.edit.withdraw.description": "Are you sure this item should be withdrawn from the archive?",
-  "item.edit.withdraw.description": "Êtes-vous certain que cet Item doit être retiré du dépôt ?",
+  "item.edit.withdraw.description": "Êtes-vous certain que cet Item doit être retiré du dépôt?",
 
   // "item.edit.withdraw.error": "An error occurred while withdrawing the item",
   "item.edit.withdraw.error": "Une erreur s'est produite lors du retrait de l'Item",
@@ -2921,12 +3277,24 @@
 
   // "item.search.results.head": "Item Search Results",
   "item.search.results.head": "Résultats de la recherche d'Items",
+<<<<<<< HEAD
 
   // "item.search.title": "Item Search",
   "item.search.title": "Recherche d'Items",
   
   // "item.truncatable-part.show-more": "Show more",
   "item.truncatable-part.show-more": "Voir plus",
+=======
+
+  // "item.search.title": "Item Search",
+  "item.search.title": "Recherche d'Items",
+
+  // "item.truncatable-part.show-more": "Show more",
+  "item.truncatable-part.show-more": "Voir plus",
+
+  //"item.truncatable-part.show-less": "Collapse",
+  "item.truncatable-part.show-less": "Réduire",
+>>>>>>> dspace-7.6.1
 
   //"item.truncatable-part.show-less": "Collapse",
   "item.truncatable-part.show-less": "Réduire",
@@ -2960,19 +3328,19 @@
   "item.page.files": "Fichiers",
 
   // "item.page.filesection.description": "Description:",
-  "item.page.filesection.description": "Description :",
+  "item.page.filesection.description": "Description:",
 
   // "item.page.filesection.download": "Download",
   "item.page.filesection.download": "Télécharger",
 
   // "item.page.filesection.format": "Format:",
-  "item.page.filesection.format": "Format :",
+  "item.page.filesection.format": "Format:",
 
   // "item.page.filesection.name": "Name:",
-  "item.page.filesection.name": "Nom :",
+  "item.page.filesection.name": "Nom:",
 
   // "item.page.filesection.size": "Size:",
-  "item.page.filesection.size": "Taille :",
+  "item.page.filesection.size": "Taille:",
 
   // "item.page.journal.search.title": "Articles in this journal",
   "item.page.journal.search.title": "Articles dans cette revue",
@@ -3018,6 +3386,7 @@
 
   // "item.page.filesection.original.bundle": "Original bundle",
   "item.page.filesection.original.bundle": "Bundle original",
+<<<<<<< HEAD
 
  // "item.page.filesection.license.bundle": "License bundle",
   "item.page.filesection.license.bundle": "Bundle de license",
@@ -3028,6 +3397,18 @@
   // "item.page.version.create": "Create new version",
   "item.page.version.create": "Créer une nouvelle version",
 
+=======
+
+  // "item.page.filesection.license.bundle": "License bundle",
+  "item.page.filesection.license.bundle": "Bundle de license",
+
+  // "item.page.return": "Back",
+  "item.page.return": "Retour",
+
+  // "item.page.version.create": "Create new version",
+  "item.page.version.create": "Créer une nouvelle version",
+
+>>>>>>> dspace-7.6.1
   // "item.page.version.hasDraft": "A new version cannot be created because there is an inprogress submission in the version history",
   "item.page.version.hasDraft": "Une nouvelle version ne peut être créée car il y a une soumission en cours dans l'historique des versions",
 
@@ -3066,6 +3447,7 @@
 
   // "item.preview.project.funder.name": "Funder:",
   "item.preview.project.funder.name": "Bailleur de fonds",
+<<<<<<< HEAD
 
   // "item.preview.project.funder.identifier": "Funder Identifier:",
   "item.preview.project.funder.identifier": "Identifiant du bailleur de fonds",
@@ -3082,6 +3464,24 @@
   // "item.preview.oaire.fundingStream": "Funding Stream:",
   "item.preview.oaire.fundingStream": "Volet de financement :",
 
+=======
+
+  // "item.preview.project.funder.identifier": "Funder Identifier:",
+  "item.preview.project.funder.identifier": "Identifiant du bailleur de fonds",
+
+  // "item.preview.oaire.awardNumber": "Funding ID:",
+  "item.preview.oaire.awardNumber": "Identifiant du bailleur de fonds :",
+
+  // "item.preview.dc.title.alternative": "Acronym:",
+  "item.preview.dc.title.alternative": "Acronyme :",
+
+  // "item.preview.dc.coverage.spatial": "Jurisdiction:",
+  "item.preview.dc.coverage.spatial": "Juridiction :",
+
+  // "item.preview.oaire.fundingStream": "Funding Stream:",
+  "item.preview.oaire.fundingStream": "Volet de financement :",
+
+>>>>>>> dspace-7.6.1
   // "item.select.confirm": "Confirm selected",
   "item.select.confirm": "Confirmer la sélection",
 
@@ -3138,6 +3538,7 @@
 
   // "item.version.history.table.action.editWorkspaceItem": "Edit workspace item",
   "item.version.history.table.action.editWorkspaceItem": "Éditer l'Item de l'espace de travail",
+<<<<<<< HEAD
 
   // "item.version.history.table.action.editSummary": "Edit summary",
   "item.version.history.table.action.editSummary": "Éditer le sommaire",
@@ -3154,6 +3555,24 @@
   // "item.version.history.table.action.deleteVersion": "Delete version",
   "item.version.history.table.action.deleteVersion": "Supprimer la version",
 
+=======
+
+  // "item.version.history.table.action.editSummary": "Edit summary",
+  "item.version.history.table.action.editSummary": "Éditer le sommaire",
+
+  // "item.version.history.table.action.saveSummary": "Save summary edits",
+  "item.version.history.table.action.saveSummary": "Sauvegarder les modifications au sommaire",
+
+  // "item.version.history.table.action.discardSummary": "Discard summary edits",
+  "item.version.history.table.action.discardSummary": "Annuler les modifications au sommaire",
+
+  // "item.version.history.table.action.newVersion": "Create new version from this one",
+  "item.version.history.table.action.newVersion": "Créer une nouvelle version à partir de celui-ci",
+
+  // "item.version.history.table.action.deleteVersion": "Delete version",
+  "item.version.history.table.action.deleteVersion": "Supprimer la version",
+
+>>>>>>> dspace-7.6.1
   // "item.version.history.table.action.hasDraft": "A new version cannot be created because there is an inprogress submission in the version history",
   "item.version.history.table.action.hasDraft": "Une nouvelle version ne peut pas être créée parce qu'il y a une soumission en cours dans l'historique des versions.",
 
@@ -3162,6 +3581,7 @@
 
   // "item.version.create.modal.header": "New version",
   "item.version.create.modal.header": "Nouvelle version",
+<<<<<<< HEAD
 
   // "item.version.create.modal.text": "Create a new version for this item",
   "item.version.create.modal.text": "Créer une nouvelle version pour cet Item",
@@ -3178,6 +3598,24 @@
   // "item.version.create.modal.button.cancel": "Cancel",
   "item.version.create.modal.button.cancel": "Annuler",
 
+=======
+
+  // "item.version.create.modal.text": "Create a new version for this item",
+  "item.version.create.modal.text": "Créer une nouvelle version pour cet Item",
+
+  // "item.version.create.modal.text.startingFrom": "starting from version {{version}}",
+  "item.version.create.modal.text.startingFrom": "à partir de la version {{version}}",
+
+  // "item.version.create.modal.button.confirm": "Create",
+  "item.version.create.modal.button.confirm": "Créer",
+
+  // "item.version.create.modal.button.confirm.tooltip": "Create new version",
+  "item.version.create.modal.button.confirm.tooltip": "Créer une nouvelle version",
+
+  // "item.version.create.modal.button.cancel": "Cancel",
+  "item.version.create.modal.button.cancel": "Annuler",
+
+>>>>>>> dspace-7.6.1
   // "item.version.create.modal.button.cancel.tooltip": "Do not create new version",
   "item.version.create.modal.button.cancel.tooltip": "Ne pas créer de nouvelle version",
 
@@ -3192,7 +3630,11 @@
 
   // "item.version.create.notification.failure": "New version has not been created",
   "item.version.create.notification.failure": "La nouvelle version n'a pas été créée",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "item.version.create.notification.inProgress": "A new version cannot be created because there is an inprogress submission in the version history",
   "item.version.create.notification.inProgress": "Une nouvelle version ne peut pas être créée parce qu'il y a une soumission en cours dans l'historique des versions.",
 
@@ -3245,7 +3687,7 @@
   "journal.page.publisher": "Éditeur",
 
   // "journal.page.titleprefix": "Journal: ",
-  "journal.page.titleprefix": "Revue : ",
+  "journal.page.titleprefix": "Revue: ",
 
   // "journal.search.results.head": "Journal Search Results",
   "journal.search.results.head": "Résultats de recherche de revues",
@@ -3278,7 +3720,11 @@
   "journalissue.page.number": "Nombre",
 
   // "journalissue.page.titleprefix": "Journal Issue: ",
+<<<<<<< HEAD
   "journalissue.page.titleprefix": "Numéro de revue : ",
+=======
+  "journalissue.page.titleprefix": "Numéro de revue: ",
+>>>>>>> dspace-7.6.1
 
   // "journalvolume.listelement.badge": "Journal Volume",
   "journalvolume.listelement.badge": "Volume de la revue",
@@ -3293,7 +3739,7 @@
   "journalvolume.page.issuedate": "Date de publication",
 
   // "journalvolume.page.titleprefix": "Journal Volume: ",
-  "journalvolume.page.titleprefix": "Volume de la revue : ",
+  "journalvolume.page.titleprefix": "Volume de la revue: ",
 
   // "journalvolume.page.volume": "Volume",
   "journalvolume.page.volume": "Volume",
@@ -3306,6 +3752,7 @@
 
   // "iiifsearchable.page.doi": "Permanent Link: ",
   "iiifsearchable.page.doi": "Lien permanent",
+<<<<<<< HEAD
 
   // "iiifsearchable.page.issue": "Issue: ",
   "iiifsearchable.page.issue": "Numéro",
@@ -3325,6 +3772,27 @@
   // "iiif.page.doi": "Permanent Link: ",
   "iiif.page.doi": "Lien permanent",
 
+=======
+
+  // "iiifsearchable.page.issue": "Issue: ",
+  "iiifsearchable.page.issue": "Numéro",
+
+  // "iiifsearchable.page.description": "Description: ",
+  "iiifsearchable.page.description": "Description : ",
+
+  // "iiifviewer.fullscreen.notice": "Use full screen for better viewing.",
+  "iiifviewer.fullscreen.notice": "Utiliser le plein écran pour une meilleure visualisation.",
+
+  // "iiif.listelement.badge": "Image Media",
+  "iiif.listelement.badge": "Média de l'image",
+
+  // "iiif.page.titleprefix": "Image: ",
+  "iiif.page.titleprefix": "Image : ",
+
+  // "iiif.page.doi": "Permanent Link: ",
+  "iiif.page.doi": "Lien permanent",
+
+>>>>>>> dspace-7.6.1
   // "iiif.page.issue": "Issue: ",
   "iiif.page.issue": "Numéro : ",
 
@@ -3389,13 +3857,17 @@
   "login.form.email": "Adresse électronique",
 
   // "login.form.forgot-password": "Have you forgotten your password?",
-  "login.form.forgot-password": "Mot de passe oublié ?",
+  "login.form.forgot-password": "Mot de passe oublié?",
 
   // "login.form.header": "Please log in to DSpace",
   "login.form.header": "Se connecter à DSpace",
 
   // "login.form.new-user": "New user? Click here to register.",
+<<<<<<< HEAD
   "login.form.new-user": "Pas encore de compte ? Cliquer ici pour vous enregistrer.",
+=======
+  "login.form.new-user": "Pas encore de compte? Cliquer ici pour vous enregistrer.",
+>>>>>>> dspace-7.6.1
 
   // "login.form.or-divider": "or",
   "login.form.or-divider": "ou",
@@ -3513,7 +3985,11 @@
 
   // "menu.section.export_metadata": "Metadata",
   "menu.section.export_metadata": "Métadonnées",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "menu.section.export_batch": "Batch Export (ZIP)",
   "menu.section.export_batch": "Exporter en lot (ZIP)",
 
@@ -3597,7 +4073,11 @@
 
   // "menu.section.processes": "Processes",
   "menu.section.processes": "Processus",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "menu.section.health": "Health",
   "menu.section.health": "Santé du système",
 
@@ -3739,20 +4219,31 @@
   // "mydspace.show.workspace": "Your Submissions",
   "mydspace.show.workspace": "Vos dépôts",
 
-  // "mydspace.status.archived": "Archived",
-  "mydspace.status.archived": "Archivés",
+  //"mydspace.show.supervisedWorkspace": "Supervised items",
+  "mydspace.show.supervisedWorkspace": "Items supervisés",
 
-  // "mydspace.status.validation": "Validation",
-  "mydspace.status.validation": "En cours de validation",
+  // "mydspace.status.mydspaceArchived": "Archived",
+  "mydspace.status.mydspaceArchived": "Archivés",
 
-  // "mydspace.status.waiting-for-controller": "Waiting for controller",
-  "mydspace.status.waiting-for-controller": "En attente d'assignation",
+  // "mydspace.status.mydspaceValidation": "Validation",
+  "mydspace.status.mydspaceValidation": "En cours de validation",
 
+  // "mydspace.status.mydspaceWaitingController": "Waiting for controller",
+  "mydspace.status.mydspaceWaitingController": "En attente d'assignation",
+
+<<<<<<< HEAD
   // "mydspace.status.workflow": "Workflow",
   "mydspace.status.workflow": "En traitement",
 
   // "mydspace.status.workspace": "Workspace",
   "mydspace.status.workspace": "Dépôts en cours",
+=======
+  // "mydspace.status.mydspaceWorkflow": "Workflow",
+  "mydspace.status.mydspaceWorkflow": "En traitement",
+
+  // "mydspace.status.mydspaceWorkspace": "Workspace",
+  "mydspace.status.mydspaceWorkspace": "Dépôts en cours",
+>>>>>>> dspace-7.6.1
 
   // "mydspace.title": "MyDSpace",
   "mydspace.title": "Mon compte DSpace",
@@ -3805,9 +4296,18 @@
   // "nav.stop-impersonating": "Stop impersonating EPerson",
   "nav.stop-impersonating": "Retour à votre propre EPerson",
 
+<<<<<<< HEAD
   // "nav.toggle": "Toggle navigation",
   "nav.toggle": "Basculer la navigation",
   
+=======
+  //"nav.subscriptions" : "Subscriptions",
+  "nav.subscriptions": "Abonnements",
+
+  // "nav.toggle": "Toggle navigation",
+  "nav.toggle": "Basculer la navigation",
+
+>>>>>>> dspace-7.6.1
   // "nav.user.description": "User profile bar",
   "nav.user.description": "Barre de profil utilisateur",
 
@@ -3836,7 +4336,11 @@
   "orgunit.page.id": "ID",
 
   // "orgunit.page.titleprefix": "Organizational Unit: ",
+<<<<<<< HEAD
   "orgunit.page.titleprefix": "Structure Organisationnelle : ",
+=======
+  "orgunit.page.titleprefix": "Structure Organisationnelle: ",
+>>>>>>> dspace-7.6.1
 
   // "pagination.options.description": "Pagination options",
   "pagination.options.description": "Options de pagination",
@@ -3957,6 +4461,7 @@
 
   // "process.detail.arguments.empty": "This process doesn't contain any arguments",
   "process.detail.arguments.empty": "Ce processus ne contient pas d'arguments",
+<<<<<<< HEAD
   
   // "process.detail.back": "Back",
   "process.detail.back": "Retour",
@@ -3964,6 +4469,15 @@
   // "process.detail.output": "Process Output",
   "process.detail.output": "Sortie du processus",
   
+=======
+
+  // "process.detail.back": "Back",
+  "process.detail.back": "Retour",
+
+  // "process.detail.output": "Process Output",
+  "process.detail.output": "Sortie du processus",
+
+>>>>>>> dspace-7.6.1
   // "process.detail.logs.button": "Retrieve process output",
   "process.detail.logs.button": "Récupérer la sortie du processus",
 
@@ -3975,6 +4489,7 @@
 
   // "process.detail.output-files": "Output Files",
   "process.detail.output-files": "Fichiers de sortie",
+<<<<<<< HEAD
   
   // "process.detail.output-files.empty": "This process doesn't contain any output files",
   "process.detail.output-files.empty": "Ce processus ne contient pas de fichiers de sortie",
@@ -3994,20 +4509,49 @@
   // "process.detail.status": "Status",
   "process.detail.status": "Statut",
   
+=======
+
+  // "process.detail.output-files.empty": "This process doesn't contain any output files",
+  "process.detail.output-files.empty": "Ce processus ne contient pas de fichiers de sortie",
+
+  // "process.detail.script": "Script",
+  "process.detail.script": "Script",
+
+  // "process.detail.title": "Process: {{ id }} - {{ name }}",
+  "process.detail.title": "Processus : {{ id }} - {{ name }}",
+
+  // "process.detail.start-time": "Start time",
+  "process.detail.start-time": "Début",
+
+  // "process.detail.end-time": "Finish time",
+  "process.detail.end-time": "Fin",
+
+  // "process.detail.status": "Status",
+  "process.detail.status": "Statut",
+
+>>>>>>> dspace-7.6.1
   // "process.detail.create": "Create similar process",
   "process.detail.create": "Créer un processus similaire",
 
   // "process.overview.table.finish": "Finish time (UTC)",
   "process.overview.table.finish": "Heure de fin (TUC)",
+<<<<<<< HEAD
   
   // "process.overview.table.id": "Process ID",
   "process.overview.table.id": "ID du processus",
   
+=======
+
+  // "process.overview.table.id": "Process ID",
+  "process.overview.table.id": "ID du processus",
+
+>>>>>>> dspace-7.6.1
   // "process.overview.table.name": "Name",
   "process.overview.table.name": "Nom",
 
   // "process.overview.table.start": "Start time (UTC)",
   "process.overview.table.start": "Heure de début (TUC)",
+<<<<<<< HEAD
   
   // "process.overview.table.status": "Status",
   "process.overview.table.status": "Statut",
@@ -4015,6 +4559,15 @@
   // "process.overview.table.user": "User",
   "process.overview.table.user": "Utilisateur",
   
+=======
+
+  // "process.overview.table.status": "Status",
+  "process.overview.table.status": "Statut",
+
+  // "process.overview.table.user": "User",
+  "process.overview.table.user": "Utilisateur",
+
+>>>>>>> dspace-7.6.1
   // "process.overview.title": "Processes Overview",
   "process.overview.title": "Sommaire des processus",
 
@@ -4039,6 +4592,24 @@
   // "process.overview.delete.header": "Delete processes",
   "process.overview.delete.header": "Supprimer les processus",
 
+<<<<<<< HEAD
+=======
+  // "process.overview.table.actions": "Actions",
+  "process.overview.table.actions": "Actions",
+
+  // "process.overview.delete": "Delete {{count}} processes",
+  "process.overview.delete": "Supprimer {{count}} processus",
+
+  // "process.overview.delete.processing": "{{count}} process(es) are being deleted. Please wait for the deletion to fully complete. Note that this can take a while.",
+  "process.overview.delete.processing": "{{count}} processus sont en train d'être supprimés. Patientez jusqu'à ce que la suppression soit terminée. Notez que cela peut prendre un certain temps.",
+
+  // "process.overview.delete.body": "Are you sure you want to delete {{count}} process(es)?",
+  "process.overview.delete.body": "Êtes-vous certain-e de vouloir supprimer {{count}} processus?",
+
+  // "process.overview.delete.header": "Delete processes",
+  "process.overview.delete.header": "Supprimer les processus",
+
+>>>>>>> dspace-7.6.1
   // "process.bulk.delete.error.head": "Error on deleteing process",
   "process.bulk.delete.error.head": "Erreur lors de la suppression de processus",
 
@@ -4048,7 +4619,11 @@
   // "process.bulk.delete.success": "{{count}} process(es) have been succesfully deleted",
   "process.bulk.delete.success": "{{count}} processus ont été supprimés.",
 
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> dspace-7.6.1
 
   // "profile.breadcrumbs": "Update Profile",
   "profile.breadcrumbs": "Mise à jour profil",
@@ -4162,7 +4737,7 @@
   "project.page.status": "Statut",
 
   // "project.page.titleprefix": "Research Project: ",
-  "project.page.titleprefix": "Projet de recherche : ",
+  "project.page.titleprefix": "Projet de recherche: ",
 
   // "project.search.results.head": "Project Search Results",
   "project.search.results.head": "Résultats de recherche de projets",
@@ -4186,13 +4761,14 @@
   "publication.page.publisher": "Éditeur",
 
   // "publication.page.titleprefix": "Publication: ",
-  "publication.page.titleprefix": "Publication : ",
+  "publication.page.titleprefix": "Publication: ",
 
   // "publication.page.volume-title": "Volume Title",
   "publication.page.volume-title": "Titre du volume",
 
   // "publication.search.results.head": "Publication Search Results",
   "publication.search.results.head": "Résultats de recherche de publications",
+<<<<<<< HEAD
 
   // "publication.search.title": "Publication Search",
   "publication.search.title": "Recherche de publications",
@@ -4200,6 +4776,15 @@
   // "media-viewer.next": "Next",
   "media-viewer.next": "Suivant",
 
+=======
+
+  // "publication.search.title": "Publication Search",
+  "publication.search.title": "Recherche de publications",
+
+  // "media-viewer.next": "Next",
+  "media-viewer.next": "Suivant",
+
+>>>>>>> dspace-7.6.1
   // "media-viewer.previous": "Previous",
   "media-viewer.previous": "Précédent",
 
@@ -4361,6 +4946,7 @@
 
   // "relationships.isContributorOf.OrgUnit": "Contributor (Organizational Unit)",
   "relationships.isContributorOf.OrgUnit": "Collectivités contributrices",
+<<<<<<< HEAD
 
   // "relationships.isContributorOf.Person": "Contributor",
   "relationships.isContributorOf.Person": "Contributeur",
@@ -4371,6 +4957,18 @@
   // "repository.image.logo": "Repository logo",
   "repository.image.logo": "Logo du dépôt",
 
+=======
+
+  // "relationships.isContributorOf.Person": "Contributor",
+  "relationships.isContributorOf.Person": "Contributeur",
+
+  // "relationships.isFundingAgencyOf.OrgUnit": "Funder",
+  "relationships.isFundingAgencyOf.OrgUnit": "Bailleur de fonds",
+
+  // "repository.image.logo": "Repository logo",
+  "repository.image.logo": "Logo du dépôt",
+
+>>>>>>> dspace-7.6.1
   // "repository.title.prefix": "DSpace Angular :: ",
   "repository.title.prefix": "DSpace Angular :: ",
 
@@ -4643,7 +5241,11 @@
 
   // "search.filters.filter.creativeWorkPublisher.label": "Search publisher",
   "search.filters.filter.creativeWorkPublisher.label": "Recherche d'un éditeur",
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> dspace-7.6.1
   // "search.filters.filter.dateIssued.head": "Date",
   "search.filters.filter.dateIssued.head": "Date",
 
@@ -4843,7 +5445,7 @@
   "search.results.head": "Résultats de recherche",
 
   // "search.results.no-results": "Your search returned no results. Having trouble finding what you're looking for? Try putting",
-  "search.results.no-results": "Votre recherche n'a retourné aucun résultat. Vous n'arrivez pas à trouver ce que vous recherchez ? Essayez de mettre",
+  "search.results.no-results": "Votre recherche n'a retourné aucun résultat. Vous n'arrivez pas à trouver ce que vous recherchez? Essayez de mettre",
 
   // "search.results.no-results-link": "quotes around it",
   "search.results.no-results-link": "des guillemets avant et après les termes recherchés",
@@ -4854,11 +5456,22 @@
   // "search.results.view-result": "View",
   "search.results.view-result": "Afficher",
 
+<<<<<<< HEAD
   // "default.search.results.head": "Search Results",
   "default.search.results.head": "Résultats de recherche",
   
   // "default-relationships.search.results.head": "Search Results",
    "default-relationships.search.results.head": "Résultats de recherche",
+=======
+  // "search.results.view-result": "View",
+  "search.results.view-result": "Afficher",
+
+  // "default.search.results.head": "Search Results",
+  "default.search.results.head": "Résultats de recherche",
+
+  // "default-relationships.search.results.head": "Search Results",
+  "default-relationships.search.results.head": "Résultats de recherche",
+>>>>>>> dspace-7.6.1
 
   // "search.sidebar.close": "Back to results",
   "search.sidebar.close": "Retour aux résultats",
@@ -4907,6 +5520,7 @@
 
   // "sorting.score.DESC": "Most Relevant",
   "sorting.score.DESC": "Le plus pertinent",
+<<<<<<< HEAD
 
   // "sorting.dc.date.issued.ASC": "Date Issued Ascending",
   "sorting.dc.date.issued.ASC": "Date de publication (croissante)",
@@ -4914,6 +5528,15 @@
   // "sorting.dc.date.issued.DESC": "Date Issued Descending",
   "sorting.dc.date.issued.DESC": "Date de publication (décroissante)",
 
+=======
+
+  // "sorting.dc.date.issued.ASC": "Date Issued Ascending",
+  "sorting.dc.date.issued.ASC": "Date de publication (croissante)",
+
+  // "sorting.dc.date.issued.DESC": "Date Issued Descending",
+  "sorting.dc.date.issued.DESC": "Date de publication (décroissante)",
+
+>>>>>>> dspace-7.6.1
   // "sorting.dc.date.accessioned.ASC": "Accessioned Date Ascending",
   "sorting.dc.date.accessioned.ASC": "Date de dépôt (croissante)",
 
@@ -4978,7 +5601,11 @@
   "submission.general.discard.confirm.cancel": "Annuler",
 
   // "submission.general.discard.confirm.info": "This operation can't be undone. Are you sure?",
+<<<<<<< HEAD
   "submission.general.discard.confirm.info": "L'annulation est irréversible, les données de la soumission en cours seront perdues. Êtes-vous certain(e) ?",
+=======
+  "submission.general.discard.confirm.info": "L'annulation est irréversible, les données de la soumission en cours seront perdues. Êtes-vous certain(e)?",
+>>>>>>> dspace-7.6.1
 
   // "submission.general.discard.confirm.submit": "Yes, I'm sure",
   "submission.general.discard.confirm.submit": "Oui, je suis certain(e)",
@@ -5076,6 +5703,36 @@
   // "submission.import-external.source.orcidWorks": "ORCID",
    "submission.import-external.source.orcidWorks": "ORCID",
 
+  // "submission.import-external.source.ads": "NASA/ADS",
+  "submission.import-external.source.ads": "NASA/ADS",
+
+  // "submission.import-external.source.cinii": "CiNii",
+  "submission.import-external.source.cinii": "CiNii",
+
+  // "submission.import-external.source.crossref": "CrossRef",
+  "submission.import-external.source.crossref": "CrossRef (DOI)",
+
+  //"submission.import-external.source.datacite": "DataCite",
+  "submission.import-external.source.datacite": "DataCite (DOI)",
+
+  // "submission.import-external.source.scielo": "SciELO",
+  "submission.import-external.source.scielo": "SciELO",
+
+  // "submission.import-external.source.scopus": "Scopus",
+  "submission.import-external.source.scopus": "Scopus",
+
+  // "submission.import-external.source.vufind": "VuFind",
+  "submission.import-external.source.vufind": "VuFind",
+
+  // "submission.import-external.source.wos": "Web Of Science",
+  "submission.import-external.source.wos": "Web Of Science",
+
+  // "submission.import-external.source.orcidWorks": "ORCID",
+  "submission.import-external.source.orcidWorks": "ORCID",
+
+  //"submission.import-external.source.epo": "European Patent Office (EPO)",
+  "submission.import-external.source.epo": "Office Européen des brevets (OEB)",
+
   // "submission.import-external.source.loading": "Loading ...",
   "submission.import-external.source.loading": "En cours de chargement ...",
 
@@ -5097,6 +5754,9 @@
   // "submission.import-external.source.pubmed": "Pubmed",
   "submission.import-external.source.pubmed": "Pubmed",
   
+  // "submission.import-external.source.pubmedeu": "Pubmed Europe",
+  "submission.import-external.source.pubmedeu": "Pubmed Europe",
+
   // "submission.import-external.source.pubmedeu": "Pubmed Europe",
   "submission.import-external.source.pubmedeu": "Pubmed Europe",
 
@@ -5258,7 +5918,11 @@
 
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.isJournalOfPublication": "Local Journals ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.isJournalOfPublication": "Revues locales ({{ count }})",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.Project": "Local Projects ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.Project": "Projects locaux ({{ count }})",
 
@@ -5282,13 +5946,21 @@
 
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.isJournalIssueOfPublication": "Local Journal Issues ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.isJournalIssueOfPublication": "Numéros de revue locaux ({{ count }})",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.JournalIssue": "Local Journal Issues ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.JournalIssue": "Numéros de revue locaux ({{ count }})",
 
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.isJournalVolumeOfPublication": "Local Journal Volumes ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.isJournalVolumeOfPublication": "Volumes de revues locaux ({{ count }})",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.JournalVolume": "Local Journal Volumes ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.JournalVolume": "Volumes de revues locaux ({{ count }})",
 
@@ -5297,7 +5969,11 @@
 
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.sherpaPublisher": "Sherpa Publishers ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.sherpaPublisher": "Éditeurs SHERPA ({{ count }})",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.orcid": "ORCID ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.orcid": "ORCID ({{ count }})",
 
@@ -5348,13 +6024,21 @@
 
   // "submission.sections.describe.relationship-lookup.title.isJournalIssueOfPublication": "Journal Issues",
   "submission.sections.describe.relationship-lookup.title.isJournalIssueOfPublication": "Numéros de revue",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.describe.relationship-lookup.title.JournalIssue": "Journal Issues",
   "submission.sections.describe.relationship-lookup.title.JournalIssue": "Numéros de revue",
 
   // "submission.sections.describe.relationship-lookup.title.isJournalVolumeOfPublication": "Journal Volumes",
   "submission.sections.describe.relationship-lookup.title.isJournalVolumeOfPublication": "Volumes de revue",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.describe.relationship-lookup.title.JournalVolume": "Journal Volumes",
   "submission.sections.describe.relationship-lookup.title.JournalVolume": "Volumes de revue",
 
@@ -5366,7 +6050,11 @@
 
   // "submission.sections.describe.relationship-lookup.title.isFundingAgencyOfPublication": "Funding Agency",
   "submission.sections.describe.relationship-lookup.title.isFundingAgencyOfPublication": "Agence de financement",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.describe.relationship-lookup.title.Project": "Projects",
   "submission.sections.describe.relationship-lookup.title.Project": "Projets",
 
@@ -5411,7 +6099,11 @@
 
   // "submission.sections.describe.relationship-lookup.selection-tab.title.isJournalVolumeOfPublication": "Selected Journal Volume",
   "submission.sections.describe.relationship-lookup.selection-tab.title.isJournalVolumeOfPublication": "Volumes de revue sélectionnés",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.describe.relationship-lookup.selection-tab.title.Project": "Selected Projects",
   "submission.sections.describe.relationship-lookup.selection-tab.title.Project": "Projets sélectionnés",
 
@@ -5435,7 +6127,11 @@
 
   // "submission.sections.describe.relationship-lookup.selection-tab.title.isJournalIssueOfPublication": "Selected Issue",
   "submission.sections.describe.relationship-lookup.selection-tab.title.isJournalIssueOfPublication": "Numéro sélectionné",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.describe.relationship-lookup.selection-tab.title.JournalVolume": "Selected Journal Volume",
   "submission.sections.describe.relationship-lookup.selection-tab.title.JournalVolume": "Volume de revue sélectionné",
 
@@ -5444,7 +6140,11 @@
 
   // "submission.sections.describe.relationship-lookup.selection-tab.title.isFundingOfPublication": "Selected Funding",
   "submission.sections.describe.relationship-lookup.selection-tab.title.isFundingOfPublication": "Financement sélectionné",
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.describe.relationship-lookup.selection-tab.title.JournalIssue": "Selected Issue",
   "submission.sections.describe.relationship-lookup.selection-tab.title.JournalIssue": "Numéro sélectionné",
 
@@ -5472,7 +6172,11 @@
   // "submission.sections.describe.relationship-lookup.selection-tab.title.arxiv": "Search Results",
   "submission.sections.describe.relationship-lookup.selection-tab.title.arxiv": "Résultats de recherche",
 
+<<<<<<< HEAD
   // "submission.sections.describe.relationship-lookup.name-variant.notification.content": "Would you like to save \"{{ value }}\" as a name variant for this person so you and others can reuse it for future submissions? If you don\'t you can still use it for this submission.",
+=======
+  // "submission.sections.describe.relationship-lookup.name-variant.notification.content": "Would you like to save \"{{ value }}\" as a name variant for this person so you and others can reuse it for future submissions? If you don't you can still use it for this submission.",
+>>>>>>> dspace-7.6.1
   "submission.sections.describe.relationship-lookup.name-variant.notification.content": "Souhaitez-vous sauvegarder \"{{ value }}\" en tant que nom alternatif pour cette personne afin que vous ou un autre utilisateur puisse l'utiliser pour de futures soumissions ? Si vous ne le souhaitez pas, vous pouvez tout de même l'utiliser pour cette soumission.",
 
   // "submission.sections.describe.relationship-lookup.name-variant.notification.confirm": "Save a new name variant",
@@ -5545,7 +6249,11 @@
   "submission.sections.general.sections_not_valid": "Sections incomplètes.",
 
   // "submission.sections.submit.progressbar.accessCondition": "Item access conditions",
+<<<<<<< HEAD
   "submission.sections.submit.progressbar.accessCondition": "Autorisations d'accès à l'Item",  
+=======
+  "submission.sections.submit.progressbar.accessCondition": "Autorisations d'accès à l'Item",
+>>>>>>> dspace-7.6.1
 
   // "submission.sections.submit.progressbar.CClicense": "Creative commons license",
   "submission.sections.submit.progressbar.CClicense": "Licence Creative Commons",
@@ -5576,6 +6284,7 @@
 
   // "submission.sections.status.valid.title": "Valid",
   "submission.sections.status.valid.title": "Valide",
+<<<<<<< HEAD
 
   // "submission.sections.status.warnings.title": "Warnings",
   "submission.sections.status.warnings.title": "Avertissements",
@@ -5592,6 +6301,24 @@
   // "submission.sections.toggle.open": "Open section",
   "submission.sections.toggle.open": "Section ouverte",
 
+=======
+
+  // "submission.sections.status.warnings.title": "Warnings",
+  "submission.sections.status.warnings.title": "Avertissements",
+
+  // "submission.sections.status.errors.aria": "has errors",
+  "submission.sections.status.errors.aria": "comporte des erreurs",
+
+  // "submission.sections.status.valid.aria": "is valid",
+  "submission.sections.status.valid.aria": "est valide",
+
+  // "submission.sections.status.warnings.aria": "has warnings",
+  "submission.sections.status.warnings.aria": "comporte des avertissements",
+
+  // "submission.sections.toggle.open": "Open section",
+  "submission.sections.toggle.open": "Section ouverte",
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.toggle.close": "Close section",
   "submission.sections.toggle.close": "Section fermée",
 
@@ -5605,7 +6332,11 @@
   "submission.sections.upload.delete.confirm.cancel": "Annuler",
 
   // "submission.sections.upload.delete.confirm.info": "This operation can't be undone. Are you sure?",
+<<<<<<< HEAD
   "submission.sections.upload.delete.confirm.info": "Cette opération est irréversible. Êtes-vous certain(e) ?",
+=======
+  "submission.sections.upload.delete.confirm.info": "Cette opération est irréversible. Êtes-vous certain(e)?",
+>>>>>>> dspace-7.6.1
 
   // "submission.sections.upload.delete.confirm.submit": "Yes, I'm sure",
   "submission.sections.upload.delete.confirm.submit": "Oui, je suis certain(e)",
@@ -5665,10 +6396,17 @@
   "submission.sections.upload.form.until-placeholder": "Jusqu'au",
 
   // "submission.sections.upload.header.policy.default.nolist": "Uploaded files in the {{collectionName}} collection will be accessible according to the following group(s):",
+<<<<<<< HEAD
   "submission.sections.upload.header.policy.default.nolist": "Les fichiers téléchargés dans la collection {{collectionName}} seront accessibles au(x) groupe(s) suivant(s) :",
 
   // "submission.sections.upload.header.policy.default.withlist": "Please note that uploaded files in the {{collectionName}} collection will be accessible, in addition to what is explicitly decided for the single file, with the following group(s):",
   "submission.sections.upload.header.policy.default.withlist": "Veuillez noter que, en complément des accès spécifiquement accordés pour le fichier, les fichiers téléchargés dans la collection {{collectionName}} seront accessibles par défaut au(x) groupe(s) suivant(s) :",
+=======
+  "submission.sections.upload.header.policy.default.nolist": "Les fichiers téléchargés dans la collection {{collectionName}} seront accessibles au(x) groupe(s) suivant(s):",
+
+  // "submission.sections.upload.header.policy.default.withlist": "Please note that uploaded files in the {{collectionName}} collection will be accessible, in addition to what is explicitly decided for the single file, with the following group(s):",
+  "submission.sections.upload.header.policy.default.withlist": "Veuillez noter que, en complément des accès spécifiquement accordés pour le fichier, les fichiers téléchargés dans la collection {{collectionName}} seront accessibles par défaut au(x) groupe(s) suivant(s):",
+>>>>>>> dspace-7.6.1
 
   // "submission.sections.upload.info": "Here you will find all the files currently in the item. You can update the file metadata and access conditions or <strong>upload additional files by dragging & dropping them anywhere on the page.</strong>",
   "submission.sections.upload.info": "Vous trouverez ici tous les fichiers actuellement associés à l'Item. Vous pouvez éditer les métadonnés et les niveaux d'accès de ce(s) fichier(s) ou <strong>télécharger des fichiers complémentaires simplement en les glissant n'importe où sur cette page</strong>",
@@ -5696,6 +6434,7 @@
 
   // "submission.sections.accesses.form.discoverable-label": "Discoverable",
   "submission.sections.accesses.form.discoverable-label": "Découvrable",
+<<<<<<< HEAD
 
   // "submission.sections.accesses.form.access-condition-label": "Access condition type",
   "submission.sections.accesses.form.access-condition-label": "Type d'autorisations d'accès",
@@ -5764,6 +6503,76 @@
   // "submission.sections.sherpa.publication.information.romeoPub": "Romeo Pub",
   "submission.sections.sherpa.publication.information.romeoPub": "Romeo Pub",
 
+=======
+
+  // "submission.sections.accesses.form.access-condition-label": "Access condition type",
+  "submission.sections.accesses.form.access-condition-label": "Type d'autorisations d'accès",
+
+  // "submission.sections.accesses.form.access-condition-hint": "Select an access condition to apply on the item once it is deposited",
+  "submission.sections.accesses.form.access-condition-hint": "Sélectionner une autorisation d'accès à appliquer une fois l'Item déposé.",
+
+  // "submission.sections.accesses.form.date-required": "Date is required.",
+  "submission.sections.accesses.form.date-required": "La date est obligatoire",
+
+  // "submission.sections.accesses.form.date-required-from": "Grant access from date is required.",
+  "submission.sections.accesses.form.date-required-from": "L'autorisation d'accès à partir d'une date est obligatoire.",
+
+  // "submission.sections.accesses.form.date-required-until": "Grant access until date is required.",
+  "submission.sections.accesses.form.date-required-until": "L'autorisation d'accès jusqu'à une date est obligatoire.",
+
+  // "submission.sections.accesses.form.from-label": "Grant access from",
+  "submission.sections.accesses.form.from-label": "Accorder l'accès à partir de",
+
+  // "submission.sections.accesses.form.from-hint": "Select the date from which the related access condition is applied",
+  "submission.sections.accesses.form.from-hint": "Sélectionner la date à partir de laquelle l'autorisation d'accès liée est appliquée.",
+
+  // "submission.sections.accesses.form.from-placeholder": "From",
+  "submission.sections.accesses.form.from-placeholder": "Depuis",
+
+  // "submission.sections.accesses.form.group-label": "Group",
+  "submission.sections.accesses.form.group-label": "Groupe",
+
+  // "submission.sections.accesses.form.group-required": "Group is required.",
+  "submission.sections.accesses.form.group-required": "Le groupe est obligatoire",
+
+  // "submission.sections.accesses.form.until-label": "Grant access until",
+  "submission.sections.accesses.form.until-label": "Accorder l'accès jusqu'au",
+
+  // "submission.sections.accesses.form.until-hint": "Select the date until which the related access condition is applied",
+  "submission.sections.accesses.form.until-hint": "Sélectionner la date jusqu'à laquelle l'autorisation d'accès liée est appliquée.",
+
+  // "submission.sections.accesses.form.until-placeholder": "Until",
+  "submission.sections.accesses.form.until-placeholder": "Jusqu'au",
+
+
+  // "submission.sections.license.granted-label": "I confirm the license above",
+  "submission.sections.license.granted-label": "J'approuve la licence ci-dessus",
+
+  // "submission.sections.license.required": "You must accept the license",
+  "submission.sections.license.required": "Vous devez accepter la licence",
+
+  // "submission.sections.license.notgranted":  "You must accept the license",
+  "submission.sections.license.notgranted": "Vous devez accepter la licence",
+
+  // "submission.sections.sherpa.publication.information": "Publication information",
+  "submission.sections.sherpa.publication.information": "Information sur la publication",
+
+  // "submission.sections.sherpa.publication.information.title": "Title",
+  "submission.sections.sherpa.publication.information.title": "Titre",
+
+  // "submission.sections.sherpa.publication.information.issns": "ISSNs",
+  "submission.sections.sherpa.publication.information.issns": "ISSNs",
+
+  // "submission.sections.sherpa.publication.information.url": "URL",
+  "submission.sections.sherpa.publication.information.url": "URL",
+
+  // "submission.sections.sherpa.publication.information.publishers": "Publisher",
+  "submission.sections.sherpa.publication.information.publishers": "Éditeur",
+
+  // "submission.sections.sherpa.publication.information.romeoPub": "Romeo Pub",
+  "submission.sections.sherpa.publication.information.romeoPub": "Romeo Pub",
+
+>>>>>>> dspace-7.6.1
   // "submission.sections.sherpa.publication.information.zetoPub": "Zeto Pub",
   "submission.sections.sherpa.publication.information.zetoPub": "Zeto Pub",
 
@@ -5823,8 +6632,13 @@
 
   // "submission.sections.sherpa.error.message": "There was an error retrieving sherpa informations",
   "submission.sections.sherpa.error.message": "Une erreur s'est produite lors de la recherche d'infomation dans Sherpa.",
+<<<<<<< HEAD
   
   
+=======
+
+
+>>>>>>> dspace-7.6.1
   // "submission.submit.breadcrumbs": "New submission",
   "submission.submit.breadcrumbs": "Nouvelle soumission",
 
@@ -5908,6 +6722,7 @@
 
   // "submission.workflow.tasks.pool.show-detail": "Show detail",
   "submission.workflow.tasks.pool.show-detail": "Afficher le détail",
+<<<<<<< HEAD
   
   // "submission.workspace.generic.view": "View",
   "submission.workspace.generic.view": "Voir",
@@ -5936,6 +6751,36 @@
   // "thumbnail.person.alt": "Profile Picture",
   "thumbnail.person.alt": "Photo de profil",
 
+=======
+
+  // "submission.workspace.generic.view": "View",
+  "submission.workspace.generic.view": "Voir",
+
+  // "submission.workspace.generic.view-help": "Select this option to view the item's metadata.",
+  "submission.workspace.generic.view-help": "Sélectionner cette option pour voir les métadonnées de l'item.",
+
+  // "thumbnail.default.alt": "Thumbnail Image",
+  "thumbnail.default.alt": "Vignette d'image",
+
+  // "thumbnail.default.placeholder": "No Thumbnail Available",
+  "thumbnail.default.placeholder": "Pas de vignette d'image disponible",
+
+  // "thumbnail.project.alt": "Project Logo",
+  "thumbnail.project.alt": "Logo du projet",
+
+  // "thumbnail.project.placeholder": "Project Placeholder Image",
+  "thumbnail.project.placeholder": "Image de remplacement du projet",
+
+  // "thumbnail.orgunit.alt": "OrgUnit Logo",
+  "thumbnail.orgunit.alt": "Logo de l'organisme",
+
+  // "thumbnail.orgunit.placeholder": "OrgUnit Placeholder Image",
+  "thumbnail.orgunit.placeholder": "Image de remplacement de l'organisme",
+
+  // "thumbnail.person.alt": "Profile Picture",
+  "thumbnail.person.alt": "Photo de profil",
+
+>>>>>>> dspace-7.6.1
   // "thumbnail.person.placeholder": "No Profile Picture Available",
   "thumbnail.person.placeholder": "Aucune photo de profil disponible",
 
@@ -5991,8 +6836,20 @@
   // "virtual-metadata.delete-relationship.modal-head": "Select the items for which you want to save the virtual metadata as real metadata",
   "virtual-metadata.delete-relationship.modal-head": "Sélectionner les Items pour lesquels vous souhaitez sauvegarder les métadonnées virtuelles en tant que métadonnées réelles",
 
+<<<<<<< HEAD
   // "workspace.search.results.head": "Your submissions",
   "workspace.search.results.head": "Vos soumissions",
+=======
+
+  //"supervisedWorkspace.search.results.head": "Supervised Items",
+  "supervisedWorkspace.search.results.head": "Documents supervisés",
+
+  //"workspace.search.results.head": "Your submissions",
+  "workspace.search.results.head": "Vos dépôts",
+
+  // "workspace.search.results.head": "Your submissions",
+  "workspace.search.results.head": "Vos dépôts",
+>>>>>>> dspace-7.6.1
 
   // "workflowAdmin.search.results.head": "Administer Workflow",
   "workflowAdmin.search.results.head": "Workflow Administrateur",
@@ -6000,9 +6857,18 @@
   // "workflow.search.results.head": "Workflow tasks",
   "workflow.search.results.head": "Tableau de suivi",
 
+<<<<<<< HEAD
   // "workflow-item.edit.breadcrumbs": "Edit workflowitem",
   "workflow-item.edit.breadcrumbs": "Éditer l'Item du Workflow",
 
+=======
+  //"supervision.search.results.head": "Workflow and Workspace tasks",
+  "supervision.search.results.head": "Tableau de suivi et dépôts en cours",
+
+  // "workflow-item.edit.breadcrumbs": "Edit workflowitem",
+  "workflow-item.edit.breadcrumbs": "Éditer l'Item du Workflow",
+
+>>>>>>> dspace-7.6.1
   // "workflow-item.edit.title": "Edit workflowitem",
   "workflow-item.edit.title": "Éditer l'Item du Workflow",
 
@@ -6054,7 +6920,11 @@
   // "workflow-item.send-back.button.confirm": "Send back",
   "workflow-item.send-back.button.confirm": "Renvoyer",
 
+<<<<<<< HEAD
    // "workflow-item.view.breadcrumbs": "Workflow View",
+=======
+  // "workflow-item.view.breadcrumbs": "Workflow View",
+>>>>>>> dspace-7.6.1
   "workflow-item.view.breadcrumbs": "Vue d'ensemble du Workflow",
 
   // "workspace-item.view.breadcrumbs": "Workspace View",
@@ -6062,6 +6932,95 @@
 
   // "workspace-item.view.title": "Workspace View",
   "workspace-item.view.title": "Vue du tableau de suivi",
+<<<<<<< HEAD
+=======
+
+  // "idle-modal.header": "Session will expire soon",
+  "idle-modal.header": "La session expirera bientôt",
+
+  // "idle-modal.info": "For security reasons, user sessions expire after {{ timeToExpire }} minutes of inactivity. Your session will expire soon. Would you like to extend it or log out?",
+  "idle-modal.info": "Pour des raisons de sécurité, les sessions des utilisateurs expirent après {{ timeToExpire }} minutes d'inactivité. Votre session va bientôt expirer. Souhaitez-vous la prolonger ou vous déconnecter ?",
+
+  // "idle-modal.log-out": "Log out",
+  "idle-modal.log-out": "Déconnexion",
+
+  // "idle-modal.extend-session": "Extend session",
+  "idle-modal.extend-session": "Prolonger la session",
+
+
+
+  // "system-wide-alert-banner.retrieval.error": "Something went wrong retrieving the system-wide alert banner",
+  "system-wide-alert-banner.retrieval.error": "Une erreur s'est produite lors de la récupération de la bannière du message d'avertissement",
+
+  //"system-wide-alert-banner.countdown.prefix": "In",
+  "system-wide-alert-banner.countdown.prefix": "Dans",
+
+  //  "system-wide-alert-banner.countdown.days": "{{days}} day(s),",
+  "system-wide-alert-banner.countdown.days": "{{days}} jour(s),",
+
+  // "system-wide-alert-banner.countdown.hours": "{{hours}} hour(s) and",
+  "system-wide-alert-banner.countdown.hours": "{{hours}} heure(s) et",
+
+  // "system-wide-alert-banner.countdown.minutes": "{{minutes}} minute(s):",
+  "system-wide-alert-banner.countdown.minutes": "{{minutes}} minute(s):",
+
+
+
+  // "menu.section.system-wide-alert": "System-wide Alert",
+  "menu.section.system-wide-alert": "Messages d'avertissement",
+
+  // "system-wide-alert.form.header": "System-wide Alert",
+  "system-wide-alert.form.header": "Messages d'avertissement",
+
+  // "system-wide-alert-form.retrieval.error": "Something went wrong retrieving the system-wide alert",
+  "system-wide-alert-form.retrieval.error": "Une erreur s'est produite lors de la récupération de la bannière du message d'avertissement",
+
+  //"system-wide-alert.form.cancel": "Cancel",
+  "system-wide-alert.form.cancel": "Annuler",
+
+
+  //"system-wide-alert.form.save": "Save",
+  "system-wide-alert.form.save": "Sauvegarder",
+
+  //"system-wide-alert.form.label.active": "ACTIVE",
+  "system-wide-alert.form.label.active": "ACTIF",
+
+  //"system-wide-alert.form.label.inactive": "INACTIVE",
+  "system-wide-alert.form.label.inactive": "INACTIF",
+
+  //"system-wide-alert.form.error.message": "The system wide alert must have a message",
+  "system-wide-alert.form.error.message": "Le message d'avertissement ne peut pas être vide",
+
+  //"system-wide-alert.form.label.message": "Alert message",
+  "system-wide-alert.form.label.message": "Message d'avertissement",
+
+  //"system-wide-alert.form.label.countdownTo.enable": "Enable a countdown timer",
+  "system-wide-alert.form.label.countdownTo.enable": "Activer un compte à rebours",
+
+  //"system-wide-alert.form.label.countdownTo.hint": "Hint: Set a countdown timer. When enabled, a date can be set in the future and the system-wide alert banner will perform a countdown to the set date. When this timer ends, it will disappear from the alert. The server will NOT be automatically stopped.",
+  "system-wide-alert.form.label.countdownTo.hint": "Lorsque cette option est activée, il est possible de fixer une date dans le futur et la bannière du message d'avertissement effectuera un compte à rebours jusqu'à la date fixée. À la fin du compte à rebours, le message d'avertissement disparaîtra mais le serveur ne sera pas arrêté automatiquement.",
+
+  //"system-wide-alert.form.label.preview": "System-wide alert preview",
+  "system-wide-alert.form.label.preview": "Aperçu du message d'avertissement",
+
+  //"system-wide-alert.form.update.success": "The system-wide alert was successfully updated",
+  "system-wide-alert.form.update.success": "Le message d'avertissement a été mis à jour",
+
+  //"system-wide-alert.form.update.error": "Something went wrong when updating the system-wide alert",
+  "system-wide-alert.form.update.error": "Un erreur s'est produite lors de la mise à jour du message d'avertissement",
+
+  //"system-wide-alert.form.create.success": "The system-wide alert was successfully created",
+  "system-wide-alert.form.create.success": "Le message d'avertissement a été crée",
+
+  //"system-wide-alert.form.create.error": "Something went wrong when creating the system-wide alert",
+  "system-wide-alert.form.create.error": "Un erreur s'est produite lors de la création du message d'avertissement",
+
+  //"admin.system-wide-alert.breadcrumbs": "System-wide Alerts",
+  "admin.system-wide-alert.breadcrumbs": "Messages d'avertissement",
+
+  //"admin.system-wide-alert.title": "System-wide Alerts",
+  "admin.system-wide-alert.title": "Messages d'avertissement",
+>>>>>>> dspace-7.6.1
 
   // "idle-modal.header": "Session will expire soon",
   "idle-modal.header": "La session expirera bientôt",

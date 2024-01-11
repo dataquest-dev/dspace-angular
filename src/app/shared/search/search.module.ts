@@ -33,6 +33,11 @@ import { ThemedSearchComponent } from './themed-search.component';
 import { ThemedSearchResultsComponent } from './search-results/themed-search-results.component';
 import { ThemedSearchSettingsComponent } from './search-settings/themed-search-settings.component';
 import { NouisliderModule } from 'ng2-nouislider';
+<<<<<<< HEAD
+=======
+import { ThemedSearchFiltersComponent } from './search-filters/themed-search-filters.component';
+import { ThemedSearchSidebarComponent } from './search-sidebar/themed-search-sidebar.component';
+>>>>>>> dspace-7.6.1
 
 const COMPONENTS = [
   SearchComponent,
@@ -59,6 +64,11 @@ const COMPONENTS = [
   ThemedConfigurationSearchPageComponent,
   ThemedSearchResultsComponent,
   ThemedSearchSettingsComponent,
+<<<<<<< HEAD
+=======
+  ThemedSearchFiltersComponent,
+  ThemedSearchSidebarComponent,
+>>>>>>> dspace-7.6.1
 ];
 
 const ENTRY_COMPONENTS = [
@@ -95,7 +105,10 @@ export const MODELS = [
       useDefaultLang: true
     }),
     SharedModule.withEntryComponents(),
+<<<<<<< HEAD
     SharedModule.withEntryComponents(),
+=======
+>>>>>>> dspace-7.6.1
     NouisliderModule,
   ],
     exports: [

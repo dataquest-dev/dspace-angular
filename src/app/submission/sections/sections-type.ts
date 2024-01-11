@@ -6,9 +6,15 @@ export enum SectionsType {
   CcLicense = 'cclicense',
   collection = 'collection',
   AccessesCondition = 'accessCondition',
+<<<<<<< HEAD
   clarinLicense = 'clarin-license',
 
   clarinNotice = 'clarin-notice',
   SherpaPolicies = 'sherpaPolicy',
   Identifiers = 'identifiers',
+=======
+  SherpaPolicies = 'sherpaPolicy',
+  Identifiers = 'identifiers',
+  Collection = 'collection',
+>>>>>>> dspace-7.6.1
 }

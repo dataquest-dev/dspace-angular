@@ -2,6 +2,10 @@ import { MetadataRepresentationType } from '../../../../core/shared/metadata-rep
 import { Component } from '@angular/core';
 import { MetadataRepresentationListElementComponent } from '../metadata-representation-list-element.component';
 import { metadataRepresentationComponent } from '../../../metadata-representation/metadata-representation.decorator';
+<<<<<<< HEAD
+=======
+import { VALUE_LIST_BROWSE_DEFINITION } from '../../../../core/shared/value-list-browse-definition.resource-type';
+>>>>>>> dspace-7.6.1
 //@metadataRepresentationComponent('Publication', MetadataRepresentationType.PlainText)
 // For now, authority controlled fields are rendered the same way as plain text fields
 //@metadataRepresentationComponent('Publication', MetadataRepresentationType.AuthorityControlled)
@@ -20,9 +24,15 @@ export class BrowseLinkMetadataListElementComponent extends MetadataRepresentati
    * expects 'startsWith' (eg browse by date) or 'value' (eg browse by title)
    */
   getQueryParams() {
+<<<<<<< HEAD
     let queryParams = {startsWith: this.metadataRepresentation.getValue()};
     if (this.metadataRepresentation.browseDefinition.metadataBrowse) {
       return {value: this.metadataRepresentation.getValue()};
+=======
+    let queryParams = {startsWith: this.mdRepresentation.getValue()};
+    if (this.mdRepresentation.browseDefinition.getRenderType() === VALUE_LIST_BROWSE_DEFINITION.value) {
+      return {value: this.mdRepresentation.getValue()};
+>>>>>>> dspace-7.6.1
     }
     return queryParams;
   }

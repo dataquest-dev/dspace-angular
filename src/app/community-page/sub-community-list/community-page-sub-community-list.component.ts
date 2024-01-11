@@ -1,6 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+<<<<<<< HEAD
+=======
+import { ActivatedRoute } from '@angular/router';
+>>>>>>> dspace-7.6.1
 
-import { BehaviorSubject, combineLatest as observableCombineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest as observableCombineLatest, Subscription } from 'rxjs';
 
 import { RemoteData } from '../../core/data/remote-data';
 import { Community } from '../../core/shared/community.model';
@@ -9,7 +13,6 @@ import { PaginatedList } from '../../core/data/paginated-list.model';
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
 import { SortDirection, SortOptions } from '../../core/cache/models/sort-options.model';
 import { CommunityDataService } from '../../core/data/community-data.service';
-import { takeUntilCompletedRemoteData } from '../../core/shared/operators';
 import { switchMap } from 'rxjs/operators';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { hasValue } from '../../shared/empty.util';
@@ -52,8 +55,12 @@ export class CommunityPageSubCommunityListComponent implements OnInit, OnDestroy
    */
   subCommunitiesRDObs: BehaviorSubject<RemoteData<PaginatedList<Community>>> = new BehaviorSubject<RemoteData<PaginatedList<Community>>>({} as any);
 
-  constructor(private cds: CommunityDataService,
-              private paginationService: PaginationService
+  subscriptions: Subscription[] = [];
+
+  constructor(
+    protected cds: CommunityDataService,
+    protected paginationService: PaginationService,
+    protected route: ActivatedRoute,
   ) {
   }
 
@@ -62,9 +69,17 @@ export class CommunityPageSubCommunityListComponent implements OnInit, OnDestroy
     this.config.id = this.pageId;
     if (hasValue(this.pageSize)) {
       this.config.pageSize = this.pageSize;
+<<<<<<< HEAD
     }
     this.config.currentPage = 1;
     this.sortConfig = new SortOptions('dc.title', SortDirection.ASC);
+=======
+    } else {
+      this.config.pageSize = this.route.snapshot.queryParams[this.pageId + '.rpp'] ?? this.config.pageSize;
+    }
+    this.config.currentPage = this.route.snapshot.queryParams[this.pageId + '.page'] ?? 1;
+    this.sortConfig = new SortOptions('dc.title', SortDirection[this.route.snapshot.queryParams[this.pageId + '.sd']] ?? SortDirection.ASC);
+>>>>>>> dspace-7.6.1
     this.initPage();
   }
 
@@ -75,7 +90,7 @@ export class CommunityPageSubCommunityListComponent implements OnInit, OnDestroy
     const pagination$ = this.paginationService.getCurrentPagination(this.config.id, this.config);
     const sort$ = this.paginationService.getCurrentSort(this.config.id, this.sortConfig);
 
-    observableCombineLatest([pagination$, sort$]).pipe(
+    this.subscriptions.push(observableCombineLatest([pagination$, sort$]).pipe(
       switchMap(([currentPagination, currentSort]) => {
         return     this.cds.findByParent(this.community.id, {
           currentPage: currentPagination.currentPage,
@@ -85,20 +100,12 @@ export class CommunityPageSubCommunityListComponent implements OnInit, OnDestroy
       })
     ).subscribe((results) => {
       this.subCommunitiesRDObs.next(results);
-    });
-
-
-    this.cds.findByParent(this.community.id, {
-      currentPage: this.config.currentPage,
-      elementsPerPage: this.config.pageSize,
-      sort: { field: this.sortConfig.field, direction: this.sortConfig.direction }
-    }).pipe(takeUntilCompletedRemoteData()).subscribe((results) => {
-      this.subCommunitiesRDObs.next(results);
-    });
+    }));
   }
 
   ngOnDestroy(): void {
-    this.paginationService.clearPagination(this.config.id);
+    this.paginationService.clearPagination(this.config?.id);
+    this.subscriptions.map((subscription: Subscription) => subscription.unsubscribe());
   }
 
 }

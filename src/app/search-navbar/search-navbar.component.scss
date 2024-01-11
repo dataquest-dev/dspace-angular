@@ -1,16 +1,24 @@
 input[type="text"] {
   margin-top: calc(-0.5 * var(--bs-font-size-base));
   background-color: #fff !important;
+<<<<<<< HEAD
+=======
+  border-color: var(--ds-header-icon-color);
+>>>>>>> dspace-7.6.1
 
   &.collapsed {
     opacity: 0;
   }
 }
 
-a.submit-icon {
+.submit-icon {
   cursor: pointer;
   position: sticky;
   top: 0;
+<<<<<<< HEAD
+=======
+  border: 0 !important;
+>>>>>>> dspace-7.6.1
 
   color: var(--ds-header-icon-color);
   &:hover, &:focus {

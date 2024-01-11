@@ -11,7 +11,11 @@ import {
   SupervisionOrderGroupSelectorComponent
 } from './supervision-order-group-selector/supervision-order-group-selector.component';
 import {
+<<<<<<< HEAD
   getWorkflowItemDeleteRoute
+=======
+ getWorkspaceItemDeleteRoute
+>>>>>>> dspace-7.6.1
 } from '../../../../../workflowitems-edit-page/workflowitems-edit-page-routing-paths';
 import { ITEM_EDIT_AUTHORIZATIONS_PATH } from '../../../../../item-page/edit-item-page/edit-item-page.routing-paths';
 import { WorkspaceItem } from '../../../../../core/submission/models/workspaceitem.model';
@@ -105,10 +109,17 @@ export class WorkspaceItemAdminWorkflowActionsComponent implements OnInit {
   }
 
   /**
+<<<<<<< HEAD
    * Returns the path to the delete page of this workflow item
    */
   getDeleteRoute(): string {
     return getWorkflowItemDeleteRoute(this.wsi.id);
+=======
+   * Returns the path to the delete page of this workspace item
+   */
+  getDeleteRoute(): string {
+    return getWorkspaceItemDeleteRoute(this.wsi.id);
+>>>>>>> dspace-7.6.1
   }
 
   /**

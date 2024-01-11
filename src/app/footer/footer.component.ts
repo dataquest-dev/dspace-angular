@@ -3,9 +3,14 @@ import { hasValue } from '../shared/empty.util';
 import { KlaroService } from '../shared/cookies/klaro.service';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+<<<<<<< HEAD
 import { RemoteData } from '../core/data/remote-data';
 import { ConfigurationProperty } from '../core/shared/configuration-property.model';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
+=======
+import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';
+import { FeatureID } from '../core/data/feature-authorization/feature-id';
+>>>>>>> dspace-7.6.1
 
 @Component({
   selector: 'ds-footer',
@@ -21,6 +26,7 @@ export class FooterComponent implements OnInit {
   showTopFooter = false;
   showPrivacyPolicy = environment.info.enablePrivacyStatement;
   showEndUserAgreement = environment.info.enableEndUserAgreement;
+<<<<<<< HEAD
 
   /**
    * The company url which customized this DSpace with redirection to the DSpace section
@@ -38,6 +44,15 @@ export class FooterComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadThemedByProps();
+=======
+  showSendFeedback$: Observable<boolean>;
+
+  constructor(
+    @Optional() private cookies: KlaroService,
+    private authorizationService: AuthorizationDataService,
+  ) {
+    this.showSendFeedback$ = this.authorizationService.isAuthorized(FeatureID.CanSendFeedback);
+>>>>>>> dspace-7.6.1
   }
 
   showCookieSettings() {

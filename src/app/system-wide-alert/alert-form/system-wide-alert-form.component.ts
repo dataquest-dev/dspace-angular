@@ -6,7 +6,11 @@ import { PaginatedList } from '../../core/data/paginated-list.model';
 import { SystemWideAlert } from '../system-wide-alert.model';
 import { hasValue, isNotEmpty } from '../../shared/empty.util';
 import { BehaviorSubject, Observable } from 'rxjs';
+<<<<<<< HEAD
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+=======
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+>>>>>>> dspace-7.6.1
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import { RemoteData } from '../../core/data/remote-data';
@@ -39,7 +43,11 @@ export class SystemWideAlertFormComponent implements OnInit {
   /**
    * The form group representing the system-wide alert
    */
+<<<<<<< HEAD
   alertForm: FormGroup;
+=======
+  alertForm: UntypedFormGroup;
+>>>>>>> dspace-7.6.1
 
   /**
    * Date object to store the countdown date part
@@ -116,11 +124,19 @@ export class SystemWideAlertFormComponent implements OnInit {
    * Creates the form with empty values
    */
   createForm() {
+<<<<<<< HEAD
     this.alertForm = new FormBuilder().group({
         formMessage: new FormControl('', {
           validators: [Validators.required],
         }),
         formActive: new FormControl(false),
+=======
+    this.alertForm = new UntypedFormBuilder().group({
+        formMessage: new UntypedFormControl('', {
+          validators: [Validators.required],
+        }),
+        formActive: new UntypedFormControl(false),
+>>>>>>> dspace-7.6.1
       }
     );
     this.setDateTime(new Date());

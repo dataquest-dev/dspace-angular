@@ -1,5 +1,9 @@
 import { Inject, Injectable, Injector, Optional } from '@angular/core';
+<<<<<<< HEAD
 import { FormControl } from '@angular/forms';
+=======
+import { UntypedFormControl } from '@angular/forms';
+>>>>>>> dspace-7.6.1
 
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -172,7 +176,11 @@ export class DsDynamicTypeBindRelationService {
    * @param model
    * @param control
    */
+<<<<<<< HEAD
   subscribeRelations(model: DynamicFormControlModel, control: FormControl): Subscription[] {
+=======
+  subscribeRelations(model: DynamicFormControlModel, control: UntypedFormControl): Subscription[] {
+>>>>>>> dspace-7.6.1
 
     const relatedModels = this.getRelatedFormModel(model);
     const subscriptions: Subscription[] = [];
@@ -183,7 +191,12 @@ export class DsDynamicTypeBindRelationService {
         const initValue = (hasNoValue(relatedModel.value) || typeof relatedModel.value === 'string') ? relatedModel.value :
           (Array.isArray(relatedModel.value) ? relatedModel.value : relatedModel.value.value);
 
+<<<<<<< HEAD
         const valueChanges = relatedModel.valueChanges.pipe(
+=======
+        const updateSubject = (relatedModel.type === 'CHECKBOX_GROUP' ? relatedModel.valueUpdates : relatedModel.valueChanges);
+        const valueChanges = updateSubject.pipe(
+>>>>>>> dspace-7.6.1
           startWith(initValue)
         );
 

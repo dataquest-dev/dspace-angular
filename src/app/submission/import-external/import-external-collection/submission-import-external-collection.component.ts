@@ -38,6 +38,10 @@ export class SubmissionImportExternalCollectionComponent {
    * This method emits the selected Collection from the 'selectedEvent' variable.
    */
   public selectObject(object: CollectionListEntry): void {
+<<<<<<< HEAD
+=======
+    this.loading = true;
+>>>>>>> dspace-7.6.1
     this.selectedEvent.emit(object);
   }
 

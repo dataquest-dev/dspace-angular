@@ -6,8 +6,12 @@
  * http://www.dspace.org/license/
  */
 /* eslint-disable max-classes-per-file */
+<<<<<<< HEAD
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+=======
+import { Injectable, Inject } from '@angular/core';
+>>>>>>> dspace-7.6.1
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { hasValue } from '../../shared/empty.util';
@@ -21,6 +25,11 @@ import { getFirstCompletedRemoteData } from '../shared/operators';
 import { DSpaceObject } from '../shared/dspace-object.model';
 import { IdentifiableDataService } from './base/identifiable-data.service';
 import { getDSORoute } from '../../app-routing-paths';
+<<<<<<< HEAD
+=======
+import { HardRedirectService } from '../services/hard-redirect.service';
+import { APP_CONFIG, AppConfig } from '../../../config/app-config.interface';
+>>>>>>> dspace-7.6.1
 
 const ID_ENDPOINT = 'pid';
 const UUID_ENDPOINT = 'dso';
@@ -70,17 +79,32 @@ export class DsoRedirectService {
   private dataService: DsoByIdOrUUIDDataService;
 
   constructor(
+<<<<<<< HEAD
+=======
+    @Inject(APP_CONFIG) protected appConfig: AppConfig,
+>>>>>>> dspace-7.6.1
     protected requestService: RequestService,
     protected rdbService: RemoteDataBuildService,
     protected objectCache: ObjectCacheService,
     protected halService: HALEndpointService,
+<<<<<<< HEAD
     private router: Router,
+=======
+    private hardRedirectService: HardRedirectService
+>>>>>>> dspace-7.6.1
   ) {
     this.dataService = new DsoByIdOrUUIDDataService(requestService, rdbService, objectCache, halService);
   }
 
   /**
+<<<<<<< HEAD
    * Retrieve a DSpaceObject by
+=======
+   * Redirect to a DSpaceObject's path using the given identifier type and ID.
+   * This is used to redirect paths like "/handle/[prefix]/[suffix]" to the object's path (e.g. /items/[uuid]).
+   * See LookupGuard for more examples.
+   *
+>>>>>>> dspace-7.6.1
    * @param id              the identifier of the object to retrieve
    * @param identifierType  the type of the given identifier (defaults to UUID)
    */
@@ -94,7 +118,12 @@ export class DsoRedirectService {
           if (hasValue(dso.uuid)) {
             let newRoute = getDSORoute(dso);
             if (hasValue(newRoute)) {
+<<<<<<< HEAD
               this.router.navigate([newRoute]);
+=======
+              // Use a "301 Moved Permanently" redirect for SEO purposes
+              this.hardRedirectService.redirect(this.appConfig.ui.nameSpace.replace(/\/$/, '') + newRoute, 301);
+>>>>>>> dspace-7.6.1
             }
           }
         }

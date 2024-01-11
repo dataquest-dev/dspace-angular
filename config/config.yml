@@ -1,9 +1,15 @@
 debug: false
 
 rest:
+<<<<<<< HEAD
   ssl: false
   host: localhost
   port: 8080
+=======
+  ssl: true
+  host: demo.dspace.org
+  port: 443
+>>>>>>> dspace-7.6.1
   nameSpace: /server
 
 # Caching settings

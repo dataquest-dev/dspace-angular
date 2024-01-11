@@ -42,8 +42,11 @@ import {
 import { ServerCheckGuard } from './core/server-check/server-check.guard';
 import { MenuResolver } from './menu.resolver';
 import { ThemedPageErrorComponent } from './page-error/themed-page-error.component';
+<<<<<<< HEAD
 import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
 import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
+=======
+>>>>>>> dspace-7.6.1
 
 @NgModule({
   imports: [
@@ -218,7 +221,7 @@ import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
           {
             path: REQUEST_COPY_MODULE_PATH,
             loadChildren: () => import('./request-copy/request-copy.module').then((m) => m.RequestCopyModule),
-            canActivate: [AuthenticatedGuard, EndUserAgreementCurrentUserGuard]
+            canActivate: [EndUserAgreementCurrentUserGuard]
           },
           {
             path: FORBIDDEN_PATH,
@@ -227,7 +230,13 @@ import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
           {
             path: 'statistics',
             loadChildren: () => import('./statistics-page/statistics-page-routing.module')
-              .then((m) => m.StatisticsPageRoutingModule)
+              .then((m) => m.StatisticsPageRoutingModule),
+            canActivate: [EndUserAgreementCurrentUserGuard],
+          },
+          {
+            path: HEALTH_PAGE_PATH,
+            loadChildren: () => import('./health-page/health-page.module')
+              .then((m) => m.HealthPageModule)
           },
           {
             path: HEALTH_PAGE_PATH,
@@ -237,7 +246,13 @@ import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
           {
             path: ACCESS_CONTROL_MODULE_PATH,
             loadChildren: () => import('./access-control/access-control.module').then((m) => m.AccessControlModule),
-            canActivate: [GroupAdministratorGuard],
+            canActivate: [GroupAdministratorGuard, EndUserAgreementCurrentUserGuard],
+          },
+          {
+            path: 'subscriptions',
+            loadChildren: () => import('./subscriptions-page/subscriptions-page-routing.module')
+              .then((m) => m.SubscriptionsPageRoutingModule),
+            canActivate: [AuthenticatedGuard]
           },
           {
             path: 'subscriptions',

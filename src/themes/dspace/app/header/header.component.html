@@ -1,4 +1,5 @@
 <header class="header">
+<<<<<<< HEAD
   <ds-clarin-navbar-top></ds-clarin-navbar-top>
   <div class="lindat-common2 lindat-common-header">
     <header data-version="3.0.5" data-build="05eff1186f12528f221a63b021c7b7dc81301429">
@@ -11,6 +12,25 @@
         <button class="lindat-navbar-toggler" type="button" data-toggle="collapse" data-target=".lindat-navbar-collapse" aria-controls="lindat-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation"
                 onclick="this.parentNode.querySelector('.lindat-navbar-toggler+div.lindat-collapse.lindat-navbar-collapse').classList.toggle('lindat-show')">
           <span class="lindat-navbar-toggler-icon"></span>
+=======
+  <nav role="navigation" [attr.aria-label]="'nav.user.description' | translate" class="container navbar navbar-expand-md px-0">
+    <div class="d-flex flex-grow-1">
+      <a class="navbar-brand m-2" routerLink="/home">
+        <img src="assets/images/dspace-logo.svg" [attr.alt]="'menu.header.image.logo' | translate"/>
+      </a>
+    </div>
+    <div class="navbar-buttons d-flex flex-grow-1 ml-auto justify-content-end align-items-center gapx-1">
+      <ds-themed-search-navbar></ds-themed-search-navbar>
+      <ds-themed-lang-switch></ds-themed-lang-switch>
+      <ds-context-help-toggle></ds-context-help-toggle>
+      <ds-themed-auth-nav-menu></ds-themed-auth-nav-menu>
+      <ds-impersonate-navbar></ds-impersonate-navbar>
+      <div class="pl-2">
+        <button class="navbar-toggler" type="button" (click)="toggleNavbar()"
+                aria-controls="collapsingNav"
+                aria-expanded="false" [attr.aria-label]="'nav.toggle' | translate">
+          <span class="navbar-toggler-icon fas fa-bars fa-fw" aria-hidden="true"></span>
+>>>>>>> dspace-7.6.1
         </button>
         <div class="lindat-collapse lindat-navbar-collapse">
           <div class="">

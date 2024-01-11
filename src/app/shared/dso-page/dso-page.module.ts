@@ -9,7 +9,11 @@ import {
 import {
   DsoEditMenuExpandableSectionComponent
 } from '../dso-page/dso-edit-menu/dso-edit-expandable-menu-section/dso-edit-menu-expandable-section.component';
+<<<<<<< HEAD
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+=======
+import { NgbDropdownModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+>>>>>>> dspace-7.6.1
 
 const COMPONENTS = [
   DsoEditMenuComponent,
@@ -25,6 +29,10 @@ const MODULES = [
   RouterModule,
   CommonModule,
   NgbTooltipModule,
+<<<<<<< HEAD
+=======
+  NgbDropdownModule,
+>>>>>>> dspace-7.6.1
 ];
 const PROVIDERS = [
 

@@ -554,9 +554,187 @@ describe('BaseDataService', () => {
           };
 
           expectObservable(service.findListByHref(selfLink, findListOptions, false, true, ...linksToFollow)).toBe(expected, values);
+<<<<<<< HEAD:src/app/core/data/base/base-data.service.spec.ts
+=======
         });
       });
 
+    });
+  });
+
+  describe('invalidateByHref', () => {
+    let getByHrefSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      getByHrefSpy = spyOn(objectCache, 'getByHref').and.returnValue(observableOf({
+        requestUUIDs: ['request1', 'request2', 'request3'],
+        dependentRequestUUIDs: ['request4', 'request5']
+      }));
+
+    });
+
+    it('should call setStaleByUUID for every request associated with this DSO', (done) => {
+      service.invalidateByHref('some-href').subscribe((ok) => {
+        expect(ok).toBeTrue();
+        expect(getByHrefSpy).toHaveBeenCalledWith('some-href');
+        expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request1');
+        expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request2');
+        expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request3');
+        expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request4');
+        expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request5');
+        done();
+      });
+    });
+
+    it('should call setStaleByUUID even if not subscribing to returned Observable', fakeAsync(() => {
+      service.invalidateByHref('some-href');
+      tick();
+
+      expect(getByHrefSpy).toHaveBeenCalledWith('some-href');
+      expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request1');
+      expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request2');
+      expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request3');
+      expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request4');
+      expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request5');
+    }));
+
+    it('should return an Observable that only emits true once all requests are stale', () => {
+      testScheduler.run(({ cold, expectObservable }) => {
+        requestService.setStaleByUUID.and.callFake((uuid) => {
+          switch (uuid) {   // fake requests becoming stale at different times
+            case 'request1':
+              return cold('--(t|)', BOOLEAN);
+            case 'request2':
+              return cold('------(t|)', BOOLEAN);
+            case 'request3':
+              return cold('---(t|)', BOOLEAN);
+            case 'request4':
+              return cold('-(t|)', BOOLEAN);
+            case 'request5':
+              return cold('----(t|)', BOOLEAN);
+          }
+        });
+
+        const done$ = service.invalidateByHref('some-href');
+
+        // emit true as soon as the final request is stale
+        expectObservable(done$).toBe('------(t|)', BOOLEAN);
+      });
+    });
+
+    it('should only fire for the current state of the object (instead of tracking it)', () => {
+      testScheduler.run(({ cold, flush }) => {
+        getByHrefSpy.and.returnValue(cold('a---b---c---', {
+          a: { requestUUIDs: ['request1'], dependentRequestUUIDs: [] },  // this is the state at the moment we're invalidating the cache
+          b: { requestUUIDs: ['request2'], dependentRequestUUIDs: [] },  // we shouldn't keep tracking the state
+          c: { requestUUIDs: ['request3'], dependentRequestUUIDs: [] },  // because we may invalidate when we shouldn't
+        }));
+
+        service.invalidateByHref('some-href');
+        flush();
+
+        // requests from the first state are marked as stale
+        expect(requestService.setStaleByUUID).toHaveBeenCalledWith('request1');
+
+        // request from subsequent states are ignored
+        expect(requestService.setStaleByUUID).not.toHaveBeenCalledWith('request2');
+        expect(requestService.setStaleByUUID).not.toHaveBeenCalledWith('request3');
+      });
+    });
+  });
+
+  describe('hasCachedResponse', () => {
+    it('should return false when the request will be dispatched', (done) => {
+      const result = service.hasCachedResponse('test-href');
+
+      result.subscribe((hasCachedResponse) => {
+        expect(hasCachedResponse).toBeFalse();
+        done();
+      });
+    });
+
+    it('should return true when the request will not be dispatched', (done) => {
+      (requestService.shouldDispatchRequest as jasmine.Spy).and.returnValue(false);
+      const result = service.hasCachedResponse('test-href');
+
+      result.subscribe((hasCachedResponse) => {
+        expect(hasCachedResponse).toBeTrue();
+        done();
+      });
+    });
+  });
+
+  describe('hasCachedErrorResponse', () => {
+    it('should return false when no response is cached', (done) => {
+      spyOn(service,'hasCachedResponse').and.returnValue(observableOf(false));
+      const result = service.hasCachedErrorResponse('test-href');
+
+      result.subscribe((hasCachedErrorResponse) => {
+        expect(hasCachedErrorResponse).toBeFalse();
+        done();
+      });
+    });
+    it('should return false when no error response is cached', (done) => {
+      spyOn(service,'hasCachedResponse').and.returnValue(observableOf(true));
+      spyOn(rdbService,'buildSingle').and.returnValue(createSuccessfulRemoteDataObject$({}));
+
+      const result = service.hasCachedErrorResponse('test-href');
+
+      result.subscribe((hasCachedErrorResponse) => {
+        expect(hasCachedErrorResponse).toBeFalse();
+        done();
+      });
+    });
+
+    it('should return true when an error response is cached', (done) => {
+      spyOn(service,'hasCachedResponse').and.returnValue(observableOf(true));
+      spyOn(rdbService,'buildSingle').and.returnValue(createFailedRemoteDataObject$());
+
+      const result = service.hasCachedErrorResponse('test-href');
+
+      result.subscribe((hasCachedErrorResponse) => {
+        expect(hasCachedErrorResponse).toBeTrue();
+        done();
+      });
+    });
+  });
+
+  describe('addDependency', () => {
+    let addDependencySpy;
+
+    beforeEach(() => {
+      addDependencySpy = spyOn(objectCache, 'addDependency');
+    });
+
+    it('should call objectCache.addDependency with the object\'s self link', () => {
+      addDependencySpy.and.callFake((href$: Observable<string>, dependsOn$: Observable<string>) => {
+        observableCombineLatest([href$, dependsOn$]).subscribe(([href, dependsOn]) => {
+          expect(href).toBe('object-href');
+          expect(dependsOn).toBe('dependsOnHref');
+>>>>>>> dspace-7.6.1:src/app/core/data/data.service.spec.ts
+        });
+      });
+
+      (service as any).addDependency(
+        createSuccessfulRemoteDataObject$({ _links: { self: { href: 'object-href' } } }),
+        observableOf('dependsOnHref')
+      );
+      expect(addDependencySpy).toHaveBeenCalled();
+    });
+
+    it('should call objectCache.addDependency without an href if request failed', () => {
+      addDependencySpy.and.callFake((href$: Observable<string>, dependsOn$: Observable<string>) => {
+        observableCombineLatest([href$, dependsOn$]).subscribe(([href, dependsOn]) => {
+          expect(href).toBe(undefined);
+          expect(dependsOn).toBe('dependsOnHref');
+        });
+      });
+
+      (service as any).addDependency(
+        createFailedRemoteDataObject$('something went wrong'),
+        observableOf('dependsOnHref')
+      );
+      expect(addDependencySpy).toHaveBeenCalled();
     });
   });
 

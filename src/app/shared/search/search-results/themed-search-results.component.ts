@@ -21,7 +21,11 @@ import { ListableObject } from '../../object-collection/shared/listable-object.m
   templateUrl: '../../theme-support/themed.component.html',
 })
 export class ThemedSearchResultsComponent extends ThemedComponent<SearchResultsComponent> {
+<<<<<<< HEAD
   protected inAndOutputNames: (keyof SearchResultsComponent & keyof this)[] = ['linkType', 'searchResults', 'searchConfig', 'showCsvExport', 'sortConfig', 'viewMode', 'configuration', 'disableHeader', 'selectable', 'context', 'hidePaginationDetail', 'selectionConfig', 'contentChange', 'deselectObject', 'selectObject'];
+=======
+  protected inAndOutputNames: (keyof SearchResultsComponent & keyof this)[] = ['linkType', 'searchResults', 'searchConfig', 'showCsvExport', 'showThumbnails', 'sortConfig', 'viewMode', 'configuration', 'disableHeader', 'selectable', 'context', 'hidePaginationDetail', 'selectionConfig', 'contentChange', 'deselectObject', 'selectObject'];
+>>>>>>> dspace-7.6.1
 
   @Input() linkType: CollectionElementLinkType;
 
@@ -29,7 +33,13 @@ export class ThemedSearchResultsComponent extends ThemedComponent<SearchResultsC
 
   @Input() searchConfig: PaginatedSearchOptions;
 
+<<<<<<< HEAD
   @Input() showCsvExport = false;
+=======
+  @Input() showCsvExport: boolean;
+
+  @Input() showThumbnails: boolean;
+>>>>>>> dspace-7.6.1
 
   @Input() sortConfig: SortOptions;
 
@@ -37,6 +47,7 @@ export class ThemedSearchResultsComponent extends ThemedComponent<SearchResultsC
 
   @Input() configuration: string;
 
+<<<<<<< HEAD
   @Input() disableHeader = false;
 
   @Input() selectable = false;
@@ -52,6 +63,23 @@ export class ThemedSearchResultsComponent extends ThemedComponent<SearchResultsC
   @Output() deselectObject: EventEmitter<ListableObject> = new EventEmitter<ListableObject>();
 
   @Output() selectObject: EventEmitter<ListableObject> = new EventEmitter<ListableObject>();
+=======
+  @Input() disableHeader: boolean;
+
+  @Input() selectable: boolean;
+
+  @Input() context: Context;
+
+  @Input() hidePaginationDetail: boolean;
+
+  @Input() selectionConfig: SelectionConfig;
+
+  @Output() contentChange: EventEmitter<ListableObject> = new EventEmitter();
+
+  @Output() deselectObject: EventEmitter<ListableObject> = new EventEmitter();
+
+  @Output() selectObject: EventEmitter<ListableObject> = new EventEmitter();
+>>>>>>> dspace-7.6.1
 
   protected getComponentName(): string {
     return 'SearchResultsComponent';

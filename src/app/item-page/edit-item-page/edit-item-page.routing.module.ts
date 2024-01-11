@@ -6,7 +6,10 @@ import { ItemReinstateComponent } from './item-reinstate/item-reinstate.componen
 import { ItemPrivateComponent } from './item-private/item-private.component';
 import { ItemPublicComponent } from './item-public/item-public.component';
 import { ItemDeleteComponent } from './item-delete/item-delete.component';
+<<<<<<< HEAD
 import { ItemStatusComponent } from './item-status/item-status.component';
+=======
+>>>>>>> dspace-7.6.1
 import { ItemBitstreamsComponent } from './item-bitstreams/item-bitstreams.component';
 import { ItemCollectionMapperComponent } from './item-collection-mapper/item-collection-mapper.component';
 import { ItemMoveComponent } from './item-move/item-move.component';
@@ -39,8 +42,18 @@ import { ItemPageBitstreamsGuard } from './item-page-bitstreams.guard';
 import { ItemPageRelationshipsGuard } from './item-page-relationships.guard';
 import { ItemPageVersionHistoryGuard } from './item-page-version-history.guard';
 import { ItemPageCollectionMapperGuard } from './item-page-collection-mapper.guard';
+<<<<<<< HEAD
 import { ThemedDsoEditMetadataComponent } from '../../dso-shared/dso-edit-metadata/themed-dso-edit-metadata.component';
 import { ItemPageRegisterDoiGuard } from './item-page-register-doi.guard';
+=======
+import { ItemPageCurateGuard } from './item-page-curate.guard';
+import { ItemPageAccessControlGuard } from './item-page-access-control.guard';
+import { ThemedDsoEditMetadataComponent } from '../../dso-shared/dso-edit-metadata/themed-dso-edit-metadata.component';
+import { ItemPageRegisterDoiGuard } from './item-page-register-doi.guard';
+import { ItemCurateComponent } from './item-curate/item-curate.component';
+import { ThemedItemStatusComponent } from './item-status/themed-item-status.component';
+import { ItemAccessControlComponent } from './item-access-control/item-access-control.component';
+>>>>>>> dspace-7.6.1
 
 /**
  * Routing module that handles the routing for the Edit Item page administrator functionality
@@ -66,7 +79,7 @@ import { ItemPageRegisterDoiGuard } from './item-page-register-doi.guard';
               },
               {
                 path: 'status',
-                component: ItemStatusComponent,
+                component: ThemedItemStatusComponent,
                 data: { title: 'item.edit.tabs.status.title', showBreadcrumbs: true },
                 canActivate: [ItemPageStatusGuard]
               },
@@ -81,6 +94,12 @@ import { ItemPageRegisterDoiGuard } from './item-page-register-doi.guard';
                 component: ThemedDsoEditMetadataComponent,
                 data: { title: 'item.edit.tabs.metadata.title', showBreadcrumbs: true },
                 canActivate: [ItemPageMetadataGuard]
+              },
+              {
+                path: 'curate',
+                component: ItemCurateComponent,
+                data: { title: 'item.edit.tabs.curate.title', showBreadcrumbs: true },
+                canActivate: [ItemPageCurateGuard]
               },
               {
                 path: 'relationships',
@@ -105,6 +124,12 @@ import { ItemPageRegisterDoiGuard } from './item-page-register-doi.guard';
                 component: ItemVersionHistoryComponent,
                 data: { title: 'item.edit.tabs.versionhistory.title', showBreadcrumbs: true },
                 canActivate: [ItemPageVersionHistoryGuard]
+              },
+              {
+                path: 'access-control',
+                component: ItemAccessControlComponent,
+                data: { title: 'item.edit.tabs.access-control.title', showBreadcrumbs: true },
+                canActivate: [ItemPageAccessControlGuard]
               },
               {
                 path: 'mapper',
@@ -190,11 +215,16 @@ import { ItemPageRegisterDoiGuard } from './item-page-register-doi.guard';
     ItemPageWithdrawGuard,
     ItemPageAdministratorGuard,
     ItemPageMetadataGuard,
+    ItemPageCurateGuard,
     ItemPageStatusGuard,
     ItemPageBitstreamsGuard,
     ItemPageRelationshipsGuard,
     ItemPageVersionHistoryGuard,
     ItemPageCollectionMapperGuard,
+<<<<<<< HEAD
+=======
+    ItemPageAccessControlGuard,
+>>>>>>> dspace-7.6.1
     ItemPageRegisterDoiGuard,
   ]
 })

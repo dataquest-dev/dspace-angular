@@ -153,6 +153,10 @@ export class AuthEffects {
       return this.authService.checkAuthenticationCookie().pipe(
         map((response: AuthStatus) => {
           if (response.authenticated) {
+<<<<<<< HEAD
+=======
+            this.authService.setExternalAuthStatus(true);
+>>>>>>> dspace-7.6.1
             this.authorizationsService.invalidateAuthorizationsRequestCache();
             return new RetrieveTokenAction();
           } else {

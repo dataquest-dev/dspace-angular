@@ -10,7 +10,10 @@ import { MenuSection } from '../../../menu/menu-section.model';
  * Represents a non-expandable section in the dso edit menus
  */
 @Component({
+<<<<<<< HEAD
   /* tslint:disable:component-selector */
+=======
+>>>>>>> dspace-7.6.1
   selector: 'ds-dso-edit-menu-section',
   templateUrl: './dso-edit-menu-section.component.html',
   styleUrls: ['./dso-edit-menu-section.component.scss']

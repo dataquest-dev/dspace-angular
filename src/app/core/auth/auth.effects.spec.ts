@@ -214,12 +214,18 @@ describe('AuthEffects', () => {
               authenticated: true
             })
         );
+        spyOn((authEffects as any).authService, 'setExternalAuthStatus');
         actions = hot('--a-', { a: { type: AuthActionTypes.CHECK_AUTHENTICATION_TOKEN_COOKIE } });
 
         const expected = cold('--b-', { b: new RetrieveTokenAction() });
 
         expect(authEffects.checkTokenCookie$).toBeObservable(expected);
         authEffects.checkTokenCookie$.subscribe(() => {
+<<<<<<< HEAD
+=======
+          expect(authServiceStub.setExternalAuthStatus).toHaveBeenCalled();
+          expect(authServiceStub.isExternalAuthentication).toBeTrue();
+>>>>>>> dspace-7.6.1
           expect((authEffects as any).authorizationsService.invalidateAuthorizationsRequestCache).toHaveBeenCalled();
         });
       });

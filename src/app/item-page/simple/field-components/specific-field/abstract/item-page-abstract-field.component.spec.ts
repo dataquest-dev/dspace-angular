@@ -44,6 +44,10 @@ describe('ItemPageAbstractFieldComponent', () => {
   }));
 
   it('should render a ds-metadata-values', () => {
+<<<<<<< HEAD
     expect(fixture.debugElement.query(By.css('ds-metadata-values'))).toBeDefined();
+=======
+    expect(fixture.debugElement.query(By.css('ds-metadata-values'))).not.toBeNull();
+>>>>>>> dspace-7.6.1
   });
 });

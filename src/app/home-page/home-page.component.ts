@@ -4,6 +4,7 @@ import { map, take } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Site } from '../core/shared/site.model';
+<<<<<<< HEAD
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { SearchService } from '../core/shared/search/search.service';
 import { SearchFilterConfig } from '../shared/search/models/search-filter-config.model';
@@ -30,6 +31,9 @@ import { SearchObjects } from '../shared/search/models/search-objects.model';
 import { environment } from '../../environments/environment';
 import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
 import { isUndefined } from '../shared/empty.util';
+=======
+import { environment } from '../../environments/environment';
+>>>>>>> dspace-7.6.1
 @Component({
   selector: 'ds-home-page',
   styleUrls: ['./home-page.component.scss'],
@@ -46,6 +50,7 @@ export class HomePageComponent implements OnInit {
 
   site$: Observable<Site>;
   recentSubmissionspageSize: number;
+<<<<<<< HEAD
 
   authors$: BehaviorSubject<FastSearchLink[]> = new BehaviorSubject<FastSearchLink[]>([]);
   subjects$: BehaviorSubject<FastSearchLink[]> = new BehaviorSubject<FastSearchLink[]>([]);
@@ -58,6 +63,8 @@ export class HomePageComponent implements OnInit {
 
   baseUrl = '';
 
+=======
+>>>>>>> dspace-7.6.1
   constructor(
     private route: ActivatedRoute, config: NgbCarouselConfig,
     protected searchService: SearchService,
@@ -69,11 +76,14 @@ export class HomePageComponent implements OnInit {
     protected router: Router
   ) {
     this.recentSubmissionspageSize = environment.homePage.recentSubmissions.pageSize;
+<<<<<<< HEAD
     config.interval = 5000;
     config.keyboard = false;
     config.showNavigationArrows = false;
     config.showNavigationIndicators = false;
     config.pauseOnHover = false;
+=======
+>>>>>>> dspace-7.6.1
   }
 
   ngOnInit(): void {

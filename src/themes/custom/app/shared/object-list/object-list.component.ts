@@ -9,7 +9,11 @@ import { ObjectListComponent as BaseComponent} from '../../../../../app/shared/o
   selector: 'ds-object-list',
   // styleUrls: ['./object-list.component.scss'],
   styleUrls: ['../../../../../app/shared/object-list/object-list.component.scss'],
+<<<<<<< HEAD
   // templateUrl: 'object-list.component.html'
+=======
+  // templateUrl: './object-list.component.html'
+>>>>>>> dspace-7.6.1
   templateUrl: '../../../../../app/shared/object-list/object-list.component.html'
 })
 

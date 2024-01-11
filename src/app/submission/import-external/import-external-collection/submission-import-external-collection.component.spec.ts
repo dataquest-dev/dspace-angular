@@ -64,7 +64,11 @@ describe('SubmissionImportExternalCollectionComponent test suite', () => {
       compAsAny = null;
     });
 
+<<<<<<< HEAD
     it('should emit from selectedEvent on selectObject', () => {
+=======
+    it('should emit from selectedEvent on selectObject and set loading to true', () => {
+>>>>>>> dspace-7.6.1
       spyOn(comp.selectedEvent, 'emit').and.callThrough();
 
       const entry = {
@@ -79,6 +83,10 @@ describe('SubmissionImportExternalCollectionComponent test suite', () => {
       comp.selectObject(entry);
 
       expect(comp.selectedEvent.emit).toHaveBeenCalledWith(entry);
+<<<<<<< HEAD
+=======
+      expect(comp.loading).toBeTrue();
+>>>>>>> dspace-7.6.1
     });
 
     it('should dismiss modal on closeCollectionModal', () => {

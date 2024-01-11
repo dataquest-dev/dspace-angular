@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { createSelector, MemoizedSelector, select, Store } from '@ngrx/store';
 import { AppState, keySelector } from '../../app.reducer';
 import { combineLatest as observableCombineLatest, Observable } from 'rxjs';
+<<<<<<< HEAD
 import { filter, map, switchMap, take } from 'rxjs/operators';
+=======
+import { distinctUntilChanged, filter, map, switchMap, take } from 'rxjs/operators';
+>>>>>>> dspace-7.6.1
 import {
   ActivateMenuSectionAction,
   AddMenuSectionAction,
@@ -17,12 +21,20 @@ import {
   ToggleActiveMenuSectionAction,
   ToggleMenuAction,
 } from './menu.actions';
+<<<<<<< HEAD
 import { hasNoValue, hasValue, hasValueOperator, isNotEmpty } from '../empty.util';
+=======
+import { hasNoValue, hasValue, hasValueOperator, isNotEmpty, isEmpty } from '../empty.util';
+>>>>>>> dspace-7.6.1
 import { MenuState } from './menu-state.model';
 import { MenuSections } from './menu-sections.model';
 import { MenuSection } from './menu-section.model';
 import { MenuID } from './menu-id.model';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+<<<<<<< HEAD
+=======
+import { compareArraysUsingIds } from '../../item-page/simple/item-types/shared/item-relationships-utils';
+>>>>>>> dspace-7.6.1
 
 export function menuKeySelector<T>(key: string, selector): MemoizedSelector<MenuState, T> {
   return createSelector(selector, (state) => {
@@ -81,8 +93,10 @@ export class MenuService {
     return this.store.pipe(
       select(menuByIDSelector(menuID)),
       select(menuSectionStateSelector),
-      map((sections: MenuSections) => {
-          return Object.values(sections)
+      map((sections: MenuSections) => Object.values(sections)),
+      distinctUntilChanged(compareArraysUsingIds()),
+      map((sections: MenuSection[]) => {
+          return sections
             .filter((section: MenuSection) => hasNoValue(section.parentID))
             .filter((section: MenuSection) => !mustBeVisible || section.visible);
         }
@@ -399,7 +413,12 @@ export class MenuService {
       }
 
       if (!last) {
+<<<<<<< HEAD
         return [...menuSections, ...this.resolveRouteMenuSections(route.firstChild, menuID)];
+=======
+        const childMenuSections = this.resolveRouteMenuSections(route.firstChild, menuID);
+        return [...menuSections.filter(menu => !(childMenuSections).map(childMenu => childMenu.id).includes(menu.id)), ...childMenuSections];
+>>>>>>> dspace-7.6.1
       } else {
         return [...menuSections];
       }
@@ -409,6 +428,7 @@ export class MenuService {
   }
 
   protected resolveSubstitutions(object, params) {
+<<<<<<< HEAD
 
     let resolved;
     if (typeof object === 'string') {
@@ -423,6 +443,16 @@ export class MenuService {
           }
         }
       } while (match);
+=======
+    let resolved;
+    if (isEmpty(params)) {
+      resolved = object;
+    } else if (typeof object === 'string') {
+      resolved = object;
+      Object.entries(params).forEach(([key, value]: [string, string]) =>
+        resolved = resolved.replaceAll(`:${key}`, value)
+      );
+>>>>>>> dspace-7.6.1
     } else if (Array.isArray(object)) {
       resolved = [];
       object.forEach((entry, index) => {

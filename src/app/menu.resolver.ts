@@ -47,7 +47,10 @@ import {
 import {
   ExportBatchSelectorComponent
 } from './shared/dso-selector/modal-wrappers/export-batch-selector/export-batch-selector.component';
+<<<<<<< HEAD
 import { getLicensesManageTablePath, getLicensesModulePath } from './app-routing-paths';
+=======
+>>>>>>> dspace-7.6.1
 
 /**
  * Creates all of the app's menus
@@ -360,6 +363,7 @@ export class MenuResolver implements Resolve<boolean> {
             link: '/health'
           } as LinkMenuItemModel,
           icon: 'heartbeat',
+<<<<<<< HEAD
           index: 13
         },        /* Workflow tasks */
         {
@@ -400,6 +404,10 @@ export class MenuResolver implements Resolve<boolean> {
           icon: 'scroll',
           index: 12
         },
+=======
+          index: 11
+        },
+>>>>>>> dspace-7.6.1
       ];
       menuList.forEach((menuSection) => this.menuService.addSection(MenuID.ADMIN, Object.assign(menuSection, {
         shouldPersistOnRouteChange: true
@@ -656,7 +664,11 @@ export class MenuResolver implements Resolve<boolean> {
             link: '/admin/system-wide-alert'
           } as LinkMenuItemModel,
           icon: 'exclamation-circle',
+<<<<<<< HEAD
           index: 14
+=======
+          index: 12
+>>>>>>> dspace-7.6.1
         },
       ];
 
@@ -698,6 +710,20 @@ export class MenuResolver implements Resolve<boolean> {
             link: '/access-control/groups'
           } as LinkMenuItemModel,
         },
+<<<<<<< HEAD
+=======
+        {
+          id: 'access_control_bulk',
+          parentID: 'access_control',
+          active: false,
+          visible: isSiteAdmin,
+          model: {
+            type: MenuItemType.LINK,
+            text: 'menu.section.access_control_bulk',
+            link: '/access-control/bulk-access'
+          } as LinkMenuItemModel,
+        },
+>>>>>>> dspace-7.6.1
         // TODO: enable this menu item once the feature has been implemented
         // {
         //   id: 'access_control_authorizations',

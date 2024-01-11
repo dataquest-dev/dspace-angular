@@ -11,8 +11,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+<<<<<<< HEAD:src/app/shared/upload/uploader/uploader.component.ts
 import { firstValueFrom, Observable, of as observableOf } from 'rxjs';
 import { FileUploader, FileUploaderOptions} from 'ng2-file-upload';
+=======
+import { of as observableOf } from 'rxjs';
+import { FileUploader } from 'ng2-file-upload';
+>>>>>>> dspace-7.6.1:src/app/shared/uploader/uploader.component.ts
 import uniqueId from 'lodash/uniqueId';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 
@@ -20,6 +25,7 @@ import { UploaderOptions } from './uploader-options.model';
 import { hasValue, isNotEmpty, isUndefined } from '../../empty.util';
 import { UploaderProperties } from './uploader-properties.model';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
+<<<<<<< HEAD:src/app/shared/upload/uploader/uploader.component.ts
 import { XSRF_COOKIE, XSRF_REQUEST_HEADER, XSRF_RESPONSE_HEADER } from '../../../core/xsrf/xsrf.interceptor';
 import { CookieService } from '../../../core/services/cookie.service';
 import { DragService } from '../../../core/drag.service';
@@ -30,6 +36,11 @@ import { RemoteData } from '../../../core/data/remote-data';
 import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
 import { TranslateService } from '@ngx-translate/core';
 import { FileLikeObject } from 'ng2-file-upload/file-upload/file-like-object.class';
+=======
+import { XSRF_COOKIE, XSRF_REQUEST_HEADER, XSRF_RESPONSE_HEADER } from '../../../core/xsrf/xsrf.constants';
+import { CookieService } from '../../../core/services/cookie.service';
+import { DragService } from '../../../core/drag.service';
+>>>>>>> dspace-7.6.1:src/app/shared/uploader/uploader.component.ts
 
 export const MAX_UPLOAD_FILE_SIZE_CFG_PROPERTY = 'spring.servlet.multipart.max-file-size';
 @Component({
@@ -109,9 +120,13 @@ export class UploaderComponent implements OnInit, AfterViewInit {
     private scrollToService: ScrollToService,
     private dragService: DragService,
     private tokenExtractor: HttpXsrfTokenExtractor,
+<<<<<<< HEAD:src/app/shared/upload/uploader/uploader.component.ts
     private cookieService: CookieService,
     private configurationService: ConfigurationDataService,
     private translate: TranslateService
+=======
+    private cookieService: CookieService
+>>>>>>> dspace-7.6.1:src/app/shared/uploader/uploader.component.ts
   ) {
   }
 

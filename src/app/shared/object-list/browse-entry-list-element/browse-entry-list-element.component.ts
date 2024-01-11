@@ -10,6 +10,10 @@ import { BBM_PAGINATION_ID } from '../../../browse-by/browse-by-metadata-page/br
 import { RouteService } from 'src/app/core/services/route.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 @Component({
   selector: 'ds-browse-entry-list-element',
@@ -27,8 +31,17 @@ export class BrowseEntryListElementComponent extends AbstractListableElementComp
    */
   queryParams$: Observable<Params>;
 
+<<<<<<< HEAD
   constructor(private paginationService: PaginationService, private routeService: RouteService) {
     super();
+=======
+  constructor(
+    public dsoNameService: DSONameService,
+    protected paginationService: PaginationService,
+    protected routeService: RouteService,
+  ) {
+    super(dsoNameService);
+>>>>>>> dspace-7.6.1
   }
 
   ngOnInit() {

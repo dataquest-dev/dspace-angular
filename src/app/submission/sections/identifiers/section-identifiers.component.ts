@@ -7,7 +7,11 @@ import { SectionModelComponent } from '../models/section.model';
 import { renderSectionFor } from '../sections-decorator';
 import { SectionDataObject } from '../models/section-data.model';
 import { SubmissionService } from '../../submission.service';
+<<<<<<< HEAD
 import { AlertType } from '../../../shared/alert/aletr-type';
+=======
+import { AlertType } from '../../../shared/alert/alert-type';
+>>>>>>> dspace-7.6.1
 import { SectionsService } from '../sections.service';
 import { WorkspaceitemSectionIdentifiersObject } from '../../../core/submission/models/workspaceitem-section-identifiers.model';
 

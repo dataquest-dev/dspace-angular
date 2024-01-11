@@ -50,7 +50,12 @@ import { ErrorComponent } from './error/error.component';
 import { LoadingComponent } from './loading/loading.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { ThumbnailComponent } from '../thumbnail/thumbnail.component';
+import { ThemedThumbnailComponent } from '../thumbnail/themed-thumbnail.component';
 import { SearchFormComponent } from './search-form/search-form.component';
+<<<<<<< HEAD
+=======
+import { ThemedSearchFormComponent } from './search-form/themed-search-form.component';
+>>>>>>> dspace-7.6.1
 import {
   SearchResultGridElementComponent
 } from './object-grid/search-result-grid-element/search-result-grid-element.component';
@@ -163,8 +168,13 @@ import {
   DsoInputSuggestionsComponent
 } from './input-suggestions/dso-input-suggestions/dso-input-suggestions.component';
 import { ItemGridElementComponent } from './object-grid/item-grid-element/item-types/item/item-grid-element.component';
+<<<<<<< HEAD
 import { TypeBadgeComponent } from './object-list/type-badge/type-badge.component';
 import { AccessStatusBadgeComponent } from './object-list/access-status-badge/access-status-badge.component';
+=======
+import { TypeBadgeComponent } from './object-collection/shared/badges/type-badge/type-badge.component';
+import { AccessStatusBadgeComponent } from './object-collection/shared/badges/access-status-badge/access-status-badge.component';
+>>>>>>> dspace-7.6.1
 import {
   MetadataRepresentationLoaderComponent
 } from './metadata-representation/metadata-representation-loader.component';
@@ -190,6 +200,10 @@ import {
 import { LogInContainerComponent } from './log-in/container/log-in-container.component';
 import { LogInPasswordComponent } from './log-in/methods/password/log-in-password.component';
 import { LogInComponent } from './log-in/log-in.component';
+<<<<<<< HEAD
+=======
+import { ThemedLogInComponent } from './log-in/themed-log-in.component';
+>>>>>>> dspace-7.6.1
 import { MissingTranslationHelper } from './translate/missing-translation.helper';
 import { FileValidator } from './utils/require-file.validator';
 import { FileValueAccessorDirective } from './utils/file-value-accessor.directive';
@@ -233,6 +247,7 @@ import { SearchNavbarComponent } from '../search-navbar/search-navbar.component'
 import { ThemedSearchNavbarComponent } from '../search-navbar/themed-search-navbar.component';
 import { ScopeSelectorModalComponent } from './search-form/scope-selector-modal/scope-selector-modal.component';
 import { DsSelectComponent } from './ds-select/ds-select.component';
+<<<<<<< HEAD
 import { ClarinExtendedLicensePipe } from './utils/clarin-extended-license.pipe';
 import { ClarinLicenseCheckedPipe } from './utils/clarin-license-checked.pipe';
 import { ClarinLicenseLabelRadioValuePipe } from './utils/clarin-license-label-radio-value.pipe';
@@ -240,6 +255,8 @@ import { CharToEndPipe } from './utils/char-to-end.pipe';
 import { ClarinLicenseRequiredInfoPipe } from './utils/clarin-license-required-info.pipe';
 import { ClarinItemBoxViewComponent } from './clarin-item-box-view/clarin-item-box-view.component';
 import { ClarinItemAuthorPreviewComponent } from './clarin-item-author-preview/clarin-item-author-preview.component';
+=======
+>>>>>>> dspace-7.6.1
 import { ContextHelpDirective } from './context-help.directive';
 import { ContextHelpWrapperComponent } from './context-help-wrapper/context-help-wrapper.component';
 import { RSSComponent } from './rss-feed/rss.component';
@@ -257,6 +274,19 @@ import {
 } from './object-list/listable-notification-object/listable-notification-object.component';
 import { ThemedCollectionDropdownComponent } from './collection-dropdown/themed-collection-dropdown.component';
 import { MetadataFieldWrapperComponent } from './metadata-field-wrapper/metadata-field-wrapper.component';
+<<<<<<< HEAD
+=======
+
+import { StatusBadgeComponent } from './object-collection/shared/badges/status-badge/status-badge.component';
+import { BadgesComponent } from './object-collection/shared/badges/badges.component';
+import { ThemedBadgesComponent } from './object-collection/shared/badges/themed-badges.component';
+import { ThemedStatusBadgeComponent } from './object-collection/shared/badges/status-badge/themed-status-badge.component';
+import { ThemedTypeBadgeComponent } from './object-collection/shared/badges/type-badge/themed-type-badge.component';
+import { ThemedMyDSpaceStatusBadgeComponent } from './object-collection/shared/badges/my-dspace-status-badge/themed-my-dspace-status-badge.component';
+import { ThemedAccessStatusBadgeComponent } from './object-collection/shared/badges/access-status-badge/themed-access-status-badge.component';
+import { MyDSpaceStatusBadgeComponent } from './object-collection/shared/badges/my-dspace-status-badge/my-dspace-status-badge.component';
+
+>>>>>>> dspace-7.6.1
 import { ShortNumberPipe } from './utils/short-number.pipe';
 import {
   LogInExternalProviderComponent
@@ -268,6 +298,7 @@ import {
   AdvancedClaimedTaskActionRatingComponent
 } from './mydspace-actions/claimed-task/rating/advanced-claimed-task-action-rating.component';
 import { ClaimedTaskActionsDeclineTaskComponent } from './mydspace-actions/claimed-task/decline-task/claimed-task-actions-decline-task.component';
+<<<<<<< HEAD
 import {
   DsoPageSubscriptionButtonComponent
 } from './dso-page/dso-page-subscription-button/dso-page-subscription-button.component';
@@ -276,6 +307,18 @@ import { EpersonSearchBoxComponent } from './eperson-group-list/eperson-search-b
 import { GroupSearchBoxComponent } from './eperson-group-list/group-search-box/group-search-box.component';
 import { HtmlContentService } from './html-content.service';
 import { ClarinSafeHtmlPipe } from './utils/clarin-safehtml.pipe';
+=======
+import { EpersonGroupListComponent } from './eperson-group-list/eperson-group-list.component';
+import { EpersonSearchBoxComponent } from './eperson-group-list/eperson-search-box/eperson-search-box.component';
+import { GroupSearchBoxComponent } from './eperson-group-list/group-search-box/group-search-box.component';
+import {
+  ThemedItemPageTitleFieldComponent
+} from '../item-page/simple/field-components/specific-field/title/themed-item-page-field.component';
+import { BitstreamListItemComponent } from './object-list/bitstream-list-item/bitstream-list-item.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { ThemedLangSwitchComponent } from './lang-switch/themed-lang-switch.component';
+import {ThemedUserMenuComponent} from './auth-nav-menu/user-menu/themed-user-menu.component';
+>>>>>>> dspace-7.6.1
 
 const MODULES = [
   CommonModule,
@@ -290,7 +333,12 @@ const MODULES = [
   RouterModule,
   DragDropModule,
   GoogleRecaptchaModule,
+<<<<<<< HEAD
   MenuModule
+=======
+  MenuModule,
+  NgxPaginationModule
+>>>>>>> dspace-7.6.1
 ];
 
 const ROOT_MODULES = [
@@ -314,6 +362,7 @@ const PIPES = [
   ObjNgFor,
   BrowserOnlyPipe,
   MarkdownPipe,
+<<<<<<< HEAD
   ShortNumberPipe,
   ObjNgFor,
   ClarinExtendedLicensePipe,
@@ -322,6 +371,9 @@ const PIPES = [
   ClarinLicenseRequiredInfoPipe,
   CharToEndPipe,
   ClarinSafeHtmlPipe
+=======
+  ShortNumberPipe
+>>>>>>> dspace-7.6.1
 ];
 
 const COMPONENTS = [
@@ -330,12 +382,18 @@ const COMPONENTS = [
   AuthNavMenuComponent,
   ThemedAuthNavMenuComponent,
   UserMenuComponent,
+<<<<<<< HEAD
+=======
+  ThemedUserMenuComponent,
+>>>>>>> dspace-7.6.1
   DsSelectComponent,
   ErrorComponent,
   LangSwitchComponent,
+  ThemedLangSwitchComponent,
   LoadingComponent,
   ThemedLoadingComponent,
   LogInComponent,
+  ThemedLogInComponent,
   LogOutComponent,
   ObjectListComponent,
   ThemedObjectListComponent,
@@ -346,9 +404,16 @@ const COMPONENTS = [
   PaginationComponent,
   RSSComponent,
   SearchFormComponent,
+  ThemedSearchFormComponent,
   PageWithSidebarComponent,
   SidebarDropdownComponent,
   ThumbnailComponent,
+<<<<<<< HEAD
+=======
+  ThemedThumbnailComponent,
+  MyDSpaceStatusBadgeComponent,
+  ThemedMyDSpaceStatusBadgeComponent,
+>>>>>>> dspace-7.6.1
   ViewModeSwitchComponent,
   TruncatableComponent,
   TruncatablePartComponent,
@@ -364,6 +429,16 @@ const COMPONENTS = [
   ComcolMetadataComponent,
   TypeBadgeComponent,
   AccessStatusBadgeComponent,
+<<<<<<< HEAD
+=======
+  ThemedAccessStatusBadgeComponent,
+  ThemedTypeBadgeComponent,
+  StatusBadgeComponent,
+  ThemedStatusBadgeComponent,
+  BadgesComponent,
+  ThemedBadgesComponent,
+
+>>>>>>> dspace-7.6.1
   ItemSelectComponent,
   CollectionSelectComponent,
   MetadataRepresentationLoaderComponent,
@@ -382,15 +457,22 @@ const COMPONENTS = [
   ItemPageTitleFieldComponent,
   ThemedSearchNavbarComponent,
   ListableNotificationObjectComponent,
+<<<<<<< HEAD
   DsoPageSubscriptionButtonComponent,
+=======
+>>>>>>> dspace-7.6.1
   MetadataFieldWrapperComponent,
   ContextHelpWrapperComponent,
   EpersonGroupListComponent,
   EpersonSearchBoxComponent,
   GroupSearchBoxComponent,
+<<<<<<< HEAD
   ScopeSelectorModalComponent,
   ClarinItemBoxViewComponent,
   ClarinItemAuthorPreviewComponent
+=======
+  ThemedItemPageTitleFieldComponent,
+>>>>>>> dspace-7.6.1
 ];
 
 const ENTRY_COMPONENTS = [
@@ -408,6 +490,7 @@ const ENTRY_COMPONENTS = [
   SearchResultGridElementComponent,
   ItemListElementComponent,
   ItemGridElementComponent,
+  BitstreamListItemComponent,
   ItemSearchResultListElementComponent,
   ItemSearchResultGridElementComponent,
   BrowseEntryListElementComponent,

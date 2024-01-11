@@ -403,9 +403,41 @@ describe('MetadataService', () => {
 
       });
 
+<<<<<<< HEAD
+=======
     });
   });
 
+  describe(`when there's no bitstream with an allowed format on the first page`, () => {
+    let bitstreams;
+
+    beforeEach(() => {
+      bitstreams = [MockBitstream1, MockBitstream3, MockBitstream2];
+      (bundleDataService.findByItemAndName as jasmine.Spy).and.returnValue(mockBundleRD$(bitstreams));
+      (bitstreamDataService.findListByHref as jasmine.Spy).and.returnValues(
+        ...mockBitstreamPages$(bitstreams).map(bp => createSuccessfulRemoteDataObject$(bp)),
+      );
+>>>>>>> dspace-7.6.1
+    });
+
+    it(`shouldn't add a citation_pdf_url meta tag`, fakeAsync(() => {
+      (metadataService as any).processRouteChange({
+        data: {
+          value: {
+            dso: createSuccessfulRemoteDataObject(ItemMock),
+          }
+        }
+      });
+      tick();
+      expect(meta.addTag).not.toHaveBeenCalledWith({
+        name: 'citation_pdf_url',
+        content: 'https://request.org/bitstreams/99b00f3c-1cc6-4689-8158-91965bee6b28/download'
+      });
+    }));
+
+  });
+
+<<<<<<< HEAD
   describe(`when there's no bitstream with an allowed format on the first page`, () => {
     let bitstreams;
 
@@ -434,6 +466,8 @@ describe('MetadataService', () => {
 
   });
 
+=======
+>>>>>>> dspace-7.6.1
 
   describe('tagstore', () => {
     beforeEach(fakeAsync(() => {

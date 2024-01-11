@@ -1,4 +1,4 @@
-import { HandleTheme, RegExTheme, Theme, UUIDTheme } from './theme.model';
+import { HandleTheme, RegExTheme, Theme, UUIDTheme } from '../app/shared/theme-support/theme.model';
 import { getCommunityModuleRoute } from '../app/community-page/community-page-routing-paths';
 import { Community } from '../app/core/shared/community.model';
 import { COMMUNITY } from '../app/core/shared/community.resource-type';
@@ -9,12 +9,18 @@ import { Item } from '../app/core/shared/item.model';
 import { ITEM } from '../app/core/shared/item.resource-type';
 import { getItemModuleRoute } from '../app/item-page/item-page-routing-paths';
 import { HandleService } from '../app/shared/handle.service';
+<<<<<<< HEAD
+=======
+import { TestBed } from '@angular/core/testing';
+import { ConfigurationDataService } from '../app/core/data/configuration-data.service';
+import { ConfigurationDataServiceStub } from '../app/shared/testing/configuration-data.service.stub';
+>>>>>>> dspace-7.6.1
 
 describe('Theme Models', () => {
   let theme: Theme;
 
   describe('RegExTheme', () => {
-    it('should return true when the regex matches the community\'s DSO route', () => {
+    it('should return true when the regex matches the community\'s DSO route', (done: DoneFn) => {
       theme = new RegExTheme({
         name: 'community',
         regex: getCommunityModuleRoute() + '/.*',
@@ -23,10 +29,13 @@ describe('Theme Models', () => {
         type: COMMUNITY.value,
         uuid: 'community-uuid',
       });
-      expect(theme.matches('', dso)).toEqual(true);
+      theme.matches('', dso).subscribe((matches: boolean) => {
+        expect(matches).toBeTrue();
+        done();
+      });
     });
 
-    it('should return true when the regex matches the collection\'s DSO route', () => {
+    it('should return true when the regex matches the collection\'s DSO route', (done: DoneFn) => {
       theme = new RegExTheme({
         name: 'collection',
         regex: getCollectionModuleRoute() + '/.*',
@@ -35,10 +44,13 @@ describe('Theme Models', () => {
         type: COLLECTION.value,
         uuid: 'collection-uuid',
       });
-      expect(theme.matches('', dso)).toEqual(true);
+      theme.matches('', dso).subscribe((matches: boolean) => {
+        expect(matches).toBeTrue();
+        done();
+      });
     });
 
-    it('should return true when the regex matches the item\'s DSO route', () => {
+    it('should return true when the regex matches the item\'s DSO route', (done: DoneFn) => {
       theme = new RegExTheme({
         name: 'item',
         regex: getItemModuleRoute() + '/.*',
@@ -47,37 +59,65 @@ describe('Theme Models', () => {
         type: ITEM.value,
         uuid: 'item-uuid',
       });
-      expect(theme.matches('', dso)).toEqual(true);
+      theme.matches('', dso).subscribe((matches: boolean) => {
+        expect(matches).toBeTrue();
+        done();
+      });
     });
 
-    it('should return true when the regex matches the url', () => {
+    it('should return true when the regex matches the url', (done: DoneFn) => {
       theme = new RegExTheme({
         name: 'url',
         regex: '.*partial.*',
       });
-      expect(theme.matches('theme/partial/url/match', null)).toEqual(true);
+      theme.matches('theme/partial/url/match', null).subscribe((matches: boolean) => {
+        expect(matches).toBeTrue();
+        done();
+      });
     });
 
-    it('should return false when the regex matches neither the url, nor the DSO route', () => {
+    it('should return false when the regex matches neither the url, nor the DSO route', (done: DoneFn) => {
       theme = new RegExTheme({
         name: 'no-match',
         regex: '.*no/match.*',
       });
-      expect(theme.matches('theme/partial/url/match', null)).toEqual(false);
+      theme.matches('theme/partial/url/match', null).subscribe((matches: boolean) => {
+        expect(matches).toBeFalse();
+        done();
+      });
     });
   });
 
   describe('HandleTheme', () => {
+<<<<<<< HEAD
     let handleService;
     beforeEach(() => {
       handleService = new HandleService();
       });
     it('should return true when the DSO\'s handle matches the theme\'s handle', () => {
+=======
+    let handleService: HandleService;
+
+    let configurationService: ConfigurationDataServiceStub;
+
+    beforeEach(() => {
+      configurationService = new ConfigurationDataServiceStub();
+
+      TestBed.configureTestingModule({
+        providers: [
+          { provide: ConfigurationDataService, useValue: configurationService },
+        ],
+      });
+      handleService = TestBed.inject(HandleService);
+    });
+    it('should return true when the DSO\'s handle matches the theme\'s handle', (done: DoneFn) => {
+>>>>>>> dspace-7.6.1
       theme = new HandleTheme({
         name: 'matching-handle',
         handle: '1234/5678',
       }, handleService);
       const matchingDso = Object.assign(new Item(), {
+<<<<<<< HEAD
         type: ITEM.value,
         uuid: 'item-uuid',
         handle: '1234/5678',
@@ -95,9 +135,34 @@ describe('Theme Models', () => {
         handle: '1234/567891011',
       });
       expect(theme.matches('', dso)).toEqual(false);
+=======
+        type: ITEM.value,
+        uuid: 'item-uuid',
+        handle: '1234/5678',
+      }, handleService);
+      theme.matches('', matchingDso).subscribe((matches: boolean) => {
+        expect(matches).toBeTrue();
+        done();
+      });
+    });
+    it('should return false when the DSO\'s handle contains the theme\'s handle as a subpart', (done: DoneFn) => {
+      theme = new HandleTheme({
+        name: 'matching-handle',
+        handle: '1234/5678',
+      }, handleService);
+      const dso = Object.assign(new Item(), {
+        type: ITEM.value,
+        uuid: 'item-uuid',
+        handle: '1234/567891011',
+      });
+      theme.matches('', dso).subscribe((matches: boolean) => {
+        expect(matches).toBeFalse();
+        done();
+      });
+>>>>>>> dspace-7.6.1
     });
 
-    it('should return false when the handles don\'t match', () => {
+    it('should return false when the handles don\'t match', (done: DoneFn) => {
       theme = new HandleTheme({
         name: 'no-matching-handle',
         handle: '1234/5678',
@@ -107,12 +172,15 @@ describe('Theme Models', () => {
         uuid: 'item-uuid',
         handle: '1234/6789',
       });
-      expect(theme.matches('', dso)).toEqual(false);
+      theme.matches('', dso).subscribe((matches: boolean) => {
+        expect(matches).toBeFalse();
+        done();
+      });
     });
   });
 
   describe('UUIDTheme', () => {
-    it('should return true when the DSO\'s UUID matches the theme\'s UUID', () => {
+    it('should return true when the DSO\'s UUID matches the theme\'s UUID', (done: DoneFn) => {
       theme = new UUIDTheme({
         name: 'matching-uuid',
         uuid: 'item-uuid',
@@ -121,10 +189,13 @@ describe('Theme Models', () => {
         type: ITEM.value,
         uuid: 'item-uuid',
       });
-      expect(theme.matches('', dso)).toEqual(true);
+      theme.matches('', dso).subscribe((matches: boolean) => {
+        expect(matches).toBeTrue();
+        done();
+      });
     });
 
-    it('should return true when the UUIDs don\'t match', () => {
+    it('should return true when the UUIDs don\'t match', (done: DoneFn) => {
       theme = new UUIDTheme({
         name: 'matching-uuid',
         uuid: 'item-uuid',
@@ -133,7 +204,10 @@ describe('Theme Models', () => {
         type: COLLECTION.value,
         uuid: 'collection-uuid',
       });
-      expect(theme.matches('', dso)).toEqual(false);
+      theme.matches('', dso).subscribe((matches: boolean) => {
+        expect(matches).toBeFalse();
+        done();
+      });
     });
   });
 });

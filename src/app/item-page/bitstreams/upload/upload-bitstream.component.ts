@@ -19,6 +19,10 @@ import { RequestService } from '../../../core/data/request.service';
 import { getBitstreamModuleRoute } from '../../../app-routing-paths';
 import { getEntityEditRoute } from '../../item-page-routing-paths';
 import { environment } from '../../../../environments/environment';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 @Component({
   selector: 'ds-upload-bitstream',
@@ -94,7 +98,9 @@ export class UploadBitstreamComponent implements OnInit, OnDestroy {
               protected authService: AuthService,
               protected notificationsService: NotificationsService,
               protected translate: TranslateService,
-              protected requestService: RequestService) {
+              protected requestService: RequestService,
+              public dsoNameService: DSONameService,
+  ) {
   }
 
   /**

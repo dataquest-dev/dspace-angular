@@ -15,6 +15,10 @@ import { ProfileClaimService } from '../profile-claim/profile-claim.service';
 import { CollectionElementLinkType } from '../../shared/object-collection/collection-element-link.type';
 import { SearchObjects } from '../../shared/search/models/search-objects.model';
 import { getFirstCompletedRemoteData } from '../../core/shared/operators';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 /**
  * Component representing a modal that show a list of suggested profile item to claim
@@ -56,7 +60,13 @@ export class ProfileClaimItemModalComponent extends DSOSelectorModalWrapperCompo
   @Output() create: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(protected activeModal: NgbActiveModal, protected route: ActivatedRoute, private router: Router,
+<<<<<<< HEAD
               private profileClaimService: ProfileClaimService) {
+=======
+              private profileClaimService: ProfileClaimService,
+              public dsoNameService: DSONameService,
+  ) {
+>>>>>>> dspace-7.6.1
     super(activeModal, route);
   }
 

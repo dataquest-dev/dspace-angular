@@ -17,7 +17,7 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 
 import {
   DYNAMIC_FORM_CONTROL_TYPE_ARRAY,
@@ -118,11 +118,14 @@ import { RelationshipOptions } from '../models/relationship-options.model';
 import { FormBuilderService } from '../form-builder.service';
 import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './ds-dynamic-form-constants';
 import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
+<<<<<<< HEAD
 import { DsDynamicAutocompleteComponent } from './models/autocomplete/ds-dynamic-autocomplete.component';
 import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/ds-dynamic-autocomplete.model';
 import { DsDynamicSponsorAutocompleteComponent } from './models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
 import { SPONSOR_METADATA_NAME } from './models/ds-dynamic-complex.model';
 import { DsDynamicSponsorScrollableDropdownComponent } from './models/sponsor-scrollable-dropdown/dynamic-sponsor-scrollable-dropdown.component';
+=======
+>>>>>>> dspace-7.6.1
 import { APP_CONFIG, AppConfig } from '../../../../../config/app-config.interface';
 import { itemLinksToFollow } from '../../../utils/relation-query.utils';
 
@@ -215,12 +218,16 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   @Input('templates') inputTemplateList: QueryList<DynamicTemplateDirective>;
   @Input() hasMetadataModel: any;
   @Input() formId: string;
+<<<<<<< HEAD
   @Input() formGroup: FormGroup;
+=======
+  @Input() formGroup: UntypedFormGroup;
+>>>>>>> dspace-7.6.1
   @Input() formModel: DynamicFormControlModel[];
   @Input() asBootstrapFormGroup = false;
   @Input() bindId = true;
   @Input() context: any | null = null;
-  @Input() group: FormGroup;
+  @Input() group: UntypedFormGroup;
   @Input() hostClass: string[];
   @Input() hasErrorMessaging = false;
   @Input() layout = null as DynamicFormLayout;
@@ -275,7 +282,11 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
     private submissionObjectService: SubmissionObjectDataService,
     private ref: ChangeDetectorRef,
     private formService: FormService,
+<<<<<<< HEAD
     private formBuilderService: FormBuilderService,
+=======
+    public formBuilderService: FormBuilderService,
+>>>>>>> dspace-7.6.1
     private submissionService: SubmissionService,
     @Inject(APP_CONFIG) protected appConfig: AppConfig,
   ) {
@@ -491,7 +502,7 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   onRemove(): void {
     const arrayContext: DynamicFormArrayModel = (this.context as DynamicFormArrayGroupModel).context;
     const path = this.formBuilderService.getPath(arrayContext);
-    const formArrayControl = this.group.root.get(path) as FormArray;
+    const formArrayControl = this.group.root.get(path) as UntypedFormArray;
     this.formBuilderService.removeFormArrayGroup(this.context.index, formArrayControl, arrayContext);
     if (this.model.parent.context.groups.length === 0) {
       this.formBuilderService.addFormArrayGroup(formArrayControl, arrayContext);

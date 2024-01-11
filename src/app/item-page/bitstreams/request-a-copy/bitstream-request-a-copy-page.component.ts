@@ -11,7 +11,11 @@ import { combineLatest as observableCombineLatest, Observable, of as observableO
 import { getBitstreamDownloadRoute, getForbiddenRoute } from '../../../app-routing-paths';
 import { TranslateService } from '@ngx-translate/core';
 import { EPerson } from '../../../core/eperson/models/eperson.model';
+<<<<<<< HEAD:src/app/item-page/bitstreams/request-a-copy/bitstream-request-a-copy-page.component.ts
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+=======
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+>>>>>>> dspace-7.6.1:src/app/shared/bitstream-request-a-copy-page/bitstream-request-a-copy-page.component.ts
 import { ItemRequestDataService } from '../../../core/data/item-request-data.service';
 import { ItemRequest } from '../../../core/shared/item-request.model';
 import { Item } from '../../../core/shared/item.model';
@@ -34,7 +38,7 @@ export class BitstreamRequestACopyPageComponent implements OnInit, OnDestroy {
 
   canDownload$: Observable<boolean>;
   private subs: Subscription[] = [];
-  requestCopyForm: FormGroup;
+  requestCopyForm: UntypedFormGroup;
 
   item: Item;
   itemName: string;
@@ -49,7 +53,7 @@ export class BitstreamRequestACopyPageComponent implements OnInit, OnDestroy {
               protected router: Router,
               private authorizationService: AuthorizationDataService,
               private auth: AuthService,
-              private formBuilder: FormBuilder,
+              private formBuilder: UntypedFormBuilder,
               private itemRequestDataService: ItemRequestDataService,
               private notificationsService: NotificationsService,
               private dsoNameService: DSONameService,
@@ -59,15 +63,15 @@ export class BitstreamRequestACopyPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.requestCopyForm = this.formBuilder.group({
-      name: new FormControl('', {
+      name: new UntypedFormControl('', {
         validators: [Validators.required],
       }),
-      email: new FormControl('', {
+      email: new UntypedFormControl('', {
         validators: [Validators.required,
         Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')]
       }),
-      allfiles: new FormControl(''),
-      message: new FormControl(''),
+      allfiles: new UntypedFormControl(''),
+      message: new UntypedFormControl(''),
     });
 
 

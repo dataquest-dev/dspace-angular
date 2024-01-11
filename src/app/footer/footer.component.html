@@ -84,6 +84,7 @@
           m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+<<<<<<< HEAD
         // main LINDAT/CLARIAH-CZ tracker
         ga('create', 'UA-27008245-2', 'cuni.cz');
         ga('send', 'pageview');
@@ -112,5 +113,36 @@
       <!-- End Piwik Code -->
       <!-- End TRACKING CODE -->
     </footer>
+=======
+  <!-- Copyright -->
+  <div class="bottom-footer p-1 d-flex justify-content-center align-items-center text-white">
+    <div class="content-container">
+      <p class="m-0">
+        <a class="text-white"
+           href="http://www.dspace.org/">{{ 'footer.link.dspace' | translate}}</a>
+        {{ 'footer.copyright' | translate:{year: dateObj | date:'y'} }}
+        <a class="text-white"
+           href="https://www.lyrasis.org/">{{ 'footer.link.lyrasis' | translate}}</a>
+      </p>
+      <ul class="footer-info list-unstyled small d-flex justify-content-center mb-0">
+        <li>
+            <a class="text-white" href="javascript:void(0);"
+             (click)="showCookieSettings()">{{ 'footer.link.cookies' | translate}}</a>
+        </li>
+        <li *ngIf="showPrivacyPolicy">
+          <a class="text-white"
+             routerLink="info/privacy">{{ 'footer.link.privacy-policy' | translate}}</a>
+        </li>
+        <li *ngIf="showEndUserAgreement">
+          <a class="text-white"
+             routerLink="info/end-user-agreement">{{ 'footer.link.end-user-agreement' | translate}}</a>
+        </li>
+        <li *ngIf="showSendFeedback$ | async">
+          <a class="text-white"
+             routerLink="info/feedback">{{ 'footer.link.feedback' | translate}}</a>
+        </li>
+      </ul>
+    </div>
+>>>>>>> dspace-7.6.1
   </div>
 </footer>

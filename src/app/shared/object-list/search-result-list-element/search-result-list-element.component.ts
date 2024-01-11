@@ -22,9 +22,15 @@ export class SearchResultListElementComponent<T extends SearchResult<K>, K exten
   dsoTitle: string;
 
   public constructor(protected truncatableService: TruncatableService,
+<<<<<<< HEAD
                      protected dsoNameService: DSONameService,
                      @Inject(APP_CONFIG) protected appConfig?: AppConfig) {
     super();
+=======
+                     public dsoNameService: DSONameService,
+                     @Inject(APP_CONFIG) protected appConfig?: AppConfig) {
+    super(dsoNameService);
+>>>>>>> dspace-7.6.1
   }
 
   /**

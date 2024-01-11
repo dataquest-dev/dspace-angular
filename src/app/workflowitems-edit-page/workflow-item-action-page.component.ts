@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+<<<<<<< HEAD
 import { Observable, forkJoin } from 'rxjs';
+=======
+import { Observable, combineLatest } from 'rxjs';
+>>>>>>> dspace-7.6.1
 import { map, switchMap, take } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { WorkflowItem } from '../core/submission/models/workflowitem.model';
@@ -52,7 +56,11 @@ export abstract class WorkflowItemActionPageComponent implements OnInit {
    * Performs the action and shows a notification based on the outcome of the action
    */
   performAction() {
+<<<<<<< HEAD
     forkJoin([this.wfi$, this.requestService.removeByHrefSubstring('/discover')]).pipe(
+=======
+    combineLatest([this.wfi$, this.requestService.removeByHrefSubstring('/discover')]).pipe(
+>>>>>>> dspace-7.6.1
       take(1),
       switchMap(([wfi]) => this.sendRequest(wfi.id))
     ).subscribe((successful: boolean) => {

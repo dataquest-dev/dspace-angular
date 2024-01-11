@@ -21,6 +21,12 @@ import { getDSORoute } from '../../app-routing-paths';
 import { ResearcherProfileDataService } from '../../core/profile/researcher-profile-data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
+<<<<<<< HEAD
+=======
+import { SubscriptionModalComponent } from '../subscriptions/subscription-modal/subscription-modal.component';
+import { Community } from '../../core/shared/community.model';
+import { Collection } from '../../core/shared/collection.model';
+>>>>>>> dspace-7.6.1
 
 /**
  * Creates the menus for the dspace object pages
@@ -50,6 +56,7 @@ export class DSOEditMenuResolver implements Resolve<{ [key: string]: MenuSection
     if (hasNoValue(id) && hasValue(route.queryParams.scope)) {
       id = route.queryParams.scope;
     }
+<<<<<<< HEAD
     return this.dSpaceObjectDataService.findById(id, true, false).pipe(
       getFirstCompletedRemoteData(),
       switchMap((dsoRD) => {
@@ -71,6 +78,34 @@ export class DSOEditMenuResolver implements Resolve<{ [key: string]: MenuSection
         }
       })
     );
+=======
+    if (hasNoValue(id)) {
+      // If there's no ID, we're not on a DSO homepage, so pass on any pre-existing menu route data
+      return observableOf({ ...route.data?.menu });
+    } else {
+      return this.dSpaceObjectDataService.findById(id, true, false).pipe(
+        getFirstCompletedRemoteData(),
+        switchMap((dsoRD) => {
+          if (dsoRD.hasSucceeded) {
+            const dso = dsoRD.payload;
+            return combineLatest(this.getDsoMenus(dso, route, state)).pipe(
+              // Menu sections are retrieved as an array of arrays and flattened into a single array
+              map((combinedMenus) => [].concat.apply([], combinedMenus)),
+              map((menus) => this.addDsoUuidToMenuIDs(menus, dso)),
+              map((menus) => {
+                return {
+                  ...route.data?.menu,
+                  [MenuID.DSO_EDIT]: menus
+                };
+              })
+            );
+          } else {
+            return observableOf({...route.data?.menu});
+          }
+        })
+      );
+    }
+>>>>>>> dspace-7.6.1
   }
 
   /**
@@ -79,6 +114,10 @@ export class DSOEditMenuResolver implements Resolve<{ [key: string]: MenuSection
   getDsoMenus(dso, route, state): Observable<MenuSection[]>[] {
     return [
       this.getItemMenu(dso),
+<<<<<<< HEAD
+=======
+      this.getComColMenu(dso),
+>>>>>>> dspace-7.6.1
       this.getCommonMenu(dso, state)
     ];
   }
@@ -174,6 +213,42 @@ export class DSOEditMenuResolver implements Resolve<{ [key: string]: MenuSection
   }
 
   /**
+<<<<<<< HEAD
+=======
+   * Get Community/Collection-specific menus
+   */
+  protected getComColMenu(dso): Observable<MenuSection[]> {
+    if (dso instanceof Community || dso instanceof Collection) {
+      return combineLatest([
+        this.authorizationService.isAuthorized(FeatureID.CanSubscribe, dso.self),
+      ]).pipe(
+        map(([canSubscribe]) => {
+          return [
+            {
+              id: 'subscribe',
+              active: false,
+              visible: canSubscribe,
+              model: {
+                type: MenuItemType.ONCLICK,
+                text: 'subscriptions.tooltip',
+                function: () => {
+                  const modalRef = this.modalService.open(SubscriptionModalComponent);
+                  modalRef.componentInstance.dso = dso;
+                }
+              } as OnClickMenuItemModel,
+              icon: 'bell',
+              index: 4
+            },
+          ];
+        })
+      );
+    } else {
+      return observableOf([]);
+    }
+  }
+
+  /**
+>>>>>>> dspace-7.6.1
    * Claim a researcher by creating a profile
    * Shows notifications and/or hides the menu section on success/error
    */

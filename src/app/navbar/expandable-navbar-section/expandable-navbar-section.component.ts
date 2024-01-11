@@ -4,7 +4,10 @@ import { MenuService } from '../../shared/menu/menu.service';
 import { slide } from '../../shared/animations/slide';
 import { first } from 'rxjs/operators';
 import { HostWindowService } from '../../shared/host-window.service';
+<<<<<<< HEAD
 import { rendersSectionForMenu } from '../../shared/menu/menu-section.decorator';
+=======
+>>>>>>> dspace-7.6.1
 import { MenuID } from '../../shared/menu/menu-id.model';
 
 /**
@@ -16,7 +19,6 @@ import { MenuID } from '../../shared/menu/menu-id.model';
   styleUrls: ['./expandable-navbar-section.component.scss'],
   animations: [slide]
 })
-@rendersSectionForMenu(MenuID.PUBLIC, true)
 export class ExpandableNavbarSectionComponent extends NavbarSectionComponent implements OnInit {
   /**
    * This section resides in the Public Navbar

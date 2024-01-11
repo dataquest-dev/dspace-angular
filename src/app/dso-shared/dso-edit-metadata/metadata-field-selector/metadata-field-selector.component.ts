@@ -9,21 +9,37 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+<<<<<<< HEAD
 import { switchMap, debounceTime, distinctUntilChanged, map, tap, take } from 'rxjs/operators';
 import { followLink } from '../../../shared/utils/follow-link-config.model';
 import {
   getAllSucceededRemoteData, getFirstCompletedRemoteData,
+=======
+import { debounceTime, distinctUntilChanged, map, switchMap, take, tap } from 'rxjs/operators';
+import { followLink } from '../../../shared/utils/follow-link-config.model';
+import {
+  getAllSucceededRemoteData,
+  getFirstCompletedRemoteData,
+>>>>>>> dspace-7.6.1
   metadataFieldsToString
 } from '../../../core/shared/operators';
 import { Observable } from 'rxjs/internal/Observable';
 import { RegistryService } from '../../../core/registry/registry.service';
+<<<<<<< HEAD
 import { FormControl } from '@angular/forms';
+=======
+import { UntypedFormControl } from '@angular/forms';
+>>>>>>> dspace-7.6.1
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { hasValue } from '../../../shared/empty.util';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { of } from 'rxjs/internal/observable/of';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
+<<<<<<< HEAD
+=======
+import { SortDirection, SortOptions } from '../../../core/cache/models/sort-options.model';
+>>>>>>> dspace-7.6.1
 
 @Component({
   selector: 'ds-metadata-field-selector',
@@ -70,7 +86,11 @@ export class MetadataFieldSelectorComponent implements OnInit, OnDestroy, AfterV
   /**
    * FormControl for the input
    */
+<<<<<<< HEAD
   public input: FormControl = new FormControl();
+=======
+  public input: UntypedFormControl = new UntypedFormControl();
+>>>>>>> dspace-7.6.1
 
   /**
    * The current query to update mdFieldOptions$ for
@@ -127,7 +147,11 @@ export class MetadataFieldSelectorComponent implements OnInit, OnDestroy, AfterV
       switchMap((query: string) => {
         this.showInvalid = false;
         if (query !== null) {
+<<<<<<< HEAD
           return this.registryService.queryMetadataFields(query, null, true, false, followLink('schema')).pipe(
+=======
+          return this.registryService.queryMetadataFields(query, { elementsPerPage: 10, sort: new SortOptions('fieldName', SortDirection.ASC) }, true, false, followLink('schema')).pipe(
+>>>>>>> dspace-7.6.1
             getAllSucceededRemoteData(),
             metadataFieldsToString(),
           );

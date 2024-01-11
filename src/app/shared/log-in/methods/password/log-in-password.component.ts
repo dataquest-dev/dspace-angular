@@ -1,8 +1,9 @@
 import { map } from 'rxjs/operators';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { select, Store } from '@ngrx/store';
+<<<<<<< HEAD
 import { firstValueFrom, Observable } from 'rxjs';
 import {
   AuthenticateAction,
@@ -11,16 +12,31 @@ import {
 
 import { getAuthenticationError, getAuthenticationInfo } from '../../../../core/auth/selectors';
 import { isEmpty, isNotEmpty } from '../../../empty.util';
+=======
+import { Observable } from 'rxjs';
+import { AuthenticateAction, ResetAuthenticationMessagesAction } from '../../../../core/auth/auth.actions';
+
+import { getAuthenticationError, getAuthenticationInfo, } from '../../../../core/auth/selectors';
+import { isNotEmpty } from '../../../empty.util';
+>>>>>>> dspace-7.6.1
 import { fadeOut } from '../../../animations/fade';
 import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
 import { renderAuthMethodFor } from '../log-in.methods-decorator';
 import { AuthMethod } from '../../../../core/auth/models/auth.method';
 import { AuthService } from '../../../../core/auth/auth.service';
+<<<<<<< HEAD
 import { CoreState } from '../../../../core/core-state.model';
 import { ActivatedRoute , Router} from '@angular/router';
 import { getBaseUrl } from '../../../clarin-shared-util';
 import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
+=======
+import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
+import { CoreState } from '../../../../core/core-state.model';
+import { getForgotPasswordRoute, getRegisterRoute } from '../../../../app-routing-paths';
+import { FeatureID } from '../../../../core/data/feature-authorization/feature-id';
+import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
+>>>>>>> dspace-7.6.1
 
 /**
  * /users/sign-in
@@ -69,9 +85,10 @@ export class LogInPasswordComponent implements OnInit {
    * The authentication form.
    * @type {FormGroup}
    */
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   /**
+<<<<<<< HEAD
    * The page from where the local login was initiated.
    */
   public redirectUrl = '';
@@ -92,16 +109,28 @@ export class LogInPasswordComponent implements OnInit {
    * @param route
    * @param router
    * @param configurationService
+=======
+   * Whether the current user (or anonymous) is authorized to register an account
+>>>>>>> dspace-7.6.1
    */
+  public canRegister$: Observable<boolean>;
+
   constructor(
     @Inject('authMethodProvider') public injectedAuthMethodModel: AuthMethod,
     @Inject('isStandalonePage') public isStandalonePage: boolean,
     private authService: AuthService,
+<<<<<<< HEAD
     private formBuilder: FormBuilder,
     private store: Store<CoreState>,
     private route: ActivatedRoute,
     protected router: Router,
     protected configurationService: ConfigurationDataService,
+=======
+    private hardRedirectService: HardRedirectService,
+    private formBuilder: UntypedFormBuilder,
+    protected store: Store<CoreState>,
+    protected authorizationService: AuthorizationDataService,
+>>>>>>> dspace-7.6.1
   ) {
     this.authMethod = injectedAuthMethodModel;
   }
@@ -136,6 +165,7 @@ export class LogInPasswordComponent implements OnInit {
       })
     );
 
+<<<<<<< HEAD
     // Load `dspace.ui.url` into `baseUrl` property.
     await this.assignBaseUrl();
     this.toggleDiscojuiceLogin();
@@ -166,6 +196,17 @@ export class LogInPasswordComponent implements OnInit {
     if (isEmpty(this.route.snapshot.queryParams?.redirectUrl)) {
       this.popUpDiscoJuiceLogin();
     }
+=======
+    this.canRegister$ = this.authorizationService.isAuthorized(FeatureID.EPersonRegistration);
+  }
+
+  getRegisterRoute() {
+    return getRegisterRoute();
+  }
+
+  getForgotRoute() {
+    return getForgotPasswordRoute();
+>>>>>>> dspace-7.6.1
   }
 
   /**

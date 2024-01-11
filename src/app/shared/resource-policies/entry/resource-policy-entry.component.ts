@@ -17,8 +17,12 @@ import { RemoteData } from '../../../core/data/remote-data';
 import { DSpaceObject } from '../../../core/shared/dspace-object.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Group } from '../../../core/eperson/models/group.model';
+<<<<<<< HEAD
 import { ACCESS_CONTROL_MODULE_PATH } from '../../../app-routing-paths';
 import { GROUP_EDIT_PATH } from '../../../access-control/access-control-routing-paths';
+=======
+import { getGroupEditRoute } from '../../../access-control/access-control-routing-paths';
+>>>>>>> dspace-7.6.1
 import { GroupDataService } from '../../../core/eperson/group-data.service';
 
 export interface ResourcePolicyCheckboxEntry {
@@ -97,7 +101,11 @@ export class ResourcePolicyEntryComponent implements OnInit {
       getFirstSucceededRemoteDataPayload(),
       map((group: Group) => group.id),
     ).subscribe((groupUUID) => {
+<<<<<<< HEAD
       this.router.navigate([ACCESS_CONTROL_MODULE_PATH, GROUP_EDIT_PATH, groupUUID]);
+=======
+      void this.router.navigate([getGroupEditRoute(groupUUID)]);
+>>>>>>> dspace-7.6.1
     });
   }
 }

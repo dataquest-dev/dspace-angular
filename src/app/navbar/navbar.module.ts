@@ -24,7 +24,10 @@ const ENTRY_COMPONENTS = [
   NavbarSectionComponent,
   ExpandableNavbarSectionComponent,
   ThemedExpandableNavbarSectionComponent,
+<<<<<<< HEAD
   ClarinNavbarTopComponent
+=======
+>>>>>>> dspace-7.6.1
 ];
 
 @NgModule({
@@ -45,8 +48,12 @@ const ENTRY_COMPONENTS = [
   exports: [
     ThemedNavbarComponent,
     NavbarSectionComponent,
+<<<<<<< HEAD
     ThemedExpandableNavbarSectionComponent,
     ClarinNavbarTopComponent
+=======
+    ThemedExpandableNavbarSectionComponent
+>>>>>>> dspace-7.6.1
   ]
 })
 

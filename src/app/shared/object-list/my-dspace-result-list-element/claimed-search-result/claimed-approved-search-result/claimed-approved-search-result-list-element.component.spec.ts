@@ -12,13 +12,16 @@ import { getMockLinkService } from '../../../../mocks/link-service.mock';
 import { VarDirective } from '../../../../utils/var.directive';
 import { TruncatableService } from '../../../../truncatable/truncatable.service';
 import { LinkService } from '../../../../../core/cache/builders/link.service';
-import { MyDspaceItemStatusType } from '../../../../object-collection/shared/mydspace-item-status/my-dspace-item-status-type';
 import { ClaimedApprovedTaskSearchResult } from '../../../../object-collection/shared/claimed-approved-task-search-result.model';
 import { ClaimedApprovedSearchResultListElementComponent } from './claimed-approved-search-result-list-element.component';
 import { DSONameService } from '../../../../../core/breadcrumbs/dso-name.service';
 import { DSONameServiceMock } from '../../../../mocks/dso-name.service.mock';
 import { APP_CONFIG } from '../../../../../../config/app-config.interface';
 import { environment } from '../../../../../../environments/environment';
+<<<<<<< HEAD
+=======
+import { Context } from '../../../../../core/shared/context.model';
+>>>>>>> dspace-7.6.1
 import { TranslateModule } from '@ngx-translate/core';
 
 let component: ClaimedApprovedSearchResultListElementComponent;
@@ -104,8 +107,8 @@ describe('ClaimedApprovedSearchResultListElementComponent', () => {
     });
   });
 
-  it('should have properly status', () => {
-    expect(component.status).toEqual(MyDspaceItemStatusType.APPROVED);
+  it('should have the correct badge context', () => {
+    expect(component.badgeContext).toEqual(Context.MyDSpaceApproved);
   });
 
 });

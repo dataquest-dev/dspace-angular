@@ -14,6 +14,7 @@ import { ItemSearchResultListElementComponent } from '../../../../../shared/obje
  */
 export class JournalSearchResultListElementComponent extends ItemSearchResultListElementComponent {
 
+<<<<<<< HEAD
   /**
    * Display thumbnails if required by configuration
    */
@@ -24,4 +25,6 @@ export class JournalSearchResultListElementComponent extends ItemSearchResultLis
     this.showThumbnails = this.appConfig.browseBy.showThumbnails;
   }
 
+=======
+>>>>>>> dspace-7.6.1
 }

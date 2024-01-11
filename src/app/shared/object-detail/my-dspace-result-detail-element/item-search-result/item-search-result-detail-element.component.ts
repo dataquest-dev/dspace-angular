@@ -3,9 +3,12 @@ import { Component } from '@angular/core';
 import { ViewMode } from '../../../../core/shared/view-mode.model';
 import { Item } from '../../../../core/shared/item.model';
 import { SearchResultDetailElementComponent } from '../search-result-detail-element.component';
+<<<<<<< HEAD
 import {
   MyDspaceItemStatusType
 } from '../../../object-collection/shared/mydspace-item-status/my-dspace-item-status-type';
+=======
+>>>>>>> dspace-7.6.1
 import { listableObjectComponent } from '../../../object-collection/shared/listable-object/listable-object.decorator';
 import { ItemSearchResult } from '../../../object-collection/shared/item-search-result.model';
 import { Context } from '../../../../core/shared/context.model';
@@ -24,8 +27,8 @@ import { Context } from '../../../../core/shared/context.model';
 export class ItemSearchResultDetailElementComponent extends SearchResultDetailElementComponent<ItemSearchResult, Item> {
 
   /**
-   * Represent item's status
+   * Represents the badge context
    */
-  public status = MyDspaceItemStatusType.ARCHIVED;
+  public badgeContext = Context.MyDSpaceArchived;
 
 }

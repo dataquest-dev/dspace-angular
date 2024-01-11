@@ -31,7 +31,10 @@ import { FollowLinkConfig } from '../../shared/utils/follow-link-config.model';
 import { RequestParam } from '../cache/models/request-param.model';
 import { NoContent } from '../shared/NoContent.model';
 import { FindListOptions } from '../data/find-list-options.model';
+<<<<<<< HEAD
 import { MetadataBitstream } from '../metadata/metadata-bitstream.model';
+=======
+>>>>>>> dspace-7.6.1
 
 const metadataRegistryStateSelector = (state: AppState) => state.metadataRegistry;
 const editMetadataSchemaSelector = createSelector(metadataRegistryStateSelector, (metadataState: MetadataRegistryState) => metadataState.editSchema);

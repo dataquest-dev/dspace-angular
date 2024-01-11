@@ -94,6 +94,22 @@ export class SearchExportCsvComponent implements OnInit {
           }
         });
       }
+<<<<<<< HEAD
+=======
+      if (isNotEmpty(this.searchConfig.fixedFilter)) {
+        const fixedFilter = this.searchConfig.fixedFilter.substring(2);
+        const keyAndValue = fixedFilter.split('=');
+        if (keyAndValue.length > 1) {
+          const key = keyAndValue[0];
+          const valueAndOperator = keyAndValue[1].split(',');
+          if (valueAndOperator.length > 1) {
+            const value = valueAndOperator[0];
+            const operator = valueAndOperator[1];
+            parameters.push({name: '-f', value: `${key},${operator}=${value}`});
+          }
+        }
+      }
+>>>>>>> dspace-7.6.1
     }
 
     this.scriptDataService.invoke('metadata-export-search', parameters, []).pipe(

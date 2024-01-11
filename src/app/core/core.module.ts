@@ -164,7 +164,11 @@ import { SubmissionAccessesModel } from './config/models/config-submission-acces
 import { RatingAdvancedWorkflowInfo } from './tasks/models/rating-advanced-workflow-info.model';
 import { AdvancedWorkflowInfo } from './tasks/models/advanced-workflow-info.model';
 import { SelectReviewerAdvancedWorkflowInfo } from './tasks/models/select-reviewer-advanced-workflow-info.model';
+<<<<<<< HEAD
 import { AccessStatusObject } from '../shared/object-list/access-status-badge/access-status.model';
+=======
+import { AccessStatusObject } from '../shared/object-collection/shared/badges/access-status-badge/access-status.model';
+>>>>>>> dspace-7.6.1
 import { AccessStatusDataService } from './data/access-status-data.service';
 import { LinkHeadService } from './services/link-head.service';
 import { ResearcherProfileDataService } from './profile/researcher-profile-data.service';
@@ -180,6 +184,7 @@ import { VocabularyEntryDetailsDataService } from './submission/vocabularies/voc
 import { IdentifierData } from '../shared/object-list/identifier-data/identifier-data.model';
 import { Subscription } from '../shared/subscriptions/models/subscription.model';
 import { SupervisionOrderDataService } from './supervision-order/supervision-order-data.service';
+<<<<<<< HEAD
 import { ClarinLicenseDataService } from './data/clarin/clarin-license-data.service';
 import { ClarinLicenseLabelDataService } from './data/clarin/clarin-license-label-data.service';
 import { HandleDataService } from './data/handle-data.service';
@@ -191,6 +196,14 @@ import { ClarinVerificationTokenDataService } from './data/clarin/clarin-verific
 import { ClruaDataService } from './data/clarin/clrua-data.service';
 import { BitstreamChecksum } from './shared/bitstream-checksum.model';
 import { BitstreamChecksumDataService } from './bitstream-checksum-data.service';
+=======
+import { ItemRequest } from './shared/item-request.model';
+import { HierarchicalBrowseDefinition } from './shared/hierarchical-browse-definition.model';
+import { FlatBrowseDefinition } from './shared/flat-browse-definition.model';
+import { ValueListBrowseDefinition } from './shared/value-list-browse-definition.model';
+import { NonHierarchicalBrowseDefinition } from './shared/non-hierarchical-browse-definition';
+import { BulkAccessConditionOptions } from './config/models/bulk-access-condition-options.model';
+>>>>>>> dspace-7.6.1
 
 /**
  * When not in production, endpoint responses can be mocked for testing purposes
@@ -278,7 +291,10 @@ const PROVIDERS = [
   ClaimedTaskDataService,
   PoolTaskDataService,
   BitstreamDataService,
+<<<<<<< HEAD
   DsDynamicTypeBindRelationService,
+=======
+>>>>>>> dspace-7.6.1
   EntityTypeDataService,
   ContentSourceResponseParsingService,
   ItemTemplateDataService,
@@ -323,9 +339,13 @@ const PROVIDERS = [
   OrcidAuthService,
   OrcidQueueDataService,
   OrcidHistoryDataService,
+<<<<<<< HEAD
   SupervisionOrderDataService,
   HandleDataService,
   BitstreamChecksumDataService
+=======
+  SupervisionOrderDataService
+>>>>>>> dspace-7.6.1
 ];
 
 /**
@@ -361,6 +381,10 @@ export const models =
     AuthStatus,
     BrowseEntry,
     BrowseDefinition,
+    NonHierarchicalBrowseDefinition,
+    FlatBrowseDefinition,
+    ValueListBrowseDefinition,
+    HierarchicalBrowseDefinition,
     ClaimedTask,
     TaskObject,
     PoolTask,
@@ -398,8 +422,13 @@ export const models =
     AccessStatusObject,
     IdentifierData,
     Subscription,
+<<<<<<< HEAD
     SubmissionAccessesModel,
     Handle
+=======
+    ItemRequest,
+    BulkAccessConditionOptions
+>>>>>>> dspace-7.6.1
   ];
 
 @NgModule({

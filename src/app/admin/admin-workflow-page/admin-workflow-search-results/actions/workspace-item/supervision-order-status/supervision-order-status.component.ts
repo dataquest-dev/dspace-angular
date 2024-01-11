@@ -8,6 +8,10 @@ import { Group } from '../../../../../../core/eperson/models/group.model';
 import { getFirstCompletedRemoteData } from '../../../../../../core/shared/operators';
 import { isNotEmpty } from '../../../../../../shared/empty.util';
 import { RemoteData } from '../../../../../../core/data/remote-data';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../../../../../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 export interface SupervisionOrderListEntry {
   supervisionOrder: SupervisionOrder;
@@ -33,6 +37,14 @@ export class SupervisionOrderStatusComponent implements OnChanges {
 
   @Output() delete: EventEmitter<SupervisionOrderListEntry> = new EventEmitter<SupervisionOrderListEntry>();
 
+<<<<<<< HEAD
+=======
+  constructor(
+    public dsoNameService: DSONameService,
+  ) {
+  }
+
+>>>>>>> dspace-7.6.1
   ngOnChanges(changes: SimpleChanges): void {
     if (changes && changes.supervisionOrderList) {
       this.getSupervisionOrderEntries(changes.supervisionOrderList.currentValue)

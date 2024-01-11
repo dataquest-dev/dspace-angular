@@ -15,7 +15,11 @@ import { getFirstCompletedRemoteData } from '../../../core/shared/operators';
 import { hasValue } from '../../../shared/empty.util';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
 import { PaginationComponentOptions } from '../../../shared/pagination/pagination-component-options.model';
+<<<<<<< HEAD
 import { AlertType } from '../../../shared/alert/aletr-type';
+=======
+import { AlertType } from '../../../shared/alert/alert-type';
+>>>>>>> dspace-7.6.1
 import { Item } from '../../../core/shared/item.model';
 import { OrcidAuthService } from '../../../core/orcid/orcid-auth.service';
 

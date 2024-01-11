@@ -12,7 +12,7 @@ import { MediaViewerConfig } from './media-viewer-config.interface';
 import { INotificationBoardOptions } from './notifications-config.interfaces';
 import { ServerConfig } from './server-config.interface';
 import { SubmissionConfig } from './submission-config.interface';
-import { ThemeConfig } from './theme.model';
+import { ThemeConfig } from './theme.config';
 import { UIServerConfig } from './ui-server-config.interface';
 import { BundleConfig } from './bundle-config.interface';
 import { ActuatorsConfig } from './actuators.config';
@@ -21,6 +21,10 @@ import { CommunityListConfig } from './community-list-config.interface';
 import { HomeConfig } from './homepage-config.interface';
 import { MarkdownConfig } from './markdown-config.interface';
 import { FilterVocabularyConfig } from './filter-vocabulary-config';
+<<<<<<< HEAD
+=======
+import { DiscoverySortConfig } from './discovery-sort.config';
+>>>>>>> dspace-7.6.1
 
 export class DefaultAppConfig implements AppConfig {
   production = false;
@@ -77,6 +81,11 @@ export class DefaultAppConfig implements AppConfig {
     // In-memory cache of server-side rendered content
     serverSide: {
       debug: false,
+<<<<<<< HEAD
+=======
+      // Link header is used for signposting functionality
+      headers: ['Link'],
+>>>>>>> dspace-7.6.1
       // Cache specific to known bots.  Allows you to serve cached contents to bots only.
       // Defaults to caching 1,000 pages. Each page expires after 1 day
       botCache: {
@@ -219,19 +228,32 @@ export class DefaultAppConfig implements AppConfig {
     { code: 'es', label: 'Español', active: true },
     { code: 'fr', label: 'Français', active: true },
     { code: 'gd', label: 'Gàidhlig', active: true },
+    { code: 'it', label: 'Italiano', active: true },
     { code: 'lv', label: 'Latviešu', active: true },
     { code: 'hu', label: 'Magyar', active: true },
     { code: 'nl', label: 'Nederlands', active: true },
     { code: 'pl', label: 'Polski', active: true },
     { code: 'pt-PT', label: 'Português', active: true },
     { code: 'pt-BR', label: 'Português do Brasil', active: true },
+<<<<<<< HEAD
     { code: 'fi', label: 'Suomi', active: true },
     { code: 'sv', label: 'Svenska', active: true },
     { code: 'tr', label: 'Türkçe', active: true },
+=======
+    { code: 'sr-lat', label: 'Srpski (lat)', active: true},
+    { code: 'fi', label: 'Suomi', active: true },
+    { code: 'sv', label: 'Svenska', active: true },
+    { code: 'tr', label: 'Türkçe', active: true },
+    { code: 'vi', label: 'Tiếng Việt', active: true },
+>>>>>>> dspace-7.6.1
     { code: 'kk', label: 'Қазақ', active: true },
     { code: 'bn', label: 'বাংলা', active: true },
     { code: 'hi', label: 'हिंदी', active: true},
     { code: 'el', label: 'Ελληνικά', active: true },
+<<<<<<< HEAD
+=======
+    { code: 'sr-cyr', label: 'Српски', active: true},
+>>>>>>> dspace-7.6.1
     { code: 'uk', label: 'Yкраї́нська', active: true}
   ];
 
@@ -253,6 +275,7 @@ export class DefaultAppConfig implements AppConfig {
 
   communityList: CommunityListConfig = {
     pageSize: 20
+<<<<<<< HEAD
   };
 
   homePage: HomeConfig = {
@@ -267,6 +290,22 @@ export class DefaultAppConfig implements AppConfig {
     }
   };
 
+=======
+  };
+
+  homePage: HomeConfig = {
+    recentSubmissions: {
+      //The number of item showing in recent submission components
+      pageSize: 5,
+      //sort record of recent submission
+      sortField: 'dc.date.accessioned',
+    },
+    topLevelCommunityList: {
+      pageSize: 5
+    }
+  };
+
+>>>>>>> dspace-7.6.1
   // Item Config
   item: ItemConfig = {
     edit: {
@@ -421,4 +460,13 @@ export class DefaultAppConfig implements AppConfig {
       enabled: false
     }
     ];
+<<<<<<< HEAD
+=======
+
+  // Configuration that determines the metadata sorting of community and collection edition and creation when there are not a search query.
+  comcolSelectionSort: DiscoverySortConfig = {
+    sortField:'dc.title',
+    sortDirection:'ASC',
+  };
+>>>>>>> dspace-7.6.1
 }

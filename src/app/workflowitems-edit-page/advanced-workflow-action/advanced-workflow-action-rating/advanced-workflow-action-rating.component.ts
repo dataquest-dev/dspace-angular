@@ -3,7 +3,11 @@ import {
   rendersAdvancedWorkflowTaskOption
 } from '../../../shared/mydspace-actions/claimed-task/switcher/claimed-task-actions-decorator';
 import { AdvancedWorkflowActionComponent } from '../advanced-workflow-action/advanced-workflow-action.component';
+<<<<<<< HEAD
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+=======
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
+>>>>>>> dspace-7.6.1
 import { WorkflowAction } from '../../../core/tasks/models/workflow-action-object.model';
 import { RatingAdvancedWorkflowInfo } from '../../../core/tasks/models/rating-advanced-workflow-info.model';
 
@@ -22,6 +26,7 @@ export const ADVANCED_WORKFLOW_ACTION_RATING = 'scorereviewaction';
 })
 export class AdvancedWorkflowActionRatingComponent extends AdvancedWorkflowActionComponent implements OnInit {
 
+<<<<<<< HEAD
   ratingForm: FormGroup;
 
   ngOnInit(): void {
@@ -29,6 +34,15 @@ export class AdvancedWorkflowActionRatingComponent extends AdvancedWorkflowActio
     this.ratingForm = new FormGroup({
       review: new FormControl(''),
       rating: new FormControl(0, Validators.min(1)),
+=======
+  ratingForm: UntypedFormGroup;
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.ratingForm = new UntypedFormGroup({
+      review: new UntypedFormControl(''),
+      rating: new UntypedFormControl(0, Validators.min(1)),
+>>>>>>> dspace-7.6.1
     });
   }
 

@@ -3,7 +3,11 @@ import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { HealthComponent } from '../../models/health-component.model';
+<<<<<<< HEAD
 import { AlertType } from '../../../shared/alert/aletr-type';
+=======
+import { AlertType } from '../../../shared/alert/alert-type';
+>>>>>>> dspace-7.6.1
 
 /**
  * A component to render a "health component" object.

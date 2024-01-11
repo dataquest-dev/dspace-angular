@@ -38,7 +38,10 @@ import {
 import {
     EditItemSelectorComponent
 } from './app/shared/dso-selector/modal-wrappers/edit-item-selector/edit-item-selector.component';
+<<<<<<< HEAD
 
+=======
+>>>>>>> dspace-7.6.1
 import { CommunityListElementComponent } from './app/shared/object-list/community-list-element/community-list-element.component';
 import { CollectionListElementComponent} from './app/shared/object-list/collection-list-element/collection-list-element.component';
 import { CollectionDropdownComponent } from './app/shared/collection-dropdown/collection-dropdown.component';
@@ -46,6 +49,22 @@ import { SharedBrowseByModule } from '../../app/shared/browse-by/shared-browse-b
 import { ResultsBackButtonModule } from '../../app/shared/results-back-button/results-back-button.module';
 import { DsoPageModule } from '../../app/shared/dso-page/dso-page.module';
 import { FileDownloadLinkComponent } from './app/shared/file-download-link/file-download-link.component';
+<<<<<<< HEAD
+=======
+import { StartsWithDateComponent } from './app/shared/starts-with/date/starts-with-date.component';
+import { StartsWithTextComponent } from './app/shared/starts-with/text/starts-with-text.component';
+import {
+  PublicationSidebarSearchListElementComponent
+} from './app/shared/object-list/sidebar-search-list-element/item-types/publication-sidebar-search-list-element.component';
+import {
+  ItemSearchResultListElementComponent
+} from './app/shared/object-list/search-result-list-element/item-search-result/item-types/item/item-search-result-list-element.component';
+import { TopLevelCommunityListComponent } from './app/home-page/top-level-community-list/top-level-community-list.component';
+import { LogInComponent } from './app/shared/log-in/log-in.component';
+import { BrowseEntryListElementComponent } from './app/shared/object-list/browse-entry-list-element/browse-entry-list-element.component';
+import { PersonComponent } from './app/entity-groups/research-entities/item-pages/person/person.component';
+import { LangSwitchComponent } from './app/shared/lang-switch/lang-switch.component';
+>>>>>>> dspace-7.6.1
 
 
 /**
@@ -56,13 +75,28 @@ const ENTRY_COMPONENTS = [
   JournalComponent,
   JournalIssueComponent,
   JournalVolumeComponent,
+<<<<<<< HEAD
   PublicationComponent,
   UntypedItemComponent,
 
+=======
+  PersonComponent,
+  PublicationComponent,
+  UntypedItemComponent,
+>>>>>>> dspace-7.6.1
   CommunityListElementComponent,
   CollectionListElementComponent,
   CollectionDropdownComponent,
   FileDownloadLinkComponent,
+<<<<<<< HEAD
+=======
+  StartsWithDateComponent,
+  StartsWithTextComponent,
+  PublicationSidebarSearchListElementComponent,
+  ItemSearchResultListElementComponent,
+  TopLevelCommunityListComponent,
+  BrowseEntryListElementComponent,
+>>>>>>> dspace-7.6.1
 ];
 
 const DECLARATIONS = [
@@ -79,6 +113,11 @@ const DECLARATIONS = [
   EditCollectionSelectorComponent,
   EditCommunitySelectorComponent,
   EditItemSelectorComponent,
+<<<<<<< HEAD
+=======
+  LogInComponent,
+  LangSwitchComponent,
+>>>>>>> dspace-7.6.1
 ];
 
 @NgModule({

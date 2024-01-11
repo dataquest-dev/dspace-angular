@@ -1,5 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, } from '@angular/core';
+<<<<<<< HEAD:src/app/shared/form/number-picker/number-picker.component.ts
 import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+=======
+import { ControlValueAccessor, UntypedFormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+>>>>>>> dspace-7.6.1:src/app/shared/number-picker/number-picker.component.ts
 import { isEmpty } from '../../empty.util';
 
 @Component({
@@ -31,7 +35,7 @@ export class NumberPickerComponent implements OnInit, ControlValueAccessor {
 
   startValue: number;
 
-  constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) {
+  constructor(private fb: UntypedFormBuilder, private cd: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -103,13 +107,12 @@ export class NumberPickerComponent implements OnInit, ControlValueAccessor {
 
       if (i >= this.min && i <= this.max) {
         this.value = i;
-        this.emitChange();
       } else if (event.target.value === null || event.target.value === '') {
         this.value = null;
-        this.emitChange();
       } else {
         this.value = undefined;
       }
+      this.emitChange();
     } catch (e) {
       this.value = undefined;
     }

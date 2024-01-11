@@ -125,6 +125,7 @@ export function getRequestCopyModulePath() {
   return `/${REQUEST_COPY_MODULE_PATH}`;
 }
 
+<<<<<<< HEAD
 export const LICENSES_MODULE_PATH = 'licenses';
 export function getLicensesModulePath() {
   return `/${LICENSES_MODULE_PATH}`;
@@ -141,6 +142,8 @@ export function getLicenseContractPagePath() {
   return `/${CONTRACT_PAGE_MODULE_PATH}`;
 }
 
+=======
+>>>>>>> dspace-7.6.1
 export const HEALTH_PAGE_PATH = 'health';
 
 export const SUBSCRIPTIONS_MODULE_PATH = 'subscriptions';

@@ -9,9 +9,12 @@ import { environment } from '../../../../../../environments/environment';
 import { APP_CONFIG } from '../../../../../../config/app-config.interface';
 import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-definition-data.service';
 import { BrowseDefinitionDataServiceStub } from '../../../../../shared/testing/browse-definition-data-service.stub';
+<<<<<<< HEAD
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 import { createSuccessfulRemoteDataObject$ } from '../../../../../shared/remote-data.utils';
 import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
+=======
+>>>>>>> dspace-7.6.1
 
 let comp: ItemPageUriFieldComponent;
 let fixture: ComponentFixture<ItemPageUriFieldComponent>;
@@ -42,8 +45,12 @@ describe('ItemPageUriFieldComponent', () => {
       })],
       providers: [
         { provide: APP_CONFIG, useValue: environment },
+<<<<<<< HEAD
         { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub },
         { provide: ConfigurationDataService, useValue: mockConfigurationDataService }
+=======
+        { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub }
+>>>>>>> dspace-7.6.1
       ],
       declarations: [ItemPageUriFieldComponent, MetadataUriValuesComponent],
       schemas: [NO_ERRORS_SCHEMA]

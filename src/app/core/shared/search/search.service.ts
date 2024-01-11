@@ -333,8 +333,14 @@ export class SearchService implements OnDestroy {
    * Send search event to rest api using angularitics
    * @param config              Paginated search options used
    * @param searchQueryResponse The response objects of the performed search
+<<<<<<< HEAD
    */
   trackSearch(config: PaginatedSearchOptions, searchQueryResponse: SearchObjects<DSpaceObject>) {
+=======
+   * @param clickedObject       Optional UUID of an object a search was performed and clicked for
+   */
+  trackSearch(config: PaginatedSearchOptions, searchQueryResponse: SearchObjects<DSpaceObject>, clickedObject?: string) {
+>>>>>>> dspace-7.6.1
     const filters: { filter: string, operator: string, value: string, label: string; }[] = [];
     const appliedFilters = searchQueryResponse.appliedFilters || [];
     for (let i = 0, filtersLength = appliedFilters.length; i < filtersLength; i++) {
@@ -356,6 +362,10 @@ export class SearchService implements OnDestroy {
           order: config.sort.direction
         },
         filters: filters,
+<<<<<<< HEAD
+=======
+        clickedObject,
+>>>>>>> dspace-7.6.1
       },
     });
   }

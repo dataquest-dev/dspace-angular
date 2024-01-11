@@ -46,8 +46,11 @@ import { RestRequestMethod } from './rest-request-method';
 import { CreateData, CreateDataImpl } from './base/create-data';
 import { RequestParam } from '../cache/models/request-param.model';
 import { dataService } from './base/data-service.decorator';
+<<<<<<< HEAD
 import {SearchData, SearchDataImpl} from './base/search-data';
 import {FollowLinkConfig} from '../../shared/utils/follow-link-config.model';
+=======
+>>>>>>> dspace-7.6.1
 
 /**
  * An abstract service for CRUD operations on Items
@@ -248,10 +251,14 @@ export abstract class BaseItemDataService extends IdentifiableDataService<Item> 
    * Get the endpoint to move the item
    * @param itemId
    */
-  public getMoveItemEndpoint(itemId: string): Observable<string> {
+  public getMoveItemEndpoint(itemId: string, inheritPolicies: boolean): Observable<string> {
     return this.halService.getEndpoint(this.linkPath).pipe(
       map((endpoint: string) => this.getIDHref(endpoint, itemId)),
+<<<<<<< HEAD
       map((endpoint: string) => `${endpoint}/owningCollection`),
+=======
+      map((endpoint: string) => `${endpoint}/owningCollection?inheritPolicies=${inheritPolicies}`)
+>>>>>>> dspace-7.6.1
     );
   }
 
@@ -260,14 +267,14 @@ export abstract class BaseItemDataService extends IdentifiableDataService<Item> 
    * @param itemId
    * @param collection
    */
-  public moveToCollection(itemId: string, collection: Collection): Observable<RemoteData<any>> {
+  public moveToCollection(itemId: string, collection: Collection, inheritPolicies: boolean): Observable<RemoteData<any>> {
     const options: HttpOptions = Object.create({});
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'text/uri-list');
     options.headers = headers;
 
     const requestId = this.requestService.generateRequestId();
-    const hrefObs = this.getMoveItemEndpoint(itemId);
+    const hrefObs = this.getMoveItemEndpoint(itemId, inheritPolicies);
 
     hrefObs.pipe(
       find((href: string) => hasValue(href)),
@@ -407,8 +414,12 @@ export abstract class BaseItemDataService extends IdentifiableDataService<Item> 
  */
 @Injectable()
 @dataService(ITEM)
+<<<<<<< HEAD
 export class ItemDataService extends BaseItemDataService implements SearchData<Item> {
   private searchData: SearchData<Item>;
+=======
+export class ItemDataService extends BaseItemDataService {
+>>>>>>> dspace-7.6.1
   constructor(
     protected requestService: RequestService,
     protected rdbService: RemoteDataBuildService,
@@ -420,10 +431,13 @@ export class ItemDataService extends BaseItemDataService implements SearchData<I
     protected bundleService: BundleDataService,
   ) {
     super('items', requestService, rdbService, objectCache, halService, notificationsService, comparator, browseService, bundleService);
+<<<<<<< HEAD
     this.searchData = new SearchDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
   }
 
   searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<Item>[]): Observable<RemoteData<PaginatedList<Item>>> {
     return this.searchData.searchBy(searchMethod, options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
+=======
+>>>>>>> dspace-7.6.1
   }
 }

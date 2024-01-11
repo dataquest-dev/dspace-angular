@@ -4,7 +4,10 @@ import { ClaimedDeclinedTaskTaskSearchResult } from 'src/app/shared/object-colle
 import { ViewMode } from '../../../../../core/shared/view-mode.model';
 import { LinkService } from '../../../../../core/cache/builders/link.service';
 import { TruncatableService } from '../../../../truncatable/truncatable.service';
+<<<<<<< HEAD
 import { MyDspaceItemStatusType } from '../../../../object-collection/shared/mydspace-item-status/my-dspace-item-status-type';
+=======
+>>>>>>> dspace-7.6.1
 import { Observable } from 'rxjs';
 import { RemoteData } from '../../../../../core/data/remote-data';
 import { WorkflowItem } from '../../../../../core/submission/models/workflowitem.model';
@@ -14,6 +17,10 @@ import { ClaimedTaskSearchResult } from '../../../../object-collection/shared/cl
 import { ClaimedTask } from '../../../../../core/tasks/models/claimed-task-object.model';
 import { DSONameService } from '../../../../../core/breadcrumbs/dso-name.service';
 import { APP_CONFIG, AppConfig } from '../../../../../../config/app-config.interface';
+<<<<<<< HEAD
+=======
+import { Context } from '../../../../../core/shared/context.model';
+>>>>>>> dspace-7.6.1
 
 /**
  * This component renders claimed task declined task object for the search result in the list view.
@@ -32,9 +39,15 @@ export class ClaimedDeclinedTaskSearchResultListElementComponent extends SearchR
   public showSubmitter = true;
 
   /**
+<<<<<<< HEAD
    * Represent item's status
    */
   public status = MyDspaceItemStatusType.DECLINED_TASk;
+=======
+   * Represents the badge context
+   */
+  public badgeContext = Context.MyDSpaceDeclined;
+>>>>>>> dspace-7.6.1
 
   /**
    * The workflowitem object that belonging to the result object
@@ -44,7 +57,11 @@ export class ClaimedDeclinedTaskSearchResultListElementComponent extends SearchR
   public constructor(
     protected linkService: LinkService,
     protected truncatableService: TruncatableService,
+<<<<<<< HEAD
     protected dsoNameService: DSONameService,
+=======
+    public dsoNameService: DSONameService,
+>>>>>>> dspace-7.6.1
     @Inject(APP_CONFIG) protected appConfig: AppConfig,
   ) {
     super(truncatableService, dsoNameService, appConfig);

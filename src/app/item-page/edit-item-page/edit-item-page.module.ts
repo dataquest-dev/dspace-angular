@@ -38,7 +38,17 @@ import { IdentifierDataService } from '../../core/data/identifier-data.service';
 import { IdentifierDataComponent } from '../../shared/object-list/identifier-data/identifier-data.component';
 import { ItemRegisterDoiComponent } from './item-register-doi/item-register-doi.component';
 import { DsoSharedModule } from '../../dso-shared/dso-shared.module';
+<<<<<<< HEAD
+=======
+import { ItemCurateComponent } from './item-curate/item-curate.component';
+import { ThemedItemStatusComponent } from './item-status/themed-item-status.component';
+>>>>>>> dspace-7.6.1
 
+import { ItemAccessControlComponent } from './item-access-control/item-access-control.component';
+import { ResultsBackButtonModule } from '../../shared/results-back-button/results-back-button.module';
+import {
+  AccessControlFormModule
+} from '../../shared/access-control-form-container/access-control-form.module';
 
 /**
  * Module that contains all components related to the Edit Item page administrator functionality
@@ -55,6 +65,11 @@ import { DsoSharedModule } from '../../dso-shared/dso-shared.module';
     NgbModule,
     ItemVersionsModule,
     DsoSharedModule,
+<<<<<<< HEAD
+=======
+    ResultsBackButtonModule,
+    AccessControlFormModule,
+>>>>>>> dspace-7.6.1
   ],
   declarations: [
     EditItemPageComponent,
@@ -67,6 +82,10 @@ import { DsoSharedModule } from '../../dso-shared/dso-shared.module';
     ItemPublicComponent,
     ItemDeleteComponent,
     ItemStatusComponent,
+<<<<<<< HEAD
+=======
+    ThemedItemStatusComponent,
+>>>>>>> dspace-7.6.1
     ItemRelationshipsComponent,
     ItemBitstreamsComponent,
     ItemVersionHistoryComponent,
@@ -81,13 +100,25 @@ import { DsoSharedModule } from '../../dso-shared/dso-shared.module';
     VirtualMetadataComponent,
     ItemAuthorizationsComponent,
     IdentifierDataComponent,
+<<<<<<< HEAD
     ItemRegisterDoiComponent
+=======
+    ItemRegisterDoiComponent,
+    ItemCurateComponent,
+    ItemAccessControlComponent,
+>>>>>>> dspace-7.6.1
   ],
   providers: [
     BundleDataService,
     IdentifierDataService,
     ObjectValuesPipe
   ],
+<<<<<<< HEAD
+=======
+  exports: [
+    ItemOperationComponent,
+  ]
+>>>>>>> dspace-7.6.1
 })
 export class EditItemPageModule {
 

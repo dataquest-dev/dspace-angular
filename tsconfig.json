@@ -21,7 +21,11 @@
     "skipDefaultLibCheck": true,
     "pretty": true,
     "allowSyntheticDefaultImports": true,
+<<<<<<< HEAD
     "target": "es2015",
+=======
+    "target": "ES2022",
+>>>>>>> dspace-7.6.1
     "typeRoots": [
       "node_modules/@types",
       "src/typings.d.ts"
@@ -39,11 +43,15 @@
     "types": [
       "node",
       "jasmine"
-    ]
+    ],
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true
-  }
+  },
+  "exclude": [
+    "cypress.config.ts"
+  ]
 }

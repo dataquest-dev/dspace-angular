@@ -67,7 +67,13 @@ export class MarkdownPipe implements PipeTransform {
         // sanitize-html doesn't let through SVG by default, so we extend its allowlists to cover MathJax SVG
         allowedTags: [
           ...sanitizeHtml.defaults.allowedTags,
+<<<<<<< HEAD
           'mjx-container', 'svg', 'g', 'path', 'rect', 'text'
+=======
+          'mjx-container', 'svg', 'g', 'path', 'rect', 'text',
+          // Also let the mjx-assistive-mml tag (and it's children) through (for screen readers)
+          'mjx-assistive-mml', 'math', 'mrow', 'mi',
+>>>>>>> dspace-7.6.1
         ],
         allowedAttributes: {
           ...sanitizeHtml.defaults.allowedAttributes,
@@ -88,7 +94,20 @@ export class MarkdownPipe implements PipeTransform {
           ],
           text: [
             'transform', 'font-size'
+<<<<<<< HEAD
           ]
+=======
+          ],
+          'mjx-assistive-mml': [
+            'unselectable', 'display', 'style',
+          ],
+          math: [
+            'xmlns',
+          ],
+          mrow: [
+            'data-mjx-texclass',
+          ],
+>>>>>>> dspace-7.6.1
         },
         parser: {
           lowerCaseAttributeNames: false,

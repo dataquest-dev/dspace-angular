@@ -15,9 +15,14 @@ import { FooterComponent } from './footer.component';
 
 import { TranslateLoaderMock } from '../shared/mocks/translate-loader.mock';
 import { storeModuleConfig } from '../app.reducer';
+<<<<<<< HEAD
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
 import { ConfigurationProperty } from '../core/shared/configuration-property.model';
+=======
+import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';
+import { AuthorizationDataServiceStub } from '../shared/testing/authorization-service.stub';
+>>>>>>> dspace-7.6.1
 
 let comp: FooterComponent;
 let fixture: ComponentFixture<FooterComponent>;
@@ -47,7 +52,11 @@ describe('Footer component', () => {
       declarations: [FooterComponent], // declare the test component
       providers: [
         FooterComponent,
+<<<<<<< HEAD
         { provide: ConfigurationDataService, useValue: mockConfigurationDataService }
+=======
+        { provide: AuthorizationDataService, useClass: AuthorizationDataServiceStub },
+>>>>>>> dspace-7.6.1
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });

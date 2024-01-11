@@ -18,4 +18,8 @@ export const coreEffects = [
   ObjectUpdatesEffects,
   RouteEffects,
   RouterEffects,
+<<<<<<< HEAD
+=======
+  MenuEffects,
+>>>>>>> dspace-7.6.1
 ];

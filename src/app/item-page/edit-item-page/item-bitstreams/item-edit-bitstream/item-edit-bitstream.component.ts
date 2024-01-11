@@ -1,5 +1,9 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+<<<<<<< HEAD
 import { Bitstream, SYNCHRONIZED_STORES_NUMBER } from '../../../../core/shared/bitstream.model';
+=======
+import { Bitstream } from '../../../../core/shared/bitstream.model';
+>>>>>>> dspace-7.6.1
 import cloneDeep from 'lodash/cloneDeep';
 import { ObjectUpdatesService } from '../../../../core/data/object-updates/object-updates.service';
 import { Observable } from 'rxjs';
@@ -14,7 +18,10 @@ import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
 import { FieldUpdate } from '../../../../core/data/object-updates/field-update.model';
 import { FieldChangeType } from '../../../../core/data/object-updates/field-change-type.model';
 import { getBitstreamDownloadRoute } from '../../../../app-routing-paths';
+<<<<<<< HEAD
 import { BitstreamChecksum, CheckSum } from '../../../../core/shared/bitstream-checksum.model';
+=======
+>>>>>>> dspace-7.6.1
 
 @Component({
   selector: 'ds-item-edit-bitstream',

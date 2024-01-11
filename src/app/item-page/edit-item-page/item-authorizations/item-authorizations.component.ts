@@ -101,7 +101,11 @@ export class ItemAuthorizationsComponent implements OnInit, OnDestroy {
   constructor(
     private linkService: LinkService,
     private route: ActivatedRoute,
+<<<<<<< HEAD
     private nameService: DSONameService
+=======
+    public nameService: DSONameService
+>>>>>>> dspace-7.6.1
   ) {
   }
 

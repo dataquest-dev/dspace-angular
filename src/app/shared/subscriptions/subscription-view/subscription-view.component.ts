@@ -12,6 +12,10 @@ import { getCommunityModuleRoute } from '../../../community-page/community-page-
 import { getCollectionModuleRoute } from '../../../collection-page/collection-page-routing-paths';
 import { getItemModuleRoute } from '../../../item-page/item-page-routing-paths';
 import { SubscriptionModalComponent } from '../subscription-modal/subscription-modal.component';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -52,6 +56,10 @@ export class SubscriptionViewComponent {
   constructor(
     private modalService: NgbModal,
     private subscriptionService: SubscriptionsDataService,
+<<<<<<< HEAD
+=======
+    public dsoNameService: DSONameService,
+>>>>>>> dspace-7.6.1
   ) { }
 
   /**

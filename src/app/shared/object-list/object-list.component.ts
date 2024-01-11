@@ -80,6 +80,14 @@ export class ObjectListComponent {
    * Whether or not the pagination should be rendered as simple previous and next buttons instead of the normal pagination
    */
   @Input() showPaginator = true;
+<<<<<<< HEAD
+=======
+
+  /**
+   * Whether to show the thumbnail preview
+   */
+  @Input() showThumbnails;
+>>>>>>> dspace-7.6.1
 
   /**
    * Emit when one of the listed object has changed.

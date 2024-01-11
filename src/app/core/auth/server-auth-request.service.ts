@@ -13,7 +13,11 @@ import {
   XSRF_REQUEST_HEADER,
   XSRF_RESPONSE_HEADER,
   DSPACE_XSRF_COOKIE
+<<<<<<< HEAD
 } from '../xsrf/xsrf.interceptor';
+=======
+} from '../xsrf/xsrf.constants';
+>>>>>>> dspace-7.6.1
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 

@@ -9,7 +9,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 import { BehaviorSubject, from as observableFrom, Observable, of as observableOf, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, mergeMap, reduce, startWith, switchMap, take } from 'rxjs/operators';
@@ -25,6 +25,10 @@ import {
   getFirstCompletedRemoteData, getFirstSucceededRemoteDataPayload
 } from '../../core/shared/operators';
 import { FindListOptions } from '../../core/data/find-list-options.model';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 /**
  * An interface to represent a collection entry
@@ -54,7 +58,7 @@ export class CollectionDropdownComponent implements OnInit, OnDestroy {
    * The search form control
    * @type {FormControl}
    */
-  public searchField: FormControl = new FormControl();
+  public searchField: UntypedFormControl = new UntypedFormControl();
 
   /**
    * The collection list obtained from a search
@@ -124,7 +128,8 @@ export class CollectionDropdownComponent implements OnInit, OnDestroy {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private collectionDataService: CollectionDataService,
-    private el: ElementRef
+    private el: ElementRef,
+    public dsoNameService: DSONameService,
   ) { }
 
   /**
@@ -233,8 +238,8 @@ export class CollectionDropdownComponent implements OnInit, OnDestroy {
               mergeMap((collection: Collection) => collection.parentCommunity.pipe(
                 getFirstSucceededRemoteDataPayload(),
                 map((community: Community) => ({
-                    communities: [{ id: community.id, name: community.name }],
-                    collection: { id: collection.id, uuid: collection.id, name: collection.name }
+                    communities: [{ id: community.id, name: this.dsoNameService.getName(community) }],
+                    collection: { id: collection.id, uuid: collection.id, name: this.dsoNameService.getName(collection) }
                   })
                 ))),
               reduce((acc: any, value: any) => [...acc, value], []),
@@ -301,8 +306,8 @@ export class CollectionDropdownComponent implements OnInit, OnDestroy {
         take(1)
       ).subscribe((community: Community) => {
         this.theOnlySelectable.emit({
-          communities: [{ id: community.id, name: community.name, uuid: community.id }],
-          collection: { id: collection.id, uuid: collection.id, name: collection.name }
+          communities: [{ id: community.id, name: this.dsoNameService.getName(community), uuid: community.id }],
+          collection: { id: collection.id, uuid: collection.id, name: this.dsoNameService.getName(collection) }
         });
       });
     }

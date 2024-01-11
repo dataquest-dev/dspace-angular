@@ -1,7 +1,14 @@
 <div class="mt-2 mb-2" *ngIf="(collection$ | async)">
   <span class="text-muted">{{'collection.listelement.badge' | translate}}:
     <a [routerLink]="['/collections', (collection$ | async)?.id]">
+<<<<<<< HEAD
       {{(collection$ | async)?.name}}
     </a>
     </span>
 </div>
+=======
+      {{ dsoNameService.getName(collection$ | async) }}
+    </a>
+    </span>
+</div>
+>>>>>>> dspace-7.6.1

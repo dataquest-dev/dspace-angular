@@ -1,5 +1,5 @@
 import { filter, map } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -16,9 +16,15 @@ import { hasValue } from '../../shared/empty.util';
 import { AuthService } from '../../core/auth/auth.service';
 import { Location } from '@angular/common';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+<<<<<<< HEAD
 import { RegistryService } from 'src/app/core/registry/registry.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 
+=======
+import { ServerResponseService } from '../../core/services/server-response.service';
+import { SignpostingDataService } from '../../core/data/signposting-data.service';
+import { LinkHeadService } from '../../core/services/link-head.service';
+>>>>>>> dspace-7.6.1
 
 /**
  * This component renders a full item page.
@@ -45,6 +51,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
 
   subs = [];
 
+<<<<<<< HEAD
   constructor(protected route: ActivatedRoute,
               router: Router,
               items: ItemDataService,
@@ -54,6 +61,21 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
               private _location: Location,
               protected halService: HALEndpointService,) {
     super(route, router, items, authService, authorizationService, registryService, halService);
+=======
+  constructor(
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected items: ItemDataService,
+    protected authService: AuthService,
+    protected authorizationService: AuthorizationDataService,
+    protected _location: Location,
+    protected responseService: ServerResponseService,
+    protected signpostingDataService: SignpostingDataService,
+    protected linkHeadService: LinkHeadService,
+    @Inject(PLATFORM_ID) protected platformId: string,
+  ) {
+    super(route, router, items, authService, authorizationService, responseService, signpostingDataService, linkHeadService, platformId);
+>>>>>>> dspace-7.6.1
   }
 
   /*** AoT inheritance fix, will hopefully be resolved in the near future **/

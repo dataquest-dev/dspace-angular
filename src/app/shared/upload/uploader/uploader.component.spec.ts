@@ -14,8 +14,11 @@ import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { CookieService } from '../../../core/services/cookie.service';
 import { CookieServiceMock } from '../../mocks/cookie.service.mock';
 import { HttpXsrfTokenExtractorMock } from '../../mocks/http-xsrf-token-extractor.mock';
+<<<<<<< HEAD:src/app/shared/upload/uploader/uploader.component.spec.ts
 import { of } from 'rxjs';
 import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
+=======
+>>>>>>> dspace-7.6.1:src/app/shared/uploader/uploader.component.spec.ts
 
 describe('Chips component', () => {
 

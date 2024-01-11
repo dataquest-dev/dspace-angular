@@ -44,9 +44,12 @@ import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.u
 import { cold } from 'jasmine-marbles';
 import { WorkflowItem } from '../../../core/submission/models/workflowitem.model';
 import { SubmissionSectionError } from '../../objects/submission-section-error.model';
+<<<<<<< HEAD
 import {
   mockItemWithMetadataFieldsAndValue
 } from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
+=======
+>>>>>>> dspace-7.6.1
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigDataService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -264,6 +267,8 @@ describe('SubmissionSectionFormComponent test suite', () => {
       formConfigService.findByHref.and.returnValue(createSuccessfulRemoteDataObject$(testFormConfiguration));
       sectionsServiceStub.getSectionData.and.returnValue(observableOf(sectionData));
       sectionsServiceStub.getSectionServerErrors.and.returnValue(observableOf([]));
+      sectionsServiceStub.isSectionReadOnly.and.returnValue(observableOf(false));
+
       spyOn(comp, 'initForm');
       spyOn(comp, 'subscriptions');
 
@@ -309,7 +314,13 @@ describe('SubmissionSectionFormComponent test suite', () => {
         'dc.title': [new FormFieldMetadataValueObject('test')]
       };
       compAsAny.formData = {};
+<<<<<<< HEAD
       compAsAny.sectionMetadata = ['dc.title'];
+=======
+      compAsAny.sectionData.data = {
+        'dc.title': [new FormFieldMetadataValueObject('test')]
+      };
+>>>>>>> dspace-7.6.1
       spyOn(compAsAny, 'inCurrentSubmissionScope').and.callThrough();
 
       expect(comp.hasMetadataEnrichment(newSectionData)).toBeTruthy();
@@ -321,7 +332,13 @@ describe('SubmissionSectionFormComponent test suite', () => {
         'dc.title': [new FormFieldMetadataValueObject('test')]
       };
       compAsAny.formData = newSectionData;
+<<<<<<< HEAD
       compAsAny.sectionMetadata = ['dc.title'];
+=======
+      compAsAny.sectionData.data = {
+        'dc.title': [new FormFieldMetadataValueObject('test')]
+      };
+>>>>>>> dspace-7.6.1
       spyOn(compAsAny, 'inCurrentSubmissionScope').and.callThrough();
 
       expect(comp.hasMetadataEnrichment(newSectionData)).toBeFalsy();
@@ -361,6 +378,25 @@ describe('SubmissionSectionFormComponent test suite', () => {
             {
               fields: [
                 {
+<<<<<<< HEAD
+=======
+                  selectableMetadata: [{ metadata: 'scoped.workflow.relation' }],
+                  scope: 'WORKFLOW',
+                } as FormFieldModel,
+              ],
+            },
+            {
+              fields: [
+                {
+                  selectableMetadata: [{ metadata: 'scoped.workspace.relation' }],
+                  scope: 'WORKSPACE',
+                } as FormFieldModel,
+              ],
+            },
+            {
+              fields: [
+                {
+>>>>>>> dspace-7.6.1
                   selectableMetadata: [{ metadata: 'dc.title' }],
                 } as FormFieldModel
               ]
@@ -386,6 +422,17 @@ describe('SubmissionSectionFormComponent test suite', () => {
         it('should return false for fields scoped to workflow', () => {
           expect((comp as any).inCurrentSubmissionScope('scoped.workflow')).toBe(false);
         });
+<<<<<<< HEAD
+=======
+
+        it('should return true for relation fields scoped to workspace', () => {
+          expect((comp as any).inCurrentSubmissionScope('scoped.workspace.relation')).toBe(true);
+        });
+
+        it('should return false for relation fields scoped to workflow', () => {
+          expect((comp as any).inCurrentSubmissionScope('scoped.workflow.relation')).toBe(false);
+        });
+>>>>>>> dspace-7.6.1
       });
 
       describe('in workflow scope', () => {
@@ -405,6 +452,17 @@ describe('SubmissionSectionFormComponent test suite', () => {
         it('should return false for fields scoped to workspace', () => {
           expect((comp as any).inCurrentSubmissionScope('scoped.workspace')).toBe(false);
         });
+<<<<<<< HEAD
+=======
+
+        it('should return true for relation fields scoped to workflow', () => {
+          expect((comp as any).inCurrentSubmissionScope('scoped.workflow.relation')).toBe(true);
+        });
+
+        it('should return false for relation fields scoped to workspace', () => {
+          expect((comp as any).inCurrentSubmissionScope('scoped.workspace.relation')).toBe(false);
+        });
+>>>>>>> dspace-7.6.1
       });
     });
 

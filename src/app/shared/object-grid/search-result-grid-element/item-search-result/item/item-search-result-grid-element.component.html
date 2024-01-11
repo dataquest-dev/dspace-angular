@@ -2,15 +2,24 @@
     <div class="position-absolute ml-1">
         <ng-content></ng-content>
     </div>
+<<<<<<< HEAD
     <a *ngIf="linkType != linkTypes.None" [target]="(linkType == linkTypes.ExternalLink) ? '_blank' : '_self'" rel="noopener noreferrer" [routerLink]="[itemPageRoute]"
         class="card-img-top full-width" [attr.title]="'search.results.view-result' | translate">
         <div>
             <ds-thumbnail [thumbnail]="dso?.thumbnail | async" [limitWidth]="false">
             </ds-thumbnail>
+=======
+    <a *ngIf="linkType != linkTypes.None" [target]="(linkType == linkTypes.ExternalLink) ? '_blank' : '_self'" [attr.rel]="(linkType == linkTypes.ExternalLink) ? 'noopener noreferrer' : null" [routerLink]="[itemPageRoute]"
+        class="card-img-top full-width" [attr.title]="'search.results.view-result' | translate">
+        <div>
+              <ds-themed-thumbnail [thumbnail]="dso?.thumbnail | async" [limitWidth]="false">
+              </ds-themed-thumbnail>
+>>>>>>> dspace-7.6.1
         </div>
     </a>
     <span *ngIf="linkType == linkTypes.None" class="card-img-top full-width">
         <div>
+<<<<<<< HEAD
             <ds-thumbnail [thumbnail]="dso?.thumbnail | async" [limitWidth]="false">
             </ds-thumbnail>
         </div>
@@ -18,6 +27,14 @@
     <div class="card-body">
         <ds-type-badge *ngIf="showLabel" [object]="dso"></ds-type-badge>
         <ds-access-status-badge [item]="dso"></ds-access-status-badge>
+=======
+              <ds-themed-thumbnail [thumbnail]="dso?.thumbnail | async" [limitWidth]="false">
+              </ds-themed-thumbnail>
+        </div>
+    </span>
+    <div class="card-body">
+        <ds-themed-badges *ngIf="showLabel" [object]="dso" [context]="context" [showAccessStatus]="true"></ds-themed-badges>
+>>>>>>> dspace-7.6.1
         <ds-truncatable [id]="dso.id">
             <ds-truncatable-part [id]="dso.id" [minLines]="3" type="h4">
                 <h4 class="card-title" [innerHTML]="dsoTitle"></h4>
@@ -37,7 +54,11 @@
             </ds-truncatable-part>
         </ds-truncatable>
         <div *ngIf="linkType != linkTypes.None" class="text-center">
+<<<<<<< HEAD
             <a [target]="(linkType == linkTypes.ExternalLink) ? '_blank' : '_self'" rel="noopener noreferrer" [routerLink]="[itemPageRoute]"
+=======
+            <a [target]="(linkType == linkTypes.ExternalLink) ? '_blank' : '_self'" [attr.rel]="(linkType == linkTypes.ExternalLink) ? 'noopener noreferrer' : null" [routerLink]="[itemPageRoute]"
+>>>>>>> dspace-7.6.1
                 class="lead btn btn-primary viewButton">{{ 'search.results.view-result' | translate}}</a>
         </div>
     </div>

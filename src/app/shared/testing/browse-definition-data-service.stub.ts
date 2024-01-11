@@ -5,12 +5,23 @@ import { BrowseDefinition } from '../../core/shared/browse-definition.model';
 import { BrowseService } from '../../core/browse/browse.service';
 import { createSuccessfulRemoteDataObject } from '../remote-data.utils';
 import { PageInfo } from '../../core/shared/page-info.model';
+<<<<<<< HEAD
 
 // This data is in post-serialized form (metadata -> metadataKeys)
 export const mockData: BrowseDefinition[] = [
       Object.assign(new BrowseDefinition, {
       'id' : 'dateissued',
       'metadataBrowse' : false,
+=======
+import { FlatBrowseDefinition } from '../../core/shared/flat-browse-definition.model';
+import { ValueListBrowseDefinition } from '../../core/shared/value-list-browse-definition.model';
+
+// This data is in post-serialized form (metadata -> metadataKeys)
+export const mockData: BrowseDefinition[] = [
+      Object.assign(new FlatBrowseDefinition(), {
+      'id' : 'dateissued',
+      'browseType': 'flatBrowse',
+>>>>>>> dspace-7.6.1
       'dataType' : 'date',
       'sortOptions' : EMPTY,
       'order' : 'ASC',
@@ -18,9 +29,15 @@ export const mockData: BrowseDefinition[] = [
       'metadataKeys' : [ 'dc.date.issued' ],
       '_links' : EMPTY
      }),
+<<<<<<< HEAD
      Object.assign(new BrowseDefinition, {
       'id' : 'author',
       'metadataBrowse' : true,
+=======
+     Object.assign(new ValueListBrowseDefinition(), {
+      'id' : 'author',
+      'browseType' : 'valueList',
+>>>>>>> dspace-7.6.1
       'dataType' : 'text',
       'sortOptions' : EMPTY,
       'order' : 'ASC',

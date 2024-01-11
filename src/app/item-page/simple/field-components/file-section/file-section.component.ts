@@ -11,6 +11,10 @@ import { NotificationsService } from '../../../../shared/notifications/notificat
 import { TranslateService } from '@ngx-translate/core';
 import { getFirstCompletedRemoteData } from '../../../../core/shared/operators';
 import { AppConfig, APP_CONFIG } from 'src/config/app-config.interface';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 /**
  * This component renders the file section of the item
@@ -42,6 +46,10 @@ export class FileSectionComponent implements OnInit {
     protected bitstreamDataService: BitstreamDataService,
     protected notificationsService: NotificationsService,
     protected translateService: TranslateService,
+<<<<<<< HEAD
+=======
+    public dsoNameService: DSONameService,
+>>>>>>> dspace-7.6.1
     @Inject(APP_CONFIG) protected appConfig: AppConfig
   ) {
     this.pageSize = this.appConfig.item.bitstream.pageSize;

@@ -14,6 +14,10 @@ import { FindListOptions } from '../../core/data/find-list-options.model';
 import { ProcessBulkDeleteService } from './process-bulk-delete.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { hasValue } from '../../shared/empty.util';
+<<<<<<< HEAD
+=======
+import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
+>>>>>>> dspace-7.6.1
 
 @Component({
   selector: 'ds-process-overview',
@@ -59,6 +63,10 @@ export class ProcessOverviewComponent implements OnInit, OnDestroy {
               protected ePersonService: EPersonDataService,
               protected modalService: NgbModal,
               public processBulkDeleteService: ProcessBulkDeleteService,
+<<<<<<< HEAD
+=======
+              protected dsoNameService: DSONameService,
+>>>>>>> dspace-7.6.1
   ) {
   }
 
@@ -83,7 +91,7 @@ export class ProcessOverviewComponent implements OnInit, OnDestroy {
   getEpersonName(id: string): Observable<string> {
     return this.ePersonService.findById(id).pipe(
       getFirstSucceededRemoteDataPayload(),
-      map((eperson: EPerson) => eperson.name)
+      map((eperson: EPerson) => this.dsoNameService.getName(eperson)),
     );
   }
 

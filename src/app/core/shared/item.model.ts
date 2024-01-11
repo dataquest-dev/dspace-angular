@@ -21,8 +21,13 @@ import { Version } from './version.model';
 import { VERSION } from './version.resource-type';
 import { BITSTREAM } from './bitstream.resource-type';
 import { Bitstream } from './bitstream.model';
+<<<<<<< HEAD
 import { ACCESS_STATUS } from 'src/app/shared/object-list/access-status-badge/access-status.resource-type';
 import { AccessStatusObject } from 'src/app/shared/object-list/access-status-badge/access-status.model';
+=======
+import { ACCESS_STATUS } from 'src/app/shared/object-collection/shared/badges/access-status-badge/access-status.resource-type';
+import { AccessStatusObject } from 'src/app/shared/object-collection/shared/badges/access-status-badge/access-status.model';
+>>>>>>> dspace-7.6.1
 import { HandleObject } from './handle-object.model';
 import { IDENTIFIERS } from '../../shared/object-list/identifier-data/identifier-data.resource-type';
 import { IdentifierData } from '../../shared/object-list/identifier-data/identifier-data.model';

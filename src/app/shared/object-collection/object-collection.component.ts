@@ -108,6 +108,14 @@ export class ObjectCollectionComponent implements OnInit {
   @Input() showPaginator = true;
 
   /**
+<<<<<<< HEAD
+=======
+   * Whether to show the thumbnail preview
+   */
+  @Input() showThumbnails;
+
+  /**
+>>>>>>> dspace-7.6.1
    * the page info of the list
    */
   pageInfo: Observable<PageInfo>;
