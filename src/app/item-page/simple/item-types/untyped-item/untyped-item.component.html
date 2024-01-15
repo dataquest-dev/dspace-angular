@@ -1,5 +1,5 @@
 <ds-themed-results-back-button *ngIf="showBackButton | async" [back]="back"></ds-themed-results-back-button>
-<div class="row pt-3" *ngIf="iiifEnabled">
+<div class="row" *ngIf="iiifEnabled">
   <div class="col-12">
     <ds-mirador-viewer id="iiif-viewer"
                    [object]="object"
@@ -10,8 +10,8 @@
 </div>
 
 <div class="d-flex flex-row">
-  <ds-item-page-title-field [item]="object" class="mr-auto">
-  </ds-item-page-title-field>
+  <ds-themed-item-page-title-field [item]="object" class="mr-auto">
+  </ds-themed-item-page-title-field>
   <ds-dso-edit-menu></ds-dso-edit-menu>
 </div>
 <div class="row">
@@ -92,18 +92,18 @@
                                   [type]="'subject'">
     </ds-clarin-generic-item-field>
     <ds-clarin-collections-item-field
-                                  [item]="object"
-                                  [iconName]="'fa-sitemap'"
-                                  [separator]="'<br />'">
+      [item]="object"
+      [iconName]="'fa-sitemap'"
+      [separator]="'<br />'">
     </ds-clarin-collections-item-field>
     <div class="clarin-item-page-field">
       <a [routerLink]="[itemPageRoute + '/full']">
         {{"item.page.link.full" | translate}}
       </a>
     </div>
-<!--    <ds-clarin-files-item-field [item]="object"-->
-<!--                                [iconName]="'fa-paperclip'"-->
-<!--                                [separator]="'<br />'">-->
-<!--    </ds-clarin-files-item-field>-->
+    <!--    <ds-clarin-files-item-field [item]="object"-->
+    <!--                                [iconName]="'fa-paperclip'"-->
+    <!--                                [separator]="'<br />'">-->
+    <!--    </ds-clarin-files-item-field>-->
   </div>
 </div>

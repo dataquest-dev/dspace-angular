@@ -44,9 +44,6 @@ import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.u
 import { cold } from 'jasmine-marbles';
 import { WorkflowItem } from '../../../core/submission/models/workflowitem.model';
 import { SubmissionSectionError } from '../../objects/submission-section-error.model';
-import {
-  mockItemWithMetadataFieldsAndValue
-} from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigDataService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -161,7 +158,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
   let translateService: any;
 
   const sectionsServiceStub: any = new SectionsServiceStub();
-  let formConfigService: any = getMockSubmissionFormsConfigService();
+  const formConfigService: any = getMockSubmissionFormsConfigService();
   const submissionId = mockSubmissionId;
   const collectionId = mockSubmissionCollectionId;
   const parsedSectionErrors: any = mockUploadResponse1ParsedErrors.traditionalpageone;
@@ -216,7 +213,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       submissionObjectDataService.getHrefByID.and.returnValue(observableOf('testUrl'));
       submissionObjectDataService.findById.and.returnValue(createSuccessfulRemoteDataObject$(new WorkspaceItem()));
 
-    const html = `
+      const html = `
         <ds-submission-section-form></ds-submission-section-form>`;
 
       testFixture = createTestComponent(html, TestComponent) as ComponentFixture<TestComponent>;
@@ -264,6 +261,8 @@ describe('SubmissionSectionFormComponent test suite', () => {
       formConfigService.findByHref.and.returnValue(createSuccessfulRemoteDataObject$(testFormConfiguration));
       sectionsServiceStub.getSectionData.and.returnValue(observableOf(sectionData));
       sectionsServiceStub.getSectionServerErrors.and.returnValue(observableOf([]));
+      sectionsServiceStub.isSectionReadOnly.and.returnValue(observableOf(false));
+
       spyOn(comp, 'initForm');
       spyOn(comp, 'subscriptions');
 
@@ -309,7 +308,9 @@ describe('SubmissionSectionFormComponent test suite', () => {
         'dc.title': [new FormFieldMetadataValueObject('test')]
       };
       compAsAny.formData = {};
-      compAsAny.sectionMetadata = ['dc.title'];
+      compAsAny.sectionData.data = {
+        'dc.title': [new FormFieldMetadataValueObject('test')]
+      };
       spyOn(compAsAny, 'inCurrentSubmissionScope').and.callThrough();
 
       expect(comp.hasMetadataEnrichment(newSectionData)).toBeTruthy();
@@ -322,6 +323,11 @@ describe('SubmissionSectionFormComponent test suite', () => {
       };
       compAsAny.formData = newSectionData;
       compAsAny.sectionMetadata = ['dc.title'];
+      spyOn(compAsAny, 'inCurrentSubmissionScope').and.callThrough();
+
+      compAsAny.sectionData.data = {
+        'dc.title': [new FormFieldMetadataValueObject('test')]
+      };
       spyOn(compAsAny, 'inCurrentSubmissionScope').and.callThrough();
 
       expect(comp.hasMetadataEnrichment(newSectionData)).toBeFalsy();
@@ -361,6 +367,22 @@ describe('SubmissionSectionFormComponent test suite', () => {
             {
               fields: [
                 {
+                  selectableMetadata: [{ metadata: 'scoped.workflow.relation' }],
+                  scope: 'WORKFLOW',
+                } as FormFieldModel,
+              ],
+            },
+            {
+              fields: [
+                {
+                  selectableMetadata: [{ metadata: 'scoped.workspace.relation' }],
+                  scope: 'WORKSPACE',
+                } as FormFieldModel,
+              ],
+            },
+            {
+              fields: [
+                {
                   selectableMetadata: [{ metadata: 'dc.title' }],
                 } as FormFieldModel
               ]
@@ -386,6 +408,14 @@ describe('SubmissionSectionFormComponent test suite', () => {
         it('should return false for fields scoped to workflow', () => {
           expect((comp as any).inCurrentSubmissionScope('scoped.workflow')).toBe(false);
         });
+
+        it('should return true for relation fields scoped to workspace', () => {
+          expect((comp as any).inCurrentSubmissionScope('scoped.workspace.relation')).toBe(true);
+        });
+
+        it('should return false for relation fields scoped to workflow', () => {
+          expect((comp as any).inCurrentSubmissionScope('scoped.workflow.relation')).toBe(false);
+        });
       });
 
       describe('in workflow scope', () => {
@@ -404,6 +434,14 @@ describe('SubmissionSectionFormComponent test suite', () => {
 
         it('should return false for fields scoped to workspace', () => {
           expect((comp as any).inCurrentSubmissionScope('scoped.workspace')).toBe(false);
+        });
+
+        it('should return true for relation fields scoped to workflow', () => {
+          expect((comp as any).inCurrentSubmissionScope('scoped.workflow.relation')).toBe(true);
+        });
+
+        it('should return false for relation fields scoped to workspace', () => {
+          expect((comp as any).inCurrentSubmissionScope('scoped.workspace.relation')).toBe(false);
         });
       });
     });
@@ -666,4 +704,3 @@ describe('SubmissionSectionFormComponent test suite', () => {
 class TestComponent {
 
 }
-

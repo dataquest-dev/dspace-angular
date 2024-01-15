@@ -26,7 +26,6 @@ import { CookieServiceMock } from '../../shared/mocks/cookie.service.mock';
 import { HttpXsrfTokenExtractorMock } from '../../shared/mocks/http-xsrf-token-extractor.mock';
 import { getMockEntityTypeService } from './my-dspace-new-submission-dropdown/my-dspace-new-submission-dropdown.component.spec';
 import { EntityTypeDataService } from '../../core/data/entity-type-data.service';
-import { of } from 'rxjs';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 
 describe('MyDSpaceNewSubmissionComponent test', () => {
