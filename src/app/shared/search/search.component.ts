@@ -415,7 +415,7 @@ export class SearchComponent implements OnInit {
    * @param searchOptions
    * @private
    */
-  private retrieveFilters(searchOptions: PaginatedSearchOptions) {
+  protected retrieveFilters(searchOptions: PaginatedSearchOptions) {
     this.filtersRD$.next(null);
     this.searchConfigService.getConfig(searchOptions.scope, searchOptions.configuration).pipe(
       getFirstCompletedRemoteData(),

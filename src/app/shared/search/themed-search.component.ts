@@ -76,7 +76,7 @@ export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
   }
 
   protected importThemedComponent(themeName: string): Promise<any> {
-    return import(`../../../themes/${themeName}/app/shared/search/search.component`);
+    return import(`../../../themes/${themeName}/app/shared/search/clarin-search/search.component`);
   }
 
   protected importUnthemedComponent(): Promise<any> {

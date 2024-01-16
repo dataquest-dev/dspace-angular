@@ -168,7 +168,7 @@ export class MembersListComponent implements OnInit, OnDestroy {
     this.subs.set(SubKey.Members,
       this.paginationService.getCurrentPagination(this.config.id, this.config).pipe(
         switchMap((currentPagination) => {
-          return this.ePersonDataService.findAllByHref(this.groupBeingEdited._links.epersons.href, {
+          return this.ePersonDataService.findListByHref(this.groupBeingEdited._links.epersons.href, {
               currentPage: currentPagination.currentPage,
               elementsPerPage: currentPagination.pageSize
             }

@@ -501,12 +501,16 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     // Update chart message e.g., `Statistics for years 2022 to 2023`, `Statistics for the year 2022`,..
     this.updateChartMessage(labels);
 
-    // Update view data
-    // @ts-ignore
-    this.chartData?.[0]?.data = totalDataViews;
-    // Update downloads data
-    // @ts-ignore
-    this.chartData?.[1]?.data = totalDataDownloads;
+    if (this.chartData) {
+      if (this.chartData[0]) {
+        // Update view data
+        this.chartData[0].data = totalDataViews;
+      }
+      if (this.chartData[1]) {
+        // Update downloads data
+        this.chartData[1].data = totalDataDownloads;
+      }
+    }
     this.chart.update();
   }
 

@@ -62,7 +62,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
     protected halService: HALEndpointService,
     protected registryService: RegistryService
   ) {
-    super(route, router, items, authService, authorizationService, responseService, signpostingDataService, linkHeadService, platformId);
+    super(route, router, items, authService, authorizationService, responseService, signpostingDataService, linkHeadService, platformId, registryService, halService);
   }
 
   /*** AoT inheritance fix, will hopefully be resolved in the near future **/
