@@ -8,14 +8,10 @@ import {
   isAuthenticated,
   isAuthenticationLoading
 } from '../../core/auth/selectors';
-import { getForgotPasswordRoute, getRegisterRoute } from '../../app-routing-paths';
 import { hasValue } from '../empty.util';
 import { AuthService } from '../../core/auth/auth.service';
 import { CoreState } from '../../core/core-state.model';
 import { rendersAuthMethodType } from './methods/log-in.methods-decorator';
-import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
-import { FeatureID } from '../../core/data/feature-authorization/feature-id';
-import { AuthMethodType } from '../../core/auth/models/auth.method-type';
 
 @Component({
   selector: 'ds-log-in',

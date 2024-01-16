@@ -27,7 +27,8 @@ export class ViewTrackerComponent implements OnInit, OnDestroy {
   protected sub: Subscription;
 
   constructor(
-    public angulartics2: Angulartics2
+    public angulartics2: Angulartics2,
+    public referrerService: ReferrerService
   ) {
   }
 

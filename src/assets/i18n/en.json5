@@ -127,7 +127,8 @@
   "admin.registries.bitstream-formats.table.mimetype": "MIME Type",
 
   "admin.registries.bitstream-formats.table.name": "Name",
-  "admin.registries.bitstream-formats.table.id" : "ID",
+
+  "admin.registries.bitstream-formats.table.id": "ID",
 
   "admin.registries.bitstream-formats.table.return": "Back",
 
@@ -1691,7 +1692,7 @@
 
   "footer.link.feedback": "Send Feedback",
 
-  "footer.link.contact-us":"Contact us",
+  "footer.link.contact-us": "Contact us",
 
   "forgot-email.form.header": "Forgot Password",
 
@@ -2687,7 +2688,7 @@
 
   "item.page.claim.tooltip": "Claim this item as profile",
 
-  "item.page.license.message": ['This item is', 'and licensed under:'],
+  "item.page.license.message": ["This item is", "and licensed under:"],
 
   "item.page.matomo-statistics.views.button": "Views",
 
@@ -4322,9 +4323,9 @@
 
   "search.filters.withdrawn.false": "No",
 
-  "search.filters.filter.language.label":"Search language",
+  "search.filters.filter.language.label": "Search language",
 
-  "search.filters.filter.language.placeholder":"Language",
+  "search.filters.filter.language.placeholder": "Language",
 
   "search.filters.head": "Filters",
 
@@ -5811,5 +5812,5 @@
 
   "navbar.about.service-integrations": "Service integrations",
 
-  "navbar.about.project-partnership": "Project partnerships"
+  "navbar.about.project-partnership": "Project partnerships",
 }

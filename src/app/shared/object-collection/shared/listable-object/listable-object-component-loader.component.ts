@@ -3,7 +3,6 @@ import {
   Component,
   ComponentRef,
   EventEmitter,
-  ElementRef,
   Input,
   OnChanges,
   OnDestroy,

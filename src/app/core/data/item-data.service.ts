@@ -46,7 +46,7 @@ import { RestRequestMethod } from './rest-request-method';
 import { CreateData, CreateDataImpl } from './base/create-data';
 import { RequestParam } from '../cache/models/request-param.model';
 import { dataService } from './base/data-service.decorator';
-import {SearchData, SearchDataImpl} from './base/search-data';
+import {SearchData} from './base/search-data';
 import {FollowLinkConfig} from '../../shared/utils/follow-link-config.model';
 
 /**

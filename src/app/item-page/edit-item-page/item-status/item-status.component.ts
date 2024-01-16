@@ -9,7 +9,7 @@ import { RemoteData } from '../../../core/data/remote-data';
 import { getItemEditRoute, getItemPageRoute } from '../../item-page-routing-paths';
 import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../../core/data/feature-authorization/feature-id';
-import { hasValue, isNotEmpty } from '../../../shared/empty.util';
+import { hasValue } from '../../../shared/empty.util';
 import { getAllSucceededRemoteDataPayload, getFirstCompletedRemoteData, } from '../../../core/shared/operators';
 import { IdentifierDataService } from '../../../core/data/identifier-data.service';
 import { Identifier } from '../../../shared/object-list/identifier-data/identifier.model';

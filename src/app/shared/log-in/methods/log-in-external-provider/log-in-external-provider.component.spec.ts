@@ -6,8 +6,6 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { EPerson } from '../../../../core/eperson/models/eperson.model';
-import { EPersonMock } from '../../../testing/eperson.mock';
 import { authReducer } from '../../../../core/auth/auth.reducer';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { AuthServiceStub } from '../../../testing/auth-service.stub';
