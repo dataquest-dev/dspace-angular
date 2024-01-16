@@ -22,6 +22,7 @@ import { ConfigurationDataService } from '../../../core/data/configuration-data.
 import { RouterMock } from '../../mocks/router.mock';
 import { createSuccessfulRemoteDataObject$ } from '../../remote-data.utils';
 import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 describe('LogInContainerComponent', () => {
 

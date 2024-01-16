@@ -44,6 +44,9 @@ import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.u
 import { cold } from 'jasmine-marbles';
 import { WorkflowItem } from '../../../core/submission/models/workflowitem.model';
 import { SubmissionSectionError } from '../../objects/submission-section-error.model';
+import {
+  mockItemWithMetadataFieldsAndValue
+} from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigDataService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -158,7 +161,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
   let translateService: any;
 
   const sectionsServiceStub: any = new SectionsServiceStub();
-  const formConfigService: any = getMockSubmissionFormsConfigService();
+  let formConfigService: any = getMockSubmissionFormsConfigService();
   const submissionId = mockSubmissionId;
   const collectionId = mockSubmissionCollectionId;
   const parsedSectionErrors: any = mockUploadResponse1ParsedErrors.traditionalpageone;

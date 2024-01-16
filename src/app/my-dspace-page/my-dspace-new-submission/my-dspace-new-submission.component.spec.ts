@@ -27,6 +27,7 @@ import { HttpXsrfTokenExtractorMock } from '../../shared/mocks/http-xsrf-token-e
 import { getMockEntityTypeService } from './my-dspace-new-submission-dropdown/my-dspace-new-submission-dropdown.component.spec';
 import { EntityTypeDataService } from '../../core/data/entity-type-data.service';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { of } from 'rxjs';
 
 describe('MyDSpaceNewSubmissionComponent test', () => {
 
