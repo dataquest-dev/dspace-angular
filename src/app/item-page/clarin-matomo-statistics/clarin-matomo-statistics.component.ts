@@ -76,7 +76,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     ],
 
 
-  }
+  };
   // public chartLabels: Label[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   // `lineTension: 0` = straight lines
