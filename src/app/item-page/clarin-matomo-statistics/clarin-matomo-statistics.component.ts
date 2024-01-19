@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {ChartConfiguration, ChartDataset, ChartOptions} from 'chart.js';
+import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { HttpClient } from '@angular/common/http';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
