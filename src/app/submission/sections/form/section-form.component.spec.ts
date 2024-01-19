@@ -326,8 +326,6 @@ describe('SubmissionSectionFormComponent test suite', () => {
       };
       compAsAny.formData = newSectionData;
       compAsAny.sectionMetadata = ['dc.title'];
-      spyOn(compAsAny, 'inCurrentSubmissionScope').and.callThrough();
-
       compAsAny.sectionData.data = {
         'dc.title': [new FormFieldMetadataValueObject('test')]
       };
@@ -645,7 +643,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
     });
   });
 
-  describe('test `local.sponsor` complex input type', () => {
+  describe(' test `local.sponsor` complex input type', () => {
     beforeEach(() => {
       fixture = TestBed.createComponent(SubmissionSectionFormComponent);
       comp = fixture.componentInstance;
@@ -689,12 +687,10 @@ describe('SubmissionSectionFormComponent test suite', () => {
 
       expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
       // delay because in the method `updateItemSponsor()` is interval
-      // wait(500);
-
-      expect(comp.initForm).toHaveBeenCalledWith(sectionData);
-      expect(comp.subscriptions).toHaveBeenCalled();
-
-
+      setTimeout(()=>{                           // <<<---using ()=> syntax
+        expect(comp.initForm).toHaveBeenCalledWith(sectionData);
+        expect(comp.subscriptions).toHaveBeenCalled();
+      }, 1000);
     });
   });
 });
