@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ChartDataSets, ChartOptions } from 'chart.js';
-import { BaseChartDirective, Label } from 'ng2-charts';
+import {ChartConfiguration, ChartDataset, ChartOptions} from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 import { HttpClient } from '@angular/common/http';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { isNull, isUndefined } from '../../shared/empty.util';
@@ -54,51 +54,72 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
   public actualMonth = '';
 
   public chartMessage = '';
+  public chartLabels: ChartConfiguration<'line'>['data'] = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    datasets: [
+      {
+        data: [],
+        label: 'Views',
+        backgroundColor: '#9ee37d',
+        borderColor: '#358600',
+        pointBackgroundColor: '#1f6200',
+        hidden: false,
+      },
+      {
+        data: [],
+        label: 'Downloads',
+        backgroundColor: '#51b9f2',
+        borderColor: '#336ab5',
+        pointBackgroundColor: '#124a94',
+        hidden: false,
+      }
+    ],
 
-  public chartLabels: Label[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  }
+  // public chartLabels: Label[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   // `lineTension: 0` = straight lines
-  public chartData: ChartDataSets[] = [
-    {
-      data: [],
-      label: 'Views',
-      backgroundColor: '#9ee37d',
-      borderColor: '#358600',
-      pointBackgroundColor: '#1f6200',
-      hidden: false,
-      lineTension: 0
-    },
-    {
-      data: [],
-      label: 'Downloads',
-      backgroundColor: '#51b9f2',
-      borderColor: '#336ab5',
-      pointBackgroundColor: '#124a94',
-      hidden: false,
-      lineTension: 0
-    }
-  ];
+  // public chartData: ChartDataSets[] = [
+  //   {
+  //     data: [],
+  //     label: 'Views',
+  //     backgroundColor: '#9ee37d',
+  //     borderColor: '#358600',
+  //     pointBackgroundColor: '#1f6200',
+  //     hidden: false,
+  //     lineTension: 0
+  //   },
+  //   {
+  //     data: [],
+  //     label: 'Downloads',
+  //     backgroundColor: '#51b9f2',
+  //     borderColor: '#336ab5',
+  //     pointBackgroundColor: '#124a94',
+  //     hidden: false,
+  //     lineTension: 0
+  //   }
+  // ];
 
   public color = '#27496d';
-  public chartOptions: ChartOptions = {
+  public chartOptions: ChartConfiguration['options'] = {
     scales: {
-      xAxes: [{
-        gridLines: {
+      x: {
+        grid: {
           color: this.color
         },
         ticks: {
-          fontColor: '#00a8cc'
+          color: '#00a8cc'
         },
-      }],
-      yAxes: [{
-        gridLines: {
+      },
+      y:{
+        grid: {
           color: this.color
         },
         ticks: {
-          beginAtZero: true,
-          fontColor: this.color
+          color: this.color
         }
-      }]
+      }
     }
   };
 
@@ -501,14 +522,14 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
     // Update chart message e.g., `Statistics for years 2022 to 2023`, `Statistics for the year 2022`,..
     this.updateChartMessage(labels);
 
-    if (this.chartData) {
-      if (this.chartData[0]) {
+    if (this.chartLabels.datasets) {
+      if (this.chartLabels.datasets[0]) {
         // Update view data
-        this.chartData[0].data = totalDataViews;
+        this.chartLabels.datasets[0].data = totalDataViews;
       }
-      if (this.chartData[1]) {
+      if (this.chartLabels.datasets[1]) {
         // Update downloads data
-        this.chartData[1].data = totalDataDownloads;
+        this.chartLabels.datasets[1].data = totalDataDownloads;
       }
     }
     this.chart.update();
@@ -516,11 +537,11 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
   setLabels(labels) {
     labels.forEach(label => {
-      this.chartLabels.push(label);
+      this.chartLabels.labels.push(label);
     });
   }
 
   removeLabels() {
-    this.chartLabels = [];
+    this.chartLabels.labels = [];
   }
 }
