@@ -19,7 +19,8 @@ function getItem(metadata: MetadataMap) {
   return Object.assign(new Item(), {
     bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
     metadata: metadata,
-    relationships: createRelationshipsObservable()
+    relationships: createRelationshipsObservable(),
+    id: '123456789'
   });
 }
 
