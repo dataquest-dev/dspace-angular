@@ -676,6 +676,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       formConfigService.findByHref.and.returnValue(createSuccessfulRemoteDataObject$(testFormConfiguration));
       spyOn(comp, 'initForm');
       spyOn(comp, 'subscriptions');
+      spyOn(comp, 'reinitializeForm');
 
       const wi = new WorkspaceItem();
       wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldsAndValue(['local.sponsor'], EU_SPONSOR));
