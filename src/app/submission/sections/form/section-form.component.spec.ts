@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, inject, TestBed, waitForAsync} from '@angular/core/testing';
 
 import { of as observableOf } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -686,11 +686,9 @@ describe('SubmissionSectionFormComponent test suite', () => {
       fixture.detectChanges();
 
       expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
-      // delay because in the method `updateItemSponsor()` is interval
-      setTimeout(()=>{                           // <<<---using ()=> syntax
-        expect(comp.initForm).toHaveBeenCalledWith(sectionData);
-        expect(comp.subscriptions).toHaveBeenCalled();
-      }, 1000);
+
+      expect(comp.initForm).toHaveBeenCalledWith(sectionData);
+      expect(comp.subscriptions).toHaveBeenCalled();
     });
   });
 });
