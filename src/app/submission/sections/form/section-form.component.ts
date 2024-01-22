@@ -445,7 +445,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    * @param metadataField input field which is updating
    * @param newMetadataValue value added to the input field
    */
-  private reinitializeForm(metadataField, newMetadataValue) {
+  public reinitializeForm(metadataField, newMetadataValue) {
     let metadataValueFromDB = '';
     // Counter to count update request timeout (20s)
     let counter = 0;

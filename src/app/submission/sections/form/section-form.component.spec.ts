@@ -687,8 +687,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
 
       expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
 
-      expect(comp.initForm).toHaveBeenCalledWith(sectionData);
-      expect(comp.subscriptions).toHaveBeenCalled();
+      expect(comp.reinitializeForm).toHaveBeenCalled();
     });
   });
 });
