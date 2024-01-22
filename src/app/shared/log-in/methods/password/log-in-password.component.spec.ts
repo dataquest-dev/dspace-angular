@@ -10,7 +10,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LogInPasswordComponent } from './log-in-password.component';
 import { authReducer } from '../../../../core/auth/auth.reducer';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { AuthServiceStub } from '../../../testing/auth-service.stub';
 import { storeModuleConfig } from '../../../../app.reducer';
 import { AuthMethod } from '../../../../core/auth/models/auth.method';
 import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
@@ -84,7 +83,7 @@ describe('LogInPasswordComponent', () => {
         BrowserOnlyMockPipe,
       ],
       providers: [
-        { provide: AuthService, useClass: AuthServiceStub },
+        { provide: AuthService, useValue: authService },
         { provide: AuthorizationDataService, useClass: AuthorizationDataServiceStub },
         { provide: 'authMethodProvider', useValue: new AuthMethod(AuthMethodType.Password, 0) },
         { provide: 'isStandalonePage', useValue: true },
