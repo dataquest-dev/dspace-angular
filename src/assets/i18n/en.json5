@@ -2014,6 +2014,8 @@
 
   "handle-table.dropdown.search-option": "Search option",
 
+  "handle-table.dropdown.search-button": "Search",
+
 
 
   "handle-table.global-actions.title": "Global Actions",
@@ -3099,6 +3101,8 @@
 
   "login.form.submit": "Log in",
 
+  "login.form.or-divider": "or",
+
   "login.title": "Login",
 
   "login.breadcrumbs": "Login",
@@ -3336,15 +3340,17 @@
 
   "menu.section.workflow": "Administer Workflow",
 
+  "menu.section.handle": "Manage Handles",
+
+  "menu.section.licenses": "License Administration",
+
+  "menu.section.submissions": "Submissions",
+
   "metadata-export-search.tooltip": "Export search results as CSV",
 
   "metadata-export-search.submit.success": "The export was started successfully",
 
   "metadata-export-search.submit.error": "Starting the export has failed",
-
-  "menu.section.handle": "Manage Handles",
-
-  "menu.section.licenses": "License Administration",
 
   "autocomplete.suggestion.sponsor.funding-code": "Funding code",
 
