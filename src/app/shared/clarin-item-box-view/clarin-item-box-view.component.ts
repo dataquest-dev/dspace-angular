@@ -185,6 +185,9 @@ export class ClarinItemBoxViewComponent implements OnInit {
       case LicenseType.academic:
         this.licenseType = 'Academic Use';
         break;
+      default:
+        this.licenseType = this.licenseLabel;
+        break;
     }
 
     // load license label icons

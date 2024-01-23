@@ -30,7 +30,7 @@
       </div>
       <div [ngClass]="{'row': true, 'justify-content-end': true, 'pt-3': (itemCountOfFiles | async) === -1}">
         <div *ngIf="licenseType != null"
-             [ngClass]="'d-inline py-1 px-1 label label-license' + ' label-' + licenseLabel + ' rounded text-white'">
+             [ngClass]="'d-inline py-1 px-1 label label-license  label-default' + ' label-' + licenseLabel + ' rounded text-white'">
           <span>
             {{licenseType }}
           </span>
