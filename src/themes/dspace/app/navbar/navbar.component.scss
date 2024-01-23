@@ -30,7 +30,7 @@ nav.navbar {
     z-index: var(--ds-nav-z-index);
     &.open {
       height: 100vh; //doesn't matter because wrapper is sticky
-      border-bottom: 5px var(--ds-header-navbar-border-bottom-color) solid; // open navbar covers header-navbar-wrapper border
+      //border-bottom: 5px var(--ds-header-navbar-border-bottom-color) solid; // open navbar covers header-navbar-wrapper border
     }
   }
 }
