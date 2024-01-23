@@ -1,8 +1,8 @@
 <div class="pt-3" *ngIf="item != null">
   <div class="card">
     <div class="card-body pt-0 pb-0">
-      <div class="row justify-content-between">
-        <span class="item-type">{{ itemType }}</span>
+      <div *ngVar="hasItemType() as nonEmptyItemType" [ngClass]="{'row': true, 'justify-content-between': nonEmptyItemType, 'justify-content-end': !nonEmptyItemType}">
+        <span *ngIf="nonEmptyItemType" class="item-type">{{ itemType }}</span>
         <span class="item-community label"><a class="pt-2" [href]="communitySearchRedirect | async">{{ (itemCommunity | async)?.name }}</a></span>
       </div>
       <div class="pl-3">
