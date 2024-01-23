@@ -60,7 +60,8 @@ import { ThemedWorkspaceItemsDeletePageComponent } from './workspaceitems-delete
         ]
       }
     ])
-  ]
+  ],
+  providers: [WorkspaceItemPageResolver, ItemFromWorkspaceResolver]
 })
 /**
  * This module defines the default component to load when navigating to the workspaceitems edit page path
