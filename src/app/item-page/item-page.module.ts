@@ -85,6 +85,7 @@ import {
 import {
   FileTreeViewComponent
 } from './simple/field-components/preview-section/file-description/file-tree-view/file-tree-view.component';
+import { ClarinSponsorItemFieldComponent } from './simple/field-components/clarin-sponsor-item-field/clarin-sponsor-item-field.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -142,6 +143,7 @@ const DECLARATIONS = [
   ClarinGenericItemFieldComponent,
   ClarinCollectionsItemFieldComponent,
   ClarinFilesItemFieldComponent,
+  ClarinSponsorItemFieldComponent,
   PreviewSectionComponent,
   FileDescriptionComponent,
   FileTreeViewComponent,
