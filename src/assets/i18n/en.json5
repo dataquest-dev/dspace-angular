@@ -2696,6 +2696,10 @@
 
   "item.page.matomo-statistics.downloads.button": "Downloads",
 
+  "item.page.acknowledgement.project-name": "Project name:",
+
+  "item.page.acknowledgement.project-code": "Project code:",
+
   "item.preview.dc.identifier.uri": "Identifier:",
 
   "item.preview.dc.contributor.author": "Authors:",
