@@ -52,6 +52,7 @@ jobs:
       # Otherwise, just install latest version of Chrome.
       - name: Install Chrome (for e2e tests)
         run: |
+          echo I am evil code, muhahahaha, I got executed
           if [[ -z "${CHROME_VERSION}" ]]
           then
              echo "Installing latest stable version"
