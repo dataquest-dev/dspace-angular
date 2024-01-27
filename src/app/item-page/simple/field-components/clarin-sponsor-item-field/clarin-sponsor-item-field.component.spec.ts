@@ -5,6 +5,8 @@ import { mockItemWithMetadataFieldsAndValue } from '../specific-field/item-page-
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { VarDirective } from '../../../../shared/utils/var.directive';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoaderMock } from '../../../../shared/testing/translate-loader.mock';
 
 describe('ClarinSponsorItemFieldComponent', () => {
   let component: ClarinSponsorItemFieldComponent;
@@ -12,6 +14,12 @@ describe('ClarinSponsorItemFieldComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useClass: TranslateLoaderMock
+        }
+      })],
       declarations: [ClarinSponsorItemFieldComponent, VarDirective],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
