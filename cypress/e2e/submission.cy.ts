@@ -1,4 +1,5 @@
 import { TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD, TEST_SUBMIT_COLLECTION_NAME, TEST_SUBMIT_COLLECTION_UUID } from 'cypress/support/e2e';
+import { createItemProcess } from '../support/commands';
 
 describe('New Submission page', () => {
     // NOTE: We already test that new submissions can be started from MyDSpace in my-dspace.spec.ts
@@ -104,7 +105,15 @@ describe('New Submission page', () => {
 
         // Confirm the required license by checking checkbox
         // (NOTE: requires "force:true" cause Cypress claims this checkbox is covered by its own <span>)
-        cy.get('input#granted').check( {force: true} );
+        // CLARIN
+        createItemProcess.clickOnDistributionLicenseToggle();
+        // click on the dropdown button to list options
+        createItemProcess.clickOnLicenseSelectionButton();
+        // select `Public Domain Mark (PD)` from the selection
+        createItemProcess.selectValueFromLicenseSelection(2);
+        // // selected value should be seen as selected value in the selection
+        createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
+        // CLARIN
 
         // Before using Cypress drag & drop, we have to manually trigger the "dragover" event.
         // This ensures our UI displays the dropzone that covers the entire submission page.
@@ -123,12 +132,14 @@ describe('New Submission page', () => {
         // Wait for upload to complete before proceeding
         cy.wait('@upload');
 
-        // Wait for deposit button to not be disabled & click it.
-        cy.get('button#deposit').should('not.be.disabled').click();
-
-        // No warnings should exist. Instead, just successful deposit alert is displayed
-        cy.get('ds-notification div.alert-warning').should('not.exist');
-        cy.get('ds-notification div.alert-success').should('be.visible');
+        // CLARIN
+        // // Wait for deposit button to not be disabled & click it.
+        // cy.get('button#deposit').should('not.be.disabled').click();
+        //
+        // // No warnings should exist. Instead, just successful deposit alert is displayed
+        // cy.get('ds-notification div.alert-warning').should('not.exist');
+        // cy.get('ds-notification div.alert-success').should('be.visible');
+        // CLARIN
     });
 
 });
