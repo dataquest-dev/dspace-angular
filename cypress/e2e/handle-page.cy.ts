@@ -12,13 +12,8 @@ describe('Handle Page', () => {
     },
     defaultCommandTimeout: 10000
   }, () => {
-    cy.visit('/login');
-
-    // Login as admin
-    cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
-
     cy.visit('/handle-table');
-
+    cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
     // <ds-handle-page> tag must be loaded
     cy.get('ds-handle-page').should('exist');
 

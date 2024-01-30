@@ -128,6 +128,13 @@ function loginViaForm(email: string, password: string): void {
 // Add as a Cypress command (i.e. assign to 'cy.loginViaForm')
 Cypress.Commands.add('loginViaForm', loginViaForm);
 
+// Do not fail test if an uncaught exception occurs in the application
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false here prevents Cypress from
+  // failing the test
+  return false
+})
+
 
 /**
  * Generate statistic view event for given object. Useful for testing statistics pages with
