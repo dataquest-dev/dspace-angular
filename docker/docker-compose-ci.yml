@@ -57,6 +57,7 @@ services:
     - |
       while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
       /dspace/bin/dspace database migrate force
+      /dspace/bin/dspace dspace index-discovery -b
       catalina.sh run
   # DSpace database container
   # NOTE: This is customized to use our loadsql image, so that we are using a database with existing test data
