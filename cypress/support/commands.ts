@@ -5,6 +5,7 @@
 
 import { AuthTokenInfo, TOKENITEM } from 'src/app/core/auth/models/auth-token-info.model';
 import { DSPACE_XSRF_COOKIE, XSRF_REQUEST_HEADER } from 'src/app/core/xsrf/xsrf.constants';
+import { TEST_COLLECTION_NAME } from './e2e';
 
 // NOTE: FALLBACK_TEST_REST_BASE_URL is only used if Cypress cannot read the REST API BaseURL
 // from the Angular UI's config.json. See 'login()'.
@@ -118,6 +119,8 @@ Cypress.Commands.add('login', login);
  * @param password password to login as
  */
 function loginViaForm(email: string, password: string): void {
+    // Cancel discojuice login - only if it is popped up
+    cy.get('.discojuice_close').should('exist').click();
     // Enter email
     cy.get('ds-log-in [data-test="email"]').type(email);
     // Enter password
