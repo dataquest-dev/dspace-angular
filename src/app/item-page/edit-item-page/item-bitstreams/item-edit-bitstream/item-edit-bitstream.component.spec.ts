@@ -167,4 +167,10 @@ describe('ItemEditBitstreamComponent', () => {
       expect(comp.bitstreamDownloadUrl).toEqual(getBitstreamDownloadRoute(bitstream));
     });
   });
+
+  describe('when the bitstream checksum is null', () => {
+    it('should not throw any error', () => {
+      expect(comp.checksumsAreEqual(null)).toBeFalse();
+    });
+  });
 });

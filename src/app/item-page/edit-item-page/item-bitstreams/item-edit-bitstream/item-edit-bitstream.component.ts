@@ -15,6 +15,7 @@ import { FieldUpdate } from '../../../../core/data/object-updates/field-update.m
 import { FieldChangeType } from '../../../../core/data/object-updates/field-change-type.model';
 import { getBitstreamDownloadRoute } from '../../../../app-routing-paths';
 import { BitstreamChecksum, CheckSum } from '../../../../core/shared/bitstream-checksum.model';
+import { hasNoValue } from '../../../../shared/empty.util';
 
 @Component({
   selector: 'ds-item-edit-bitstream',
@@ -140,7 +141,7 @@ export class ItemEditBitstreamComponent implements OnChanges, OnInit {
    * @param checksum2 e.g. Active store checksum (local or S3)
    */
   compareChecksums(checksum1: CheckSum, checksum2: CheckSum): boolean {
-    return checksum1.value === checksum2.value && checksum1.checkSumAlgorithm === checksum2.checkSumAlgorithm;
+    return checksum1?.value === checksum2?.value && checksum1?.checkSumAlgorithm === checksum2?.checkSumAlgorithm;
   }
 
   /**
@@ -149,6 +150,10 @@ export class ItemEditBitstreamComponent implements OnChanges, OnInit {
    * @param bitstreamChecksum which contains all checksums
    */
   checksumsAreEqual(bitstreamChecksum: BitstreamChecksum): boolean {
+    if (hasNoValue(bitstreamChecksum)){
+      return false;
+    }
+
     if (this.isBitstreamSynchronized()) {
       // Compare DB and Active store checksums
       // Compare DB and Synchronized and Active store checksums
