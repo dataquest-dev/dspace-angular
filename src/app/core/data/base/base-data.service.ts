@@ -273,7 +273,7 @@ export class BaseDataService<T extends CacheableObject> implements HALDataServic
       // call it isn't immediately returned, but we wait until the remote data for the new request
       // is created. If useCachedVersionIfAvailable is false it also ensures you don't get a
       // cached completed object
-      skipWhile((rd: RemoteData<T>) => useCachedVersionIfAvailable ? rd.isStale : rd.hasCompleted),
+      skipWhile((rd: RemoteData<T>) => rd.isStale || (!useCachedVersionIfAvailable && rd.hasCompleted)),
       this.reRequestStaleRemoteData(reRequestOnStale, () =>
         this.findByHref(href$, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow)),
     );
@@ -307,7 +307,7 @@ export class BaseDataService<T extends CacheableObject> implements HALDataServic
       // call it isn't immediately returned, but we wait until the remote data for the new request
       // is created. If useCachedVersionIfAvailable is false it also ensures you don't get a
       // cached completed object
-      skipWhile((rd: RemoteData<PaginatedList<T>>) => useCachedVersionIfAvailable ? rd.isStale : rd.hasCompleted),
+      skipWhile((rd: RemoteData<PaginatedList<T>>) => rd.isStale || (!useCachedVersionIfAvailable && rd.hasCompleted)),
       this.reRequestStaleRemoteData(reRequestOnStale, () =>
         this.findListByHref(href$, options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow)),
     );
@@ -339,6 +339,48 @@ export class BaseDataService<T extends CacheableObject> implements HALDataServic
         this.requestService.send(request, useCachedVersionIfAvailable);
       });
     }
+  }
+
+  /**
+   * Checks for the provided href whether a response is already cached
+   * @param href$                       The url for which to check whether there is a cached response.
+   *                                    Can be a string or an Observable<string>
+   */
+  hasCachedResponse(href$: string | Observable<string>): Observable<boolean> {
+    if (isNotEmpty(href$)) {
+      if (typeof href$ === 'string') {
+        href$ = observableOf(href$);
+      }
+      return href$.pipe(
+        isNotEmptyOperator(),
+        take(1),
+        map((href: string) => {
+          const requestId = this.requestService.generateRequestId();
+          const request = new GetRequest(requestId, href);
+          return !this.requestService.shouldDispatchRequest(request, true);
+        }),
+      );
+    }
+    throw new Error(`Can't check whether there is a cached response for an empty href$`);
+  }
+
+  /**
+   * Checks for the provided href whether an ERROR response is currently cached
+   * @param href$                       The url for which to check whether there is a cached ERROR response.
+   *                                    Can be a string or an Observable<string>
+   */
+  hasCachedErrorResponse(href$: string | Observable<string>): Observable<boolean> {
+    return this.hasCachedResponse(href$).pipe(
+      switchMap((hasCachedResponse) => {
+        if (hasCachedResponse) {
+           return this.rdbService.buildSingle(href$).pipe(
+             getFirstCompletedRemoteData(),
+             map((rd => rd.hasFailed))
+           );
+        }
+        return observableOf(false);
+      })
+    );
   }
 
   /**

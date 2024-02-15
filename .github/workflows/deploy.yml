@@ -33,10 +33,14 @@ jobs:
     if: github.event.inputs.INSTANCE == '*' || github.event.inputs.INSTANCE == '5'
     runs-on: dspace-dep-1
     timeout-minutes: 5
+    env:
+      INSTANCE: '5'
+      ENVFILE: /opt/dspace-envs/.env.dspace.dev-5
     steps:
       - uses: actions/checkout@v4
 
       - name: deploy to dev-5
+        working-directory: build-scripts/run/
         run: |
           cd $GITHUB_WORKSPACE/build-scripts/run/
           pwd
@@ -64,7 +68,7 @@ jobs:
           echo S3_ENDPOINT=CHANGE ME >> .env.dev-5
 
           export ENVFILE=$(pwd)/.env.dev-5
-          ./start.sh dspace-5
+          ./start.sh dspace-$INSTANCE
 
   deploy-8:
     if: github.event.inputs.INSTANCE == '*' || github.event.inputs.INSTANCE == '8'
