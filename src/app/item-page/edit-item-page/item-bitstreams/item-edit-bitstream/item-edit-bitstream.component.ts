@@ -182,7 +182,7 @@ export class ItemEditBitstreamComponent implements OnChanges, OnInit {
   computeChecksum() {
     this.loading = true;
     // Send request to get bitstream checksum
-    this.checkSum$ = this.bitstreamChecksumDataService.findByHref(this.bitstream._links.checksum.href)
+    this.checkSum$ = this.bitstreamChecksumDataService.findByHref(this.bitstream?._links?.checksum?.href)
       .pipe(getFirstSucceededRemoteData(), getRemoteDataPayload(),
         map(value => {
           this.computedChecksum = true;
