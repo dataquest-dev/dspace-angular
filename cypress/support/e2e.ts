@@ -14,7 +14,7 @@
 // ***********************************************************
 
 // Import all custom Commands (from commands.ts) for all tests
-// import './commands';
+import './commands';
 
 // Import Cypress Axe tools for all tests
 // https://github.com/component-driven/cypress-axe
