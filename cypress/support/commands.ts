@@ -118,8 +118,6 @@ Cypress.Commands.add('login', login);
  * @param password password to login as
  */
 function loginViaForm(email: string, password: string): void {
-    cy.wait(500);
-    cy.get('.discojuice_close').should('exist').click();
     // Enter email
     cy.get('ds-log-in [data-test="email"]').type(email);
     // Enter password
