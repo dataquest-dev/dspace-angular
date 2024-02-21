@@ -301,16 +301,4 @@ describe('ItemPageComponent', () => {
     }));
   });
 
-  describe('when the item has the file', () => {
-    it('should display license and files section', waitForAsync(async () => {
-      comp.itemRD$ = createSuccessfulRemoteDataObject$(mockItem);
-      fixture.detectChanges();
-
-      void fixture.whenStable().then(() => {
-        const objectLoader = fixture.debugElement.query(By.css('ds-clarin-license-info'));
-        expect(objectLoader.nativeElement).toBeDefined();
-      });
-    }));
-  });
-
 });

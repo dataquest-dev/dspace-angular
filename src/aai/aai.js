@@ -88,6 +88,8 @@
               case 'local':
                 // DiscoJuice.UI.setScreen(opts.localauth);
                 // jQuery('input#login').focus();
+                // Use cookie to toggle discojuice popup.
+                setCookie('SHOW_DISCOJUICE_POPUP', false, 1)
                 window.location = window.location.origin + (namespace === '' ? namespace : '/' + namespace) + "/login?redirectUrl=" + window.location.href;
                 break;
               //case 'saml':
@@ -111,6 +113,15 @@
         return djc;
       } //if jQuery(selector)
     };
+
+    // Set a cookie
+    function setCookie(name, value, daysToExpire) {
+      var expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + daysToExpire);
+
+      var cookieString = name + '=' + value + ';expires=' + expirationDate.toUTCString() + ';path=/';
+      document.cookie = cookieString;
+    }
   }
 
   if (!window.aai) {
