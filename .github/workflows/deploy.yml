@@ -50,7 +50,7 @@ jobs:
     timeout-minutes: 120
     env:
       INSTANCE: '8'
-      # this .env (as of time of writing) REPLACES ENTRYPOINT to angular to include
+      # 2024/02: this .env replaces ENTRYPOINT to angular
       # !!!!WARNING!!!!
       # disable TSL checks = allowing to cooperate with https backend with invalid
       # certificate
