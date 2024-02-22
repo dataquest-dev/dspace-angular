@@ -142,6 +142,6 @@ jobs:
     needs: docker
     uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@internal/rework-actions
     with:
-      INSTANCE: 5
+      INSTANCE: '5'
       IMPORT: false
     secrets: inherit
