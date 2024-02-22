@@ -36,7 +36,7 @@ jobs:
 
     steps:
       - name: just do it
-        runs: |
+        run: |
           echo this is it.
 
 #      # https://github.com/actions/checkout
