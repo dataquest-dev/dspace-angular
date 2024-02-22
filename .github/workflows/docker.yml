@@ -140,7 +140,7 @@ jobs:
 
   deploy:
     needs: docker
-    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml
+    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@dtq-dev
     with:
       INSTANCE: '5'
       IMPORT: false
