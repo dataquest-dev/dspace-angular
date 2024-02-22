@@ -35,7 +35,7 @@ jobs:
         latest=false
 
     steps:
-     # https://github.com/actions/checkout
+      # https://github.com/actions/checkout
       - name: Checkout codebase
         uses: actions/checkout@v3
 
@@ -140,7 +140,7 @@ jobs:
 
   deploy:
     needs: docker
-    uses: ./.github/workflows/deploy.yml
+    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml
     with:
       INSTANCE: '5'
       IMPORT: false
