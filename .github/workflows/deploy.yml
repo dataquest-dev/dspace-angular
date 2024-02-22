@@ -45,7 +45,7 @@ jobs:
           ./start.sh dspace-$INSTANCE
 
   deploy-8:
-    if: github.event.inputs.INSTANCE == '*' || github.event.inputs.INSTANCE == '8'
+    if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8'
     runs-on: dspace-dep-1
     timeout-minutes: 120
     env:
@@ -72,7 +72,7 @@ jobs:
 
   import-8:
     runs-on: dspace-dep-1
-    if: github.event.inputs.IMPORT == 'true'
+    if: inputs.IMPORT == 'true' # shouldn't there also be if instance = 5?
     needs: deploy-8
     env:
       INSTANCE: '8'
