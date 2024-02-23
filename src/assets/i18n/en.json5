@@ -2789,6 +2789,9 @@
   "item.view.box.description.message": "Description:",
 
 
+  "item.view.box.author.preview.and": "and",
+
+
   "item.file.description.not.supported.video": "Your browser does not support the video tag.",
 
   "item.file.description.name": "Name",
