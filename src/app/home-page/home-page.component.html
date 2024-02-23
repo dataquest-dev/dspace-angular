@@ -32,7 +32,7 @@
       </div>
       <div class="col-md-4 d-none d-lg-block">
         <div class="row">
-          <a href="https://lindat.mff.cuni.cz/" class="col-md-7" style="height: 160px; position: relative;">
+          <a routerLink="home" class="col-md-7" style="height: 160px; position: relative;">
             <img alt="LINDAT/CLARIAH-CZ logo" class="logo" style="position: absolute; height: 50%; top: 0px; bottom: 0px; margin: auto;" src="assets/images/lindat-logo-new-sm.png">
           </a>
           <a class="col-md-5" style="height: 160px; position: relative;" href="http://www.clarin.eu/">
@@ -47,15 +47,16 @@
   </div>
   <div class="container clarin-home-page-color pt-4 pb-5">
     <div class="row justify-content-center pt-4">
-      <div class="input-group input-group-lg col-md-6 col-md-offset-3">
-        <span class="input-group-addon">
+      <div class="col-6 d-flex justify-content-center">
+        <span class="flex-fill input-group-addon">
           <i style="color: #7479B8;" class="fas fa-search fa-lg"></i>
         </span>
-        <input type="text" class="form-control" name="query"
-               #searchValue
-               (keyup.enter)="redirectToSearch(searchValue.value)">
-        <button class="btn btn-repository" (click)="redirectToSearch(searchValue.value)">{{'home-page.search' | translate}}
-        </button>
+        <ds-themed-search-form id="search-form"
+                               class="flex-fill"
+                               [currentUrl]="searchLink"
+                               [inPlaceSearch]="false"
+                               [searchPlaceholder]="'home-page.search' | translate">
+        </ds-themed-search-form>
       </div>
     </div>
     <div class="row justify-content-center pt-3">
