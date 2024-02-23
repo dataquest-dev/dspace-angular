@@ -87,7 +87,8 @@ jobs:
 
   import-8:
     runs-on: dspace-dep-1
-    if: inputs.IMPORT == 'true'
+    if: inputs.IMPORT
+
     needs: deploy-8
     env:
       INSTANCE: '8'
