@@ -24,7 +24,8 @@
         </div>
         <div class="row d-flex pt-1">
           <div class="label label-info label-icon"><i class="fas fa-paperclip fa-sm"></i></div>
-          <div *ngIf="(itemCountOfFiles | async) !== -1" class="label label-info"> {{'item.view.box.files.message.0' | translate}} {{ (itemCountOfFiles | async) }} {{'item.view.box.files.message.1' | translate}} ({{(itemFilesSizeBytes | async) | dsFileSize }}). </div>
+          <div *ngIf="hasMoreFiles()" class="label label-info"> {{'item.view.box.files.message.0' | translate}} {{ (itemCountOfFiles | async) }} {{'item.view.box.files.message.1' | translate}} ({{(itemFilesSizeBytes | async) | dsFileSize }}). </div>
+          <div *ngIf="(itemCountOfFiles | async) === 1" class="label label-info"> {{'item.view.box.one.file.message' | translate}} ({{(itemFilesSizeBytes | async) | dsFileSize }}). </div>
           <div *ngIf="(itemCountOfFiles | async) === -1" class="label label-info"> {{'item.view.box.no-files.message' | translate}}</div>
         </div>
       </div>

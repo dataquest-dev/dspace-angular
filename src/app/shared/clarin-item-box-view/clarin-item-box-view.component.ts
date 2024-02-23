@@ -219,6 +219,10 @@ export class ClarinItemBoxViewComponent implements OnInit {
   hasItemType() {
     return !isEmpty(this.itemType);
   }
+
+  hasMoreFiles() {
+    return this.itemCountOfFiles.value > 1;
+  }
 }
 
 /**

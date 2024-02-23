@@ -2782,6 +2782,8 @@
 
   "item.view.box.files.message": ["This item contains", "files"],
 
+  "item.view.box.one.file.message": "This item contains 1 file",
+
   "item.view.box.no-files.message": "This item contains no files.",
 
   "item.view.box.description.message": "Description:",
