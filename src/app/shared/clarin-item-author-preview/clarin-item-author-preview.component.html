@@ -16,12 +16,12 @@
               <span (click)="toggleShowEveryAuthor()" class="clarin-font-size">
                 <i [hidden]="showEveryAuthor | async" class="fas fa-caret-right"></i>
                 <i [hidden]="!(showEveryAuthor | async)" class="fas fa-caret-down"></i>
-                Show everyone
+                {{'item.view.box.author.preview.show-everyone' | translate}}
               </span>
 
       <div [hidden]="!(showEveryAuthor | async)">
                 <span *ngFor="let author of (itemAuthors | async); let i = index">
-                  <span *ngIf="i > 1 && i < itemAuthors.value.length -1"> ; </span>
+                  <span *ngIf="i > 1 && i < itemAuthors.value.length -1">; </span>
                   <span *ngIf="i == itemAuthors.value.length -1">
                     {{'item.view.box.author.preview.and' | translate}}
                   </span>

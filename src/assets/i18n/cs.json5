@@ -2683,6 +2683,8 @@
   "item.view.box.description.message": "Popis:",
   // "item.view.box.author.preview.and": "and:",
   "item.view.box.author.preview.and": "a",
+  // "item.view.box.author.preview.show-everyone": "show everyone:",
+  "item.view.box.author.preview.show-everyone": "zobraz všechny autory",
   // "item.file.description.not.supported.video": "Your browser does not support the video tag.",
   "item.file.description.not.supported.video": "Váš prohlížeč nepodporuje videa.",
   // "item.file.description.name": "Name",
