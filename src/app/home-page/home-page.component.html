@@ -51,7 +51,9 @@
         <span class="input-group-addon">
           <i style="color: #7479B8;" class="fas fa-search fa-lg"></i>
         </span>
-        <input type="text" class="form-control" name="query" #searchValue>
+        <input type="text" class="form-control" name="query"
+               #searchValue
+               (keyup.enter)="redirectToSearch(searchValue.value)">
         <button class="btn btn-repository" (click)="redirectToSearch(searchValue.value)">{{'home-page.search' | translate}}
         </button>
       </div>
