@@ -2784,6 +2784,8 @@
 
   "item.view.box.no-files.message": "This item contains no files.",
 
+  "item.view.box.description.message": "Description:",
+
 
   "item.file.description.not.supported.video": "Your browser does not support the video tag.",
 
