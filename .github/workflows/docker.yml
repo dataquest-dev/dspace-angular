@@ -22,7 +22,7 @@ jobs:
   dspace-angular:
     # Ensure this job never runs on forked repos. It's only executed for 'dspace/dspace-angular'
     if: github.repository == 'dataquest-dev/dspace-angular'
-    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
+    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@internal/improve-build
     with:
       build_id: dspace-angular
       image_name: dataquest/dspace-angular
@@ -56,7 +56,7 @@ jobs:
 
   deploy:
     needs: dspace-angular
-    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@internal/improve-build
+    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@dtq-dev
     with:
       INSTANCE: '5'
       IMPORT: false
