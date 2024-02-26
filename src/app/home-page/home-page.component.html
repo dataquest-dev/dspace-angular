@@ -64,20 +64,20 @@
     </div>
     <div class="row justify-content-center pt-5">
       <div class="col-md-9">
-        <div class="row offset-md-1 justify-content-center">
-          <div class="fast-search-col border-bottom">
+        <div class="row offset-md-1">
+          <div class="col-md-4 border-bottom">
             <strong>{{'home-page.hyperlink.author.message' | translate}}</strong>
             <div *ngFor="let authorLink of (authors$| async); let i = index">
               <span><a [href]="authorLink.url">{{ authorLink.name }} ({{ authorLink.occurrences }})</a></span>
             </div>
           </div>
-          <div class="fast-search-col border-bottom">
+          <div class="col-md-4 border-bottom">
             <strong>{{'home-page.hyperlink.subject.message' | translate}}</strong>
             <div *ngFor="let subjectLink of (subjects$| async); let i = index">
               <span><a [href]="subjectLink.url">{{ subjectLink.name }} ({{ subjectLink.occurrences }})</a></span>
             </div>
           </div>
-          <div class="fast-search-col border-bottom">
+          <div class="col-md-4 border-bottom">
             <strong>{{'home-page.hyperlink.language.message' | translate}}</strong>
             <div *ngFor="let languageLink of (languages$| async); let i = index">
               <span><a [href]="languageLink.url">{{ languageLink.name }} ({{ languageLink.occurrences }})</a></span>
