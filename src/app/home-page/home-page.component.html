@@ -70,33 +70,33 @@
             <div *ngFor="let authorLink of (authors$| async); let i = index">
               <span><a [href]="authorLink.url">{{ authorLink.name }} ({{ authorLink.occurrences }})</a></span>
             </div>
-            <span>
+            <div>
               <a href="javascript:void(0);" (click)="redirectToBrowseByField('author')">
                 {{ 'home-page.hyperlink.view-more.message' | translate }}
               </a>
-            </span>
+            </div>
           </div>
           <div class="col-md-4 border-bottom">
             <strong>{{'home-page.hyperlink.subject.message' | translate}}</strong>
             <div *ngFor="let subjectLink of (subjects$| async); let i = index">
               <span><a [href]="subjectLink.url">{{ subjectLink.name }} ({{ subjectLink.occurrences }})</a></span>
             </div>
-            <span>
+            <div>
               <a href="javascript:void(0);" (click)="redirectToBrowseByField('subject')">
                 {{ 'home-page.hyperlink.view-more.message' | translate }}
               </a>
-            </span>
+            </div>
           </div>
           <div class="col-md-4 border-bottom">
             <strong>{{'home-page.hyperlink.language.message' | translate}}</strong>
             <div *ngFor="let languageLink of (languages$| async); let i = index">
               <span><a [href]="languageLink.url">{{ languageLink.name }} ({{ languageLink.occurrences }})</a></span>
             </div>
-            <span>
+            <div>
               <a href="javascript:void(0);" (click)="redirectToBrowseByField('language')">
                 {{ 'home-page.hyperlink.view-more.message' | translate }}
               </a>
-            </span>
+            </div>
           </div>
         </div>
       </div>
