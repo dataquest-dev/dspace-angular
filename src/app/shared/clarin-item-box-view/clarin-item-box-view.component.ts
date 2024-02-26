@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
-import { switchMap } from 'rxjs/operators';
+import { switchMap} from 'rxjs/operators';
 import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
@@ -28,6 +28,7 @@ import { LicenseType } from '../../item-page/clarin-license-info/clarin-license-
 import { ListableObject } from '../object-collection/shared/listable-object.model';
 import { ItemSearchResult } from '../object-collection/shared/item-search-result.model';
 import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
+import { HttpClient } from '@angular/common/http';
 
 /**
  * Show item on the Home/Search page in the customized box with Item's information.
@@ -38,6 +39,9 @@ import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
   styleUrls: ['./clarin-item-box-view.component.scss']
 })
 export class ClarinItemBoxViewComponent implements OnInit {
+
+  ITEM_TYPE_IMAGES_PATH = '/assets/images/item-types/';
+  ITEM_TYPE_DEFAULT_IMAGE_NAME = 'application-x-zerosize.png';
 
   /**
    * Show information of this item.
@@ -222,6 +226,11 @@ export class ClarinItemBoxViewComponent implements OnInit {
 
   hasMoreFiles() {
     return this.itemCountOfFiles.value > 1;
+  }
+
+  handleImageError(event) {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = this.ITEM_TYPE_IMAGES_PATH + this.ITEM_TYPE_DEFAULT_IMAGE_NAME;
   }
 }
 
