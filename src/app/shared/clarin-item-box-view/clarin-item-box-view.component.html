@@ -7,11 +7,11 @@
       </div>
       <div class="pl-3">
         <div class="row pt-3 justify-content-between">
-          <div class="">
+          <div class="col-10 pl-0">
             <div><a [routerLink]="itemUri" class="item-name">{{ itemName }}</a></div>
             <div class="pt-1"><strong>{{'item.view.box.author.message' | translate}}</strong></div>
           </div>
-          <div>
+          <div class="col-2">
             <img class="artifact-icon"
                  [src]="ITEM_TYPE_IMAGES_PATH + itemType + '.png'"
                  (error)="handleImageError($event)">
