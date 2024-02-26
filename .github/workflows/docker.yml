@@ -56,7 +56,7 @@ jobs:
 
   deploy:
     needs: dspace-angular
-    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@dtq-dev
+    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@internal/improve-build
     with:
       INSTANCE: '5'
       IMPORT: false
