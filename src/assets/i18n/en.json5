@@ -843,6 +843,8 @@
 
   "browse.metadata.title": "Title",
 
+  "browse.metadata.language": "Language",
+
   "browse.metadata.author.breadcrumbs": "Browse by Author",
 
   "browse.metadata.dateissued.breadcrumbs": "Browse by Date",
@@ -1932,6 +1934,8 @@
   "home-page.hyperlink.subject.message": "Subject",
 
   "home-page.hyperlink.language.message": "Language (ISO)",
+
+  "home-page.hyperlink.view-more.message": "... View More",
 
   "home-page.whats-new.message": "What's New",
 

@@ -260,6 +260,10 @@ export class HomePageComponent implements OnInit {
   redirectToSearch(searchValue) {
     this.router.navigateByUrl('/search?query=' + searchValue);
   }
+
+  redirectToBrowseByField(field) {
+    this.router.navigateByUrl('/browse/' + field);
+  }
 }
 
 /**
