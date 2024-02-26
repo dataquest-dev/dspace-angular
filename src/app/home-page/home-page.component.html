@@ -106,7 +106,10 @@
   <div class="container pt-3">
     <div class="card clarin-home-page-items-color">
       <div class="card-body">
-        <div class="recent-submissions-head">{{'home-page.whats-new.message' | translate}}</div>
+        <div class="justify-content-between d-flex">
+          <div class="recent-submissions-head flex-fill">{{'home-page.whats-new.message' | translate}}</div>
+          <ds-rss class="ml-1 override-css"></ds-rss>
+        </div>
         <ds-clarin-item-box-view
           *ngFor="let newItem of (newItems$ | async)"
           [object]="newItem"></ds-clarin-item-box-view>
