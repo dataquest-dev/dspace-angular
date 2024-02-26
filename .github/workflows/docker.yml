@@ -32,7 +32,6 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-
   #############################################################
   # Build/Push the 'dataquest/dspace-angular' image ('-dist' tag)
   #############################################################
