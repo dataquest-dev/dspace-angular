@@ -22,13 +22,18 @@
           </a>
           <button type="button"
                   class="btn btn-danger dropdown-toggle dropdown-toggle-split clarin-ref-box-services-button"
-                  data-bs-toggle="dropdown"
+                  data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false">
           </button>
           <div class="dropdown-menu">
-            <a class="dropdown-item" *ngFor="let featuredServiceLink of featuredService.featuredServiceLinks"
-               [href]="featuredServiceLink.value">{{featuredServiceLink.key}}</a>
+            <a
+              class="dropdown-item"
+              target="_blank"
+              *ngFor="let featuredServiceLink of featuredService.featuredServiceLinks"
+              [href]="featuredServiceLink.value">
+              {{featuredServiceLink.key}}
+            </a>
           </div>
         </div>
       </div>
