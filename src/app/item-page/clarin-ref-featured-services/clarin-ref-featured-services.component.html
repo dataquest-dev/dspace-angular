@@ -14,11 +14,12 @@
 
       <div class="d-flex align-items-start clarin-ref-box-footer-services pt-1">
         <div class="btn-group pr-2" *ngFor="let featuredService of (featuredServices | async)">
-          <button type="button"
-                  class="btn btn-danger clarin-ref-box-services-button"
-                  (click)="redirectToFeaturedService(featuredService.url)">
+          <a class="btn btn-danger clarin-ref-box-services-button"
+             type="button"
+             target="_blank"
+             [href]="featuredService.url">
             {{featuredService.name}}
-          </button>
+          </a>
           <button type="button"
                   class="btn btn-danger dropdown-toggle dropdown-toggle-split clarin-ref-box-services-button"
                   data-bs-toggle="dropdown"
