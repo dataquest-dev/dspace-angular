@@ -41,6 +41,12 @@
                                   [type]="'hyperlink'">
     </ds-clarin-generic-item-field>
     <ds-clarin-generic-item-field [item]="object"
+                                  [fields]="['local.demo.uri']"
+                                  [label]="'item.page.demo.uri'"
+                                  [iconName]="'fa-external-link'"
+                                  [type]="'hyperlink'">
+    </ds-clarin-generic-item-field>
+    <ds-clarin-generic-item-field [item]="object"
                                   [fields]="['dc.relation.isreferencedby']"
                                   [label]="'item.page.referenced-by'"
                                   [iconName]="'fa-link'">

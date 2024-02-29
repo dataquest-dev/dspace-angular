@@ -2505,6 +2505,8 @@
   "workflow-item.search.result.list.element.supervised.remove-tooltip": "Odebrat dozorčí skupinu",
   // "item.page.project-url": "Project URL",
   "item.page.project-url": "Projekt URL",
+  // "item.page.demo.uri": "Demo URL",
+  "item.page.demo.uri": "URL dema",
   // "item.page.referenced-by": "Referenced by",
   "item.page.referenced-by": "Odkazy na záznam",
   // "item.page.type": "Type",
