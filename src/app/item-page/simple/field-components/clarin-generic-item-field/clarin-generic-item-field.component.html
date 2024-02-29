@@ -12,9 +12,19 @@
         <ds-clarin-sponsor-item-field [item]="item"></ds-clarin-sponsor-item-field>
       </div>
       <div class="dont-break-out d-inline" *ngFor="let mdValue of item?.allMetadata(fields); let last=last; let i = index">
-        <a *ngIf="type === 'hyperlink'" [href]="mdValue.value">{{mdValue.value}}</a>
+        <span *ngIf="type === 'hyperlink'" class="justify-content-between d-flex">
+          <a [href]="mdValue.value">
+            {{mdValue.value}}
+          </a>
+          <i class="far fa-copy pr-5 cursor-pointer"
+             *ngIf="copyButton"
+             (click)="copyToClipboard(mdValue.value)"
+             [ngbTooltip]="'Copied!'" #copyButton="ngbTooltip"></i>
+        </span>
         <span *ngIf="type === 'search'">
-          <a [href]="getLinkToSearch(i)">{{mdValue.value}}</a>
+          <a [href]="getLinkToSearch(i)">
+            {{mdValue.value}}
+          </a>
           <span *ngIf="!last" [innerHTML]="separator" class="pr-1"></span>
         </span>
         <span *ngIf="type === 'subject'">
