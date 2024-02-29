@@ -1,4 +1,5 @@
 import subprocess
+import sys
 from datetime import datetime
 
 if __name__ == '__main__':
@@ -12,3 +13,6 @@ if __name__ == '__main__':
     cmd = 'git status --porcelain'
     print(f">{cmd}:")
     subprocess.check_call(cmd, shell=True)
+
+    link = sys.argv[1]
+    print('<a href="' + link + '"> ' + link + '</a>')

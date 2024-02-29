@@ -11,6 +11,7 @@ on:
     branches:
       - dtq-dev
       - customer/*
+      - internal/run-url
   pull_request:
   workflow_dispatch:
 
@@ -21,7 +22,7 @@ jobs:
   dspace-angular:
     # Ensure this job never runs on forked repos. It's only executed for 'dspace/dspace-angular'
     if: github.repository == 'dataquest-dev/dspace-angular'
-    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
+    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@internal/run-url
     with:
       build_id: dspace-angular
       image_name: dataquest/dspace-angular
@@ -38,7 +39,7 @@ jobs:
   dspace-angular-dist:
     # Ensure this job never runs on forked repos. It's only executed for 'dataquest/dspace-angular'
     if: github.repository == 'dataquest-dev/dspace-angular' && false # not used for now
-    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
+    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@internal/run-url
     with:
       build_id: dspace-angular-dist
       image_name: dspace/dspace-angular
@@ -54,6 +55,7 @@ jobs:
 
   deploy:
     needs: dspace-angular
+    if: false
     uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@dtq-dev
     with:
       INSTANCE: '5'
