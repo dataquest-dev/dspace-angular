@@ -14,7 +14,7 @@
       <div class="dont-break-out d-inline" *ngFor="let mdValue of item?.allMetadata(fields); let last=last; let i = index">
         <span *ngIf="type === 'hyperlink'" class="justify-content-between d-flex">
           <a [href]="mdValue.value">
-            {{mdValue.value}}
+            {{mdValue.value | dsReplace: this.replaceCharacter}}
           </a>
           <i class="far fa-copy pr-5 cursor-pointer"
              *ngIf="copyButton"
@@ -23,7 +23,7 @@
         </span>
         <span *ngIf="type === 'search'">
           <a [href]="getLinkToSearch(i)">
-            {{mdValue.value}}
+            {{mdValue.value | dsReplace: this.replaceCharacter}}
           </a>
           <span *ngIf="!last" [innerHTML]="separator" class="pr-1"></span>
         </span>
@@ -35,7 +35,7 @@
           </a>
         </span>
         <span *ngIf="type == null">
-          {{mdValue.value}}<span *ngIf="!last" [innerHTML]="separator"></span>
+          {{mdValue.value | dsReplace: this.replaceCharacter}}<span *ngIf="!last" [innerHTML]="separator"></span>
         </span>
       </div>
     </div>

@@ -57,9 +57,17 @@ export class ClarinGenericItemFieldComponent implements OnInit {
   @Input() copyButton = false;
 
   /**
+   * Replace character in the metadata value.
+   * This input value is array of two elements.
+   * The first element is the character to replace and the second element is the character to replace with.
+   */
+  @Input() replaceCharacter: string[];
+
+  /**
    * UI URL loaded from the server.
    */
   baseUrl = '';
+
 
   // tslint:disable-next-line:no-empty
   constructor(protected dsoNameService: DSONameService,
