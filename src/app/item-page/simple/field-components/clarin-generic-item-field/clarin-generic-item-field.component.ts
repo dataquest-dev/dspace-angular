@@ -1,12 +1,10 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../../../core/shared/item.model';
 import { isEmpty, isNotUndefined } from '../../../../shared/empty.util';
 import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
 import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
 import { convertMetadataFieldIntoSearchType, getBaseUrl } from '../../../../shared/clarin-shared-util';
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
-import { Clipboard } from '@angular/cdk/clipboard';
-import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'ds-clarin-generic-item-field',
@@ -14,11 +12,6 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./clarin-generic-item-field.component.scss']
 })
 export class ClarinGenericItemFieldComponent implements OnInit {
-
-  /**
-   * After clicking on the `Copy` icon the message `Copied` is popped up.
-   */
-  @ViewChild('copyButton', {static: false}) copyButtonRef: NgbTooltip;
 
   /**
    * The item to display metadata for
@@ -52,11 +45,6 @@ export class ClarinGenericItemFieldComponent implements OnInit {
   @Input() label: string;
 
   /**
-   * Show the copy button in the metadata field row
-   */
-  @Input() copyButton = false;
-
-  /**
    * Replace character in the metadata value.
    * This input value is array of two elements.
    * The first element is the character to replace and the second element is the character to replace with.
@@ -71,8 +59,7 @@ export class ClarinGenericItemFieldComponent implements OnInit {
 
   // tslint:disable-next-line:no-empty
   constructor(protected dsoNameService: DSONameService,
-              protected configurationService: ConfigurationDataService,
-              private clipboard: Clipboard) { }
+              protected configurationService: ConfigurationDataService) { }
 
   // tslint:disable-next-line:no-empty
   async ngOnInit(): Promise<void> {
@@ -136,17 +123,5 @@ export class ClarinGenericItemFieldComponent implements OnInit {
       .then((baseUrlResponse: ConfigurationProperty) => {
         return baseUrlResponse?.values?.[0];
       });
-  }
-
-  /**
-   * Copy the metadata value to the clipboard. After clicking on the `Copy` icon the message `Copied` is popped up.
-   *
-   * @param value
-   */
-  copyToClipboard(value: string) {
-    this.clipboard.copy(value);
-    setTimeout(() => {
-      this.copyButtonRef.close();
-    }, 700);
   }
 }

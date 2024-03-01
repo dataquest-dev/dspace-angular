@@ -28,11 +28,10 @@
                                   [type]="'author'">
     </ds-clarin-generic-item-field>
     <ds-clarin-generic-item-field [item]="object"
-                                  [fields]="['dc.identifier.uri']"
+                                  [fields]="['dc.identifier.uri', 'dc.identifier.doi']"
                                   [label]="'item.page.uri'"
                                   [iconName]="'fa-share'"
-                                  [type]="'hyperlink'"
-                                  [copyButton]="true">
+                                  [type]="'identifier'">
     </ds-clarin-generic-item-field>
     <ds-clarin-generic-item-field [item]="object"
                                   [fields]="['dc.source.uri']"

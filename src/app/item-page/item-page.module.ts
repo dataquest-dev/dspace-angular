@@ -86,6 +86,7 @@ import {
   FileTreeViewComponent
 } from './simple/field-components/preview-section/file-description/file-tree-view/file-tree-view.component';
 import { ClarinSponsorItemFieldComponent } from './simple/field-components/clarin-sponsor-item-field/clarin-sponsor-item-field.component';
+import { ClarinIdentifierItemFieldComponent } from './simple/field-components/clarin-identifier-item-field/clarin-identifier-item-field.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -170,6 +171,7 @@ const DECLARATIONS = [
   ],
   declarations: [
     ...DECLARATIONS,
+    ClarinIdentifierItemFieldComponent,
 
   ],
   exports: [
