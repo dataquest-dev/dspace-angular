@@ -2550,7 +2550,7 @@
   // "item.page.journal.search.title": "Articles in this journal",
   "item.page.journal.search.title": "Články v tomto časopise",
   // "item.page.link.full": "Show full item record",
-  "item.page.link.full": "Úplný záznam",
+  "item.page.link.full": "Zobrazit celý záznam",
   // "item.page.link.simple": "Simple item page",
   "item.page.link.simple": "Minimální záznam",
   // "item.page.orcid.title": "ORCID",
