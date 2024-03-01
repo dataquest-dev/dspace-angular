@@ -9,7 +9,7 @@ from datetime import datetime
 # It must also cooperate with argparse
 
 # the idea is, that this will be different on each branch, but could be possibly passed by argv/argparse
-RELEASE_TAG_BASE='none'
+RELEASE_TAG_BASE='drruk'
 
 if __name__ == '__main__':
     ts = datetime.now()
