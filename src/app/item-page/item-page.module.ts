@@ -88,6 +88,7 @@ import {
 import { ClarinSponsorItemFieldComponent } from './simple/field-components/clarin-sponsor-item-field/clarin-sponsor-item-field.component';
 import { ClarinIdentifierItemFieldComponent } from './simple/field-components/clarin-identifier-item-field/clarin-identifier-item-field.component';
 import { ClarinDateItemFieldComponent } from './simple/field-components/clarin-date-item-field/clarin-date-item-field.component';
+import { ClarinDescriptionItemFieldComponent } from './simple/field-components/clarin-description-item-field/clarin-description-item-field.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -174,6 +175,7 @@ const DECLARATIONS = [
     ...DECLARATIONS,
     ClarinIdentifierItemFieldComponent,
     ClarinDateItemFieldComponent,
+    ClarinDescriptionItemFieldComponent,
 
   ],
   exports: [
