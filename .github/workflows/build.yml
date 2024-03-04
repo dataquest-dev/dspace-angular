@@ -128,7 +128,6 @@ jobs:
           sleep 20s
           echo after sleep
           docker ps -a
-          docker start dspacedb
           echo after startup
           docker ps -a
           sleep 20s
