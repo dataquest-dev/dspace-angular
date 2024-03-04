@@ -22,7 +22,7 @@ jobs:
       # The ci step will test the dspace-angular code against DSpace REST.
       # Direct that step to utilize a DSpace REST service that has been started in docker.
       # Spin up UI on 127.0.0.1 to avoid host resolution issues in e2e tests with Node 18+
-      INSTANCE: '0'
+      INSTANCE: '2'
       DSPACE_CI_IMAGE: 'dataquest/dspace:dspace-7_x-test'
       DSPACE_DB_IMAGE: 'dataquest/dspace-postgres-pgcrypto:dspace-7_x-loadsql'
       DSPACE_SOLR_IMAGE: dataquest/dspace-solr:dspace-7_x
@@ -130,7 +130,7 @@ jobs:
           docker ps -a
           docker container ls
           echo postgres logs
-          docker logs dspacedb0
+          docker logs dspacedb
 
       # Run integration tests via Cypress.io
       # https://github.com/cypress-io/github-action
