@@ -2552,7 +2552,7 @@
   // "item.page.link.full": "Show full item record",
   "item.page.link.full": "Zobrazit celý záznam",
   // "item.page.link.simple": "Simple item page",
-  "item.page.link.simple": "Minimální záznam",
+  "item.page.link.simple": "Zobrazit minimální záznam",
   // "item.page.orcid.title": "ORCID",
   "item.page.orcid.title": "ORCID",
   // "item.page.orcid.tooltip": "Open ORCID setting page",

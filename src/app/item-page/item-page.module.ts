@@ -89,6 +89,7 @@ import { ClarinSponsorItemFieldComponent } from './simple/field-components/clari
 import { ClarinIdentifierItemFieldComponent } from './simple/field-components/clarin-identifier-item-field/clarin-identifier-item-field.component';
 import { ClarinDateItemFieldComponent } from './simple/field-components/clarin-date-item-field/clarin-date-item-field.component';
 import { ClarinDescriptionItemFieldComponent } from './simple/field-components/clarin-description-item-field/clarin-description-item-field.component';
+import { ClarinFilesSectionComponent } from './clarin-files-section/clarin-files-section.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -150,6 +151,10 @@ const DECLARATIONS = [
   PreviewSectionComponent,
   FileDescriptionComponent,
   FileTreeViewComponent,
+  ClarinIdentifierItemFieldComponent,
+  ClarinDateItemFieldComponent,
+  ClarinDescriptionItemFieldComponent,
+  ClarinFilesSectionComponent
 ];
 
 @NgModule({
@@ -173,10 +178,6 @@ const DECLARATIONS = [
   ],
   declarations: [
     ...DECLARATIONS,
-    ClarinIdentifierItemFieldComponent,
-    ClarinDateItemFieldComponent,
-    ClarinDescriptionItemFieldComponent,
-
   ],
   exports: [
     ...DECLARATIONS,
