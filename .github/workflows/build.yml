@@ -22,6 +22,7 @@ jobs:
       # The ci step will test the dspace-angular code against DSpace REST.
       # Direct that step to utilize a DSpace REST service that has been started in docker.
       # Spin up UI on 127.0.0.1 to avoid host resolution issues in e2e tests with Node 18+
+      INSTANCE: 0
       DSPACE_CI_IMAGE: 'dataquest/dspace:dspace-7_x-test'
       DSPACE_DB_IMAGE: 'dataquest/dspace-postgres-pgcrypto:dspace-7_x-loadsql'
       DSPACE_SOLR_IMAGE: dataquest/dspace-solr:dspace-7_x
@@ -119,8 +120,14 @@ jobs:
       # and load assetstore from a cached copy
       - name: Start DSpace REST Backend via Docker (for e2e tests)
         run: |
+          echo at start
+          docker ps -a
           docker-compose -f ./docker/docker-compose-ci.yml up -d
+          echo after first docker compose
+          docker ps -a
           docker-compose -f ./docker/cli.yml -f ./docker/cli.assetstore.yml run --rm dspace-cli
+          echo at end
+          docker ps -a
           docker container ls
 
       # Run integration tests via Cypress.io
