@@ -24,7 +24,6 @@ jobs:
       # Spin up UI on 127.0.0.1 to avoid host resolution issues in e2e tests with Node 18+
       INSTANCE: '2'
       DSPACE_CI_IMAGE: 'dataquest/dspace:dspace-7_x-test'
-      # DSPACE_DB_IMAGE: 'dataquest/dspace-postgres-pgcrypto:dspace-7_x-loadsql'
       DSPACE_SOLR_IMAGE: dataquest/dspace-solr:dspace-7_x
       DSPACE_REST_HOST: 127.0.0.1
       DSPACE_REST_PORT: 8080
@@ -120,27 +119,9 @@ jobs:
       # and load assetstore from a cached copy
       - name: Start DSpace REST Backend via Docker (for e2e tests)
         run: |
-          echo at start
-          docker ps -a
           docker-compose -f ./docker/docker-compose-ci.yml up -d
-          echo after ci up
-          docker ps -a 
-          sleep 20s
-          echo after sleep
-          docker ps -a
-          echo after startup
-          docker ps -a
-          sleep 20s
-          echo after another sleep
-          docker ps -a
-          echo after first docker compose
-          docker ps -a
           docker-compose -f ./docker/cli.yml -f ./docker/cli.assetstore.yml run --rm dspace-cli
-          echo at end
-          docker ps -a
           docker container ls
-          echo postgres logs
-          docker logs dspacedb
 
       # Run integration tests via Cypress.io
       # https://github.com/cypress-io/github-action
