@@ -20,17 +20,15 @@
       <div *ngIf="type === 'description'">
         <ds-clarin-description-item-field [item]="item" [fields]="fields"></ds-clarin-description-item-field>
       </div>
-      <div class="dont-break-out d-inline" *ngFor="let mdValue of item?.allMetadata(fields); let last=last; let i = index">
+      <div class="dont-break-out d-inline-flex mr-1" *ngFor="let mdValue of item?.allMetadata(fields); let last=last; let i = index">
         <span *ngIf="type === 'hyperlink'">
           <a [href]="mdValue.value">
             {{mdValue.value | dsReplace: this.replaceCharacter}}
           </a>
         </span>
         <span *ngIf="type === 'search'">
-          <a [href]="getLinkToSearch(i)">
-            {{mdValue.value | dsReplace: this.replaceCharacter}}
-          </a>
-          <span *ngIf="!last" [innerHTML]="separator" class="pr-1"></span>
+          <a [href]="getLinkToSearch(i)">{{mdValue.value | dsReplace: this.replaceCharacter}}</a>
+          <span *ngIf="!last" [innerHTML]="separator"></span>
         </span>
         <span *ngIf="type === 'subject'">
           <a class="badge badge-info text-white cursor-pointer mr-1"
