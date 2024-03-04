@@ -123,6 +123,17 @@ jobs:
           echo at start
           docker ps -a
           docker-compose -f ./docker/docker-compose-ci.yml up -d
+          echo after ci up
+          docker ps -a 
+          sleep 20s
+          echo after sleep
+          docker ps -a
+          docker start dspacedb
+          echo after startup
+          docker ps -a
+          sleep 20s
+          echo after another sleep
+          docker ps -a
           echo after first docker compose
           docker ps -a
           docker-compose -f ./docker/cli.yml -f ./docker/cli.assetstore.yml run --rm dspace-cli
