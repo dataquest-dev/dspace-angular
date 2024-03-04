@@ -70,7 +70,8 @@ services:
       LOADSQL: https://github.com/dataquest-dev/DSpace/releases/download/data/dspace-test-database-dump_29.1.2024.sql
       PGDATA: /pgdata
       POSTGRES_PASSWORD: dspace
-    image: ${DSPACE_DB_IMAGE:-dataquest/dspace-postgres-pgcrypto:dspace-7_x-loadsql}
+    # image: ${DSPACE_DB_IMAGE:-dataquest/dspace-postgres-pgcrypto:dspace-7_x-loadsql}
+    image: ${DSPACE_DB_IMAGE:-dspace/dspace-postgres-pgcrypto:loadsql}
     networks:
       dspacenet:
     stdin_open: true
