@@ -2707,6 +2707,10 @@
 
   "item.page.acknowledgement.project-code": "Project code:",
 
+  "item.page.date.cca.message": "The exact date is unknown",
+
+  "item.page.date.composed.message": "This item is composed of parts issued in",
+
   "item.preview.dc.identifier.uri": "Identifier:",
 
   "item.preview.dc.contributor.author": "Authors:",
