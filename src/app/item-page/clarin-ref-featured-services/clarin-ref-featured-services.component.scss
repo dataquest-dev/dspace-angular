@@ -73,4 +73,13 @@
     background-color: #3071a9 !important;
     border-color: #285e8e !important;
   }
+
+  &:focus {
+    box-shadow: none !important;
+  }
+}
+
+.lindat-dropdown-menu {
+  max-height: 260px;
+  overflow-y: auto;
 }
