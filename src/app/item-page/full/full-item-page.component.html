@@ -25,7 +25,7 @@
                   <span *ngIf="!last" [innerHTML]="' '"></span>
                 </span>
               </td>
-              <td>{{mdValue.language}}</td>
+              <td *ngIf="(isAdmin$|async)">{{mdValue.language}}</td>
             </tr>
           </ng-container>
           </tbody>
