@@ -67,6 +67,11 @@ export class ClarinGenericItemFieldComponent implements OnInit {
     if (isEmpty(this.separator)) {
       this.separator = ',';
     }
+
+    // Set default replace character
+    if (isEmpty(this.replaceCharacter)) {
+      this.replaceCharacter = [';', ' '];
+    }
   }
 
   /**

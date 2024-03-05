@@ -19,7 +19,12 @@
           <ng-container *ngFor="let mdEntry of (metadata$ | async) | keyvalue">
             <tr *ngFor="let mdValue of mdEntry.value">
               <td>{{mdEntry.key}}</td>
-              <td>{{mdValue.value}}</td>
+              <td>
+                <span *ngFor="let value of mdValue.value.split(SEPARATOR); let last=last;">
+                  <span [innerHTML]="makeLinks(value) | dsReplace: [';', ' ']" ></span>
+                  <span *ngIf="!last" [innerHTML]="' '"></span>
+                </span>
+              </td>
               <td>{{mdValue.language}}</td>
             </tr>
           </ng-container>

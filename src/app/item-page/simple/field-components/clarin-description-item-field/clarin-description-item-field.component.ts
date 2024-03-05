@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../../../core/shared/item.model';
+import { makeLinks } from '../../../../shared/clarin-shared-util';
 
 @Component({
   selector: 'ds-clarin-description-item-field',
@@ -27,16 +28,11 @@ export class ClarinDescriptionItemFieldComponent implements OnInit {
     // Store all description metadata values
     let updatedMVs = [];
     this.item.allMetadataValues(this.fields).forEach((value) => {
-      updatedMVs.push(this.makeLinks(value));
+      updatedMVs.push(makeLinks(value));
     });
 
     // Join the metadata values with a line break
     this.validTextMetadata = updatedMVs.join('<br>');
   }
 
-  makeLinks(text: string): string {
-    // Use a regular expression to find URLs and convert them into clickable links
-    const regex = /(?:https?|ftp):\/\/[^\s)]+|www\.[^\s)]+/g;
-    return text.replace(regex, (url) => `<a href="${url}" target="_blank">${url}</a>`);
-  }
 }
