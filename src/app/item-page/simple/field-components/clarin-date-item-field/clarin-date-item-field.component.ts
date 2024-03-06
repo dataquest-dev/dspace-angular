@@ -23,7 +23,6 @@ export class ClarinDateItemFieldComponent implements OnInit {
   updatedDateValue: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   ngOnInit(): void {
-    // let dateValue = this.item.allMetadataValues(this.fields);
     let localDateValue = this.item.allMetadataValues('local.approximateDate.issued');
     let dateValue = this.item.allMetadataValues('dc.date.issued');
 
