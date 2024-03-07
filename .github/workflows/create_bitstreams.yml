@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: dataquest-dev/dspace-python-api
-          ref: internal/add-env-for-BE
+          ref: add-env-for-BE
 
   import-2:
     if: inputs.INSTANCE == '2'
