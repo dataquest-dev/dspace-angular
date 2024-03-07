@@ -9,7 +9,10 @@
         <div class="row pt-3 justify-content-between">
           <div class="col-10 pl-0">
             <div><a [routerLink]="itemUri" class="item-name">{{ itemName }}</a></div>
-            <div class="pt-1"><strong>{{'item.view.box.author.message' | translate}}</strong></div>
+            <div *ngIf="isSearchResult === false" class="pt-1"><strong>{{'item.view.box.author.message' | translate}}</strong></div>
+            <div *ngIf="isSearchResult" class="pt-1">
+              <span>(<a [href]="publisherRedirectLink">{{itemPublisher}}</a>) / {{itemDate}}</span>
+            </div>
           </div>
           <div class="col-2">
             <img class="artifact-icon"
@@ -17,10 +20,11 @@
                  (error)="handleImageError($event)">
           </div>
         </div>
+        <div *ngIf="isSearchResult" class="row pt-1"><strong>{{'item.view.box.author.message' | translate}}</strong></div>
         <div class="row">
           <ds-clarin-item-author-preview [item]="item"></ds-clarin-item-author-preview>
         </div>
-        <div class="row d-block pt-1">
+        <div *ngIf="isSearchResult === false" class="row d-block pt-1">
           <div><strong>{{'item.view.box.description.message' | translate}}</strong></div>
           <div class="clarin-item-description pr-3">{{itemDescription}}</div>
         </div>
@@ -37,8 +41,13 @@
           <span>
             {{licenseType }}
           </span>
-          <div class="d-inline" *ngFor="let icon of (licenseLabelIcons | async)">
-            <img [ngClass]="{'clarin-license-icon-mr':licenseLabelIcons.value.length > 1}" [src]="secureImageData(icon)" alt="" width="16px">
+          <div class="d-inline" *ngFor="let lli of (licenseLabelIcons | async)">
+            <img [ngClass]="{'clarin-license-icon-mr':licenseLabelIcons.value.length > 1}"
+                 [src]="secureImageData(lli?.icon)"
+                 [ngbTooltip]="lli?.title"
+                 triggers="mouseenter:mouseleave"
+                 placement="bottom"
+                 alt="" width="16px">
           </div>
         </div>
       </div>
