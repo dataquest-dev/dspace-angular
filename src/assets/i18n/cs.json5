@@ -4274,7 +4274,7 @@
   // "sorting.score.ASC": "Least Relevant",
   "sorting.score.ASC": "Nejméně relevantní",
   // "sorting.score.DESC": "Most Relevant",
-  "sorting.score.DESC": "Nejrelevantnější",
+  "sorting.score.DESC": "relevance",
   // "sorting.dc.date.issued.ASC": "Date Issued Ascending",
   "sorting.dc.date.issued.ASC": "Datum vydání vzestupně",
   // "sorting.dc.date.issued.DESC": "Date Issued Descending",

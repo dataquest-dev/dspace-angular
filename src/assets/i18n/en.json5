@@ -4413,17 +4413,17 @@
 
   "sorting.DESC": "Descending",
 
-  "sorting.dc.title.ASC": "Title Ascending",
+  "sorting.dc.title.ASC": "Title Asc",
 
-  "sorting.dc.title.DESC": "Title Descending",
+  "sorting.dc.title.DESC": "Title Desc",
 
   "sorting.score.ASC": "Least Relevant",
 
   "sorting.score.DESC": "Most Relevant",
 
-  "sorting.dc.date.issued.ASC": "Date Issued Ascending",
+  "sorting.dc.date.issued.ASC": "Date Issued Asc",
 
-  "sorting.dc.date.issued.DESC": "Date Issued Descending",
+  "sorting.dc.date.issued.DESC": "Date Issued Desc",
 
   "sorting.dc.date.accessioned.ASC": "Accessioned Date Ascending",
 
