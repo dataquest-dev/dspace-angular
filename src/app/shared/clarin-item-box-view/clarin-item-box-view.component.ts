@@ -144,7 +144,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
     this.itemUri = getItemPageRoute(this.item);
     this.itemDescription = this.item?.firstMetadataValue('dc.description');
     this.itemPublisher = this.item?.firstMetadataValue('dc.publisher');
-    this.publisherRedirectLink = this.baseUrl + '/search?f.dc.publisher=' + this.itemPublisher + ',equals';
+    this.publisherRedirectLink = this.baseUrl + '/search?f.publisher=' + this.itemPublisher + ',equals';
     this.itemDate = this.clarinDateService.composeItemDate(this.item);
 
     await this.assignBaseUrl();
