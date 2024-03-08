@@ -3,7 +3,7 @@
     <div class="card-body pt-0 pb-0">
       <div *ngVar="hasItemType() as nonEmptyItemType" [ngClass]="{'row': true, 'justify-content-between': nonEmptyItemType, 'justify-content-end': !nonEmptyItemType}">
         <span *ngIf="nonEmptyItemType" class="item-type">{{ itemType }}</span>
-        <span class="item-community label"><a class="pt-2" [href]="communitySearchRedirect | async">{{ (itemCommunity | async)?.name }}</a></span>
+        <span class="label item-community"><a class="pt-2" [href]="communitySearchRedirect | async">{{ (itemCommunity | async)?.name }}</a></span>
       </div>
       <div class="pl-3">
         <div class="row pt-3 justify-content-between">
