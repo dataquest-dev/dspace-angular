@@ -4329,6 +4329,14 @@
 
   "search.filters.filter.supervisedBy.label": "Search Supervised By",
 
+  "search.filters.filter.rights.label": "Search rights",
+
+  "search.filters.filter.rights.placeholder": "Rights",
+
+  "search.filters.filter.items_owning_community.label": "Search community",
+
+  "search.filters.filter.items_owning_community.placeholder": "Community",
+
   "search.filters.entityType.JournalIssue": "Journal Issue",
 
   "search.filters.entityType.JournalVolume": "Journal Volume",
