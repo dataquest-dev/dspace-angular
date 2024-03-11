@@ -3530,9 +3530,9 @@
 
   "pagination.results-per-page": "Results Per Page",
 
-  "pagination.showing.detail": "{{ range }} of {{ total }}",
+  "pagination.showing.detail": "{{ range }} out of {{ total }} results",
 
-  "pagination.showing.label": "Now showing ",
+  "pagination.showing.label": "Showing ",
 
   "pagination.sort-direction": "Sort Options",
 
