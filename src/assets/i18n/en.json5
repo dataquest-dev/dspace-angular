@@ -3934,7 +3934,7 @@
 
   "repository.title": "DSpace Repository",
 
-  "repository.title.prefix": "DSpace Repository :: ",
+  "repository.title.prefix": "",
 
   "repository.title.prefixDSpace": "DSpace",
 
