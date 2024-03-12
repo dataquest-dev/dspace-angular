@@ -1612,7 +1612,7 @@
   // "error.validation.groupExists": "This group already exists",
   "error.validation.groupExists": "Tato skupina již existuje",
   // "feed.description": "Syndication feed",
-  "feed.description": "Synchronizační kanál",
+  "feed.description": "RSS Feed",
   // "file-section.error.header": "Error obtaining files for this item",
   "file-section.error.header": "Chyba při získávání souborů pro tuto položku",
   // "footer.copyright": "copyright © 2002-{{ year }}",
