@@ -10,6 +10,7 @@ on:
   push:
     branches:
       - dtq-dev
+      - dtq-dev-pages
       - customer/*
   pull_request:
   workflow_dispatch:
