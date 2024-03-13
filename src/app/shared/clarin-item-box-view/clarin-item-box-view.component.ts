@@ -7,7 +7,7 @@ import {
   getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteListPayload
 } from '../../core/shared/operators';
 import { Collection } from '../../core/shared/collection.model';
-import { isEmpty, isNotEmpty, isNull } from '../empty.util';
+import { isEmpty, isNull } from '../empty.util';
 import { followLink } from '../utils/follow-link-config.model';
 import { Community } from '../../core/shared/community.model';
 import { BehaviorSubject } from 'rxjs';

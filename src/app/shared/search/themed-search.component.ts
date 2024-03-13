@@ -53,7 +53,7 @@ export class ThemedSearchComponent extends ThemedComponent<ClarinSearchComponent
 
   @Input() showThumbnails;
 
-  @Input() showViewModes: boolean = false;
+  @Input() showViewModes = false;
 
   @Input() useUniquePageId: boolean;
 
