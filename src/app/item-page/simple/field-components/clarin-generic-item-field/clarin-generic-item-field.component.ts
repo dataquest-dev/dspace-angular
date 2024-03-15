@@ -9,8 +9,8 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { getFirstSucceededRemoteDataPayload } from '../../../../core/shared/operators';
 import { map } from 'rxjs/operators';
 
-const SHOW_HANDLE_AND_DOI_PROPERTY_NAME = 'item-page.show-handle-and-doi';
 export const DOI_METADATA_FIELD = 'dc.identifier.doi';
+const SHOW_HANDLE_AND_DOI_PROPERTY_NAME = 'item-page.show-handle-and-doi';
 const HANDLE_METADATA_FIELD = 'dc.identifier.uri';
 
 @Component({
@@ -75,8 +75,6 @@ export class ClarinGenericItemFieldComponent implements OnInit {
    */
   showHandleAndDOI = 'false';
 
-
-  // tslint:disable-next-line:no-empty
   constructor(protected dsoNameService: DSONameService,
               protected configurationService: ConfigurationDataService) { }
 
@@ -182,7 +180,6 @@ export class ClarinGenericItemFieldComponent implements OnInit {
         return baseUrlResponse?.values?.[0];
       });
   }
-
 
   /**
    * Load the configuration value for showing both the handle and DOI identifiers
