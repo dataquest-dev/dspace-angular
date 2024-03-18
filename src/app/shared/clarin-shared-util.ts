@@ -50,7 +50,7 @@ export function convertMetadataFieldIntoSearchType(field: string[]) {
  * @param item current Item
  * @param itemAuthors BehaviourSubject (async) of Authors with search links
  * @param baseUrl e.g. localhost:8080
- * @param fields metadata fields where are stored authors
+ * @param fields metadata fields where authors are stored
  */
 export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
   if (isNull(item) || isNull(itemAuthors) || isNull(baseUrl)) {
