@@ -1676,7 +1676,7 @@
 
   "error.validation.metadata.qualifier.max-length": "This field may not contain more than 64 characters",
 
-  "feed.description": "Syndication feed",
+  "feed.description": "RSS feed",
 
   "file-section.error.header": "Error obtaining files for this item",
 
@@ -2613,6 +2613,8 @@
 
   "item.page.project-url": "Project URL",
 
+  "item.page.demo.uri": "Demo URL",
+
   "item.page.referenced-by": "Referenced by",
 
   "item.page.type": "Type",
@@ -2635,7 +2637,7 @@
 
   "item.page.collections.load-more": "Load more",
 
-  "item.page.date": "Date",
+  "item.page.date": "Date issued",
 
   "item.page.edit": "Edit this item",
 
@@ -2655,9 +2657,9 @@
 
   "item.page.journal.search.title": "Articles in this journal",
 
-  "item.page.link.full": "Full item page",
+  "item.page.link.full": "Show full item record",
 
-  "item.page.link.simple": "Simple item page",
+  "item.page.link.simple": "Show simple item record",
 
   "item.page.orcid.title": "ORCID",
 
@@ -2680,6 +2682,8 @@
   "item.page.subject": "Subject(s)",
 
   "item.page.uri": "Item identifier",
+
+  "item.page.doi": "DOI",
 
   "item.page.bitstreams.view-more": "Show more",
 
@@ -2708,6 +2712,10 @@
   "item.page.acknowledgement.project-name": "Project name:",
 
   "item.page.acknowledgement.project-code": "Project code:",
+
+  "item.page.date.cca.message": "The exact date is unknown",
+
+  "item.page.date.composed.message": "This item is composed of parts issued in",
 
   "item.preview.dc.identifier.uri": "Identifier:",
 
@@ -2783,6 +2791,8 @@
 
 
   "item.view.box.author.message": "Author(s):",
+
+  "item.view.box.publisher.message": "Publisher:",
 
   "item.view.box.files.message": ["This item contains", "files"],
 
@@ -3524,9 +3534,9 @@
 
   "pagination.results-per-page": "Results Per Page",
 
-  "pagination.showing.detail": "{{ range }} of {{ total }}",
+  "pagination.showing.detail": "{{ range }} out of {{ total }} results",
 
-  "pagination.showing.label": "Now showing ",
+  "pagination.showing.label": "Showing ",
 
   "pagination.sort-direction": "Sort Options",
 
@@ -3926,7 +3936,7 @@
 
   "repository.title": "DSpace Repository",
 
-  "repository.title.prefix": "DSpace Repository :: ",
+  "repository.title.prefix": "LINDAT/CLARIAH-CZ Repository ",
 
   "repository.title.prefixDSpace": "DSpace",
 
@@ -4143,7 +4153,7 @@
 
   "search.filters.applied.f.entityType": "Item Type",
 
-  "search.filters.applied.f.has_content_in_original_bundle": "Has files",
+  "search.filters.applied.f.has_content_in_original_bundle": "Contain Files",
 
   "search.filters.applied.f.itemtype": "Type",
 
@@ -4237,7 +4247,7 @@
 
   "search.filters.filter.expand": "Expand filter",
 
-  "search.filters.filter.has_content_in_original_bundle.head": "Has files",
+  "search.filters.filter.has_content_in_original_bundle.head": "Contain Files",
 
   "search.filters.filter.itemtype.head": "Type",
 
@@ -4323,6 +4333,14 @@
 
   "search.filters.filter.supervisedBy.label": "Search Supervised By",
 
+  "search.filters.filter.rights.label": "Search rights",
+
+  "search.filters.filter.rights.placeholder": "Rights",
+
+  "search.filters.filter.items_owning_community.label": "Search community",
+
+  "search.filters.filter.items_owning_community.placeholder": "Community",
+
   "search.filters.entityType.JournalIssue": "Journal Issue",
 
   "search.filters.entityType.JournalVolume": "Journal Volume",
@@ -4355,7 +4373,7 @@
 
   "search.filters.filter.language.placeholder": "Language",
 
-  "search.filters.head": "Filters",
+  "search.filters.head": "Limit your search",
 
   "search.filters.reset": "Reset filters",
 
@@ -4407,17 +4425,17 @@
 
   "sorting.DESC": "Descending",
 
-  "sorting.dc.title.ASC": "Title Ascending",
+  "sorting.dc.title.ASC": "Title Asc",
 
-  "sorting.dc.title.DESC": "Title Descending",
+  "sorting.dc.title.DESC": "Title Desc",
 
   "sorting.score.ASC": "Least Relevant",
 
   "sorting.score.DESC": "Most Relevant",
 
-  "sorting.dc.date.issued.ASC": "Date Issued Ascending",
+  "sorting.dc.date.issued.ASC": "Date Issued Asc",
 
-  "sorting.dc.date.issued.DESC": "Date Issued Descending",
+  "sorting.dc.date.issued.DESC": "Date Issued Desc",
 
   "sorting.dc.date.accessioned.ASC": "Accessioned Date Ascending",
 
