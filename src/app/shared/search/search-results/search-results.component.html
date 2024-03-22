@@ -23,10 +23,13 @@
           message="{{errorMessageLabel() | translate}}"></ds-error>
 <div *ngIf="searchResults?.payload?.page.length == 0 || searchResults?.statusCode == 400">
     {{ 'search.results.no-results' | translate }}
-  <!-- TUL customer do not want this feature -->
-<!--    <a [routerLink]="['/search']"-->
-<!--       [queryParams]="{ query: surroundStringWithQuotes(searchConfig?.query) }"-->
-<!--       queryParamsHandling="merge">-->
-<!--        {{"search.results.no-results-link" | translate}}-->
-<!--    </a>-->
+    <a [routerLink]="['/search']"
+       [queryParams]="{ query: surroundStringWithQuotes(searchConfig?.query) }"
+       queryParamsHandling="merge">
+        {{"search.results.no-results-link" | translate}}
+    </a>
+  <div>
+    <span>{{ 'search.results.advanced-search' | translate }}</span>
+    <a [href]="ADVANCED_SEARCH_WIKI_URL" target="_blank">{{ 'search.results.advanced-search-link' | translate }}</a>
+  </div>
 </div>

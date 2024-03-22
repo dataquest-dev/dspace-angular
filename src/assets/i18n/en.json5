@@ -4371,6 +4371,10 @@
 
   "search.results.no-results-link": "quotes around it",
 
+  "search.results.advanced-search" : "Or try searching using the ",
+
+  "search.results.advanced-search-link" : "advanced search.",
+
   "search.results.empty": "Your search returned no results.",
 
   "search.results.view-result": "View",

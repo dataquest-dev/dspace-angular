@@ -32,6 +32,8 @@ export interface SelectionConfig {
 export class SearchResultsComponent {
   hasNoValue = hasNoValue;
 
+  ADVANCED_SEARCH_WIKI_URL = 'https://wiki.lyrasis.org/display/DSDOC7x/Search+-+Advanced';
+
   /**
    * The link type of the listed search results
    */
