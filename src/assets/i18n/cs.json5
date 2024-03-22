@@ -7108,10 +7108,17 @@
   "search.results.head" : "Výsledky hledání",
 
   // "search.results.no-results" : "Your search returned no results. Having trouble finding what you're looking for? Try putting"
-  "search.results.no-results" : "Nebyly nalezeny žádné výsledky, zkuste dotaz přeformulovat.",
+  "search.results.no-results" : "Nebyly nalezeny žádné výsledky. Máte problém najít to, co hledáte? Zkuste dotaz",
 
   // "search.results.no-results-link" : "quotes around it"
-  "search.results.no-results-link" : "vložit citace",
+  "search.results.no-results-link" : "vložit do citace.",
+
+  // "search.results.advanced-search" : "Or try searching using the "
+  "search.results.advanced-search" : "Nebo skuste vyhledávat podle metod ",
+
+  // "search.results.advanced-search-link": "advanced search."
+  "search.results.advanced-search-link" : "pokročilého vyhledávaní.",
+
 
   // "search.results.empty" : "Your search returned no results."
   "search.results.empty" : "Vaše hledání nevrátilo žádné výsledky.",
