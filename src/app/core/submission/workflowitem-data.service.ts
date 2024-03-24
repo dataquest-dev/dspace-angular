@@ -105,7 +105,7 @@ export class WorkflowItemDataService extends IdentifiableDataService<WorkflowIte
    */
   public findByItem(uuid: string, useCachedVersionIfAvailable = false, reRequestOnStale = true, options: FindListOptions = {}, ...linksToFollow: FollowLinkConfig<WorkflowItem>[]): Observable<RemoteData<WorkflowItem>> {
     const findListOptions = new FindListOptions();
-    findListOptions.searchParams = [new RequestParam('uuid', encodeURIComponent(uuid))];
+    findListOptions.searchParams = [new RequestParam('uuid', uuid)];
     const href$ = this.searchData.getSearchByHref(this.searchByItemLinkPath, findListOptions, ...linksToFollow);
     return this.findByHref(href$, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
   }
