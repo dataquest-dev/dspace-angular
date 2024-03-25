@@ -797,6 +797,8 @@
   "browse.comcol.by.subject": "Podle předmětu",
   // "browse.comcol.by.title": "By Title",
   "browse.comcol.by.title": "Podle názvu",
+  // "browse.comcol.by.language": "By Language",
+  "browse.comcol.by.language": "Podle jazyka",
   // "browse.comcol.head": "Browse",
   "browse.comcol.head": "Procházet",
   // "browse.empty": "No items to show.",
