@@ -190,7 +190,7 @@ export class HomePageComponent implements OnInit {
    * @private
    */
   private loadSubject() {
-    const facetName = 'subject';
+    const facetName = 'subjectFirstValue';
     this.getFastSearchLinks(facetName, this.subjects$);
   }
 
