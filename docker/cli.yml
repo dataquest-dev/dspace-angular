@@ -40,6 +40,7 @@ services:
       assetstore__P__s3__P__endpoint: ${S3_ENDPOINT:-}
     volumes:
     - "assetstore:/dspace/assetstore"
+    - ./local.cfg:/dspace/config/local.cfg
     entrypoint: /dspace/bin/dspace
     command: help
     networks:
