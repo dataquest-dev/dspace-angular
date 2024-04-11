@@ -18,13 +18,13 @@ export class ClarinLicenseCheckedPipe implements PipeTransform {
    * @param clarinLicenseProp to compare
    * @param clarinLicenseProps all extended clarin license labels or non extended clarin license label in array
    */
-  transform(clarinLicenseProp: ClarinLicenseLabel | ClarinLicenseRequiredInfo, clarinLicenseProps: any[]): boolean {
+  transform(clarinLicenseProp: any | ClarinLicenseRequiredInfo, clarinLicenseProps: any[]): boolean {
     let contains = false;
     if (isEmpty(clarinLicenseProp) || isEmpty(clarinLicenseProps)) {
       return contains;
     }
     clarinLicenseProps.forEach(cll => {
-      if (cll.id === clarinLicenseProp.id) {
+      if (cll.name === clarinLicenseProp.name) {
         contains = true;
       }
     });
