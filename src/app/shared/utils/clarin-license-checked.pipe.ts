@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
 import { isEmpty } from '../empty.util';
 import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
 

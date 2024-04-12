@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { validateLicenseLabel } from '../define-license-form/define-license-form-validator';
 import { isNotEmpty } from '../../../../shared/empty.util';
 
 /**
