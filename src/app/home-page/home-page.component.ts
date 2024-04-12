@@ -232,7 +232,7 @@ export class HomePageComponent implements OnInit {
           // remove `/objects` from the updatedSearchUrl
           updatedSearchUrl = updatedSearchUrl.replace('/objects', '');
           const fastSearchLink: FastSearchLink = Object.assign(new FastSearchLink(), {
-            name: facetValue.value,
+            name: this.truncateText(facetValue.value),
             occurrences: facetValue.count,
             url: updatedSearchUrl
           });
@@ -263,6 +263,24 @@ export class HomePageComponent implements OnInit {
 
   redirectToBrowseByField(field) {
     this.router.navigateByUrl('/browse/' + field);
+  }
+
+  /**
+   * If the text is longer than 20 characters, replace the characters after the 20th index with '...'
+   * This method is used to truncate the text in the `authors/subjects/languages` browsing section. We do not want
+   * to display the full text of the author/subject/language, but only the first 20 characters because it overflows to
+   * the next line.
+   *
+   * @param text
+   * @private
+   */
+  private truncateText(text: string): string {
+    if (text.length > 20) {
+      // Replace characters after the 20th index with '...'
+      return text.substring(0, 20) + '...';
+    } else {
+      return text; // Return the original string if it's not longer than 20 characters
+    }
   }
 }
 
