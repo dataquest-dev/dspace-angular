@@ -30,6 +30,9 @@ import { SearchObjects } from '../shared/search/models/search-objects.model';
 import { environment } from '../../environments/environment';
 import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
 import { isUndefined } from '../shared/empty.util';
+
+const MAX_TRUNCATE_LENGTH = 20;
+
 @Component({
   selector: 'ds-home-page',
   styleUrls: ['./home-page.component.scss'],
@@ -266,20 +269,21 @@ export class HomePageComponent implements OnInit {
   }
 
   /**
-   * If the text is longer than 20 characters, replace the characters after the 20th index with '...'
-   * This method is used to truncate the text in the `authors/subjects/languages` browsing section. We do not want
-   * to display the full text of the author/subject/language, but only the first 20 characters because it overflows to
-   * the next line.
+   * If the text is longer than MAX_TRUNCATE_LENGTH characters, replace the characters after
+   * the MAX_TRUNCATE_LENGTHth index with '...' This method is used to truncate
+   * the text in the `authors/subjects/languages` browsing section. We do not want
+   * to display the full text of the author/subject/language, but only
+   * the first MAX_TRUNCATE_LENGTH characters because it overflows to the next line.
    *
    * @param text
    * @private
    */
   private truncateText(text: string): string {
-    if (text.length > 20) {
-      // Replace characters after the 20th index with '...'
-      return text.substring(0, 20) + '...';
+    if (text.length > MAX_TRUNCATE_LENGTH) {
+      // Replace characters after the MAX_TRUNCATE_LENGTHth index with '...'
+      return text.substring(0, MAX_TRUNCATE_LENGTH) + '...';
     } else {
-      return text; // Return the original string if it's not longer than 20 characters
+      return text; // Return the original string if it's not longer than MAX_TRUNCATE_LENGTH characters
     }
   }
 }
