@@ -130,4 +130,4 @@ jobs:
   trigger-playwright:
     needs: [deploy-5, deploy-8]
     if: ${{ always() }}
-    uses: dataquest-dev/dspace-ui-tests/.github/workflows/cron-test.yml
+    uses: dataquest-dev/dspace-ui-tests/.github/workflows/cron-test.yml@master
