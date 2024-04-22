@@ -126,3 +126,8 @@ jobs:
 
           echo "dspace healthcheck:"
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
+
+  trigger-playwright:
+    needs: [deploy-5, deploy-8]
+    if: ${{ always() }}
+    uses: dataquest-dev/dspace-ui-tests/.github/workflows/cron-test.yml
