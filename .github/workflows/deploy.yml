@@ -17,6 +17,9 @@ on:
         default: false
         type: boolean
 
+permissions:
+  contents: read
+
   workflow_dispatch:
     inputs:
       INSTANCE:
