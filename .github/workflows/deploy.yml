@@ -16,10 +16,6 @@ on:
         required: false
         default: false
         type: boolean
-
-permissions:
-  contents: read
-
   workflow_dispatch:
     inputs:
       INSTANCE:
@@ -38,6 +34,9 @@ permissions:
         required: false
         default: false
         type: boolean
+
+permissions:
+  contents: read
 
 jobs:
   deploy-5:
