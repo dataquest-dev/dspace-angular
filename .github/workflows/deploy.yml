@@ -127,7 +127,7 @@ jobs:
           echo "dspace healthcheck:"
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
 
-  trigger-and-check-playwright-after-only-deploy8:
+  playwright-after-deploy8:
     runs-on: ubuntu-latest
     needs: deploy-8
     if: '!inputs.IMPORT'
@@ -159,7 +159,7 @@ jobs:
             exit 1
           fi;
 
-  trigger-and-check-playwright-after-import8:
+  playwright-after-import8:
     runs-on: ubuntu-latest
     needs: import-8
     if: inputs.IMPORT
