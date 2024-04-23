@@ -129,7 +129,7 @@ jobs:
 
   trigger-playwright:
     runs-on: ubuntu-latest
-    needs: [deploy-5, deploy-8]
+    needs: [deploy-5, deploy-8, import-8]
     if: ${{ always() }}
     steps:
       - name: run playwright
