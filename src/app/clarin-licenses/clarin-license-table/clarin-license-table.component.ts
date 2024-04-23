@@ -222,16 +222,11 @@ export class ClarinLicenseTableComponent implements OnInit {
     const reader = new FileReader();
     const fileByteArray = [];
 
-    let hasIcon = true;
     try {
       reader.readAsArrayBuffer(clarinLicenseLabel.icon?.[0]);
     } catch (error) {
       // Cannot read any icon that means there is no icon
-      hasIcon = false;
-    }
-
-    // Create license label without icon
-    if (!hasIcon) {
+      // Create license label without icon
       this.createClarinLicenseLabel(clarinLicenseLabel, [], successfulMessageContentDef, errorMessageContentDef);
       return;
     }
