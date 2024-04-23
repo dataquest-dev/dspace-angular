@@ -138,7 +138,7 @@ jobs:
           -H "Authorization: token ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}" \
           --request POST \
           https://api.github.com/repos/dataquest-dev/\
-          dspace-ui-tests/actions/workflows/cron-test.yml/dispatches 
+          dspace-ui-tests/actions/workflows/cron-test.yml/dispatches \
           --data "{\"ref\":\"refs/heads/master\"}" 2> /dev/null
 
           # wait for it to start
@@ -170,7 +170,7 @@ jobs:
           -H "Authorization: token ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}" \
           --request POST \
           https://api.github.com/repos/dataquest-dev/\
-          dspace-ui-tests/actions/workflows/cron-test.yml/dispatches 
+          dspace-ui-tests/actions/workflows/cron-test.yml/dispatches \
           --data "{\"ref\":\"refs/heads/master\"}" 2> /dev/null
 
           # wait for it to start
