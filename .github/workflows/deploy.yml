@@ -130,7 +130,7 @@ jobs:
   trigger-and-check-playwright-after-only-deploy8:
     runs-on: ubuntu-latest
     needs: deploy-8
-    if: !inputs.IMPORT
+    if: '!inputs.IMPORT'
     steps:
       - name: run playwright
         run: |
