@@ -113,7 +113,7 @@ describe('Create a new submission', () => {
     defaultCommandTimeout: 10000
   },() => {
     createItemProcess.clickOnSelectionInput('dc.type');
-    createItemProcess.clickOnTypeSelection('Article');
+    createItemProcess.clickOnTypeSelection('Corpus');
   });
 
   // Test CMDI input field
@@ -135,7 +135,7 @@ describe('Create a new submission', () => {
     defaultCommandTimeout: 10000
   },() => {
     createItemProcess.clickOnSelectionInput('dc.type');
-    createItemProcess.clickOnTypeSelection('Article');
+    createItemProcess.clickOnTypeSelection('Corpus');
     createItemProcess.checkCheckbox('local_hasCMDI');
     createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
     createItemProcess.clickOnSave();
