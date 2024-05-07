@@ -124,9 +124,7 @@ export class ComplexFieldParser extends FieldParser {
         inputConfig.readOnly = true;
       }
 
-      if (this.configData.mandatory) {
-        inputConfig.required = hasValue(complexDefinitionInput.required) && complexDefinitionInput.required === 'true';
-      }
+      inputConfig.required = hasValue(complexDefinitionInput.required) && complexDefinitionInput.required === 'true';
 
       // max length - 200 chars
       this.addValidatorToComplexInput(inputConfig, complexDefinitionInput);
