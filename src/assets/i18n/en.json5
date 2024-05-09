@@ -2573,6 +2573,8 @@
 
   "item.edit.withdraw.success": "The item was withdrawn successfully",
 
+  "item.edit.tabs.license.head": "License",
+
   "item.orcid.return": "Back",
 
   "item.listelement.badge": "Item",
