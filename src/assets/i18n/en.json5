@@ -2575,6 +2575,8 @@
 
   "item.edit.tabs.license.head": "License",
 
+  "item.edit.license.head": "Current License",
+
   "item.orcid.return": "Back",
 
   "item.listelement.badge": "Item",

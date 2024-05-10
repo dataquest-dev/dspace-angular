@@ -1,1 +1,32 @@
-<p>item-license-mapper works!</p>
+<div class="container mt-2">
+  <div class="row">
+    <div class="col-12">
+      <h2>{{'item.edit.license.head' | translate}}</h2>
+      <div class="alert alert-dismissible alert-info">
+        <a [href]="(currentLicense | async)?.definition" class="badge badge-info">
+          {{(currentLicense | async)?.name}}
+        </a>
+        <a class="pl-2">Remove License</a>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div>Choose a license</div>
+    <select>
+      <option>License 1</option>
+      <option>License 2</option>
+      <option>License 3</option>
+    </select>
+    <div>
+      <span>icon</span>
+      <span>Warning info</span>
+    </div>
+  </div>
+  <div>
+    <a>Define a new license</a>
+  </div>
+  <div>
+    <button>Update</button>
+    <button>Return</button>
+  </div>
+</div>
