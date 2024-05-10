@@ -2579,6 +2579,14 @@
 
   "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
 
+  "item.edit.license.define.license.message": "Define a new license",
+
+  "item.edit.license.button.name.update": "Update",
+
+  "item.edit.license.button.name.return": "Return",
+
+  "item.edit.license.remove.license.message": "Remove License",
+
   "item.edit.license.head": "Current License",
 
   "item.orcid.return": "Back",
