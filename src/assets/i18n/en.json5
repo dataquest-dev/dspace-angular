@@ -2575,6 +2575,8 @@
 
   "item.edit.tabs.license.head": "License",
 
+  "item.edit.license.select.license.initial-value.message": "-Select License-",
+
   "item.edit.license.select.license.select.message": "Select a license",
 
   "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
