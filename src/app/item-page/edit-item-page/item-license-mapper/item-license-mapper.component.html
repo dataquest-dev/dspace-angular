@@ -10,16 +10,16 @@
       </div>
     </div>
   </div>
-  <div>
-    <div>Choose a license</div>
-    <select>
-      <option>License 1</option>
-      <option>License 2</option>
-      <option>License 3</option>
-    </select>
-    <div>
-      <span>icon</span>
-      <span>Warning info</span>
+  <div class="form-group row pt-3">
+    <div class="col-12">
+      <label class="font-weight-bold" for="selectLicense">{{'item.edit.license.select.license.select.message' | translate}}</label>
+      <select class="form-control" [(ngModel)]="selectedLicense" name="selectLicense" id="selectLicense">
+        <option *ngFor="let license of (allLicenses | async)" [value]="license">{{license.name}}</option>
+      </select>
+      <label class="text-info pt-2" for="selectLicense">
+        <i class="fa fa-info-circle"></i>
+        <span class="pl-1">{{'item.edit.license.select.license.info' | translate}}</span>
+      </label>
     </div>
   </div>
   <div>

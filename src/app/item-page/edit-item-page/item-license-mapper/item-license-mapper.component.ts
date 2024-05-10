@@ -5,9 +5,10 @@ import {RemoteData} from '../../../core/data/remote-data';
 import {Item} from '../../../core/shared/item.model';
 import {ActivatedRoute} from '@angular/router';
 import {ClarinLicenseDataService} from '../../../core/data/clarin/clarin-license-data.service';
-import {getFirstCompletedRemoteData} from '../../../core/shared/operators';
+import {getFirstCompletedRemoteData, getFirstSucceededRemoteListPayload} from '../../../core/shared/operators';
 import {PaginatedList} from '../../../core/data/paginated-list.model';
 import {ClarinLicense} from '../../../core/shared/clarin/clarin-license.model';
+import {FindListOptions} from '../../../core/data/find-list-options.model';
 
 @Component({
   selector: 'ds-item-license-mapper',
@@ -17,6 +18,8 @@ import {ClarinLicense} from '../../../core/shared/clarin/clarin-license.model';
 export class ItemLicenseMapperComponent implements OnInit {
 
   currentLicense: BehaviorSubject<ClarinLicense> = new BehaviorSubject(null);
+  allLicenses: BehaviorSubject<ClarinLicense[]> = new BehaviorSubject<ClarinLicense[]>([]);
+  selectedLicense: ClarinLicense;
 
   constructor(private route: ActivatedRoute,
               private clarinLicenseService: ClarinLicenseDataService) {
@@ -33,6 +36,25 @@ export class ItemLicenseMapperComponent implements OnInit {
       );
 
       this.loadCurrentLicense();
+      this.loadAllLicenses();
+    }
+
+  /**
+   * Load all licenses from the server and set them to allLicenses.
+   * @private
+   */
+  private loadAllLicenses() {
+      const options = new FindListOptions();
+      options.currentPage = 0;
+      // Load all licenses
+      options.elementsPerPage = 1000;
+
+      this.clarinLicenseService.findAll(options, false)
+        .pipe(
+          getFirstSucceededRemoteListPayload(),
+        ).subscribe((licenses) => {
+        this.allLicenses.next(licenses);
+      });
     }
 
     /**
