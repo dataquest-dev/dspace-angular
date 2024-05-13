@@ -14,7 +14,6 @@ import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { RequestService } from '../../../core/data/request.service';
 import { hasFailed } from '../../../core/data/request-entry-state.model';
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
-import { RouteService } from '../../../core/services/route.service';
 import { getItemPageRoute } from '../../item-page-routing-paths';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
