@@ -47,7 +47,6 @@ export class ItemLicenseMapperComponent implements OnInit {
   selectedLicenseId: number = null;
 
   constructor(private route: ActivatedRoute,
-              private routeService: RouteService,
               private router: Router,
               private clarinLicenseService: ClarinLicenseDataService,
               private halService: HALEndpointService,
