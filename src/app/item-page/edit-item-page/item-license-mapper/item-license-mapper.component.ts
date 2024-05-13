@@ -1,25 +1,24 @@
-import {Component, OnInit} from '@angular/core';
-import {map, switchMap, take, tap} from 'rxjs/operators';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {RemoteData} from '../../../core/data/remote-data';
-import {Item} from '../../../core/shared/item.model';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ClarinLicenseDataService} from '../../../core/data/clarin/clarin-license-data.service';
-import {getFirstCompletedRemoteData, getFirstSucceededRemoteListPayload} from '../../../core/shared/operators';
-import {PaginatedList} from '../../../core/data/paginated-list.model';
-import {ClarinLicense} from '../../../core/shared/clarin/clarin-license.model';
-import {FindListOptions} from '../../../core/data/find-list-options.model';
-import {followLink} from '../../../shared/utils/follow-link-config.model';
-import {ItemDataService} from '../../../core/data/item-data.service';
-import {MetadataValue} from '../../../core/shared/metadata.models';
-import {PatchRequest, PutRequest} from '../../../core/data/request.models';
-import {HALEndpointService} from '../../../core/shared/hal-endpoint.service';
-import {RequestService} from '../../../core/data/request.service';
-import {hasFailed} from '../../../core/data/request-entry-state.model';
-import {isEmpty} from '../../../shared/empty.util';
-import {RemoteDataBuildService} from '../../../core/cache/builders/remote-data-build.service';
-import {RouteService} from '../../../core/services/route.service';
-import {getItemPageRoute} from '../../item-page-routing-paths';
+import { Component, OnInit } from '@angular/core';
+import { map, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { RemoteData } from '../../../core/data/remote-data';
+import { Item } from '../../../core/shared/item.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ClarinLicenseDataService } from '../../../core/data/clarin/clarin-license-data.service';
+import { getFirstCompletedRemoteData, getFirstSucceededRemoteListPayload } from '../../../core/shared/operators';
+import { PaginatedList } from '../../../core/data/paginated-list.model';
+import { ClarinLicense } from '../../../core/shared/clarin/clarin-license.model';
+import { FindListOptions } from '../../../core/data/find-list-options.model';
+import { PutRequest } from '../../../core/data/request.models';
+import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
+import { RequestService } from '../../../core/data/request.service';
+import { hasFailed } from '../../../core/data/request-entry-state.model';
+import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
+import { RouteService } from '../../../core/services/route.service';
+import { getItemPageRoute } from '../../item-page-routing-paths';
+import { NotificationsService } from '../../../shared/notifications/notifications.service';
+import { TranslateService } from '@ngx-translate/core';
+import { getLicensesManageTablePath, getLicensesModulePath } from '../../../app-routing-paths';
 
 @Component({
   selector: 'ds-item-license-mapper',
@@ -27,19 +26,35 @@ import {getItemPageRoute} from '../../item-page-routing-paths';
   styleUrls: ['./item-license-mapper.component.scss']
 })
 export class ItemLicenseMapperComponent implements OnInit {
+  // Import methods for resolving the `license/manage-table` path
+  protected readonly getLicensesModulePath = getLicensesModulePath;
+  protected readonly getLicensesManageTablePath = getLicensesManageTablePath;
 
+  /**
+   * The current license of the item. It is automatically updated when the item's license is changed and successfully
+   * updated.
+   */
   currentLicense: BehaviorSubject<ClarinLicense> = new BehaviorSubject(null);
+
+  /**
+   * All licenses available in the system.
+   */
   allLicenses: BehaviorSubject<ClarinLicense[]> = new BehaviorSubject<ClarinLicense[]>([]);
+
+  /**
+   * The selected license id to attach to the item.
+   */
   selectedLicenseId: number = null;
 
   constructor(private route: ActivatedRoute,
               private routeService: RouteService,
               private router: Router,
               private clarinLicenseService: ClarinLicenseDataService,
-              private itemService: ItemDataService,
               private halService: HALEndpointService,
               private requestService: RequestService,
-              private rdbService: RemoteDataBuildService) {
+              private rdbService: RemoteDataBuildService,
+              private translateService: TranslateService,
+              private notificationsService: NotificationsService) {
   }
 
   /**
@@ -82,7 +97,6 @@ export class ItemLicenseMapperComponent implements OnInit {
 
       // Fetch Item's license
       this.itemRD$.subscribe((itemRD) => {
-        console.log('itemRD', itemRD);
         licenseName = itemRD.payload.firstMetadataValue('dc.rights');
       });
 
@@ -110,42 +124,45 @@ export class ItemLicenseMapperComponent implements OnInit {
     this.currentLicense.next(null);
   }
 
+  /**
+   * Update item's metadata and bitstream with new license and show notification on success/failure.
+   */
   updateLicense() {
     // Update item metadata with new license
     this.itemRD$.pipe(
       take(1),
     ).subscribe((itemRD) => {
+      // Compose URL: /core/items/{itemUUID}/bundles?licenseID={licenseID}
       let url = this.halService.getRootHref() + '/core/items/' + itemRD.payload.uuid + '/bundles?licenseID=' + this.selectedLicenseId;
       const requestId = this.requestService.generateRequestId();
       const putRequest = new PutRequest(requestId, url);
-      // call patch request
+      // call put request
       this.requestService.send(putRequest);
 
+      // Process response
       const response = this.rdbService.buildFromRequestUUID(requestId);
       response
         .pipe(getFirstCompletedRemoteData())
         .subscribe((responseRD$: RemoteData<Item>) => {
           if (hasFailed(responseRD$.state)) {
-            // this.error$.value.push('Cannot load the IP Address');
+            this.notificationsService.error(null, this.translateService.instant('item.edit.license.update.error'));
             return;
           }
-          if (isEmpty(responseRD$?.payload)) {
-            return;
-          }
+          // Update current license after successfully request
+          this.currentLicense.next(this.allLicenses.value.find(
+            (license) => String(license.id) === String(this.selectedLicenseId)));
+          this.notificationsService.success(null, this.translateService.instant('item.edit.license.update.success'));
         });
     });
   }
 
+  /**
+   * Redirect to Item Page
+   */
   return() {
-    // Redirect to previous page - Item Page
-    this.routeService.getPreviousUrl().pipe(
-      take(1))
-      .subscribe((previousUrl: string) => {
-        this.itemRD$.subscribe((itemRD) => {
-          const itemUrl = getItemPageRoute(itemRD.payload);
-          void this.router.navigateByUrl(itemUrl);
-        });
-      });
+    this.itemRD$.subscribe((itemRD) => {
+      const itemUrl = getItemPageRoute(itemRD.payload);
+      void this.router.navigateByUrl(itemUrl);
+    });
   }
-
 }
