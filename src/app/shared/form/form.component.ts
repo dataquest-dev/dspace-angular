@@ -18,7 +18,6 @@ import { hasValue, isNotEmpty, isNotNull, isNull } from '../empty.util';
 import { FormService } from './form.service';
 import { FormEntry, FormError } from './form.reducer';
 import { FormFieldMetadataValueObject } from './builder/models/form-field-metadata-value.model';
-import {DsDynamicInputModel} from './builder/ds-dynamic-form-ui/models/ds-dynamic-input.model';
 
 /**
  * The default form component.
