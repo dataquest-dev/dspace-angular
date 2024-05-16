@@ -2478,7 +2478,7 @@
   // "item.edit.license.select.license.select.message": "Select a license",
   "item.edit.license.select.license.select.message": "Vyberte licenci",
   // "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
-  "item.edit.license.select.license.info": "Přejete-li si změnit licenci, vyberte ji ze seznamu a zmáčkněte změnit.",
+  "item.edit.license.select.license.info": "Přejete-li si změnit licenci, vyberte ji ze seznamu a zmáčkněte aktualizovat.",
   // "item.edit.license.define.license.message": "Define a new license",
   "item.edit.license.define.license.message": "Definovat novou licenci",
   // "item.edit.license.button.name.update": "Update",
