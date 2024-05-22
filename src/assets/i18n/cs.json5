@@ -656,7 +656,7 @@
   // "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
   "clarin.license.agreement.signer.header.info": ["Informace uvedené níže vás, PODEPSANÉHO, identifikují. Pokud jsou tyto informace nesprávné, kontaktujte prosím", "poradnu.", "Tyto informace budou uloženy spolu se záznamem o souhlasu."],
   // "clarin.license.agreement.item.handle": "Item handle",
-  "clarin.license.agreement.item.handle": "Klika položky",
+  "clarin.license.agreement.item.handle": "Handle položky",
   // "clarin.license.agreement.bitstream.name": "Bitstream",
   "clarin.license.agreement.bitstream.name": "Bitstream",
   // "clarin.license.agreement.signer.name": "Signer",
