@@ -4,7 +4,11 @@
 // ***********************************************
 
 import { AuthTokenInfo, TOKENITEM } from 'src/app/core/auth/models/auth-token-info.model';
-import { FALLBACK_TEST_REST_BASE_URL, TEST_COLLECTION_NAME } from '.';
+
+// NOTE: FALLBACK_TEST_REST_BASE_URL is only used if Cypress cannot read the REST API BaseURL
+// from the Angular UI's config.json. See 'getBaseRESTUrl()' in commands.ts
+export const FALLBACK_TEST_REST_BASE_URL = 'http://localhost:8080/server';
+export const TEST_COLLECTION_NAME = 'Col';
 
 // Declare Cypress namespace to help with Intellisense & code completion in IDEs
 // ALL custom commands MUST be listed here for code completion to work
