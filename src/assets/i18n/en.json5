@@ -692,7 +692,7 @@
 
   "clarin.license.agreement.signer.ip.address": "Ip Address",
 
-  "clarin.license.agreement.signer.SEND_TOKEN": "Email",
+  "clarin.license.agreement.signer.SEND_TOKEN": "E-mail",
 
   "clarin.license.agreement.signer.NAME": "Name (given name and surname)",
 
@@ -702,7 +702,7 @@
 
   "clarin.license.agreement.signer.COUNTRY": "Country",
 
-  "clarin.license.agreement.signer.EXTRA_EMAIL": "Email",
+  "clarin.license.agreement.signer.EXTRA_EMAIL": "E-mail",
 
   "clarin.license.agreement.signer.ORGANIZATION": "Organization",
 
