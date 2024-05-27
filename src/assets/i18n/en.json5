@@ -3584,6 +3584,12 @@
 
   "person.page.name": "Name",
 
+  "person.page.subscriptions": "Subscriptions",
+
+  "person.page.subscriptions.message": "You may subscribe to collections to receive daily e-mail alerts of new items added. You can subscribe to as many or as few collections as you wish. Another alternative to daily e-mail alerts is to use the RSS feeds available for all collections.",
+
+  "person.page.subscriptions.email": "Email Subscriptions",
+
   "person.page.link.full": "Show all metadata",
 
   "person.page.orcid": "ORCID",

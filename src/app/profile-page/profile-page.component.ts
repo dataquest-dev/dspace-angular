@@ -81,6 +81,11 @@ export class ProfilePageComponent implements OnInit {
 
   isResearcherProfileEnabled$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  /**
+   * The value of whether the user is an administrator or not
+   */
+  isAdmin: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   constructor(private authService: AuthService,
               private notificationsService: NotificationsService,
               private translate: TranslateService,
@@ -108,6 +113,12 @@ export class ProfilePageComponent implements OnInit {
     ).subscribe((configRD: RemoteData<ConfigurationProperty>) => {
       this.isResearcherProfileEnabled$.next(configRD.hasSucceeded && configRD.payload.values.length > 0);
     });
+
+    // Check if the user is an administrator and assign the value to the isAdmin BehaviorSubject
+    this.authorizationService.isAuthorized(FeatureID.AdministratorOf)
+      .subscribe((value) => {
+        this.isAdmin.next(value);
+      });
   }
 
   /**

@@ -16,9 +16,7 @@ import { getRemoteDataPayload, getFirstSucceededRemoteData } from '../../core/sh
 import { FormBuilderService } from '../../shared/form/builder/form-builder.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { environment } from '../../../environments/environment';
-import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { BehaviorSubject } from 'rxjs';
-import { FeatureID } from '../../core/data/feature-authorization/feature-id';
 
 @Component({
   selector: 'ds-profile-page-metadata-form',
@@ -38,6 +36,11 @@ export class ProfilePageMetadataFormComponent implements OnInit {
    * The user to display the form for
    */
   @Input() user: EPerson;
+
+  /**
+   * The value of whether the user is an administrator or not
+   */
+  @Input() isAdmin: BehaviorSubject<boolean>;
 
   /**
    * The form's input models
@@ -106,16 +109,10 @@ export class ProfilePageMetadataFormComponent implements OnInit {
    */
   activeLangs: LangConfig[];
 
-  /**
-   * The value of whether the user is an administrator or not
-   */
-  isAdmin: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
   constructor(protected formBuilderService: FormBuilderService,
               protected translate: TranslateService,
               protected epersonService: EPersonDataService,
-              protected notificationsService: NotificationsService,
-              private authorizationService: AuthorizationDataService) {
+              protected notificationsService: NotificationsService) {
   }
 
   ngOnInit(): void {
@@ -125,12 +122,6 @@ export class ProfilePageMetadataFormComponent implements OnInit {
     this.translate.onLangChange
       .subscribe(() => {
         this.updateFieldTranslations();
-      });
-
-    // Check if the user is an administrator and assign the value to the isAdmin BehaviorSubject
-    this.authorizationService.isAuthorized(FeatureID.AdministratorOf)
-      .subscribe((value) => {
-        this.isAdmin.next(value);
       });
   }
 
