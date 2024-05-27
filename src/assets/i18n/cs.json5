@@ -3443,6 +3443,8 @@
   "person.listelement.badge": "Osoba",
   // "person.listelement.no-title": "No name found",
   "person.listelement.no-title": "Nebylo nalezeno žádné jméno",
+  // "person.page.last-login": "Last Login",
+  "person.page.last-login": "Poslední přihlášení",
   // "person.page.birthdate": "Birth Date",
   "person.page.birthdate": "Datum narození",
   // "person.page.edit": "Edit this item",
