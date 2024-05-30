@@ -112,7 +112,7 @@ services:
       TZ: ${TIMEZONE:-Europe/Bratislava}
     restart: unless-stopped
     container_name: dspacesolr${INSTANCE}
-    image: ${DSPACE_SOLR_IMAGE:-dataquest/dspace-solr:latest}
+    image: ${DSPACE_SOLR_IMAGE:-dataquest/dspace-solr:dspace-7_x}
     # Needs main 'dspace' container to start first to guarantee access to solr_configs
     depends_on:
     - dspace
