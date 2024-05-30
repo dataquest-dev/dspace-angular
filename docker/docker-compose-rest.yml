@@ -94,7 +94,7 @@ services:
       TZ: ${TIMEZONE:-Europe/Bratislava}
       PGDATA: /pgdata
       POSTGRES_PASSWORD: dspace
-    image: dspace/dspace-postgres-pgcrypto
+    image: ${DSPACE_DB_IMAGE:-dataquest/dspace-postgres-pgcrypto:dspace-7_x}
     networks:
       dspacenet:
     ports:
