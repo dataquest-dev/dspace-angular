@@ -16,6 +16,7 @@ import { getRemoteDataPayload, getFirstSucceededRemoteData } from '../../core/sh
 import { FormBuilderService } from '../../shared/form/builder/form-builder.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { environment } from '../../../environments/environment';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'ds-profile-page-metadata-form',
@@ -35,6 +36,11 @@ export class ProfilePageMetadataFormComponent implements OnInit {
    * The user to display the form for
    */
   @Input() user: EPerson;
+
+  /**
+   * The value of whether the user is an administrator or not
+   */
+  @Input() isAdmin: BehaviorSubject<boolean>;
 
   /**
    * The form's input models

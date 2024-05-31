@@ -14,9 +14,22 @@
     <div class="card mb-4">
       <div class="card-header">{{'profile.card.identify' | translate}}</div>
       <div class="card-body">
-        <ds-profile-page-metadata-form [user]="user"></ds-profile-page-metadata-form>
+        <ds-profile-page-metadata-form [user]="user" [isAdmin]="isAdmin"></ds-profile-page-metadata-form>
       </div>
     </div>
+    <div class="card mb-4 alert-warning" *ngIf="(isAdmin | async)">
+      <div class="card-header">{{'person.page.subscriptions' | translate}}</div>
+      <div class="card-body">
+        <div>{{'person.page.subscriptions.message' | translate}}</div>
+        <div class="font-weight-bold pt-2">{{'person.page.subscriptions.email' | translate}}</div>
+        <select>
+          <option>Blablabla</option>
+          <option>Blablabla</option>
+          <option>Blablabla</option>
+        </select>
+      </div>
+    </div>
+
     <div *ngIf="canChangePassword$ | async" class="card mb-4 security-section">
       <div class="card-header">{{'profile.card.security' | translate}}</div>
       <div class="card-body">

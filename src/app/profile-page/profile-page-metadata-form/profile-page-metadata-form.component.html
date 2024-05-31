@@ -5,3 +5,9 @@
          [displaySubmit]="false"
          [displayCancel]="false">
 </ds-form>
+<div class="container" *ngIf="isAdmin | async">
+  <div class="alert alert-dismissible alert-warning">
+    <div class="font-weight-bold">{{ 'person.page.last-login' | translate }}</div>
+    <div>{{ user.lastActive | date:'medium' }}</div>
+  </div>
+</div>
