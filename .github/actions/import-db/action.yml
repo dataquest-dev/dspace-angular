@@ -22,21 +22,22 @@ runs:
 
     - uses: actions/checkout@v4
       with:
-        repository: dataquest-dev/dspace-python-api
-        path: dspace-python-api
+        repository: dataquest-dev/dspace-import
         ref: 'main'
+        submodules: 'recursive'
+        path: 'dspace-import'
 
 
     - name: stop and remove containers
       id: import
       shell: bash
-      working-directory: dspace-python-api/scripts
+      working-directory: dspace-import/scripts
       env:
         DATADIR: ${{ inputs.DATADIR }}
         DB5PORT: 15432
         DB5NAME: dspace-import-db5
         DB7PORT: 543${{ inputs.INSTANCE }}
-        BEURL: http://dev-5.pc:8${{ inputs.INSTANCE }}/server/api/
+        BEURL: http://dev-5.pc:8${{ inputs.INSTANCE }}/server/api
       run: |
           docker stop $DB5NAME || true
           echo "====="
@@ -61,4 +62,4 @@ runs:
       run: |
         docker stop ${{ steps.import.outputs.cid }} || true
       if: ${{ always() }}
-          
+

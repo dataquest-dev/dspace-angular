@@ -20,9 +20,6 @@
       <div *ngIf="type === 'description'">
         <ds-clarin-description-item-field [item]="item" [fields]="fields"></ds-clarin-description-item-field>
       </div>
-      <div *ngIf="type === 'sponsor'">
-        <ds-clarin-sponsor-item-field [item]="item"></ds-clarin-sponsor-item-field>
-      </div>
       <div class="dont-break-out d-inline" *ngFor="let mdValue of item?.allMetadata(fields); let last=last; let i = index">
         <span *ngIf="type === 'hyperlink'" class="pr-1">
           <a [href]="mdValue.value">

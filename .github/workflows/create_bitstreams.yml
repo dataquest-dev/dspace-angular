@@ -14,61 +14,19 @@ on:
           - '8'
       
 jobs:
-  checkout-codebase:
+  import-specific-bitstreams:
     runs-on: dspace-dep-1
+    env:
+      DSPACE_REST_API: http://dev-5.pc:8${{ github.event.inputs.INSTANCE }}/server/api
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: dataquest-dev/dspace-python-api
+          repository: dataquest-dev/dspace-rest-test
+          ref: master
+          submodules: 'recursive'
 
-  import-2:
-    if: inputs.INSTANCE == '2'
-    runs-on: dspace-dep-1
-    needs: checkout-codebase
-    env:
-      DSPACE_REST_API: http://dev-5.pc:82/server/api/
-    steps:
       - name: install requirements and run import
         run: |
-          pip install -r requirements.txt
-          cd tools/create_bitstreams
-          python3 create_bitstreams.py
-
-  import-5:
-    if: inputs.INSTANCE == '5'
-    runs-on: dspace-dep-1
-    needs: checkout-codebase
-    env:
-      DSPACE_REST_API: http://dev-5.pc:85/server/api/
-    steps:
-      - name: install requirements and run import
-        run: |
-          pip install -r requirements.txt
-          cd tools/create_bitstreams
-          python3 create_bitstreams.py
-
-  import-6:
-    if: inputs.INSTANCE == '6'
-    runs-on: dspace-dep-1
-    needs: checkout-codebase
-    env:
-      DSPACE_REST_API: http://dev-5.pc:86/server/api/
-    steps:
-      - name: install requirements and run import
-        run: |
-          pip install -r requirements.txt
-          cd tools/create_bitstreams
-          python3 create_bitstreams.py
-
-  import-8:
-    if: inputs.INSTANCE == '8'
-    runs-on: dspace-dep-1
-    needs: checkout-codebase
-    env:
-      DSPACE_REST_API: http://dev-5.pc:88/server/api/
-    steps:
-      - name: install requirements and run import
-        run: |
-          pip install -r requirements.txt
-          cd tools/create_bitstreams
+          pip install -q -r requirements.txt
+          cd tests/integration
           python3 create_bitstreams.py

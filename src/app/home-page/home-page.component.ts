@@ -30,6 +30,9 @@ import { SearchObjects } from '../shared/search/models/search-objects.model';
 import { environment } from '../../environments/environment';
 import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
 import { isUndefined } from '../shared/empty.util';
+
+const MAX_TRUNCATE_LENGTH = 20;
+
 @Component({
   selector: 'ds-home-page',
   styleUrls: ['./home-page.component.scss'],
@@ -190,7 +193,7 @@ export class HomePageComponent implements OnInit {
    * @private
    */
   private loadSubject() {
-    const facetName = 'subject';
+    const facetName = 'subjectFirstValue';
     this.getFastSearchLinks(facetName, this.subjects$);
   }
 
@@ -210,7 +213,7 @@ export class HomePageComponent implements OnInit {
    */
   async getFastSearchLinks(facetName, behaviorSubject: BehaviorSubject<any>) {
     await this.assignBaseUrl();
-    const authorFilter: SearchFilterConfig = Object.assign(new SearchFilterConfig(), {
+    const searchFilter: SearchFilterConfig = Object.assign(new SearchFilterConfig(), {
       name: facetName,
       filterType: FilterType.text,
       hasFacets: false,
@@ -222,8 +225,8 @@ export class HomePageComponent implements OnInit {
         },
       },
     });
-    const authorFilterOptions: SearchOptions = new SearchOptions({configuration: 'default'});
-    this.searchService.getFacetValuesFor(authorFilter, 1, authorFilterOptions)
+    const searchOptions: SearchOptions = new SearchOptions({configuration: 'homepage'});
+    this.searchService.getFacetValuesFor(searchFilter, 1, searchOptions)
       .pipe(getFirstSucceededRemoteDataPayload())
       .subscribe(authorStats => {
         authorStats.page.forEach((facetValue: FacetValue) => {
@@ -232,7 +235,7 @@ export class HomePageComponent implements OnInit {
           // remove `/objects` from the updatedSearchUrl
           updatedSearchUrl = updatedSearchUrl.replace('/objects', '');
           const fastSearchLink: FastSearchLink = Object.assign(new FastSearchLink(), {
-            name: facetValue.value,
+            name: this.truncateText(facetValue.value),
             occurrences: facetValue.count,
             url: updatedSearchUrl
           });
@@ -263,6 +266,25 @@ export class HomePageComponent implements OnInit {
 
   redirectToBrowseByField(field) {
     this.router.navigateByUrl('/browse/' + field);
+  }
+
+  /**
+   * If the text is longer than MAX_TRUNCATE_LENGTH characters, replace the characters after
+   * the MAX_TRUNCATE_LENGTHth index with '...' This method is used to truncate
+   * the text in the `authors/subjects/languages` browsing section. We do not want
+   * to display the full text of the author/subject/language, but only
+   * the first MAX_TRUNCATE_LENGTH characters because it overflows to the next line.
+   *
+   * @param text
+   * @private
+   */
+  private truncateText(text: string): string {
+    if (text.length > MAX_TRUNCATE_LENGTH) {
+      // Replace characters after the MAX_TRUNCATE_LENGTHth index with '...'
+      return text.substring(0, MAX_TRUNCATE_LENGTH) + '...';
+    } else {
+      return text; // Return the original string if it's not longer than MAX_TRUNCATE_LENGTH characters
+    }
   }
 }
 

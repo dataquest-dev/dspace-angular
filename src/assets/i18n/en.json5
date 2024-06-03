@@ -692,6 +692,26 @@
 
   "clarin.license.agreement.signer.ip.address": "Ip Address",
 
+  "clarin.license.agreement.signer.SEND_TOKEN": "E-mail",
+
+  "clarin.license.agreement.signer.NAME": "Name (given name and surname)",
+
+  "clarin.license.agreement.signer.DOB": "Date of birth",
+
+  "clarin.license.agreement.signer.ADDRESS": "Address",
+
+  "clarin.license.agreement.signer.COUNTRY": "Country",
+
+  "clarin.license.agreement.signer.EXTRA_EMAIL": "E-mail",
+
+  "clarin.license.agreement.signer.ORGANIZATION": "Organization",
+
+  "clarin.license.agreement.signer.REQUIRED_ORGANIZATION": "Organization",
+
+  "clarin.license.agreement.signer.INTENDED_USE": "Intended use",
+
+  "clarin.license.agreement.signer.ACA_ORG_NAME_AND_SEAT": "Name and seat (address) of your academic institution",
+
   "clarin.license.agreement.button.agree": "I AGREE",
 
   "clarin.license.agreement.warning": "By clicking on the button below I, SIGNER with the above ID, agree to the LICENCE(s) restricting the usage of requested BITSTREAM(s).",
@@ -831,6 +851,8 @@
 
   "browse.comcol.by.title": "By Title",
 
+  "browse.comcol.by.language": "By Language",
+
   "browse.comcol.head": "Browse",
 
   "browse.empty": "No items to show.",
@@ -931,7 +953,7 @@
 
   "contact-us.title": "Contact Us",
 
-  "contact-us.description": "DSpace@TUL administrators may be contacted at:",
+  "contact-us.description": "DSpace administrators may be contacted at:",
 
   "contact-us.form": "On-line form: ",
 
@@ -2574,6 +2596,28 @@
   "item.edit.withdraw.header": "Withdraw item: {{ id }}",
 
   "item.edit.withdraw.success": "The item was withdrawn successfully",
+
+  "item.edit.tabs.license.head": "License",
+
+  "item.edit.license.head": "Current License",
+
+  "item.edit.license.select.license.initial-value.message": "-Select License-",
+
+  "item.edit.license.select.license.select.message": "Select a license",
+
+  "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
+
+  "item.edit.license.define.license.message": "Define a new license",
+
+  "item.edit.license.button.name.update": "Update",
+
+  "item.edit.license.button.name.return": "Return",
+
+  "item.edit.license.remove.license.message": "Remove License",
+
+  "item.edit.license.update.success": "License updated successfully",
+
+  "item.edit.license.update.error": "Error: cannot update license",
 
   "item.orcid.return": "Back",
 

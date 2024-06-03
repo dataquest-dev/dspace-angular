@@ -290,7 +290,7 @@ import {
 import { BitstreamListItemComponent } from './object-list/bitstream-list-item/bitstream-list-item.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ThemedLangSwitchComponent } from './lang-switch/themed-lang-switch.component';
-import { ThemedUserMenuComponent } from './auth-nav-menu/user-menu/themed-user-menu.component';
+import {ThemedUserMenuComponent} from './auth-nav-menu/user-menu/themed-user-menu.component';
 import { HtmlContentService } from './html-content.service';
 import { ClarinSafeHtmlPipe } from './utils/clarin-safehtml.pipe';
 import { ReplacePipe } from './utils/replace.pipe';

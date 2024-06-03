@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Item } from '../../core/shared/item.model';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
-import { isNull, isUndefined } from '../../shared/empty.util';
+import { isEmpty, isNotEmpty, isNull, isUndefined } from '../../shared/empty.util';
 import { getFirstSucceededRemoteData } from '../../core/shared/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NgbModal, NgbTooltip, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -15,6 +15,7 @@ import {
   DOI_METADATA_FIELD, HANDLE_METADATA_FIELD,
 } from '../simple/field-components/clarin-generic-item-field/clarin-generic-item-field.component';
 import { ItemIdentifierService } from '../../shared/item-identifier.service';
+import { AUTHOR_METADATA_FIELDS } from '../../core/shared/clarin/constants';
 
 /**
  * If the item has more authors do not add all authors to the citation but add there a shortcut.
@@ -71,6 +72,11 @@ export class ClarinRefCitationComponent implements OnInit {
    */
   hasDoi = false;
 
+  /**
+   * The authors of the item. Fetched from the metadata.
+   */
+  authors: string[] = [];
+
   constructor(private configurationService: ConfigurationDataService,
               private clipboard: Clipboard,
               public config: NgbTooltipConfig,
@@ -84,13 +90,20 @@ export class ClarinRefCitationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const author = this.getAuthors();
+    this.authors = this.item.allMetadataValues(AUTHOR_METADATA_FIELDS);
+    // First Part could be authors or publisher
+    let firstPart = this.getAuthors();
     const year = this.getYear();
 
-    let citationArray = [author, year];
+    // Show publisher instead of author if author is none
+    if (isEmpty(firstPart)) {
+      firstPart = this.item.firstMetadataValue('dc.publisher');
+    }
+
+    let citationArray = [firstPart, year];
     // Filter null values
     citationArray = citationArray.filter(textValue => {
-      return textValue !== null;
+      return isNotEmpty(textValue);
     });
 
     this.hasDoi = this.hasItemDoi();
@@ -111,7 +124,8 @@ export class ClarinRefCitationComponent implements OnInit {
    */
   copyText() {
     const tabChar = '  ';
-    this.clipboard.copy(this.citationText + ',\n' + tabChar + this.itemNameText + ', ' +
+    let authorWithItemName = this.citationText + ',\n' + tabChar + this.itemNameText;
+    this.clipboard.copy(authorWithItemName + ', ' +
       this.repositoryNameText + ', \n' + tabChar + this.identifierURI);
     setTimeout(() => {
       this.tooltipRef.close();
@@ -152,19 +166,42 @@ export class ClarinRefCitationComponent implements OnInit {
     return fullUri.substr(startHandleIndex);
   }
 
+  /**
+   * Check if the Item has any author metadata.
+   * @param authorMetadata
+   */
+  hasNoAuthor(authorMetadata: string[] = []) {
+    return isEmpty(authorMetadata);
+  }
+
   getAuthors() {
     let authorText = '';
-    const authorMetadata = this.item.metadata['dc.contributor.author'];
+    const authorMetadata = this.authors;
     if (isUndefined(authorMetadata) || isNull(authorMetadata)) {
       return null;
     }
 
-    authorText = authorMetadata[0]?.value;
-    // There are more authors for the item
-    if (authorMetadata.length > 1) {
-      authorText = authorText + '; ' + ET_AL_TEXT;
+    // If metadata value is `(:unav) Unknown author` return null
+    if (this.hasNoAuthor(authorMetadata)) {
+      return null;
     }
 
+    // If there is only one author
+    if (authorMetadata.length === 1) {
+      return authorMetadata[0];
+    }
+
+    // If there are less than 5 authors
+    if (authorMetadata.length <= 5) {
+      let authors_list = authorMetadata.join('; ');
+      // Replace last `;` with `and`
+      authors_list = authors_list.replace(/;([^;]*)$/, ' and$1');
+      return authors_list;
+    }
+
+    // If there are more than 5 authors
+    // Get only first author and add `et al.` at the end
+    authorText = authorMetadata[0] + '; ' + ET_AL_TEXT;
     return authorText;
   }
 
