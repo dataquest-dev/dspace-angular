@@ -196,6 +196,7 @@ import { ClarinVerificationTokenDataService } from './data/clarin/clarin-verific
 import { ClruaDataService } from './data/clarin/clrua-data.service';
 import { BitstreamChecksum } from './shared/bitstream-checksum.model';
 import { BitstreamChecksumDataService } from './bitstream-checksum-data.service';
+import { VersionInfoDataService } from './data/clarin/version-info-data.service';
 
 /**
  * When not in production, endpoint responses can be mocked for testing purposes
@@ -226,6 +227,7 @@ const PROVIDERS = [
   SiteDataService,
   MetadataValueDataService,
   ClarinLicenseDataService,
+  VersionInfoDataService,
   ClarinLicenseLabelDataService,
   ClruaDataService,
   ClarinUserRegistrationDataService,
