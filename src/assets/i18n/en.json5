@@ -5883,4 +5883,15 @@
   "navbar.about.service-integrations": "Service integrations",
 
   "navbar.about.project-partnership": "Project partnerships",
+
+
+  "version-info.page.title": "Version info",
+
+  "version-info.page.date": "Date",
+
+  "version-info.page.build-run": "Build run URL",
+
+  "version-info.page.hash": "Commit hash"
+
+
 }

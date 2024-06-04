@@ -5665,4 +5665,12 @@
   "navbar.about.service-integrations": "Integrace služeb",
   // "navbar.about.project-partnership": "Project partnerships"
   "navbar.about.project-partnership": "Projektové partnerství",
+  // "version-info.page.title": "Version info",
+  "version-info.page.title": "Informace o verzi",
+  // "version-info.page.date": "Date",
+  "version-info.page.date": "Datum",
+  // "version-info.page.build-run": "Build run URL",
+  "version-info.page.build-run": "URL buildu",
+  // "version-info.page.hash": "Commit Hash"
+  "version-info.page.hash": "Commit hash"
 }
