@@ -265,6 +265,11 @@ import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
             path: STATIC_PAGE_PATH,
             loadChildren: () => import('./static-page/static-page.module').then((m) => m.StaticPageModule),
           },
+          {
+            path: 'version-info',
+            loadChildren: () => import('./version-info/version-info.module').then((m) => m.VersionInfoModule),
+            canActivate: [EndUserAgreementCurrentUserGuard],
+          },
           { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent }
         ]
       }
