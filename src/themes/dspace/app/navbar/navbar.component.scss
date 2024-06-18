@@ -11,7 +11,14 @@ nav.navbar {
   border-top: 1px var(--ds-header-navbar-border-top-color) solid;
   border-bottom: 5px var(--ds-header-navbar-border-bottom-color) solid;
   align-items: baseline;
-  color: var(--ds-header-icon-color);
+
+  .navbar-inner-container {
+    border-top: 1px var(--ds-header-navbar-border-top-color) solid;
+  }
+}
+
+.navbar-nav {
+  background-color: var(--ds-navbar-bg);
 }
 
 .clarin-logo {
