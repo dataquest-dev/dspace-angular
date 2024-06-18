@@ -17,9 +17,6 @@ on:
 permissions:
   contents: read  #  to fetch code (actions/checkout)
 
-permissions:
-  contents: read  #  to fetch code (actions/checkout)
-
 
 env:
   # Define tags to use for Docker images based on Git tags/branches (for docker/metadata-action)
