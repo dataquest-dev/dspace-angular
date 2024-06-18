@@ -96,17 +96,6 @@ export class ItemPageComponent implements OnInit, OnDestroy {
    */
   signpostingLinks: SignpostingLink[] = [];
 
-  /**
-   * Whether the current user is an admin or not
-   */
-  isAdmin$: Observable<boolean>;
-
-  itemUrl: string;
-
-  /**
-   * Contains a list of SignpostingLink related to the item
-   */
-  signpostingLinks: SignpostingLink[] = [];
 
   constructor(
     protected route: ActivatedRoute,
