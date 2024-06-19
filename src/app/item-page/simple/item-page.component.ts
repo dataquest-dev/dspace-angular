@@ -96,7 +96,6 @@ export class ItemPageComponent implements OnInit, OnDestroy {
    */
   signpostingLinks: SignpostingLink[] = [];
 
-
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
