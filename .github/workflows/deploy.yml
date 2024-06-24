@@ -7,7 +7,7 @@ on:
       INSTANCE:
         required: false
         type: string
-        default: '2'
+        default: '5'
       IMPORT:
         required: false
         default: true
@@ -21,11 +21,10 @@ on:
     inputs:
       INSTANCE:
         required: true
-        default: '2'
+        default: '5'
         type: choice
         options:
           - '*'
-          - '2'
           - '5'
           - '8'
       IMPORT:
@@ -38,13 +37,13 @@ on:
         type: boolean
 
 jobs:
-  deploy-2:
-    if: inputs.INSTANCE == '*' || inputs.INSTANCE == '2'
+  deploy-5:
+    if: inputs.INSTANCE == '*' || inputs.INSTANCE == '5'
     runs-on: dspace-dep-1
     timeout-minutes: 10
     env:
-      INSTANCE: '2'
-      ENVFILE: /opt/dspace-envs/.env.dspace.dev-5.uk
+      INSTANCE: '5'
+      ENVFILE: /opt/dspace-envs/.env.dspace.dev-5
     steps:
       - uses: actions/checkout@v4
 
@@ -104,8 +103,9 @@ jobs:
         with:
           INSTANCE: ${{ env.INSTANCE }}
           DATADIR: /opt/dspace-data/clarin-dspace/
+          ASSETSTORE: /opt/dspace-data/clarin-dspace/assetstore/
 
-      - name: dspace command
+      - name: dspace basic command
         run: |
           export DNAME=dspace$INSTANCE
           docker logs -n 50 $DNAME
@@ -125,6 +125,9 @@ jobs:
           echo "dspace checker:"
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace checker -v -l"
 
+      - name: dspace healthcheck
+        run: |
+          export DNAME=dspace$INSTANCE
           echo "dspace healthcheck:"
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
 
