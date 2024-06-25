@@ -146,7 +146,7 @@ jobs:
           # dspace-ui-tests/actions/workflows/cron-test.yml/dispatches \
           # --data "{\"ref\":\"refs/heads/master\"}" 2> /dev/null
 
-          gh workflow run cron-test.yml --repo dataquest-dev/dspace-ui-tests
+          gh workflow run  --repo dataquest-dev/dspace-ui-tests --ref master cron-test.yml
 
           # wait for it to start
           sleep 30s
