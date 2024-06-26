@@ -7,7 +7,7 @@ on:
       INSTANCE:
         required: false
         type: string
-        default: '5'
+        default: '9'
       IMPORT:
         required: false
         default: true
@@ -21,15 +21,16 @@ on:
     inputs:
       INSTANCE:
         required: true
-        default: '5'
+        default: '9'
         type: choice
         options:
           - '*'
           - '5'
           - '8'
+          - '9'
       IMPORT:
-        required: true
-        default: true
+        required: false
+        default: false
         type: boolean
       ERASE_DB:
         required: false
