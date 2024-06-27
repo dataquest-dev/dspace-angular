@@ -1,20 +1,17 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, Optional } from '@angular/core';
 import { hasValue } from '../shared/empty.util';
 import { KlaroService } from '../shared/cookies/klaro.service';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../core/data/feature-authorization/feature-id';
-import { RemoteData } from '../core/data/remote-data';
-import { ConfigurationProperty } from '../core/shared/configuration-property.model';
-import { ConfigurationDataService } from '../core/data/configuration-data.service';
 
 @Component({
   selector: 'ds-footer',
   styleUrls: ['footer.component.scss'],
   templateUrl: 'footer.component.html'
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent {
   dateObj: number = Date.now();
 
   /**
@@ -25,36 +22,17 @@ export class FooterComponent implements OnInit {
   showEndUserAgreement = environment.info.enableEndUserAgreement;
   showSendFeedback$: Observable<boolean>;
 
-  /**
-   * The company url which customized this DSpace with redirection to the DSpace section
-   */
-  themedByUrl$: Observable<RemoteData<ConfigurationProperty>>;
-
-  /**
-   * The company name which customized this DSpace with redirection to the DSpace section
-   */
-  themedByCompanyName$: Observable<RemoteData<ConfigurationProperty>>;
-
   constructor(
     @Optional() private cookies: KlaroService,
     private authorizationService: AuthorizationDataService,
-    protected configurationDataService: ConfigurationDataService
   ) {
     this.showSendFeedback$ = this.authorizationService.isAuthorized(FeatureID.CanSendFeedback);
   }
 
-  ngOnInit(): void {
-    this.loadThemedByProps();
-  }
   showCookieSettings() {
     if (hasValue(this.cookies)) {
       this.cookies.showSettings();
     }
     return false;
-  }
-
-  private loadThemedByProps() {
-    this.themedByUrl$ = this.configurationDataService.findByPropertyName('themed.by.url');
-    this.themedByCompanyName$ = this.configurationDataService.findByPropertyName('themed.by.company.name');
   }
 }
