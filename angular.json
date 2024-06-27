@@ -61,6 +61,11 @@
                 "input": "src/themes/dspace/styles/theme.scss",
                 "inject": false,
                 "bundleName": "dspace-theme"
+              },
+              {
+                "input": "src/themes/zcupub/styles/theme.scss",
+                "inject": false,
+                "bundleName": "zcupub-theme"
               }
             ],
             "scripts": [
