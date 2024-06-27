@@ -57,6 +57,6 @@ jobs:
     uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@dtq-dev
     if: ${{ github.event_name != 'pull_request' }}
     with:
-      INSTANCE: '5'
+      INSTANCE: '9'
       IMPORT: false
     secrets: inherit
