@@ -23,7 +23,7 @@ runs:
     - uses: actions/checkout@v4
       with:
         repository: dataquest-dev/dspace-import
-        ref: 'tul_table_difference'
+        ref: 'internal/review_expand_assetstore_for_testing_'
         submodules: 'recursive'
         path: 'dspace-import'
 
