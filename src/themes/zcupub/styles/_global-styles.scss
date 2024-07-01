@@ -4,6 +4,38 @@
 @import '../../../styles/_global-styles.scss';
 @import '../../../styles/_clarin-styles.scss';
 
+.btn-outline-secondary, .btn-outline-primary {
+  border-color: var(--lt-zcu-pub-blue) !important;
+  color: var(--lt-zcu-pub-blue) !important;
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem var(--lt-zcu-pub-blue-lighter) !important;
+  }
+
+  &:hover {
+    background-color: var(--lt-zcu-pub-blue-hover) !important;
+    border-color: var(--lt-zcu-pub-blue-hover) !important;
+    transition: filter 0.3s;
+    color: white !important;
+  }
+}
+
+.btn-danger, .btn-dark, .btn-success, .btn-warning, .btn-info, .btn-primary, .btn-secondary {
+  background-color: var(--lt-zcu-pub-blue) !important;
+  border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25) !important;
+  color: white !important;
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem var(--lt-zcu-pub-blue-lighter) !important;
+  }
+
+  &:hover {
+    background-color: var(--lt-zcu-pub-blue-hover) !important;
+    border-color: var(--lt-zcu-pub-blue-hover) !important;
+    transition: filter 0.3s;
+  }
+}
+
 .facet-filter, .setting-option {
   background-color: var(--bs-light);
   border-radius: var(--bs-border-radius);
@@ -99,38 +131,6 @@ a {
 
 .cursor-pointer {
   cursor: pointer;
-}
-
-.btn-outline-secondary, .btn-outline-primary {
-  border-color: var(--lt-zcu-pub-blue) !important;
-  color: var(--lt-zcu-pub-blue) !important;
-
-  &:focus {
-    box-shadow: 0 0 0 0.2rem var(--lt-zcu-pub-blue-lighter) !important;
-  }
-
-  &:hover {
-    background-color: var(--lt-zcu-pub-blue-hover) !important;
-    border-color: var(--lt-zcu-pub-blue-hover) !important;
-    transition: filter 0.3s;
-    color: white !important;
-  }
-}
-
-.btn-danger, .btn-dark, .btn-success, .btn-warning, .btn-info, .btn-primary, .btn-secondary {
-  background-color: var(--lt-zcu-pub-blue) !important;
-  border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25) !important;
-  color: white !important;
-
-  &:focus {
-    box-shadow: 0 0 0 0.2rem var(--lt-zcu-pub-blue-lighter) !important;
-  }
-
-  &:hover {
-    background-color: var(--lt-zcu-pub-blue-hover) !important;
-    border-color: var(--lt-zcu-pub-blue-hover) !important;
-    transition: filter 0.3s;
-  }
 }
 
 .form-control:focus {
