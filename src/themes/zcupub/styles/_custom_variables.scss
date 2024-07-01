@@ -2,4 +2,15 @@
   --lt-zcu-pub-blue: #23539B;
   --lt-zcu-pub-blue-hover: #1a3d71 ;
   --lt-zcu-pub-blue-lighter: #d5e6ff;
+
+  //$admin-sidebar-bg: #202224;
+  $admin-sidebar-bg: #292B2F;
+  $admin-sidebar-active-bg: darken($admin-sidebar-bg, 3%);
+  --ds-admin-sidebar-bg: #{$admin-sidebar-bg};
+  --ds-admin-sidebar-active-bg: #{$admin-sidebar-active-bg};
+  --ds-admin-sidebar-header-bg: #{darken($admin-sidebar-bg, 7%)};
+
+  --ds-dark-scrollbar-bg: #{$admin-sidebar-active-bg};
+  --ds-dark-scrollbar-alt-bg: #{lighten($admin-sidebar-active-bg, 2%)};
+  --ds-dark-scrollbar-fg: #47495d;
 }
