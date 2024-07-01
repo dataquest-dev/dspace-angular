@@ -31,7 +31,7 @@
   color: var(--lt-zcu-pub-blue) !important;
 
   &:focus {
-    box-shadow: 0 0 0 0.2rem #d5d6e9 !important;
+    box-shadow: 0 0 0 0.2rem var(--lt-zcu-pub-blue-lighter) !important;
   }
 
   &:hover {
@@ -48,7 +48,7 @@
   color: white !important;
 
   &:focus {
-    box-shadow: 0 0 0 0.2rem #d5d6e9 !important;
+    box-shadow: 0 0 0 0.2rem var(--lt-zcu-pub-blue-lighter) !important;
   }
 
   &:hover {
@@ -59,7 +59,7 @@
 }
 
 .form-control:focus {
-  box-shadow: 0 0 0 0.2rem #d5d6e9 !important;
+  box-shadow: 0 0 0 0.2rem var(--lt-zcu-pub-blue-lighter) !important;
 }
 
 ds-home-page ds-themed-search-form {

@@ -1,0 +1,24 @@
+.loginDropdownMenu, .logoutDropdownMenu {
+  min-width: 330px;
+  z-index: 1002;
+}
+
+.loginDropdownMenu {
+  min-height: 260px;
+}
+
+.dropdown-item.active, .dropdown-item:active,
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: transparent !important;
+}
+
+.loginLink, .dropdownLogin, .logoutLink, .dropdownLogout {
+  color: white;
+
+  &:hover, &:focus {
+    background-color: white;
+    color: var(--lt-zcu-pub-blue);
+    border-radius: 2px;
+    transition: background-color 0.2s ease-out;
+  }
+}

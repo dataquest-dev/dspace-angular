@@ -11,10 +11,10 @@ import { MenuID } from '../../../../../app/shared/menu/menu-id.model';
  */
 @Component({
   selector: 'ds-expandable-navbar-section',
-  // templateUrl: './expandable-navbar-section.component.html',
-  templateUrl: '../../../../../app/navbar/expandable-navbar-section/expandable-navbar-section.component.html',
-  // styleUrls: ['./expandable-navbar-section.component.scss'],
-  styleUrls: ['../../../../../app/navbar/expandable-navbar-section/expandable-navbar-section.component.scss'],
+  templateUrl: './expandable-navbar-section.component.html',
+  // templateUrl: '../../../../../app/navbar/expandable-navbar-section/expandable-navbar-section.component.html',
+  styleUrls: ['./expandable-navbar-section.component.scss'],
+  // styleUrls: ['../../../../../app/navbar/expandable-navbar-section/expandable-navbar-section.component.scss'],
   animations: [slide]
 })
 @rendersSectionForMenu(MenuID.PUBLIC, true)
