@@ -90,11 +90,11 @@
               </ul>
             </div>
             <div class="footer-sign">
-              <p class="theme-by">Theme by</p>
-              <a class="dtq-sign text-white"
+              <p class="theme-by">{{ 'footer.theme.by.message' | translate }}</p>
+              <a class="dtq-sign text-white" *ngVar="(themedByCompanyName$ | async)?.payload?.values[0] as companyName"
                  [href]="(themedByUrl$ | async)?.payload?.values[0]"
-                 [title]="(themedByCompanyName$ | async)?.payload?.values[0]">
-                + dataquest
+                 [title]="companyName">
+                {{ companyName }}
               </a>
             </div>
           </div>
