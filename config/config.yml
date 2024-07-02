@@ -105,7 +105,7 @@ themes:
   # # This theme will use the default bootstrap styling for DSpace components
   # - name: BASE_THEME_NAME
   #
-  - name: zcupub
+  - name: custom
     headTags:
       - tagName: link
         attributes:

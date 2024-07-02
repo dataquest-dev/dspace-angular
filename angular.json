@@ -63,9 +63,9 @@
                 "bundleName": "dspace-theme"
               },
               {
-                "input": "src/themes/zcupub/styles/theme.scss",
+                "input": "src/themes/custom/styles/theme.scss",
                 "inject": false,
-                "bundleName": "zcupub-theme"
+                "bundleName": "custom-theme"
               }
             ],
             "scripts": [
