@@ -18,8 +18,8 @@ import { storeModuleConfig } from '../app.reducer';
 import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';
 import { AuthorizationDataServiceStub } from '../shared/testing/authorization-service.stub';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
-import { createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
 import { ConfigurationProperty } from '../core/shared/configuration-property.model';
+import { createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
 
 let comp: FooterComponent;
 let fixture: ComponentFixture<FooterComponent>;
@@ -50,7 +50,6 @@ describe('Footer component', () => {
       providers: [
         FooterComponent,
         { provide: AuthorizationDataService, useClass: AuthorizationDataServiceStub },
-        FooterComponent,
         { provide: ConfigurationDataService, useValue: mockConfigurationDataService }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]

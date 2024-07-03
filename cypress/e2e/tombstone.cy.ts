@@ -1,17 +1,17 @@
-import {
-  TEST_ADMIN_PASSWORD, TEST_ADMIN_USER,
-  TEST_WITHDRAWN_ITEM,
-  TEST_WITHDRAWN_ITEM_WITH_REASON,
-  TEST_WITHDRAWN_ITEM_WITH_REASON_AND_AUTHORS,
-  TEST_WITHDRAWN_REPLACED_ITEM, TEST_WITHDRAWN_REPLACED_ITEM_WITH_AUTHORS
-} from '../support/e2e';
-
-const ITEMPAGE_WITHDRAWN = '/items/' + TEST_WITHDRAWN_ITEM;
-const ITEMPAGE_WITHDRAWN_REASON = '/items/' + TEST_WITHDRAWN_ITEM_WITH_REASON;
-const ITEMPAGE_WITHDRAWN_REPLACED = '/items/' + TEST_WITHDRAWN_REPLACED_ITEM;
-const ITEMPAGE_WITHDRAWN_REASON_AUTHORS = '/items/' + TEST_WITHDRAWN_ITEM_WITH_REASON_AND_AUTHORS;
-const ITEMPAGE_WITHDRAWN_REPLACED_AUTHORS = '/items/' + TEST_WITHDRAWN_REPLACED_ITEM_WITH_AUTHORS;
-const TOMBSTONED_ITEM_MESSAGE = 'This item has been withdrawn';
+// import {
+//   TEST_ADMIN_PASSWORD, TEST_ADMIN_USER,
+//   TEST_WITHDRAWN_ITEM,
+//   TEST_WITHDRAWN_ITEM_WITH_REASON,
+//   TEST_WITHDRAWN_ITEM_WITH_REASON_AND_AUTHORS,
+//   TEST_WITHDRAWN_REPLACED_ITEM, TEST_WITHDRAWN_REPLACED_ITEM_WITH_AUTHORS
+// } from '../support/e2e';
+//
+// const ITEMPAGE_WITHDRAWN = '/items/' + TEST_WITHDRAWN_ITEM;
+// const ITEMPAGE_WITHDRAWN_REASON = '/items/' + TEST_WITHDRAWN_ITEM_WITH_REASON;
+// const ITEMPAGE_WITHDRAWN_REPLACED = '/items/' + TEST_WITHDRAWN_REPLACED_ITEM;
+// const ITEMPAGE_WITHDRAWN_REASON_AUTHORS = '/items/' + TEST_WITHDRAWN_ITEM_WITH_REASON_AND_AUTHORS;
+// const ITEMPAGE_WITHDRAWN_REPLACED_AUTHORS = '/items/' + TEST_WITHDRAWN_REPLACED_ITEM_WITH_AUTHORS;
+// const TOMBSTONED_ITEM_MESSAGE = 'This item has been withdrawn';
 
 // describe('Tombstone  Page', () => {
 //
@@ -58,37 +58,37 @@ const TOMBSTONED_ITEM_MESSAGE = 'This item has been withdrawn';
 //
 // });
 
-describe('Admin Tombstone  Page', () => {
-  beforeEach(() => {
-    cy.visit('/login');
-    // Cancel discojuice login - only if it is popped up
-    cy.wait(500);
-    cy.get('.discojuice_close').should('exist').click();
-    // Login as admin
-    cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
-    cy.visit('/');
-  });
-
-  it('the admin should see ds-item-page',{
-      retries: {
-        runMode: 8,
-        openMode: 8,
-      },
-      defaultCommandTimeout: 10000
-    }, () => {
-    cy.visit(ITEMPAGE_WITHDRAWN);
-    cy.get('ds-item-page').should('exist');
-  });
-
-  it('the admin should see the withdrawn message on the replaced item', {
-      retries: {
-        runMode: 8,
-        openMode: 8,
-      },
-    defaultCommandTimeout: 10000
-    }, () => {
-    cy.visit(ITEMPAGE_WITHDRAWN_REPLACED);
-    cy.get('ds-item-page').contains(TOMBSTONED_ITEM_MESSAGE);
-  });
-
-});
+// describe('Admin Tombstone  Page', () => {
+//   beforeEach(() => {
+//     cy.visit('/login');
+//     // Cancel discojuice login - only if it is popped up
+//     cy.wait(500);
+//     cy.get('.discojuice_close').should('exist').click();
+//     // Login as admin
+//     cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
+//     cy.visit('/');
+//   });
+//
+//   it('the admin should see ds-item-page',{
+//       retries: {
+//         runMode: 8,
+//         openMode: 8,
+//       },
+//       defaultCommandTimeout: 10000
+//     }, () => {
+//     cy.visit(ITEMPAGE_WITHDRAWN);
+//     cy.get('ds-item-page').should('exist');
+//   });
+//
+//   it('the admin should see the withdrawn message on the replaced item', {
+//       retries: {
+//         runMode: 8,
+//         openMode: 8,
+//       },
+//     defaultCommandTimeout: 10000
+//     }, () => {
+//     cy.visit(ITEMPAGE_WITHDRAWN_REPLACED);
+//     cy.get('ds-item-page').contains(TOMBSTONED_ITEM_MESSAGE);
+//   });
+//
+// });

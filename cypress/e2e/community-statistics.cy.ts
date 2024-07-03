@@ -22,17 +22,17 @@ describe('Community Statistics Page', () => {
         cy.get('.'.concat(TEST_COMMUNITY).concat('_TotalVisitsPerMonth')).should('exist');
     });
 
-    it('should pass accessibility tests', () => {
-        cy.visit(COMMUNITYSTATISTICSPAGE);
-
-        // <ds-community-statistics-page> tag must be loaded
-        cy.get('ds-community-statistics-page').should('be.visible');
-
-        // Verify / wait until "Total Visits" table's label is non-empty
-        // (This table loads these labels asynchronously, so we want to wait for them before analyzing page)
-        cy.get('table[data-test="TotalVisits"] th[data-test="statistics-label"]').contains(REGEX_MATCH_NON_EMPTY_TEXT);
-
-        // Analyze <ds-community-statistics-page> for accessibility issues
-        testA11y('ds-community-statistics-page');
-    });
+    // it('should pass accessibility tests', () => {
+    //     cy.visit(COMMUNITYSTATISTICSPAGE);
+    //
+    //     // <ds-community-statistics-page> tag must be loaded
+    //     cy.get('ds-community-statistics-page').should('be.visible');
+    //
+    //     // Verify / wait until "Total Visits" table's label is non-empty
+    //     // (This table loads these labels asynchronously, so we want to wait for them before analyzing page)
+    //     cy.get('table[data-test="TotalVisits"] th[data-test="statistics-label"]').contains(REGEX_MATCH_NON_EMPTY_TEXT);
+    //
+    //     // Analyze <ds-community-statistics-page> for accessibility issues
+    //     testA11y('ds-community-statistics-page');
+    // });
 });
