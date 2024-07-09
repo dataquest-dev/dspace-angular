@@ -288,7 +288,9 @@ jobs:
           export DNAME=dspace$INSTANCE
           export DDBNAME=dspacedb$INSTANCE
 
-          docker stop $DDBNAME || true
+          echo "====="
+          docker stop $DNAME || true
+
           echo "====="
           echo Starting vanilla import DB
           docker cp $DATADIR $DDBNAME:/tmp/
@@ -296,9 +298,13 @@ jobs:
           # docker exec $DDBNAME /bin/bash -c "psql -U dspace -p 543$INSTANCE -d $DDBNAME < /tmp/$FNAME"
           docker exec $DDBNAME psql -U postgres -d dspace -f /tmp/$FNAME
           echo Database $DDBNAME fulfilled
+          echo "====="
           docker exec $DDBNAME /bin/bash -c "rm /tmp/$FNAME"
           echo Dump $FNAME removed
+          echo "====="
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
+          echo "====="
+
       - name: dspace basic command
         run: |
           export DNAME=dspace$INSTANCE
