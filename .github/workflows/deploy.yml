@@ -274,8 +274,23 @@ jobs:
             exit 1
           fi;
 
+  deploy-4:
+    if: inputs.IMPORT && inputs.INSTANCE == 'ZCU'
+    runs-on: dspace-dep-1
+    timeout-minutes: 10
+    env:
+      INSTANCE: '4'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: deploy to dev-5
+        working-directory: build-scripts/run/
+        run: |
+          ./start.sh dspace-$INSTANCE
+
   import-ZCU:
     runs-on: dspace-dep-1
+    needs: deploy-4
     if: inputs.IMPORT && inputs.INSTANCE == 'ZCU'
     env:
       INSTANCE: '4'
