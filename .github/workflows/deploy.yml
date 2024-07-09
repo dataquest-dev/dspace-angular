@@ -294,7 +294,7 @@ jobs:
           echo "====="
           # echo Starting vanilla import DB
           docker cp $DATADIR $DDBNAME:/tmp/
-          docker exec $DDBNAME /bin/bash -c"psql -p 543$INSTANCE -U dspace -d dspace -f /tmp/$FNAME && rm /tmp/$FNAME"
+          docker exec $DDBNAME /bin/bash -c "psql -p 543$INSTANCE -U dspace -d dspace -f /tmp/$FNAME && rm /tmp/$FNAME"
           echo "====="
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
           echo "====="
