@@ -296,6 +296,7 @@ jobs:
           docker cp $DATADIR $DDBNAME:/tmp/
           echo Dump $FNAME copied
           # docker exec $DDBNAME /bin/bash -c "psql -U dspace -p 543$INSTANCE -d $DDBNAME < /tmp/$FNAME"
+          docker inspect -f '{{.State.Running}}' $DDBNAME
           docker exec $DDBNAME psql -U postgres -d dspace -f /tmp/$FNAME
           echo Database $DDBNAME fulfilled
           echo "====="
