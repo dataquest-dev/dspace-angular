@@ -288,7 +288,7 @@ jobs:
           export DNAME=dspace$INSTANCE
           export DDBNAME=dspacedb$INSTANCE
 
-          docker stop $DB5NAME || true
+          docker stop $DDBNAME || true
           echo "====="
           echo Starting vanilla import DB
           docker cp $DATADIR $DDBNAME:/tmp/
