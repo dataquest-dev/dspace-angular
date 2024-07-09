@@ -274,31 +274,9 @@ jobs:
             exit 1
           fi;
 
-  deploy-4:
-    if: inputs.IMPORT && inputs.INSTANCE == 'ZCU'
-    runs-on: dspace-dep-1
-    timeout-minutes: 10
-    env:
-      INSTANCE: '4'
-      ENVFILE: /opt/dspace-envs/.env.dspace.dev-5
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/erase-db
-        if: inputs.ERASE_DB
-        with:
-          INSTANCE: $INSTANCE
-          NAME: dspace-$INSTANCE
-
-      - name: deploy to dev-5
-        working-directory: build-scripts/run/
-        run: |
-          ./start.sh dspace-$INSTANCE
-
   import-ZCU:
     runs-on: dspace-dep-1
     if: inputs.IMPORT && inputs.INSTANCE == 'ZCU'
-    needs: deploy-4
     env:
       INSTANCE: '4'
     steps:
@@ -314,7 +292,7 @@ jobs:
           docker stop $DNAME || true
 
           echo "====="
-          echo Starting vanilla import DB
+          # echo Starting vanilla import DB
           docker cp $DATADIR $DDBNAME:/tmp/
           echo Dump $FNAME copied
           # docker exec $DDBNAME /bin/bash -c "psql -U dspace -p 543$INSTANCE -d $DDBNAME < /tmp/$FNAME"
