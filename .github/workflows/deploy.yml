@@ -296,6 +296,8 @@ jobs:
           docker cp $DATADIR $DDBNAME:/tmp/
           docker exec $DDBNAME /bin/bash -c "psql -p 543$INSTANCE -U dspace -d dspace -f /tmp/$FNAME && rm /tmp/$FNAME"
           echo "====="
+          docker start $DNAME
+          sleep 60
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
           echo "====="
 
