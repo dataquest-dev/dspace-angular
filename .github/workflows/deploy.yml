@@ -301,7 +301,11 @@ jobs:
           echo "====="
           docker start $DNAME
           sleep 60
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
+          echo "====="
+          # new user will not be accepted unless restarted
+          docker restart $DNAME
+          sleep 60
           echo "====="
 
       - name: dspace basic command
