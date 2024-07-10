@@ -278,6 +278,7 @@ jobs:
     runs-on: dspace-dep-1
     if: inputs.IMPORT && inputs.INSTANCE == '4'
     timeout-minutes: 60
+    neneeds: deploy-4
     env:
       INSTANCE: '4'
     steps:
