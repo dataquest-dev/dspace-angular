@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import pytz
 from datetime import datetime
 
 # when next editing this script, please introduce argparse.
@@ -12,7 +13,7 @@ from datetime import datetime
 RELEASE_TAG_BASE='none'
 
 if __name__ == '__main__':
-    ts = datetime.now().astimezone()
+    ts = datetime.now().astimezone(pytz.timezone("Europe/Bratislava"))
     # we have html tags, since this script ends up creating VERSION_D.html
     print(f"<h4>This info was generated on: <br> <strong> {ts} </strong> </h4>")
 
