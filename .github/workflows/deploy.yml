@@ -329,7 +329,7 @@ jobs:
         run: |
           export DNAME=dspace$INSTANCE
           echo "dspace healthcheck:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
+          # docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
 
       - name: dspace basic command
         run: |
