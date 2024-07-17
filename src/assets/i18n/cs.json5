@@ -1653,6 +1653,8 @@
   "footer.link.feedback": "Odeslat zpětnou vazbu",
   // "footer.link.contact-us":"Contact us",
   "footer.link.contact-us": "Kontaktujte nás",
+  // "footer.link.university": "University Library",
+  "footer.link.university": "Univerzitni Knihovna",
   // "forgot-email.form.header": "Forgot Password",
   "forgot-email.form.header": "Zapomenuté heslo",
   // "forgot-email.form.info": "Enter the email address associated with the account.",
