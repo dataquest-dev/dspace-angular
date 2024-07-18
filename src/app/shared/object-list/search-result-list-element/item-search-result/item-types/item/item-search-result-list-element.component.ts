@@ -5,10 +5,10 @@ import { ItemSearchResult } from '../../../../../object-collection/shared/item-s
 import { SearchResultListElementComponent } from '../../../search-result-list-element.component';
 import { Item } from '../../../../../../core/shared/item.model';
 import { getItemPageRoute } from '../../../../../../item-page/item-page-routing-paths';
-import {VocabularyService} from '../../../../../../core/submission/vocabularies/vocabulary.service';
-import {TruncatableService} from '../../../../../truncatable/truncatable.service';
-import {DSONameService} from '../../../../../../core/breadcrumbs/dso-name.service';
-import {APP_CONFIG, AppConfig} from '../../../../../../../config/app-config.interface';
+import { VocabularyService } from '../../../../../../core/submission/vocabularies/vocabulary.service';
+import { TruncatableService } from '../../../../../truncatable/truncatable.service';
+import { DSONameService } from '../../../../../../core/breadcrumbs/dso-name.service';
+import { APP_CONFIG, AppConfig } from '../../../../../../../config/app-config.interface';
 import {
   getFirstSucceededRemoteDataPayload,
   getFirstSucceededRemoteListPayload
