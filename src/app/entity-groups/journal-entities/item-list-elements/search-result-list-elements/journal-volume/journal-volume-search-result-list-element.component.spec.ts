@@ -10,6 +10,7 @@ import { TruncatableService } from '../../../../../shared/truncatable/truncatabl
 import { DSONameService } from '../../../../../core/breadcrumbs/dso-name.service';
 import { DSONameServiceMock } from '../../../../../shared/mocks/dso-name.service.mock';
 import { APP_CONFIG } from '../../../../../../config/app-config.interface';
+import { VocabularyService } from '../../../../../core/submission/vocabularies/vocabulary.service';
 
 let journalVolumeListElementComponent: JournalVolumeSearchResultListElementComponent;
 let fixture: ComponentFixture<JournalVolumeSearchResultListElementComponent>;
@@ -69,6 +70,10 @@ const enviromentNoThumbs = {
   }
 };
 
+const vocabularyService = jasmine.createSpyObj('VocabularyService', {
+  findVocabularyById: observableOf({}),
+});
+
 describe('JournalVolumeSearchResultListElementComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -76,7 +81,8 @@ describe('JournalVolumeSearchResultListElementComponent', () => {
       providers: [
         { provide: TruncatableService, useValue: {} },
         { provide: DSONameService, useClass: DSONameServiceMock },
-        { provide: APP_CONFIG, useValue: environmentUseThumbs }
+        { provide: APP_CONFIG, useValue: environmentUseThumbs },
+        { provide: VocabularyService, useValue: vocabularyService }
       ],
 
       schemas: [NO_ERRORS_SCHEMA]
@@ -163,7 +169,8 @@ describe('JournalVolumeSearchResultListElementComponent', () => {
       providers: [
         {provide: TruncatableService, useValue: {}},
         {provide: DSONameService, useClass: DSONameServiceMock},
-        { provide: APP_CONFIG, useValue: enviromentNoThumbs }
+        { provide: APP_CONFIG, useValue: enviromentNoThumbs },
+        { provide: VocabularyService, useValue: vocabularyService }
       ],
 
       schemas: [NO_ERRORS_SCHEMA]

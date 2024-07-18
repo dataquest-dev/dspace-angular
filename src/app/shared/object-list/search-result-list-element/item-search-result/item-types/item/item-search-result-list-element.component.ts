@@ -10,38 +10,15 @@ import {TruncatableService} from '../../../../../truncatable/truncatable.service
 import {DSONameService} from '../../../../../../core/breadcrumbs/dso-name.service';
 import {APP_CONFIG, AppConfig} from '../../../../../../../config/app-config.interface';
 import {
-  getFirstCompletedRemoteData,
   getFirstSucceededRemoteDataPayload,
   getFirstSucceededRemoteListPayload
 } from '../../../../../../core/shared/operators';
-import {followLink} from '../../../../../utils/follow-link-config.model';
-import {map, switchMap} from 'rxjs/operators';
-import {Vocabulary} from '../../../../../../core/submission/vocabularies/models/vocabulary.model';
-import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
-import {isEmpty, isNotEmpty} from '../../../../../empty.util';
-import {BehaviorSubject} from 'rxjs';
-import {th} from 'date-fns/locale';
+import { followLink } from '../../../../../utils/follow-link-config.model';
+import { map, switchMap } from 'rxjs/operators';
+import { Vocabulary } from '../../../../../../core/submission/vocabularies/models/vocabulary.model';
+import { VocabularyEntry } from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 
 export const ASSETSTORE_PREFIX = 'assets/images/';
-export const ALLOWED_ENGLISH_TYPES =
-  ['article',
-  'conferenceObject',
-  'bachelorThesis',
-  'masterThesis',
-  'doctoralThesis',
-  'doctoralThesis',
-  'book',
-  'bookPart',
-  'review',
-  'lecture',
-  'workingPaper',
-  'preprint',
-  'report',
-  'annotation',
-  'contributionToPeriodical',
-  'other',
-  'patent',
-  'video'];
 
 @listableObjectComponent('PublicationSearchResult', ViewMode.ListElement)
 @listableObjectComponent(ItemSearchResult, ViewMode.ListElement)
@@ -86,7 +63,7 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
    */
   private loadTypeAndAssingImage() {
     // Load all vocabulary options defined in the `submission-forms.xml` - `nase_typy` vocabulary
-    this.vocabularyService.findVocabularyById('nase_typy', true, true, followLink('entries', { shouldEmbed: false })).pipe(
+    this.vocabularyService.findVocabularyById('nase_typy', true, true, followLink('entries', { shouldEmbed: false }))?.pipe(
       getFirstSucceededRemoteDataPayload(),
       switchMap((vocabulary: Vocabulary) => vocabulary.entries),
       getFirstSucceededRemoteListPayload(),
