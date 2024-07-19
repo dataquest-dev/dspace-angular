@@ -3,13 +3,13 @@ import { TopLevelCommunityListComponent as BaseComponent } from '../../../../../
 import {
   getFirstSucceededRemoteListPayload
 } from '../../../../../app/core/shared/operators';
-import { BehaviorSubject } from 'rxjs';
-import { APP_CONFIG, AppConfig } from '../../../../../config/app-config.interface';
-import { CommunityDataService } from '../../../../../app/core/data/community-data.service';
-import { PaginationService } from '../../../../../app/core/pagination/pagination.service';
-import { LocaleService } from '../../../../../app/core/locale/locale.service';
-import { getCommunityPageRoute } from '../../../../../app/community-page/community-page-routing-paths';
-import { DSONameService } from '../../../../../app/core/breadcrumbs/dso-name.service';
+import { BehaviorSubject} from 'rxjs';
+import { APP_CONFIG, AppConfig} from '../../../../../config/app-config.interface';
+import { CommunityDataService} from '../../../../../app/core/data/community-data.service';
+import { PaginationService} from '../../../../../app/core/pagination/pagination.service';
+import { LocaleService} from '../../../../../app/core/locale/locale.service';
+import { getCommunityPageRoute} from '../../../../../app/community-page/community-page-routing-paths';
+import { DSONameService} from '../../../../../app/core/breadcrumbs/dso-name.service';
 
 export const OPEN_RESOURCES = 'Otevřené zdroje / Open resources';
 export const PUBLICATIONS = 'Publikační činnost / Publications';
@@ -18,7 +18,7 @@ export const THESES_CS_CUSTOM = 'Kvalifikační práce';
 
 export const OPEN_RESOURCE_BG = '#31859C';
 export const PUBLICATIONS_BG = '#427D7B';
-export const THESES_BG = '#ADD7D6'
+export const THESES_BG = '#ADD7D6';
 
 @Component({
   selector: 'ds-top-level-community-list',
@@ -29,6 +29,7 @@ export const THESES_BG = '#ADD7D6'
 })
 
 export class TopLevelCommunityListComponent extends BaseComponent {
+  protected readonly getCommunityPageRoute = getCommunityPageRoute;
 
   communitiesRedirect: BehaviorSubject<CommunityRedirect[]> = new BehaviorSubject<CommunityRedirect[]>([]);
 
@@ -59,13 +60,13 @@ export class TopLevelCommunityListComponent extends BaseComponent {
           switch (communityNameBothLang) {
             case THESES:
               // CS language has a customized namd for the `Theses` community
-              if(this.localeService.isLanguage('cs')) {
+              if (this.localeService.isLanguage('cs')) {
                 communityRedirect.name = THESES_CS_CUSTOM;
               }
               communitiesRedirectTemp[1] = communityRedirect;
               communityRedirect.bgColor = THESES_BG;
-              communityRedirect.textColor = 'black'
-              break
+              communityRedirect.textColor = 'black';
+              break;
             case OPEN_RESOURCES:
               communitiesRedirectTemp[2] = communityRedirect;
               communityRedirect.bgColor = OPEN_RESOURCE_BG;
@@ -75,11 +76,9 @@ export class TopLevelCommunityListComponent extends BaseComponent {
               communityRedirect.bgColor = PUBLICATIONS_BG;
           }
         });
-        this.communitiesRedirect.next(communitiesRedirectTemp)
+        this.communitiesRedirect.next(communitiesRedirectTemp);
     });
   }
-
-  protected readonly getCommunityPageRoute = getCommunityPageRoute;
 }
 
 export interface CommunityRedirect {

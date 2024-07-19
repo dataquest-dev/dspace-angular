@@ -434,6 +434,7 @@ export class SearchComponent implements OnInit {
     this.lastSearchOptions = searchOptions;
     let followLinks = [
       followLink<Item>('thumbnail', { isOptional: true }),
+      followLink<Item>('bundles'),
       followLink<SubmissionObject>('item', { isOptional: true }, followLink<Item>('thumbnail', { isOptional: true })) as any,
       followLink<Item>('accessStatus', { isOptional: true, shouldEmbed: environment.item.showAccessStatuses }),
     ];

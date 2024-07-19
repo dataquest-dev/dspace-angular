@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row flex-nowrap">
   <div *ngIf="showThumbnails" class="col-3 col-md-2">
     <a *ngIf="linkType != linkTypes.None" [target]="(linkType == linkTypes.ExternalLink) ? '_blank' : '_self'" [attr.rel]="(linkType == linkTypes.ExternalLink) ? 'noopener noreferrer' : null"
        [routerLink]="[itemPageRoute]" class="dont-break-out">
@@ -10,7 +10,7 @@
     </ds-thumbnail>
     </span>
   </div>
-  <div [ngClass]="showThumbnails ? 'col-9' : 'col-md-12'">
+  <div [ngClass]="showThumbnails ? 'col-9' : 'col-md-11'">
     <div class="d-flex">
       <ds-themed-badges *ngIf="showLabel" [object]="dso" [context]="context" [showAccessStatus]="true"></ds-themed-badges>
     </div>
@@ -42,5 +42,8 @@
         </ds-truncatable-part>
       </div>
     </ds-truncatable>
+  </div>
+  <div class="col-1 d-flex flex-wrap align-items-center text-center">
+    <img src="./assets/images/_open.svg" alt="_open.svg" class="dont-break-out" style="max-width: 50px">
   </div>
 </div>

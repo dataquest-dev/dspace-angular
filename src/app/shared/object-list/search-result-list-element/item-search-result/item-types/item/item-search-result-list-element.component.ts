@@ -16,7 +16,6 @@ import {
 import { followLink } from '../../../../../utils/follow-link-config.model';
 import { map, switchMap } from 'rxjs/operators';
 import { Vocabulary } from '../../../../../../core/submission/vocabularies/models/vocabulary.model';
-import { VocabularyEntry } from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 
 export const ASSETSTORE_PREFIX = 'assets/images/';
 export const DEFAULT_IMAGE = 'other';
@@ -54,6 +53,7 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
     this.showThumbnails = this.showThumbnails ?? this.appConfig.browseBy.showThumbnails;
     this.itemPageRoute = getItemPageRoute(this.dso);
     this.loadTypeAndAssingImage();
+    console.log('links', this.dso);
   }
 
   /**
