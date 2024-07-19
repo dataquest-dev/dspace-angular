@@ -19,6 +19,7 @@ import { Vocabulary } from '../../../../../../core/submission/vocabularies/model
 import { VocabularyEntry } from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 
 export const ASSETSTORE_PREFIX = 'assets/images/';
+export const DEFAULT_IMAGE = 'other';
 
 @listableObjectComponent('PublicationSearchResult', ViewMode.ListElement)
 @listableObjectComponent(ItemSearchResult, ViewMode.ListElement)
@@ -57,7 +58,7 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
 
   /**
    * 1. Load all types from the `nase_typy` vocabulary.
-   * 2. The Item has the dc.type in english and in czech - get only english variation.
+   * 2. The Item has the dc.type in english or czech - get both.
    * 3. Find the right image for the type.
    * @private
    */
@@ -67,23 +68,18 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
       getFirstSucceededRemoteDataPayload(),
       switchMap((vocabulary: Vocabulary) => vocabulary.entries),
       getFirstSucceededRemoteListPayload(),
-      // Filter only the english types
-      map((list: VocabularyEntry[]) => {
-        // Get all the types (en, cs)
-        const itemTypes = this.dso.allMetadata('dc.type');
-        // If the Item doesn't have the dc.type, set the default image
-        let typeValue = 'other';
-        itemTypes.forEach(itemType => {
-          if (list.find((entry: VocabularyEntry) => entry.value === itemType.value)) {
-            typeValue = itemType.value;
+      map(() => this.dso.allMetadata('dc.type')))
+      .subscribe(itemTypes => {
+        let typeImage = DEFAULT_IMAGE;
+        itemTypes.forEach(type => {
+          const rightImage = this.findRightImageByType(type.value);
+          if (rightImage !== DEFAULT_IMAGE) {
+            typeImage = rightImage;
             return;
           }
         });
-        return typeValue;
-      }))
-      .subscribe(typeValue => {
         // Assign the right image for the type
-        this.defaultImage = ASSETSTORE_PREFIX + this.findRightImageByType(typeValue) + '.svg';
+        this.defaultImage = ASSETSTORE_PREFIX + typeImage + '.svg';
       });
   }
 
@@ -101,15 +97,32 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
       case 'video':
         return type;
       case 'conferenceObject':
+      case 'konferenční příspěvek':
         return 'conferPaper';
       case 'bachelorThesis':
       case 'masterThesis':
       case 'doctoralThesis':
+      case 'bakalářská práce':
+      case 'bakalářská  práce':
+      case 'diplomová práce':
+      case 'disertační práce':
+      case 'rigorózní práce':
         return 'theses';
       case 'bookPart':
+      case 'kapitola v knize':
         return 'chapter';
       case 'lecture':
+      case 'prezentace':
+      case 'přednáška':
         return 'presentation';
+      case 'článek':
+        return 'article';
+      case 'zpráva':
+        return 'report';
+      case 'kniha':
+        return 'book';
+      case 'pracovní sešit':
+        return 'workingPaper';
       default:
         return 'other';
     }
