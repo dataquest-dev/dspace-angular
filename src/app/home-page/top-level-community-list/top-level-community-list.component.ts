@@ -53,8 +53,8 @@ export class TopLevelCommunityListComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(APP_CONFIG) protected appConfig: AppConfig,
-    private cds: CommunityDataService,
-    private paginationService: PaginationService
+    protected cds: CommunityDataService,
+    protected paginationService: PaginationService
   ) {
     this.config = new PaginationComponentOptions();
     this.config.id = this.pageId;

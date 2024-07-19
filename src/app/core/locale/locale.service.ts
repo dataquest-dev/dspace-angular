@@ -197,4 +197,8 @@ export class LocaleService {
 
   }
 
+  public isLanguage(lang: string): boolean {
+    return this.getCurrentLanguageCode() === lang;
+  }
+
 }
