@@ -45,7 +45,7 @@ describe(`DSONameService`, () => {
       }
     });
 
-    service = new DSONameService({ instant: (a) => a } as any);
+    service = new DSONameService({ instant: (a) => a } as any, { get: (a) => a } as any);
   });
 
   describe(`getName`, () => {

@@ -61,8 +61,7 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
     this.showThumbnails = this.showThumbnails ?? this.appConfig.browseBy.showThumbnails;
     this.itemPageRoute = getItemPageRoute(this.dso);
     this.loadTypeAndAssingImage();
-    this.dso.accessStatus
-      .pipe(getFirstSucceededRemoteDataPayload())
+    this.dso.accessStatus?.pipe(getFirstSucceededRemoteDataPayload())
       .subscribe((accessStatus) => {
         if (accessStatus.status === OPEN_ACCESS_CONST) {
           this.accessStatus.next(true);

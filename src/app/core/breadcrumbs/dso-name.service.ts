@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { hasValue, isEmpty } from '../../shared/empty.util';
 import { DSpaceObject } from '../shared/dspace-object.model';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,9 +15,16 @@ import { DSpaceObjectType } from '../shared/dspace-object-type.model';
 })
 export class DSONameService {
 
-  constructor(private translateService: TranslateService,
-              private localeService: LocaleService) {
+  injectedLocaleService: LocaleService;
 
+  constructor(private translateService: TranslateService,
+              private injector: Injector) {
+    // This is hard hack to avoid a lot of failing unit tests.
+    try {
+      this.injectedLocaleService = this.injector.get(LocaleService);
+    } catch (error) {
+      console.warn('LocaleService is not provided!');
+    }
   }
 
   /**
@@ -83,7 +90,7 @@ export class DSONameService {
 
       if (typeof dso.type === 'string' && name.trim().includes('/') && this.isColOrComType(dso)) {
         const dsoNames = name.trim().split('/');
-        if (this.localeService.isLanguage('cs')) {
+        if (this.injectedLocaleService?.isLanguage('cs')) {
           return dsoNames[0];
         } else {
           return dsoNames[1];

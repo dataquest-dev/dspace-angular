@@ -50,7 +50,6 @@ export class TopLevelCommunityListComponent extends BaseComponent {
         communitiesRD.forEach((community) => {
           const communityNameBothLang = community.firstMetadataValue('dc.title');
           const communityName = this.dsoNameService.getName(community);
-          console.log('communityName', communityName);
           const communityRedirect: CommunityRedirect = {
             uuid: community.uuid,
             name: communityName,

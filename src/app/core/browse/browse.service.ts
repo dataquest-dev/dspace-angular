@@ -26,8 +26,9 @@ import { BrowseDefinitionDataService } from './browse-definition-data.service';
 import { SortDirection } from '../cache/models/sort-options.model';
 
 
-export const BROWSE_LINKS_TO_FOLLOW: FollowLinkConfig<BrowseEntry | Item>[] = [
-  followLink('thumbnail')
+export const BROWSE_LINKS_TO_FOLLOW: FollowLinkConfig<any>[] = [
+  followLink('thumbnail'),
+  followLink('accessStatus')
 ];
 
 /**
