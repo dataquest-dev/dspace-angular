@@ -16,9 +16,11 @@ import {
 import { followLink } from '../../../../../utils/follow-link-config.model';
 import { map, switchMap } from 'rxjs/operators';
 import { Vocabulary } from '../../../../../../core/submission/vocabularies/models/vocabulary.model';
+import { BehaviorSubject } from 'rxjs';
 
 export const ASSETSTORE_PREFIX = 'assets/images/';
 export const DEFAULT_IMAGE = 'other';
+export const OPEN_ACCESS_CONST = 'open.access';
 
 @listableObjectComponent('PublicationSearchResult', ViewMode.ListElement)
 @listableObjectComponent(ItemSearchResult, ViewMode.ListElement)
@@ -41,6 +43,11 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
    */
   defaultImage = ASSETSTORE_PREFIX + 'other.svg';
 
+  /**
+   * The status of the item's access - `open.access` or `restricted`
+   */
+  accessStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   constructor(protected vocabularyService: VocabularyService,
               protected truncatableService: TruncatableService,
               public dsoNameService: DSONameService,
@@ -50,10 +57,17 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.accessStatus.next(false);
     this.showThumbnails = this.showThumbnails ?? this.appConfig.browseBy.showThumbnails;
     this.itemPageRoute = getItemPageRoute(this.dso);
     this.loadTypeAndAssingImage();
-    console.log('links', this.dso);
+    this.dso.accessStatus
+      .pipe(getFirstSucceededRemoteDataPayload())
+      .subscribe((accessStatus) => {
+        if (accessStatus.status === OPEN_ACCESS_CONST) {
+          this.accessStatus.next(true);
+        }
+    });
   }
 
   /**

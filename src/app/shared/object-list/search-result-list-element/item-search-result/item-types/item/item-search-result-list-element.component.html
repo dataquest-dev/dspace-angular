@@ -43,7 +43,8 @@
       </div>
     </ds-truncatable>
   </div>
-  <div class="col-1 d-flex flex-wrap align-items-center text-center">
-    <img src="./assets/images/_open.svg" alt="_open.svg" class="dont-break-out" style="max-width: 50px">
+  <div class="col-1 d-flex flex-wrap align-items-center text-center"
+       *ngVar="(accessStatus | async) === true ? '_open.svg' : '_closed.svg' as accessImage">
+    <img [src]="'./assets/images/' + accessImage" class="dont-break-out" style="max-width: 50px">
   </div>
 </div>

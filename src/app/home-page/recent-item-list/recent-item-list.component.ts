@@ -62,7 +62,7 @@ export class RecentItemListComponent implements OnInit {
   ngOnInit(): void {
     const linksToFollow: FollowLinkConfig<Item>[] = [];
     if (this.appConfig.browseBy.showThumbnails) {
-      linksToFollow.push(followLink('thumbnail'), followLink('bundles'));
+      linksToFollow.push(followLink('thumbnail'), followLink('accessStatus'));
     }
     this.itemRD$ = this.searchService.search(
       new PaginatedSearchOptions({
