@@ -38,6 +38,10 @@ a {
   background-color: var(--lt-zcu-pub-blue);
 }
 
+.zcu-blue {
+  color: var(--lt-zcu-pub-blue);
+}
+
 .form-control:focus {
   box-shadow: 0 0 0 0.2rem
   var(--lt-zcu-pub-blue-lighter)
@@ -54,18 +58,18 @@ a {
 }
 
 .label-PUB {
-  background-color: #dff0d8 !important;
-  color: #5cb811 !important;;
+  background-color: #479f76 !important;
+  color: white !important;;
 }
 
 .label-RES {
-  color: #c62d1f !important;
-  background-color: #f2dede !important;
+  color: white !important;
+  background-color: #e35d6a !important;
 }
 
 .label-ACA, .label-PDT {
-  color: #ffab23 !important;
-  background-color: #fcf8e3 !important;
+  color: white !important;
+  background-color: #ffcd39 !important;
 }
 
 .cursor-pointer {

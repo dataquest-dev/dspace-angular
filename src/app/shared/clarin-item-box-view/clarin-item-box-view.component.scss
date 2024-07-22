@@ -34,8 +34,8 @@
 }
 
 .label-info {
-  background-color: #5bc0de;
-  border: none !important;
+  //background-color: #5bc0de;
+  //border: none !important;
 }
 
 .label-icon {
@@ -50,7 +50,7 @@
   color: #fff;
   border-radius: 0 0.25em 0.25em 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  border: 1px solid #ddd;
+  //border: 1px solid #ddd;
   border-bottom: none;
 }
 
@@ -76,7 +76,7 @@
 }
 
 .item-name {
-  color: #428bca;
+  color: var(--lt-zcu-pub-blue);
 }
 
 .item-author {
