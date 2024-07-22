@@ -1,4 +1,15 @@
 :host {
+  .library-name {
+    color: var(--lt-zcu-pub-blue);
+    font-weight: 700;
+  }
+
+  div.background-image-container {
+    color: white;
+    position: relative;
+    background-color: var(--lt-zcu-pub-blue);
+  }
+
   .clarin-home-page-color {
     background-color: #f2f2f2;
   }
