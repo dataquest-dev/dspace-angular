@@ -53,23 +53,27 @@ a {
 }
 
 .label-default {
-  color: grey !important;
-  background-color: whitesmoke;
+  color: #41464b !important;
+  background-color: #e2e3e5 !important;
+  border-color: #d3d6d8 !important;
 }
 
 .label-PUB {
-  background-color: #479f76 !important;
-  color: white !important;;
+  background-color: #e9f4d9 !important;
+  color: #4c6722 !important;
+  border: 1px solid #badbcc !important;
 }
 
 .label-RES {
-  color: white !important;
-  background-color: #e35d6a !important;
+  color: #6c2323 !important;
+  background-color: #f5dada !important;
+  border: 1px solid #f5c2c7 !important;
 }
 
 .label-ACA, .label-PDT {
-  color: white !important;
-  background-color: #ffcd39 !important;
+  color: #c09853 !important;
+  background-color: #fcf8e3 !important;
+  border: 1px solid #ffecb5 !important;
 }
 
 .cursor-pointer {
