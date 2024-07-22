@@ -3,7 +3,11 @@
   <ng-container *ngIf="(site$ | async) as site">
     <ds-view-tracker [object]="site"></ds-view-tracker>
   </ng-container>
-  <ds-themed-search-form [inPlaceSearch]="false" [searchPlaceholder]="'home.search-form.placeholder' | translate"></ds-themed-search-form>
+  <div>
+    <h2 class="library-name">{{ 'home-page.library.name' | translate }}</h2>
+    <div>{{ 'home-page.library.description' | translate }}</div>
+  </div>
   <ds-themed-top-level-community-list></ds-themed-top-level-community-list>
+  <ds-themed-search-form [inPlaceSearch]="false" [searchPlaceholder]="'home.search-form.placeholder' | translate"></ds-themed-search-form>
   <ds-recent-item-list *ngIf="recentSubmissionspageSize>0"></ds-recent-item-list>
 </div>

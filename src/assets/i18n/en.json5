@@ -1718,6 +1718,8 @@
 
   "footer.link.contact-us": "Contact us",
 
+  "footer.link.university": "University Library",
+
   "footer.theme.by.message": "Theme by",
 
   "forgot-email.form.header": "Forgot Password",
@@ -1968,6 +1970,10 @@
   "home-page.whats-new.message": "What's New",
 
   "home-page.new-items.message": "Most Viewed Items - Last Month",
+
+  "home-page.library.name": "Digital Library University of West Bohemia",
+
+  "home-page.library.description": "Welcome to website Digital Library University of West Bohemia in Pilsen. Institutional repository, which administrate University library serve for storing and searching full texts of academic worker and students of university by mode open access.",
 
 
 

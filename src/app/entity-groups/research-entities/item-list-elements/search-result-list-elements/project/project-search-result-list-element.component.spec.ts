@@ -10,6 +10,7 @@ import { DSONameService } from '../../../../../core/breadcrumbs/dso-name.service
 import { DSONameServiceMock } from '../../../../../shared/mocks/dso-name.service.mock';
 import { By } from '@angular/platform-browser';
 import { APP_CONFIG } from '../../../../../../config/app-config.interface';
+import { VocabularyService } from '../../../../../core/submission/vocabularies/vocabulary.service';
 
 let projectListElementComponent: ProjectSearchResultListElementComponent;
 let fixture: ComponentFixture<ProjectSearchResultListElementComponent>;
@@ -64,6 +65,10 @@ const enviromentNoThumbs = {
   }
 };
 
+const vocabularyService = jasmine.createSpyObj('VocabularyService', {
+  findVocabularyById: observableOf({}),
+});
+
 describe('ProjectSearchResultListElementComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -71,7 +76,8 @@ describe('ProjectSearchResultListElementComponent', () => {
       providers: [
         { provide: TruncatableService, useValue: {} },
         { provide: DSONameService, useClass: DSONameServiceMock },
-        { provide: APP_CONFIG, useValue: environmentUseThumbs }
+        { provide: APP_CONFIG, useValue: environmentUseThumbs },
+        { provide: VocabularyService, useValue: vocabularyService }
       ],
 
       schemas: [NO_ERRORS_SCHEMA]
@@ -134,7 +140,8 @@ describe('ProjectSearchResultListElementComponent', () => {
       providers: [
         {provide: TruncatableService, useValue: {}},
         {provide: DSONameService, useClass: DSONameServiceMock},
-        { provide: APP_CONFIG, useValue: enviromentNoThumbs }
+        { provide: APP_CONFIG, useValue: enviromentNoThumbs },
+        { provide: VocabularyService, useValue: vocabularyService }
 
       ],
 

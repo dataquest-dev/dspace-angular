@@ -6,12 +6,12 @@
               <p>{{'contact-us.description' | translate}}</p>
               <div class="text-left">
                 <span>{{'contact-us.form' | translate}} </span>
-                <a routerLink="info/feedback" class="ml-4">{{'contact-us.feedback' | translate}}</a>
+                <a href="info/feedback" class="ml-4">{{'contact-us.feedback' | translate}}</a>
               </div>
               <div class="text-left">
                 <span>{{'contact-us.email' | translate}}</span>
-                <a *ngIf="emailToContact" [href]="'mailto:' + emailToContact" class="email-text"
-                >{{emailToContact}}</a>
+                <a *ngIf="(emailToContact | async)" [href]="'mailto:' + (emailToContact | async)" class="email-text"
+                >{{emailToContact | async}}</a>
               </div>
             </div>
           </div>

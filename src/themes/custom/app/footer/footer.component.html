@@ -75,18 +75,21 @@
                   <a class="text-white" href="javascript:void(0);"
                      (click)="showCookieSettings()">{{ 'footer.link.cookies' | translate}}</a>
                 </li>
+                <li>
+                  <a class="text-white" [href]="'https://www.knihovna.zcu.cz'">{{ 'footer.link.university' | translate }}</a>
+                </li>
                 <!-- <li *ngIf="showPrivacyPolicy">
                   <a class="text-white"
                      routerLink="info/privacy">{{ 'footer.link.privacy-policy' | translate}}</a>
                 </li> -->
-                <li *ngIf="showEndUserAgreement">
-                  <a class="text-white"
-                     routerLink="info/end-user-agreement">{{ 'footer.link.end-user-agreement' | translate}}</a>
-                </li>
-                <li>
-                  <a class="text-white"
-                     routerLink="info/feedback">{{ 'footer.link.feedback' | translate}}</a>
-                </li>
+<!--                <li *ngIf="showEndUserAgreement">-->
+<!--                  <a class="text-white"-->
+<!--                     routerLink="info/end-user-agreement">{{ 'footer.link.end-user-agreement' | translate}}</a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                  <a class="text-white"-->
+<!--                     routerLink="info/feedback">{{ 'footer.link.feedback' | translate}}</a>-->
+<!--                </li>-->
               </ul>
             </div>
             <div class="footer-sign">

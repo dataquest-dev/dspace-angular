@@ -7,6 +7,9 @@ import { MetadataValue } from '../../../../../core/shared/metadata.models';
 import _ from 'lodash';
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-definition-data.service';
+import { DEFAULT_DOI_RESOLVER } from '../../../../../shared/item-identifier.service';
+import { getFirstSucceededRemoteDataPayload } from '../../../../../core/shared/operators';
+import { isUndefined } from '../../../../../shared/empty.util';
 
 @Component({
   selector: 'ds-item-page-uri-field',
@@ -18,7 +21,7 @@ import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-d
  */
 export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements OnInit{
 
-  doiResolver: string;
+  doiResolver = DEFAULT_DOI_RESOLVER;
   constructor(protected browseDefinitionDataService: BrowseDefinitionDataService,
               private configService: ConfigurationDataService) {
     super(browseDefinitionDataService);
@@ -50,10 +53,17 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
   }
 
   loadDoiResolver() {
-    this.configService.findByPropertyName('identifier.doi.resolver').subscribe(remoteData => {
-      this.doiResolver = remoteData?.payload?.values?.[0];
+    this.configService.findByPropertyName('identifier.doi.resolver')
+      .pipe(getFirstSucceededRemoteDataPayload()).subscribe(remoteData => {
+        const configValue = remoteData?.values?.[0];
+        if (isUndefined(configValue)) {
+          this.doiResolver = DEFAULT_DOI_RESOLVER;
+        } else {
+          this.doiResolver = configValue;
+        }
     });
   }
+
   getUriMetadataValues() {
     const mvalues: MetadataValue[] = this.item?.allMetadata(this.fields);
 
@@ -66,7 +76,7 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
         return;
       }
       // Compose `doiResolver` + `doi identifier` value
-      mv.value = this.doiResolver + '/' + mv.value;
+      mv.value = this.doiResolver + mv.value;
     });
     return clonedMValues;
   }

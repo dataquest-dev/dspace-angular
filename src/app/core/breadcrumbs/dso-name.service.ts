@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { hasValue, isEmpty } from '../../shared/empty.util';
 import { DSpaceObject } from '../shared/dspace-object.model';
 import { TranslateService } from '@ngx-translate/core';
 import { Metadata } from '../shared/metadata.utils';
+import { LocaleService } from '../locale/locale.service';
+import { DSpaceObjectType } from '../shared/dspace-object-type.model';
 
 /**
  * Returns a name for a {@link DSpaceObject} based
@@ -13,8 +15,16 @@ import { Metadata } from '../shared/metadata.utils';
 })
 export class DSONameService {
 
-  constructor(private translateService: TranslateService) {
+  injectedLocaleService: LocaleService;
 
+  constructor(private translateService: TranslateService,
+              private injector: Injector) {
+    // This is hard hack to avoid a lot of failing unit tests.
+    try {
+      this.injectedLocaleService = this.injector.get(LocaleService);
+    } catch (error) {
+      console.warn('LocaleService is not provided!');
+    }
   }
 
   /**
@@ -77,10 +87,24 @@ export class DSONameService {
       if (isEmpty(name)) {
         name = this.factories.Default(dso);
       }
+
+      if (typeof dso.type === 'string' && name.trim().includes('/') && this.isColOrComType(dso)) {
+        const dsoNames = name.trim().split('/');
+        if (this.injectedLocaleService?.isLanguage('cs')) {
+          return dsoNames[0];
+        } else {
+          return dsoNames[1];
+        }
+      }
       return name;
     } else {
       return '';
     }
+  }
+
+  private isColOrComType(dso) {
+    return dso.type === DSpaceObjectType.COMMUNITY.toLowerCase()
+      || dso.type === DSpaceObjectType.COLLECTION.toLowerCase();
   }
 
   /**
