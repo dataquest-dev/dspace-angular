@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'ds-contact-page',
@@ -7,14 +8,14 @@ import { ConfigurationDataService } from '../core/data/configuration-data.servic
   templateUrl: './contact-page.component.html'
 })
 export class ContactPageComponent implements OnInit {
-  emailToContact: string;
+  emailToContact: BehaviorSubject<string> = new BehaviorSubject<string>('');
   constructor(
     private configService: ConfigurationDataService
   ) {}
 
   ngOnInit(): void {
     this.configService.findByPropertyName('lr.help.mail').subscribe(remoteData => {
-      this.emailToContact = remoteData.payload.values[0];
+      this.emailToContact.next(remoteData.payload.values[0]);
     });
   }
 }

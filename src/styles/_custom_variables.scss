@@ -1,4 +1,7 @@
 :root {
+  --lt-zcu-pub-blue: #23539B;
+  --lt-zcu-pub-blue-hover: #1a3d71 ;
+  --lt-zcu-pub-blue-lighter: #d5e6ff;
 
   --lt-common-navbar-height: 80px;
   --lt-clarin-purple: #7479b8;
@@ -50,7 +53,7 @@
   --ds-expandable-navbar-link-color: var(--ds-navbar-link-color);
   --ds-expandable-navbar-link-color-hover: var(--ds-navbar-link-color-hover);
 
-  $admin-sidebar-bg: darken(#2B4E72, 17%);
+  $admin-sidebar-bg: #292B2F;
   $admin-sidebar-active-bg: darken($admin-sidebar-bg, 3%);
   --ds-admin-sidebar-bg: #{$admin-sidebar-bg};
   --ds-admin-sidebar-active-bg: #{$admin-sidebar-active-bg};
@@ -118,4 +121,5 @@
   --ds-dso-edit-lang-width: 90px;
   --ds-dso-edit-actions-width: 173px;
   --ds-dso-edit-virtual-tooltip-min-width: 300px;
+
 }

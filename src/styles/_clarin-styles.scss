@@ -1,65 +1,87 @@
-.label-icon {
-  border-radius: 0.25em 0 0 0.25em;
-}
-
-.label-default {
-  color: grey !important;
-  background-color: whitesmoke;
-}
-
-.label-PUB {
-  background-color: #dff0d8 !important;
-  color: #5cb811 !important;;
-}
-
-.label-RES {
-  color: #c62d1f !important;
-  background-color: #f2dede !important;
-}
-
-.label-ACA, .label-PDT {
-  color: #ffab23 !important;
-  background-color: #fcf8e3 !important;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
 .btn-outline-secondary, .btn-outline-primary {
-  border-color: var(--lt-clarin-purple) !important;
-  color: var(--lt-clarin-purple) !important;
+  border-color: var(--lt-zcu-pub-blue) !important;
+  color: var(--lt-zcu-pub-blue) !important;
 
   &:focus {
-    box-shadow: 0 0 0 0.2rem #d5d6e9 !important;
+    box-shadow: 0 0 0 0.2rem var(--lt-zcu-pub-blue-lighter) !important;
   }
 
   &:hover {
-    background-color: #545aa5 !important;
-    border-color: #545aa5 !important;
+    background-color: var(--lt-zcu-pub-blue-hover) !important;
+    border-color: var(--lt-zcu-pub-blue-hover) !important;
     transition: filter 0.3s;
     color: white !important;
   }
 }
 
 .btn-danger, .btn-dark, .btn-success, .btn-warning, .btn-info, .btn-primary, .btn-secondary {
-  background-color: var(--lt-clarin-purple) !important;
+  background-color: var(--lt-zcu-pub-blue) !important;
   border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25) !important;
   color: white !important;
 
   &:focus {
-    box-shadow: 0 0 0 0.2rem #d5d6e9 !important;
+    box-shadow: 0 0 0 0.2rem var(--lt-zcu-pub-blue-lighter) !important;
   }
 
   &:hover {
-    background-color: #545aa5 !important;
-    border-color: #545aa5 !important;
+    background-color: var(--lt-zcu-pub-blue-hover) !important;
+    border-color: var(--lt-zcu-pub-blue-hover) !important;
     transition: filter 0.3s;
   }
 }
 
+a {
+  color: var(--lt-zcu-pub-blue);
+}
+
+.badge {
+  background-color: var(--lt-zcu-pub-blue);
+}
+
+.zcu-blue {
+  color: var(--lt-zcu-pub-blue);
+}
+
 .form-control:focus {
-  box-shadow: 0 0 0 0.2rem #d5d6e9 !important;
+  box-shadow: 0 0 0 0.2rem
+  var(--lt-zcu-pub-blue-lighter)
+  !important;
+}
+
+.label-icon {
+  border-radius: 0.25em 0 0 0.25em;
+}
+
+.label-default {
+  color: #41464b !important;
+  background-color: #e2e3e5 !important;
+  border: 1px solid #d3d6d8 !important;
+}
+
+.label-PUB {
+  background-color: #e9f4d9 !important;
+  color: #4c6722 !important;
+  border: 1px solid #badbcc !important;
+}
+
+.label-RES {
+  color: #6c2323 !important;
+  background-color: #f5dada !important;
+  border: 1px solid #f5c2c7 !important;
+}
+
+.label-ACA, .label-PDT {
+  color: #c09853 !important;
+  background-color: #fcf8e3 !important;
+  border: 1px solid #ffecb5 !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.2rem var(--lt-zcu-pub-blue-lighter) !important;
 }
 
 ds-home-page ds-themed-search-form {

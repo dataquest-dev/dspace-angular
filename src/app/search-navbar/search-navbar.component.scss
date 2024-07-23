@@ -14,9 +14,12 @@ input[type="text"] {
   top: 0;
   border: 0 !important;
 
-  color: var(--ds-header-icon-color);
+  color: white;
   &:hover, &:focus {
-    color: var(--ds-header-icon-color-hover);
+    background-color: white;
+    color: var(--lt-zcu-pub-blue);
+    border-radius: 2px;
+    transition: background-color 0.2s ease-out;
   }
 }
 
@@ -27,4 +30,3 @@ input[type="text"] {
   }
 
 }
-

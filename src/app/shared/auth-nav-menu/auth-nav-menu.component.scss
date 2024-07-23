@@ -12,10 +12,13 @@
   background-color: transparent !important;
 }
 
-.loginLink, .dropdownLogin, .logoutLink, .dropdownLogout, dropdown-toggle {
-  color: var(--ds-header-icon-color);
+.loginLink, .dropdownLogin, .logoutLink, .dropdownLogout {
+  color: white;
 
   &:hover, &:focus {
-    color: var(--ds-header-icon-color-hover);
+    background-color: white;
+    color: var(--lt-zcu-pub-blue);
+    border-radius: 2px;
+    transition: background-color 0.2s ease-out;
   }
 }

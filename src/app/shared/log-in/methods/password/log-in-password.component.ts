@@ -216,14 +216,14 @@ export class LogInPasswordComponent implements OnInit {
 
     if (!this.isStandalonePage || isNotEmpty(this.redirectUrl)) {
       // Create a URLSearchParams object
-      const urlParams = new URLSearchParams(this.redirectUrl.split('?')[1]);
+      const urlParams = new URLSearchParams(this.redirectUrl?.split('?')[1]);
       // Get the value of the 'redirectUrl' parameter
       let redirectUrl = urlParams.get('redirectUrl');
       if (isEmpty(redirectUrl)) {
         redirectUrl = this.redirectUrl;
       }
 
-      this.authService.setRedirectUrl(redirectUrl.replace(this.baseUrl, ''));
+      this.authService.setRedirectUrl(redirectUrl?.replace(this.baseUrl, ''));
     } else {
       this.authService.setRedirectUrlIfNotSet('/');
     }
