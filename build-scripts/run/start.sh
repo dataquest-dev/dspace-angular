@@ -32,6 +32,11 @@ docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f d
 docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml run --rm dspace-cli user --add -m user@test.edu -g meno -s priezvisko -l en -p user -o dataquest
 docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml run --rm dspace-cli version
 
+docker exec dspace${INSTANCE} apt update
+docker exec dspace${INSTANCE} apt install host -y
+docker exec dspace${INSTANCE} /dspace/bin/make-handle-config
+docker exec dspace${INSTANCE} /dspace/bin/start-handle-server
+
 echo "====="
 echo "Logs"
 docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/docker-compose-rest.yml logs -n 50 || true
