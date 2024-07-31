@@ -30,7 +30,7 @@ import { SearchObjects } from '../shared/search/models/search-objects.model';
 import { environment } from '../../environments/environment';
 import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
 import { isUndefined } from '../shared/empty.util';
-import {LocaleService} from '../core/locale/locale.service';
+import { LocaleService } from '../core/locale/locale.service';
 
 const MAX_TRUNCATE_LENGTH = 20;
 const HOME_PAGE_IMAGE_PATH = 'assets/images/home-page-image-';
