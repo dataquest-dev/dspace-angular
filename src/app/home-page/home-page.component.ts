@@ -30,8 +30,10 @@ import { SearchObjects } from '../shared/search/models/search-objects.model';
 import { environment } from '../../environments/environment';
 import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
 import { isUndefined } from '../shared/empty.util';
+import { LocaleService } from '../core/locale/locale.service';
 
 const MAX_TRUNCATE_LENGTH = 20;
+const HOME_PAGE_IMAGE_PATH = 'assets/images/home-page-image-';
 
 @Component({
   selector: 'ds-home-page',
@@ -74,7 +76,8 @@ export class HomePageComponent implements OnInit {
     protected usageReportService: UsageReportDataService,
     protected siteService: SiteDataService,
     protected itemService: ItemDataService,
-    protected router: Router
+    protected router: Router,
+    private localeService: LocaleService
   ) {
     this.recentSubmissionspageSize = environment.homePage.recentSubmissions.pageSize;
     config.interval = 5000;
@@ -285,6 +288,20 @@ export class HomePageComponent implements OnInit {
     } else {
       return text; // Return the original string if it's not longer than MAX_TRUNCATE_LENGTH characters
     }
+  }
+
+  /**
+   * Check if current czech or not
+   */
+  isCsLocale() {
+    return this.localeService.getCurrentLanguageCode() === 'cs';
+  }
+
+  /**
+   * Decide which image to show on the home page based on the current locale (cs, en)
+   */
+  getCorrectHomePageImage() {
+    return this.isCsLocale() ? HOME_PAGE_IMAGE_PATH + 'cs.png' : HOME_PAGE_IMAGE_PATH + 'en.png';
   }
 }
 

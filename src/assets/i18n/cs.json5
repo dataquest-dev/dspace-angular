@@ -3885,7 +3885,7 @@
   // "repository.image.logo": "Repository logo",
   "repository.image.logo": "Logo úložiště",
   // "repository.title.prefix": "DSpace :: ",
-  "repository.title.prefix": "",
+  "repository.title.prefix": "DSpace at University of West Bohemia ",
   // "repository.title.prefixDSpace": "DSpace :: ",
   "repository.title.prefixDSpace": "",
   // "resource-policies.add.button": "Add",
