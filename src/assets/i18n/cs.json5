@@ -3932,6 +3932,8 @@
   "menu.section.browse_global_by_author": "Podle autora",
   // "menu.section.browse_global_by_dateissued": "By Issue Date",
   "menu.section.browse_global_by_dateissued": "Podle data vydání",
+  // "menu.section.browse_global_by_language": "By language",
+  "menu.section.browse_global_by_language": "Podle jazyka",
   // "menu.section.browse_global_by_subject": "By Subject",
   "menu.section.browse_global_by_subject": "Podle předmětu",
   // "menu.section.browse_global_by_srsc": "By Subject Category",

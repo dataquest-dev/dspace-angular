@@ -3304,6 +3304,8 @@
 
   "menu.section.browse_global_by_dateissued": "By Issue Date",
 
+  "menu.section.browse_global_by_language": "By Language",
+
   "menu.section.browse_global_by_subject": "By Subject",
 
   "menu.section.browse_global_by_srsc": "By Subject Category",
