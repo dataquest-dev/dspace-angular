@@ -44,7 +44,7 @@ export class NavbarComponent extends MenuComponent {
               public authorizationService: AuthorizationDataService,
               public route: ActivatedRoute,
               protected themeService: ThemeService,
-              private store: Store<AppState>,
+              protected store: Store<AppState>,
   ) {
     super(menuService, injector, authorizationService, route, themeService);
   }
