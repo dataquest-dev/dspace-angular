@@ -157,7 +157,7 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
    * Check if current location is czech or not
    */
   isCsLocale() {
-    return this.injectedLocaleService.getCurrentLanguageCode() === 'cs';
+    return this.injectedLocaleService?.getCurrentLanguageCode() === 'cs';
   }
 
   /**
