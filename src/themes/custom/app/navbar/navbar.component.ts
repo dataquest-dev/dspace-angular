@@ -40,7 +40,15 @@ export class NavbarComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     super.ngOnInit();
+
+    // Redirect to home page if the user is already on the home page to activate router event to hide the zcu icon
+    if (this.router.url === HOME_URL) {
+      void this.router.navigate([HOME_URL]);
+    }
+
     this.router.events.subscribe(() => {
+      // Check if the current page is the home page. The `this.router.url === HOME_URL` check must be in this
+      // subscription.
       this.isHomePage.next(this.router.url === HOME_URL);
     });
   }
