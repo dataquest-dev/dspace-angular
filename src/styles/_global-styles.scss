@@ -327,3 +327,7 @@ ul.dso-edit-menu-dropdown > li .nav-item.nav-link {
 .mt-ncs { margin-top: calc(var(--ds-content-spacing) * -1); }
 .mb-ncs { margin-bottom: calc(var(--ds-content-spacing) * -1); }
 .my-ncs { margin-top: calc(var(--ds-content-spacing) * -1); margin-bottom: calc(var(--ds-content-spacing) * -1); }
+
+header.header {
+  background-color: var(--lt-zcu-pub-blue);
+}
