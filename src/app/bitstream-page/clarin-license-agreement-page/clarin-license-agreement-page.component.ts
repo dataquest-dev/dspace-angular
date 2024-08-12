@@ -167,7 +167,8 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       this.getBitstreamUUID();
     if (this.userMetadata$.value?.page) {
       // Filter the page array to exclude items with metadataKey "IP"
-      this.userMetadata$.value.page = this.userMetadata$.value.page.filter(item => item.metadataKey !== "IP");
+      this.userMetadata$.value.page =
+        this.userMetadata$.value.page.filter(item => item.metadataKey !== 'IP');
     }
     // Add IP address into request. Every restricted download must have stored IP address in the `user_metadata` table.
     this.userMetadata$.value?.page.push(Object.assign(new ClarinUserMetadata(), {
