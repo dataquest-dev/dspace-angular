@@ -2,11 +2,17 @@
   <div *ngIf="showThumbnails" class="col-3 col-md-2">
     <a *ngIf="linkType != linkTypes.None" [target]="(linkType == linkTypes.ExternalLink) ? '_blank' : '_self'" [attr.rel]="(linkType == linkTypes.ExternalLink) ? 'noopener noreferrer' : null"
        [routerLink]="[itemPageRoute]" class="dont-break-out">
-    <ds-thumbnail [thumbnail]="dso?.thumbnail | async" [defaultImage]="defaultImage" [limitWidth]="true">
+    <ds-thumbnail [thumbnail]="dso?.thumbnail | async" [defaultImage]="defaultImage" [limitWidth]="true"
+                  [ngbTooltip]="showTypeInfo()"
+                  placement="bottom"
+                  triggers="mouseenter:mouseleave">
     </ds-thumbnail>
     </a>
     <span *ngIf="linkType == linkTypes.None" class="dont-break-out">
-    <ds-thumbnail [thumbnail]="dso?.thumbnail | async" [defaultImage]="defaultImage" [limitWidth]="true">
+    <ds-thumbnail [thumbnail]="dso?.thumbnail | async" [defaultImage]="defaultImage" [limitWidth]="true"
+                  [ngbTooltip]="showTypeInfo()"
+                  placement="bottom"
+                  triggers="mouseenter:mouseleave">
     </ds-thumbnail>
     </span>
   </div>

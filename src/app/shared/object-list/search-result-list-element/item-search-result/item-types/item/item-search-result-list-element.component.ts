@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, Injector} from '@angular/core';
 import { listableObjectComponent } from '../../../../../object-collection/shared/listable-object/listable-object.decorator';
 import { ViewMode } from '../../../../../../core/shared/view-mode.model';
 import { ItemSearchResult } from '../../../../../object-collection/shared/item-search-result.model';
@@ -17,6 +17,9 @@ import { followLink } from '../../../../../utils/follow-link-config.model';
 import { map, switchMap } from 'rxjs/operators';
 import { Vocabulary } from '../../../../../../core/submission/vocabularies/models/vocabulary.model';
 import { BehaviorSubject } from 'rxjs';
+import { LocaleService } from '../../../../../../core/locale/locale.service';
+import { MetadataValueFilter } from '../../../../../../core/shared/metadata.models';
+import { isEmpty } from '../../../../../empty.util';
 
 export const ASSETSTORE_PREFIX = 'assets/images/';
 export const DEFAULT_IMAGE = 'other';
@@ -48,11 +51,20 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
    */
   accessStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  injectedLocaleService: LocaleService;
+
   constructor(protected vocabularyService: VocabularyService,
               protected truncatableService: TruncatableService,
               public dsoNameService: DSONameService,
-              @Inject(APP_CONFIG) protected appConfig?: AppConfig) {
+              @Inject(APP_CONFIG) protected appConfig?: AppConfig,
+              public injector?: Injector) {
     super(truncatableService, dsoNameService, appConfig);
+    // This is hard hack to avoid a lot of failing unit tests.
+    try {
+      this.injectedLocaleService = this.injector?.get(LocaleService);
+    } catch (error) {
+      console.warn('LocaleService is not provided!');
+    }
   }
 
   ngOnInit(): void {
@@ -139,5 +151,25 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
       default:
         return 'other';
     }
+  }
+
+  /**
+   * Check if current location is czech or not
+   */
+  isCsLocale() {
+    return this.injectedLocaleService?.getCurrentLanguageCode() === 'cs';
+  }
+
+  /**
+   * Show type of the Item following the current location. Or show the type in the only available language.
+   */
+  showTypeInfo() {
+    const filter: MetadataValueFilter = { language: this.isCsLocale() ? 'cs' : 'en' };
+    let type = this.dso.firstMetadataValue('dc.type', filter);
+
+    if (isEmpty(type)) {
+      type = this.dso.firstMetadataValue('dc.type');
+    }
+    return type;
   }
 }

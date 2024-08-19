@@ -6,6 +6,13 @@ import { finalize } from 'rxjs/operators';
 import { FlatNode } from './flat-node.model';
 import { FindListOptions } from '../core/data/find-list-options.model';
 
+const customSequenceOfCommunities = [
+  'Publikační činnost / Publications',
+  'Publikace ZČU / UWB Publications',
+  'Vysokoškolské kvalifikační práce / Theses',
+  'Otevřené zdroje / Open resources'
+];
+
 /**
  * DataSource object needed by a CDK Tree to render its nodes.
  * The list of FlatNodes that this DataSource object represents gets created in the CommunityListService at
@@ -33,6 +40,7 @@ export class CommunityListDatasource implements DataSource<FlatNode> {
     this.subLoadCommunities = this.communityListService.loadCommunities(findOptions, expandedNodes).pipe(
       finalize(() => this.loading$.next(false)),
     ).subscribe((flatNodes: FlatNode[]) => {
+      const orderedFlatNodes = this.orderFlatNodesFollowingCustomSequence(flatNodes);
       this.communityList$.next(flatNodes);
     });
   }
@@ -42,4 +50,33 @@ export class CommunityListDatasource implements DataSource<FlatNode> {
     this.loading$.complete();
   }
 
+  /**
+   * Orders the flat nodes according to a predefined sequence of communities.
+   * If a community is not in the predefined sequence, it will be ordered according to its position in the original
+   * list.
+   *
+   * @param flatNodes
+   */
+  orderFlatNodesFollowingCustomSequence(flatNodes: FlatNode[]): FlatNode[] {
+    return flatNodes.sort((a, b) => {
+      const indexA = customSequenceOfCommunities.indexOf(a.name);
+      const indexB = customSequenceOfCommunities.indexOf(b.name);
+
+      // If both items are in the predefined order, sort them by that order
+      if (indexA !== -1 && indexB !== -1) {
+        return indexA - indexB;
+      }
+
+      // If only one of the items is in the predefined order, it should come first
+      if (indexA !== -1) {
+        return -1;
+      }
+      if (indexB !== -1) {
+        return 1;
+      }
+
+      // If neither item is in the predefined order, maintain their current order
+      return 0;
+    });
+  }
 }
