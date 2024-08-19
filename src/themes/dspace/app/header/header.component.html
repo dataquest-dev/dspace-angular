@@ -1,8 +1,8 @@
 <header class="header">
   <nav role="navigation" [attr.aria-label]="'nav.user.description' | translate" class="container navbar navbar-expand-md px-0">
     <div class="d-flex flex-grow-1">
-      <a class="navbar-brand m-2" routerLink="/home">
-        <img src="assets/images/dspace-logo.svg" [attr.alt]="'menu.header.image.logo' | translate"/>
+      <a *ngIf="!(isHomePage | async)" class="navbar-brand my-2 text-white" routerLink="/home">
+        <img src="assets/images/zcu-small-white.png" alt="zcu">
       </a>
     </div>
     <div class="navbar-buttons d-flex flex-grow-1 ml-auto justify-content-end align-items-center gapx-1">
