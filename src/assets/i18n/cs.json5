@@ -3941,6 +3941,8 @@
   "menu.section.browse_global_by_nsi": "By Norwegian Science Index",
   // "menu.section.browse_global_by_title": "By Title",
   "menu.section.browse_global_by_title": "Podle názvu",
+  // "menu.section.browse_global_by_language": "By Title",
+  "menu.section.browse_global_by_language": "Podle jazyka",
   // "menu.section.browse_global_communities_and_collections": "Communities & Collections",
   "menu.section.browse_global_communities_and_collections": "Komunity & kolekce",
   // "menu.section.control_panel": "Control Panel",
