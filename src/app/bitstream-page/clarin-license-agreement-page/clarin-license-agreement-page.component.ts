@@ -165,15 +165,18 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       CLARIN_USER_METADATA_MANAGE;
     url += this.isDownloadingZIP() ? '/zip?itemUUID=' + this.item$.value.uuid : '?bitstreamUUID=' +
       this.getBitstreamUUID();
-    const postRequest = new PostRequest(requestId, url, this.userMetadata$.value?.page, requestOptions);
-
+    if (this.userMetadata$.value?.page) {
+      // Filter the page array to exclude items with metadataKey "IP"
+      this.userMetadata$.value.page =
+        this.userMetadata$.value.page.filter(item => item.metadataKey !== 'IP');
+    }
     // Add IP address into request. Every restricted download must have stored IP address in the `user_metadata` table.
     this.userMetadata$.value?.page.push(Object.assign(new ClarinUserMetadata(), {
       type: ClarinUserMetadata.type,
       metadataKey: 'IP',
       metadataValue: this.ipAddress$.value
     }));
-
+    const postRequest = new PostRequest(requestId, url, this.userMetadata$.value?.page, requestOptions);
     // Send POST request
     this.requestService.send(postRequest);
     // Get response
@@ -309,6 +312,8 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     let shouldSee = false;
     this.requiredInfo$?.value?.forEach(requiredInfo => {
       if (requiredInfo?.name === 'SEND_TOKEN') {
+        // We don't want to display SEND_TOKEN as an input field
+        this.requiredInfo$.next(this.requiredInfo$.value?.filter(item => item.name !== 'SEND_TOKEN'));
         shouldSee = true;
       }
     });

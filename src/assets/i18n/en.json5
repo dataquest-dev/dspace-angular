@@ -1973,9 +1973,9 @@
 
   "home-page.new-items.message": "Most Viewed Items - Last Month",
 
-  "home-page.library.name": "Digital Library University of West Bohemia",
+  "home-page.library.name": "Data Repository University of West Bohemia",
 
-  "home-page.library.description": "Welcome to website Digital Library University of West Bohemia in Pilsen. Institutional repository, which administrate University library serve for storing and searching full texts of academic worker and students of university by mode open access.",
+  "home-page.library.description": "Welcome to website Data Repository of the University of West Bohemia in Pilsen. Institutional repository, which administrate University library serve for storing and searching research data of the university's academic staff and students in an open access mode.",
 
 
 
@@ -2759,7 +2759,7 @@
 
   "item.page.version.create": "Create new version",
 
-  "item.page.version.hasDraft": "A new version cannot be created because there is an inprogress submission in the version history",
+  "item.page.version.hasDraft": "A new version cannot be created because there is an in-progress submission in the version history",
 
   "item.page.claim.button": "Claim",
 
@@ -2947,7 +2947,7 @@
 
   "item.version.history.table.action.deleteVersion": "Delete version",
 
-  "item.version.history.table.action.hasDraft": "A new version cannot be created because there is an inprogress submission in the version history",
+  "item.version.history.table.action.hasDraft": "A new version cannot be created because there is an in-progress submission in the version history",
 
   "item.version.notice": "This is not the latest version of this item. The latest version can be found <a href='{{destination}}'>here</a>.",
 
@@ -2977,7 +2977,7 @@
 
   "item.version.create.notification.failure": "New version has not been created",
 
-  "item.version.create.notification.inProgress": "A new version cannot be created because there is an inprogress submission in the version history",
+  "item.version.create.notification.inProgress": "A new version cannot be created because there is an in-progress submission in the version history",
 
   "item.version.delete.modal.header": "Delete version",
 
