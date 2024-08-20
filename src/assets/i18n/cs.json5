@@ -6651,7 +6651,7 @@
   // "subscriptions.frequency.W": "Weekly",
   "subscriptions.frequency.W": "Týdenní frekvence",
   // "subscriptions.tooltip": "Subscribe",
-  "subscriptions.tooltip": "Potvrdit",
+  "subscriptions.tooltip": "Přihlásit se k odběru",
   // "subscriptions.modal.title": "Subscriptions",
   "subscriptions.modal.title": "Notifikace",
   // "subscriptions.modal.type-frequency": "Type and frequency",
