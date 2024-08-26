@@ -4,7 +4,7 @@
       <div class="col-md-4 custom-col-md-4 jumbotron d-flex align-items-center justify-content-center"
            [ngStyle]="{'backgroundColor': community.bgColor}"
            *ngFor="let community of communities">
-        <a [href]="getCommunityPageRoute(community.uuid)"
+        <a [routerLink]="getCommunityPageRoute(community.uuid)"
            class="align-text-bottom text-decoration-none"
            [ngStyle]="{'color': community.textColor}">
           <div class="main-topics text-center">
