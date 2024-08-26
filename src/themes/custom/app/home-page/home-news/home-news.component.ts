@@ -30,6 +30,6 @@ export class HomeNewsComponent extends BaseComponent {
    * Decide which image to show on the home page based on the current locale (cs, en)
    */
   getCorrectHomePageImage() {
-    return this.isCsLocale() ? HOME_PAGE_IMAGE_PATH + 'cs.png' : HOME_PAGE_IMAGE_PATH + 'en.png';
+    return this.isCsLocale() ? HOME_PAGE_IMAGE_PATH + 'cs.webp' : HOME_PAGE_IMAGE_PATH + 'en.webp';
   }
 }
