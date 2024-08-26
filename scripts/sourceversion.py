@@ -1,7 +1,6 @@
 import subprocess
 import sys
-import pytz
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 # when next editing this script, please introduce argparse.
 # do not forget, it is called in BE by .github\workflows\reusable-docker-build.yml
@@ -12,10 +11,15 @@ from datetime import datetime
 # the idea is, that this will be different on each branch, but could be possibly passed by argv/argparse
 RELEASE_TAG_BASE='none'
 
+def get_time_in_timezone(timezone_offset):
+    return datetime.now(timezone.utc) + timedelta(hours=timezone_offset)
+
+
 if __name__ == '__main__':
-    ts = datetime.now().astimezone(pytz.timezone("Europe/Bratislava"))
+    cet_offset = 1
+    ts = get_time_in_timezone(cet_offset)
     # we have html tags, since this script ends up creating VERSION_D.html
-    print(f"<h4>This info was generated on: <br> <strong> {ts} </strong> </h4>")
+    print(f"<h4>This info was generated on: <br> <strong> {ts.strftime('%Y-%m-%d %H:%M:%S %Z%z')} </strong> </h4>")
 
     cmd = 'git log -1 --pretty=format:"<h4>Git hash: <br><strong> %H </strong> <br> Date of commit: <br> <strong> %ai </strong></h4>"'
     subprocess.check_call(cmd, shell=True)
