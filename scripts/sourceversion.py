@@ -12,7 +12,12 @@ from datetime import datetime, timezone, timedelta
 RELEASE_TAG_BASE='none'
 
 def get_time_in_timezone(timezone_offset):
-    return datetime.now(timezone.utc) + timedelta(hours=timezone_offset)
+    try:
+        from zoneinfo import ZoneInfo
+        my_tz = ZoneInfo("Europe/Bratislava")
+    except Exception as e:
+        my_tz = timezone.utc
+    return datetime.now(my_tz)
 
 
 if __name__ == '__main__':
