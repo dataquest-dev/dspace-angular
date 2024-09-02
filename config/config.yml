@@ -112,14 +112,6 @@ themes:
           rel: icon
           href: assets/dspace/images/favicons/favicon.ico
           sizes: any
-      - tagName: link
-        attributes:
-          rel: apple-touch-icon
-          href: assets/dspace/images/favicons/apple-touch-icon.png
-      - tagName: link
-        attributes:
-          rel: manifest
-          href: assets/dspace/images/favicons/manifest.webmanifest
 
 #info:
 #  # Whether the end user agreement is required before users may use the repository.
