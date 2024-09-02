@@ -64,6 +64,7 @@ export class CommunityPageSubCommunityListComponent implements OnInit, OnDestroy
   ngOnInit(): void {
     this.config = new PaginationComponentOptions();
     this.config.id = this.pageId;
+    this.pageSize = 15;
     if (hasValue(this.pageSize)) {
       this.config.pageSize = this.pageSize;
     } else {
