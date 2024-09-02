@@ -280,7 +280,7 @@ function serverSideRender(req, res, sendToUser: boolean = true) {
       // When this error occurs we can't fall back to CSR because the response has already been
       // sent. These errors occur for various reasons in universal, not all of which are in our
       // control to solve.
-      console.warn('Warning [ERR_HTTP_HEADERS_SENT]: Tried to set headers after they were sent to the client');
+      console.warn('Warning [ERR_HTTP_HEADERS_SENT]: Tried to set headers after they were sent to the client', err);
     } else {
       console.warn('Error in server-side rendering (SSR)');
       if (hasValue(err)) {
