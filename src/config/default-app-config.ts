@@ -425,4 +425,7 @@ export class DefaultAppConfig implements AppConfig {
     sortField:'dc.title',
     sortDirection:'ASC',
   };
+
+  // NOTE: you must disable/enable in the backend the signposting feature to make it work `signposting.enabled`
+  signpostingEnabled = false;
 }
