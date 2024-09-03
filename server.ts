@@ -281,6 +281,9 @@ function serverSideRender(req, res, sendToUser: boolean = true) {
       // sent. These errors occur for various reasons in universal, not all of which are in our
       // control to solve.
       console.warn('Warning [ERR_HTTP_HEADERS_SENT]: Tried to set headers after they were sent to the client', err);
+      console.warn('[ERR_HTTP_HEADERS_SENT] - Request: ', req);
+      console.warn('[ERR_HTTP_HEADERS_SENT] - Response: ', res);
+      console.warn('[ERR_HTTP_HEADERS_SENT] - Data : ', data);
     } else {
       console.warn('Error in server-side rendering (SSR)');
       if (hasValue(err)) {
