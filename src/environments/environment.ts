@@ -24,6 +24,8 @@ export const environment: Partial<BuildConfig> = {
     // NOTE: Space is capitalized because 'namespace' is a reserved string in TypeScript
     nameSpace: '/server',
   },
+
+  signpostingEnabled: false
 };
 
 /*
