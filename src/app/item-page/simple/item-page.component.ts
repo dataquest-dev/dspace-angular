@@ -26,6 +26,7 @@ import { LinkDefinition, LinkHeadService } from '../../core/services/link-head.s
 import { BehaviorSubject } from 'rxjs';
 import { RegistryService } from '../../core/registry/registry.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { environment } from '../../../environments/environment';
 
 /**
  * This component renders a simple item page.
@@ -136,6 +137,9 @@ export class ItemPageComponent implements OnInit, OnDestroy {
    * @private
    */
   private initPageLinks(): void {
+    if (!environment.signpostingEnabled) {
+      return;
+    }
     this.route.params.subscribe(params => {
       this.signpostingDataService.getLinks(params.id).pipe(take(1)).subscribe((signpostingLinks: SignpostingLink[]) => {
         let links = '';
