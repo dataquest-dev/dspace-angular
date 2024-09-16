@@ -912,7 +912,7 @@ describe('FormBuilderService test suite', () => {
   });
 
   it(`should request the ${typeFieldProp} property and set value "dc_type"`, () => {
-    const typeValue = service.getTypeField("dc.type");
+    const typeValue = service.getTypeField('dc.type');
     // Two times because the first time is when the service is created and the second time is when the method is called
     expect(configSpy.findByPropertyName).toHaveBeenCalledTimes(2);
     expect(configSpy.findByPropertyName).toHaveBeenCalledWith(typeFieldProp);
