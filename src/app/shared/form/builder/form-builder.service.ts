@@ -96,6 +96,8 @@ export class FormBuilderService extends DynamicFormService {
     if (hasValue(this.configService)) {
       this.setTypeBindFieldFromConfig();
     }
+
+
   }
 
   createDynamicFormControlEvent(control: UntypedFormControl, group: UntypedFormGroup, model: DynamicFormControlModel, type: string): DynamicFormControlEvent {
@@ -567,15 +569,17 @@ export class FormBuilderService extends DynamicFormService {
         if (typeFieldConfig.includes('=>')) {
           // Split the typeFieldConfig into parts based on the delimiter
           const [metadataFieldConfigPart, valuePart] = typeFieldConfig.split('=>');
+          // Process only custom type-bind fields
+          if (isNotEmpty(valuePart)) {
+            // Replace '.' with '_' in the valuePart
+            const normalizedValuePart = valuePart.replace(/\./g, '_');
 
-          // Replace '.' with '_' in the valuePart
-          const normalizedValuePart = valuePart.replace(/\./g, '_');
+            // Set the value in the typeFields map
+            this.typeFields.set(metadataFieldConfigPart, normalizedValuePart);
 
-          // Set the value in the typeFields map
-          this.typeFields.set(metadataFieldConfigPart, normalizedValuePart);
-
-          if (metadataFieldConfigPart === metadataField) {
-            typeFieldConfigValue = valuePart;
+            if (metadataFieldConfigPart === metadataField) {
+              typeFieldConfigValue = valuePart;
+            }
           }
         } else {
           // If no delimiter is found, use the entire typeFieldConfig as the default value
