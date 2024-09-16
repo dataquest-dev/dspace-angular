@@ -49,12 +49,15 @@ import {
   COMPLEX_GROUP_SUFFIX,
   DynamicComplexModel
 } from './ds-dynamic-form-ui/models/ds-dynamic-complex.model';
-import {FormRowModel} from '../../../core/config/models/config-submission-form.model';
+import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
 
 export const TYPE_BIND_DEFAULT = 'default';
 @Injectable()
 export class FormBuilderService extends DynamicFormService {
 
+  /**
+   * This map contains the type bind model
+   */
   private typeBindModel:  Map<string,DynamicFormControlModel>;
 
   /**
@@ -101,12 +104,13 @@ export class FormBuilderService extends DynamicFormService {
   }
 
   /**
-   * TODO CHANGE ME
-   * @param fieldType the type of the field which is associated to `type-bind`
+   * Get the type bind model associated to the `type-bind`
+   *
+   * @param typeBingField the special `<type-bind field=..>`
+   * @returns the default (dc_type) type bind model or the one associated to the `type-bind` field
    */
-  getTypeBindModel(fieldType: string): DynamicFormControlModel {
-    // I want to find out from the cfg that the fieldType is associated to `edm.type` or default `dc.type`
-    let typeBModelKey = this.typeFields.get(fieldType);
+  getTypeBindModel(typeBingField: string): DynamicFormControlModel {
+    let typeBModelKey = this.typeFields.get(typeBingField);
     if (isUndefined(typeBModelKey)) {
       typeBModelKey = this.typeFields.get(TYPE_BIND_DEFAULT);
     }
@@ -323,7 +327,7 @@ export class FormBuilderService extends DynamicFormService {
     if (rawData.rows && !isEmpty(rawData.rows)) {
       rawData.rows.forEach((currentRow: FormRowModel) => {
         const rowParsed = this.rowParser.parse(submissionId, currentRow, scopeUUID, sectionData, submissionScope,
-          readOnly, currentRow?.fields[0]?.selectableMetadata?.[0]?.metadata);
+          readOnly);
         if (isNotNull(rowParsed)) {
           if (Array.isArray(rowParsed)) {
             rows = rows.concat(rowParsed);
@@ -550,22 +554,31 @@ export class FormBuilderService extends DynamicFormService {
         return;
       }
 
+      // All cfg property values
       const typeFieldConfigValues = remoteData.payload.values;
       let typeFieldConfigValue = '';
+      // Iterate over each config property value
       typeFieldConfigValues.forEach((typeFieldConfig: string) => {
+        // Check if the typeFieldConfig contains the '=>' delimiter
         if (typeFieldConfig.includes('=>')) {
-          const typeFieldConfigParts = typeFieldConfig.split('=>');
-          if (typeFieldConfigParts.length > 1) {
-            const metadataFieldConfigPart = typeFieldConfigParts[0];
-            const typeFieldConfigValuePart = typeFieldConfigParts[1];
-            this.typeFields.set(metadataFieldConfigPart, typeFieldConfigValuePart.replace(/\./g, '_'));
-            if (metadataFieldConfigPart === metadataField) {
-              typeFieldConfigValue = typeFieldConfigValuePart;
-            }
+          // Split the typeFieldConfig into parts based on the delimiter
+          const [metadataFieldConfigPart, valuePart] = typeFieldConfig.split('=>');
+
+          // Replace '.' with '_' in the valuePart
+          const normalizedValuePart = valuePart.replace(/\./g, '_');
+
+          // Set the value in the typeFields map
+          this.typeFields.set(metadataFieldConfigPart, normalizedValuePart);
+
+          if (metadataFieldConfigPart === metadataField) {
+            typeFieldConfigValue = valuePart;
           }
         } else {
+          // If no delimiter is found, use the entire typeFieldConfig as the default value
           typeFieldConfigValue = typeFieldConfig;
         }
+
+        // Always update the typeFields map with the default value, normalized
         this.typeFields.set(TYPE_BIND_DEFAULT, typeFieldConfigValue.replace(/\./g, '_'));
       });
     });
@@ -573,7 +586,7 @@ export class FormBuilderService extends DynamicFormService {
 
   /**
    * Get type field. If the type isn't already set, and a ConfigurationDataService is provided, set (with subscribe)
-   * from back end. Otherwise, get/set a default "dc_type" value
+   * from back end. Otherwise, get/set a default "dc_type" value or specific value from the typeFields map.
    */
   getTypeField(metadataField: string): string {
     if (hasValue(this.configService) && isEmpty(this.typeFields.values())) {
