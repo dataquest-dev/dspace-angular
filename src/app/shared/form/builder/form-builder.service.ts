@@ -51,7 +51,11 @@ import {
 } from './ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
 
+/**
+ * The key for the default type bind field. {'default': 'dc_type'}
+ */
 export const TYPE_BIND_DEFAULT = 'default';
+
 @Injectable()
 export class FormBuilderService extends DynamicFormService {
 
