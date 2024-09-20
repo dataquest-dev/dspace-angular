@@ -7,12 +7,30 @@ import { PageInfo } from '../../../../../../core/shared/page-info.model';
 import { VocabularyService } from '../../../../../../core/submission/vocabularies/vocabulary.service';
 import { DynamicFormLayoutService, DynamicFormValidationService } from '@ng-dynamic-forms/core';
 import { catchError, debounceTime, distinctUntilChanged, map, merge, switchMap, tap } from 'rxjs/operators';
-import { buildPaginatedList } from '../../../../../../core/data/paginated-list.model';
-import { isEmpty, isNotEmpty } from '../../../../../empty.util';
+import {buildPaginatedList, PaginatedList} from '../../../../../../core/data/paginated-list.model';
+import {hasValue, isEmpty, isNotEmpty} from '../../../../../empty.util';
 import { DsDynamicTagComponent } from '../tag/dynamic-tag.component';
 import { MetadataValueDataService } from '../../../../../../core/data/metadata-value-data.service';
 import { FormFieldMetadataValueObject } from '../../../models/form-field-metadata-value.model';
 import { LookupRelationService } from '../../../../../../core/data/lookup-relation.service';
+import {AUTOCOMPLETE_CUSTOM_SOLR_PREFIX, DsDynamicAutocompleteModel} from './ds-dynamic-autocomplete.model';
+import {
+  getAllSucceededRemoteListPayload,
+  getFirstCompletedRemoteData,
+  getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteListPayload
+} from '../../../../../../core/shared/operators';
+import {GetRequest} from '../../../../../../core/data/request.models';
+import {RequestParam} from '../../../../../../core/cache/models/request-param.model';
+import {FindListOptions} from '../../../../../../core/data/find-list-options.model';
+import {HttpOptions} from '../../../../../../core/dspace-rest/dspace-rest.service';
+import {HttpHeaders, HttpParams} from '@angular/common/http';
+import {RequestService} from '../../../../../../core/data/request.service';
+import {RemoteDataBuildService} from '../../../../../../core/cache/builders/remote-data-build.service';
+import {HALEndpointService} from '../../../../../../core/shared/hal-endpoint.service';
+import {RemoteData} from '../../../../../../core/data/remote-data';
+import {hasFailed} from '../../../../../../core/data/request-entry-state.model';
+import {VocabularyEntry} from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
+import {MetadataValue} from '../../../../../../core/metadata/metadata-value.model';
 
 /**
  * Component representing a autocomplete input field.
@@ -26,7 +44,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
 
   @Input() bindId = true;
   @Input() group: FormGroup;
-  @Input() model: DynamicTagModel;
+  @Input() model: DsDynamicAutocompleteModel;
 
   @Output() blur: EventEmitter<any> = new EventEmitter<any>();
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
@@ -35,7 +53,6 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
   @ViewChild('instance') instance: NgbTypeahead;
 
   hasAuthority: boolean;
-  isSponsorInputType = false;
 
   searching = false;
   searchFailed = false;
@@ -47,7 +64,10 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
               protected layoutService: DynamicFormLayoutService,
               protected validationService: DynamicFormValidationService,
               protected metadataValueService: MetadataValueDataService,
-              protected lookupRelationService: LookupRelationService
+              protected lookupRelationService: LookupRelationService,
+              protected requestService: RequestService,
+              protected rdbService: RemoteDataBuildService,
+              protected halService: HALEndpointService
   ) {
     super(vocabularyService, cdr, layoutService, validationService);
   }
@@ -155,17 +175,30 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
         if (term === '' || term.length < this.model.minChars) {
           return observableOf({ list: [] });
         } else {
-          // metadataValue request
-          const response = this.metadataValueService.findByMetadataNameAndByValue(this.model?.metadataFields?.pop(), term);
-          return response.pipe(
-            tap(() => this.searchFailed = false),
-            catchError((error) => {
-              this.searchFailed = true;
-              return observableOf(buildPaginatedList(
-                new PageInfo(),
-                []
-              ));
-            }));
+          // Custom suggestion request
+          if (this.model.autocompleteCustom) {
+            if (this.model.autocompleteCustom.startsWith(AUTOCOMPLETE_CUSTOM_SOLR_PREFIX)) {
+              return this.getCustomSuggestions(
+                this.model.autocompleteCustom.replace(AUTOCOMPLETE_CUSTOM_SOLR_PREFIX, ''), term)
+                .pipe(getFirstSucceededRemoteDataPayload(),
+                  map((list: PaginatedList<VocabularyEntry>) => {
+                    return this.formatVocabularyEntryList(list);
+                  }),
+                  tap(() => this.searchFailed = false),
+                  catchError(() => {
+                    return this.onSearchErrorVocabularyEntries();
+                  }))
+            }
+          } else {
+            // MetadataValue request
+            const response = this.metadataValueService.findByMetadataNameAndByValue(this.model?.metadataFields?.pop(),
+              term);
+            return response.pipe(
+              tap(() => this.searchFailed = false),
+              catchError(() => {
+                return this.onSearchErrorVocabularyEntries();
+              }));
+          }
         }
       }),
       map((list: any) => {
@@ -173,4 +206,36 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       }),
       tap(() => this.changeSearchingStatus(false)),
       merge(this.hideSearchingWhenUnsubscribed));
+
+  getCustomSuggestions(autocompleteCustom: string, term: string): Observable<RemoteData<any>> {
+    const options: HttpOptions = Object.create({});
+    options.params = new HttpParams({ fromString: 'autocompleteCustom=' + autocompleteCustom + '&searchValue=' + term });
+
+    const requestId = this.requestService.generateRequestId();
+    const url = this.halService.getRootHref() + '/suggestions';
+    const getRequest = new GetRequest(requestId, url, null, options);
+    this.requestService.send(getRequest);
+
+    return this.rdbService.buildFromRequestUUID(requestId);
+  }
+
+  formatVocabularyEntryList(list: PaginatedList<VocabularyEntry>): PaginatedList<VocabularyEntry> {
+    const vocabularyEntryList: VocabularyEntry[] = [];
+    list.page.forEach((rawVocabularyEntry: VocabularyEntry) => {
+      const voc: VocabularyEntry = new VocabularyEntry();
+      voc.display = rawVocabularyEntry.value;
+      voc.value = rawVocabularyEntry.value;
+      vocabularyEntryList.push(voc);
+    });
+    list.page = vocabularyEntryList;
+    return list;
+  }
+
+  onSearchErrorVocabularyEntries() {
+    this.searchFailed = true;
+    return observableOf(buildPaginatedList(
+      new PageInfo(),
+      []
+    ));
+  }
 }

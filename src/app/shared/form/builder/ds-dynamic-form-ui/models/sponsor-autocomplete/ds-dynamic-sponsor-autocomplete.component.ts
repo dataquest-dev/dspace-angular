@@ -20,6 +20,9 @@ import { AUTOCOMPLETE_COMPLEX_PREFIX } from '../autocomplete/ds-dynamic-autocomp
 import { DsDynamicAutocompleteService } from '../autocomplete/ds-dynamic-autocomplete.service';
 import { DEFAULT_EU_FUNDING_TYPES } from './ds-dynamic-sponsor-autocomplete.model';
 import { VocabularyEntry } from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
+import {RequestService} from '../../../../../../core/data/request.service';
+import {RemoteDataBuildService} from '../../../../../../core/cache/builders/remote-data-build.service';
+import {HALEndpointService} from '../../../../../../core/shared/hal-endpoint.service';
 
 /**
  * Component representing a sponsor autocomplete input field in the complex input type.
@@ -37,10 +40,13 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
               protected validationService: DynamicFormValidationService,
               protected metadataValueService: MetadataValueDataService,
               protected lookupRelationService: LookupRelationService,
-              protected translateService: TranslateService
+              protected translateService: TranslateService,
+              protected requestService: RequestService,
+              protected rdbService: RemoteDataBuildService,
+              protected halService: HALEndpointService
   ) {
     super(vocabularyService, cdr, layoutService, validationService, metadataValueService,
-      lookupRelationService);
+      lookupRelationService, requestService, rdbService, halService);
   }
 
   /**
