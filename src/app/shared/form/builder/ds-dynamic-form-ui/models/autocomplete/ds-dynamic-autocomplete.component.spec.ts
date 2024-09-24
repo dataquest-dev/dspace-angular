@@ -59,13 +59,6 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
   let html;
   let modelValue: any;
 
-  /**
-   *               protected requestService: RequestService,
-   *               protected rdbService: RemoteDataBuildService,
-   *               protected halService: HALEndpointService,
-   *               protected configurationService: ConfigurationDataService
-   */
-
   beforeEach(waitForAsync(() => {
     const mockMetadataValueService = new MockMetadataValueService();
     const vocabularyServiceStub = new VocabularyServiceStub();

@@ -33,6 +33,11 @@ import { ConfigurationProperty } from '../../../../../../core/shared/configurati
 const AUTOCOMPLETE_CUSTOM_HANDLE_TITLE = 'solr-handle_title_ac';
 
 /**
+ * The suggestion has a `:` in the result value as a separator.
+ */
+const AUTOCOMPLETE_CUSTOM_VALUE_SEPARATOR = ':';
+
+/**
  * Component representing a autocomplete input field.
  */
 @Component({
@@ -125,7 +130,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
    */
   async updateModel(updateValue) {
     if (this.model?.autocompleteCustom === AUTOCOMPLETE_CUSTOM_HANDLE_TITLE) {
-      const handle_title = updateValue.display.split(':');
+      const handle_title = updateValue.display.split(AUTOCOMPLETE_CUSTOM_VALUE_SEPARATOR);
       updateValue.display = this.handlePrefix.value + handle_title[0];
       updateValue.value = this.handlePrefix.value + handle_title[0];
     }
