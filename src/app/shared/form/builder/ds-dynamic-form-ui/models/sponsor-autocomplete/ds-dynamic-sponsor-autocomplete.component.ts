@@ -20,9 +20,10 @@ import { AUTOCOMPLETE_COMPLEX_PREFIX } from '../autocomplete/ds-dynamic-autocomp
 import { DsDynamicAutocompleteService } from '../autocomplete/ds-dynamic-autocomplete.service';
 import { DEFAULT_EU_FUNDING_TYPES } from './ds-dynamic-sponsor-autocomplete.model';
 import { VocabularyEntry } from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
-import {RequestService} from '../../../../../../core/data/request.service';
-import {RemoteDataBuildService} from '../../../../../../core/cache/builders/remote-data-build.service';
-import {HALEndpointService} from '../../../../../../core/shared/hal-endpoint.service';
+import { RequestService } from '../../../../../../core/data/request.service';
+import { RemoteDataBuildService } from '../../../../../../core/cache/builders/remote-data-build.service';
+import { HALEndpointService } from '../../../../../../core/shared/hal-endpoint.service';
+import { ConfigurationDataService } from '../../../../../../core/data/configuration-data.service';
 
 /**
  * Component representing a sponsor autocomplete input field in the complex input type.
@@ -43,10 +44,11 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
               protected translateService: TranslateService,
               protected requestService: RequestService,
               protected rdbService: RemoteDataBuildService,
-              protected halService: HALEndpointService
+              protected halService: HALEndpointService,
+              protected configurationService: ConfigurationDataService
   ) {
     super(vocabularyService, cdr, layoutService, validationService, metadataValueService,
-      lookupRelationService, requestService, rdbService, halService);
+      lookupRelationService, requestService, rdbService, halService, configurationService);
   }
 
   /**
@@ -54,7 +56,7 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
    *                               2. metadata suggestion -> update as suggestion value.
    * @param updateValue
    */
-  updateModel(updateValue) {
+  async updateModel(updateValue) {
     let newValue;
     if (updateValue instanceof  ExternalSourceEntry) {
       // special autocomplete sponsor input
