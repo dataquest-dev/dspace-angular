@@ -14,11 +14,18 @@ import { createTestComponent } from '../../../../../testing/utils.test';
 import { DsDynamicAutocompleteComponent } from './ds-dynamic-autocomplete.component';
 import { DsDynamicAutocompleteModel } from './ds-dynamic-autocomplete.model';
 import { MetadataValueDataService } from '../../../../../../core/data/metadata-value-data.service';
-import { of as observableOf } from 'rxjs';
+import { of, of as observableOf } from 'rxjs';
 import { VocabularyEntry } from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
 import { MockMetadataValueService } from '../../../../../testing/metadata-value-data-service.mock';
 import { LookupRelationService } from '../../../../../../core/data/lookup-relation.service';
 import { MockLookupRelationService } from '../../../../../testing/lookup-relation-service.mock';
+import { getMockRequestService } from '../../../../../mocks/request.service.mock';
+import { HALEndpointServiceStub } from '../../../../../testing/hal-endpoint-service.stub';
+import { getMockRemoteDataBuildService } from '../../../../../mocks/remote-data-build.service.mock';
+import { RequestService } from '../../../../../../core/data/request.service';
+import { HALEndpointService } from '../../../../../../core/shared/hal-endpoint.service';
+import { RemoteDataBuildService } from '../../../../../../core/cache/builders/remote-data-build.service';
+import { ConfigurationDataService } from '../../../../../../core/data/configuration-data.service';
 
 let AUT_TEST_GROUP;
 let AUT_TEST_MODEL_CONFIG;
@@ -52,10 +59,23 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
   let html;
   let modelValue: any;
 
+  /**
+   *               protected requestService: RequestService,
+   *               protected rdbService: RemoteDataBuildService,
+   *               protected halService: HALEndpointService,
+   *               protected configurationService: ConfigurationDataService
+   */
+
   beforeEach(waitForAsync(() => {
     const mockMetadataValueService = new MockMetadataValueService();
     const vocabularyServiceStub = new VocabularyServiceStub();
     const mockLookupRelationService = new MockLookupRelationService();
+    const requestService = getMockRequestService();
+    const halService = Object.assign(new HALEndpointServiceStub('url'));
+    const rdbService = getMockRemoteDataBuildService();
+    const configurationServiceSpy = jasmine.createSpyObj('configurationService', {
+      findByPropertyName: of('hdl'),
+    });
     init();
     TestBed.configureTestingModule({
       imports: [
@@ -76,7 +96,11 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
         { provide: VocabularyService, useValue: vocabularyServiceStub },
         { provide: DynamicFormLayoutService, useValue: mockDynamicFormLayoutService },
         { provide: DynamicFormValidationService, useValue: mockDynamicFormValidationService },
-        { provide: LookupRelationService, useValue: mockLookupRelationService}
+        { provide: LookupRelationService, useValue: mockLookupRelationService},
+        { provide: RequestService, useValue: requestService },
+        { provide: HALEndpointService, useValue: halService },
+        { provide: RemoteDataBuildService, useValue: rdbService },
+        { provide: ConfigurationDataService, useValue: configurationServiceSpy }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });
