@@ -5,8 +5,9 @@ import { isEmpty } from '../../../../../empty.util';
 
 export const DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE = 'AUTOCOMPLETE';
 export const AUTOCOMPLETE_COMPLEX_PREFIX = 'autocomplete_in_complex_input';
-export const DEFAULT_MIN_CHARS_TO_AUTOCOMPLETE = 3;
+export const DEFAULT_MIN_CHARS_TO_AUTOCOMPLETE = 1;
 export const AUTOCOMPLETE_CUSTOM_SOLR_PREFIX = 'solr-';
+export const AUTOCOMPLETE_CUSTOM_JSON_PREFIX = 'json_static-';
 
 /**
  * Configuration for the DsDynamicAutocompleteModel.

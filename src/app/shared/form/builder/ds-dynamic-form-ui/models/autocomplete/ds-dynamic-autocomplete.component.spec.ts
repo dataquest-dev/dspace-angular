@@ -26,6 +26,7 @@ import { RequestService } from '../../../../../../core/data/request.service';
 import { HALEndpointService } from '../../../../../../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../../../../../../core/cache/builders/remote-data-build.service';
 import { ConfigurationDataService } from '../../../../../../core/data/configuration-data.service';
+import {TranslateModule} from '@ngx-translate/core';
 
 let AUT_TEST_GROUP;
 let AUT_TEST_MODEL_CONFIG;
@@ -77,6 +78,7 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
         FormsModule,
         NgbModule,
         ReactiveFormsModule,
+        TranslateModule.forRoot(),
       ],
       declarations: [
         DsDynamicAutocompleteComponent,

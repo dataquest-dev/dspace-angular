@@ -12,7 +12,11 @@ import { DsDynamicTagComponent } from '../tag/dynamic-tag.component';
 import { MetadataValueDataService } from '../../../../../../core/data/metadata-value-data.service';
 import { FormFieldMetadataValueObject } from '../../../models/form-field-metadata-value.model';
 import { LookupRelationService } from '../../../../../../core/data/lookup-relation.service';
-import { AUTOCOMPLETE_CUSTOM_SOLR_PREFIX, DsDynamicAutocompleteModel } from './ds-dynamic-autocomplete.model';
+import {
+  AUTOCOMPLETE_CUSTOM_JSON_PREFIX,
+  AUTOCOMPLETE_CUSTOM_SOLR_PREFIX,
+  DsDynamicAutocompleteModel
+} from './ds-dynamic-autocomplete.model';
 import { getFirstSucceededRemoteDataPayload } from '../../../../../../core/shared/operators';
 import { GetRequest } from '../../../../../../core/data/request.models';
 import { HttpOptions } from '../../../../../../core/dspace-rest/dspace-rest.service';
@@ -25,12 +29,20 @@ import { VocabularyEntry } from '../../../../../../core/submission/vocabularies/
 import { ConfigurationDataService } from '../../../../../../core/data/configuration-data.service';
 import { CANONICAL_PREFIX_KEY } from '../../../../../handle.service';
 import { ConfigurationProperty } from '../../../../../../core/shared/configuration-property.model';
+import { DsDynamicAutocompleteService } from './ds-dynamic-autocomplete.service';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Prefix for custom autocomplete definition from the `submission-forms.xml`.
  * <input-type autocomplete-custom="solr-handle_title_ac">autocomplete</input-type>
  */
 const AUTOCOMPLETE_CUSTOM_HANDLE_TITLE = 'solr-handle_title_ac';
+
+/**
+ * Prefix for custom autocomplete definition from the `submission-forms.xml`.
+ * <input-type autocomplete-custom="son_static-iso_langs.json">autocomplete</input-type>
+ */
+const AUTOCOMPLETE_CUSTOM_LANGUAGE_JSON = 'json_static-iso_langs.json';
 
 /**
  * The suggestion has a `:` in the result value as a separator.
@@ -78,7 +90,8 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
               protected requestService: RequestService,
               protected rdbService: RemoteDataBuildService,
               protected halService: HALEndpointService,
-              protected configurationService: ConfigurationDataService
+              protected configurationService: ConfigurationDataService,
+              protected translateService: TranslateService
   ) {
     super(vocabularyService, cdr, layoutService, validationService);
   }
@@ -177,6 +190,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
    * @param x
    */
   formatter = (x: { display: string }) => {
+    console.log('formatter', x);
     return x.display;
   };
 
@@ -185,6 +199,10 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
    * @param suggestion
    */
   suggestionFormatter = (suggestion: TemplateRef<any>) => {
+    if (this.model.autocompleteCustom === AUTOCOMPLETE_CUSTOM_LANGUAGE_JSON) {
+      // Language suggestion has a special format - ISO code and language name
+      return DsDynamicAutocompleteService.pretifyLanguageSuggestion(suggestion, this.translateService);
+    }
     // @ts-ignore
     return suggestion.display;
   };
@@ -205,7 +223,8 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
         } else {
           // Custom suggestion request
           if (this.model.autocompleteCustom) {
-            if (this.model.autocompleteCustom.startsWith(AUTOCOMPLETE_CUSTOM_SOLR_PREFIX)) {
+            if (this.model.autocompleteCustom.startsWith(AUTOCOMPLETE_CUSTOM_SOLR_PREFIX) ||
+                this.model.autocompleteCustom.startsWith(AUTOCOMPLETE_CUSTOM_JSON_PREFIX)) {
               return this.getCustomSuggestions(this.model.autocompleteCustom, term)
                 .pipe(getFirstSucceededRemoteDataPayload(),
                   map((list: PaginatedList<VocabularyEntry>) => {
@@ -256,7 +275,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     const vocabularyEntryList: VocabularyEntry[] = [];
     list.page.forEach((rawVocabularyEntry: VocabularyEntry) => {
       const voc: VocabularyEntry = new VocabularyEntry();
-      voc.display = rawVocabularyEntry.value;
+      voc.display = rawVocabularyEntry.display;
       voc.value = rawVocabularyEntry.value;
       vocabularyEntryList.push(voc);
     });

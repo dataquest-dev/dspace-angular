@@ -48,7 +48,7 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
               protected configurationService: ConfigurationDataService
   ) {
     super(vocabularyService, cdr, layoutService, validationService, metadataValueService,
-      lookupRelationService, requestService, rdbService, halService, configurationService);
+      lookupRelationService, requestService, rdbService, halService, configurationService, translateService);
   }
 
   /**
@@ -85,7 +85,7 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
       fundingProjectCode = fundingFields?.[1];
       fundingName = fundingFields?.[3];
     }
-    return DsDynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
+    return DsDynamicAutocompleteService.pretifySponsorSuggestion(fundingProjectCode, fundingName, this.translateService);
   };
 
   /**
