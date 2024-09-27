@@ -141,7 +141,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
    * Update value from suggestion to the input field.
    * @param updateValue raw suggestion.
    */
-  async updateModel(updateValue) {
+  updateModel(updateValue) {
     if (this.model?.autocompleteCustom === AUTOCOMPLETE_CUSTOM_HANDLE_TITLE) {
       const handle_title = updateValue.display.split(AUTOCOMPLETE_CUSTOM_VALUE_SEPARATOR);
       updateValue.display = this.handlePrefix.value + handle_title[0];
@@ -190,7 +190,6 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
    * @param x
    */
   formatter = (x: { display: string }) => {
-    console.log('formatter', x);
     return x.display;
   };
 

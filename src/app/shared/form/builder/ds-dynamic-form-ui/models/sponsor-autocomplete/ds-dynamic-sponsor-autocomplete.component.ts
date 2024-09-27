@@ -56,7 +56,7 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
    *                               2. metadata suggestion -> update as suggestion value.
    * @param updateValue
    */
-  async updateModel(updateValue) {
+  updateModel(updateValue) {
     let newValue;
     if (updateValue instanceof  ExternalSourceEntry) {
       // special autocomplete sponsor input
