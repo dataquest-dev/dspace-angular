@@ -5271,6 +5271,10 @@
 
   "submission.workflow.generic.submit_score-help": "",
 
+  "submission.workflow.generic.share-submission": "Share submission",
+
+  "submission.workflow.generic.share-submission.tooltip": "Share submission",
+
   "submission.workflow.tasks.claimed.approve": "Approve",
 
   "submission.workflow.tasks.claimed.approve_help": "If you have reviewed the item and it is suitable for inclusion in the collection, select \"Approve\".",

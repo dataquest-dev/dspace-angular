@@ -19,6 +19,9 @@ import { getFirstCompletedRemoteData, getRemoteDataPayload } from '../../../core
 import { RemoteData } from '../../../core/data/remote-data';
 import { NoContent } from '../../../core/shared/NoContent.model';
 import { getWorkspaceItemViewRoute } from '../../../workspaceitems-edit-page/workspaceitems-edit-page-routing-paths';
+import {GetRequest} from '../../../core/data/request.models';
+import {HALEndpointService} from '../../../core/shared/hal-endpoint.service';
+import {RemoteDataBuildService} from '../../../core/cache/builders/remote-data-build.service';
 
 /**
  * This component represents actions related to WorkspaceItem object.
@@ -46,8 +49,7 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
    * and therefore can delete it as well
    * (since the user can discard the item also from the edit page)
    * @type {Observable<boolean>}
-   */
-  canEditItem$: Observable<boolean>;
+   */  canEditItem$: Observable<boolean>;
 
   /**
    * Initialize instance variables
@@ -69,6 +71,8 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
     protected requestService: RequestService,
     private authService: AuthService,
     public authorizationService: AuthorizationDataService,
+    protected halService: HALEndpointService,
+    protected rdbService: RemoteDataBuildService,
     ) {
     super(WorkspaceItem.type, injector, router, notificationsService, translate, searchService, requestService);
 
@@ -123,5 +127,16 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
    */
   getWorkspaceItemViewRoute(workspaceItem: WorkspaceItem): string {
     return getWorkspaceItemViewRoute(workspaceItem?.id);
+  }
+
+  shareSubmission() {
+    const requestId = this.requestService.generateRequestId();
+
+    const url = this.halService.getRootHref() + '/submission/share?workspaceitemid=' + this.object.id;
+    const getRequest = new GetRequest(requestId, url);
+    // Send GET request
+    this.requestService.send(getRequest);
+    // Get response
+    const response = this.rdbService.buildFromRequestUUID(requestId);
   }
 }
