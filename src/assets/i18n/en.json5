@@ -5941,4 +5941,18 @@
   "navbar.about.project-partnership": "Project partnerships",
 
   "share.submission.breadcrumbs": "Share submission",
+
+  "share.submission.page.title": "Share link",
+
+  "share.submission.page.share-link.message.start": "To pass your submission to another user give them the following link: ",
+
+  "share.submission.page.share-link.message.end": ". You will also receive an email with this link.",
+
+  "change.submitter.breadcrumbs": "Change submitter",
+
+  "change.submitter.page.title": "Change submitter",
+
+  "change.submitter.page.message": "This items currently belongs to: ",
+
+
 }

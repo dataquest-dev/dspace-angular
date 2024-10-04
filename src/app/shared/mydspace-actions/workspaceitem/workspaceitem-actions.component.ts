@@ -141,10 +141,13 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
     // Get response
     const response = this.rdbService.buildFromRequestUUID(requestId);
     this.shareSubmissionSpinner = true;
-    response.pipe(getFirstCompletedRemoteData()).subscribe((rd: RemoteData<any>) => {
+    response.pipe(getFirstCompletedRemoteData()).subscribe((rd: RemoteData<ShareSubmissionLink>) => {
       if (rd.hasSucceeded) {
         this.notificationsService.success(
           this.translate.instant('submission.workflow.share-submission.email.successful'));
+        void this.router.navigate(['/share-submission'], { queryParams: {
+          changeSubmitterLink: rd.payload?.shareLink
+        }});
       } else {
         this.notificationsService.error(
           this.translate.instant('submission.workflow.share-submission.email.error'));
@@ -152,4 +155,8 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
       this.shareSubmissionSpinner = false;
     });
   }
+}
+
+export interface ShareSubmissionLink {
+  shareLink: string;
 }
