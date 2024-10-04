@@ -5275,6 +5275,10 @@
 
   "submission.workflow.generic.share-submission.tooltip": "Share submission",
 
+  "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
+
+  "submission.workflow.share-submission.email.error": "Cannot send the email with share link",
+
   "submission.workflow.tasks.claimed.approve": "Approve",
 
   "submission.workflow.tasks.claimed.approve_help": "If you have reviewed the item and it is suitable for inclusion in the collection, select \"Approve\".",

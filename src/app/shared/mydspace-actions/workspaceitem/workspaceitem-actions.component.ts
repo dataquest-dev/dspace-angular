@@ -38,6 +38,8 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
    */
   @Input() object: WorkspaceItem;
 
+  shareSubmissionSpinner = false;
+
   /**
    * A boolean representing if a delete operation is pending
    * @type {BehaviorSubject<boolean>}
@@ -138,5 +140,16 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
     this.requestService.send(getRequest);
     // Get response
     const response = this.rdbService.buildFromRequestUUID(requestId);
+    this.shareSubmissionSpinner = true;
+    response.pipe(getFirstCompletedRemoteData()).subscribe((rd: RemoteData<any>) => {
+      if (rd.hasSucceeded) {
+        this.notificationsService.success(
+          this.translate.instant('submission.workflow.share-submission.email.successful'));
+      } else {
+        this.notificationsService.error(
+          this.translate.instant('submission.workflow.share-submission.email.error'));
+      }
+      this.shareSubmissionSpinner = false;
+    });
   }
 }
