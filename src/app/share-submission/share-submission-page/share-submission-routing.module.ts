@@ -2,7 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { ShareSubmissionPageComponent } from './share-submission-page.component';
 import { I18nBreadcrumbResolver } from '../../core/breadcrumbs/i18n-breadcrumb.resolver';
-import {ChangeSubmitterPageComponent} from '../../change-submitter-page/change-submitter-page.component';
+import { ChangeSubmitterPageComponent } from '../../change-submitter-page/change-submitter-page.component';
 
 const routes: Routes = [
   { path: '',

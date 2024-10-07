@@ -1,26 +1,26 @@
-import {Component, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {WorkspaceItem} from '../core/submission/models/workspaceitem.model';
-import {RequestParam} from '../core/cache/models/request-param.model';
+import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { WorkspaceItem } from '../core/submission/models/workspaceitem.model';
+import { RequestParam } from '../core/cache/models/request-param.model';
 import {
   getFirstCompletedRemoteData,
   getFirstSucceededRemoteDataPayload,
   getFirstSucceededRemoteListPayload
 } from '../core/shared/operators';
-import {map} from 'rxjs/operators';
-import {WorkspaceitemDataService} from '../core/submission/workspaceitem-data.service';
-import {ActivatedRoute} from '@angular/router';
-import {followLink} from '../shared/utils/follow-link-config.model';
-import {EPerson} from '../core/eperson/models/eperson.model';
-import {DSONameService} from '../core/breadcrumbs/dso-name.service';
-import {isNullOrUndef} from 'chart.js/helpers';
-import {HALEndpointService} from '../core/shared/hal-endpoint.service';
-import {RemoteDataBuildService} from '../core/cache/builders/remote-data-build.service';
-import {RequestService} from '../core/data/request.service';
-import {PostRequest} from '../core/data/request.models';
-import {RemoteData} from '../core/data/remote-data';
-import {NotificationsService} from '../shared/notifications/notifications.service';
-import {TranslateService} from '@ngx-translate/core';
+import { map } from 'rxjs/operators';
+import { WorkspaceitemDataService } from '../core/submission/workspaceitem-data.service';
+import { ActivatedRoute } from '@angular/router';
+import { followLink } from '../shared/utils/follow-link-config.model';
+import { EPerson } from '../core/eperson/models/eperson.model';
+import { DSONameService } from '../core/breadcrumbs/dso-name.service';
+import { isNullOrUndef } from 'chart.js/helpers';
+import { HALEndpointService } from '../core/shared/hal-endpoint.service';
+import { RemoteDataBuildService } from '../core/cache/builders/remote-data-build.service';
+import { RequestService } from '../core/data/request.service';
+import { PostRequest } from '../core/data/request.models';
+import { RemoteData } from '../core/data/remote-data';
+import { NotificationsService } from '../shared/notifications/notifications.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'ds-change-submitter-page',
