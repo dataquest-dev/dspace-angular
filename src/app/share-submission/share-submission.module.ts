@@ -5,8 +5,6 @@ import { SharedModule } from '../shared/shared.module';
 import { ShareSubmissionPageModule } from './share-submission-page/share-submission-routing.module';
 import { ChangeSubmitterPageComponent } from '../change-submitter-page/change-submitter-page.component';
 
-
-
 @NgModule({
   declarations: [
     ShareSubmissionPageComponent,
