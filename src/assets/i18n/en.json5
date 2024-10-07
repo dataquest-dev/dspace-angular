@@ -5954,5 +5954,10 @@
 
   "change.submitter.page.message": "This items currently belongs to: ",
 
+  "change.submitter.page.button.take-it": "Take it",
+
+  "change.submitter.page.changed-successfully": "The submitter has been successfully changed",
+
+  "change.submitter.page.changed-error": "An error occurred while changing the submitter",
 
 }
