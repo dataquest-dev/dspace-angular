@@ -94,7 +94,6 @@ export class ChangeSubmitterPageComponent implements OnInit {
     }
 
     if (workspaceItem.submitter instanceof Observable<EPerson>) {
-      console.log('Loading submitter from observable', workspaceItem);
       workspaceItem.submitter
         .pipe(getFirstSucceededRemoteDataPayload())
         .subscribe((submitter: any) => {
@@ -132,7 +131,7 @@ export class ChangeSubmitterPageComponent implements OnInit {
 
     const url = this.halService.getRootHref() + '/submission/setOwner?shareToken=' + this.shareToken;
     const postRequest = new PostRequest(requestId, url);
-    // Send GET request
+    // Send POST request
     this.requestService.send(postRequest);
     this.changeSubmitterSpinner = true;
     // Get response

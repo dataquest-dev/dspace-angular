@@ -54,7 +54,8 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
    * and therefore can delete it as well
    * (since the user can discard the item also from the edit page)
    * @type {Observable<boolean>}
-   */  canEditItem$: Observable<boolean>;
+   */
+  canEditItem$: Observable<boolean>;
 
   /**
    * Initialize instance variables
