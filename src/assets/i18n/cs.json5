@@ -2096,7 +2096,7 @@
   // "error.top-level-communities": "Error fetching top-level communities",
   "error.top-level-communities": "Chyba při načítání komunit nejvyšší úrovně",
   // "error.validation.license.notgranted": "You must grant this license to complete your submission. If you are unable to grant this license at this time you may save your work and return later or remove the submission.",
-  "error.validation.license.notgranted": "Pro dokončení zaslání musíte udělit licenci. Pokud v tuto chvíli tuto licenci nemůžete udělit, můžete svou práci uložit a později se k svému příspěveku vrátit nebo jej smazat.",
+  "error.validation.license.notgranted": "Pro dokončení zaslání musíte udělit licenci. Pokud v tuto chvíli tuto licenci nemůžete udělit, můžete svou práci uložit a později se k svému příspěvku vrátit nebo jej smazat.",
   // "error.validation.clarin-license.notgranted": "You must choose one of the resource licenses.",
   "error.validation.clarin-license.notgranted": "Musíte si vybrat jednu z licencí zdrojů.",
   // "error.validation.pattern": "This input is restricted by the current pattern: {{ pattern }}.",
