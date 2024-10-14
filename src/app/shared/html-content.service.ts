@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import {firstValueFrom, of as observableOf} from 'rxjs';
-import {HTML_SUFFIX, STATIC_FILES_PROJECT_PATH} from '../static-page/static-page-routing-paths';
-import {isEmpty, isNotEmpty} from './empty.util';
-import {LocaleService} from '../core/locale/locale.service';
+import { firstValueFrom, of as observableOf } from 'rxjs';
+import { HTML_SUFFIX, STATIC_FILES_PROJECT_PATH } from '../static-page/static-page-routing-paths';
+import { isEmpty, isNotEmpty } from './empty.util';
+import { LocaleService } from '../core/locale/locale.service';
 
 /**
  * Service for loading static `.html` files stored in the `/static-files` folder.
