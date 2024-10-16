@@ -115,7 +115,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   /**
    * The path to the Seznam dataset license content.
    */
-  LICENSE_PATH_SEZNAM = 'szn-dataset-license.html';
+  LICENSE_PATH_SEZNAM_CZ = 'szn-dataset-license.html';
 
   /**
    * The content of the Seznam dataset license. Fetch from the static file.
@@ -166,7 +166,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
    * Load the content for the special license. This content is shown directly in this approval page.
    */
   loadLicenseContentSeznam() {
-    this.htmlContentService.getHmtlContentByPathAndLocale(this.LICENSE_PATH_SEZNAM).then(content => {
+    this.htmlContentService.getHmtlContentByPathAndLocale(this.LICENSE_PATH_SEZNAM_CZ).then(content => {
       this.licenseContentSeznam.next(content);
     });
     return true;
