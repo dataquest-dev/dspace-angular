@@ -7,7 +7,7 @@ import {TranslateService} from '@ngx-translate/core';
  */
 export class DsDynamicAutocompleteService {
 
-  static pretifySponsorSuggestion(fundingProjectCode, fundingName, translateService) {
+  static prettifySponsorSuggestion(fundingProjectCode, fundingName, translateService) {
     if (isEmpty(fundingProjectCode) || isEmpty(fundingName)) {
       throw (new Error('The suggestion returns wrong data!'));
     }

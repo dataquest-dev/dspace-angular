@@ -85,7 +85,7 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
       fundingProjectCode = fundingFields?.[1];
       fundingName = fundingFields?.[3];
     }
-    return DsDynamicAutocompleteService.pretifySponsorSuggestion(fundingProjectCode, fundingName, this.translateService);
+    return DsDynamicAutocompleteService.prettifySponsorSuggestion(fundingProjectCode, fundingName, this.translateService);
   };
 
   /**
