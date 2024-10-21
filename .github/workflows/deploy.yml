@@ -315,7 +315,8 @@ jobs:
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace version"
 
           echo "dspace cleanup:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace cleanup -v"
+          # very likely - https://groups.google.com/g/dspace-tech/c/tsoctFfNUsI/m/IIeYofYADAAJ
+          # docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace cleanup -v"
 
           echo "dspace reindex solr:"
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace index-discovery -b"
