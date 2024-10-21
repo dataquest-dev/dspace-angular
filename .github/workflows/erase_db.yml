@@ -2,26 +2,28 @@ name: Erase database
 
 on:
   workflow_dispatch:
+    inputs:
+      INSTANCE:
+        required: true
+        default: '6'
+        type: choice
+        options:
+          - '5'
+          - '8'
+          - '6'
+
 
 jobs:
-  restart_db:
-    env: 
-      INSTANCE: 6
+  erase_db:
     runs-on: dspace-dep-1
+    timeout-minutes: 5
+    env:
+      INSTANCE: ${{ inputs.INSTANCE }}
     steps:
-      - uses: actions/checkout@v3
+
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/erase-db
         with:
-          submodules: false
-      - name: stop and remove containers
-        run: |
-          docker stop dspacedb$INSTANCE dspace$INSTANCE dspace-angular$INSTANCE
-          docker rm dspacedb$INSTANCE dspace$INSTANCE dspace-angular$INSTANCE
-      - name: remove volumes
-        if: '!cancelled()'
-        run: |
-          docker volume rm dspace-${{env.INSTANCE}}_pgdata dspace-${{env.INSTANCE}}_assetstore
-      - name: redeploy
-        if: '!cancelled()'
-        run: |
-          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}" --request POST https://api.github.com/repos/dataquest-dev/dspace-angular/actions/workflows/deploy.yml/dispatches --data "{\"ref\":\"refs/heads/customer/TUL\"}"
-          
+          INSTANCE: ${{ env.INSTANCE }}
+          NAME: dspace-${{ env.INSTANCE }}
