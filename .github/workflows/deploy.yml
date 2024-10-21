@@ -26,8 +26,6 @@ on:
         options:
           - '*'
           - '6'
-          - '5'
-          - '8'
       IMPORT:
         required: true
         default: true
@@ -62,7 +60,7 @@ jobs:
   deploy-8:
     if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8'
     runs-on: dspace-dep-1
-    timeout-minutes: 120
+    timeout-minutes: 180
     env:
       INSTANCE: '8'
       # 2024/02: this .env replaces ENTRYPOINT to angular
@@ -104,6 +102,7 @@ jobs:
         with:
           INSTANCE: ${{ env.INSTANCE }}
           DATADIR: /opt/dspace-data/clarin-dspace/
+          ASSETSTORE: /opt/dspace-data/clarin-dspace/assetstore/
 
       - name: dspace basic command
         run: |
@@ -272,3 +271,66 @@ jobs:
             echo "rest-tests have failed! check appropriate action run"
             exit 1
           fi;
+
+  import-6:
+    runs-on: dspace-dep-1
+    if: inputs.IMPORT && inputs.INSTANCE == '6'
+    timeout-minutes: 120
+    needs: deploy-6
+    env:
+      INSTANCE: '6'
+    steps:
+      - name: vanilla import
+        env:
+          FNAME: dspace_tul_dump_2024.10.08.sql
+        run: |
+          export DATADIR=/opt/dspace-data/tul-dump/$FNAME
+          export DNAME=dspace$INSTANCE
+          export DDBNAME=dspacedb$INSTANCE
+
+          echo "====="
+          docker stop $DNAME || true
+
+          echo "====="
+          # echo Starting vanilla import DB
+          docker cp $DATADIR $DDBNAME:/tmp/
+          # drop + create + import + cleanup
+          docker exec $DDBNAME /bin/bash -c "dropdb -U dspace -p 543$INSTANCE dspace && createdb -U dspace -p 543$INSTANCE --owner=dspace --encoding=UNICODE dspace && psql -p 543$INSTANCE -U dspace -d dspace -f /tmp/$FNAME && rm /tmp/$FNAME"
+          echo "====="
+          docker start $DNAME
+          sleep 60
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
+          echo "====="
+          # new user will not be accepted unless restarted
+          docker restart $DNAME
+          sleep 60
+          echo "====="
+
+      - name: dspace basic command
+        run: |
+          export DNAME=dspace$INSTANCE
+          docker logs -n 50 $DNAME
+
+          echo "dspace version:"
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace version"
+
+          echo "dspace cleanup:"
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace cleanup -v"
+
+          echo "dspace reindex solr:"
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace index-discovery -b"
+
+          echo "dspace reindex OAI-PMH:"
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace oai import -c"
+
+      - name: dspace healthcheck
+        run: |
+          export DNAME=dspace$INSTANCE
+          echo "dspace healthcheck:"
+          # docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
+
+      - name: dspace basic command
+        run: |
+          echo "dspace checker:"
+          # docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace checker -v -l"
+
