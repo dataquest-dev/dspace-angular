@@ -4,17 +4,17 @@ import { DynamicFormControlEvent, DynamicFormControlModel } from '@ng-dynamic-fo
 import { combineLatest as observableCombineLatest, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, find, map, mergeMap, take, tap } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { findIndex, isEqual } from 'lodash';
+import findIndex from 'lodash/findIndex';
+import isEqual from 'lodash/isEqual';
 
 import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
 import { FormComponent } from '../../../shared/form/form.component';
 import { FormService } from '../../../shared/form/form.service';
 import { SectionModelComponent } from '../models/section.model';
-import { SubmissionFormsConfigService } from '../../../core/config/submission-forms-config.service';
+import { SubmissionFormsConfigDataService } from '../../../core/config/submission-forms-config-data.service';
 import { hasValue, isEmpty, isNotEmpty, isUndefined } from '../../../shared/empty.util';
 import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { SubmissionFormsModel } from '../../../core/config/models/config-submission-forms.model';
-import { SubmissionSectionError, SubmissionSectionObject } from '../../objects/submission-objects.reducer';
 import { FormFieldPreviousValueObject } from '../../../shared/form/builder/models/form-field-previous-value-object';
 import { SectionDataObject } from '../models/section-data.model';
 import { renderSectionFor } from '../sections-decorator';
@@ -37,6 +37,11 @@ import { RemoteData } from '../../../core/data/remote-data';
 import { SubmissionScopeType } from '../../../core/submission/submission-scope-type';
 import { WorkflowItem } from '../../../core/submission/models/workflowitem.model';
 import { SubmissionObject } from '../../../core/submission/models/submission-object.model';
+import { SubmissionSectionObject } from '../../objects/submission-section-object.model';
+import { SubmissionSectionError } from '../../objects/submission-section-error.model';
+import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
+import { SPONSOR_METADATA_NAME } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
+import { AUTHOR_METADATA_FIELD_NAME } from 'src/app/shared/form/builder/ds-dynamic-form-ui/models/clarin-name.model';
 
 /**
  * This component represents a section that contains a Form.
@@ -116,6 +121,20 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
   protected subs: Subscription[] = [];
 
   protected submissionObject: SubmissionObject;
+
+  /**
+   * A flag representing if this section is readonly
+   */
+  protected isSectionReadonly = false;
+
+  protected workspaceItem: WorkspaceItem;
+
+  /**
+   * The timeout for checking if the sponsor was uploaded in the database
+   * The timeout is set to 20 seconds by default.
+   */
+  public sponsorRefreshTimeout = 20;
+
   /**
    * The FormComponent reference
    */
@@ -128,7 +147,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    * @param {FormBuilderService} formBuilderService
    * @param {SectionFormOperationsService} formOperationsService
    * @param {FormService} formService
-   * @param {SubmissionFormsConfigService} formConfigService
+   * @param {SubmissionFormsConfigDataService} formConfigService
    * @param {NotificationsService} notificationsService
    * @param {SectionsService} sectionService
    * @param {SubmissionService} submissionService
@@ -144,7 +163,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
               protected formBuilderService: FormBuilderService,
               protected formOperationsService: SectionFormOperationsService,
               protected formService: FormService,
-              protected formConfigService: SubmissionFormsConfigService,
+              protected formConfigService: SubmissionFormsConfigDataService,
               protected notificationsService: NotificationsService,
               protected sectionService: SectionsService,
               protected submissionService: SubmissionService,
@@ -173,13 +192,15 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
           this.sectionService.getSectionData(this.submissionId, this.sectionData.id, this.sectionData.sectionType),
           this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')).pipe(
             getFirstSucceededRemoteData(),
-            getRemoteDataPayload())
+            getRemoteDataPayload()),
+            this.sectionService.isSectionReadOnly(this.submissionId, this.sectionData.id, this.submissionService.getSubmissionScope())
         ])),
       take(1))
-      .subscribe(([sectionData, submissionObject]: [WorkspaceitemSectionFormObject, SubmissionObject]) => {
+      .subscribe(([sectionData, submissionObject, isSectionReadOnly]: [WorkspaceitemSectionFormObject, SubmissionObject, boolean]) => {
         if (isUndefined(this.formModel)) {
           // this.sectionData.errorsToShow = [];
           this.submissionObject = submissionObject;
+          this.isSectionReadonly = isSectionReadOnly;
           // Is the first loading so init form
           this.initForm(sectionData);
           this.sectionData.data = sectionData;
@@ -226,7 +247,9 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
 
     const sectionDataToCheck = {};
     Object.keys(sectionData).forEach((key) => {
-      if (this.sectionMetadata && this.sectionMetadata.includes(key) && this.inCurrentSubmissionScope(key)) {
+      // todo: removing Relationships works due to a bug -- dspace.entity.type is included in sectionData, which is what triggers the update;
+      //       if we use this.sectionMetadata.includes(key), this field is filtered out and removed Relationships won't disappear from the form.
+      if (this.inCurrentSubmissionScope(key)) {
         sectionDataToCheck[key] = sectionData[key];
       }
     });
@@ -254,16 +277,22 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    * @private
    */
   private inCurrentSubmissionScope(field: string): boolean {
-    const scope = this.formConfig?.rows.find(row => {
-      return row.fields?.[0]?.selectableMetadata?.[0]?.metadata === field;
-    }).fields?.[0]?.scope;
+    const scope = this.formConfig?.rows.find((row: FormRowModel) => {
+      if (row.fields?.[0]?.selectableMetadata) {
+        return row.fields?.[0]?.selectableMetadata?.[0]?.metadata === field;
+      } else if (row.fields?.[0]?.selectableRelationship) {
+        return row.fields?.[0]?.selectableRelationship.relationshipType === field.replace(/^relationship\./g, '');
+      } else {
+        return false;
+      }
+    })?.fields?.[0]?.scope;
 
     switch (scope) {
       case SubmissionScopeType.WorkspaceItem: {
-        return this.submissionObject.type === WorkspaceItem.type;
+        return (this.submissionObject as any).type === WorkspaceItem.type.value;
       }
       case SubmissionScopeType.WorkflowItem: {
-        return this.submissionObject.type === WorkflowItem.type;
+        return (this.submissionObject as any).type === WorkflowItem.type.value;
       }
       default: {
         return true;
@@ -284,11 +313,11 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         this.formConfig,
         this.collectionId,
         sectionData,
-        this.submissionService.getSubmissionScope()
+        this.submissionService.getSubmissionScope(),
+        this.isSectionReadonly
       );
       const sectionMetadata = this.sectionService.computeSectionConfiguredMetadata(this.formConfig);
       this.sectionService.updateSectionData(this.submissionId, this.sectionData.id, sectionData, this.sectionData.errorsToShow, this.sectionData.serverValidationErrors, sectionMetadata);
-
     } catch (e) {
       const msg: string = this.translate.instant('error.submission.sections.init-form-error') + e.toString();
       const sectionError: SubmissionSectionError = {
@@ -394,6 +423,69 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     if ((environment.submission.autosave.metadata.indexOf(metadata) !== -1 && isNotEmpty(value)) || this.hasRelatedCustomError(metadata)) {
       this.submissionService.dispatchSave(this.submissionId);
     }
+
+    if (metadata === SPONSOR_METADATA_NAME) {
+      this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
+      this.reinitializeForm(SPONSOR_METADATA_NAME, value);
+    }
+
+    if (metadata === AUTHOR_METADATA_FIELD_NAME) {
+      this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
+      this.reinitializeForm(AUTHOR_METADATA_FIELD_NAME, value);
+    }
+  }
+
+  /**
+   * This method updates specific input field e.g. `local.sponsor` and check if the metadata value was updated
+   * in the DB. When the metadata is updated in the DB refresh this input field.
+   * The reason of this method: If the data is not actual in BE, the input field probably won't fill in suggested value
+   * into all input fields e.g., the user click on the suggested value for the `author` but the input fields
+   * are still empty.
+   *
+   * @param metadataField input field which is updating
+   * @param newMetadataValue value added to the input field
+   */
+  public reinitializeForm(metadataField, newMetadataValue) {
+    let metadataValueFromDB = '';
+    // Counter to count update request timeout (20s)
+    let counter = 0;
+
+    this.isUpdating = true;
+    const interval = setInterval( () => {
+      // Load item from the DB
+      this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')).pipe(
+        getFirstSucceededRemoteData(),
+        getRemoteDataPayload())
+        .subscribe((payload) => {
+          if (isNotEmpty(payload.item)) {
+            payload.item.subscribe( item => {
+              if (isNotEmpty(item.payload) && isNotEmpty(item.payload.metadata[metadataField])) {
+                metadataValueFromDB = item.payload.metadata[metadataField];
+              }
+            });
+          }
+        });
+      // Check if new value is refreshed in the DB
+      if (Array.isArray(metadataValueFromDB) && isNotEmpty(metadataValueFromDB)) {
+        metadataValueFromDB.forEach((mv, index) => {
+          // @ts-ignore
+          if (metadataValueFromDB[index].value === newMetadataValue.value) {
+            // update form
+            this.formModel = undefined;
+            this.cdr.detectChanges();
+            this.ngOnInit();
+            clearInterval(interval);
+            this.isUpdating = false;
+          }
+        });
+      }
+      // Clear interval after 20s timeout
+      if (counter === ( this.sponsorRefreshTimeout * 1000 ) / 250) {
+        clearInterval(interval);
+        this.isUpdating = false;
+      }
+      counter++;
+    }, 250 );
   }
 
   private hasRelatedCustomError(medatata): boolean {

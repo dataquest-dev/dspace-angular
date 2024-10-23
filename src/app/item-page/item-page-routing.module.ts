@@ -7,15 +7,28 @@ import { VersionResolver } from './version-page/version.resolver';
 import { DSOBreadcrumbsService } from '../core/breadcrumbs/dso-breadcrumbs.service';
 import { LinkService } from '../core/cache/builders/link.service';
 import { UploadBitstreamComponent } from './bitstreams/upload/upload-bitstream.component';
-import { ITEM_EDIT_PATH, UPLOAD_BITSTREAM_PATH } from './item-page-routing-paths';
+import {
+  ITEM_EDIT_PATH,
+  MATOMO_STATISTICS_PATH, ORCID_PATH,
+  TOMBSTONE_ITEM_PATH,
+  UPLOAD_BITSTREAM_PATH
+} from './item-page-routing-paths';
 import { ItemPageAdministratorGuard } from './item-page-administrator.guard';
-import { MenuItemType } from '../shared/menu/initial-menus-state';
 import { LinkMenuItemModel } from '../shared/menu/menu-item/models/link.model';
 import { ThemedItemPageComponent } from './simple/themed-item-page.component';
 import { ThemedFullItemPageComponent } from './full/themed-full-item-page.component';
+import { MenuItemType } from '../shared/menu/menu-item-type.model';
 import { VersionPageComponent } from './version-page/version-page/version-page.component';
-import { BitstreamRequestACopyPageComponent } from '../shared/bitstream-request-a-copy-page/bitstream-request-a-copy-page.component';
+import { BitstreamRequestACopyPageComponent } from './bitstreams/request-a-copy/bitstream-request-a-copy-page.component';
+import { TombstoneComponent } from './tombstone/tombstone.component';
+import { ClarinMatomoStatisticsComponent } from './clarin-matomo-statistics/clarin-matomo-statistics.component';
 import { REQUEST_COPY_MODULE_PATH } from '../app-routing-paths';
+import { OrcidPageComponent } from './orcid-page/orcid-page.component';
+import { OrcidPageGuard } from './orcid-page/orcid-page.guard';
+import { DSOEditMenuResolver } from '../shared/dso-page/dso-edit-menu.resolver';
+import {
+  ClarinZipDownloadPageComponent
+} from '../bitstream-page/clarin-zip-download-page/clarin-zip-download-page.component';
 
 @NgModule({
   imports: [
@@ -24,7 +37,8 @@ import { REQUEST_COPY_MODULE_PATH } from '../app-routing-paths';
         path: ':id',
         resolve: {
           dso: ItemPageResolver,
-          breadcrumb: ItemBreadcrumbResolver
+          breadcrumb: ItemBreadcrumbResolver,
+          menu: DSOEditMenuResolver
         },
         runGuardsAndResolvers: 'always',
         children: [
@@ -50,7 +64,53 @@ import { REQUEST_COPY_MODULE_PATH } from '../app-routing-paths';
           {
             path: REQUEST_COPY_MODULE_PATH,
             component: BitstreamRequestACopyPageComponent,
-          }
+          },
+          {
+            path: ORCID_PATH,
+            component: OrcidPageComponent,
+            canActivate: [AuthenticatedGuard, OrcidPageGuard]
+          },
+          {
+            path: TOMBSTONE_ITEM_PATH,
+            component: TombstoneComponent
+          },
+          {
+            path: MATOMO_STATISTICS_PATH,
+            component: ClarinMatomoStatisticsComponent,
+            resolve: {
+              dso: ItemPageResolver,
+            }
+          },
+          {
+            path: ORCID_PATH,
+            component: OrcidPageComponent,
+            canActivate: [AuthenticatedGuard, OrcidPageGuard]
+          },
+          {
+            path: 'download',
+            children: [
+              {
+                path: '',
+                component: ClarinZipDownloadPageComponent,
+                resolve: {
+                  dso: ItemPageResolver,
+                },
+                data: {
+                  zipDownloadLink: 'This is download link'
+                }
+              },
+              {
+                path: 'zip',
+                component: ClarinZipDownloadPageComponent,
+                resolve: {
+                  dso: ItemPageResolver,
+                },
+                data: {
+                  zipDownloadLink: 'This is download link'
+                }
+              }
+            ],
+          },
         ],
         data: {
           menu: {
@@ -58,6 +118,7 @@ import { REQUEST_COPY_MODULE_PATH } from '../app-routing-paths';
               id: 'statistics_item_:id',
               active: true,
               visible: true,
+              index: 2,
               model: {
                 type: MenuItemType.LINK,
                 text: 'menu.section.statistics',
@@ -88,6 +149,7 @@ import { REQUEST_COPY_MODULE_PATH } from '../app-routing-paths';
     LinkService,
     ItemPageAdministratorGuard,
     VersionResolver,
+    OrcidPageGuard
   ]
 
 })

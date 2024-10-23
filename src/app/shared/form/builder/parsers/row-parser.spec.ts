@@ -22,6 +22,7 @@ describe('RowParser test suite', () => {
   const initFormValues = {};
   const submissionScope = 'WORKSPACE';
   const readOnly = false;
+  const typeField = 'dc_type';
 
   beforeEach(() => {
     row1 = {

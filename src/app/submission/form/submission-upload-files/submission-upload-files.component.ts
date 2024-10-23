@@ -9,7 +9,7 @@ import { hasValue, isEmpty, isNotEmpty } from '../../../shared/empty.util';
 import { normalizeSectionData } from '../../../core/submission/submission-response-parsing.service';
 import { SubmissionService } from '../../submission.service';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
-import { UploaderOptions } from '../../../shared/uploader/uploader-options.model';
+import { UploaderOptions } from '../../../shared/upload/uploader/uploader-options.model';
 import parseSectionErrors from '../../utils/parseSectionErrors';
 import { SubmissionJsonPatchOperationsService } from '../../../core/submission/submission-json-patch-operations.service';
 import { WorkspaceItem } from '../../../core/submission/models/workspaceitem.model';
@@ -83,7 +83,7 @@ export class SubmissionUploadFilesComponent implements OnChanges {
       .subscribe();
     this.subs.push(sub);
     return sub;
-  }
+  };
 
   /**
    * Initialize instance variables
@@ -155,8 +155,12 @@ export class SubmissionUploadFilesComponent implements OnChanges {
   /**
    * Show error notification on upload fails
    */
-  public onUploadError() {
-    this.notificationsService.error(null, this.translate.get('submission.sections.upload.upload-failed'));
+  public onUploadError(event: any) {
+    const errorMessageUploadLimit = this.translate.instant('submission.sections.upload.upload-failed.size-limit-exceeded');
+    const defaultErrorMessage = this.translate.instant('submission.sections.upload.upload-failed');
+    const errorMessage = event?.response === errorMessageUploadLimit ? errorMessageUploadLimit : defaultErrorMessage;
+
+    this.notificationsService.error(null, errorMessage);
   }
 
   /**

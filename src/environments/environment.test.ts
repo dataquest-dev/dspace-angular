@@ -25,7 +25,8 @@ export const environment: BuildConfig = {
     rateLimiter: {
       windowMs: 1 * 60 * 1000, // 1 minute
       max: 500 // limit each IP to 500 requests per windowMs
-    }
+    },
+    useProxies: true,
   },
 
   // The REST API server settings.
@@ -36,6 +37,10 @@ export const environment: BuildConfig = {
     // NOTE: Space is capitalized because 'namespace' is a reserved string in TypeScript
     nameSpace: '/api',
     baseUrl: 'https://rest.com/api'
+  },
+
+  actuators: {
+    endpointPath: '/actuator/health'
   },
 
   // Caching settings
@@ -50,6 +55,21 @@ export const environment: BuildConfig = {
       defaultTime: 0,
       maxBufferSize: 100,
       timePerMethod: { [RestRequestMethod.PATCH]: 3 } as any // time in seconds
+    },
+    // In-memory cache of server-side rendered pages. Disabled in test environment (max=0)
+    serverSide: {
+      debug: false,
+      headers: ['Link'],
+      botCache: {
+        max: 0,
+        timeToLive: 24 * 60 * 60 * 1000, // 1 day
+        allowStale: true,
+      },
+      anonymousCache: {
+        max: 0,
+        timeToLive: 10 * 1000, // 10 seconds
+        allowStale: true,
+      }
     }
   },
 
@@ -73,6 +93,7 @@ export const environment: BuildConfig = {
 
   // Form settings
   form: {
+    spellCheck: true,
     // NOTE: Map server-side validators to comparative Angular form validators
     validatorMap: {
       required: 'required',
@@ -99,6 +120,9 @@ export const environment: BuildConfig = {
       metadata: ['dc.title', 'dc.identifier.doi', 'dc.identifier.pmid', 'dc.identifier.arxiv'],
       // NOTE: every how many minutes submission is saved automatically
       timer: 5
+    },
+    typeBind: {
+      field: 'dc.type'
     },
     icons: {
       metadata: [
@@ -182,6 +206,14 @@ export const environment: BuildConfig = {
     code: 'bn',
     label: 'বাংলা',
     active: true,
+  }, {
+    code: 'el',
+    label: 'Ελληνικά',
+    active: true,
+  }, {
+    code: 'disabled',
+    label: 'Disabled',
+    active: false,
   }],
 
   // Browse-By Pages
@@ -192,10 +224,37 @@ export const environment: BuildConfig = {
     fiveYearLimit: 30,
     // The absolute lowest year to display in the dropdown (only used when no lowest date can be found for all items)
     defaultLowerLimit: 1900,
+    // Whether to add item thumbnail images to BOTH browse and search result lists.
+    showThumbnails: true,
+    // The number of entries in a paginated browse results list.
+    // Rounded to the nearest size in the list of selectable sizes on the
+    // settings menu.  See pageSizeOptions in 'pagination-component-options.model.ts'.
+    pageSize: 20,
+  },
+  communityList: {
+    pageSize: 20
+  },
+  homePage: {
+    recentSubmissions: {
+      pageSize: 5,
+      //sort record of recent submission
+      sortField: 'dc.date.accessioned',
+    },
+    topLevelCommunityList: {
+      pageSize: 5
+    }
   },
   item: {
     edit: {
       undoTimeout: 10000 // 10 seconds
+    },
+    // Show the item access status label in items lists
+    showAccessStatuses: false,
+    bitstream: {
+      // Number of entries in the bitstream list in the item view page.
+      // Rounded to the nearest size in the list of selectable sizes on the
+      // settings menu.  See pageSizeOptions in 'pagination-component-options.model.ts'.
+      pageSize: 5
     }
   },
   collection: {
@@ -228,8 +287,33 @@ export const environment: BuildConfig = {
       name: 'base',
     },
   ],
+  bundle: {
+    standardBundles: ['ORIGINAL', 'THUMBNAIL', 'LICENSE'],
+  },
   mediaViewer: {
     image: true,
     video: true
-  }
+  },
+  info: {
+    enableEndUserAgreement: true,
+    enablePrivacyStatement: true,
+  },
+  markdown: {
+    enabled: false,
+    mathjax: false,
+  },
+  comcolSelectionSort: {
+    sortField:'dc.title',
+    sortDirection:'ASC',
+  },
+
+  vocabularies: [
+    {
+      filter: 'subject',
+      vocabulary: 'srsc',
+      enabled: true
+    }
+  ],
+
+  signpostingEnabled: true
 };

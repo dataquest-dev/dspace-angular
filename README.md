@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/DSpace/dspace-angular/workflows/Build/badge.svg?branch=main)](https://github.com/DSpace/dspace-angular/actions?query=workflow%3ABuild) [![Coverage Status](https://codecov.io/gh/DSpace/dspace-angular/branch/main/graph/badge.svg)](https://codecov.io/gh/DSpace/dspace-angular) [![Universal Angular](https://img.shields.io/badge/universal-angular2-brightgreen.svg?style=flat)](https://github.com/angular/universal)
+[![Build](https://github.com/dataquest-dev/dspace-angular/actions/workflows/build.yml/badge.svg)](https://github.com/dataquest-dev/dspace-angular/actions/workflows/build.yml) [![codecov](https://codecov.io/gh/dataquest-dev/dspace-angular/branch/dtq-dev/graph/badge.svg?token=DQ7QIZN8S6)](https://codecov.io/gh/dataquest-dev/dspace-angular) [![Universal Angular](https://img.shields.io/badge/universal-angular2-brightgreen.svg?style=flat)](https://github.com/angular/universal)
 
 dspace-angular
 ==============
@@ -35,7 +35,7 @@ https://wiki.lyrasis.org/display/DSDOC7x/Installing+DSpace
 Quick start
 -----------
 
-**Ensure you're running [Node](https://nodejs.org) `v12.x`, `v14.x` or `v16.x`, [npm](https://www.npmjs.com/) >= `v5.x` and [yarn](https://yarnpkg.com) == `v1.x`**
+**Ensure you're running [Node](https://nodejs.org) `v16.x` or `v18.x`, [npm](https://www.npmjs.com/) >= `v5.x` and [yarn](https://yarnpkg.com) == `v1.x`**
 
 ```bash
 # clone the repo
@@ -90,7 +90,7 @@ Requirements
 ------------
 
 -	[Node.js](https://nodejs.org) and [yarn](https://yarnpkg.com)
--	Ensure you're running node `v12.x`, `v14.x` or `v16.x` and yarn == `v1.x`
+-	Ensure you're running node `v16.x` or `v18.x` and yarn == `v1.x`
 
 If you have [`nvm`](https://github.com/creationix/nvm#install-script) or [`nvm-windows`](https://github.com/coreybutler/nvm-windows) installed, which is highly recommended, you can run `nvm install --lts && nvm use` to install and start using the latest Node LTS.
 
@@ -157,8 +157,8 @@ DSPACE_UI_SSL => DSPACE_SSL
 
 The same settings can also be overwritten by setting system environment variables instead, E.g.:
 ```bash
-export DSPACE_HOST=api7.dspace.org
-export DSPACE_UI_PORT=4200
+export DSPACE_HOST=demo.dspace.org
+export DSPACE_UI_PORT=4000
 ```
 
 The priority works as follows: **environment variable** overrides **variable in `.env` file** overrides external config set by `DSPACE_APP_CONFIG_PATH` overrides **`config.(prod or dev).yml`**
@@ -179,7 +179,7 @@ If needing to update default configurations values for production, update local 
 
 -	Update `environment.production.ts` file in `src/environment/` for a `production` environment;
 
-The environment object is provided for use as import in code and is extended with he runtime configuration on bootstrap of the application.
+The environment object is provided for use as import in code and is extended with the runtime configuration on bootstrap of the application.
 
 > Take caution moving runtime configs into the buildtime configuration. They will be overwritten by what is defined in the runtime config on bootstrap.
 
@@ -288,7 +288,7 @@ E2E tests (aka integration tests) use [Cypress.io](https://www.cypress.io/). Con
 The test files can be found in the `./cypress/integration/` folder.
 
 Before you can run e2e tests, two things are REQUIRED:
-1. You MUST be running the DSpace backend (i.e. REST API) locally. The e2e tests will *NOT* succeed if run against our demo REST API (https://api7.dspace.org/server/), as that server is uncontrolled and may have content added/removed at any time.
+1. You MUST be running the DSpace backend (i.e. REST API) locally. The e2e tests will *NOT* succeed if run against our demo/sandbox REST API (https://demo.dspace.org/server/ or https://sandbox.dspace.org/server/), as those sites may have content added/removed at any time.
     * After starting up your backend on localhost, make sure either your `config.prod.yml` or `config.dev.yml` has its `rest` settings defined to use that localhost backend.
 	* If you'd prefer, you may instead use environment variables as described at [Configuring](#configuring). For example:
        ```
@@ -330,8 +330,11 @@ All E2E tests must be created under the `./cypress/integration/` folder, and mus
 * In the [Cypress Test Runner](https://docs.cypress.io/guides/core-concepts/test-runner), you'll Cypress automatically visit the page.  This first test will succeed, as all you are doing is making sure the _page exists_.
 * From here, you can use the [Selector Playground](https://docs.cypress.io/guides/core-concepts/test-runner#Selector-Playground) in the Cypress Test Runner window to determine how to tell Cypress to interact with a specific HTML element on that page.
     * Most commands start by telling Cypress to [get()](https://docs.cypress.io/api/commands/get) a specific element, using a CSS or jQuery style selector
+      * It's generally best not to rely on attributes like `class` and `id` in tests, as those are likely to change later on. Instead, you can add a `data-test` attribute to makes it clear that it's required for a test. 
     * Cypress can then do actions like [click()](https://docs.cypress.io/api/commands/click) an element, or [type()](https://docs.cypress.io/api/commands/type) text in an input field, etc.
-	* Cypress can also validate that something occurs, using [should()](https://docs.cypress.io/api/commands/should) assertions.
+      * When running with server-side rendering enabled, the client first receives HTML without the JS; only once the page is rendered client-side do some elements (e.g. a button that toggles a Bootstrap dropdown) become fully interactive. This can trip up Cypress in some cases as it may try to `click` or `type` in an element that's not fully loaded yet, causing tests to fail. 
+      * To work around this issue, define the attributes you use for Cypress selectors as `[attr.data-test]="'button' | ngBrowserOnly"`. This will only show the attribute in CSR HTML, forcing Cypress to wait until CSR is complete before interacting with the element.
+    * Cypress can also validate that something occurs, using [should()](https://docs.cypress.io/api/commands/should) assertions.
 * Any time you save your test file, the Cypress Test Runner will reload & rerun it. This allows you can see your results quickly as you write the tests & correct any broken tests rapidly.
 * Cypress also has a great guide on [writing your first test](https://on.cypress.io/writing-first-test) with much more info. Keep in mind, while the examples in the Cypress docs often involve Javascript files (.js), the same examples will work in our Typescript (.ts) e2e tests.
 
@@ -348,7 +351,7 @@ Documentation
 
 Official DSpace documentation is available in the DSpace wiki at https://wiki.lyrasis.org/display/DSDOC7x/
 
-Some UI specific configuration documentation is also found in the [`./docs`](docs) folder of htis codebase.
+Some UI specific configuration documentation is also found in the [`./docs`](docs) folder of this codebase.
 
 ### Building code documentation
 
@@ -376,10 +379,10 @@ To get the most out of TypeScript, you'll need a TypeScript-aware editor. We've 
 	-	[Sublime Text](http://www.sublimetext.com/3)
 		-	[Typescript-Sublime-Plugin](https://github.com/Microsoft/Typescript-Sublime-plugin#installation)
 
-Collaborating
+Contributing
 -------------
 
-See [the guide on the wiki](https://wiki.lyrasis.org/display/DSPACE/DSpace+7+-+Angular+UI+Development#DSpace7-AngularUIDevelopment-Howtocontribute)
+See [Contributing documentation](CONTRIBUTING.md)
 
 File Structure
 --------------
@@ -410,8 +413,7 @@ dspace-angular
 │   ├── merge-i18n-files.ts                             *
 │   ├── serve.ts                                        *
 │   ├── sync-i18n-files.ts                              *
-│   ├── test-rest.ts                                    *
-│   └── webpack.js                                      *
+│   └── test-rest.ts                                    *
 ├── src                                                 * The source of the application
 │   ├── app                                             * The source code of the application, subdivided by module/page.
 │   ├── assets                                          * Folder for static resources
@@ -567,3 +569,8 @@ The full license is available in the [LICENSE](LICENSE) file or online at http:/
 
 DSpace uses third-party libraries which may be distributed under different licenses. Those licenses are listed
 in the [LICENSES_THIRD_PARTY](LICENSES_THIRD_PARTY) file.
+
+Additional tools
+----------------
+
+This project is tested with BrowserStack.

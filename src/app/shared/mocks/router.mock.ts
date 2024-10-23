@@ -29,4 +29,12 @@ export class RouterMock {
   createUrlTree(commands, navExtras = {}) {
     return {};
   }
+
+  serializeUrl(commands, navExtras = {}) {
+    return '/testing-url';
+  }
+
+  get url() {
+    return this.routerState.snapshot.url;
+  }
 }

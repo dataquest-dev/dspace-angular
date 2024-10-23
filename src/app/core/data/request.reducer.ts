@@ -1,128 +1,24 @@
+/* eslint-disable max-classes-per-file */
 import {
   RequestAction,
   RequestActionTypes,
   RequestConfigureAction,
+  RequestErrorAction,
   RequestExecuteAction,
   RequestRemoveAction,
-  ResetResponseTimestampsAction,
+  RequestStaleAction,
   RequestSuccessAction,
-  RequestErrorAction,
-  RequestStaleAction
+  ResetResponseTimestampsAction
 } from './request.actions';
-import { RestRequest } from './request.models';
-import { HALLink } from '../shared/hal-link.model';
-import { UnCacheableObject } from '../shared/uncacheable-object.model';
 import { isNull } from '../../shared/empty.util';
-
-export enum RequestEntryState {
-  RequestPending = 'RequestPending',
-  ResponsePending = 'ResponsePending',
-  Error = 'Error',
-  Success = 'Success',
-  ErrorStale = 'ErrorStale',
-  SuccessStale = 'SuccessStale'
-}
-
-/**
- * Returns true if the given state is RequestPending, false otherwise
- */
-export const isRequestPending = (state: RequestEntryState) =>
-  state === RequestEntryState.RequestPending;
-
-/**
- * Returns true if the given state is ResponsePending, false otherwise
- */
-export const isResponsePending = (state: RequestEntryState) =>
-  state === RequestEntryState.ResponsePending;
-
-/**
- * Returns true if the given state is Error, false otherwise
- */
-export const isError = (state: RequestEntryState) =>
-  state === RequestEntryState.Error;
-
-/**
- * Returns true if the given state is Success, false otherwise
- */
-export const isSuccess = (state: RequestEntryState) =>
-  state === RequestEntryState.Success;
-
-/**
- * Returns true if the given state is ErrorStale, false otherwise
- */
-export const isErrorStale = (state: RequestEntryState) =>
-  state === RequestEntryState.ErrorStale;
-
-/**
- * Returns true if the given state is SuccessStale, false otherwise
- */
-export const isSuccessStale = (state: RequestEntryState) =>
-  state === RequestEntryState.SuccessStale;
-
-/**
- * Returns true if the given state is RequestPending or ResponsePending,
- * false otherwise
- */
-export const isLoading = (state: RequestEntryState) =>
-  isRequestPending(state) || isResponsePending(state);
-
-/**
- * If isLoading is true for the given state, this method returns undefined, we can't know yet.
- * If it isn't this method will return true if the the given state is Error or ErrorStale,
- * false otherwise
- */
-export const hasFailed = (state: RequestEntryState) => {
-  if (isLoading(state)) {
-    return undefined;
-  } else {
-    return isError(state) || isErrorStale(state);
-  }
-};
-
-/**
- * If isLoading is true for the given state, this method returns undefined, we can't know yet.
- * If it isn't this method will return true if the the given state is Success or SuccessStale,
- * false otherwise
- */
-export const hasSucceeded = (state: RequestEntryState) => {
-  if (isLoading(state)) {
-    return undefined;
-  } else {
-    return isSuccess(state) || isSuccessStale(state);
-  }
-};
-
-/**
- * Returns true if the given state is not loading, false otherwise
- */
-export const hasCompleted = (state: RequestEntryState) =>
-  !isLoading(state);
-
-/**
- * Returns true if the given state is SuccessStale or ErrorStale, false otherwise
- */
-export const isStale = (state: RequestEntryState) =>
-  isSuccessStale(state) || isErrorStale(state);
-
-export class ResponseState {
-  timeCompleted: number;
-  statusCode: number;
-  errorMessage?: string;
-  payloadLink?: HALLink;
-  unCacheableObject?: UnCacheableObject;
-}
-
-// tslint:disable-next-line:max-classes-per-file
-export class RequestEntry {
-  request: RestRequest;
-  state: RequestEntryState;
-  response: ResponseState;
-  lastUpdated: number;
-}
-
-export interface RequestState {
-  [uuid: string]: RequestEntry;
-}
+import {
+  hasSucceeded,
+  isStale,
+  RequestEntryState,
+  isRequestPending,
+  isResponsePending
+} from './request-entry-state.model';
+import { RequestState } from './request-state.model';
 
 // Object.create(null) ensures the object has no default js properties (e.g. `__proto__`)
 const initialState = Object.create(null);
@@ -201,14 +97,17 @@ function executeRequest(storeState: RequestState, action: RequestExecuteAction):
  *    the new storeState, with the response added to the request
  */
 function completeSuccessRequest(storeState: RequestState, action: RequestSuccessAction): RequestState {
-  if (isNull(storeState[action.payload.uuid])) {
+  const prevEntry = storeState[action.payload.uuid];
+  if (isNull(prevEntry)) {
     // after a request has been removed it's possible pending changes still come in.
     // Don't store them
     return storeState;
   } else {
     return Object.assign({}, storeState, {
-      [action.payload.uuid]: Object.assign({}, storeState[action.payload.uuid], {
-        state: RequestEntryState.Success,
+      [action.payload.uuid]: Object.assign({}, prevEntry, {
+        // If a response comes in for a request that's already stale, still store it otherwise
+        // components that are waiting for it might freeze
+        state: isStale(prevEntry.state) ? RequestEntryState.SuccessStale : RequestEntryState.Success,
         response: {
           timeCompleted: action.payload.timeCompleted,
           lastUpdated: action.payload.timeCompleted,
@@ -234,14 +133,17 @@ function completeSuccessRequest(storeState: RequestState, action: RequestSuccess
  *    the new storeState, with the response added to the request
  */
 function completeFailedRequest(storeState: RequestState, action: RequestErrorAction): RequestState {
-  if (isNull(storeState[action.payload.uuid])) {
+  const prevEntry = storeState[action.payload.uuid];
+  if (isNull(prevEntry)) {
     // after a request has been removed it's possible pending changes still come in.
     // Don't store them
     return storeState;
   } else {
     return Object.assign({}, storeState, {
-      [action.payload.uuid]: Object.assign({}, storeState[action.payload.uuid], {
-        state: RequestEntryState.Error,
+      [action.payload.uuid]: Object.assign({}, prevEntry, {
+        // If a response comes in for a request that's already stale, still store it otherwise
+        // components that are waiting for it might freeze
+        state: isStale(prevEntry.state) ? RequestEntryState.ErrorStale : RequestEntryState.Error,
         response: {
           timeCompleted: action.payload.timeCompleted,
           lastUpdated: action.payload.timeCompleted,
@@ -265,22 +167,27 @@ function completeFailedRequest(storeState: RequestState, action: RequestErrorAct
  *    the new storeState, set to stale
  */
 function expireRequest(storeState: RequestState, action: RequestStaleAction): RequestState {
-  if (isNull(storeState[action.payload.uuid])) {
-    // after a request has been removed it's possible pending changes still come in.
-    // Don't store them
+  const prevEntry = storeState[action.payload.uuid];
+  if (isNull(prevEntry) || isStale(prevEntry.state) || isRequestPending(prevEntry.state)) {
+    // No need to do anything if the entry doesn't exist, is already stale, or if the request is
+    // still pending, because that means it still needs to be sent to the server. Any response
+    // is guaranteed to have been generated after the request was set to stale.
     return storeState;
   } else {
-    const prevEntry = storeState[action.payload.uuid];
-    if (isStale(prevEntry.state)) {
-      return storeState;
+    let nextRequestEntryState: RequestEntryState;
+    if (isResponsePending(prevEntry.state)) {
+      nextRequestEntryState = RequestEntryState.ResponsePendingStale;
+    } else if (hasSucceeded(prevEntry.state)) {
+      nextRequestEntryState = RequestEntryState.SuccessStale;
     } else {
-      return Object.assign({}, storeState, {
-        [action.payload.uuid]: Object.assign({}, prevEntry, {
-          state: hasSucceeded(prevEntry.state) ? RequestEntryState.SuccessStale : RequestEntryState.ErrorStale,
-          lastUpdated: action.lastUpdated
-        })
-      });
+      nextRequestEntryState = RequestEntryState.ErrorStale;
     }
+    return Object.assign({}, storeState, {
+      [action.payload.uuid]: Object.assign({}, prevEntry, {
+        state: nextRequestEntryState,
+        lastUpdated: action.lastUpdated
+      })
+    });
   }
 }
 

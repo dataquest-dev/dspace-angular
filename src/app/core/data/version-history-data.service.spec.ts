@@ -65,6 +65,10 @@ describe('VersionHistoryDataService', () => {
       },
     },
   });
+  const version1WithDraft = Object.assign(new Version(), {
+    ...version1,
+    versionhistory: createSuccessfulRemoteDataObject$(versionHistoryDraft),
+  });
   const versions = [version1, version2];
   versionHistory.versions = createSuccessfulRemoteDataObject$(createPaginatedList(versions));
   const item1 = Object.assign(new Item(), {
@@ -102,17 +106,23 @@ describe('VersionHistoryDataService', () => {
       buildFromRequestUUID: jasmine.createSpy('buildFromRequestUUID'),
     });
     objectCache = jasmine.createSpyObj('objectCache', {
-      remove: jasmine.createSpy('remove')
+      remove: jasmine.createSpy('remove'),
     });
     versionService = jasmine.createSpyObj('objectCache', {
       findByHref: jasmine.createSpy('findByHref'),
-      findAllByHref: jasmine.createSpy('findAllByHref'),
+      findListByHref: jasmine.createSpy('findListByHref'),
       getHistoryFromVersion: jasmine.createSpy('getHistoryFromVersion'),
     });
     halService = new HALEndpointServiceStub(url);
     notificationsService = new NotificationsServiceStub();
 
-    service = new VersionHistoryDataService(requestService, rdbService, null, objectCache, halService, notificationsService, versionService, null, null);
+    service = new VersionHistoryDataService(
+      requestService,
+      rdbService,
+      objectCache,
+      halService,
+      versionService,
+    );
   }
 
   beforeEach(() => {
@@ -126,8 +136,8 @@ describe('VersionHistoryDataService', () => {
       result = service.getVersions('1');
     });
 
-    it('should call versionService.findAllByHref', () => {
-      expect(versionService.findAllByHref).toHaveBeenCalled();
+    it('should call versionService.findListByHref', () => {
+      expect(versionService.findListByHref).toHaveBeenCalled();
     });
   });
 
@@ -135,8 +145,8 @@ describe('VersionHistoryDataService', () => {
     beforeEach(waitForAsync(() => {
       service.getVersions(versionHistoryId);
     }));
-    it('findAllByHref should have been called', () => {
-      expect(versionService.findAllByHref).toHaveBeenCalled();
+    it('findListByHref should have been called', () => {
+      expect(versionService.findListByHref).toHaveBeenCalled();
     });
   });
 
@@ -151,7 +161,7 @@ describe('VersionHistoryDataService', () => {
   describe('when getVersionsEndpoint is called', () => {
     it('should return the correct value', () => {
       service.getVersionsEndpoint(versionHistoryId).subscribe((res) => {
-        expect(res).toBe(url + '/versions');
+        expect(res).toBe(url + '/versionhistories/version-history-id/versions');
       });
     });
   });
@@ -180,21 +190,18 @@ describe('VersionHistoryDataService', () => {
   });
 
   describe('hasDraftVersion$', () => {
-    beforeEach(waitForAsync(() => {
-      versionService.findByHref.and.returnValue(createSuccessfulRemoteDataObject$<Version>(version1));
-    }));
     it('should return false if draftVersion is false', fakeAsync(() => {
-      versionService.getHistoryFromVersion.and.returnValue(of(versionHistory));
+      versionService.findByHref.and.returnValue(createSuccessfulRemoteDataObject$<Version>(version1));
       service.hasDraftVersion$('href').subscribe((res) => {
         expect(res).toBeFalse();
       });
     }));
+
     it('should return true if draftVersion is true', fakeAsync(() => {
-      versionService.getHistoryFromVersion.and.returnValue(of(versionHistoryDraft));
+      versionService.findByHref.and.returnValue(createSuccessfulRemoteDataObject$<Version>(version1WithDraft));
       service.hasDraftVersion$('href').subscribe((res) => {
         expect(res).toBeTrue();
       });
     }));
   });
-
 });

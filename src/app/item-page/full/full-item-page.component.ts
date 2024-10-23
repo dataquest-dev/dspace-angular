@@ -1,8 +1,8 @@
 import { filter, map } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 
-import { Observable ,  BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ItemPageComponent } from '../simple/item-page.component';
 import { MetadataMap } from '../../core/shared/metadata.models';
@@ -16,7 +16,13 @@ import { hasValue } from '../../shared/empty.util';
 import { AuthService } from '../../core/auth/auth.service';
 import { Location } from '@angular/common';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
-
+import { ServerResponseService } from '../../core/services/server-response.service';
+import { SignpostingDataService } from '../../core/data/signposting-data.service';
+import { LinkHeadService } from '../../core/services/link-head.service';
+import { RegistryService } from 'src/app/core/registry/registry.service';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { makeLinks } from '../../shared/clarin-shared-util';
+import { SEPARATOR } from 'src/app/shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 
 /**
  * This component renders a full item page.
@@ -31,25 +37,35 @@ import { AuthorizationDataService } from '../../core/data/feature-authorization/
   animations: [fadeInOut]
 })
 export class FullItemPageComponent extends ItemPageComponent implements OnInit, OnDestroy {
+  protected readonly makeLinks = makeLinks;
+  protected readonly SEPARATOR = SEPARATOR;
 
   itemRD$: BehaviorSubject<RemoteData<Item>>;
 
   metadata$: Observable<MetadataMap>;
 
   /**
-   * True when the itemRD has been originated from its workflowitem, false otherwise.
+   * True when the itemRD has been originated from its workspaceite/workflowitem, false otherwise.
    */
-  fromWfi = false;
+  fromSubmissionObject = false;
 
   subs = [];
 
-  constructor(protected route: ActivatedRoute,
-              router: Router,
-              items: ItemDataService,
-              authService: AuthService,
-              authorizationService: AuthorizationDataService,
-              private _location: Location) {
-    super(route, router, items, authService, authorizationService);
+  constructor(
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected items: ItemDataService,
+    protected authService: AuthService,
+    protected authorizationService: AuthorizationDataService,
+    protected _location: Location,
+    protected responseService: ServerResponseService,
+    protected signpostingDataService: SignpostingDataService,
+    protected linkHeadService: LinkHeadService,
+    @Inject(PLATFORM_ID) protected platformId: string,
+    protected halService: HALEndpointService,
+    protected registryService: RegistryService
+  ) {
+    super(route, router, items, authService, authorizationService, responseService, signpostingDataService, linkHeadService, platformId, registryService, halService);
   }
 
   /*** AoT inheritance fix, will hopefully be resolved in the near future **/
@@ -61,7 +77,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
       map((item: Item) => item.metadata),);
 
     this.subs.push(this.route.data.subscribe((data: Data) => {
-        this.fromWfi = hasValue(data.wfi);
+        this.fromSubmissionObject = hasValue(data.wfi) || hasValue(data.wsi);
       })
     );
   }
