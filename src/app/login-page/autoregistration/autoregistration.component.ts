@@ -189,7 +189,6 @@ export class AutoregistrationComponent implements OnInit {
    * Retrieve the `ClarinVerificationToken` object by the `verificationToken` value.
    */
   private loadVerificationToken() {
-    console.log('I am here');
     this.verificationTokenService.searchBy('byToken', this.createSearchOptions(this.verificationToken))
       .pipe(getFirstSucceededRemoteListPayload())
       .subscribe(res => {

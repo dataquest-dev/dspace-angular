@@ -5964,4 +5964,10 @@
 
   "change.submitter.page.changed-error": "An error occurred while changing the submitter",
 
+  "change.submitter.page.cannot.see.submitter.message": "You do not have permission to see submitter information.",
+
+  "change.submitter.page.items.handle.message": "Item's handle: ",
+
+  "change.submitter.page.items.name.message": "Item's name: "
+
 }

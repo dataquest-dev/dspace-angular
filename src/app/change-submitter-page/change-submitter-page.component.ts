@@ -17,10 +17,13 @@ import { isNullOrUndef } from 'chart.js/helpers';
 import { HALEndpointService } from '../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../core/cache/builders/remote-data-build.service';
 import { RequestService } from '../core/data/request.service';
-import { PostRequest } from '../core/data/request.models';
+import { GetRequest } from '../core/data/request.models';
 import { RemoteData } from '../core/data/remote-data';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
+import { HttpHeaders } from '@angular/common/http';
+import { HttpOptions } from '../core/dspace-rest/dspace-rest.service';
+import { Item } from '../core/shared/item.model';
 
 @Component({
   selector: 'ds-change-submitter-page',
@@ -35,9 +38,20 @@ export class ChangeSubmitterPageComponent implements OnInit {
   private shareToken = '';
 
   /**
+   * WorkspaceItem id from the url.
+   * This id is used to get authorization rights to call REST API to change the submitter.
+   */
+  private workspaceitemid = '';
+
+  /**
    * BehaviorSubject that contains the submitter of the WorkspaceItem.
    */
   submitter: BehaviorSubject<EPerson> = new BehaviorSubject(null);
+
+  /**
+   * BehaviorSubject that contains the Item.
+   */
+  item: BehaviorSubject<Item> = new BehaviorSubject(null);
 
   /**
    * BehaviorSubject that contains the WorkspaceItem.
@@ -61,6 +75,8 @@ export class ChangeSubmitterPageComponent implements OnInit {
   ngOnInit(): void {
     // Load `share_token` param value from the url
     this.shareToken = this.route.snapshot.queryParams.share_token;
+    // Load `workspaceitem_id` param value from the url
+    this.workspaceitemid = this.route.snapshot.queryParams.workspaceitemid;
     this.loadWorkspaceItemAndAssignSubmitter(this.shareToken);
   }
 
@@ -70,17 +86,36 @@ export class ChangeSubmitterPageComponent implements OnInit {
   loadWorkspaceItemAndAssignSubmitter(shareToken: string) {
     this.findWorkspaceItemByShareToken(shareToken)?.subscribe((workspaceItem: WorkspaceItem) => {
       this.workspaceItem.next(workspaceItem);
+      this.loadItemFromWorkspaceItem(workspaceItem);
       this.loadAndAssignSubmitter(workspaceItem);
     });
+  }
+
+  /**
+   * Load the Item from the WorkspaceItem and assign it to the item BehaviorSubject.
+   */
+  loadItemFromWorkspaceItem(workspaceItem: WorkspaceItem) {
+    if (workspaceItem.item instanceof Observable<Item>) {
+      workspaceItem.item
+        .pipe(getFirstSucceededRemoteDataPayload())
+        .subscribe((item: Item) => {
+          this.item.next(item);
+        });
+    }
   }
 
   /**
    * Find a WorkspaceItem by its shareToken.
    */
   findWorkspaceItemByShareToken(shareToken: string): Observable<WorkspaceItem> {
+    let requestHeaders = new HttpHeaders();
+    const requestOptions: HttpOptions = Object.create({});
+    requestHeaders = requestHeaders.append('shareToken', shareToken);
+    requestOptions.headers = requestHeaders;
+
     return this.workspaceItemService.searchBy('shareToken', {
       searchParams: [Object.assign(new RequestParam('shareToken', shareToken))]
-    }, false, false, followLink('submitter')).pipe(getFirstSucceededRemoteListPayload(),
+    }, false, false, followLink('item'), followLink('submitter')).pipe(getFirstSucceededRemoteListPayload(),
         map((workspaceItems: WorkspaceItem[]) => workspaceItems?.[0]));
   }
 
@@ -112,14 +147,13 @@ export class ChangeSubmitterPageComponent implements OnInit {
   }
 
   /**
-   * Get the name of the submitter using the DSONameService.
-   * @param submitter
+   * Get the name of the submitter or item using the DSONameService.
    */
-  getSubmitterName(submitter: EPerson): string {
-    if (isNullOrUndef(submitter)) {
+  getName(object: EPerson | Item) {
+    if (isNullOrUndef(object)) {
       return '';
     }
-    return this.dsoNameService.getName(submitter);
+    return this.dsoNameService.getName(object);
   }
 
   /**
@@ -129,10 +163,12 @@ export class ChangeSubmitterPageComponent implements OnInit {
   changeSubmitter() {
     const requestId = this.requestService.generateRequestId();
 
-    const url = this.halService.getRootHref() + '/submission/setOwner?shareToken=' + this.shareToken;
-    const postRequest = new PostRequest(requestId, url);
+    const url = this.halService.getRootHref() + '/submission/setOwner?shareToken=' + this.shareToken +
+      '&workspaceitemid=' + this.workspaceitemid;
+
+    const getRequest = new GetRequest(requestId, url);
     // Send POST request
-    this.requestService.send(postRequest);
+    this.requestService.send(getRequest);
     this.changeSubmitterSpinner = true;
     // Get response
     const response = this.rdbService.buildFromRequestUUID(requestId);
