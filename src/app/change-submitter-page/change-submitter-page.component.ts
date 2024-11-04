@@ -157,7 +157,7 @@ export class ChangeSubmitterPageComponent implements OnInit {
   }
 
   /**
-   * Change the submitter of the WorkspaceItem using the shareToken. This will send a POST request to the backend when
+   * Change the submitter of the WorkspaceItem using the shareToken. This will send a GET request to the backend when
    * the submitter of the Item is changed.
    */
   changeSubmitter() {
@@ -167,7 +167,7 @@ export class ChangeSubmitterPageComponent implements OnInit {
       '&workspaceitemid=' + this.workspaceitemid;
 
     const getRequest = new GetRequest(requestId, url);
-    // Send POST request
+    // Send GET request
     this.requestService.send(getRequest);
     this.changeSubmitterSpinner = true;
     // Get response
