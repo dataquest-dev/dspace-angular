@@ -3148,9 +3148,9 @@
   // "workflow-item.search.result.notification.deleted.failure": "Failed to delete supervision order \"{{name}}\"",
   "workflow-item.search.result.notification.deleted.failure": "Při mazání příkazu supervize \"{{name}}\" došlo k chybě",
   // "workflow-item.search.result.list.element.supervised-by": "Supervised by:",
-  "workflow-item.search.result.list.element.supervised-by": "Pod dohledem:",
+  "workflow-item.search.result.list.element.supervised-by": "Dohlížející autorita:",
   // "workflow-item.search.result.list.element.supervised.remove-tooltip": "Remove supervision group",
-  "workflow-item.search.result.list.element.supervised.remove-tooltip": "Odebrat skupinu dohledu",
+  "workflow-item.search.result.list.element.supervised.remove-tooltip": "Odebrat dohlížející autoritu",
   // "confidence.indicator.help-text.accepted": "This authority value has been confirmed as accurate by an interactive user",
   // TODO New key - Add a translation
   "confidence.indicator.help-text.accepted": "This authority value has been confirmed as accurate by an interactive user",
@@ -5503,7 +5503,7 @@
   // TODO New key - Add a translation
   "search.filters.filter.supervisedBy.placeholder": "Supervised By",
   // "search.filters.filter.supervisedBy.label": "Search Supervised By",
-  "search.filters.filter.supervisedBy.label": "Hledat pod dohledem",
+  "search.filters.filter.supervisedBy.label": "Hledat dohlížející autoritu",
   // "search.filters.filter.rights.head": "Rights",
   "search.filters.filter.rights.head": "Práva",
   // "search.filters.filter.language.head": "Language (ISO)",
