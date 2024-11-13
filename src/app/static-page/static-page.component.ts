@@ -16,6 +16,7 @@ import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
   styleUrls: ['./static-page.component.scss']
 })
 export class StaticPageComponent implements OnInit {
+  static readonly no_static: string = 'no_static_';
   htmlContent: BehaviorSubject<string> = new BehaviorSubject<string>('');
   htmlFileName: string;
 
@@ -70,7 +71,7 @@ export class StaticPageComponent implements OnInit {
   private composeRedirectUrl(href: string | null, namespacePrefix: string): string {
     const staticPagePath = STATIC_PAGE_PATH;
     const baseUrl = new URL(window.location.origin);
-    baseUrl.pathname = href.startsWith('no_static_')
+    baseUrl.pathname = href.startsWith(StaticPageComponent.no_static)
             ? `${namespacePrefix}/`
             : `${namespacePrefix}/${staticPagePath}/`;
     return baseUrl.href;
@@ -101,8 +102,8 @@ export class StaticPageComponent implements OnInit {
   }
 
   private redirectToAbsoluteLink(redirectUrl: string, href: string | null, namespacePrefix: string): void {
-    if (href.startsWith('no_static_')) {
-      href = href.replace('no_static_','');
+    if (href.startsWith(StaticPageComponent.no_static)) {
+      href = href.replace(StaticPageComponent.no_static,'');
     }
     const absoluteUrl = new URL(href, redirectUrl.replace(namespacePrefix, ''));
     window.location.href = absoluteUrl.href;
