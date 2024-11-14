@@ -5033,7 +5033,7 @@
   // "repository.title": "DSpace Repository",
   "repository.title": "Institucionální digitální repozitář",
   // "repository.title.prefix": "DSpace Repository :: ",
-  "repository.title.prefix": "IDR :: ",
+  "repository.title.prefix": "LINDAT/CLARIAH-CZ Repozitář",
   // "resource-policies.add.button": "Add",
   "resource-policies.add.button": "Přidat",
   // "resource-policies.add.for.": "Add a new policy",
