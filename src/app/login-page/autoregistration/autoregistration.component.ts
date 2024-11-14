@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { GetRequest, PostRequest } from '../../core/data/request.models';
-import { getFirstCompletedRemoteData,getFirstSucceededRemoteListPayload } from '../../core/shared/operators';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  getFirstCompletedRemoteData, getFirstSucceededRemoteData,
+  getFirstSucceededRemoteListPayload
+} from '../../core/shared/operators';
+import { ActivatedRoute } from '@angular/router';
 import { RequestService } from '../../core/data/request.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
@@ -19,11 +22,13 @@ import { HttpHeaders } from '@angular/common/http';
 import { AuthTokenInfo } from '../../core/auth/models/auth-token-info.model';
 import { isEmpty } from '../../shared/empty.util';
 import { CoreState } from 'src/app/core/core-state.model';
-import { hasSucceeded } from 'src/app/core/data/request-entry-state.model';
+import { hasSucceeded} from 'src/app/core/data/request-entry-state.model';
 import { FindListOptions } from '../../core/data/find-list-options.model';
 import { getBaseUrl } from '../../shared/clarin-shared-util';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
 import { RemoteData } from '../../core/data/remote-data';
+import { HardRedirectService } from '../../core/services/hard-redirect.service';
+import { environment } from '../../../environments/environment';
 
 /**
  * This component is showed up when the user has clicked on the `verification token`.
@@ -69,8 +74,7 @@ export class AutoregistrationComponent implements OnInit {
    */
   showAttributes: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  constructor(protected router: Router,
-    public route: ActivatedRoute,
+  constructor(public route: ActivatedRoute,
     private requestService: RequestService,
     protected halService: HALEndpointService,
     protected rdbService: RemoteDataBuildService,
@@ -78,7 +82,8 @@ export class AutoregistrationComponent implements OnInit {
     private translateService: TranslateService,
     private configurationService: ConfigurationDataService,
     private verificationTokenService: ClarinVerificationTokenDataService,
-    private store: Store<CoreState>
+    private store: Store<CoreState>,
+    private hardRedirectService: HardRedirectService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -159,22 +164,18 @@ export class AutoregistrationComponent implements OnInit {
     this.requestService.send(postRequest);
     // Get response
     const response = this.rdbService.buildFromRequestUUID(requestId);
-    // Process response
-    response
-      .pipe(getFirstCompletedRemoteData())
+    response.pipe(getFirstSucceededRemoteData())
       .subscribe(responseRD$ => {
-        if (hasSucceeded(responseRD$.state)) {
-          // Retrieve the token from the response. The token is returned as array of string.
+        if (responseRD$.hasSucceeded) {
           const token = Object.values(responseRD$?.payload).join('');
           const authToken = new AuthTokenInfo(token);
-          this.deleteVerificationToken();
           this.store.dispatch(new AuthenticatedAction(authToken));
-          this.router.navigate(['home']);
+          this.deleteVerificationToken();
+          this.hardRedirectService.redirect(environment.ui.baseUrl + 'home');
         } else {
           this.notificationService.error(this.translateService.instant('clarin.autologin.error.message'));
-          console.error(responseRD$.errorMessage);
         }
-      });
+    });
   }
 
   /**
