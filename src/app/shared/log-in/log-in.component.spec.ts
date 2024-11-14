@@ -30,6 +30,8 @@ import { ConfigurationProperty } from '../../core/shared/configuration-property.
 import { RouterStub } from '../testing/router.stub';
 import { CookieService } from '../../core/services/cookie.service';
 import { CookieServiceMock } from '../mocks/cookie.service.mock';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationsServiceStub } from '../testing/notifications-service.stub';
 
 describe('LogInComponent', () => {
 
@@ -50,6 +52,7 @@ describe('LogInComponent', () => {
   let authorizationService: AuthorizationDataService;
   let authService: any;
   let configurationDataService: ConfigurationDataService;
+  let notificationService: NotificationsServiceStub;
 
   beforeEach(waitForAsync(() => {
     hardRedirectService = jasmine.createSpyObj('hardRedirectService', {
@@ -72,6 +75,7 @@ describe('LogInComponent', () => {
         ]
       }))
     });
+    notificationService = new NotificationsServiceStub();
 
     // refine the test module by declaring the test component
     void TestBed.configureTestingModule({
@@ -102,6 +106,7 @@ describe('LogInComponent', () => {
         provideMockStore({ initialState }),
         { provide: ThemeService, useValue: getMockThemeService() },
         { provide: CookieService, useClass: CookieServiceMock },
+        { provide: NotificationsService, useValue: notificationService },
         LogInComponent
       ],
       schemas: [

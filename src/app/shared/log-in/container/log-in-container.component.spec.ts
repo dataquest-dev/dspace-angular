@@ -25,6 +25,8 @@ import { ConfigurationProperty } from '../../../core/shared/configuration-proper
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from '../../../core/services/cookie.service';
 import { CookieServiceMock } from '../../mocks/cookie.service.mock';
+import { NotificationsServiceStub } from '../../testing/notifications-service.stub';
+import { NotificationsService } from '../../notifications/notifications.service';
 
 describe('LogInContainerComponent', () => {
 
@@ -36,6 +38,7 @@ describe('LogInContainerComponent', () => {
   let hardRedirectService: HardRedirectService;
   let configurationDataService: ConfigurationDataService;
   let authService: any;
+  let notificationService: NotificationsServiceStub;
 
   beforeEach(waitForAsync(() => {
     hardRedirectService = jasmine.createSpyObj('hardRedirectService', {
@@ -55,6 +58,7 @@ describe('LogInContainerComponent', () => {
         ]
       }))
     });
+    notificationService = new NotificationsServiceStub();
 
     // refine the test module by declaring the test component
     TestBed.configureTestingModule({
@@ -85,6 +89,7 @@ describe('LogInContainerComponent', () => {
           } },
         { provide: Router, useValue: new RouterMock() },
         { provide: CookieService, useClass: CookieServiceMock },
+        { provide: NotificationsService, useValue: notificationService },
         LogInContainerComponent
       ],
       schemas: [
