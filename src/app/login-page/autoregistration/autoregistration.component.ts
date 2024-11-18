@@ -171,6 +171,9 @@ export class AutoregistrationComponent implements OnInit {
           const authToken = new AuthTokenInfo(token);
           this.store.dispatch(new AuthenticatedAction(authToken));
           this.deleteVerificationToken();
+          // Use hard redirect to load all components from the beginning as the logged-in user. Because some components
+          // are not loaded correctly when the user is logged in e.g., `log in` button is still visible instead of
+          // log out button.
           this.hardRedirectService.redirect(environment.ui.baseUrl + 'home');
         } else {
           this.notificationService.error(this.translateService.instant('clarin.autologin.error.message'));
