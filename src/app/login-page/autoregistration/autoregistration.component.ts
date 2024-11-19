@@ -22,7 +22,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { AuthTokenInfo } from '../../core/auth/models/auth-token-info.model';
 import { isEmpty } from '../../shared/empty.util';
 import { CoreState } from 'src/app/core/core-state.model';
-import { hasSucceeded} from 'src/app/core/data/request-entry-state.model';
+import { hasSucceeded } from 'src/app/core/data/request-entry-state.model';
 import { FindListOptions } from '../../core/data/find-list-options.model';
 import { getBaseUrl } from '../../shared/clarin-shared-util';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
