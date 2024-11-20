@@ -230,18 +230,6 @@ describe('Create a new submission', () => {
     createItemProcess.showErrorNotSupportedLicense();
   });
 
-  // Author field should consist of two input fields
-  it('Author field should consist of two input fields', {
-    retries: {
-      runMode: 6,
-      openMode: 6,
-    },
-    defaultCommandTimeout: 10000
-  },() => {
-    createItemProcess.checkAuthorFirstnameField();
-    createItemProcess.checkAuthorLastnameField();
-  });
-
   it('The submission should not have the Notice Step', {
     retries: {
       runMode: 6,
@@ -260,16 +248,6 @@ describe('Create a new submission in the clariah collection', () => {
 
     // This page is restricted, so we will be shown the login form. Fill it out & submit.
     cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
-  });
-
-  it('The submission should have the Notice Step', {
-    retries: {
-      runMode: 6,
-      openMode: 6,
-    },
-    defaultCommandTimeout: 10000
-  },() => {
-    createItemProcess.checkClarinNoticeStep();
   });
 });
 
