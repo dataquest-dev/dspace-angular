@@ -40,6 +40,9 @@ services:
       db__P__url: 'jdbc:postgresql://dspacedb:543${INSTANCE}/dspace'
       # solr.server: Ensure we are using the 'dspacesolr' image for Solr
       solr__P__server: http://dspacesolr:898${INSTANCE}/solr
+      # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests
+      # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
+      proxies__P__trusted__P__ipranges: '172.2${INSTANCE}.0'
       #S3 config
       assetstore__P__index__P__primary: ${S3_STORAGE:-0}
       assetstore__P__s3__P__enabled: ${S3_ENABLED:-false}
@@ -163,6 +166,7 @@ services:
       cp -r -u /opt/solr/server/solr/configsets/dspace/statistics/* statistics
       exec solr -p 898${INSTANCE} -f -m 4g
 volumes:
+  # Commented out because there are a lot of files in the assetstore
   #assetstore:
   pgdata:
   solr_data:
