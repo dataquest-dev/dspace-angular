@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/prettier/prettier
+    rev: "2.3.2"
+    hooks:
+      - id: prettier
+        files: \.(ts|js|json|html|css)$
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v7.32.0
+    hooks:
+      - id: eslint
+        name: eslint
+        files: \.(ts|js)$
+        types: [file]
