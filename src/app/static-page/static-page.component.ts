@@ -103,7 +103,7 @@ export class StaticPageComponent implements OnInit {
 
   private redirectToAbsoluteLink(redirectUrl: string, href: string | null, namespacePrefix: string): void {
     if (href.startsWith(StaticPageComponent.no_static)) {
-      href = href.replace(StaticPageComponent.no_static,'');
+      href = href.replace(StaticPageComponent.no_static, '');
     }
     const absoluteUrl = new URL(href, redirectUrl.replace(namespacePrefix, ''));
     window.location.href = absoluteUrl.href;
