@@ -17,13 +17,15 @@ services:
       TZ: ${TIMEZONE:-Europe/Bratislava}
       DSPACE_UI_SSL: 'false'
       DSPACE_UI_HOST: dspace-angular
-      # Use only 4000, not the {UI_PORT} from the .env because in the container it is always 4000
+      # Use only `4000`, not the {UI_PORT} from the .env because in the container it is always `4000`
       DSPACE_UI_PORT: 4000
-      DSPACE_UI_NAMESPACE: ${DSPACE_UI_NAMESPACE:-/}
+      # Use only `/`, not the {DSPACE_UI_NAMESPACE} from the .env because in the container it is always `/`
+      DSPACE_UI_NAMESPACE: /
       DSPACE_REST_SSL: ${DSPACE_SSL:-false}
       DSPACE_REST_HOST: ${DSPACE_HOST:-localhost}
       DSPACE_REST_PORT: ${DSPACE_REST_PORT:-8080}
-      DSPACE_REST_NAMESPACE: ${DSPACE_REST_NAMESPACE:-/server}
+      # Use only `/server`, not the {DSPACE_UI_NAMESPACE} from the .env because in the container it is always `/server`
+      DSPACE_REST_NAMESPACE: /server
     image: ${DSPACE_UI_IMAGE:-dataquest/dspace-angular:dspace-7_x}
     volumes:
     - ./config.prod.yml:/app/config/config.prod.yml
