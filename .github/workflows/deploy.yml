@@ -147,7 +147,7 @@ jobs:
   playwright-after-deploy8:
     runs-on: ubuntu-latest
     needs: deploy-8
-    timeout-minutes: 15
+    timeout-minutes: 45
     if: '!inputs.IMPORT'
     steps:
       - name: run playwright
@@ -184,7 +184,7 @@ jobs:
   rest-tests-after-deploy8:
     runs-on: ubuntu-latest
     needs: playwright-after-deploy8
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - name: run rest-tests
         run: |
@@ -219,7 +219,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: import-8
     if: inputs.IMPORT
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - name: run playwright
         run: |
@@ -256,7 +256,7 @@ jobs:
   rest-tests-after-import8:
     runs-on: ubuntu-latest
     needs: playwright-after-import8
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - name: run rest-tests
         run: |
