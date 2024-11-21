@@ -63,11 +63,11 @@ services:
       # BE server port
     - published: 808${INSTANCE}
       target: 8080
-      host_ip: 127.0.0.1
+      host_ip: ${HOST_IP:-127.0.0.1}
       # original debug port
     - published: 800${INSTANCE}
       target: 8000
-      host_ip: 127.0.0.1
+      host_ip: ${HOST_IP:-127.0.0.1}
       # handle binary port as per https://www.handle.net/hnr_support.html (5th paragraph)
     - published: 264${INSTANCE}
       target: 2641
@@ -80,7 +80,8 @@ services:
     tty: true
     volumes:
     - dspace_logs:/dspace/log
-    - assetstore:/dspace/assetstore
+    - #assetstore:/dspace/assetstore
+    - /opt/DATA/assetstore:/dspace/assetstore
     # Mount DSpace's solr configs to a volume, so that we can share to 'dspacesolr' container (see below)
     - solr_configs:/dspace/solr
     - handle_server:/dspace/handle-server
@@ -95,6 +96,7 @@ services:
     - '-c'
     - |
       while (!</dev/tcp/dspacedb/543${INSTANCE}) > /dev/null 2>&1; do sleep 1; done;
+      pushd ../webapps && unlink server && ln -s /dspace/webapps/server/ 'repository#server' && popd
       /dspace/bin/dspace database migrate force
       custom_run.sh
       /dspace/bin/start-handle-server
@@ -112,7 +114,7 @@ services:
     ports:
     - published: 543${INSTANCE}
       target: 543${INSTANCE}
-      host_ip: 127.0.0.1
+      host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
     volumes:
@@ -133,7 +135,7 @@ services:
     ports:
     - published: 898${INSTANCE}
       target: 898${INSTANCE}
-      host_ip: 127.0.0.1
+      host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
     working_dir: /var/solr/data
@@ -164,7 +166,8 @@ services:
       cp -r -u /opt/solr/server/solr/configsets/dspace/statistics/* statistics
       exec solr -p 898${INSTANCE} -f -m 4g
 volumes:
-  assetstore:
+  # Commented out because there are a lot of files in the assetstore
+  #assetstore:
   pgdata:
   solr_data:
   # Special volume used to share Solr configs from 'dspace' to 'dspacesolr' container (see above)
