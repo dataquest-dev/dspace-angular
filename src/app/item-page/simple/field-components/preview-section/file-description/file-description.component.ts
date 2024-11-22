@@ -10,7 +10,7 @@ const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip', 'ap
   styleUrls: ['./file-description.component.scss'],
 })
 export class FileDescriptionComponent {
-  MIME_TYPE_IMAGES_PATH = '/assets/images/mime/';
+  MIME_TYPE_IMAGES_PATH = './assets/images/mime/';
   MIME_TYPE_DEFAULT_IMAGE_NAME = 'application-octet-stream.png';
 
   @Input()
