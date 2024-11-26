@@ -28,7 +28,6 @@ import { getBaseUrl } from '../../shared/clarin-shared-util';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
 import { RemoteData } from '../../core/data/remote-data';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
-import { environment } from '../../../environments/environment';
 
 /**
  * This component is showed up when the user has clicked on the `verification token`.
@@ -174,7 +173,10 @@ export class AutoregistrationComponent implements OnInit {
           // Use hard redirect to load all components from the beginning as the logged-in user. Because some components
           // are not loaded correctly when the user is logged in e.g., `log in` button is still visible instead of
           // log out button.
-          this.hardRedirectService.redirect(environment.ui.baseUrl + 'home');
+          const redirectUrl = this.baseUrl.endsWith('/')
+            ? `${this.baseUrl}home`
+            : `${this.baseUrl}/home`;
+          this.hardRedirectService.redirect(redirectUrl);
         } else {
           this.notificationService.error(this.translateService.instant('clarin.autologin.error.message'));
         }
