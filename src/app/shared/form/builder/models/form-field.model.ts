@@ -137,4 +137,7 @@ export class FormFieldModel {
 
   @autoserialize
   autocompleteCustom: string;
+
+  @autoserialize
+  typeBindField: string;
 }

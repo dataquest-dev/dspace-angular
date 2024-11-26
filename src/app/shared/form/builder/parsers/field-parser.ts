@@ -330,6 +330,9 @@ export abstract class FieldParser {
         this.parserOptions.typeField);
     }
 
+    if (isNotEmpty(this.configData.typeBindField)) {
+      controlModel.typeBindField = this.configData.typeBindField;
+    }
     return controlModel;
   }
 

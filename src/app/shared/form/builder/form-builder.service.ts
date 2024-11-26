@@ -54,7 +54,7 @@ import { FormRowModel } from '../../../core/config/models/config-submission-form
 /**
  * The key for the default type bind field. {'default': 'dc_type'}
  */
-export const TYPE_BIND_DEFAULT = 'default';
+export const TYPE_BIND_DEFAULT_KEY = 'default';
 
 @Injectable()
 export class FormBuilderService extends DynamicFormService {
@@ -91,7 +91,7 @@ export class FormBuilderService extends DynamicFormService {
     this.typeFields = new Map();
     this.typeBindModel = new Map();
 
-    this.typeFields.set(TYPE_BIND_DEFAULT, 'dc_type');
+    this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
     // If optional config service was passed, perform an initial set of type field (default dc_type) for type binds
     if (hasValue(this.configService)) {
       this.setTypeBindFieldFromConfig();
@@ -118,9 +118,18 @@ export class FormBuilderService extends DynamicFormService {
   getTypeBindModel(typeBingField: string): DynamicFormControlModel {
     let typeBModelKey = this.typeFields.get(typeBingField);
     if (isUndefined(typeBModelKey)) {
-      typeBModelKey = this.typeFields.get(TYPE_BIND_DEFAULT);
+      typeBModelKey = this.typeFields.get(TYPE_BIND_DEFAULT_KEY);
     }
-    return this.typeBindModel.get(typeBModelKey);
+    // 1. The candidate is undefined when the custom field is configured for a specific metadata field
+    // e.g., `dc.language.iso=>edm.type`, but the custom field is not configured in the
+    // `submission-forms` configuration (type-bind without custom `field`)
+    // 2. If candidateTypeBindModel does not have custom `field` property, return the default typeBindModel, also
+    // that means that the custom field is not configured in the `submission-forms` configuration
+    const candidateTypeBindModel = this.typeBindModel.get(typeBModelKey);
+    if (isUndefined(candidateTypeBindModel) || isNotUndefined((candidateTypeBindModel as any).typeBindField)) {
+      return this.typeBindModel.get(this.typeFields.get(TYPE_BIND_DEFAULT_KEY));
+    }
+      return candidateTypeBindModel;
   }
 
   setTypeBindModel(model: DynamicFormControlModel) {
@@ -587,7 +596,7 @@ export class FormBuilderService extends DynamicFormService {
         }
 
         // Always update the typeFields map with the default value, normalized
-        this.typeFields.set(TYPE_BIND_DEFAULT, typeFieldConfigValue.replace(/\./g, '_'));
+        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, typeFieldConfigValue.replace(/\./g, '_'));
       });
     });
   }
@@ -599,11 +608,11 @@ export class FormBuilderService extends DynamicFormService {
   getTypeField(metadataField: string): string {
     if (hasValue(this.configService) && isEmpty(this.typeFields.values())) {
       this.setTypeBindFieldFromConfig(metadataField);
-    } else if (hasNoValue(this.typeFields.get(TYPE_BIND_DEFAULT))) {
-      this.typeFields.set(TYPE_BIND_DEFAULT, 'dc_type');
+    } else if (hasNoValue(this.typeFields.get(TYPE_BIND_DEFAULT_KEY))) {
+      this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
     }
 
-    return this.typeFields.get(metadataField) || this.typeFields.get(TYPE_BIND_DEFAULT);
+    return this.typeFields.get(metadataField) || this.typeFields.get(TYPE_BIND_DEFAULT_KEY);
   }
 
 }
