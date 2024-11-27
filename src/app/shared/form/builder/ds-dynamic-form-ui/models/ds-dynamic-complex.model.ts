@@ -14,6 +14,7 @@ export const COMPLEX_GROUP_SUFFIX = '_COMPLEX_GROUP';
 export const COMPLEX_INPUT_SUFFIX = '_COMPLEX_INPUT_';
 export const SEPARATOR = ';';
 export const SPONSOR_METADATA_NAME = 'local.sponsor';
+export const CONTACT_PERSON_METADATA_NAME = 'local.contact.person';
 export const EU_PROJECT_PREFIX = 'info:eu-repo';
 export const OPENAIRE_INPUT_NAME = 'openaire_id';
 
@@ -70,7 +71,7 @@ export class DynamicComplexModel extends DynamicConcatModel {
     value = value.slice(0, -1);
 
     // `local.sponsor` input type has input value stored in one input field which starts with AUTOCOMPLETE_COMPLEX_PREFIX
-    if (this.name === SPONSOR_METADATA_NAME) {
+    if (this.name === SPONSOR_METADATA_NAME || this.name === CONTACT_PERSON_METADATA_NAME) {
       formValues.forEach((formValue) => {
         if (isNotEmpty(formValue) && isNotEmpty(formValue.value) &&
           formValue.value.startsWith(AUTOCOMPLETE_COMPLEX_PREFIX)) {

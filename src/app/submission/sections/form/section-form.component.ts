@@ -40,7 +40,10 @@ import { SubmissionObject } from '../../../core/submission/models/submission-obj
 import { SubmissionSectionObject } from '../../objects/submission-section-object.model';
 import { SubmissionSectionError } from '../../objects/submission-section-error.model';
 import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
-import { SPONSOR_METADATA_NAME } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
+import {
+  CONTACT_PERSON_METADATA_NAME,
+  SPONSOR_METADATA_NAME
+} from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 import { AUTHOR_METADATA_FIELD_NAME } from 'src/app/shared/form/builder/ds-dynamic-form-ui/models/clarin-name.model';
 
 /**
@@ -424,7 +427,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       this.submissionService.dispatchSave(this.submissionId);
     }
 
-    if (metadata === SPONSOR_METADATA_NAME) {
+    if (metadata === SPONSOR_METADATA_NAME || metadata === CONTACT_PERSON_METADATA_NAME) {
       this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
       this.reinitializeForm(SPONSOR_METADATA_NAME, value);
     }

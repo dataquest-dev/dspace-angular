@@ -13,6 +13,7 @@ import { MetadataValueDataService } from '../../../../../../core/data/metadata-v
 import { FormFieldMetadataValueObject } from '../../../models/form-field-metadata-value.model';
 import { LookupRelationService } from '../../../../../../core/data/lookup-relation.service';
 import {
+  AUTOCOMPLETE_COMPLEX_PREFIX,
   AUTOCOMPLETE_CUSTOM_JSON_PREFIX,
   AUTOCOMPLETE_CUSTOM_SOLR_PREFIX,
   DsDynamicAutocompleteModel
@@ -31,6 +32,7 @@ import { CANONICAL_PREFIX_KEY } from '../../../../../handle.service';
 import { ConfigurationProperty } from '../../../../../../core/shared/configuration-property.model';
 import { DsDynamicAutocompleteService } from './ds-dynamic-autocomplete.service';
 import { TranslateService } from '@ngx-translate/core';
+import { CONTACT_PERSON_METADATA_NAME } from '../ds-dynamic-complex.model';
 
 /**
  * Prefix for custom autocomplete definition from the `submission-forms.xml`.
@@ -148,7 +150,13 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       updateValue.value = this.handlePrefix.value + handle_title[0];
     }
 
-    this.dispatchUpdate(updateValue.display);
+    // Contact Person metadata value has a special format - `autocomplete_in_complex_input;` + `display`
+    // because it is in the complex input
+    const valueToUpdate = this.model?.name.startsWith(CONTACT_PERSON_METADATA_NAME) ?
+      AUTOCOMPLETE_COMPLEX_PREFIX + ';' + updateValue.display :
+      updateValue.display;
+
+    this.dispatchUpdate(AUTOCOMPLETE_COMPLEX_PREFIX + ';' + updateValue.display);
   }
 
   /**
