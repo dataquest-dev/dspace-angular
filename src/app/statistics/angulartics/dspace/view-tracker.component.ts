@@ -40,7 +40,8 @@ export class ViewTrackerComponent implements OnInit, OnDestroy {
           action: 'page_view',
           properties: {
             object: this.object,
-            referrer
+            referrer,
+            category: 'page_view',
           },
         });
       });
