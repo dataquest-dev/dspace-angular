@@ -5,8 +5,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { By } from '@angular/platform-browser';
-
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
 
