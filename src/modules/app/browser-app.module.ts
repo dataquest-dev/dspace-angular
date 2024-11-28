@@ -17,7 +17,6 @@ import { CookieService } from '../../app/core/services/cookie.service';
 import { AuthService } from '../../app/core/auth/auth.service';
 import {
   Angulartics2GoogleTagManager,
-  Angulartics2Matomo,
   Angulartics2Module,
 } from 'angulartics2';
 import { SubmissionService } from '../../app/submission/submission.service';
