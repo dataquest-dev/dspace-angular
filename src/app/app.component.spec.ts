@@ -36,7 +36,6 @@ import { getMockThemeService } from './shared/mocks/theme-service.mock';
 import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 import { APP_CONFIG } from '../config/app-config.interface';
 import { environment } from '../environments/environment';
-import { Angulartics2Matomo } from 'angulartics2';
 
 let comp: AppComponent;
 let fixture: ComponentFixture<AppComponent>;
@@ -74,7 +73,6 @@ describe('App component', () => {
         { provide: NativeWindowService, useValue: new NativeWindowRef() },
         { provide: MetadataService, useValue: new MetadataServiceMock() },
         { provide: Angulartics2DSpace, useValue: new AngularticsProviderMock() },
-        { provide: Angulartics2Matomo, useValue: new AngularticsProviderMock() },
         { provide: AuthService, useValue: new AuthServiceMock() },
         { provide: Router, useValue: new RouterMock() },
         { provide: ActivatedRoute, useValue: new MockActivatedRoute() },

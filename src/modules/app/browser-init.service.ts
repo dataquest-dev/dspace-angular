@@ -33,6 +33,7 @@ import { MenuService } from '../../app/shared/menu/menu.service';
 import { RootDataService } from '../../app/core/data/root-data.service';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { ServerCheckGuard } from '../../app/core/server-check/server-check.guard';
+import { Angulartics2Matomo } from 'angulartics2';
 
 /**
  * Performs client-side initialization.
@@ -59,6 +60,7 @@ export class BrowserInitService extends InitService {
     protected menuService: MenuService,
     private rootDataService: RootDataService,
     protected serverCheckGuard: ServerCheckGuard,
+    private angulartics2Matomo: Angulartics2Matomo
   ) {
     super(
       store,
@@ -100,6 +102,7 @@ export class BrowserInitService extends InitService {
       this.initRouteListeners();
       this.themeService.listenForThemeChanges(true);
       this.trackAuthTokenExpiration();
+      this.angulartics2Matomo.startTracking();
 
       this.initKlaro();
 

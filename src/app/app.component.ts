@@ -31,7 +31,6 @@ import { models } from './core/core.module';
 import { ThemeService } from './shared/theme-support/theme.service';
 import { IdleModalComponent } from './shared/idle-modal/idle-modal.component';
 import { distinctNext } from './core/shared/distinct-next';
-import { Angulartics2Matomo } from 'angulartics2';
 
 @Component({
   selector: 'ds-app',
@@ -75,7 +74,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     private cssService: CSSVariableService,
     private modalService: NgbModal,
     private modalConfig: NgbModalConfig,
-    private angulartics2Matomo: Angulartics2Matomo
   ) {
     this.notificationOptions = environment.notifications;
 
@@ -89,8 +87,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.isThemeLoading$ = this.themeService.isThemeLoading$;
 
     this.storeCSSVariables();
-
-    this.angulartics2Matomo.startTracking();
   }
 
   ngOnInit() {

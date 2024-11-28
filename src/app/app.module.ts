@@ -31,7 +31,6 @@ import { APP_CONFIG, AppConfig } from '../config/app-config.interface';
 import { StoreDevModules } from '../config/store/devtools';
 import { RootModule } from './root.module';
 import { ScriptLoaderService } from './clarin-navbar-top/script-loader-service';
-import { Angulartics2Module } from 'angulartics2';
 
 export function getConfig() {
   return environment;
@@ -63,7 +62,6 @@ const IMPORTS = [
   StoreDevModules,
   EagerThemesModule,
   RootModule,
-  Angulartics2Module.forRoot()
 ];
 
 const PROVIDERS = [

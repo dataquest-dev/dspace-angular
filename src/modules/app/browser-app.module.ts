@@ -16,8 +16,7 @@ import { ClientCookieService } from '../../app/core/services/client-cookie.servi
 import { CookieService } from '../../app/core/services/cookie.service';
 import { AuthService } from '../../app/core/auth/auth.service';
 import {
-  Angulartics2GoogleTagManager,
-  Angulartics2Module,
+  Angulartics2GoogleTagManager, Angulartics2Module,
 } from 'angulartics2';
 import { SubmissionService } from '../../app/submission/submission.service';
 import { StatisticsModule } from '../../app/statistics/statistics.module';
