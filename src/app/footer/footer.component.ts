@@ -9,7 +9,6 @@ import { RemoteData } from '../core/data/remote-data';
 import { ConfigurationProperty } from '../core/shared/configuration-property.model';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
 
-
 @Component({
   selector: 'ds-footer',
   styleUrls: ['footer.component.scss'],
@@ -35,7 +34,6 @@ export class FooterComponent implements OnInit {
    * The company name which customized this DSpace with redirection to the DSpace section
    */
   themedByCompanyName$: Observable<RemoteData<ConfigurationProperty>>;
-  router: any;
 
   constructor(
     @Optional() private cookies: KlaroService,

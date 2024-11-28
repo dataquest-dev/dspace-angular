@@ -31,7 +31,7 @@ import { models } from './core/core.module';
 import { ThemeService } from './shared/theme-support/theme.service';
 import { IdleModalComponent } from './shared/idle-modal/idle-modal.component';
 import { distinctNext } from './core/shared/distinct-next';
-import {Angulartics2Matomo} from 'angulartics2';
+import { Angulartics2Matomo } from 'angulartics2';
 
 @Component({
   selector: 'ds-app',
