@@ -31,7 +31,7 @@ export function convertMetadataFieldIntoSearchType(field: string[]) {
     case field.includes('dc.contributor.author') || field.includes('dc.creator'):
       return 'author';
     case field.includes('dc.type'):
-      return 'itemtype';
+      return 'type';
     case field.includes('dc.publisher') || field.includes('creativework.publisher'):
       return 'publisher';
     case field.includes('dc.language.iso') || field.includes('local.language.name'):
