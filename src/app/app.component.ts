@@ -90,7 +90,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.storeCSSVariables();
 
-    angulartics2Matomo.startTracking();
+    this.angulartics2Matomo.startTracking();
   }
 
   ngOnInit() {

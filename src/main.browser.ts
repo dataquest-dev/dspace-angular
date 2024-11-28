@@ -10,6 +10,7 @@ import { environment } from './environments/environment';
 import { AppConfig } from './config/app-config.interface';
 import { extendEnvironmentWithAppConfig } from './config/config.util';
 import { enableProdMode } from '@angular/core';
+import { matomoSettings } from './matomo-settings';
 
 const bootstrap = () => platformBrowserDynamic()
   .bootstrapModule(BrowserAppModule, {});
@@ -26,6 +27,7 @@ const main = () => {
   if (environment.production) {
     enableProdMode();
   }
+  addMatomoStatistics();
 
   if (hasTransferState) {
     // Configuration will be taken from transfer state during initialization
@@ -43,26 +45,19 @@ const main = () => {
 };
 
 function addMatomoStatistics() {
-  // @ts-ignore
-  let _paq = _paq || [];
-  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-  // _paq.push(['trackPageView']); // DELETE THIS LINE
-  _paq.push(['enableLinkTracking']);
-  (function() {
-    let u = 'http://localhost:8135/';
-    _paq.push(['setDocumentTitle', location.hostname + '/' + document.title]);
-    _paq.push(['setCookieDomain', '*dev-5.pc*']);
-    _paq.push(['setDomains', ['*dev-5.pc*']]);
-    _paq.push(['setUserId', this.getUserId()]);
-    // _paq.push(['setCustomVariable', 1, 'lang', 'en', 'visit']);
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    _paq.push(['setTrackerUrl', u + 'matomo.php']);
-    _paq.push(['setSiteId', 1]);
+  (window as any)._paq = (window as any)._paq || [];
 
-    let d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-    g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g,s);
-  })();
+  // Push all configuration commands first
+  (window as any)._paq.push(['setTrackerUrl', matomoSettings.hostUrl + 'matomo.php']);
+  (window as any)._paq.push(['setSiteId', matomoSettings.siteId]);
+  (window as any)._paq.push(['enableLinkTracking']);
+
+  const g = document.createElement('script');
+  g.type = 'text/javascript';
+  g.async = true;
+  g.defer = true;
+  g.src = matomoSettings.hostUrl + 'matomo.js';
+  document.getElementsByTagName('head')[0].appendChild(g);
 }
 
 // support async tag or hmr

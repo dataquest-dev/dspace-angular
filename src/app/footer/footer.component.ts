@@ -47,11 +47,6 @@ export class FooterComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadThemedByProps();
-    // this.initializeMatomoTracker();
-    //
-    // this.router.events.subscribe(() => {
-    //   this.initializeMatomoTracker();
-    // });
   }
   showCookieSettings() {
     if (hasValue(this.cookies)) {
@@ -63,32 +58,5 @@ export class FooterComponent implements OnInit {
   private loadThemedByProps() {
     this.themedByUrl$ = this.configurationDataService.findByPropertyName('themed.by.url');
     this.themedByCompanyName$ = this.configurationDataService.findByPropertyName('themed.by.company.name');
-  }
-
-  // private initializeMatomoTracker() {
-  //   const _paq = (window as any)._paq || [];
-  //   _paq.push(["setDocumentTitle", location.hostname + "/" + document.title]);
-  //   _paq.push(["setCookieDomain", "*.mff.cuni.cz"]);
-  //   _paq.push(["setDomains", ["*.mff.cuni.cz"]]);
-  //   _paq.push(['setUserId', this.getUserId()]);
-  //   _paq.push(['setCustomVariable', 1, 'lang', 'en', 'visit']);
-  //   _paq.push(['trackPageView']);
-  //   _paq.push(['enableLinkTracking']);
-  //   const u = '//dev-5.pc:8135/';
-  //   _paq.push(['setTrackerUrl', u + 'matomo.php']);
-  //   _paq.push(['setSiteId', 1]);
-  //
-  //   const d = document;
-  //   const g = d.createElement('script');
-  //   const s = d.getElementsByTagName('script')[0];
-  //   g.type = 'text/javascript';
-  //   g.async = true;
-  //   g.defer = true;
-  //   g.src = u + 'piwik.js';
-  //   s.parentNode?.insertBefore(g, s);
-  // }
-
-  private getUserId() {
-    return 'user123'; // change later as well as other above
   }
 }
