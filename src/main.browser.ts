@@ -10,7 +10,7 @@ import { environment } from './environments/environment';
 import { AppConfig } from './config/app-config.interface';
 import { extendEnvironmentWithAppConfig } from './config/config.util';
 import { enableProdMode } from '@angular/core';
-import { matomoSettings } from './matomo-settings';
+import { matomoSettings } from '../matomo-settings';
 
 const bootstrap = () => platformBrowserDynamic()
   .bootstrapModule(BrowserAppModule, {});
