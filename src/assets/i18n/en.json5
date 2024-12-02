@@ -4227,6 +4227,8 @@
 
   "search.filters.applied.f.subject": "Subject",
 
+  "search.filters.applied.f.subjectFirstValue": "Subject",
+
   "search.filters.applied.f.submitter": "Submitter",
 
   "search.filters.applied.f.jobTitle": "Job Title",

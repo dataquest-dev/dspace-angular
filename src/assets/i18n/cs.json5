@@ -5283,6 +5283,8 @@
   "search.filters.applied.f.namedresourcetype": "Status",
   // "search.filters.applied.f.subject": "Subject",
   "search.filters.applied.f.subject": "Předmět",
+  // "search.filters.applied.f.subjectFirstValue": "Subject",
+  "search.filters.applied.f.subjectFirstValue": "Předmět",
   // "search.filters.applied.f.submitter": "Submitter",
   "search.filters.applied.f.submitter": "Odesílatel",
   // "search.filters.applied.f.jobTitle": "Job Title",
