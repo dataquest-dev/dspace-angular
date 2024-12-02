@@ -38,7 +38,10 @@
 
             if (redirectUrlFromLogin != null && redirectUrlFromLogin !== '') {
               // Redirect from the login page with retrieved redirect URL
-              redirectUrl = window.location.origin + (namespace === '' ? namespace : '/' + namespace) + redirectUrlFromLogin;
+              var baseUrl = window.location.origin + formatNamespace(namespace);
+              var redirectPath = ensureLeadingSlash(redirectUrlFromLogin);
+
+              redirectUrl = baseUrl + redirectPath;
             }
 
             // Encode the redirect URL
@@ -128,6 +131,20 @@
 
       var cookieString = name + '=' + value + ';expires=' + expirationDate.toUTCString() + ';path=/';
       document.cookie = cookieString;
+    }
+
+    /**
+     * Return empty string if namespace is empty, otherwise return namespace with leading slash.
+     */
+    function formatNamespace(namespace) {
+      return namespace === '' ? '' : ensureLeadingSlash(namespace);
+    }
+
+    /**
+     * Ensure that the path starts with a leading slash.
+     */
+    function ensureLeadingSlash(path) {
+      return path.startsWith('/') ? path : '/' + path;
     }
   }
 
