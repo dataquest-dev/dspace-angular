@@ -10,9 +10,4 @@ export const environment: Partial<BuildConfig> = {
     time: false,
     inlineCriticalCss: false,
   },
-
-  matomo: {
-    hostUrl: 'http://localhost:8135/',
-    siteId: '1',
-  }
 };

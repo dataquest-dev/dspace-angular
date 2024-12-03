@@ -26,11 +26,6 @@ export const environment: Partial<BuildConfig> = {
   },
 
   signpostingEnabled: false,
-
-  matomo: {
-    hostUrl: 'http://localhost:8135/',
-    siteId: '1',
-  }
 };
 
 /*
