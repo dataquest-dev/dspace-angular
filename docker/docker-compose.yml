@@ -29,6 +29,7 @@ services:
     - ./config.prod.yml:/app/config/config.prod.yml
 #    - ./aai.js:/app/dist/browser/aai.js
 #    - ./dspace-ui.json:/app/docker/dspace-ui.json:rw
+    - ./matomo-settings.ts:/src/matomo/matomo-settings.ts
     build:
       context: ..
       dockerfile: Dockerfile
