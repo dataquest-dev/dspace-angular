@@ -22,6 +22,7 @@ import { HomeConfig } from './homepage-config.interface';
 import { MarkdownConfig } from './markdown-config.interface';
 import { FilterVocabularyConfig } from './filter-vocabulary-config';
 import { DiscoverySortConfig } from './discovery-sort.config';
+import { MatomoConfig } from './matomo-config';
 
 export class DefaultAppConfig implements AppConfig {
   production = false;
@@ -428,4 +429,10 @@ export class DefaultAppConfig implements AppConfig {
 
   // NOTE: you must disable/enable in the backend the signposting feature to make it work `signposting.enabled`
   signpostingEnabled = false;
+
+  // Matomo configuration
+  matomo: MatomoConfig = {
+    hostUrl: 'http://localhost:8135/',
+    siteId: '1'
+  };
 }

@@ -10,7 +10,6 @@ import { environment } from './environments/environment';
 import { AppConfig } from './config/app-config.interface';
 import { extendEnvironmentWithAppConfig } from './config/config.util';
 import { enableProdMode } from '@angular/core';
-import { matomoSettings } from './matomo/matomo-settings';
 
 const bootstrap = () => platformBrowserDynamic()
   .bootstrapModule(BrowserAppModule, {});
@@ -27,8 +26,8 @@ const main = () => {
   if (environment.production) {
     enableProdMode();
   }
-  addMatomoStatistics();
 
+  addMatomoStatistics();
   if (hasTransferState) {
     // Configuration will be taken from transfer state during initialization
     return bootstrap();
@@ -48,15 +47,15 @@ function addMatomoStatistics() {
   (window as any)._paq = (window as any)._paq || [];
 
   // Push all configuration commands first
-  (window as any)._paq.push(['setTrackerUrl', matomoSettings.hostUrl + 'matomo.php']);
-  (window as any)._paq.push(['setSiteId', matomoSettings.siteId]);
+  (window as any)._paq.push(['setTrackerUrl', environment.matomo.hostUrl + 'matomo.php']);
+  (window as any)._paq.push(['setSiteId', environment.matomo.siteId]);
   (window as any)._paq.push(['enableLinkTracking']);
 
   const g = document.createElement('script');
   g.type = 'text/javascript';
   g.async = true;
   g.defer = true;
-  g.src = matomoSettings.hostUrl + 'matomo.js';
+  g.src = environment.matomo.hostUrl + 'matomo.js';
   document.getElementsByTagName('head')[0].appendChild(g);
 }
 

@@ -25,7 +25,12 @@ export const environment: Partial<BuildConfig> = {
     nameSpace: '/server',
   },
 
-  signpostingEnabled: false
+  signpostingEnabled: false,
+
+  matomo: {
+    hostUrl: 'http://localhost:8135/',
+    siteId: '1',
+  }
 };
 
 /*
