@@ -160,6 +160,9 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     // The user is signed in and has record in the userRegistration
     // Load userRegistration and userMetadata from userRegistration repository
     this.loadUserRegistrationAndUserMetadata();
+
+    // Load the Seznam dataset license content
+    this.loadLicenseContentSeznam();
   }
 
   /**
