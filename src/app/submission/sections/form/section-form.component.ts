@@ -436,22 +436,22 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     // The values in the `typeFields` are in the format `dc_type` or `edm_type`, so we need to replace `_` with `.`
     [...this.typeFields.values()].some(typeValue => {
       if (typeValue.replace('_', '.') === metadata) {
-        this.handleFormSave(typeValue, value);
+        this.dispatchFormSaveAndReinitialize(typeValue, value);
         return true;
       }
     });
 
     if ([SPONSOR_METADATA_NAME, AUTHOR_METADATA_FIELD_NAME].includes(metadata)) {
-      this.handleFormSave(metadata, value);
+      this.dispatchFormSaveAndReinitialize(metadata, value);
     }
   }
 
   /**
-   * Handle form save and reinitialization
+   * Dispatch form save and reinitialize form
    * @param metadata
    * @param value
    */
-  handleFormSave(metadata, value) {
+  dispatchFormSaveAndReinitialize(metadata, value) {
     this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
     this.reinitializeForm(metadata, value);
   }
