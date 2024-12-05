@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GetRequest, PostRequest } from '../../core/data/request.models';
 import {
   getFirstCompletedRemoteData, getFirstSucceededRemoteData,
@@ -9,7 +9,7 @@ import { RequestService } from '../../core/data/request.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthenticatedAction } from '../../core/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
@@ -27,7 +27,8 @@ import { getBaseUrl } from '../../shared/clarin-shared-util';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
 import { RemoteData } from '../../core/data/remote-data';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../shared/shared.module';
 
 /**
  * This component is showed up when the user has clicked on the `verification token`.
@@ -37,7 +38,9 @@ import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'ds-autoregistration',
   templateUrl: './autoregistration.component.html',
-  styleUrls: ['./autoregistration.component.scss']
+  styleUrls: ['./autoregistration.component.scss'],
+  standalone: true,
+  imports: [TranslateModule, CommonModule, SharedModule]
 })
 export class AutoregistrationComponent implements OnInit {
 
@@ -73,13 +76,7 @@ export class AutoregistrationComponent implements OnInit {
    */
   showAttributes: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  /**
-   * Flag to check if the code is executed on the client side.
-   */
-  isBrowser: boolean;
-
-  constructor(@Inject(PLATFORM_ID) private platformId: object,
-    public route: ActivatedRoute,
+  constructor(public route: ActivatedRoute,
     private requestService: RequestService,
     protected halService: HALEndpointService,
     protected rdbService: RemoteDataBuildService,
@@ -89,28 +86,23 @@ export class AutoregistrationComponent implements OnInit {
     private verificationTokenService: ClarinVerificationTokenDataService,
     private store: Store<CoreState>,
     private hardRedirectService: HardRedirectService
-  ) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-  }
+  ) { }
 
   async ngOnInit(): Promise<void> {
-    if (this.isBrowser) {
-      // Only execute client-side logic
-      // Retrieve the token from the request param
-      this.verificationToken = this.route?.snapshot?.queryParams?.['verification-token'];
-      // Load the repository name for the welcome message
-      this.loadRepositoryName();
-      // Load the `ClarinVerificationToken` based on the `verificationToken` value
-      this.loadVerificationToken();
-      await this.assignBaseUrl();
-      await this.loadShowAttributes().then((value: RemoteData<ConfigurationProperty>) => {
-        const stringBoolean = value?.payload?.values?.[0];
-        this.showAttributes.next(stringBoolean === 'true');
-      });
+    // Retrieve the token from the request param
+    this.verificationToken = this.route?.snapshot?.queryParams?.['verification-token'];
+    // Load the repository name for the welcome message
+    this.loadRepositoryName();
+    // Load the `ClarinVerificationToken` based on the `verificationToken` value
+    this.loadVerificationToken();
+    await this.assignBaseUrl();
+    await this.loadShowAttributes().then((value: RemoteData<ConfigurationProperty>) => {
+      const stringBoolean = value?.payload?.values?.[0];
+      this.showAttributes.next(stringBoolean === 'true');
+    });
 
-      if (this.showAttributes.value === false) {
-        this.autologin();
-      }
+    if (this.showAttributes.value === false) {
+      this.autologin();
     }
   }
 
