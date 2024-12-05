@@ -6,8 +6,8 @@ import { LoginPageRoutingModule } from './login-page-routing.module';
 import { ThemedLoginPageComponent } from './themed-login-page.component';
 import { AuthFailedPageComponent } from './auth-failed-page/auth-failed-page.component';
 import { MissingIdpHeadersComponent } from './missing-idp-headers/missing-idp-headers.component';
-import { AutoregistrationComponent } from './autoregistration/autoregistration.component';
 import { DuplicateUserErrorComponent } from './duplicate-user-error/duplicate-user-error.component';
+import { AutoregistrationLoaderComponent } from './autoregistration/autoregistration-loader.component';
 
 @NgModule({
   imports: [
@@ -20,7 +20,7 @@ import { DuplicateUserErrorComponent } from './duplicate-user-error/duplicate-us
     ThemedLoginPageComponent,
     AuthFailedPageComponent,
     MissingIdpHeadersComponent,
-    AutoregistrationComponent,
+    AutoregistrationLoaderComponent,
     DuplicateUserErrorComponent
   ]
 })
