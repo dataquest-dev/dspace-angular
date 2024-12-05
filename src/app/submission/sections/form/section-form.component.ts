@@ -136,6 +136,11 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
   public sponsorRefreshTimeout = 20;
 
   /**
+   * The map of type bind fields. We need to have this map to check if the type field is updated.
+   */
+  private typeFields: Map<string, string>;
+
+  /**
    * The FormComponent reference
    */
   @ViewChild('formRef') private formRef: FormComponent;
@@ -175,6 +180,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
               @Inject('sectionDataProvider') public injectedSectionData: SectionDataObject,
               @Inject('submissionIdProvider') public injectedSubmissionId: string) {
     super(injectedCollectionId, injectedSectionData, injectedSubmissionId);
+    this.typeFields = new Map();
   }
 
   /**
@@ -209,6 +215,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
           this.cdr.detectChanges();
         }
       });
+    this.formBuilderService.setTypeBindFieldFromConfig(this.typeFields);
   }
 
   /**
@@ -424,15 +431,29 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       this.submissionService.dispatchSave(this.submissionId);
     }
 
-    if (metadata === SPONSOR_METADATA_NAME) {
-      this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
-      this.reinitializeForm(SPONSOR_METADATA_NAME, value);
-    }
+    // Check if the type field is updated it could be e.g. `dc.type` or `edm.type` metadata field
+    // `.some()` method is used to break the loop when the type field is found.
+    // The values in the `typeFields` are in the format `dc_type` or `edm_type`, so we need to replace `_` with `.`
+    [...this.typeFields.values()].some(typeValue => {
+      if (typeValue.replace('_', '.') === metadata) {
+        this.dispatchFormSaveAndReinitialize(typeValue, value);
+        return true;
+      }
+    });
 
-    if (metadata === AUTHOR_METADATA_FIELD_NAME) {
-      this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
-      this.reinitializeForm(AUTHOR_METADATA_FIELD_NAME, value);
+    if ([SPONSOR_METADATA_NAME, AUTHOR_METADATA_FIELD_NAME].includes(metadata)) {
+      this.dispatchFormSaveAndReinitialize(metadata, value);
     }
+  }
+
+  /**
+   * Dispatch form save and reinitialize form
+   * @param metadata
+   * @param value
+   */
+  dispatchFormSaveAndReinitialize(metadata, value) {
+    this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
+    this.reinitializeForm(metadata, value);
   }
 
   /**
