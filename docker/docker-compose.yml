@@ -27,7 +27,7 @@ services:
     image: ${DSPACE_UI_IMAGE:-dataquest/dspace-angular:dspace-7_x}
     volumes:
     - ./config.prod.yml:/app/config/config.prod.yml
-    - ./aai.js:/app/dist/browser/aai.js
+#    - ./aai.js:/app/dist/browser/aai.js
 #    - ./dspace-ui.json:/app/docker/dspace-ui.json:rw
     build:
       context: ..
