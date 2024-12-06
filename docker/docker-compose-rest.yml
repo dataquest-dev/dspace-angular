@@ -171,7 +171,7 @@ services:
       exec solr -p 898${INSTANCE} -f -m 4g
 volumes:
   # Commented out because there are a lot of files in the assetstore
-  #assetstore:
+  assetstore:
   pgdata:
   solr_data:
   # Special volume used to share Solr configs from 'dspace' to 'dspacesolr' container (see above)
