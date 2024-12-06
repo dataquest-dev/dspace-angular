@@ -27,6 +27,7 @@ const main = () => {
     enableProdMode();
   }
 
+  addMatomoStatistics();
   if (hasTransferState) {
     // Configuration will be taken from transfer state during initialization
     return bootstrap();
@@ -41,6 +42,28 @@ const main = () => {
       });
   }
 };
+
+function addMatomoStatistics() {
+  (window as any)._paq = (window as any)._paq || [];
+
+  void fetch('assets/config.json')
+    .then((response) => response.json())
+    .then((config) => {
+      const matomoConfig = config.matomo;
+
+      // Push all configuration commands first
+      (window as any)._paq.push(['setTrackerUrl', matomoConfig.hostUrl + 'matomo.php']);
+      (window as any)._paq.push(['setSiteId', matomoConfig.siteId]);
+      (window as any)._paq.push(['enableLinkTracking']);
+
+      const g = document.createElement('script');
+      g.type = 'text/javascript';
+      g.async = true;
+      g.defer = true;
+      g.src = matomoConfig.hostUrl + 'matomo.js';
+      document.getElementsByTagName('head')[0].appendChild(g);
+    });
+}
 
 // support async tag or hmr
 if (document.readyState === 'complete' && !hasTransferState) {

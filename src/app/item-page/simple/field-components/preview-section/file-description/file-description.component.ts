@@ -3,14 +3,14 @@ import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.mode
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
 import {Router} from '@angular/router';
 
-const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip'];
+const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip', 'application/x-tar'];
 @Component({
   selector: 'ds-file-description',
   templateUrl: './file-description.component.html',
   styleUrls: ['./file-description.component.scss'],
 })
 export class FileDescriptionComponent {
-  MIME_TYPE_IMAGES_PATH = '/assets/images/mime/';
+  MIME_TYPE_IMAGES_PATH = './assets/images/mime/';
   MIME_TYPE_DEFAULT_IMAGE_NAME = 'application-octet-stream.png';
 
   @Input()
@@ -28,13 +28,6 @@ export class FileDescriptionComponent {
 
   public isHtml() {
     return this.fileInput?.format === 'text/html';
-  }
-
-  /**
-   * Show scrollbar in the `.txt` preview, but it should be hidden in the other formats.
-   */
-  public dynamicOverflow() {
-    return (this.isTxt() || this.isHtml()) ? 'overflow: scroll' : 'overflow: hidden';
   }
 
   /**

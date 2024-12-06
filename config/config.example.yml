@@ -393,3 +393,7 @@ vocabularies:
 comcolSelectionSort:
   sortField: 'dc.title'
   sortDirection: 'ASC'
+
+matomo:
+  hostUrl: http://localhost:8135/
+  siteId: 1

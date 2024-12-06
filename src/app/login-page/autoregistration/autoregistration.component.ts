@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { GetRequest, PostRequest } from '../../core/data/request.models';
-import { getFirstCompletedRemoteData,getFirstSucceededRemoteListPayload } from '../../core/shared/operators';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  getFirstCompletedRemoteData, getFirstSucceededRemoteData,
+  getFirstSucceededRemoteListPayload
+} from '../../core/shared/operators';
+import { ActivatedRoute } from '@angular/router';
 import { RequestService } from '../../core/data/request.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthenticatedAction } from '../../core/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
@@ -19,11 +22,13 @@ import { HttpHeaders } from '@angular/common/http';
 import { AuthTokenInfo } from '../../core/auth/models/auth-token-info.model';
 import { isEmpty } from '../../shared/empty.util';
 import { CoreState } from 'src/app/core/core-state.model';
-import { hasSucceeded } from 'src/app/core/data/request-entry-state.model';
 import { FindListOptions } from '../../core/data/find-list-options.model';
 import { getBaseUrl } from '../../shared/clarin-shared-util';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
 import { RemoteData } from '../../core/data/remote-data';
+import { HardRedirectService } from '../../core/services/hard-redirect.service';
+import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../shared/shared.module';
 
 /**
  * This component is showed up when the user has clicked on the `verification token`.
@@ -33,7 +38,9 @@ import { RemoteData } from '../../core/data/remote-data';
 @Component({
   selector: 'ds-autoregistration',
   templateUrl: './autoregistration.component.html',
-  styleUrls: ['./autoregistration.component.scss']
+  styleUrls: ['./autoregistration.component.scss'],
+  standalone: true,
+  imports: [TranslateModule, CommonModule, SharedModule]
 })
 export class AutoregistrationComponent implements OnInit {
 
@@ -69,8 +76,7 @@ export class AutoregistrationComponent implements OnInit {
    */
   showAttributes: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  constructor(protected router: Router,
-    public route: ActivatedRoute,
+  constructor(public route: ActivatedRoute,
     private requestService: RequestService,
     protected halService: HALEndpointService,
     protected rdbService: RemoteDataBuildService,
@@ -78,7 +84,8 @@ export class AutoregistrationComponent implements OnInit {
     private translateService: TranslateService,
     private configurationService: ConfigurationDataService,
     private verificationTokenService: ClarinVerificationTokenDataService,
-    private store: Store<CoreState>
+    private store: Store<CoreState>,
+    private hardRedirectService: HardRedirectService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -95,7 +102,7 @@ export class AutoregistrationComponent implements OnInit {
     });
 
     if (this.showAttributes.value === false) {
-      this.sendAutoLoginRequest();
+      this.autologin();
     }
   }
 
@@ -115,11 +122,9 @@ export class AutoregistrationComponent implements OnInit {
     const response = this.rdbService.buildFromRequestUUID(requestId);
     // Process response
     response
-      .pipe(getFirstCompletedRemoteData())
+      .pipe(getFirstSucceededRemoteData())
       .subscribe(responseRD$ => {
-        if (hasSucceeded(responseRD$.state)) {
-          // Show successful message
-          this.notificationService.success(this.translateService.instant('clarin.autoregistration.successful.message'));
+        if (responseRD$.hasSucceeded) {
           // Call autologin
           this.sendAutoLoginRequest();
         } else {
@@ -159,22 +164,24 @@ export class AutoregistrationComponent implements OnInit {
     this.requestService.send(postRequest);
     // Get response
     const response = this.rdbService.buildFromRequestUUID(requestId);
-    // Process response
-    response
-      .pipe(getFirstCompletedRemoteData())
+    response.pipe(getFirstSucceededRemoteData())
       .subscribe(responseRD$ => {
-        if (hasSucceeded(responseRD$.state)) {
-          // Retrieve the token from the response. The token is returned as array of string.
+        if (responseRD$.hasSucceeded) {
           const token = Object.values(responseRD$?.payload).join('');
           const authToken = new AuthTokenInfo(token);
-          this.deleteVerificationToken();
           this.store.dispatch(new AuthenticatedAction(authToken));
-          this.router.navigate(['home']);
+          this.deleteVerificationToken();
+          // Use hard redirect to load all components from the beginning as the logged-in user. Because some components
+          // are not loaded correctly when the user is logged in e.g., `log in` button is still visible instead of
+          // log out button.
+          const redirectUrl = this.baseUrl.endsWith('/')
+            ? `${this.baseUrl}home`
+            : `${this.baseUrl}/home`;
+          this.hardRedirectService.redirect(redirectUrl);
         } else {
           this.notificationService.error(this.translateService.instant('clarin.autologin.error.message'));
-          console.error(responseRD$.errorMessage);
         }
-      });
+    });
   }
 
   /**
@@ -189,7 +196,6 @@ export class AutoregistrationComponent implements OnInit {
    * Retrieve the `ClarinVerificationToken` object by the `verificationToken` value.
    */
   private loadVerificationToken() {
-    console.log('I am here');
     this.verificationTokenService.searchBy('byToken', this.createSearchOptions(this.verificationToken))
       .pipe(getFirstSucceededRemoteListPayload())
       .subscribe(res => {

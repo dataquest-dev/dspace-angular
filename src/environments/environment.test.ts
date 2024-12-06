@@ -315,5 +315,10 @@ export const environment: BuildConfig = {
     }
   ],
 
-  signpostingEnabled: true
+  signpostingEnabled: true,
+
+  matomo: {
+    hostUrl: 'http://localhost:8135/',
+    siteId: '1',
+  }
 };

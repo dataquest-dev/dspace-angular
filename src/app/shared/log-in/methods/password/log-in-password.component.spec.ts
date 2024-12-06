@@ -25,6 +25,8 @@ import { createSuccessfulRemoteDataObject$ } from '../../../remote-data.utils';
 import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
 import { CookieService } from '../../../../core/services/cookie.service';
 import { CookieServiceMock } from '../../../mocks/cookie.service.mock';
+import { NotificationsService } from '../../../notifications/notifications.service';
+import { NotificationsServiceStub } from '../../../testing/notifications-service.stub';
 
 describe('LogInPasswordComponent', () => {
   const uiUrl = 'localhost:4000';
@@ -36,6 +38,7 @@ describe('LogInPasswordComponent', () => {
   let hardRedirectService: HardRedirectService;
   let authService: any;
   let configurationDataService: ConfigurationDataService;
+  let notificationService: NotificationsServiceStub;
 
   beforeEach(() => {
     hardRedirectService = jasmine.createSpyObj('hardRedirectService', {
@@ -68,6 +71,7 @@ describe('LogInPasswordComponent', () => {
         ]
       }))
     });
+    notificationService = new NotificationsServiceStub();
 
   });
 
@@ -102,6 +106,7 @@ describe('LogInPasswordComponent', () => {
           } },
         { provide: Router, useValue: new RouterMock() },
         { provide: CookieService, useClass: CookieServiceMock },
+        { provide: NotificationsService, useValue: notificationService },
         provideMockStore({ initialState }),
       ],
       schemas: [

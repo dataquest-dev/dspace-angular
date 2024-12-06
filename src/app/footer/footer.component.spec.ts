@@ -5,8 +5,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { By } from '@angular/platform-browser';
-
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
 
@@ -62,10 +60,6 @@ describe('Footer component', () => {
     fixture = TestBed.createComponent(FooterComponent);
 
     comp = fixture.componentInstance; // component test instance
-
-    // query for the title <p> by CSS element selector
-    de = fixture.debugElement.query(By.css('p'));
-    el = de.nativeElement;
   });
 
   it('should create footer', inject([FooterComponent], (app: FooterComponent) => {

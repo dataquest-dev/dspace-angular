@@ -16,7 +16,6 @@ import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
 import { renderAuthMethodFor } from '../log-in.methods-decorator';
 import { AuthMethod } from '../../../../core/auth/models/auth.method';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
 import { CoreState } from '../../../../core/core-state.model';
 import { getForgotPasswordRoute, getRegisterRoute } from '../../../../app-routing-paths';
 import { FeatureID } from '../../../../core/data/feature-authorization/feature-id';
@@ -26,6 +25,11 @@ import { getBaseUrl } from '../../../clarin-shared-util';
 import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { CookieService } from '../../../../core/services/cookie.service';
+import { NotificationsService } from '../../../notifications/notifications.service';
+import { TranslateService } from '@ngx-translate/core';
+import { NotificationOptions } from '../../../notifications/models/notification-options.model';
+import { HELP_DESK_PROPERTY } from '../../../../item-page/tombstone/tombstone.component';
+import { getFirstSucceededRemoteDataPayload } from '../../../../core/shared/operators';
 
 export const SHOW_DISCOJUICE_POPUP_CACHE_NAME = 'SHOW_DISCOJUICE_POPUP';
 /**
@@ -96,7 +100,6 @@ export class LogInPasswordComponent implements OnInit {
     @Inject('authMethodProvider') public injectedAuthMethodModel: AuthMethod,
     @Inject('isStandalonePage') public isStandalonePage: boolean,
     private authService: AuthService,
-    private hardRedirectService: HardRedirectService,
     private formBuilder: UntypedFormBuilder,
     protected store: Store<CoreState>,
     protected authorizationService: AuthorizationDataService,
@@ -104,6 +107,8 @@ export class LogInPasswordComponent implements OnInit {
     protected router: Router,
     protected configurationService: ConfigurationDataService,
     protected storage: CookieService,
+    private notificationService: NotificationsService,
+    private translateService: TranslateService
   ) {
     this.authMethod = injectedAuthMethodModel;
   }
@@ -113,6 +118,7 @@ export class LogInPasswordComponent implements OnInit {
    * @method ngOnInit
    */
   public async ngOnInit() {
+    this.checkIfHasLoginError();
     this.initializeDiscoJuiceCache();
     this.redirectUrl = '';
     // set formGroup
@@ -153,6 +159,23 @@ export class LogInPasswordComponent implements OnInit {
 
   getForgotRoute() {
     return getForgotPasswordRoute();
+  }
+
+  private checkIfHasLoginError() {
+    const loginError = this.route.snapshot.queryParams?.error;
+    if (loginError !== 'shibboleth-authentication-failed') {
+      return;
+    }
+
+    // It is a Shibboleth authentication error
+    // Load the help desk email from the server
+    const helpDeskEmail$ = this.configurationService.findByPropertyName(HELP_DESK_PROPERTY);
+    helpDeskEmail$.pipe(getFirstSucceededRemoteDataPayload())
+      .subscribe((helpDeskEmailCfg) => {
+        this.notificationService.error(this.translateService.instant('login.auth.failed.shibboleth.title'),
+          this.translateService.instant('login.auth.failed.shibboleth.message',
+            { email: helpDeskEmailCfg?.values?.[0] }), new NotificationOptions(-1, true));
+      });
   }
 
   /**

@@ -107,9 +107,7 @@ export class ClarinFilesSectionComponent implements OnInit {
       return file.name;
     });
 
-    this.command = `curl --remote-name-all ` + this.halService.getRootHref() + `/core/bitstreams/handle/${
-      this.itemHandle
-    }/{${fileNames.join(',')}}`;
+    this.command = `curl --remote-name-all ` + this.halService.getRootHref() + `/core/items/${this.item.id}/allzip?handleId=${this.itemHandle}`;
   }
 
   loadDownloadZipConfigProperties() {

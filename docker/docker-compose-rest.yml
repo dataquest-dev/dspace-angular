@@ -94,6 +94,10 @@ services:
     entrypoint:
     - /bin/bash
     - '-c'
+    # When customizing the namespace, add the following command to the entrypoint command below (after `while ...`):
+    # `pushd ../webapps && unlink server && ln -s /dspace/webapps/server/ 'repository#server' && popd`
+    # This will create a symlink from the webapps directory to the server directory with the custom namespace
+    # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
     - |
       while (!</dev/tcp/dspacedb/543${INSTANCE}) > /dev/null 2>&1; do sleep 1; done;
       pushd ../webapps && unlink server && ln -s /dspace/webapps/server/ 'repository#server' && popd

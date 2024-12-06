@@ -25,7 +25,7 @@ export const environment: Partial<BuildConfig> = {
     nameSpace: '/server',
   },
 
-  signpostingEnabled: false
+  signpostingEnabled: false,
 };
 
 /*
