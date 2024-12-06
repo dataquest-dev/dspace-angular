@@ -80,7 +80,8 @@ services:
     tty: true
     volumes:
     - dspace_logs:/dspace/log
-    - assetstore:/dspace/assetstore
+    - #assetstore:/dspace/assetstore
+    - /opt/DATA/assetstore:/dspace/assetstore
     # Mount DSpace's solr configs to a volume, so that we can share to 'dspacesolr' container (see below)
     - solr_configs:/dspace/solr
     - handle_server:/dspace/handle-server
@@ -99,6 +100,7 @@ services:
     # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
     - |
       while (!</dev/tcp/dspacedb/543${INSTANCE}) > /dev/null 2>&1; do sleep 1; done;
+      pushd ../webapps && unlink server && ln -s /dspace/webapps/server/ 'repository#server' && popd
       /dspace/bin/dspace database migrate force
       custom_run.sh
       /dspace/bin/start-handle-server
@@ -168,7 +170,8 @@ services:
       cp -r -u /opt/solr/server/solr/configsets/dspace/statistics/* statistics
       exec solr -p 898${INSTANCE} -f -m 4g
 volumes:
-  assetstore:
+  # Commented out because there are a lot of files in the assetstore
+  #assetstore:
   pgdata:
   solr_data:
   # Special volume used to share Solr configs from 'dspace' to 'dspacesolr' container (see above)

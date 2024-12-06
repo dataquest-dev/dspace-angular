@@ -3,7 +3,7 @@
   function AAI() {
     var host = 'https://' + window.location.hostname,
         ourEntityID = host.match("lindat.mff.cuni.cz") ? "https://ufal-point.mff.cuni.cz" : host;
-    var namespace = '';
+    var namespace = 'repository';
     this.defaults = {
       //host : 'https://ufal-point.mff.cuni.cz',
       host : host, //better default (useful when testing on ufal-point-dev)
