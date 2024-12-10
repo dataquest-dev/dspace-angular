@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 # It must also cooperate with argparse
 
 # the idea is, that this will be different on each branch, but could be possibly passed by argv/argparse
-RELEASE_TAG_BASE='none'
+RELEASE_TAG_BASE='lindat'
 
 def get_time_in_timezone(zone: str = "Europe/Bratislava"):
     try:
