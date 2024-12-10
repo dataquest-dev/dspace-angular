@@ -257,7 +257,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       });
     let bitstreamDownloadPath = getBitstreamDownloadRoute(bitstream);
     if (isNotEmpty(downloadToken)) {
-      bitstreamDownloadPath = bitstreamDownloadPath + '?dtoken=' + downloadToken;
+      bitstreamDownloadPath = this.halService.getRootHref() + bitstreamDownloadPath + '?dtoken=' + downloadToken;
     }
     this.hardRedirectService.redirect(bitstreamDownloadPath);
   }
