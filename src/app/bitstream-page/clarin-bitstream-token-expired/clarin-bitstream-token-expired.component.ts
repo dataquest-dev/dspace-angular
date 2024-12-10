@@ -4,7 +4,6 @@ import { Bitstream } from '../../core/shared/bitstream.model';
 import { take } from 'rxjs/operators';
 import { getBitstreamDownloadRoute } from '../../app-routing-paths';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
-import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 
 /**
  * This component shows error that the download token is expired and redirect the user to the Item View page
@@ -22,14 +21,13 @@ export class ClarinBitstreamTokenExpiredComponent implements OnInit {
 
   constructor(
     private hardRedirectService: HardRedirectService,
-    private halService: HALEndpointService
   ) { }
 
   ngOnInit(): void {
     setTimeout(() => {
         this.bitstream$.pipe(take(1))
           .subscribe(bitstream => {
-            const bitstreamDownloadPath = this.halService.getRootHref() + getBitstreamDownloadRoute(bitstream);
+            const bitstreamDownloadPath = getBitstreamDownloadRoute(bitstream);
             this.hardRedirectService.redirect(bitstreamDownloadPath);
           });
       },
