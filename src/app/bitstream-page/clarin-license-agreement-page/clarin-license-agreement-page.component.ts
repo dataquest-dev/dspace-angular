@@ -35,7 +35,7 @@ import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-bu
 import { HttpOptions } from '../../core/dspace-rest/dspace-rest.service';
 import { Router } from '@angular/router';
 import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
-import { getBitstreamDownloadRoute } from '../../app-routing-paths';
+import { getBitstreamContentRoute } from '../../app-routing-paths';
 import { hasFailed } from 'src/app/core/data/request-entry-state.model';
 import { FindListOptions } from '../../core/data/find-list-options.model';
 import isEqual from 'lodash/isEqual';
@@ -255,10 +255,12 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       .subscribe(bitstream$ => {
         bitstream = bitstream$;
       });
-    let bitstreamDownloadPath = getBitstreamDownloadRoute(bitstream);
+    let bitstreamDownloadPath = getBitstreamContentRoute(bitstream);
     if (isNotEmpty(downloadToken)) {
-      bitstreamDownloadPath = bitstreamDownloadPath + '?dtoken=' + downloadToken;
+      bitstreamDownloadPath = this.halService.getRootHref() + '/core' + bitstreamDownloadPath +
+        '?dtoken=' + downloadToken;
     }
+
     this.hardRedirectService.redirect(bitstreamDownloadPath);
   }
 
