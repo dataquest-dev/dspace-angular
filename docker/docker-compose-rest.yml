@@ -95,14 +95,16 @@ services:
     - /bin/bash
     - '-c'
     # When customizing the namespace, add the following command to the entrypoint command below (after `while ...`):
-    # `pushd ../webapps && unlink server && ln -s /dspace/webapps/server/ 'repository#server' && popd`
+    # `pushd ../webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ 'repository#server' || true) && popd`
+    # The `(... || true)` condition is necessary to ensure the `popd` command runs at the end. 
+    # It used to fail when the `server` folder did not exist in `/webapps`.
     # This will create a symlink from the webapps directory to the server directory with the custom namespace
     # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
     - |
       while (!</dev/tcp/dspacedb/543${INSTANCE}) > /dev/null 2>&1; do sleep 1; done;
-      pushd ../webapps && unlink server && ln -s /dspace/webapps/server/ 'repository#server' && popd
+      pushd ../webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ 'repository#server' || true) && popd
       /dspace/bin/dspace database migrate force
-      custom_run.sh
+      ./custom_run.sh
       /dspace/bin/start-handle-server
   # DSpace database container
   dspacedb:
