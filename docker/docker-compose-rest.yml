@@ -102,6 +102,7 @@ services:
     # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
     - |
       while (!</dev/tcp/dspacedb/543${INSTANCE}) > /dev/null 2>&1; do sleep 1; done;
+      pushd ../webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ 'repository#server' || true) && popd
       /dspace/bin/dspace database migrate force
       ./custom_run.sh
       /dspace/bin/start-handle-server
