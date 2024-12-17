@@ -105,7 +105,7 @@ jobs:
           echo "started handle server"
           # this seems to be the easiest solution for now
           docker restart dockerized-nginx-with-shibboleth-nginx-1
-          /bin/bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://dev-5.pc:8$INSTANCE/server/api)" != "200" ]]; do sleep 5; done'
+          /bin/bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://dev-5.pc:8$INSTANCE/repository/server/api)" != "200" ]]; do sleep 5; done'
 
 
   import-8:
