@@ -1969,6 +1969,11 @@
 
   "home-page.new-items.message": "Most Viewed Items - Last Month",
 
+  "home-page.library.name": "Slovak Academy of Sciences",
+
+  "home-page.library.description": "",
+
+
 
 
   "handle-table.breadcrumbs": "Handles",
@@ -4002,7 +4007,7 @@
 
   "repository.title": "DSpace Repository",
 
-  "repository.title.prefix": "LINDAT/CLARIAH-CZ Repository ",
+  "repository.title.prefix": "SAV Repository ",
 
   "repository.title.prefixDSpace": "DSpace",
 
