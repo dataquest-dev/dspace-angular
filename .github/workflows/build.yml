@@ -9,6 +9,8 @@ on:
     branches:
       - dtq-dev
       - customer/*
+  schedule:
+    - cron: '0 * * * *'
   pull_request:
 
 permissions:
