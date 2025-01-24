@@ -10,7 +10,7 @@ on:
       - dtq-dev
       - customer/*
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 */4 * * *'
   pull_request:
 
 permissions:
