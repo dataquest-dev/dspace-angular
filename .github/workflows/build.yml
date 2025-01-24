@@ -5,6 +5,8 @@ name: Build
 
 # Run this Build for pushes to our main and all PRs
 on:
+  schedule:
+    - cron: '0 */4 * * *'
   push:
     branches:
       - dtq-dev
@@ -107,7 +109,7 @@ jobs:
       # so that it can be shared with the 'codecov' job (see below)
       # NOTE: Angular CLI only supports code coverage for specs. See https://github.com/angular/angular-cli/issues/6286
       - name: Upload code coverage report to Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: matrix.node-version == '18.x'
         with:
           name: dspace-angular coverage report
@@ -141,7 +143,7 @@ jobs:
       # Cypress always creates a video of all e2e tests (whether they succeeded or failed)
       # Save those in an Artifact
       - name: Upload e2e test videos to Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: e2e-test-videos
@@ -150,7 +152,7 @@ jobs:
       # If e2e tests fail, Cypress creates a screenshot of what happened
       # Save those in an Artifact
       - name: Upload e2e test failure screenshots to Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-test-screenshots
