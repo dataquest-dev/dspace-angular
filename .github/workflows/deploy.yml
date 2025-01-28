@@ -39,7 +39,7 @@ on:
 jobs:
   deploy-5:
     if: inputs.INSTANCE == '*' || inputs.INSTANCE == '5'
-    runs-on: dspace-dep-1
+    runs-on: dspace-test-1
     timeout-minutes: 10
     env:
       INSTANCE: '5'
