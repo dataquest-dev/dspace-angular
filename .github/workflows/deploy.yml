@@ -64,7 +64,7 @@ jobs:
 
   deploy-8:
     if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8'
-    runs-on: dspace-dep-1
+    runs-on: dspace-test-1
     timeout-minutes: 120
     env:
       INSTANCE: '8'
@@ -109,7 +109,7 @@ jobs:
 
 
   import-8:
-    runs-on: dspace-dep-1
+    runs-on: dspace-test-1
     if: inputs.IMPORT
     needs: deploy-8
     env:
