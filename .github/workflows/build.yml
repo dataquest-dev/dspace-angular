@@ -12,6 +12,7 @@ on:
   schedule:
     - cron: '0 */4 * * *'
   pull_request:
+
 permissions:
   contents: read  #  to fetch code (actions/checkout)
 
@@ -42,7 +43,7 @@ jobs:
       #CHROME_VERSION: "90.0.4430.212-1"
       # Bump Node heap size (OOM in CI after upgrading to Angular 15)
       NODE_OPTIONS: '--max-old-space-size=4096'
-      # Project name to use when running docker-compose prior to e2e tests
+      # Project name to use when running docker compose prior to e2e tests
       COMPOSE_PROJECT_NAME: 'ci'
     strategy:
       # Create a matrix of Node versions to test against (in parallel)
@@ -117,7 +118,7 @@ jobs:
           path: 'coverage/dspace-angular/lcov.info'
           retention-days: 14
 
-      # Using docker-compose start backend using CI configuration
+      # Using docker compose start backend using CI configuration
       # and load assetstore from a cached copy
       - name: Start DSpace REST Backend via Docker (for e2e tests)
         run: |
