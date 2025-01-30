@@ -11,6 +11,7 @@ on:
       - customer/*
   schedule:
     - cron: '0 */4 * * *'
+  workflow_dispatch:
   pull_request:
 
 permissions:
