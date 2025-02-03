@@ -1,20 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { isEmpty } from '../empty.util';
 import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
+import { isEmpty } from '../empty.util';
 
 /**
  * Pipe to mark checkbox or input to true/false based on the input form data.
- * This Pipe is used for editing Clarin License - extended license labels.
+ * This Pipe is used for editing Clarin License - required info.
  */
 @Pipe({
-  name: 'dsCheckedLicense'
+  name: 'dsCheckedRI'
 })
-export class ClarinLicenseCheckedPipe implements PipeTransform {
+export class ClarinLicenseRequiredInfoCheckedPipe implements PipeTransform {
 
   /**
-   * If the clarin license contains extended clarinLicenseLabel return true otherwise return false
-   * @param clarinLicenseProp extended license label to compare
-   * @param clarinLicenseProps all extended or non-extended clarin license labels clarin license label in array
+   * If the clarinLicense contains the required info return true otherwise return false
+   * @param clarinLicenseProp required info to compare
+   * @param clarinLicenseProps all required info which the clarin license contains
    */
   transform(clarinLicenseProp: any | ClarinLicenseRequiredInfo, clarinLicenseProps: any[]): boolean {
     let contains = false;
@@ -22,7 +22,7 @@ export class ClarinLicenseCheckedPipe implements PipeTransform {
       return contains;
     }
     clarinLicenseProps.forEach(cll => {
-      if (cll.title === clarinLicenseProp.title) {
+      if (cll.name === clarinLicenseProp.name) {
         contains = true;
       }
     });

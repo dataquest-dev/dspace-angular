@@ -296,6 +296,7 @@ import { ClarinSafeHtmlPipe } from './utils/clarin-safehtml.pipe';
 import { ReplacePipe } from './utils/replace.pipe';
 import { ClarinDateService } from './clarin-date.service';
 import { ItemIdentifierService } from './item-identifier.service';
+import { ClarinLicenseRequiredInfoCheckedPipe } from './utils/clarin-license-required-info-checked.pipe';
 
 const MODULES = [
   CommonModule,
@@ -338,6 +339,7 @@ const PIPES = [
   ShortNumberPipe,
   ClarinExtendedLicensePipe,
   ClarinLicenseCheckedPipe,
+  ClarinLicenseRequiredInfoCheckedPipe,
   ClarinLicenseLabelRadioValuePipe,
   ClarinLicenseRequiredInfoPipe,
   CharToEndPipe,
