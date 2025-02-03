@@ -55,7 +55,7 @@ runs:
           timestamp=$(date +"%y%m%d%H%M")
           log_file="${{ inputs.LOGDIR }}python.log.${timestamp}"
           echo $log_file
-          docker logs $DB5NAME  > "$log_file" || true
+          docker logs $DB5NAME > "$log_file" || true
           echo "====="
           # copy assetstore
           echo Preparing assetstore
