@@ -121,6 +121,7 @@ jobs:
           INSTANCE: ${{ env.INSTANCE }}
           DATADIR: /opt/dspace-data/clarin-dspace/
           ASSETSTORE: /opt/dspace-data/clarin-dspace/assetstore/
+          LOGDIR: /log/
 
       - name: dspace basic command
         run: |

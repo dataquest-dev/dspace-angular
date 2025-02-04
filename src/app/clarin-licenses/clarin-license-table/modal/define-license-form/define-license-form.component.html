@@ -44,7 +44,7 @@
               <label id="requiredInfo" for="requiredInfo">{{'clarin-license.define-license-form.required-info' | translate}}</label>
               <div *ngFor="let ri of requiredInfoOptions">
                 <input type="checkbox" formArrayName="requiredInfo" [value]="ri"
-                     [checked]="ri | dsCheckedLicense: requiredInfo"
+                     [checked]="ri | dsCheckedRI: requiredInfo"
                      (change)="changeCheckboxValue($event,'requiredInfo', ri)"/>
                 {{ ri.value }}
               </div>

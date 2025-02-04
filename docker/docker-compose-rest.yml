@@ -95,8 +95,9 @@ services:
     - /bin/bash
     - '-c'
     # When customizing the namespace, add the following command to the entrypoint command below (after `while ...`):
-    # `pushd ../webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ 'repository#server' || true) && popd`
-    # The `(... || true)` condition is necessary to ensure the `popd` command runs at the end. 
+    # `pushd ../webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ 'repository#server' || true) &&
+    # popd`
+    # The `(... || true)` condition is necessary to ensure the `popd` command runs at the end.
     # It used to fail when the `server` folder did not exist in `/webapps`.
     # This will create a symlink from the webapps directory to the server directory with the custom namespace
     # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
