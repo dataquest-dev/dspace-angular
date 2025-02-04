@@ -136,6 +136,9 @@ describe('Create a new submission', () => {
   },() => {
     createItemProcess.clickOnSelectionInput('dc.type');
     createItemProcess.clickOnTypeSelection('Corpus');
+    // Wait because after the type change, the `Save` request is sent, and the page is reloaded.
+    // The checkbox could be checked during the reloading process.
+    cy.wait(500);
     createItemProcess.checkCheckbox('local_hasCMDI');
     createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
     createItemProcess.clickOnSave();

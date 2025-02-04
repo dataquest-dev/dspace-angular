@@ -129,13 +129,13 @@ export class DefineLicenseFormComponent implements OnInit {
   private loadArrayValuesToForm() {
     // add passed extendedClarinLicenseLabels to the form because add them to the form in the init is a problem
     const extendedClarinLicenseLabels = (this.clarinLicenseForm.controls.extendedClarinLicenseLabels).value as any[];
-    this.extendedClarinLicenseLabels.forEach(extendedClarinLicenseLabel => {
+    this.extendedClarinLicenseLabels?.forEach(extendedClarinLicenseLabel => {
       extendedClarinLicenseLabels.push(extendedClarinLicenseLabel);
     });
 
     // add passed requiredInfo to the form because add them to the form in the init is a problem
     const requiredInfoOptions = (this.clarinLicenseForm.controls.requiredInfo).value as any[];
-    this.requiredInfo.forEach(requiredInfo => {
+    this.requiredInfo?.forEach(requiredInfo => {
       requiredInfoOptions.push(requiredInfo);
     });
   }
