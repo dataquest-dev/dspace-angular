@@ -71,10 +71,6 @@ runs:
           timestamp=$(date +"%y%m%d%H%M")
           log_file_timestamp="${{ inputs.LOGDIR }}python.${timestamp}.log"
           echo $log_file_timestamp
-          pwd
-          ls
-          ls ../
-          tail -F ../__logs/*.txt | tee -a $log_file_timestamp > /dev/null &
           echo "====="
           args=(
             --resume=false
@@ -89,7 +85,8 @@ runs:
           if [ -n "${{ inputs.ASSETSTORE }}" ]; then
             args+=(--assetstore=${{ inputs.ASSETSTORE }})
           fi
-          python3 repo_import.py "${args[@]}"
+          python3 repo_import.py "${args[@]}" &
+          tail -F ../__logs/*.txt | tee -a $log_file_timestamp > /dev/null &
     - name: cleanup
       shell: bash
       run: |
