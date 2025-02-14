@@ -41,7 +41,7 @@ runs:
         DB5PORT: 15432
         DB5NAME: dspace-import-db5
         DB7PORT: 543${{ inputs.INSTANCE }}
-        BEURL: http://dev-5.pc:8${{ inputs.INSTANCE }}/server/api
+        BEURL: http://dev-5.pc:8${{ inputs.INSTANCE }}/repository/server/api
       run: |
           docker stop $DB5NAME || true
           echo "====="
@@ -50,9 +50,6 @@ runs:
           cid=$(docker run -d --rm --name $DB5NAME -v $(pwd):/dq/scripts -v $DATADIR/dump:/dq/dump -p 127.0.0.1:$DB5PORT:5432 -e POSTGRES_DB=empty -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=dspace postgres /bin/bash -c "cd /dq/scripts && ./init.dspacedb5.sh")
           echo "cid=$cid" >> $GITHUB_OUTPUT
           sleep 60
-          echo "====="
-          docker logs $DB5NAME || true
-          echo "====="
           # copy assetstore
           echo Preparing assetstore
           if [[ -z ${{ inputs.ASSETSTORE }} ]]; then
@@ -69,6 +66,15 @@ runs:
           rm __temp/resume/*.json || true
           # arguments of the script
           # required
+          echo "====="
+          # Generate the current timestamp for the log filename
+          timestamp=$(date +"%y%m%d%H%M")
+          log_file_timestamp="${{ inputs.LOGDIR }}python.${timestamp}.log"
+          echo $log_file_timestamp
+          mkdir ../__logs
+          # Continuously append to the log file $log_file_timestamp. Start appending when the first file is added to the __logs folder.
+          while true; do tail -F --retry ../__logs/*.txt 2>/dev/null >> $log_file_timestamp & sleep 2; done &
+          echo "====="
           args=(
             --resume=false
             --config=backend.endpoint=$BEURL

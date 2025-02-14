@@ -89,8 +89,8 @@ export const CLARIN_LICENSE_FORM_REQUIRED_OPTIONS = [
   }),
   Object.assign(new ClarinLicenseRequiredInfo(), {
     id: 9,
-    value: CLARIN_LICENSE_REQUIRED_INFO.INTENDED_USE,
-    name: 'INTENDED_USE'
+    value: CLARIN_LICENSE_REQUIRED_INFO.ACA_ORG_NAME_AND_SEAT,
+    name: 'ACA_ORG_NAME_AND_SEAT'
   })
 ];
 

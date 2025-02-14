@@ -22,6 +22,11 @@ export function getBitstreamModuleRoute() {
 export function getBitstreamDownloadRoute(bitstream): string {
   return new URLCombiner(getBitstreamModuleRoute(), bitstream.uuid, 'download').toString();
 }
+
+export function getBitstreamContentRoute(bitstream): string {
+  return new URLCombiner(getBitstreamModuleRoute(), bitstream.uuid, 'content').toString();
+}
+
 export function getBitstreamRequestACopyRoute(item, bitstream): { routerLink: string, queryParams: any } {
   const url = new URLCombiner(getItemModuleRoute(), item.uuid, 'request-a-copy').toString();
   return {

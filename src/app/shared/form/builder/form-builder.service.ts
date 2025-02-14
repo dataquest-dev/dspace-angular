@@ -94,7 +94,7 @@ export class FormBuilderService extends DynamicFormService {
     this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
     // If optional config service was passed, perform an initial set of type field (default dc_type) for type binds
     if (hasValue(this.configService)) {
-      this.setTypeBindFieldFromConfig();
+      this.setTypeBindFieldFromConfig(this.typeFields);
     }
 
 
@@ -560,7 +560,7 @@ export class FormBuilderService extends DynamicFormService {
   /**
    * Get the type bind field from config
    */
-  setTypeBindFieldFromConfig(metadataField: string = null): void {
+  setTypeBindFieldFromConfig(typeBindFields: Map<string, string>, metadataField: string = null): void {
     this.configService.findByPropertyName('submit.type-bind.field').pipe(
       getFirstCompletedRemoteData(),
     ).subscribe((remoteData: any) => {
@@ -584,7 +584,7 @@ export class FormBuilderService extends DynamicFormService {
             const normalizedValuePart = valuePart.replace(/\./g, '_');
 
             // Set the value in the typeFields map
-            this.typeFields.set(metadataFieldConfigPart, normalizedValuePart);
+            typeBindFields.set(metadataFieldConfigPart, normalizedValuePart);
 
             if (metadataFieldConfigPart === metadataField) {
               typeFieldConfigValue = valuePart;
@@ -596,7 +596,7 @@ export class FormBuilderService extends DynamicFormService {
         }
 
         // Always update the typeFields map with the default value, normalized
-        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, typeFieldConfigValue.replace(/\./g, '_'));
+        typeBindFields.set(TYPE_BIND_DEFAULT_KEY, typeFieldConfigValue.replace(/\./g, '_'));
       });
     });
   }
@@ -607,7 +607,7 @@ export class FormBuilderService extends DynamicFormService {
    */
   getTypeField(metadataField: string): string {
     if (hasValue(this.configService) && isEmpty(this.typeFields.values())) {
-      this.setTypeBindFieldFromConfig(metadataField);
+      this.setTypeBindFieldFromConfig(this.typeFields, metadataField);
     } else if (hasNoValue(this.typeFields.get(TYPE_BIND_DEFAULT_KEY))) {
       this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
     }
