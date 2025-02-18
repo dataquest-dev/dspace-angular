@@ -17,11 +17,9 @@ jobs:
         uses: actions/checkout@v4  # Ensures the repository is available
 
       - name: Get and Trigger Customer Branch Builds
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Authenticate with GitHub CLI using the token
-          echo $GH_TOKEN | gh auth login --with-token
+          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
 
           git fetch --prune origin  # Ensure remote refs are fetched
           BRANCHES=$(git ls-remote --heads origin | awk -F'/' '{print $3"/"$4}' | grep '^customer/')
