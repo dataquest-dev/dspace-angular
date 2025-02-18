@@ -17,7 +17,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git fetch --prune origin  # Ensure remote refs are fetched
-          BRANCHES=$(git ls-remote --heads origin | awk -F'/' '{print $3}' | grep '^customer/' | jq -R -s -c 'split("\n")[:-1]')
+          BRANCHES=$(git ls-remote --heads origin | awk -F'/' '{print $3"/"$4}' | grep '^customer/')
           for branch in $(echo $BRANCHES | jq -r '.[]'); do
             echo "Triggering build for branch: $branch"
             gh workflow run build.yml --ref $branch
