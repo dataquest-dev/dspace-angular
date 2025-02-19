@@ -1,3 +1,4 @@
+import { testA11y } from 'cypress/support/utils';
 
 describe('Browse By Author', () => {
     it('should pass accessibility tests', () => {
