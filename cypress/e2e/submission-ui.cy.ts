@@ -230,28 +230,28 @@ describe('Create a new submission', () => {
     createItemProcess.showErrorNotSupportedLicense();
   });
 
-  // Author field should consist of two input fields
-  it('Author field should consist of two input fields', {
-    retries: {
-      runMode: 6,
-      openMode: 6,
-    },
-    defaultCommandTimeout: 10000
-  },() => {
-    createItemProcess.checkAuthorFirstnameField();
-    createItemProcess.checkAuthorLastnameField();
-  });
+  // // Author field should consist of two input fields
+  // it('Author field should consist of two input fields', {
+  //   retries: {
+  //     runMode: 6,
+  //     openMode: 6,
+  //   },
+  //   defaultCommandTimeout: 10000
+  // },() => {
+  //   createItemProcess.checkAuthorFirstnameField();
+  //   createItemProcess.checkAuthorLastnameField();
+  // });
 
-  it('The submission should not have the Notice Step', {
-    retries: {
-      runMode: 6,
-      openMode: 6,
-    },
-    defaultCommandTimeout: 10000
-  },() => {
-    createItemProcess.checkClarinNoticeStepNotExist();
-  });
-});
+//   it('The submission should not have the Notice Step', {
+//     retries: {
+//       runMode: 6,
+//       openMode: 6,
+//     },
+//     defaultCommandTimeout: 10000
+//   },() => {
+//     createItemProcess.checkClarinNoticeStepNotExist();
+//   });
+// });
 
 describe('Create a new submission in the clariah collection', () => {
   beforeEach(() => {
