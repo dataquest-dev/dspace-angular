@@ -251,7 +251,7 @@ describe('Create a new submission', () => {
 //   },() => {
 //     createItemProcess.checkClarinNoticeStepNotExist();
 //   });
-// });
+});
 
 describe('Create a new submission in the clariah collection', () => {
   beforeEach(() => {
