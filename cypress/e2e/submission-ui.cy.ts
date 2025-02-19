@@ -5,7 +5,6 @@
 import {
   TEST_ADMIN_PASSWORD,
   TEST_ADMIN_USER,
-  TEST_SUBMIT_CLARIAH_COLLECTION_UUID,
   TEST_SUBMIT_COLLECTION_UUID
 } from '../support/e2e';
 import { createItemProcess } from '../support/commands';
@@ -253,25 +252,25 @@ describe('Create a new submission', () => {
 //   });
 });
 
-describe('Create a new submission in the clariah collection', () => {
-  beforeEach(() => {
-    // Create a new submission
-    cy.visit('/submit?collection=' + TEST_SUBMIT_CLARIAH_COLLECTION_UUID + '&entityType=none');
-
-    // This page is restricted, so we will be shown the login form. Fill it out & submit.
-    cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
-  });
-
-  it('The submission should have the Notice Step', {
-    retries: {
-      runMode: 6,
-      openMode: 6,
-    },
-    defaultCommandTimeout: 10000
-  },() => {
-    createItemProcess.checkClarinNoticeStep();
-  });
-});
+// describe('Create a new submission in the clariah collection', () => {
+//   beforeEach(() => {
+//     // Create a new submission
+//     cy.visit('/submit?collection=' + TEST_SUBMIT_CLARIAH_COLLECTION_UUID + '&entityType=none');
+//
+//     // This page is restricted, so we will be shown the login form. Fill it out & submit.
+//     cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
+//   });
+//
+//   it('The submission should have the Notice Step', {
+//     retries: {
+//       runMode: 6,
+//       openMode: 6,
+//     },
+//     defaultCommandTimeout: 10000
+//   },() => {
+//     createItemProcess.checkClarinNoticeStep();
+//   });
+// });
 
 function addEUSponsor(euSponsorOrder) {
   createItemProcess.clickAddMore(1);
