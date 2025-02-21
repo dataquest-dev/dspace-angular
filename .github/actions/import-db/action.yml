@@ -73,7 +73,7 @@ runs:
           echo $log_file_timestamp
           mkdir ../__logs
           # Continuously append to the log file $log_file_timestamp. Start appending when the first file is added to the __logs folder.
-          while true; do tail -F --retry ../__logs/*.txt 2>/dev/null >> $log_file_timestamp & sleep 2; done &
+          inotifywait -m -e create --format "%w%f" ../__logs/ | while IFS= read -r file; do tail -F --retry "$file" >> "$log_file_timestamp" 2>/dev/null & done &
           echo "====="
           args=(
             --resume=false
