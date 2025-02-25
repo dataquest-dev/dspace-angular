@@ -5,7 +5,7 @@ import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { getFirstCompletedRemoteData, getFirstSucceededRemoteData } from '../../core/shared/operators';
-import { switchMap } from 'rxjs/operators';
+import { scan, switchMap } from 'rxjs/operators';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
 import { defaultPagination, defaultSortConfiguration } from '../clarin-license-table-pagination';
@@ -320,21 +320,28 @@ export class ClarinLicenseTableComponent implements OnInit {
    */
   loadAllLicenses() {
     this.selectedLicense = null;
-
     this.licensesRD$ = new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
     this.isLoading = true;
 
     // load the current pagination and sorting options
-    const currentPagination$ = this.paginationService.getCurrentPagination(this.options.id, this.options);
-    const currentSort$ = this.paginationService.getCurrentSort(this.options.id, defaultSortConfiguration);
+    const currentPagination$ = this.getCurrentPagination();
+    const currentSort$ = this.getCurrentSort();
+    const searchTerm$ = new BehaviorSubject<string>(this.searchingLicenseName);
 
-    observableCombineLatest([currentPagination$, currentSort$]).pipe(
-      switchMap(([currentPagination, currentSort]) => {
-        return this.clarinLicenseService.searchBy('byNameLike',{
-            currentPage: currentPagination.currentPage,
+    observableCombineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
+      scan((prevState, [currentPagination, currentSort, searchTerm]) => {
+        // If search term has changed, reset to page 1; otherwise, keep current page
+        const currentPage = prevState.searchTerm !== searchTerm ? 1 : currentPagination.currentPage;
+        return { currentPage, currentPagination, currentSort, searchTerm };
+      }, { searchTerm: '', currentPage: 1, currentPagination: this.getCurrentPagination(),
+        currentSort: this.getCurrentSort() }),
+
+      switchMap(({ currentPage, currentPagination, currentSort, searchTerm }) => {
+        return this.clarinLicenseService.searchBy('byNameLike', {
+            currentPage: currentPage, // Properly reset page only when needed
             elementsPerPage: currentPagination.pageSize,
-            sort: {field: currentSort.field, direction: currentSort.direction},
-            searchParams: [Object.assign(new RequestParam('name', this.searchingLicenseName))]
+            sort: { field: currentSort.field, direction: currentSort.direction },
+            searchParams: [new RequestParam('name', searchTerm)]
           }, false
         );
       }),
@@ -361,7 +368,24 @@ export class ClarinLicenseTableComponent implements OnInit {
     }
   }
 
+  /**
+   * Initialize the pagination options. Set the default values.
+   */
   private initializePaginationOptions() {
     this.options = defaultPagination;
+  }
+
+  /**
+   * Get the current pagination options.
+   */
+  private getCurrentPagination() {
+    return this.paginationService.getCurrentPagination(this.options.id, this.options);
+  }
+
+  /**
+   * Get the current sorting options.
+   */
+  private getCurrentSort() {
+    return this.paginationService.getCurrentSort(this.options.id, defaultSortConfiguration);
   }
 }

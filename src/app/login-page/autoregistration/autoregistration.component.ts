@@ -9,7 +9,7 @@ import { RequestService } from '../../core/data/request.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthenticatedAction } from '../../core/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
@@ -27,6 +27,8 @@ import { getBaseUrl } from '../../shared/clarin-shared-util';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
 import { RemoteData } from '../../core/data/remote-data';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
+import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../shared/shared.module';
 
 /**
  * This component is showed up when the user has clicked on the `verification token`.
@@ -36,7 +38,9 @@ import { HardRedirectService } from '../../core/services/hard-redirect.service';
 @Component({
   selector: 'ds-autoregistration',
   templateUrl: './autoregistration.component.html',
-  styleUrls: ['./autoregistration.component.scss']
+  styleUrls: ['./autoregistration.component.scss'],
+  standalone: true,
+  imports: [TranslateModule, CommonModule, SharedModule]
 })
 export class AutoregistrationComponent implements OnInit {
 
