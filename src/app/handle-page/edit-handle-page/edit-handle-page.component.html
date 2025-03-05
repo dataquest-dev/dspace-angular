@@ -6,6 +6,13 @@
              [(ngModel)]="handle"
              [placeholder]="'handle-table.edit-handle.form-handle-input-placeholder' | translate">
     </div>
+    <div class="form-group">
+      <label for="handleId">ID</label>
+      <input type="text" class="form-control" id="handleId" name="handleId"
+             [(ngModel)]="id"
+             placeholder="..."
+             [readonly]="true">
+    </div>
     <div class="form-group" *ngIf="resourceType">
       <label for="resourceType">{{'handle-table.table.resource-type' | translate}}</label>
       <input type="text" class="form-control" id="resourceType" name="resourceType"
@@ -14,7 +21,7 @@
              [readonly]="true">
     </div>
     <div class="form-group" *ngIf="resourceType">
-      <label for="resourceType">{{'handle-table.table.resource-id' | translate}}</label>
+      <label for="resourceId">{{'handle-table.table.resource-id' | translate}}</label>
       <input type="text" class="form-control" id="resourceId" name="resourceId"
              [(ngModel)]="resourceId"
              [placeholder]="'handle-table.edit-handle.form-url-input-placeholder' | translate"
