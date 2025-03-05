@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../../core/shared/item.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RemoteData } from '../../../core/data/remote-data';
 import { VersionHistory } from '../../../core/shared/version-history.model';
 import { Version } from '../../../core/shared/version.model';
@@ -14,6 +14,7 @@ import { map, startWith, switchMap } from 'rxjs/operators';
 import { VersionHistoryDataService } from '../../../core/data/version-history-data.service';
 import { AlertType } from '../../../shared/alert/alert-type';
 import { getItemPageRoute } from '../../item-page-routing-paths';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ds-item-versions-notice',
@@ -60,7 +61,13 @@ export class ItemVersionsNoticeComponent implements OnInit {
    */
   public AlertTypeEnum = AlertType;
 
-  constructor(private versionHistoryService: VersionHistoryDataService) {
+  /**
+   * New observable for the full redirect URL (with namespace)
+   */
+  destinationUrl$: Observable<string>;
+
+  constructor(private versionHistoryService: VersionHistoryDataService,
+              private router: Router) {
   }
 
   /**
@@ -88,6 +95,16 @@ export class ItemVersionsNoticeComponent implements OnInit {
         startWith(false),
       );
     }
+    // Compute the destination URL from latestVersion$ with the namespace
+    this.destinationUrl$ = this.latestVersion$.pipe(
+      switchMap(latestVersion => latestVersion?.item || of(null)), // Handle the nested observable
+      map(item => {
+        const payload = item?.payload;
+        if (!payload) { return ''; } // Fallback if no payload
+        const routeCommands = [this.getItemPage(payload)]; // Generate route commands
+        return this.router.createUrlTree(routeCommands).toString(); // Convert to full URL
+      })
+    );
   }
 
   /**
