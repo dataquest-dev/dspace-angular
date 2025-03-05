@@ -12,6 +12,7 @@ import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.u
 import { createPaginatedList } from '../../../shared/testing/utils.test';
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 describe('ItemVersionsNoticeComponent', () => {
   let component: ItemVersionsNoticeComponent;
@@ -56,13 +57,16 @@ describe('ItemVersionsNoticeComponent', () => {
     ['getVersions', 'getLatestVersionFromHistory$', 'isLatest$', ]
   );
 
+  let router: Router;
   beforeEach(waitForAsync(() => {
+    router = jasmine.createSpyObj('router', ['createUrlTree']);
 
     TestBed.configureTestingModule({
       declarations: [ItemVersionsNoticeComponent],
       imports: [TranslateModule.forRoot(), RouterTestingModule.withRoutes([])],
       providers: [
-        { provide: VersionHistoryDataService, useValue: versionHistoryServiceSpy }
+        { provide: VersionHistoryDataService, useValue: versionHistoryServiceSpy },
+        { provide: Router, useValue: router }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
