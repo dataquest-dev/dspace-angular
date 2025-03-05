@@ -14,7 +14,7 @@ import { map, startWith, switchMap } from 'rxjs/operators';
 import { VersionHistoryDataService } from '../../../core/data/version-history-data.service';
 import { AlertType } from '../../../shared/alert/alert-type';
 import { getItemPageRoute } from '../../item-page-routing-paths';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'ds-item-versions-notice',
@@ -67,7 +67,8 @@ export class ItemVersionsNoticeComponent implements OnInit {
   destinationUrl$: Observable<string>;
 
   constructor(private versionHistoryService: VersionHistoryDataService,
-              private router: Router) {
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
   }
 
   /**
@@ -97,12 +98,14 @@ export class ItemVersionsNoticeComponent implements OnInit {
     }
     // Compute the destination URL from latestVersion$ with the namespace
     this.destinationUrl$ = this.latestVersion$.pipe(
-      switchMap(latestVersion => latestVersion?.item || of(null)), // Handle the nested observable
+      switchMap(latestVersion => latestVersion?.item || of(null)),
       map(item => {
-        const payload = item?.payload;
-        if (!payload) { return ''; } // Fallback if no payload
-        const routeCommands = [this.getItemPage(payload)]; // Generate route commands
-        return this.router.createUrlTree(routeCommands).toString(); // Convert to full URL
+        const routeCommands = [this.getItemPage(item?.payload)]; // e.g., ['/items/xyz']
+
+        // Use the current ActivatedRoute to make it work like [routerLink]
+        const urlTree = this.router.createUrlTree(routeCommands, { relativeTo: this.activatedRoute });
+
+        return this.router.serializeUrl(urlTree); // Get the final URL string
       })
     );
   }
