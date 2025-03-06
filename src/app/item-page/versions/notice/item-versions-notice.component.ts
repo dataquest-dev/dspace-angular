@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Item } from '../../../core/shared/item.model';
 import { Observable, of } from 'rxjs';
 import { RemoteData } from '../../../core/data/remote-data';
@@ -13,8 +13,7 @@ import {
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { VersionHistoryDataService } from '../../../core/data/version-history-data.service';
 import { AlertType } from '../../../shared/alert/alert-type';
-import { getItemPageRoute } from '../../item-page-routing-paths';
-import { ActivatedRoute, Router } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'ds-item-versions-notice',
@@ -52,10 +51,6 @@ export class ItemVersionsNoticeComponent implements OnInit {
   showLatestVersionNotice$: Observable<boolean>;
 
   /**
-   * Pagination options to fetch a single version on the first page (this is the latest version in the history)
-   */
-
-  /**
    * The AlertType enumeration
    * @type {AlertType}
    */
@@ -67,8 +62,7 @@ export class ItemVersionsNoticeComponent implements OnInit {
   destinationUrl$: Observable<string>;
 
   constructor(private versionHistoryService: VersionHistoryDataService,
-              private router: Router,
-              private activatedRoute: ActivatedRoute) {
+              @Inject(DOCUMENT) private document: Document ) {
   }
 
   /**
@@ -96,27 +90,39 @@ export class ItemVersionsNoticeComponent implements OnInit {
         startWith(false),
       );
     }
+
     // Compute the destination URL from latestVersion$ with the namespace
     this.destinationUrl$ = this.latestVersion$.pipe(
       switchMap(latestVersion => latestVersion?.item || of(null)),
       map(item => {
-        const routeCommands = [this.getItemPage(item?.payload)]; // e.g., ['/items/xyz']
+        const itemId = this.extractItemId(item?.payload); // Extract only the UUID
 
-        // Use the current ActivatedRoute to make it work like [routerLink]
-        const urlTree = this.router.createUrlTree(routeCommands, { relativeTo: this.activatedRoute });
+        if (!itemId) {
+          console.error('No valid UUID found in payload');
+          return this.document.location.pathname; // Fallback to the current path if extraction fails
+        }
 
-        return this.router.serializeUrl(urlTree); // Get the final URL string
+        // Get the base URL dynamically - with the namespace. Remove the last part of the path (the item UUID).
+        const baseUrl = this.document.location.pathname.split('/').slice(0, -1).join('/');
+
+        // Construct the final URL dynamically
+        const finalUrl = `${baseUrl}/${itemId}`;
+
+        return finalUrl;
       })
     );
   }
 
   /**
-   * Get the item page url
-   * @param item The item for which the url is requested
+   * Extracts the first valid UUID from the payload
    */
-  getItemPage(item: Item): string {
-    if (hasValue(item)) {
-      return getItemPageRoute(item);
-    }
+  extractItemId(payload: any): string | null {
+    if (!payload) { return null; }
+
+    // Extracts the first valid UUID from the payload
+    const uuidRegex = /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/;
+    const match = JSON.stringify(payload).match(uuidRegex); // Convert payload to string and search for UUID
+
+    return match ? match[0] : null; // Return the first UUID found, or null if none
   }
 }
