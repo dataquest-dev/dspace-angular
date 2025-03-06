@@ -12,24 +12,28 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class ClarinRefCitationModalComponent implements AfterViewInit {
 
   /**
-   * The citation text that will be displayed in the modal.
-   */
-  @Input() citationText = '';
-
-  /**
-   * The name of the item (title/header of the modal).
-   */
-  @Input() itemName = '';
-
-  /**
-   * The citation type (e.g., CMDI,..) displayed in the footer.
-   */
-  @Input() citationType = '';
-
-  /**
    * Reference to the textarea for selecting text.
    */
   @ViewChild('copyCitationModal', { static: false }) citationContentRef!: ElementRef<HTMLTextAreaElement>;
+
+  /**
+   * The citation context - data retrieved from OAI-PMH
+   */
+  @Input()
+  citationText = '';
+
+  /**
+   * The name of the showed Item
+   */
+  @Input()
+  itemName = '';
+
+  /**
+   * The type of the citation - e.g. `bibtex` or `cmdi`
+   */
+  @Input()
+  citationType = '';
+
 
   private isViewInitialized = false;
 
