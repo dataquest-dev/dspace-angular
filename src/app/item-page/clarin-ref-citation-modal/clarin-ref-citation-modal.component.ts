@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * The modal component for copying the citation data retrieved from OAI-PMH.
@@ -11,42 +12,49 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular
 export class ClarinRefCitationModalComponent implements AfterViewInit {
 
   /**
-   * The reference to make possible automatically select whole content.
+   * The citation text that will be displayed in the modal.
    */
-  @ViewChild('copyCitationModal', { static: true }) citationContentRef: ElementRef;
+  @Input() citationText = '';
 
-  private _citationText = '';
-  @Input()
-  get citationText(): string {
-    return this._citationText;
-  }
-  set citationText(value: string) {
-    this._citationText = value;
-    // Select content when citationText is updated, but only after view is initialized
-    if (this.isViewInitialized) {
-      setTimeout(() => this.selectContent(), 0); // Push to next tick to ensure DOM update
-    }
-  }
+  /**
+   * The name of the item (title/header of the modal).
+   */
+  @Input() itemName = '';
+
+  /**
+   * The citation type (e.g., CMDI,..) displayed in the footer.
+   */
+  @Input() citationType = '';
+
+  /**
+   * Reference to the textarea for selecting text.
+   */
+  @ViewChild('copyCitationModal', { static: false }) citationContentRef!: ElementRef<HTMLTextAreaElement>;
 
   private isViewInitialized = false;
 
+  constructor(public activeModal: NgbActiveModal) {} // Inject modal service
+
   ngAfterViewInit(): void {
     this.isViewInitialized = true;
-    // Select content if citationText is already set by this point
     if (this.citationText) {
-      setTimeout(() => this.selectContent(), 0); // Ensure DOM is ready
+      this.selectContent();
     }
   }
 
-  selectContent() {
-    const element = this.citationContentRef?.nativeElement;
-    if (element) {
-      element.select();
-    }
+  /**
+   * Selects the content of the citation text area.
+   */
+  selectContent(): void {
+    setTimeout(() => {
+      this.citationContentRef?.nativeElement.select();
+    }, 0); // Ensure DOM is updated before selection
   }
 
-  // Public method for parent to trigger selection explicitly
-  selectContentOnLoad() {
-    setTimeout(() => this.selectContent(), 0); // Ensure DOM is updated
+  /**
+   * Allows external triggers for content selection.
+   */
+  selectContentOnLoad(): void {
+    this.selectContent();
   }
 }
