@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * The modal component for copying the citation data retrieved from OAI-PMH.
@@ -11,39 +10,43 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ClarinRefCitationModalComponent implements AfterViewInit {
 
-  constructor(public activeModal: NgbActiveModal) {
-  }
-
   /**
    * The reference to make possible automatically select whole content.
    */
   @ViewChild('copyCitationModal', { static: true }) citationContentRef: ElementRef;
 
-  /**
-   * The name of the showed Item
-   */
+  private _citationText = '';
   @Input()
-  itemName = '';
+  get citationText(): string {
+    return this._citationText;
+  }
+  set citationText(value: string) {
+    this._citationText = value;
+    // Select content when citationText is updated, but only after view is initialized
+    if (this.isViewInitialized) {
+      setTimeout(() => this.selectContent(), 0); // Push to next tick to ensure DOM update
+    }
+  }
 
-  /**
-   * The type of the citation - e.g. `bibtex` or `cmdi`
-   */
-  @Input()
-  citationType = '';
-
-  /**
-   * The citation context - data retrieved from OAI-PMH
-   */
-  @Input()
-  citationText = '';
+  private isViewInitialized = false;
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.selectContent();
-    }, 300);
+    this.isViewInitialized = true;
+    // Select content if citationText is already set by this point
+    if (this.citationText) {
+      setTimeout(() => this.selectContent(), 0); // Ensure DOM is ready
+    }
   }
 
   selectContent() {
-    this.citationContentRef?.nativeElement?.select();
+    const element = this.citationContentRef?.nativeElement;
+    if (element) {
+      element.select();
+    }
+  }
+
+  // Public method for parent to trigger selection explicitly
+  selectContentOnLoad() {
+    setTimeout(() => this.selectContent(), 0); // Ensure DOM is updated
   }
 }
