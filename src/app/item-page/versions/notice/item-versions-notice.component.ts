@@ -95,7 +95,7 @@ export class ItemVersionsNoticeComponent implements OnInit {
     this.destinationUrl$ = this.latestVersion$.pipe(
       switchMap(latestVersion => latestVersion?.item || of(null)),
       map(item => {
-        const itemId = this.extractItemId(item?.payload); // Extract only the UUID
+        const itemId = item?.payload?.uuid;
 
         if (!itemId) {
           console.error('No valid UUID found in payload');
@@ -113,16 +113,4 @@ export class ItemVersionsNoticeComponent implements OnInit {
     );
   }
 
-  /**
-   * Extracts the first valid UUID from the payload
-   */
-  extractItemId(payload: any): string | null {
-    if (!payload) { return null; }
-
-    // Extracts the first valid UUID from the payload
-    const uuidRegex = /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/;
-    const match = JSON.stringify(payload).match(uuidRegex); // Convert payload to string and search for UUID
-
-    return match ? match[0] : null; // Return the first UUID found, or null if none
-  }
 }
