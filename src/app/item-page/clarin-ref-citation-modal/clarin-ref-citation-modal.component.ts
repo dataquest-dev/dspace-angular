@@ -11,13 +11,16 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ClarinRefCitationModalComponent implements AfterViewInit {
 
-  constructor(public activeModal: NgbActiveModal) {
-  }
+  /**
+   * Reference to the textarea for selecting text.
+   */
+  @ViewChild('copyCitationModal', { static: false }) citationContentRef!: ElementRef<HTMLTextAreaElement>;
 
   /**
-   * The reference to make possible automatically select whole content.
+   * The citation context - data retrieved from OAI-PMH
    */
-  @ViewChild('copyCitationModal', { static: true }) citationContentRef: ElementRef;
+  @Input()
+  citationText = '';
 
   /**
    * The name of the showed Item
@@ -31,19 +34,31 @@ export class ClarinRefCitationModalComponent implements AfterViewInit {
   @Input()
   citationType = '';
 
-  /**
-   * The citation context - data retrieved from OAI-PMH
-   */
-  @Input()
-  citationText = '';
+
+  private isViewInitialized = false;
+
+  constructor(public activeModal: NgbActiveModal) {} // Inject modal service
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
+    this.isViewInitialized = true;
+    if (this.citationText) {
       this.selectContent();
-    }, 300);
+    }
   }
 
-  selectContent() {
-    this.citationContentRef?.nativeElement?.select();
+  /**
+   * Selects the content of the citation text area.
+   */
+  selectContent(): void {
+    setTimeout(() => {
+      this.citationContentRef?.nativeElement.select();
+    }, 0); // Ensure DOM is updated before selection
+  }
+
+  /**
+   * Allows external triggers for content selection.
+   */
+  selectContentOnLoad(): void {
+    this.selectContent();
   }
 }
