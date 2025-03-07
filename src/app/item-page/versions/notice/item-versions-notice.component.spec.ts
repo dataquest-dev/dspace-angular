@@ -12,8 +12,6 @@ import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.u
 import { createPaginatedList } from '../../../shared/testing/utils.test';
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MockActivatedRoute } from '../../../shared/mocks/active-router.mock';
 
 describe('ItemVersionsNoticeComponent', () => {
   let component: ItemVersionsNoticeComponent;
@@ -58,19 +56,12 @@ describe('ItemVersionsNoticeComponent', () => {
     ['getVersions', 'getLatestVersionFromHistory$', 'isLatest$', ]
   );
 
-  let router: Router;
-  let activatedRoute: ActivatedRoute;
-
   beforeEach(waitForAsync(() => {
-    router = jasmine.createSpyObj('router', ['createUrlTree']);
-
     TestBed.configureTestingModule({
       declarations: [ItemVersionsNoticeComponent],
       imports: [TranslateModule.forRoot(), RouterTestingModule.withRoutes([])],
       providers: [
-        { provide: VersionHistoryDataService, useValue: versionHistoryServiceSpy },
-        { provide: Router, useValue: router },
-        { provide: ActivatedRoute, useValue: new MockActivatedRoute() },
+        { provide: VersionHistoryDataService, useValue: versionHistoryServiceSpy }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
