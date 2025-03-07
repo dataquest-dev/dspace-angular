@@ -169,11 +169,8 @@ export class DefineLicenseFormComponent implements OnInit {
     if (event.target.checked) {
       form.push(checkBoxValue);
     } else {
-      form.forEach((formValue, index)  => {
-        if (formValue?.id === checkBoxValue.id) {
-          form.splice(index, 1);
-        }
-      });
+      let index = form.findIndex(item => item.name === checkBoxValue.name);
+      form.splice(index, 1);
     }
   }
 
