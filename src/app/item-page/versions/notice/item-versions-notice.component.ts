@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Item } from '../../../core/shared/item.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RemoteData } from '../../../core/data/remote-data';
 import { VersionHistory } from '../../../core/shared/version-history.model';
 import { Version } from '../../../core/shared/version.model';
@@ -13,7 +13,7 @@ import {
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { VersionHistoryDataService } from '../../../core/data/version-history-data.service';
 import { AlertType } from '../../../shared/alert/alert-type';
-import { getItemPageRoute } from '../../item-page-routing-paths';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'ds-item-versions-notice',
@@ -51,16 +51,18 @@ export class ItemVersionsNoticeComponent implements OnInit {
   showLatestVersionNotice$: Observable<boolean>;
 
   /**
-   * Pagination options to fetch a single version on the first page (this is the latest version in the history)
-   */
-
-  /**
    * The AlertType enumeration
    * @type {AlertType}
    */
   public AlertTypeEnum = AlertType;
 
-  constructor(private versionHistoryService: VersionHistoryDataService) {
+  /**
+   * New observable for the full redirect URL (with namespace)
+   */
+  destinationUrl$: Observable<string>;
+
+  constructor(private versionHistoryService: VersionHistoryDataService,
+              @Inject(DOCUMENT) private document: Document ) {
   }
 
   /**
@@ -88,15 +90,27 @@ export class ItemVersionsNoticeComponent implements OnInit {
         startWith(false),
       );
     }
+
+    // Compute the destination URL from latestVersion$ with the namespace
+    this.destinationUrl$ = this.latestVersion$.pipe(
+      switchMap(latestVersion => latestVersion?.item || of(null)),
+      map(item => {
+        const itemId = item?.payload?.uuid;
+
+        if (!itemId) {
+          console.error('No valid UUID found in payload');
+          return this.document.location.pathname; // Fallback to the current path if extraction fails
+        }
+
+        // Get the base URL dynamically - with the namespace. Remove the last part of the path (the item UUID).
+        const baseUrl = this.document.location.pathname.split('/').slice(0, -1).join('/');
+
+        // Construct the final URL dynamically
+        const finalUrl = `${baseUrl}/${itemId}`;
+
+        return finalUrl;
+      })
+    );
   }
 
-  /**
-   * Get the item page url
-   * @param item The item for which the url is requested
-   */
-  getItemPage(item: Item): string {
-    if (hasValue(item)) {
-      return getItemPageRoute(item);
-    }
-  }
 }

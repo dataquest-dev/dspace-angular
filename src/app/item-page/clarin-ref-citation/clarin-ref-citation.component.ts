@@ -230,20 +230,26 @@ export class ClarinRefCitationComponent implements OnInit {
    * Open the citation modal with the data retrieved from the OAI-PMH.
    * @param citationType
    */
-  async openModal(citationType) {
+  async openModal(citationType: string) {
     const modal = this.modalService.open(ClarinRefCitationModalComponent, {
       size: 'xl',
       ariaLabelledBy: 'modal-basic-title'
     });
+
+    // Set initial properties
     modal.componentInstance.itemName = this.itemNameText;
     modal.componentInstance.citationType = citationType;
+
     // Fetch the citation text from the API
     let citationText = '';
     await this.getCitationText(citationType)
       .then(res => {
-        citationText = res.payload?.metadata;
+        citationText = res.payload?.metadata || ''; // Fallback to empty string if metadata is undefined
+        modal.componentInstance.citationText = citationText; // Set citationText after fetching
       });
-    modal.componentInstance.citationText = citationText;
+
+    // Ensure the modal content is selected after rendering
+    modal.componentInstance.selectContentOnLoad();
   }
 
   /**
