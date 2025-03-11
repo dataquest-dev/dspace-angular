@@ -60,7 +60,7 @@ export class AuthFailedPageComponent implements OnInit {
   public sendEmail() {
     const requestId = this.requestService.generateRequestId();
 
-    const url = this.halService.getRootHref() + '/autoregistration?netid=' + this.netid +
+    const url = this.halService.getRootHref() + '/autoregistration?netid=' + encodeURIComponent(this.netid) +
       '&email=' + encodeURIComponent(this.email);
     const postRequest = new PostRequest(requestId, url);
     // Send POST request
