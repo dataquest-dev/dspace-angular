@@ -2019,6 +2019,9 @@
 
   "handle-table.edit-handle.form-button-submit": "Submit",
 
+  "handle-table.edit-handle.form-id-input-text": "ID",
+
+  "handle-table.edit-handle.form-id-input-placeholder": "...",
 
   "handle-page.title": "Handles",
 

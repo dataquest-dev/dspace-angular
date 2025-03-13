@@ -7,10 +7,10 @@
              [placeholder]="'handle-table.edit-handle.form-handle-input-placeholder' | translate">
     </div>
     <div class="form-group">
-      <label for="handleId">ID</label>
+      <label for="handleId">{{'handle-table.edit-handle.form-id-input-text' | translate}}</label>
       <input type="text" class="form-control" id="handleId" name="handleId"
              [(ngModel)]="id"
-             placeholder="..."
+             [placeholder]="'handle-table.edit-handle.form-id-input-placeholder' | translate"
              [readonly]="true">
     </div>
     <div class="form-group" *ngIf="resourceType">
