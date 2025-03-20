@@ -113,27 +113,27 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
    * The images are loaded from the `/assets/images/`
    */
   private findRightImageByType(type): string {
-    switch (type) {
+    switch (type?.toLowerCase()) {
       case 'article':
       case 'other':
       case 'book':
-      case 'workingPaper':
+      case 'workingpaper':
       case 'report':
       case 'video':
         return type;
-      case 'conferenceObject':
+      case 'conferenceobject':
       case 'konferenční příspěvek':
         return 'conferPaper';
-      case 'bachelorThesis':
-      case 'masterThesis':
-      case 'doctoralThesis':
+      case 'bachelorthesis':
+      case 'masterthesis':
+      case 'doctoralthesis':
       case 'bakalářská práce':
       case 'bakalářská  práce':
       case 'diplomová práce':
       case 'disertační práce':
       case 'rigorózní práce':
         return 'theses';
-      case 'bookPart':
+      case 'bookpart':
       case 'kapitola v knize':
         return 'chapter';
       case 'lecture':
