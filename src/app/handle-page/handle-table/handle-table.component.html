@@ -66,14 +66,21 @@
                   </span>
                 </td>
                 <td class="version-row-element-editor">
-                  {{handle?.url}}
+                  <a *ngIf="handle?.url" [href]="handle?.url" target="_blank" rel="noopener noreferrer">
+                    {{handle?.url}}
+                  </a>
                 </td>
                 <td class="version-row-element-editor">
                   {{handle?.resourceTypeID}}
                 </td>
                 <td class="version-row-element-editor">
-                  <span *ngIf="handle?.resourceTypeID != null">
-                     {{handle?.id}}
+                  <span *ngIf="handle?.resourceId != null">
+                    <a *ngIf="shouldLink(handle); else noLink" [href]="getHandleTargetPageRoute(handle)" target="_blank" rel="noopener noreferrer">
+                      {{handle?.resourceId}}
+                    </a>
+                    <ng-template #noLink>
+                      {{handle?.resourceId}}
+                    </ng-template>
                   </span>
                 </td>
               </tr>
