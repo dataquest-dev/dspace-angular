@@ -1,3 +1,12 @@
 /**
-  The file for styling `handle-table.component.html`. No styling needed.
+  The file for styling `handle-table.component.html`.
  */
+ // element breaks and wraps properly
+.version-row-element-editor {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  word-break: break-all;
+  max-width: 250px;
+  overflow: hidden;
+}
