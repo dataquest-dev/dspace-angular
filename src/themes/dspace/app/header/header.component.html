@@ -35,7 +35,7 @@
                   <a href="{{ getLangCode() + '/' + translateSlug('services') }}" class="lindat-nav-link ">{{'navbar.services' | translate}}</a>
                 </li>
                 <li class="lindat-nav-item lindat-dropdown">
-                  <a href="{{ '/' + getLangCodeIfCzech() }}" class="lindat-nav-link lindat-dropdown-toggle"
+                  <a href="{{ getLangCodeIfCzech() }}" class="lindat-nav-link lindat-dropdown-toggle"
                      data-toggle="dropdown"
                      onclick="this.parentNode.querySelector('.lindat-dropdown-toggle+div.lindat-dropdown-menu').classList.toggle('lindat-show'); return false;">{{'navbar.about' | translate}}</a>
                   <div class="lindat-dropdown-menu">
