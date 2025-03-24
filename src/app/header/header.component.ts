@@ -42,22 +42,21 @@ export class HeaderComponent implements OnInit {
   }
 
   getLangCodeIfCzech(): string {
-    return this.localeService.getCurrentLanguageCode() === "cs" ? this.localeService.getCurrentLanguageCode() : "";
+    return this.localeService.getCurrentLanguageCode() === 'cs' ? this.localeService.getCurrentLanguageCode() : '';
   }
 
   translateSlug(slug: string): string {
-    if (this.localeService.getCurrentLanguageCode() === "en") return slug;
-
-    if (slug === "partners") {
-      return "partneri";
-    } else if (slug === "integration") {
-      return "integrace";
-    } else if (slug === "partnership") {
-      return "partnerstvi";
-    } else if (slug === "services") {
-      return "sluzby";
-    } else {
-      return "";
+    if (this.localeService.getCurrentLanguageCode() === 'en') {
+      return slug;
     }
+
+    const translations = {
+      'partners': 'partneri',
+      'integration': 'integrace',
+      'partnership': 'partnerstvi',
+      'services': 'sluzby'
+    };
+
+    return translations[slug] || '';
   }
 }
