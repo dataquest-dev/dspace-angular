@@ -37,16 +37,30 @@ export class HeaderComponent implements OnInit {
     this.menuService.toggleMenu(this.menuID);
   }
 
+  /**
+  * Returns the current language code from the locale service
+  * @returns {string} The current language code
+  */
   getLangCode(): string {
     return this.localeService.getCurrentLanguageCode();
   }
 
+  /**
+  * Returns the current language code only if it's Czech ('cs'), otherwise returns an empty string
+  * @returns {string} The language code if Czech, empty string otherwise
+  */
   getLangCodeIfCzech(): string {
     return this.localeService.getCurrentLanguageCode() === 'cs' ? this.localeService.getCurrentLanguageCode() : '';
   }
 
+  /**
+  * Translates English slugs to their Czech equivalents when the current language is Czech
+  * @param {string} slug - The English slug to translate
+  * @returns {string} The translated slug if in Czech, the original slug if in English, or empty string if translation not found
+  */
   translateSlug(slug: string): string {
-    if (this.localeService.getCurrentLanguageCode() === 'en') {
+    const currentLang = this.localeService.getCurrentLanguageCode();
+    if (currentLang === 'en') {
       return slug;
     }
 
