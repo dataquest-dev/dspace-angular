@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { MenuService } from '../shared/menu/menu.service';
 import { MenuID } from '../shared/menu/menu-id.model';
 import { HostWindowService } from '../shared/host-window.service';
+import { LocaleService } from '../core/locale/locale.service';
 
 /**
  * Represents the header with the logo and simple navigation
@@ -24,6 +25,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     protected menuService: MenuService,
     protected windowService: HostWindowService,
+    private localeService: LocaleService,
   ) {
   }
 
@@ -33,5 +35,29 @@ export class HeaderComponent implements OnInit {
 
   public toggleNavbar(): void {
     this.menuService.toggleMenu(this.menuID);
+  }
+
+  getLangCode(): string {
+    return this.localeService.getCurrentLanguageCode();
+  }
+
+  getLangCodeIfCzech(): string {
+    return this.localeService.getCurrentLanguageCode() === "cs" ? this.localeService.getCurrentLanguageCode() : "";
+  }
+
+  translateSlug(slug: string): string {
+    if (this.localeService.getCurrentLanguageCode() === "en") return slug;
+
+    if (slug === "partners") {
+      return "partneri";
+    } else if (slug === "integration") {
+      return "integrace";
+    } else if (slug === "partnership") {
+      return "partnerstvi";
+    } else if (slug === "services") {
+      return "sluzby";
+    } else {
+      return "";
+    }
   }
 }
