@@ -22,7 +22,7 @@ describe('HeaderComponent', () => {
 
   // Mock LocaleService
   const localeServiceMock = {
-    getCurrentLanguageCode: () => 'en' // returns false language code
+    getCurrentLanguageCode: () => 'en' // returns default language code
   };
 
   // waitForAsync beforeEach
