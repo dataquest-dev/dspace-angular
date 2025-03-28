@@ -1,6 +1,7 @@
-import { Component, Inject, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Injector, Input, OnDestroy, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { AlertType } from '../../shared/alert/alert-type';
 import { DSpaceObject } from '../../core/shared/dspace-object.model';
+import { Context } from '../../core/shared/context.model';
 import { DsoEditMetadataForm } from './dso-edit-metadata-form';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data } from '@angular/router';
@@ -9,9 +10,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { RemoteData } from '../../core/data/remote-data';
 import { hasNoValue, hasValue } from '../../shared/empty.util';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import {
-  getFirstCompletedRemoteData,
-} from '../../core/shared/operators';
+import { getFirstCompletedRemoteData } from '../../core/shared/operators';
 import { UpdateDataService } from '../../core/data/update-data.service';
 import { ResourceType } from '../../core/shared/resource-type';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
@@ -104,6 +103,8 @@ export class DsoEditMetadataComponent implements OnInit, OnDestroy {
    * Unsubscribed from in ngOnDestroy()
    */
   dsoUpdateSubscription: Subscription;
+
+  public readonly Context = Context;
 
   constructor(protected route: ActivatedRoute,
               protected notificationsService: NotificationsService,

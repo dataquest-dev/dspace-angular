@@ -11,7 +11,9 @@ import { ItemMetadataRepresentation } from '../../../core/shared/metadata-repres
 import { MetadataValue, VIRTUAL_METADATA_PREFIX } from '../../../core/shared/metadata.models';
 import { DsoEditMetadataChangeType, DsoEditMetadataValue } from '../dso-edit-metadata-form';
 import { By } from '@angular/platform-browser';
-import {BtnDisabledDirective} from '../../../shared/btn-disabled.directive';
+import { BtnDisabledDirective } from '../../../shared/btn-disabled.directive';
+import { DsoEditMetadataFieldServiceStub } from '../../../shared/testing/dso-edit-metadata-field.service.stub';
+import { DsoEditMetadataFieldService } from '../dso-edit-metadata-value-field/dso-edit-metadata-field.service';
 
 const EDIT_BTN = 'edit';
 const CONFIRM_BTN = 'confirm';
@@ -25,6 +27,7 @@ describe('DsoEditMetadataValueComponent', () => {
 
   let relationshipService: RelationshipDataService;
   let dsoNameService: DSONameService;
+  let dsoEditMetadataFieldService: DsoEditMetadataFieldServiceStub;
 
   let editMetadataValue: DsoEditMetadataValue;
   let metadataValue: MetadataValue;
@@ -36,6 +39,7 @@ describe('DsoEditMetadataValueComponent', () => {
     dsoNameService = jasmine.createSpyObj('dsoNameService', {
       getName: 'Related Name',
     });
+    dsoEditMetadataFieldService = new DsoEditMetadataFieldServiceStub();
   }
 
   beforeEach(waitForAsync(() => {
@@ -55,6 +59,7 @@ describe('DsoEditMetadataValueComponent', () => {
       providers: [
         { provide: RelationshipDataService, useValue: relationshipService },
         { provide: DSONameService, useValue: dsoNameService },
+        { provide: DsoEditMetadataFieldService, useValue: dsoEditMetadataFieldService },
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
