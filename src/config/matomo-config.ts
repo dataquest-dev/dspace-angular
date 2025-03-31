@@ -8,4 +8,6 @@ export class MatomoConfig implements Config {
   public hostUrl: string;
 
   public siteId: string;
+
+  public dimensionId: Number;
 }
