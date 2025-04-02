@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, combineLatest as observableCombineLatest } from 'rxjs';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { HandleDataService } from '../../core/data/handle-data.service';
@@ -57,11 +57,6 @@ export class HandleTableComponent implements OnInit {
               private translateService: TranslateService,
               private notificationsService: NotificationsService,) {
   }
-
-  /**
-   * The reference for the input html element
-   */
-  @ViewChild('searchInput', {static: true}) searchInput: ElementRef;
 
   /**
    * The list of Handle object as BehaviorSubject object
@@ -157,7 +152,7 @@ export class HandleTableComponent implements OnInit {
     const currentSort$ = this.getCurrentSort();
     const searchTerm$ = new BehaviorSubject<string>(this.searchQuery);
 
-    observableCombineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
+    combineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
       scan((prevState, [currentPagination, currentSort, searchTerm]) => {
         // If search term has changed, reset to page 1; otherwise, keep current page
         const currentPage = prevState.searchTerm !== searchTerm ? 1 : currentPagination.currentPage;
@@ -386,9 +381,9 @@ export class HandleTableComponent implements OnInit {
       case this.internalOption:
         // if the handle doesn't have the URL - is internal, if it does - is external
         parsedSearchOption = URL_SEARCH_OPTION;
-        if (this.searchQuery === 'Yes' || this.searchQuery === 'yes') {
+        if (this.searchQuery.toLowerCase() === 'yes') {
           parsedSearchQuery = 'internal';
-        } else if (this.searchQuery === 'No' || this.searchQuery === 'no') {
+        } else if (this.searchQuery.toLowerCase() === 'no') {
           parsedSearchQuery = 'external';
         }
         break;
