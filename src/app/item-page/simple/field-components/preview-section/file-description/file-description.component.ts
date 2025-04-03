@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 
 const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip', 'application/x-tar'];
