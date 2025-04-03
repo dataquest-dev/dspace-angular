@@ -2832,6 +2832,10 @@
 
   "item.preview.authors.et.al": " ; et al.",
 
+  "item.preview.loading-files": "Loading files... This may take a few seconds as file previews are being generated. If the process takes too long, please contact the system administrator",
+
+  "item.preview.no-preview": "The file preview wasn't successfully generated, please contact the system administrator",
+
   "item.refbox.modal.copy.instruction": ["Press", "ctrl + c", "to copy"],
 
   "item.refbox.modal.submit": "Ok",
