@@ -9,5 +9,5 @@ export class MatomoConfig implements Config {
 
   public siteId: string;
 
-  public dimensionId: Number;
+  public dimensionId: number;
 }

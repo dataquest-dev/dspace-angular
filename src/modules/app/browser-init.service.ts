@@ -105,7 +105,7 @@ export class BrowserInitService extends InitService {
       // ideally we'd add the custom dimension to the 'trackPageView' action only, but don't have that information
       // in pageTrack context. So we add it to page_view events, and remove it after the page view.
       // page_view events are fired via view-track.component, and exposes dc.identifier.uri via properties
-      this.angulartics2Matomo.eventTrack = function (action, properties? : any) {
+      this.angulartics2Matomo.eventTrack = function (action: string, properties?: any) {
         if (action === 'page_view') {
           if (properties.dc_identifier) {
             (window as any)._paq.push(['setCustomDimension', environment.matomo.dimensionId, properties.dc_identifier]);
