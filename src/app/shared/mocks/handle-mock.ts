@@ -19,6 +19,7 @@ export const mockHandle = Object.assign(new Handle(), {
   handle: '123456',
   resourceTypeID: 0,
   url: 'handle.url',
+  resourceId: 'a43666e5-d477-4957-8e63-74baf6955d97',
   _links: {
     self: {
       href: 'url.123456'

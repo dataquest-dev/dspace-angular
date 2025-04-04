@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, combineLatest as observableCombineLatest, fromEvent } from 'rxjs';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { HandleDataService } from '../../core/data/handle-data.service';
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
-import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
+import { scan, switchMap, take } from 'rxjs/operators';
 import { getFirstSucceededRemoteData, getRemoteDataPayload } from '../../core/shared/operators';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import {
@@ -28,6 +28,9 @@ import {
   SITE,
   SUCCESSFUL_RESPONSE_START_CHAR
 } from '../../core/handle/handle.resource-type';
+import { getCommunityPageRoute } from '../../community-page/community-page-routing-paths';
+import { getCollectionPageRoute } from '../../collection-page/collection-page-routing-paths';
+import { getEntityPageRoute } from '../../item-page/item-page-routing-paths';
 
 /**
  * Constants for converting the searchQuery for the server
@@ -54,11 +57,6 @@ export class HandleTableComponent implements OnInit {
               private translateService: TranslateService,
               private notificationsService: NotificationsService,) {
   }
-
-  /**
-   * The reference for the input html element
-   */
-  @ViewChild('searchInput', {static: true}) searchInput: ElementRef;
 
   /**
    * The list of Handle object as BehaviorSubject object
@@ -150,13 +148,20 @@ export class HandleTableComponent implements OnInit {
     this.isLoading = true;
 
     // load the current pagination and sorting options
-    const currentPagination$ = this.paginationService.getCurrentPagination(this.options.id, this.options);
-    const currentSort$ = this.paginationService.getCurrentSort(this.options.id, this.sortConfiguration);
+    const currentPagination$ = this.getCurrentPagination();
+    const currentSort$ = this.getCurrentSort();
+    const searchTerm$ = new BehaviorSubject<string>(this.searchQuery);
 
-    observableCombineLatest([currentPagination$, currentSort$]).pipe(
-      switchMap(([currentPagination, currentSort]) => {
+    combineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
+      scan((prevState, [currentPagination, currentSort, searchTerm]) => {
+        // If search term has changed, reset to page 1; otherwise, keep current page
+        const currentPage = prevState.searchTerm !== searchTerm ? 1 : currentPagination.currentPage;
+        return { currentPage, currentPagination, currentSort, searchTerm };
+      }, { searchTerm: '', currentPage: 1, currentPagination: this.getCurrentPagination(),
+        currentSort: this.getCurrentSort() }),
+      switchMap(({ currentPage, currentPagination, currentSort, searchTerm }) => {
         return this.handleDataService.findAll({
-            currentPage: currentPagination.currentPage,
+            currentPage: currentPage,
             elementsPerPage: currentPagination.pageSize,
             sort: {field: currentSort.field, direction: currentSort.direction}
           }, false
@@ -167,6 +172,29 @@ export class HandleTableComponent implements OnInit {
       this.handlesRD$.next(res);
       this.isLoading = false;
     });
+  }
+
+  getItemPageRoute(id: string): string {
+    return getEntityPageRoute(null, id);
+  }
+
+  type2route(type: string): (id: string) => string {
+    switch (type) {
+      case COMMUNITY:
+        return getCommunityPageRoute;
+      case COLLECTION:
+        return getCollectionPageRoute;
+      case ITEM:
+        return this.getItemPageRoute;
+    }
+  }
+
+  getHandleTargetPageRoute(handle: Handle): string {
+    return this.type2route(handle.resourceTypeID)(handle.resourceId);
+  }
+
+  shouldLink(handle: Handle): boolean {
+    return handle.resourceTypeID !== SITE;
   }
 
   /**
@@ -216,7 +244,7 @@ export class HandleTableComponent implements OnInit {
           this.switchSelectedHandle(this.selectedHandle);
           this.router.navigate([this.handleRoute, this.editHandlePath],
             { queryParams: { id: handle.id, _selflink: handle._links.self.href, handle: handle.handle,
-                url: handle.url, resourceType: handle.resourceTypeID, resourceId: handle.id,
+                url: handle.url, resourceType: handle.resourceTypeID, resourceId: handle.resourceId,
                 currentPage: this.options.currentPage } },
           );
         }
@@ -326,29 +354,6 @@ export class HandleTableComponent implements OnInit {
   }
 
   /**
-   * If the user is typing the searchQuery is changing.
-   */
-  setSearchQuery() {
-    if (isEmpty(this.searchOption)) {
-      return;
-    }
-
-    fromEvent(this.searchInput.nativeElement,'keyup')
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged()
-      )
-      .subscribe( cc => {
-        this.searchHandles(this.searchInput.nativeElement.value);
-        setTimeout(() => {
-          // click to refresh table data because without click it still shows wrong data
-          document.getElementById('clarin-dc-search-box').click();
-        }, 25);
-      });
-
-  }
-
-  /**
    * The search option is selected from the dropdown menu.
    * @param event with the selected value
    */
@@ -360,7 +365,7 @@ export class HandleTableComponent implements OnInit {
    * Update the sortConfiguration based on the `searchOption` and the `searchQuery` but parse that attributes at first.
    * @param searchQuery
    */
-  searchHandles(searchQuery = '') {
+  searchHandles() {
     if (isEmpty(this.searchOption)) {
       return;
     }
@@ -368,7 +373,7 @@ export class HandleTableComponent implements OnInit {
     // parse searchQuery for the server request
     // the new sorting query is in the format e.g. `handle:123456`, `resourceTypeId:2`, `url:internal`
     let parsedSearchOption = '';
-    let parsedSearchQuery = searchQuery;
+    let parsedSearchQuery = this.searchQuery;
     switch (this.searchOption) {
       case this.handleOption:
         parsedSearchOption = HANDLE_SEARCH_OPTION;
@@ -376,16 +381,16 @@ export class HandleTableComponent implements OnInit {
       case this.internalOption:
         // if the handle doesn't have the URL - is internal, if it does - is external
         parsedSearchOption = URL_SEARCH_OPTION;
-        if (searchQuery === 'Yes' || searchQuery === 'yes') {
+        if (this.searchQuery.toLowerCase() === 'yes') {
           parsedSearchQuery = 'internal';
-        } else if (searchQuery === 'No' || searchQuery === 'no') {
+        } else if (this.searchQuery.toLowerCase() === 'no') {
           parsedSearchQuery = 'external';
         }
         break;
       case this.resourceTypeOption:
         parsedSearchOption = RESOURCE_TYPE_SEARCH_OPTION;
         // parse resourceType from string to the number because the resourceType is integer on the server
-        switch (searchQuery) {
+        switch (this.searchQuery) {
           case ITEM:
             parsedSearchQuery = '' + 2;
             break;
@@ -414,5 +419,19 @@ export class HandleTableComponent implements OnInit {
 
   private initializeSortingOptions() {
     this.sortConfiguration = defaultSortConfiguration;
+  }
+
+  /**
+   * Get the current pagination options.
+   */
+  private getCurrentPagination() {
+    return this.paginationService.getCurrentPagination(this.options.id, defaultPagination);
+  }
+
+  /**
+   * Get the current sorting options.
+   */
+  private getCurrentSort() {
+    return this.paginationService.getCurrentSort(this.options.id, defaultSortConfiguration);
   }
 }
