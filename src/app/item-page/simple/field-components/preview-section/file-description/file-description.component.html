@@ -60,18 +60,30 @@
         </a>
       </div>
       <div [style]="'max-height: 500px; padding: 0px; overflow: scroll'" class="panel-body">
-        <ul class="treeview in collapse show">
-          <ng-container *ngIf="fileInput.format === 'application/zip' || fileInput.format === 'application/x-tar'">
-            <ds-file-tree-view
-              *ngFor="let node of fileInput.fileInfo"
-              [node]="node">
-            </ds-file-tree-view>
-          </ng-container>
-          <ng-container *ngIf="isTxt()">
-            <pre>{{ fileInput.fileInfo[0]?.content }}</pre>
-          </ng-container>
-          <ng-container *ngIf="fileInput.format === 'text/html'">
-            <div [innerHTML]="fileInput.fileInfo[0]?.content"></div>
+        <ul class="treeview collapse show">
+          <!-- Loading Spinner -->
+          <div *ngIf="fileInput.fileInfo.length === 0" class="d-flex justify-content-center align-items-center my-3">
+            <div>{{'item.preview.no-preview' | translate}}
+              <a *ngIf="emailToContact" [href]="'mailto:' + emailToContact" class="email-text">{{ emailToContact }}</a>
+            </div>
+          </div>
+
+          <!-- File Content -->
+          <ng-container *ngIf="fileInput.fileInfo.length !== 0">
+            <!-- ZIP or TAR File Format -->
+            <ng-container *ngIf="isArchive(fileInput.format)">
+              <ds-file-tree-view *ngFor="let node of fileInput.fileInfo" [node]="node"></ds-file-tree-view>
+            </ng-container>
+
+            <!-- TXT Format -->
+            <ng-container *ngIf="isTxt()">
+              <pre>{{ fileInput.fileInfo[0]?.content }}</pre>
+            </ng-container>
+
+            <!-- HTML Format -->
+            <ng-container *ngIf="fileInput.format === 'text/html'">
+              <div [innerHTML]="fileInput.fileInfo[0]?.content"></div>
+            </ng-container>
           </ng-container>
         </ul>
       </div>

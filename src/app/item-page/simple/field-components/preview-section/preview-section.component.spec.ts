@@ -7,20 +7,33 @@ import { PreviewSectionComponent } from './preview-section.component';
 import { ResourceType } from 'src/app/core/shared/resource-type';
 import { HALLink } from 'src/app/core/shared/hal-link.model';
 import { Item } from 'src/app/core/shared/item.model';
+import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoaderMock } from '../../../../shared/mocks/translate-loader.mock';
 
 describe('PreviewSectionComponent', () => {
   let component: PreviewSectionComponent;
   let fixture: ComponentFixture<PreviewSectionComponent>;
   let mockRegistryService: any;
+  let mockConfigService: any;
 
   beforeEach(async () => {
+    mockConfigService = jasmine.createSpyObj(['findByPropertyName']);
     mockRegistryService = jasmine.createSpyObj('RegistryService', [
       'getMetadataBitstream',
     ]);
 
     await TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useClass: TranslateLoaderMock
+        }
+      })],
       declarations: [PreviewSectionComponent],
-      providers: [{ provide: RegistryService, useValue: mockRegistryService }],
+      providers: [
+        { provide: RegistryService, useValue: mockRegistryService },
+        { provide: ConfigurationDataService, useValue: mockConfigService }],
     }).compileComponents();
   });
 
