@@ -21,9 +21,8 @@
         </div>
       </div>
         <input type="text" id="clarin-dc-search-box" class="form-control" aria-label="Text input with dropdown button"
-               [value]="searchQuery"
-               #searchInput>
-        <span class="input-group-append" (click)="searchHandles(searchInput.value)">
+               [(ngModel)]="searchQuery">
+        <span class="input-group-append" (click)="searchHandles()">
           <button type="submit" class="btn btn-primary search-button">
             <i class="fas fa-search"></i>{{'handle-table.dropdown.search-button' | translate}}</button>
         </span>
@@ -31,7 +30,7 @@
 
       <!-- The table with pagination -->
       <div *ngVar="(handlesRD$ | async)?.payload as handles">
-        <div class="mb-2">
+        <div class="mb-2 table-responsive">
           <ds-pagination (paginationChange)="onPageChange()"
                          [sortOptions]="sortConfiguration"
                          [hideGear]="true"
@@ -66,14 +65,21 @@
                   </span>
                 </td>
                 <td class="version-row-element-editor">
-                  {{handle?.url}}
+                  <a *ngIf="handle?.url" [href]="handle?.url" target="_blank" rel="noopener noreferrer">
+                    {{handle?.url}}
+                  </a>
                 </td>
                 <td class="version-row-element-editor">
                   {{handle?.resourceTypeID}}
                 </td>
                 <td class="version-row-element-editor">
-                  <span *ngIf="handle?.resourceTypeID != null">
-                     {{handle?.id}}
+                  <span *ngIf="handle?.resourceId != null">
+                    <a *ngIf="shouldLink(handle); else noLink" [href]="getHandleTargetPageRoute(handle)" target="_blank" rel="noopener noreferrer">
+                      {{handle?.resourceId}}
+                    </a>
+                    <ng-template #noLink>
+                      {{handle?.resourceId}}
+                    </ng-template>
                   </span>
                 </td>
               </tr>

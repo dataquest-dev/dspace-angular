@@ -128,7 +128,7 @@ describe('HandleTableComponent', () => {
         url: mockHandle.url,
         currentPage: (component as any).options.currentPage,
         resourceType: mockHandle.resourceTypeID,
-        resourceId: mockHandle.id
+        resourceId: mockHandle.resourceId
       }
     };
     // should unselect
