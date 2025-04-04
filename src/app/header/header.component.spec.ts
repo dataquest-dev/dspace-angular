@@ -12,12 +12,18 @@ import { MenuService } from '../shared/menu/menu.service';
 import { MenuServiceStub } from '../shared/testing/menu-service.stub';
 import { HostWindowService } from '../shared/host-window.service';
 import { HostWindowServiceStub } from '../shared/testing/host-window-service.stub';
+import { LocaleService } from '../core/locale/locale.service';
 
 let comp: HeaderComponent;
 let fixture: ComponentFixture<HeaderComponent>;
 
 describe('HeaderComponent', () => {
   const menuService = new MenuServiceStub();
+
+  // Mock LocaleService
+  const localeServiceMock = {
+    getCurrentLanguageCode: () => 'en' // returns default language code
+  };
 
   // waitForAsync beforeEach
   beforeEach(waitForAsync(() => {
@@ -29,7 +35,8 @@ describe('HeaderComponent', () => {
       declarations: [HeaderComponent],
       providers: [
         { provide: HostWindowService, useValue: new HostWindowServiceStub(0) },
-        { provide: MenuService, useValue: menuService }
+        { provide: MenuService, useValue: menuService },
+        { provide: LocaleService, useValue: localeServiceMock }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     })
