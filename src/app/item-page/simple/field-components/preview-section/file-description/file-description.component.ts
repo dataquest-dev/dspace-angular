@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 
 const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip', 'application/x-tar'];
 @Component({
@@ -9,14 +10,24 @@ const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip', 'ap
   templateUrl: './file-description.component.html',
   styleUrls: ['./file-description.component.scss'],
 })
-export class FileDescriptionComponent {
+export class FileDescriptionComponent implements OnInit {
   MIME_TYPE_IMAGES_PATH = './assets/images/mime/';
   MIME_TYPE_DEFAULT_IMAGE_NAME = 'application-octet-stream.png';
 
   @Input()
   fileInput: MetadataBitstream;
 
-  constructor(protected halService: HALEndpointService, private router: Router) { }
+  emailToContact: string;
+
+  constructor(protected halService: HALEndpointService,
+              private router: Router,
+              private configService: ConfigurationDataService) { }
+
+  ngOnInit(): void {
+    this.configService.findByPropertyName('lr.help.mail').subscribe(remoteData => {
+      this.emailToContact = remoteData.payload.values[0];
+    });
+  }
 
   public downloadFile() {
     void this.router.navigateByUrl('bitstreams/' + this.fileInput.id + '/download');
@@ -45,4 +56,9 @@ export class FileDescriptionComponent {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = this.MIME_TYPE_IMAGES_PATH + this.MIME_TYPE_DEFAULT_IMAGE_NAME;
   }
+
+  isArchive(format: string): boolean {
+    return format === 'application/zip' || format === 'application/x-tar';
+  }
+
 }
