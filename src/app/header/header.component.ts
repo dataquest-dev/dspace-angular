@@ -65,9 +65,9 @@ export class HeaderComponent implements OnInit {
     }
 
     const translations = {
-      'partners': 'partneri',
-      'integration': 'integrace',
-      'partnership': 'partnerstvi',
+      'partners': 'cs/partneri',
+      'integration': 'cs/integrace',
+      'partnership': 'cs/partnerstvi',
       'services': 'sluzby'
     };
 
