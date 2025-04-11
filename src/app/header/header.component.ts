@@ -65,12 +65,12 @@ export class HeaderComponent implements OnInit {
     }
 
     const translations = {
-      'partners': 'partneri',
-      'integration': 'integrace',
-      'partnership': 'partnerstvi',
+      'partners': this.getLangCodeIfCzech() + '/' + 'partneri',
+      'integration': this.getLangCodeIfCzech() + '/' + 'integrace',
+      'partnership': this.getLangCodeIfCzech() + '/' + 'partnerstvi',
       'services': 'sluzby'
     };
 
-    return this.getLangCodeIfCzech + '/' + translations[slug] || '';
+    return translations[slug] || '';
   }
 }
