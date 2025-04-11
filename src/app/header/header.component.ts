@@ -50,7 +50,7 @@ export class HeaderComponent implements OnInit {
   * @returns {string} The language code if Czech, empty string otherwise
   */
   getLangCodeIfCzech(): string {
-    return this.localeService.getCurrentLanguageCode() === 'cs' ? this.localeService.getCurrentLanguageCode() : '';
+    return this.localeService.getCurrentLanguageCode() === 'cs' ? 'cs' : '';
   }
 
   /**
@@ -71,6 +71,6 @@ export class HeaderComponent implements OnInit {
       'services': 'sluzby'
     };
 
-    return translations[slug] || '';
+    return this.getLangCodeIfCzech + '/' + translations[slug] || '';
   }
 }
