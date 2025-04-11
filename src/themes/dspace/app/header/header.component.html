@@ -32,19 +32,19 @@
                   <a href="{{ '/' + getLangCodeIfCzech() + '#tools' }}" class="lindat-nav-link ">{{'navbar.tools' | translate}}</a>
                 </li>
                 <li class="lindat-nav-item ">
-                  <a href="{{ getLangCode() + '/' + translateSlug('services') }}" class="lindat-nav-link ">{{'navbar.services' | translate}}</a>
+                  <a href="{{ '/' + getLangCode() + '/' + translateSlug('services') }}" class="lindat-nav-link ">{{'navbar.services' | translate}}</a>
                 </li>
                 <li class="lindat-nav-item lindat-dropdown">
                   <a href="{{ getLangCodeIfCzech() }}" class="lindat-nav-link lindat-dropdown-toggle"
                      data-toggle="dropdown"
                      onclick="this.parentNode.querySelector('.lindat-dropdown-toggle+div.lindat-dropdown-menu').classList.toggle('lindat-show'); return false;">{{'navbar.about' | translate}}</a>
                   <div class="lindat-dropdown-menu">
-                    <a href="{{ getLangCodeIfCzech() + '/' + translateSlug('partners') }}" class="lindat-dropdown-item">{{'navbar.about.partners' | translate}}</a>
+                    <a href="{{ '/' + translateSlug('partners') }}" class="lindat-dropdown-item">{{'navbar.about.partners' | translate}}</a>
                     <a href="files/mission-en.pdf" class="lindat-dropdown-item">{{'navbar.about.mission-statement' | translate}}</a>
                     <a href="https://www.clarin.eu/" class="lindat-dropdown-item">{{'navbar.about.clarin' | translate}}</a>
                     <a href="https://www.dariah.eu/" class="lindat-dropdown-item">{{'navbar.about.dariah' | translate}}</a>
-                    <a href="{{ getLangCodeIfCzech() + '/' + translateSlug('integration') }}" class="lindat-dropdown-item">{{'navbar.about.service-integrations' | translate}}</a>
-                    <a href="{{ getLangCodeIfCzech() + '/' + translateSlug('partnership') }}" class="lindat-dropdown-item">{{'navbar.about.project-partnership' | translate}}</a>
+                    <a href="{{ '/' + translateSlug('integration') }}" class="lindat-dropdown-item">{{'navbar.about.service-integrations' | translate}}</a>
+                    <a href="{{ '/' + translateSlug('partnership') }}" class="lindat-dropdown-item">{{'navbar.about.project-partnership' | translate}}</a>
                   </div>
                 </li>
               </ul>
