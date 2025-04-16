@@ -3,6 +3,7 @@ import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.mode
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
 import { Router } from '@angular/router';
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { getFirstSucceededRemoteData } from '../../../../../core/shared/operators';
 
 const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip', 'application/x-tar'];
 @Component({
@@ -24,8 +25,10 @@ export class FileDescriptionComponent implements OnInit {
               private configService: ConfigurationDataService) { }
 
   ngOnInit(): void {
-    this.configService.findByPropertyName('lr.help.mail').subscribe(remoteData => {
-      this.emailToContact = remoteData.payload.values[0];
+    this.configService.findByPropertyName('lr.help.mail')
+      .pipe(getFirstSucceededRemoteData())
+      .subscribe(remoteData => {
+      this.emailToContact = remoteData?.payload?.values?.[0];
     });
   }
 
@@ -61,4 +64,8 @@ export class FileDescriptionComponent implements OnInit {
     return format === 'application/zip' || format === 'application/x-tar';
   }
 
+  hasNoPreview() {
+    // this.fileInput.fileInfo.length === 0 means that the file has no preview
+    return this.fileInput.fileInfo.length === 0;
+  }
 }
