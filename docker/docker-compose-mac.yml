@@ -1,0 +1,11 @@
+services:
+  dspacesolr:
+    platform: linux/amd64
+  dspacedb:
+    platform: linux/amd64
+  dspace:
+    platform: linux/amd64
+  dspace-angular:
+    platform: linux/amd64
+  dspace-cli:
+    platform: linux/amd64
