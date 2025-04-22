@@ -1,6 +1,6 @@
 import { APP_BASE_HREF, CommonModule, DOCUMENT } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { Injectable, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -31,8 +31,8 @@ import { APP_CONFIG, AppConfig } from '../config/app-config.interface';
 import { StoreDevModules } from '../config/store/devtools';
 import { RootModule } from './root.module';
 import { ScriptLoaderService } from './clarin-navbar-top/script-loader-service';
-import { DefaultUrlSerializer, UrlSerializer, UrlTree } from '@angular/router';
-import { encodeSpecialURICharacters } from './shared/clarin-shared-util';
+import { UrlSerializer } from '@angular/router';
+import { BitstreamUrlSerializer } from './core/url-serializer/bitstream-url-serializer';
 
 export function getConfig() {
   return environment;
@@ -46,30 +46,6 @@ const getBaseHref = (document: Document, appConfig: AppConfig): string => {
 
 export function getMetaReducers(appConfig: AppConfig): MetaReducer<AppState>[] {
   return appConfig.debug ? [...appMetaReducers, ...debugMetaReducers] : appMetaReducers;
-}
-
-/**
- * This class intercepts the parsing of URLs to ensure that the filename in the URL is properly encoded.
- * But it only does this for URLs that start with '/bitstream/'.
- */
-@Injectable({ providedIn: 'root' })
-export class BitstreamUrlSerializer extends DefaultUrlSerializer {
-  FILENAME_INDEX = 5;
-  // Intercept parsing of every URL
-  parse(url: string): UrlTree {
-    if (url.startsWith('/bitstream/')) {
-      // Split the URL to isolate the filename
-      const parts = url.split('/');
-      if (parts.length > this.FILENAME_INDEX) {
-        // Fetch the filename from the URL
-        const filename = parts.slice(this.FILENAME_INDEX).join();
-        const encodedFilename = encodeSpecialURICharacters(filename);
-        // Reconstruct the URL with the encoded filename
-        url = [...parts.slice(0, this.FILENAME_INDEX), encodedFilename].join('/');
-      }
-    }
-    return super.parse(url);
-  }
 }
 
 const IMPORTS = [
