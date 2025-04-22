@@ -54,18 +54,18 @@ export function getMetaReducers(appConfig: AppConfig): MetaReducer<AppState>[] {
  */
 @Injectable({ providedIn: 'root' })
 export class BitstreamUrlSerializer extends DefaultUrlSerializer {
-  FILE_NAME_INDEX = 5;
+  FILENAME_INDEX = 5;
   // Intercept parsing of every URL
   parse(url: string): UrlTree {
     if (url.startsWith('/bitstream/')) {
       // Split the URL to isolate the filename
       const parts = url.split('/');
-      if (parts.length > this.FILE_NAME_INDEX) {
+      if (parts.length > this.FILENAME_INDEX) {
         // Fetch the filename from the URL
-        const filename = parts.slice(this.FILE_NAME_INDEX).join();
+        const filename = parts.slice(this.FILENAME_INDEX).join();
         const encodedFilename = encodeSpecialURICharacters(filename);
         // Reconstruct the URL with the encoded filename
-        url = [...parts.slice(0, this.FILE_NAME_INDEX), encodedFilename].join('/');
+        url = [...parts.slice(0, this.FILENAME_INDEX), encodedFilename].join('/');
       }
     }
     return super.parse(url);
