@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DefaultUrlSerializer, UrlTree } from '@angular/router';
-import { encodeSpecialURICharacters } from '../../shared/clarin-shared-util';
+import { encodeRFC3986URIComponent } from '../../shared/clarin-shared-util';
 
 /**
  * This class intercepts the parsing of URLs to ensure that the filename in the URL is properly encoded.
@@ -17,7 +17,7 @@ export class BitstreamUrlSerializer extends DefaultUrlSerializer {
       if (parts.length > this.FILENAME_INDEX) {
         // Fetch the filename from the URL
         const filename = parts.slice(this.FILENAME_INDEX).join();
-        const encodedFilename = encodeSpecialURICharacters(filename);
+        const encodedFilename = encodeRFC3986URIComponent(filename);
         // Reconstruct the URL with the encoded filename
         url = [...parts.slice(0, this.FILENAME_INDEX), encodedFilename].join('/');
       }

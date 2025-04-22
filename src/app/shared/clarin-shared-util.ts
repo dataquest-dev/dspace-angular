@@ -93,12 +93,10 @@ export function makeLinks(text: string): string {
  * The special characters are `()[]` and the space character.
  * @param uriPart
  */
-export function encodeSpecialURICharacters(uriPart: string) {
+export function encodeRFC3986URIComponent(uriPart: string) {
   // Decode the filename to handle any encoded characters
   const decodedFileName = decodeURIComponent(uriPart);
   // Encode special characters in the filename
   return encodeURIComponent(decodedFileName)
-    .replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase())
-    .replace(/\[/g, '%5B')
-    .replace(/\]/g, '%5D');
+    .replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
 }
