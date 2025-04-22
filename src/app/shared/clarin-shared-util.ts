@@ -87,3 +87,18 @@ export function makeLinks(text: string): string {
   const regex = /(?:https?|ftp):\/\/[^\s)]+|www\.[^\s)]+/g;
   return text?.replace(regex, (url) => `<a href="${url}" target="_blank">${url}</a>`);
 }
+
+/**
+ * Encode special characters in a URI part to ensure it is safe for use in a URL.
+ * The special characters are `()[]` and the space character.
+ * @param uriPart
+ */
+export function encodeSpecialURICharacters(uriPart: string) {
+  // Decode the filename to handle any encoded characters
+  const decodedFileName = decodeURIComponent(uriPart);
+  // Encode special characters in the filename
+  return encodeURIComponent(decodedFileName)
+    .replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase())
+    .replace(/\[/g, '%5B')
+    .replace(/\]/g, '%5D');
+}
