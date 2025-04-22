@@ -66,6 +66,6 @@ export class FileDescriptionComponent implements OnInit {
 
   hasNoPreview() {
     // this.fileInput.fileInfo.length === 0 means that the file has no preview
-    return this.fileInput.fileInfo.length === 0;
+    return this.fileInput?.fileInfo?.length === 0;
   }
 }
