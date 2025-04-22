@@ -28,7 +28,7 @@ export class PreviewSectionComponent implements OnInit {
         this.listOfFiles.next(data);
       });
     this.configService.findByPropertyName('lr.help.mail')?.subscribe(remoteData => {
-      this.emailToContact = remoteData.payload.values[0];
+      this.emailToContact = remoteData.payload?.values?.[0];
     });
   }
 
