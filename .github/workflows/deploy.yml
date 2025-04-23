@@ -2,8 +2,6 @@
 name: Deploy DSpace
 
 on:
-  schedule:
-    - cron: '0 21 * * 6'  # Runs every Saturday at 9 PM
   workflow_call:
     inputs:
       INSTANCE:
@@ -39,18 +37,6 @@ on:
         type: boolean
 
 jobs:
-  import-every-week:
-    # Only run this job when triggered by the schedule event
-    if: github.event_name == 'schedule'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Call the deploy action with predefined inputs
-        uses: ./.github/workflows/deploy.yml
-        with:
-          INSTANCE: '8'
-          IMPORT: true
-          ERASE_DB: true
-
   deploy-5:
     if: inputs.INSTANCE == '*' || inputs.INSTANCE == '5'
     runs-on: dspace-dep-1

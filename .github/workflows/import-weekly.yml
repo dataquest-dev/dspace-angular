@@ -1,0 +1,13 @@
+name: Import Weekly
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # every Sunday at midnight UTC
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      INSTANCE: '8'
+      IMPORT: true
+      ERASE_DB: true
