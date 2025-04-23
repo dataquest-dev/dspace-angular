@@ -3,7 +3,11 @@ import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.mode
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
 import { Router } from '@angular/router';
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
-import { getFirstSucceededRemoteData } from '../../../../../core/shared/operators';
+import {getFirstCompletedRemoteData, getFirstSucceededRemoteData} from '../../../../../core/shared/operators';
+import {BitstreamDataService} from "../../../../../core/data/bitstream-data.service";
+import {Bitstream} from "../../../../../core/shared/bitstream.model";
+import {RemoteData} from "../../../../../core/data/remote-data";
+import {followLink} from "../../../../../shared/utils/follow-link-config.model";
 
 const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip', 'application/x-tar'];
 @Component({
@@ -19,9 +23,12 @@ export class FileDescriptionComponent implements OnInit {
   fileInput: MetadataBitstream;
 
   emailToContact: string;
+  content_url: string;
+  thumbnail_url: string;
 
   constructor(protected halService: HALEndpointService,
               private router: Router,
+              private bitstreamService: BitstreamDataService,
               private configService: ConfigurationDataService) { }
 
   ngOnInit(): void {
@@ -30,10 +37,34 @@ export class FileDescriptionComponent implements OnInit {
       .subscribe(remoteData => {
       this.emailToContact = remoteData?.payload?.values?.[0];
     });
+    this.bitstreamService.findById(this.fileInput.id, true, false, followLink('thumbnail'))
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe((remoteData : RemoteData<Bitstream>) => {
+        if (remoteData.hasSucceeded) {
+          this.content_url = remoteData.payload?._links.content.href;
+          remoteData.payload?.thumbnail.subscribe((thumbnailRD : RemoteData<Bitstream>) => {
+            if (thumbnailRD.hasSucceeded) {
+              this.thumbnail_url = thumbnailRD.payload?._links.content.href;
+            }
+          });
+        }
+      });
   }
 
   public downloadFile() {
     void this.router.navigateByUrl('bitstreams/' + this.fileInput.id + '/download');
+  }
+
+  public hasThumbnail() {
+    return this.thumbnail_url !== undefined && this.thumbnail_url !== null;
+  }
+
+  public thubmnailLink() {
+    return this.thumbnail_url;
+  }
+
+  public contentLink() {
+    return this.content_url;
   }
 
   public isTxt() {
