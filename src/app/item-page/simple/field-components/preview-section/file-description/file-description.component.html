@@ -1,13 +1,14 @@
 <div class="file-preview-box rounded pt-2">
   <div style="text-align: left" *ngIf="fileInput.format === 'video/mp4'">
-    <video preload="none" controls="controls" height="240">
+    <video preload="none" controls="controls" height="240" [attr.poster]="hasThumbnail() ? thubmnailLink() : null">
+      <source [src]="contentLink()" type="video/mp4">
       {{'item.file.description.not.supported.video' | translate}}
     </video>
   </div>
   <div class="file-content">
     <dl class="dl-horizontal">
       <dt>{{'item.file.description.name' | translate}}</dt>
-      <dd title="ud-treebanks-v2.12.tgz">
+      <dd>
         {{ fileInput.name }}
       </dd>
       <dt>{{'item.file.description.size' | translate}}</dt>
