@@ -164,7 +164,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     // Load the Seznam dataset license content
     this.item$.subscribe((item$) => {
         console.log(this.item$.value.metadata?.['dc.rights']?.[0]?.value);
-        if (this.item$.value.metadata?.['dc.rights']?.[0]?.value == this.LICENSE_NAME_SEZNAM) {
+        if (this.item$.value.metadata?.['dc.rights']?.[0]?.value === this.LICENSE_NAME_SEZNAM) {
           this.loadLicenseContentSeznam();
         }
     });
