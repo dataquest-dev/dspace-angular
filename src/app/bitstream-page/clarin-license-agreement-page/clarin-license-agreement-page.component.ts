@@ -143,6 +143,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
    ngOnInit(): void {
     // Load CurrentItem by bitstreamID to show itemHandle
     this.loadCurrentItem();
+
     // Load helpDeskEmail from configuration property - BE
     this.loadHelpDeskEmail();
     // Load IPAddress by API to show user IP Address
@@ -162,17 +163,24 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     this.loadUserRegistrationAndUserMetadata();
 
     // Load the Seznam dataset license content
-    this.loadLicenseContentSeznam();
+    this.item$.subscribe((item$) => {
+        console.log(this.item$.value.metadata?.['dc.rights']?.[0]?.value);
+        if (this.item$.value.metadata?.['dc.rights']?.[0]?.value == this.LICENSE_NAME_SEZNAM) {
+          this.loadLicenseContentSeznam();
+        }
+    });
+    //this.loadLicenseContentSeznam();
   }
 
   /**
    * Load the content for the special license. This content is shown directly in this approval page.
    */
   loadLicenseContentSeznam() {
-    this.htmlContentService.getHmtlContentByPathAndLocale(this.LICENSE_PATH_SEZNAM_CZ).then(content => {
-      this.licenseContentSeznam.next(content);
-    });
-    return true;
+      this.htmlContentService.getHmtlContentByPathAndLocale(this.LICENSE_PATH_SEZNAM_CZ).then(content => {
+        this.licenseContentSeznam.next(content);
+      });
+
+      return true;
   }
 
   public accept() {
