@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Call the deploy action with predefined inputs
-        uses: ./.github/actions/deploy-dspace  # Path to your custom action
+        uses: ./.github/workflows/deploy.yml
         with:
           INSTANCE: '8'
           IMPORT: true
