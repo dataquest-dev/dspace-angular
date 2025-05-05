@@ -50,7 +50,7 @@ export class HeaderComponent implements OnInit {
   * @returns {string} The language code if Czech, empty string otherwise
   */
   getLangCodeIfCzech(): string {
-    return this.localeService.getCurrentLanguageCode() === 'cs' ? this.localeService.getCurrentLanguageCode() : '';
+    return this.localeService.getCurrentLanguageCode() === 'cs' ? 'cs' : '';
   }
 
   /**
@@ -65,9 +65,9 @@ export class HeaderComponent implements OnInit {
     }
 
     const translations = {
-      'partners': 'partneri',
-      'integration': 'integrace',
-      'partnership': 'partnerstvi',
+      'partners': this.getLangCodeIfCzech() + '/' + 'partneri',
+      'integration': this.getLangCodeIfCzech() + '/' + 'integrace',
+      'partnership': this.getLangCodeIfCzech() + '/' + 'partnerstvi',
       'services': 'sluzby'
     };
 

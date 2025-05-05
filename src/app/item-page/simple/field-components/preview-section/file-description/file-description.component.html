@@ -61,9 +61,8 @@
       </div>
       <div [style]="'max-height: 500px; padding: 0px; overflow: scroll'" class="panel-body">
         <ul class="treeview collapse show">
-          <!-- Loading Spinner -->
-          <div *ngIf="fileInput.fileInfo.length === 0" class="d-flex justify-content-center align-items-center my-3">
-            <div>{{'item.preview.no-preview' | translate}}
+          <div *ngIf="hasNoPreview()" class="d-flex justify-content-center align-items-center my-3">
+            <div>{{ 'item.preview.no-preview' | translate }}
               <a *ngIf="emailToContact" [href]="'mailto:' + emailToContact" class="email-text">{{ emailToContact }}</a>
             </div>
           </div>
