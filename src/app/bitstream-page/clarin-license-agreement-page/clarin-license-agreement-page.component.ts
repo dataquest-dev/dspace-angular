@@ -162,12 +162,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     this.loadUserRegistrationAndUserMetadata();
 
     // Load the Seznam dataset license content
-    this.item$.subscribe((item$) => {
-        console.log(this.item$.value.metadata?.['dc.rights']?.[0]?.value);
-        if (this.item$.value.metadata?.['dc.rights']?.[0]?.value === this.LICENSE_NAME_SEZNAM) {
-          this.loadLicenseContentSeznam();
-        }
-    });
+    this.loadSeznamDatasetLicenseContent();
   }
 
   /**
@@ -392,6 +387,14 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
             this.userMetadata$.next(userMetadata.payload);
           });
       });
+  }
+
+  private loadSeznamDatasetLicenseContent() {
+    this.item$.subscribe((item$) => {
+      if (this.item$.value.firstMetadataValue('dc.rights') === this.LICENSE_NAME_SEZNAM) {
+        this.loadLicenseContentSeznam();
+      }
+    });
   }
 
   private loadCurrentUser() {
