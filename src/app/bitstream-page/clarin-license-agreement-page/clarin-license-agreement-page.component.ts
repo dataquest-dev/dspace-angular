@@ -162,17 +162,21 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     this.loadUserRegistrationAndUserMetadata();
 
     // Load the Seznam dataset license content
-    this.loadSeznamDatasetLicenseContent();
+    this.loadLicenseContentSeznam();
   }
 
   /**
    * Load the content for the special license. This content is shown directly in this approval page.
    */
   loadLicenseContentSeznam() {
-    this.htmlContentService.getHmtlContentByPathAndLocale(this.LICENSE_PATH_SEZNAM_CZ).then(content => {
-      this.licenseContentSeznam.next(content);
+    this.item$.subscribe((item) => {
+      if (this.item$.value.firstMetadataValue('dc.rights') === this.LICENSE_NAME_SEZNAM) {
+        this.htmlContentService.getHmtlContentByPathAndLocale(this.LICENSE_PATH_SEZNAM_CZ).then(content => {
+          this.licenseContentSeznam.next(content);
+        });
+        return true;
+      }
     });
-    return true;
   }
 
   public accept() {
@@ -387,14 +391,6 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
             this.userMetadata$.next(userMetadata.payload);
           });
       });
-  }
-
-  private loadSeznamDatasetLicenseContent() {
-    this.item$.subscribe((item$) => {
-      if (this.item$.value.firstMetadataValue('dc.rights') === this.LICENSE_NAME_SEZNAM) {
-        this.loadLicenseContentSeznam();
-      }
-    });
   }
 
   private loadCurrentUser() {
