@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewEncapsulation
+} from '@angular/core';
 import { SortDirection, SortOptions } from '../../core/cache/models/sort-options.model';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { RemoteData } from '../../core/data/remote-data';
@@ -225,6 +233,13 @@ export class ObjectListComponent {
   */
   goNext() {
       this.next.emit(true);
+  }
+
+  /**
+   * Show the search results in the Clarin view box or use the default view
+   */
+  showClarinViewBox() {
+    return this.context === 'search' && this.selectionConfig?.listId !== 'bulk-access-list';
   }
 
 }
