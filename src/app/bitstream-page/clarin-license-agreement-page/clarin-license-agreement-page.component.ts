@@ -174,7 +174,6 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
         this.htmlContentService.getHmtlContentByPathAndLocale(this.LICENSE_PATH_SEZNAM_CZ).then(content => {
           this.licenseContentSeznam.next(content);
         });
-        return true;
       }
     });
   }
