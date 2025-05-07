@@ -31,6 +31,8 @@ import { APP_CONFIG, AppConfig } from '../config/app-config.interface';
 import { StoreDevModules } from '../config/store/devtools';
 import { RootModule } from './root.module';
 import { ScriptLoaderService } from './clarin-navbar-top/script-loader-service';
+import { UrlSerializer } from '@angular/router';
+import { BitstreamUrlSerializer } from './core/url-serializer/bitstream-url-serializer';
 
 export function getConfig() {
   return environment;
@@ -105,6 +107,7 @@ const PROVIDERS = [
     useClass: LogInterceptor,
     multi: true
   },
+  { provide: UrlSerializer, useClass: BitstreamUrlSerializer },
   // register the dynamic matcher used by form. MUST be provided by the app module
   ...DYNAMIC_MATCHER_PROVIDERS,
 ];
