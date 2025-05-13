@@ -230,7 +230,7 @@ export class ObjectListComponent {
   /**
    * Show the search results in the Clarin view box or use the default view
    */
-  showClarinViewBox() {
+  showClarinViewBox(): boolean {
     return this.context === 'search' && this.selectionConfig?.listId !== 'bulk-access-list';
   }
 
