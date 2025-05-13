@@ -12,11 +12,20 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
 import { FileSizePipe } from '../../../../../shared/utils/file-size-pipe';
+import {BitstreamDataService} from '../../../../../core/data/bitstream-data.service';
+import {AuthService} from '../../../../../core/auth/auth.service';
+import {AuthorizationDataService} from '../../../../../core/data/feature-authorization/authorization-data.service';
+import {FileService} from '../../../../../core/shared/file.service';
+import {AuthServiceStub} from '../../../../../shared/testing/auth-service.stub';
+import {FileServiceStub} from '../../../../../shared/testing/file-service.stub';
+import {AuthorizationDataServiceStub} from '../../../../../shared/testing/authorization-service.stub';
+import {Bitstream} from '../../../../../core/shared/bitstream.model';
 
 describe('FileDescriptionComponent', () => {
   let component: FileDescriptionComponent;
   let fixture: ComponentFixture<FileDescriptionComponent>;
   let halService: HALEndpointService;
+  let bitstreamDataService: BitstreamDataService;
 
   beforeEach(async () => {
     const configurationDataService = jasmine.createSpyObj('configurationDataService', {
@@ -32,6 +41,10 @@ describe('FileDescriptionComponent', () => {
       getRootHref: 'root url',
     });
 
+    bitstreamDataService = jasmine.createSpyObj('bitstreamDataService', {
+      findById: createSuccessfulRemoteDataObject$(new Bitstream()),
+    });
+
     await TestBed.configureTestingModule({
         imports: [TranslateModule.forRoot({
           loader: {
@@ -42,7 +55,11 @@ describe('FileDescriptionComponent', () => {
       declarations: [FileDescriptionComponent, FileSizePipe],
       providers: [
         { provide: ConfigurationDataService, useValue: configurationDataService },
-        { provide: HALEndpointService, useValue: halService }
+        { provide: HALEndpointService, useValue: halService },
+        { provide: AuthService, useClass: AuthServiceStub },
+        { provide: FileService, useClass: FileServiceStub },
+        { provide: AuthorizationDataService, useClass: AuthorizationDataServiceStub },
+        { provide: BitstreamDataService, useValue: bitstreamDataService },
       ]
     }).compileComponents();
   });
@@ -53,7 +70,7 @@ describe('FileDescriptionComponent', () => {
 
     // Mock the input value
     const fileInput = new MetadataBitstream();
-    fileInput.id = 123;
+    fileInput.id = '66efe81e-2950-483d-a065-bbdacd689f95';
     fileInput.name = 'testFile';
     fileInput.description = 'test description';
     fileInput.fileSize = 2048;
