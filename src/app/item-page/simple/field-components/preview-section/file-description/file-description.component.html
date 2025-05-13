@@ -1,7 +1,8 @@
 <div class="file-preview-box rounded pt-2">
   <div style="text-align: left" *ngIf="fileInput.format === 'video/mp4'">
-    <video preload="none" controls="controls" height="240" [attr.poster]="hasThumbnail() ? thubmnailLink() : null">
-      <source [src]="contentLink()" type="video/mp4">
+    <video #videoPreview preload="none" controls="controls" [src]="content_url" [poster]="thumbnail_url$ | async"
+           height="240">
+      <!--source [src]="content_url" type="video/mp4"-->
       {{'item.file.description.not.supported.video' | translate}}
     </video>
   </div>
