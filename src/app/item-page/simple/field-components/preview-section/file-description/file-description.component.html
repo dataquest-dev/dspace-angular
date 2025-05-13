@@ -31,7 +31,8 @@
     </dl>
     <img
       *ngIf="fileInput.format !== 'video/mp4'"
-      [src]="MIME_TYPE_IMAGES_PATH + fileInput.format?.replace('/','-') + '.png'"
+      [src]=" ( thumbnail_url$ | async) ? (thumbnail_url$ | async) : MIME_TYPE_IMAGES_PATH +
+      fileInput.format?.replace('/','-') + '.png'"
       (error)="handleImageError($event)"
       (click)="downloadFile()"
       alt="Preview"

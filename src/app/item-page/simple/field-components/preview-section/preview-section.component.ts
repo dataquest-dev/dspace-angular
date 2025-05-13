@@ -22,7 +22,7 @@ export class PreviewSectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.registryService
-      .getMetadataBitstream(this.item.handle, 'ORIGINAL,TEXT,THUMBNAIL')
+      .getMetadataBitstream(this.item.handle, 'ORIGINAL')
       .pipe(getAllSucceededRemoteListPayload())
       .subscribe((data: MetadataBitstream[]) => {
         this.listOfFiles.next(data);
