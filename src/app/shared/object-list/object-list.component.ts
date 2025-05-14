@@ -20,6 +20,11 @@ import { CollectionElementLinkType } from '../object-collection/collection-eleme
 })
 export class ObjectListComponent {
   /**
+   * The id of the list used for bulk access
+   */
+  BULK_ACCESS_LIST_ID = 'bulk-access-list';
+
+  /**
    * The view mode of the this component
    */
   viewMode = ViewMode.ListElement;
@@ -231,7 +236,6 @@ export class ObjectListComponent {
    * Show the search results in the Clarin view box or use the default view
    */
   showClarinViewBox(): boolean {
-    return this.context === 'search' && this.selectionConfig?.listId !== 'bulk-access-list';
+    return this.context === 'search' && this.selectionConfig?.listId !== this.BULK_ACCESS_LIST_ID;
   }
-
 }
