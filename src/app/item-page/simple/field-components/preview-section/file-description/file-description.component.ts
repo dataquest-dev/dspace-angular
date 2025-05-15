@@ -58,15 +58,19 @@ export class FileDescriptionComponent implements OnInit, OnDestroy {
       .pipe(getFirstCompletedRemoteData(),
             switchMap((remoteData: RemoteData<Bitstream>) => {
               if (remoteData.hasSucceeded) {
-                this.thumbnail_url$ = remoteData.payload?.thumbnail.pipe(
-                  switchMap((thumbnailRD: RemoteData<Bitstream>) => {
-                    if (thumbnailRD.hasSucceeded) {
-                      return this.buildUrl(thumbnailRD.payload?._links.content.href);
-                    } else {
-                      return of('');
-                    }
-                  }),
-                );
+                if (remoteData.payload?.thumbnail){
+                  this.thumbnail_url$ = remoteData.payload?.thumbnail.pipe(
+                    switchMap((thumbnailRD: RemoteData<Bitstream>) => {
+                      if (thumbnailRD.hasSucceeded) {
+                        return this.buildUrl(thumbnailRD.payload?._links.content.href);
+                      } else {
+                        return of('');
+                      }
+                    }),
+                  );
+                } else {
+                  this.thumbnail_url$ = of('');
+                }
                 return of(remoteData.payload?._links.content.href);
               }
             }
