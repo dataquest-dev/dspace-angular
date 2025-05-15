@@ -23,7 +23,7 @@ describe('ClarinFilesSectionComponent', () => {
   let halService: HALEndpointService;
   // Set up the mock service's getMetadataBitstream method to return a simple stream
   const metadatabitstream = new MetadataBitstream();
-  metadatabitstream.id = 123;
+  metadatabitstream.id = '70ccc608-f6a5-4c96-ab2d-53bc56ae8ebe';
   metadatabitstream.name = 'test';
   metadatabitstream.description = 'test';
   metadatabitstream.fileSize = 1024;

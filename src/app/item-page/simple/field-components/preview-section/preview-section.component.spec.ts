@@ -43,7 +43,7 @@ describe('PreviewSectionComponent', () => {
 
     // Set up the mock service's getMetadataBitstream method to return a simple stream
     const metadatabitstream = new MetadataBitstream();
-    metadatabitstream.id = 123;
+    metadatabitstream.id = '5974f1cf-f2ef-4e4c-8f6d-85ad6c52efde';
     metadatabitstream.name = 'test';
     metadatabitstream.description = 'test';
     metadatabitstream.fileSize = 1024;
