@@ -12,14 +12,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
 import { FileSizePipe } from '../../../../../shared/utils/file-size-pipe';
-import {BitstreamDataService} from '../../../../../core/data/bitstream-data.service';
-import {AuthService} from '../../../../../core/auth/auth.service';
-import {AuthorizationDataService} from '../../../../../core/data/feature-authorization/authorization-data.service';
-import {FileService} from '../../../../../core/shared/file.service';
-import {AuthServiceStub} from '../../../../../shared/testing/auth-service.stub';
-import {FileServiceStub} from '../../../../../shared/testing/file-service.stub';
-import {AuthorizationDataServiceStub} from '../../../../../shared/testing/authorization-service.stub';
-import {Bitstream} from '../../../../../core/shared/bitstream.model';
+import { BitstreamDataService } from '../../../../../core/data/bitstream-data.service';
+import { AuthService } from '../../../../../core/auth/auth.service';
+import { AuthorizationDataService } from '../../../../../core/data/feature-authorization/authorization-data.service';
+import { FileService } from '../../../../../core/shared/file.service';
+import { AuthServiceStub } from '../../../../../shared/testing/auth-service.stub';
+import { FileServiceStub } from '../../../../../shared/testing/file-service.stub';
+import { AuthorizationDataServiceStub } from '../../../../../shared/testing/authorization-service.stub';
+import { Bitstream } from '../../../../../core/shared/bitstream.model';
 
 describe('FileDescriptionComponent', () => {
   let component: FileDescriptionComponent;

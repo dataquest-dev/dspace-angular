@@ -1,20 +1,20 @@
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MetadataBitstream} from 'src/app/core/metadata/metadata-bitstream.model';
-import {HALEndpointService} from '../../../../../core/shared/hal-endpoint.service';
-import {Router} from '@angular/router';
-import {ConfigurationDataService} from '../../../../../core/data/configuration-data.service';
-import {getFirstCompletedRemoteData, getFirstSucceededRemoteData} from '../../../../../core/shared/operators';
-import {BitstreamDataService} from '../../../../../core/data/bitstream-data.service';
-import {Bitstream} from '../../../../../core/shared/bitstream.model';
-import {RemoteData} from '../../../../../core/data/remote-data';
-import {followLink} from '../../../../../shared/utils/follow-link-config.model';
-import {fromEvent, merge, Observable, of, Subscription} from 'rxjs';
-import {FileService} from '../../../../../core/shared/file.service';
-import {distinctUntilChanged, switchMap, take} from 'rxjs/operators';
-import {FeatureID} from '../../../../../core/data/feature-authorization/feature-id';
-import {hasValue} from '../../../../../shared/empty.util';
-import {AuthorizationDataService} from '../../../../../core/data/feature-authorization/authorization-data.service';
-import {AuthService} from '../../../../../core/auth/auth.service';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
+import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
+import { Router } from '@angular/router';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { getFirstCompletedRemoteData, getFirstSucceededRemoteData } from '../../../../../core/shared/operators';
+import { BitstreamDataService } from '../../../../../core/data/bitstream-data.service';
+import { Bitstream } from '../../../../../core/shared/bitstream.model';
+import { RemoteData } from '../../../../../core/data/remote-data';
+import { followLink } from '../../../../../shared/utils/follow-link-config.model';
+import { fromEvent, merge, Observable, of, Subscription } from 'rxjs';
+import { FileService } from '../../../../../core/shared/file.service';
+import { distinctUntilChanged, switchMap, take } from 'rxjs/operators';
+import { FeatureID } from '../../../../../core/data/feature-authorization/feature-id';
+import { hasValue } from '../../../../../shared/empty.util';
+import { AuthorizationDataService } from '../../../../../core/data/feature-authorization/authorization-data.service';
+import { AuthService } from '../../../../../core/auth/auth.service';
 
 const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip', 'application/x-tar'];
 @Component({
