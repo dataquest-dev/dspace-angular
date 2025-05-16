@@ -81,8 +81,6 @@ services:
     - dspace_logs:/dspace/log
     - assetstore:/dspace/assetstore
     #- /opt/DATA/assetstore:/dspace/assetstore
-    # Mount DSpace's solr configs to a volume, so that we can share to 'dspacesolr' container (see below)
-    - solr_configs:/dspace/solr
     - handle_server:/dspace/handle-server
     - ./local.cfg:/dspace/config/local.cfg
     # Ensure that the database is ready BEFORE starting tomcat
