@@ -80,7 +80,7 @@ export class ClarinFilesSectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.registryService
-      .getMetadataBitstream(this.itemHandle, 'ORIGINAL,TEXT,THUMBNAIL')
+      .getMetadataBitstream(this.itemHandle, 'ORIGINAL')
       .pipe(getAllSucceededRemoteListPayload())
       .subscribe((data: MetadataBitstream[]) => {
         this.listOfFiles.next(data);

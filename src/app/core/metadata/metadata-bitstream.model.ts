@@ -31,7 +31,7 @@ export class MetadataBitstream extends ListableObject implements HALResource {
    * The identifier of this metadata field
    */
   @autoserialize
-  id: number;
+  id: string;
 
   /**
    * The name of this bitstream
