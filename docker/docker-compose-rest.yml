@@ -133,9 +133,6 @@ services:
     restart: unless-stopped
     container_name: dspacesolr${INSTANCE}
     image: ${DSPACE_SOLR_IMAGE:-dataquest/dspace-solr:dspace-7_x}
-    # Needs main 'dspace' container to start first to guarantee access to solr_configs
-    depends_on:
-    - dspace
     networks:
       dspacenet:
     ports:
@@ -146,9 +143,6 @@ services:
     tty: true
     working_dir: /var/solr/data
     volumes:
-    # Mount our "solr_configs" volume available under the Solr's configsets folder (in a 'dspace' subfolder)
-    # This copies the Solr configs from main 'dspace' container into 'dspacesolr' via that volume
-    - solr_configs:/opt/solr/server/solr/configsets/dspace
     # Keep Solr data directory between reboots
     - solr_data:/var/solr/data
     - solr_logs:/var/solr/logs
@@ -162,14 +156,14 @@ services:
     - '-c'
     - |
       init-var-solr
-      precreate-core authority /opt/solr/server/solr/configsets/dspace/authority
-      cp -r -u /opt/solr/server/solr/configsets/dspace/authority/* authority
-      precreate-core oai /opt/solr/server/solr/configsets/dspace/oai
-      cp -r -u /opt/solr/server/solr/configsets/dspace/oai/* oai
-      precreate-core search /opt/solr/server/solr/configsets/dspace/search
-      cp -r -u /opt/solr/server/solr/configsets/dspace/search/* search
-      precreate-core statistics /opt/solr/server/solr/configsets/dspace/statistics
-      cp -r -u /opt/solr/server/solr/configsets/dspace/statistics/* statistics
+      precreate-core authority /opt/solr/server/solr/configsets/authority
+      cp -r /opt/solr/server/solr/configsets/authority/* authority
+      precreate-core oai /opt/solr/server/solr/configsets/oai
+      cp -r /opt/solr/server/solr/configsets/oai/* oai
+      precreate-core search /opt/solr/server/solr/configsets/search
+      cp -r /opt/solr/server/solr/configsets/search/* search
+      precreate-core statistics /opt/solr/server/solr/configsets/statistics
+      cp -r /opt/solr/server/solr/configsets/statistics/* statistics
       exec solr -p 898${INSTANCE} -f -m 4g
 volumes:
   # Commented out because there are a lot of files in the assetstore
@@ -177,7 +171,6 @@ volumes:
   pgdata:
   solr_data:
   # Special volume used to share Solr configs from 'dspace' to 'dspacesolr' container (see above)
-  solr_configs:
   dspace_logs:
   solr_logs:
   handle_server:

@@ -6,6 +6,7 @@ import { Bitstream } from '../core/shared/bitstream.model';
 import { getFirstCompletedRemoteData } from '../core/shared/operators';
 import { hasNoValue } from '../shared/empty.util';
 import { BitstreamDataService } from '../core/data/bitstream-data.service';
+import { encodeRFC3986URIComponent } from '../shared/clarin-shared-util';
 
 /**
  * This class resolves a bitstream based on the DSpace 6 XMLUI or JSPUI bitstream download URLs
@@ -40,7 +41,7 @@ export class LegacyBitstreamUrlResolver implements Resolve<RemoteData<Bitstream>
       return this.bitstreamDataService.findByItemHandle(
         `${prefix}/${suffix}`,
         sequenceId,
-        filename,
+        encodeRFC3986URIComponent(filename),
       ).pipe(
         getFirstCompletedRemoteData()
       );

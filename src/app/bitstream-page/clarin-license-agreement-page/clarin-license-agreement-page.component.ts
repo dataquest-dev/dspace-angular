@@ -169,10 +169,13 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
    * Load the content for the special license. This content is shown directly in this approval page.
    */
   loadLicenseContentSeznam() {
-    this.htmlContentService.getHmtlContentByPathAndLocale(this.LICENSE_PATH_SEZNAM_CZ).then(content => {
-      this.licenseContentSeznam.next(content);
+    this.item$.subscribe((item) => {
+      if (item.firstMetadataValue('dc.rights') === this.LICENSE_NAME_SEZNAM) {
+        this.htmlContentService.getHmtlContentByPathAndLocale(this.LICENSE_PATH_SEZNAM_CZ).then(content => {
+          this.licenseContentSeznam.next(content);
+        });
+      }
     });
-    return true;
   }
 
   public accept() {
