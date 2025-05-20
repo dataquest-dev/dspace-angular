@@ -40,6 +40,7 @@ export class FileDescriptionComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
+
   constructor(protected halService: HALEndpointService,
               private router: Router,
               private bitstreamService: BitstreamDataService,
