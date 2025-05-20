@@ -1,13 +1,15 @@
 <div class="file-preview-box rounded pt-2">
   <div style="text-align: left" *ngIf="fileInput.format === 'video/mp4'">
-    <video preload="none" controls="controls" height="240">
+    <video #videoPreview preload="none" controls="controls" [src]="content_url" [poster]="thumbnail_url$ | async"
+           height="240">
+      <!--source [src]="content_url" type="video/mp4"-->
       {{'item.file.description.not.supported.video' | translate}}
     </video>
   </div>
   <div class="file-content">
     <dl class="dl-horizontal">
       <dt>{{'item.file.description.name' | translate}}</dt>
-      <dd title="ud-treebanks-v2.12.tgz">
+      <dd>
         {{ fileInput.name }}
       </dd>
       <dt>{{'item.file.description.size' | translate}}</dt>
@@ -29,7 +31,8 @@
     </dl>
     <img
       *ngIf="fileInput.format !== 'video/mp4'"
-      [src]="MIME_TYPE_IMAGES_PATH + fileInput.format?.replace('/','-') + '.png'"
+      [src]="(thumbnail_url$ | async) ? (thumbnail_url$ | async) : MIME_TYPE_IMAGES_PATH +
+      fileInput.format?.replace('/','-') + '.png'"
       (error)="handleImageError($event)"
       (click)="downloadFile()"
       alt="Preview"
