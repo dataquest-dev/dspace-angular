@@ -1,0 +1,5 @@
+<input type="file" (change)="fileChanged($event)" />
+<button (click)="uploadFile(selectedFile)">Upload</button>
+<div *ngFor="let part of uploadedParts">
+  Part {{part.PartNumber}} ETag: {{part.ETag}}
+</div>

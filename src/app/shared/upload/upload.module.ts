@@ -11,10 +11,13 @@ import { SharedModule } from '../shared.module';
 import { FileUploadModule } from 'ng2-file-upload';
 import { UploaderComponent } from './uploader/uploader.component';
 import { FileDropzoneNoUploaderComponent } from './file-dropzone-no-uploader/file-dropzone-no-uploader.component';
+import {S3UploadService} from '../../core/store/s3-upload.service';
+import {UploaderS3Component} from './uploader/uploader-s3.component';
 
 const COMPONENTS = [
   UploaderComponent,
   FileDropzoneNoUploaderComponent,
+  UploaderS3Component
 ];
 
 @NgModule({
@@ -28,6 +31,7 @@ const COMPONENTS = [
   ],
   providers: [
     ...COMPONENTS,
+    S3UploadService
   ],
   exports: [
     ...COMPONENTS,
