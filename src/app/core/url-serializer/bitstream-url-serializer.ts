@@ -16,7 +16,7 @@ export class BitstreamUrlSerializer extends DefaultUrlSerializer {
       const parts = url.split('/');
       if (parts.length > this.FILENAME_INDEX) {
         // Fetch the filename from the URL
-        const filename = parts.slice(this.FILENAME_INDEX).join();
+        const filename = parts[this.FILENAME_INDEX] || '';
         const encodedFilename = encodeRFC3986URIComponent(filename);
         // Reconstruct the URL with the encoded filename
         url = [...parts.slice(0, this.FILENAME_INDEX), encodedFilename].join('/');
