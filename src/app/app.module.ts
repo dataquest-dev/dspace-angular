@@ -33,6 +33,7 @@ import { RootModule } from './root.module';
 import { ScriptLoaderService } from './clarin-navbar-top/script-loader-service';
 import { UrlSerializer } from '@angular/router';
 import { BitstreamUrlSerializer } from './core/url-serializer/bitstream-url-serializer';
+import {NoS3CredsInterceptor} from './core/auth/no-s3-creds.interceptor';
 
 export function getConfig() {
   return environment;
@@ -89,6 +90,7 @@ const PROVIDERS = [
     useClass: AuthInterceptor,
     multi: true
   },
+  { provide: HTTP_INTERCEPTORS, useClass: NoS3CredsInterceptor, multi: true },
   // register LocaleInterceptor as HttpInterceptor
   {
     provide: HTTP_INTERCEPTORS,
