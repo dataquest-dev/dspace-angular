@@ -1,4 +1,4 @@
-<div class="forbidden container">
+<!-- <div class="forbidden container">
   <h1>403</h1>
   <h2><small>{{"403.forbidden" | translate}}</small></h2>
   <br/>
@@ -7,4 +7,15 @@
   <p class="text-center">
     <a routerLink="/home" class="btn btn-primary">{{"403.link.home-page" | translate}}</a>
   </p>
+</div> -->
+
+<div class="forbidden container text-center">
+    <h2>
+      <small>{{"403.help" | translate}}</small>
+      <br>
+      <a *ngIf="(emailToContact | async)" [href]="'mailto:' + (emailToContact | async)" class="email-text">{{emailToContact | async}}</a>
+    </h2>
+    <p class="text-center">
+      <a routerLink="/home" class="btn btn-primary">{{"403.link.home-page" | translate}}</a>
+    </p>
 </div>
