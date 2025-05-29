@@ -35,68 +35,66 @@ export class UploaderS3Component {
 
     this.uploadSvc.initiate(file.name).subscribe(initRes => {
       const uploadId = initRes.uploadId;
-
       this.uploadedCount
         .pipe(
           filter(count => count === totalParts),
           take(1)
         )
         .subscribe(() => {
-          if (completed) return;
+          if (completed) { return; }
           completed = true;
 
-          // Fetch uploaded parts from the backend
-          this.uploadSvc.listUploadedParts(uploadId, file.name).subscribe(serverParts => {
-            // Compare with client-side parts
-            const clientParts = Array.from(this.uploadedPartsMap.entries())
-              .map(([PartNumber, ETag]) => ({
-                PartNumber,
-                ETag: ETag.replace(/"/g, '') // Normalize by removing quotes
-              }))
-              .sort((a, b) => a.PartNumber - b.PartNumber);
+          // Compare with client-side parts
+          const clientParts = Array.from(this.uploadedPartsMap.entries())
+            .map(([PartNumber, ETag]) => ({
+              PartNumber,
+              ETag: ETag.replace(/"/g, '') // Normalize by removing quotes
+            }))
+            .sort((a, b) => a.PartNumber - b.PartNumber);
 
-            const serverSorted = [...serverParts].sort((a, b) => a.PartNumber - b.PartNumber);
 
-            console.log('Client parts:', clientParts);
-            console.log('Server parts:', serverSorted);
-
-            // if (JSON.stringify(serverSorted) !== JSON.stringify(clientParts)) {
-            //   console.error('Mismatch between client and server parts.');
-            //   return;
-            // }
-            console.log('here');
-            // Proceed with completion
-            this.uploadSvc.complete(uploadId, file.name, clientParts.map(p => ({
-              partNumber: p.PartNumber,
-              ETag: p.ETag
-            }))) .subscribe({
-              next: res => console.log('Upload complete!', res),
-              error: err => console.error('Upload complete error', err)
-            });
+          console.log('Client parts:', clientParts);
+          // if (JSON.stringify(serverSorted) !== JSON.stringify(clientParts)) {
+          //   console.error('Mismatch between client and server parts.');
+          //   return;
+          // }
+          console.log('here');
+          // Proceed with completion
+          this.uploadSvc.complete(uploadId, file.name, clientParts.map(p => ({
+            partNumber: p.PartNumber,
+            ETag: p.ETag
+          }))) .subscribe({
+            next: res => console.log('Upload complete!', res),
+            error: err => console.error('Upload complete error', err)
           });
         });
 
-      for (let part = 1; part <= totalParts; part++) {
-        const blob = file.slice((part - 1) * this.partSize, part * this.partSize);
+      this.uploadSvc.getAllPresignedUrls(uploadId, file.name, totalParts).subscribe(presignedParts => {
+        const presignedMap = new Map<number, string>();
+        for (const p of presignedParts) {
+          presignedMap.set(p.partNumber, p.url);
+        }
 
-        this.uploadSvc.getPresignedUrl(uploadId, part, file.name)
-          .subscribe(url => {
-            this.uploadPartWithXhr(url, blob, part)
-              .subscribe({
-                next: ({ loaded, total, etag }) => {
-                  const pct = Math.round((loaded / total) * 100);
-                  console.log(`Part ${part}: ${pct}%`);
+        for (let part = 1; part <= totalParts; part++) {
+          const blob = file.slice((part - 1) * this.partSize, part * this.partSize);
+          const url = presignedMap.get(part);
 
-                  if (etag) {
-                    this.uploadedPartsMap.set(part, etag);
-                    this.uploadedParts.push({ PartNumber: part, ETag: etag });
-                    this.uploadedCount.next(this.uploadedCount.value + 1);
-                  }
-                },
-                error: err => console.error(`Part ${part} error:`, err)
-              });
-          });
-      }
+          if (url) {
+            this.uploadPartWithXhr(url, blob, part).subscribe({
+              next: ({ loaded, total, etag }) => {
+                const pct = Math.round((loaded / total) * 100);
+                console.log(`Part ${part}: ${pct}%`);
+
+                if (etag) {
+                  this.uploadedPartsMap.set(part, etag);
+                  this.uploadedCount.next(this.uploadedCount.value + 1);
+                }
+              },
+              error: err => console.error(`Part ${part} error:`, err)
+            });
+          }
+        }
+      });
     });
   }
 
