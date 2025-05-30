@@ -160,7 +160,7 @@ jobs:
         with:
           repository: dataquest-dev/dspace-ui-tests
           path: dspace-ui-tests
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
       - name: Copy config to UI tests repository
         run: |
