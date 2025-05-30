@@ -10,10 +10,15 @@ export class S3UploadService {
   initiate(fileName: string) {
     return this.http.post<{uploadId: string, key: string}>('http://localhost:8080/server/api/upload/initiate', null, { params: { fileName } });
   }
-  getPresignedUrl(uploadId: string, partNumber: number, key: string) {
-    return this.http.get<string>(`http://localhost:8080/server/api/upload/${uploadId}/presign`, {
-      params: { partNumber: partNumber.toString(), key }
-    });
+  getPresignedUrl(
+    uploadId: string,
+    partNumber: number,
+    key: string
+  ): Observable<PresignedPart> {
+    return this.http.get<PresignedPart>(
+      `http://localhost:8080/server/api/upload/${uploadId}/presign`,
+      { params: { partNumber: partNumber.toString(), key } }
+    );
   }
 
   getAllPresignedUrls(uploadId: string, key: string, totalParts: number): Observable<{ partNumber: number, url: string }[]> {
@@ -39,6 +44,12 @@ export class S3UploadService {
   //     params: { uploadId, key: 'eighty-eight/43/34/91/43349123994797340734389361345819157822'}
   //   });
   // }
+}
+
+export interface PresignedPart {
+  partNumber: number;
+  url: string;
+  expiresAt: string;  // or Date if you parse it
 }
 
 export interface CompleteResponse {

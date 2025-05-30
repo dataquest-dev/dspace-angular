@@ -31,97 +31,132 @@ export class UploaderS3Component {
 
   uploadFile(file: File) {
     const totalParts = Math.ceil(file.size / this.partSize);
-    let completed = false; // Prevent duplicate complete calls
+    let completed = false;
 
     this.uploadSvc.initiate(file.name).subscribe(initRes => {
       const uploadId = initRes.uploadId;
+
+      // Complete when we've seen all parts succeed
       this.uploadedCount
-        .pipe(
-          filter(count => count === totalParts),
-          take(1)
-        )
+        .pipe(filter(c => c === totalParts), take(1))
         .subscribe(() => {
-          if (completed) { return; }
+          if (completed) return;
           completed = true;
 
-          // Compare with client-side parts
-          const clientParts = Array.from(this.uploadedPartsMap.entries())
+          const parts = Array.from(this.uploadedPartsMap.entries())
             .map(([PartNumber, ETag]) => ({
-              PartNumber,
-              ETag: ETag.replace(/"/g, '') // Normalize by removing quotes
+              partNumber: PartNumber,
+              ETag: ETag.replace(/"/g, '')
             }))
-            .sort((a, b) => a.PartNumber - b.PartNumber);
+            .sort((a, b) => a.partNumber - b.partNumber);
 
-
-          console.log('Client parts:', clientParts);
-          // if (JSON.stringify(serverSorted) !== JSON.stringify(clientParts)) {
-          //   console.error('Mismatch between client and server parts.');
-          //   return;
-          // }
-          console.log('here');
-          // Proceed with completion
-          this.uploadSvc.complete(uploadId, file.name, clientParts.map(p => ({
-            partNumber: p.PartNumber,
-            ETag: p.ETag
-          }))) .subscribe({
-            next: res => console.log('Upload complete!', res),
-            error: err => console.error('Upload complete error', err)
-          });
+          this.uploadSvc.complete(uploadId, file.name, parts).subscribe(
+            res => console.log('Upload complete!', res),
+            err => console.error('Complete error', err)
+          );
         });
 
-      this.uploadSvc.getAllPresignedUrls(uploadId, file.name, totalParts).subscribe(presignedParts => {
-        const presignedMap = new Map<number, string>();
-        for (const p of presignedParts) {
-          presignedMap.set(p.partNumber, p.url);
-        }
+      // 1) Get all presigned URLs up front
+      this.uploadSvc.getAllPresignedUrls(uploadId, file.name, totalParts)
+        .subscribe(presignedParts => {
+          const presignedMap = new Map<number, string>();
+          for (const p of presignedParts) {
+            presignedMap.set(p.partNumber, p.url);
+          }
 
-        for (let part = 1; part <= totalParts; part++) {
-          const blob = file.slice((part - 1) * this.partSize, part * this.partSize);
-          const url = presignedMap.get(part);
+          // 2) Kick off each part upload with retry logic
+          for (let part = 1; part <= totalParts; part++) {
+            const start = (part - 1) * this.partSize;
+            const blob = file.slice(start, start + this.partSize);
+            const initialUrl = presignedMap.get(part)!;
 
-          if (url) {
-            this.uploadPartWithXhr(url, blob, part).subscribe({
-              next: ({ loaded, total, etag }) => {
+            this.retryUploadPart(
+              uploadId,
+              file.name,
+              blob,
+              part,
+              initialUrl,
+              30
+            ).subscribe({
+              next: ({ etag, loaded, total }) => {
                 const pct = Math.round((loaded / total) * 100);
                 console.log(`Part ${part}: ${pct}%`);
-
                 if (etag) {
                   this.uploadedPartsMap.set(part, etag);
                   this.uploadedCount.next(this.uploadedCount.value + 1);
                 }
               },
-              error: err => console.error(`Part ${part} error:`, err)
+              error: err => console.error(`Part ${part} failed:`, err)
             });
           }
-        }
-      });
+        });
     });
   }
 
-  uploadPartWithXhr(url: string, blob: Blob, partNumber: number): Observable<{ loaded: number, total: number, etag?: string }> {
+  /**
+   * Attempts to PUT `blob` to S3. On failure, retries up to `retries` times,
+   * fetching a fresh presigned URL only when retrying (not on the first try).
+   */
+  retryUploadPart(
+    uploadId: string,
+    key: string,
+    blob: Blob,
+    partNumber: number,
+    initialUrl: string,
+    retries: number
+  ): Observable<{ loaded: number; total: number; etag?: string }> {
     return new Observable(observer => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('PUT', url, true);
+      let attemptCount = 0;
+      let currentUrl = initialUrl;
 
-      xhr.upload.onprogress = (event) => {
-        observer.next({ loaded: event.loaded, total: event.total });
+      const tryOnce = () => {
+        attemptCount++;
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', currentUrl, true);
+
+        xhr.upload.onprogress = (e) =>
+          observer.next({ loaded: e.loaded, total: e.total });
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            const etag = xhr.getResponseHeader('ETag')?.replace(/"/g, '');
+            observer.next({ loaded: blob.size, total: blob.size, etag });
+            observer.complete();
+          } else {
+            handleFailure(`status ${xhr.status}`);
+          }
+        };
+
+        xhr.onerror = () => handleFailure('network error');
+
+        xhr.send(blob);
       };
 
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          const etag = xhr.getResponseHeader('ETag')?.replace(/"/g, ''); // remove quotes
-          observer.next({ loaded: blob.size, total: blob.size, etag });
-          observer.complete();
+      const handleFailure = (reason: string) => {
+        if (attemptCount <= retries) {
+          const delayMs = Math.pow(2, attemptCount) * 1000;
+          console.warn(`Part ${partNumber} fail (${reason}), retry ${attemptCount}/${retries} in ${delayMs}ms`);
+
+          // Fetch the new PresignedPart object, then retry
+          this.uploadSvc
+            .getPresignedUrl(uploadId, partNumber, key)   // now returns PresignedPart
+            .pipe(take(1))
+            .subscribe({
+              next: (part: { partNumber: number; url: string; expiresAt: string }) => {
+                currentUrl = part.url;
+                setTimeout(tryOnce, delayMs);
+              },
+              error: (err) => {
+                observer.error(`Could not refresh presigned URL: ${err}`);
+              }
+            });
         } else {
-          observer.error(`Upload failed with status ${xhr.status}`);
+          observer.error(`Part ${partNumber} failed after ${retries} retries (${reason})`);
         }
       };
 
-      xhr.onerror = () => {
-        observer.error('Network error during part upload');
-      };
-
-      xhr.send(blob);
+      // start the very first attempt immediately
+      tryOnce();
     });
   }
 }
