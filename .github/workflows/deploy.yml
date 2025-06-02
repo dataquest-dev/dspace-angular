@@ -159,7 +159,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: dataquest-dev/dspace-ui-tests
-          ref: specific-customer-tests
           path: dspace-ui-tests
           token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
@@ -176,12 +175,10 @@ jobs:
         working-directory: dspace-ui-tests/scripts
         env:
           HOME_URL: https://dev-5.pc:8443/repository/
-          NAME: DEFAULT
+          NAME: LINDAT
         run: |
           ./test.sh
 
-      - uses: mazoea/ga-maz/end@master
-        if: ${{ always() }}
       - uses: mazoea/ga-maz/end@master
         with:
           CHOWN_DIR: ./
