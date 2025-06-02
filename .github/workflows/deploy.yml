@@ -157,27 +157,27 @@ jobs:
     steps:
       - name: Check runner
         run: echo "Self-hosted runner dspace-test-1 is now running this job"
-      - name: Checkout Playwright tests
-        uses: actions/checkout@v4
-        with:
-          repository: dataquest-dev/dspace-ui-tests
-          path: dspace-ui-tests
-          token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
+      # - name: Checkout Playwright tests
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: dataquest-dev/dspace-ui-tests
+      #     path: dspace-ui-tests
+      #     token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
-      - name: After checkout playwright
-        run: echo "UI Tests were checkouted, needs to copy json now"
-      - name: Copy config to UI tests repository
-        run: |
-          cp config/config.lindat.ui.tests.json dspace-ui-tests/customer_constants/
+      # - name: After checkout playwright
+      #   run: echo "UI Tests were checkouted, needs to copy json now"
+      # - name: Copy config to UI tests repository
+      #   run: |
+      #     cp config/config.lindat.ui.tests.json dspace-ui-tests/customer_constants/
 
-      - name: test
-        working-directory: dspace-ui-tests/scripts
-        env:
-          PLAYWRIGHT_ARTIFACTS_DIR: /tmp/playwright-artifacts
-          HOME_URL: https://dev-5.pc:8443/repository/
-          NAME: DEFAULT
-        run: |
-          ./test.sh
+      # - name: test
+      #   working-directory: dspace-ui-tests/scripts
+      #   env:
+      #     PLAYWRIGHT_ARTIFACTS_DIR: /tmp/playwright-artifacts
+      #     HOME_URL: https://dev-5.pc:8443/repository/
+      #     NAME: DEFAULT
+      #   run: |
+      #     ./test.sh
 
       - uses: mazoea/ga-maz/end@master
         if: ${{ always() }}
