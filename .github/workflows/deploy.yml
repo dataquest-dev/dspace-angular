@@ -161,6 +161,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: dataquest-dev/dspace-ui-tests
+          ref: specific-customer-tests
           path: dspace-ui-tests
           token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
@@ -173,7 +174,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: main-repo
-          
+
       - name: Copy config to UI tests repository
         run: |
           cp main-repo/config/config.lindat.ui.tests.json dspace-ui-tests/customer_constants/
