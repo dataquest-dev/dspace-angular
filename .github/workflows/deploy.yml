@@ -155,6 +155,8 @@ jobs:
     timeout-minutes: 45
     if: '!inputs.IMPORT'
     steps:
+      - name: Check runner
+        run: echo "Self-hosted runner dspace-test-1 is now running this job"
       - name: Checkout Playwright tests
         uses: actions/checkout@v4
         with:
@@ -162,6 +164,8 @@ jobs:
           path: dspace-ui-tests
           token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
+      - name: After checkout playwright
+        run: echo "UI Tests were checkouted, needs to copy json now"
       - name: Copy config to UI tests repository
         run: |
           cp config/config.lindat.ui.tests.json dspace-ui-tests/customer_constants/
