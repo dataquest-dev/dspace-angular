@@ -165,10 +165,18 @@ jobs:
           token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
       - name: After checkout playwright
-        run: echo "UI Tests were checkouted, needs to copy json now"
+        run: |
+          echo "UI Tests were checkouted, needs to copy json now"
+          ls -la dspace-ui-tests
+
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+        with:
+          path: main-repo
+          
       - name: Copy config to UI tests repository
         run: |
-          cp config/config.lindat.ui.tests.json dspace-ui-tests/customer_constants/
+          cp main-repo/config/config.lindat.ui.tests.json dspace-ui-tests/customer_constants/
 
       - name: test
         working-directory: dspace-ui-tests/scripts
