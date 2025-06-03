@@ -6,7 +6,8 @@
 
   "401.unauthorized": "unauthorized",
 
-  "403.help": "You don't have permission to access this page. You can use the button below to get back to the home page.",
+  //"403.help": "You don't have permission to access this page. You can use the button below to get back to the home page.",
+  "403.help": "Restricted access to the document - contact us",
 
   "403.link.home-page": "Take me to the home page",
 
