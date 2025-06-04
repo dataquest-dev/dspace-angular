@@ -95,7 +95,7 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
       take(1),
       switchMap(([clarinIsAuthorized, isAuthorized, isLoggedIn, bitstream]: [RemoteData<any>, boolean, boolean, Bitstream]) => {
         const isAuthorizedByClarin = this.processClarinAuthorization(clarinIsAuthorized);
-        if (isAuthorizedByClarin && isAuthorized && isLoggedIn) {
+        if ((isAuthorizedByClarin || isAuthorized) && isLoggedIn) {
           return this.fileService.retrieveFileDownloadLink(bitstream._links.content.href).pipe(
             filter((fileLink) => hasValue(fileLink)),
             take(1),
