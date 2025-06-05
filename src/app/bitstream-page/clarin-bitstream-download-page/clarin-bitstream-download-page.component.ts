@@ -87,7 +87,7 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
         const clarinIsAuthorized$ = this.rdbService.buildFromRequestUUID(requestId);
         // Clarin authorization will check dtoken parameter from the request
         const dtoken = isNotEmpty(this.dtoken) ? '?dtoken=' + this.dtoken : '';
-        const isAuthorized$ = this.authorizationService.isAuthorized(FeatureID.CanDownload, isNotEmpty(bitstream) ? bitstream.self + dtoken : undefined);
+        const isAuthorized$ = this.authorizationService.isAuthorized(FeatureID.CanDownload, isNotEmpty(bitstream) ? bitstream.self + dtoken : undefined, undefined, false);
         const isLoggedIn$ = this.auth.isAuthenticated();
         return observableCombineLatest([clarinIsAuthorized$, isAuthorized$, isLoggedIn$, observableOf(bitstream)]);
       }),
@@ -95,7 +95,7 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
       take(1),
       switchMap(([clarinIsAuthorized, isAuthorized, isLoggedIn, bitstream]: [RemoteData<any>, boolean, boolean, Bitstream]) => {
         const isAuthorizedByClarin = this.processClarinAuthorization(clarinIsAuthorized);
-        if ((isAuthorizedByClarin || isAuthorized) && isLoggedIn) {
+        if (isAuthorizedByClarin && isAuthorized && isLoggedIn) {
           return this.fileService.retrieveFileDownloadLink(bitstream._links.content.href).pipe(
             filter((fileLink) => hasValue(fileLink)),
             take(1),
