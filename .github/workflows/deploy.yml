@@ -150,41 +150,39 @@ jobs:
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
 
   playwright-after-deploy8:
-    runs-on: ubuntu-latest
+    runs-on: dspace-test-1
     needs: deploy-8
     timeout-minutes: 45
     if: '!inputs.IMPORT'
     steps:
-      - name: run playwright
+      - name: Checkout Playwright tests
+        uses: actions/checkout@v4
+        with:
+          repository: dataquest-dev/dspace-ui-tests
+          path: dspace-ui-tests
+          token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
+
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+        with:
+          path: this-repository
+
+      - name: Copy customer config to UI tests repository for merging
         run: |
-          # wait until FE stabilizes a bit
-          sleep 3m
+          cp this-repository/config/config.lindat.ui.tests.json dspace-ui-tests/customer-constants/
 
-          curl -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}" \
-          --request POST \
-          https://api.github.com/repos/dataquest-dev/\
-          dspace-ui-tests/actions/workflows/cron-test.yml/dispatches \
-          --data "{\"ref\":\"refs/heads/master\"}" 2> /dev/null
+      - name: test
+        working-directory: dspace-ui-tests/scripts
+        env:
+          HOME_URL: https://dev-5.pc:8443/repository/
+          NAME: LINDAT
+        run: |
+          ./test.sh
 
-          # wait for it to start
-          sleep 30s
-
-          # get result of last job
-          RES=$(curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}" https://api.github.com/repos/dataquest-dev/dspace-ui-tests/actions/workflows/cron-test.yml/runs?per_page=1 2> /dev/null | jq .workflow_runs[0].conclusion)
-
-          # while job did not finish, sleep
-          while [[ $RES == 'null' ]]; do
-            sleep 10s
-           RES=$(curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}" https://api.github.com/repos/dataquest-dev/dspace-ui-tests/actions/workflows/cron-test.yml/runs?per_page=1 2> /dev/null | jq .workflow_runs[0].conclusion)
-          done;
-
-          echo $RES
-          # if last result is not success, return -1 and fail
-          if [[ $RES != \"success\" ]]; then
-            echo "playwright tests have failed! check appropriate action run in the dspace-ui-tests repository"
-            exit 1
-          fi;
+      - uses: mazoea/ga-maz/end@master
+        with:
+          CHOWN_DIR: ./
+        if: ${{ always() }}
 
   rest-tests-after-deploy8:
     runs-on: ubuntu-latest
