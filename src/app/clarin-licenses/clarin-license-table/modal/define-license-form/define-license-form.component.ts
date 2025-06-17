@@ -151,7 +151,7 @@ export class DefineLicenseFormComponent implements OnInit {
    * Add or remove checkbox value from form array based on the checkbox selection
    * @param event
    * @param formName
-   * @param extendedClarinLicenseLabel
+   * @param checkBoxValue
    */
   changeCheckboxValue(event: any, formName: string, checkBoxValue) {
     let form = null;
@@ -169,7 +169,7 @@ export class DefineLicenseFormComponent implements OnInit {
     if (event.target.checked) {
       form.push(checkBoxValue);
     } else {
-      let index = form.findIndex(item => item.name === checkBoxValue.name);
+      let index = form.findIndex(item => item.id === checkBoxValue.id);
       form.splice(index, 1);
     }
   }

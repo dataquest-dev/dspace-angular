@@ -170,7 +170,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
    */
   loadLicenseContentSeznam() {
     this.item$.subscribe((item) => {
-      if (item.firstMetadataValue('dc.rights') === this.LICENSE_NAME_SEZNAM) {
+      if (item?.firstMetadataValue('dc.rights') === this.LICENSE_NAME_SEZNAM) {
         this.htmlContentService.getHmtlContentByPathAndLocale(this.LICENSE_PATH_SEZNAM_CZ).then(content => {
           this.licenseContentSeznam.next(content);
         });

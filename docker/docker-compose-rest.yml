@@ -70,7 +70,12 @@ services:
       # handle binary port as per https://www.handle.net/hnr_support.html (5th paragraph)
     - published: 264${INSTANCE}
       target: 2641
-      host_ip: 127.0.0.1
+      protocol: tcp
+      host_ip: ${HOST_IP:-127.0.0.1}
+    - published: 264${INSTANCE}
+      target: 2641
+      protocol: udp
+      host_ip: ${HOST_IP:-127.0.0.1}
       # handle http port as per https://www.handle.net/hnr_support.html (5th paragraph)
     - published: 801${INSTANCE}
       target: 8010
@@ -100,7 +105,7 @@ services:
     # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
     - |
       while (!</dev/tcp/dspacedb/543${INSTANCE}) > /dev/null 2>&1; do sleep 1; done;
-      pushd ../webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ 'repository#server' || true) && popd
+      pushd /usr/local/tomcat/webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ `echo -n "${DSPACE_REST_NAMESPACE}" | sed -e 's#^/##' -e 'sx/x#x'` || true) && popd
       /dspace/bin/dspace database migrate force
       /dspace/bin/start-handle-server
       ./custom_run.sh
