@@ -403,6 +403,9 @@ export class HandleTableComponent implements OnInit {
           case SITE.toLowerCase():
             parsedSearchQuery = '' + 5;
             break;
+          case '':
+            parsedSearchQuery = '';
+            break;
           default:
             parsedSearchQuery = '' + -1;
             break;
