@@ -171,6 +171,7 @@ export class DefineLicenseFormComponent implements OnInit {
     } else {
       let index = null;
 
+      // Required Info needs to be checked by some other property, because id is glitching
       if (formName === 'requiredInfo') {
         index = form.findIndex(item => item.name === checkBoxValue.name);
       } else {
