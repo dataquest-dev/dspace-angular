@@ -22,7 +22,7 @@
       </div>
         <input type="text" id="clarin-dc-search-box" class="form-control" aria-label="Text input with dropdown button"
                [(ngModel)]="searchQuery"
-               [disabled]="searchOption == null || searchOption == ''">
+               [disabled]="!searchOption">
         <span class="input-group-append" (click)="searchHandles()">
           <button type="submit" class="btn btn-primary search-button">
             <i class="fas fa-search"></i>{{'handle-table.dropdown.search-button' | translate}}</button>
