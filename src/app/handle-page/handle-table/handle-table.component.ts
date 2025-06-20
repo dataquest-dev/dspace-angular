@@ -373,40 +373,45 @@ export class HandleTableComponent implements OnInit {
     // parse searchQuery for the server request
     // the new sorting query is in the format e.g. `handle:123456`, `resourceTypeId:2`, `url:internal`
     let parsedSearchOption = '';
-    let parsedSearchQuery = this.searchQuery;
-    switch (this.searchOption) {
-      case this.handleOption:
-        parsedSearchOption = HANDLE_SEARCH_OPTION;
-        break;
-      case this.internalOption:
-        // if the handle doesn't have the URL - is internal, if it does - is external
-        parsedSearchOption = URL_SEARCH_OPTION;
-        if (this.searchQuery.toLowerCase() === 'yes') {
-          parsedSearchQuery = 'internal';
-        } else if (this.searchQuery.toLowerCase() === 'no') {
-          parsedSearchQuery = 'external';
-        }
-        break;
-      case this.resourceTypeOption:
-        parsedSearchOption = RESOURCE_TYPE_SEARCH_OPTION;
-        // parse resourceType from string to the number because the resourceType is integer on the server
-        switch (this.searchQuery) {
-          case ITEM:
-            parsedSearchQuery = '' + 2;
-            break;
-          case COLLECTION:
-            parsedSearchQuery = '' + 3;
-            break;
-          case COMMUNITY:
-            parsedSearchQuery = '' + 4;
-            break;
-          case SITE:
-            parsedSearchQuery = '' + 5;
-        }
-        break;
-      default:
-        parsedSearchOption = '';
-        break;
+    let parsedSearchQuery = '';
+    if (this.searchQuery) {
+      parsedSearchQuery = this.searchQuery;
+      switch (this.searchOption) {
+        case this.handleOption:
+          parsedSearchOption = HANDLE_SEARCH_OPTION;
+          break;
+        case this.internalOption:
+          // if the handle doesn't have the URL - is internal, if it does - is external
+          parsedSearchOption = URL_SEARCH_OPTION;
+          if (this.searchQuery.toLowerCase() === 'yes') {
+            parsedSearchQuery = 'internal';
+          } else if (this.searchQuery.toLowerCase() === 'no') {
+            parsedSearchQuery = 'external';
+          }
+          break;
+        case this.resourceTypeOption:
+          parsedSearchOption = RESOURCE_TYPE_SEARCH_OPTION;
+          // parse resourceType from string to the number because the resourceType is integer on the server
+          switch (this.searchQuery.toLowerCase()) {
+            case ITEM.toLowerCase():
+              parsedSearchQuery = '' + 2;
+              break;
+            case COLLECTION.toLowerCase():
+              parsedSearchQuery = '' + 3;
+              break;
+            case COMMUNITY.toLowerCase():
+              parsedSearchQuery = '' + 4;
+              break;
+            case SITE.toLowerCase():
+              parsedSearchQuery = '' + 5;
+              break;
+            // no results for invalid search inputs
+            default:
+              parsedSearchQuery = '' + -1;
+              break;
+          }
+          break;
+      }
     }
 
     this.sortConfiguration.field = parsedSearchOption + ':' + parsedSearchQuery;
