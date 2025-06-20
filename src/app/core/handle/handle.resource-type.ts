@@ -9,7 +9,7 @@ import { ResourceType } from '../shared/resource-type';
 
 export const HANDLE = new ResourceType('handle');
 export const SUCCESSFUL_RESPONSE_START_CHAR = '2';
-export const COMMUNITY = 'community';
-export const COLLECTION = 'collection';
-export const ITEM = 'item';
-export const SITE = 'site';
+export const COMMUNITY = 'Community';
+export const COLLECTION = 'Collection';
+export const ITEM = 'Item';
+export const SITE = 'Site';
