@@ -391,16 +391,16 @@ export class HandleTableComponent implements OnInit {
         parsedSearchOption = RESOURCE_TYPE_SEARCH_OPTION;
         // parse resourceType from string to the number because the resourceType is integer on the server
         switch (this.searchQuery.toLowerCase()) {
-          case ITEM.toLowerCase():
+          case ITEM:
             parsedSearchQuery = '' + 2;
             break;
-          case COLLECTION.toLowerCase():
+          case COLLECTION:
             parsedSearchQuery = '' + 3;
             break;
-          case COMMUNITY.toLowerCase():
+          case COMMUNITY:
             parsedSearchQuery = '' + 4;
             break;
-          case SITE.toLowerCase():
+          case SITE:
             parsedSearchQuery = '' + 5;
             break;
           default:
