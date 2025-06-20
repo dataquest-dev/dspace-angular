@@ -2469,7 +2469,7 @@
   // "handle-table.table.handle": "Handle",
   "handle-table.table.handle": "Handle",
   // "handle-table.table.internal": "Internal",
-  "handle-table.table.internal": "Interní",
+  "handle-table.table.internal": "Je interní",
   // "handle-table.table.is-internal": "Yes",
   "handle-table.table.is-internal": "Ano",
   // "handle-table.table.not-internal": "No",
