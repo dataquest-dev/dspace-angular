@@ -177,7 +177,7 @@ export class DefineLicenseFormComponent implements OnInit {
         index = form.findIndex(item => item && checkBoxValue.id === item.id);
       }
 
-      if (index != -1) {
+      if (index !== -1) {
         form.splice(index, 1);
       }
     }
