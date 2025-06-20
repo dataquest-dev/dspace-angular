@@ -411,8 +411,6 @@ export class HandleTableComponent implements OnInit {
               break;
           }
           break;
-        default:
-          break;
       }
     }
 
