@@ -1,0 +1,21 @@
+{
+    "env": {
+      "has_discojuice": false,
+      "has_whats_new": false,
+      "has_profile_and_logout_link": true,
+      "can_create_item_test": "enabled",
+      "author_has_one_field": false
+    },
+    "locators": {
+      "title": "DSpace :: Home",
+      "profile_link": "a[href=\"/profile\"]",
+      "logout_link": "button[data-test=\"logout-button\"]",
+      "signon_link": "a[data-test=\"login-menu\"]",
+      "result_card": "li[data-test=\"list-object\"]"
+    },
+    "urls": {
+      "oaipmh_response": "http://dev-5.pc:86/server/oai/request?verb=ListRecords&metadataPrefix=oai_dc",
+      "redirect_to_login": "http://dev-5.pc:86/login?redirectUrl=http:%2F%2Fdev-5.pc:82%2Fhome",
+      "not_exposed_data": "http://dev-5.pc:86/server/oai/request?verb=GetRecord&metadataPrefix=cmdi&identifier=oai:dev-5.pc:20.500.12800/1-4740"
+    }
+}
