@@ -1,0 +1,14 @@
+{
+    "env": {
+      "has_discojuice": true,
+      "has_whats_new": true,
+      "has_profile_and_logout_link": false,
+      "can_create_item_test": "disabled",
+      "author_has_one_field": true
+    },
+    "locators": {
+      "title": "LINDAT/CLARIAH-CZ Repository Home",
+      "profile_link": "a[href=\"/profile\"]",
+      "logout_link": "a[href=\"/logout\"]"
+    }
+}
