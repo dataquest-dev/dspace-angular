@@ -24,6 +24,7 @@ import { FilterVocabularyConfig } from './filter-vocabulary-config';
 import { DiscoverySortConfig } from './discovery-sort.config';
 import { LiveRegionConfig } from '../app/shared/live-region/live-region.config';
 import { SearchConfig } from './search-page-config.interface';
+import { MatomoConfig } from './matomo-config';
 
 interface AppConfig extends Config {
   ui: UIServerConfig;
@@ -52,6 +53,8 @@ interface AppConfig extends Config {
   comcolSelectionSort: DiscoverySortConfig;
   liveRegion: LiveRegionConfig;
   search: SearchConfig
+  signpostingEnabled: boolean;
+  matomo: MatomoConfig;
 }
 
 /**

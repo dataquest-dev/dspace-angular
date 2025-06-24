@@ -19,6 +19,10 @@ import { SignpostingDataService } from '../../core/data/signposting-data.service
 import { SignpostingLink } from '../../core/data/signposting-links.model';
 import { isNotEmpty } from '../../shared/empty.util';
 import { LinkDefinition, LinkHeadService } from '../../core/services/link-head.service';
+import { BehaviorSubject } from 'rxjs';
+import { RegistryService } from '../../core/registry/registry.service';
+import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { environment } from '../../../environments/environment';
 
 /**
  * This component renders a simple item page.
@@ -53,13 +57,36 @@ export class ItemPageComponent implements OnInit, OnDestroy {
    * Route to the item's page
    */
   itemPageRoute$: Observable<string>;
+  /**
+   * handle of the specific item
+   */
+  itemHandle: string;
+  /**
+   * handle of the specific item
+   */
+  fileName: string;
 
   /**
    * Whether the current user is an admin or not
    */
   isAdmin$: Observable<boolean>;
 
+  /**
+   * If item is withdrawn and has new destination in the metadata: `dc.relation.isreplacedby`
+   */
+  replacedTombstone = false;
+
+  /**
+   * If item is withdrawn and has/doesn't has reason of withdrawal
+   */
+  withdrawnTombstone = false;
+
   itemUrl: string;
+
+  /**
+   * True if the item has files, false otherwise.
+   */
+  hasFiles: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   /**
    * Contains a list of SignpostingLink related to the item
@@ -74,8 +101,10 @@ export class ItemPageComponent implements OnInit, OnDestroy {
     protected responseService: ServerResponseService,
     protected signpostingDataService: SignpostingDataService,
     protected linkHeadService: LinkHeadService,
-    @Inject(PLATFORM_ID) protected platformId: string
-  ) {
+    @Inject(PLATFORM_ID) protected platformId: string,
+    protected registryService: RegistryService,
+    protected halService: HALEndpointService
+) {
     this.initPageLinks();
   }
 
@@ -93,6 +122,7 @@ export class ItemPageComponent implements OnInit, OnDestroy {
 
     this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
 
+    this.processItem();
   }
 
   /**
@@ -101,6 +131,9 @@ export class ItemPageComponent implements OnInit, OnDestroy {
    * @private
    */
   private initPageLinks(): void {
+    if (!environment.signpostingEnabled) {
+      return;
+    }
     this.route.params.subscribe(params => {
       this.signpostingDataService.getLinks(params.id).pipe(take(1)).subscribe((signpostingLinks: SignpostingLink[]) => {
         let links = '';
@@ -124,6 +157,56 @@ export class ItemPageComponent implements OnInit, OnDestroy {
           this.responseService.setHeader('Link', links);
         }
       });
+    });
+  }
+
+  /**
+   * Check if the item has files and assign the result into the `hasFiles` variable.
+   * */
+  private checkIfItemHasFiles(item: Item) {
+    const hasFilesMetadata = item.metadata?.['local.has.files']?.[0]?.value;
+    this.hasFiles.next(hasFilesMetadata !== 'no');
+  }
+
+  /**
+   * Process the tombstone of the Item and check if it has files or not.
+   */
+  processItem() {
+    // if the item is withdrawn
+    let isWithdrawn = false;
+    // metadata value from `dc.relation.isreplacedby`
+    let isReplaced = '';
+
+    // load values from item
+    this.itemRD$.pipe(
+      take(1),
+      getAllSucceededRemoteDataPayload())
+      .subscribe((item: Item) => {
+        this.itemHandle = item.handle;
+        isWithdrawn = item.isWithdrawn;
+        isReplaced = item.metadata['dc.relation.isreplacedby']?.[0]?.value;
+
+        // check if the item has files
+        this.checkIfItemHasFiles(item);
+      });
+
+    // do not show tombstone for non withdrawn items
+    if (!isWithdrawn) {
+      return;
+    }
+
+    // for users navigate to the custom tombstone
+    // for admin stay on the item page with tombstone flag
+    this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
+    this.isAdmin$.subscribe(isAdmin => {
+      // do not show tombstone for admin but show it for users
+      if (!isAdmin) {
+        if (isNotEmpty(isReplaced)) {
+          this.replacedTombstone = true;
+        } else {
+          this.withdrawnTombstone = true;
+        }
+      }
     });
   }
 

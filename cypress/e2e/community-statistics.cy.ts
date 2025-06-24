@@ -4,11 +4,12 @@ import { testA11y } from 'cypress/support/utils';
 describe('Community Statistics Page', () => {
     const COMMUNITYSTATISTICSPAGE = '/statistics/communities/'.concat(Cypress.env('DSPACE_TEST_COMMUNITY'));
 
-    it('should load if you click on "Statistics" from a Community page', () => {
-        cy.visit('/communities/'.concat(Cypress.env('DSPACE_TEST_COMMUNITY')));
-        cy.get('a[data-test="link-menu-item.menu.section.statistics"]').click();
-        cy.location('pathname').should('eq', COMMUNITYSTATISTICSPAGE);
-    });
+    // NOTE: Statistics option was removed from the navbar
+    // it('should load if you click on "Statistics" from a Community page', () => {
+    //     cy.visit('/communities/'.concat(Cypress.env('DSPACE_TEST_COMMUNITY')));
+    //     cy.get('a[data-test="link-menu-item.menu.section.statistics"]').click();
+    //     cy.location('pathname').should('eq', COMMUNITYSTATISTICSPAGE);
+    // });
 
     it('should contain a "Total visits" section', () => {
         cy.visit(COMMUNITYSTATISTICSPAGE);

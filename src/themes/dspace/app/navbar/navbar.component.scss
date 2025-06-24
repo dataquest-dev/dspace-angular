@@ -1,3 +1,6 @@
 :host {
-
+  .clarin-logo {
+    height: var(--ds-login-logo-height);
+    width: var(--ds-login-logo-width);
+  }
 }

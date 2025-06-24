@@ -13,7 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared.module';
 import { NativeWindowMockFactory } from '../mocks/mock-native-window-ref';
 import { ActivatedRouteStub } from '../testing/active-router.stub';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NativeWindowService } from '../../core/services/window.service';
 import { provideMockStore } from '@ngrx/store/testing';
 import { createTestComponent } from '../testing/utils.test';
@@ -23,6 +23,15 @@ import { AuthorizationDataService } from '../../core/data/feature-authorization/
 import { of } from 'rxjs';
 import { ThemeService } from '../theme-support/theme.service';
 import { getMockThemeService } from '../mocks/theme-service.mock';
+import { of as observableOf } from 'rxjs';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
+import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
+import { RouterStub } from '../testing/router.stub';
+import { CookieService } from '../../core/services/cookie.service';
+import { CookieServiceMock } from '../mocks/cookie.service.mock';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationsServiceStub } from '../testing/notifications-service.stub';
 
 describe('LogInComponent', () => {
 
@@ -41,6 +50,9 @@ describe('LogInComponent', () => {
   let hardRedirectService: HardRedirectService;
 
   let authorizationService: AuthorizationDataService;
+  let authService: any;
+  let configurationDataService: ConfigurationDataService;
+  let notificationService: NotificationsServiceStub;
 
   beforeEach(waitForAsync(() => {
     hardRedirectService = jasmine.createSpyObj('hardRedirectService', {
@@ -50,6 +62,20 @@ describe('LogInComponent', () => {
     authorizationService = jasmine.createSpyObj('authorizationService', {
       isAuthorized: of(true)
     });
+    authService = jasmine.createSpyObj('authService', {
+      isAuthenticated: observableOf(true),
+      setRedirectUrl: {},
+      setRedirectUrlIfNotSet: {}
+    });
+    configurationDataService = jasmine.createSpyObj('configurationDataService', {
+      findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
+        name: 'dspace.ui.url',
+        values: [
+          'some url'
+        ]
+      }))
+    });
+    notificationService = new NotificationsServiceStub();
 
     // refine the test module by declaring the test component
     void TestBed.configureTestingModule({
@@ -72,12 +98,15 @@ describe('LogInComponent', () => {
       providers: [
         { provide: AuthService, useClass: AuthServiceStub },
         { provide: NativeWindowService, useFactory: NativeWindowMockFactory },
-        // { provide: Router, useValue: new RouterStub() },
+        { provide: Router, useValue: new RouterStub() },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: HardRedirectService, useValue: hardRedirectService },
         { provide: AuthorizationDataService, useValue: authorizationService },
+        { provide: ConfigurationDataService, useValue: configurationDataService },
         provideMockStore({ initialState }),
         { provide: ThemeService, useValue: getMockThemeService() },
+        { provide: CookieService, useClass: CookieServiceMock },
+        { provide: NotificationsService, useValue: notificationService },
         LogInComponent
       ],
       schemas: [

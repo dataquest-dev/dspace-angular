@@ -93,22 +93,11 @@ export class VersionHistoryDataService extends IdentifiableDataService<VersionHi
     this.halService.getEndpoint(this.versionsEndpoint).pipe(
       take(1),
       map((endpointUrl: string) => (summary?.length > 0) ? `${endpointUrl}?summary=${summary}` : `${endpointUrl}`),
-      find((href: string) => hasValue(href)),
-    ).subscribe((href) => {
-      const request = new PostRequest(requestId, href, itemHref, requestOptions);
-      if (hasValue(this.responseMsToLive)) {
-        request.responseMsToLive = this.responseMsToLive;
-      }
-
-      this.requestService.send(request);
-    });
-
-    return this.rdbService.buildFromRequestUUIDAndAwait<Version>(requestId, (versionRD) => combineLatest([
-      this.requestService.setStaleByHrefSubstring(versionRD.payload._links.self.href),
-      this.requestService.setStaleByHrefSubstring(versionRD.payload._links.versionhistory.href),
-    ])).pipe(
-      getFirstCompletedRemoteData(),
-    );
+      map((endpointURL: string) => new PostRequest(this.requestService.generateRequestId(), endpointURL, itemHref, requestOptions)),
+      sendRequest(this.requestService),
+      switchMap((restRequest: RestRequest) => this.rdbService.buildFromRequestUUID(restRequest.uuid)),
+      getFirstCompletedRemoteData()
+    ) as Observable<RemoteData<Version>>;
   }
 
   /**

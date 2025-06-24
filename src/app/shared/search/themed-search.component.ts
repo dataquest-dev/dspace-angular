@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ThemedComponent } from '../theme-support/themed.component';
-import { SearchComponent } from './search.component';
 import { SearchConfigurationOption } from './search-switch-configuration/search-configuration-option.model';
 import { Context } from '../../core/shared/context.model';
 import { CollectionElementLinkType } from '../object-collection/collection-element-link.type';
@@ -9,6 +8,7 @@ import { ViewMode } from '../../core/shared/view-mode.model';
 import { SearchObjects } from './models/search-objects.model';
 import { DSpaceObject } from '../../core/shared/dspace-object.model';
 import { ListableObject } from '../object-collection/shared/listable-object.model';
+import { ClarinSearchComponent } from './clarin-search/clarin-search.component';
 
 /**
  * Themed wrapper for {@link SearchComponent}
@@ -17,8 +17,8 @@ import { ListableObject } from '../object-collection/shared/listable-object.mode
   selector: 'ds-themed-search',
   templateUrl: '../theme-support/themed.component.html',
 })
-export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
-  protected inAndOutputNames: (keyof SearchComponent & keyof this)[] = [
+export class ThemedSearchComponent extends ThemedComponent<ClarinSearchComponent> {
+  protected inAndOutputNames: (keyof ClarinSearchComponent & keyof this)[] = [
     'configurationList',
     'context',
     'configuration',
@@ -48,7 +48,7 @@ export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
     'selectObject',
   ];
 
-  @Input() configurationList: SearchConfigurationOption[];
+  @Input() configurationList: SearchConfigurationOption[] = null;
 
   @Input() context: Context;
 
@@ -82,7 +82,7 @@ export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
 
   @Input() showThumbnails: boolean;
 
-  @Input() showViewModes: boolean;
+  @Input() showViewModes = false;
 
   @Input() useUniquePageId: boolean;
 
@@ -103,7 +103,7 @@ export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
   @Output() selectObject: EventEmitter<ListableObject> = new EventEmitter();
 
   protected getComponentName(): string {
-    return 'SearchComponent';
+    return 'ClarinSearchComponent';
   }
 
   protected importThemedComponent(themeName: string): Promise<any> {
@@ -111,6 +111,6 @@ export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
   }
 
   protected importUnthemedComponent(): Promise<any> {
-    return import('./search.component');
+    return import('./clarin-search/clarin-search.component');
   }
 }

@@ -36,11 +36,14 @@ export class ViewTrackerComponent implements OnInit, OnDestroy {
     this.sub = this.referrerService.getReferrer()
       .pipe(take(1))
       .subscribe((referrer: string) => {
+        let dc_identifier  = this.object?.firstMetadataValue('dc.identifier.uri');
         this.angulartics2.eventTrack.next({
           action: 'page_view',
           properties: {
             object: this.object,
-            referrer
+            referrer,
+            category: 'page_view',
+            dc_identifier: dc_identifier
           },
         });
       });

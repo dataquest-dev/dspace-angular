@@ -18,9 +18,15 @@
       object-position: top;
     }
 
+  div.background-image {
+    color: var($gray-800);
+    background-color: var(--ds-clarin-home-news-background-color);
     .container {
       position: relative;
       text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+      background-color: #f2f2f2;
+      border-bottom: solid 1px #e5e5e5;
+      border-radius: 0 !important;
 
       &:before, &:after {
         content: '';
@@ -41,8 +47,6 @@
         background: linear-gradient(to right, var(--ds-banner-text-background), transparent);
         right: calc(-1 * var(--ds-banner-background-gradient-width));
       }
-
-      background-color: var(--ds-banner-text-background);
     }
 
 

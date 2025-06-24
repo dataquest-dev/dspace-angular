@@ -40,6 +40,8 @@ import { SubmissionObject } from '../../../core/submission/models/submission-obj
 import { SubmissionSectionObject } from '../../objects/submission-section-object.model';
 import { SubmissionSectionError } from '../../objects/submission-section-error.model';
 import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
+import { SPONSOR_METADATA_NAME } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
+import { AUTHOR_METADATA_FIELD_NAME } from 'src/app/shared/form/builder/ds-dynamic-form-ui/models/clarin-name.model';
 
 /**
  * This component represents a section that contains a Form.
@@ -125,6 +127,19 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    */
   protected isSectionReadonly = false;
 
+  protected workspaceItem: WorkspaceItem;
+
+  /**
+   * The timeout for checking if the sponsor was uploaded in the database
+   * The timeout is set to 20 seconds by default.
+   */
+  public sponsorRefreshTimeout = 20;
+
+  /**
+   * The map of type bind fields. We need to have this map to check if the type field is updated.
+   */
+  private typeFields: Map<string, string>;
+
   /**
    * The FormComponent reference
    */
@@ -165,6 +180,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
               @Inject('sectionDataProvider') public injectedSectionData: SectionDataObject,
               @Inject('submissionIdProvider') public injectedSubmissionId: string) {
     super(injectedCollectionId, injectedSectionData, injectedSubmissionId);
+    this.typeFields = new Map();
   }
 
   /**
@@ -199,6 +215,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
           this.cdr.detectChanges();
         }
       });
+    this.formBuilderService.setTypeBindFieldFromConfig(this.typeFields);
   }
 
   /**
@@ -414,6 +431,83 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     if ((environment.submission.autosave.metadata.indexOf(metadata) !== -1 && isNotEmpty(value)) || this.hasRelatedCustomError(metadata)) {
       this.submissionService.dispatchSave(this.submissionId);
     }
+
+    // Check if the type field is updated it could be e.g. `dc.type` or `edm.type` metadata field
+    // `.some()` method is used to break the loop when the type field is found.
+    // The values in the `typeFields` are in the format `dc_type` or `edm_type`, so we need to replace `_` with `.`
+    [...this.typeFields.values()].some(typeValue => {
+      if (typeValue.replace('_', '.') === metadata) {
+        this.dispatchFormSaveAndReinitialize(typeValue, value);
+        return true;
+      }
+    });
+
+    if ([SPONSOR_METADATA_NAME, AUTHOR_METADATA_FIELD_NAME].includes(metadata)) {
+      this.dispatchFormSaveAndReinitialize(metadata, value);
+    }
+  }
+
+  /**
+   * Dispatch form save and reinitialize form
+   * @param metadata
+   * @param value
+   */
+  dispatchFormSaveAndReinitialize(metadata, value) {
+    this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
+    this.reinitializeForm(metadata, value);
+  }
+
+  /**
+   * This method updates specific input field e.g. `local.sponsor` and check if the metadata value was updated
+   * in the DB. When the metadata is updated in the DB refresh this input field.
+   * The reason of this method: If the data is not actual in BE, the input field probably won't fill in suggested value
+   * into all input fields e.g., the user click on the suggested value for the `author` but the input fields
+   * are still empty.
+   *
+   * @param metadataField input field which is updating
+   * @param newMetadataValue value added to the input field
+   */
+  public reinitializeForm(metadataField, newMetadataValue) {
+    let metadataValueFromDB = '';
+    // Counter to count update request timeout (20s)
+    let counter = 0;
+
+    this.isUpdating = true;
+    const interval = setInterval( () => {
+      // Load item from the DB
+      this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')).pipe(
+        getFirstSucceededRemoteData(),
+        getRemoteDataPayload())
+        .subscribe((payload) => {
+          if (isNotEmpty(payload.item)) {
+            payload.item.subscribe( item => {
+              if (isNotEmpty(item.payload) && isNotEmpty(item.payload.metadata[metadataField])) {
+                metadataValueFromDB = item.payload.metadata[metadataField];
+              }
+            });
+          }
+        });
+      // Check if new value is refreshed in the DB
+      if (Array.isArray(metadataValueFromDB) && isNotEmpty(metadataValueFromDB)) {
+        metadataValueFromDB.forEach((mv, index) => {
+          // @ts-ignore
+          if (metadataValueFromDB[index].value === newMetadataValue.value) {
+            // update form
+            this.formModel = undefined;
+            this.cdr.detectChanges();
+            this.ngOnInit();
+            clearInterval(interval);
+            this.isUpdating = false;
+          }
+        });
+      }
+      // Clear interval after 20s timeout
+      if (counter === ( this.sponsorRefreshTimeout * 1000 ) / 250) {
+        clearInterval(interval);
+        this.isUpdating = false;
+      }
+      counter++;
+    }, 250 );
   }
 
   private hasRelatedCustomError(medatata): boolean {

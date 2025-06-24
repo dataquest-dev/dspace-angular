@@ -289,13 +289,14 @@ describe('ThumbnailComponent', () => {
     describe('with thumbnail as RemoteData<Bitstream>', () => {
       let thumbnail: Bitstream;
 
-      beforeEach(() => {
-        thumbnail = new Bitstream();
-        thumbnail._links = {
-          self: { href: 'self.url' },
-          bundle: { href: 'bundle.url' },
-          format: { href: 'format.url' },
-          content: { href: CONTENT },
+    beforeEach(() => {
+      thumbnail = new Bitstream();
+      thumbnail._links = {
+        self: { href: 'self.url' },
+        bundle: { href: 'bundle.url' },
+        format: { href: 'format.url' },
+        content: { href: CONTENT },
+        checksum: { href: 'checksum.url' },
         thumbnail: undefined
         };
       });

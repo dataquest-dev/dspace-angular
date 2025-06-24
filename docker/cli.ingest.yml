@@ -12,6 +12,7 @@
 # https://github.com/DSpace/DSpace/blob/main/dspace/src/main/docker-compose/cli.ingest.yml
 #
 # Therefore, it should be kept in sync with that file
+
 services:
   dspace-cli:
     environment:

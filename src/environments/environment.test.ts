@@ -329,4 +329,13 @@ export const environment: BuildConfig = {
   search: {
     filterPlaceholdersCount: 5
   }
+  ],
+
+  signpostingEnabled: true,
+
+  matomo: {
+    hostUrl: 'http://localhost:8135/',
+    siteId: '1',
+    dimensionId: 1
+  }
 };

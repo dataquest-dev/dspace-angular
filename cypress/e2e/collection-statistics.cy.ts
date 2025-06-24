@@ -4,11 +4,12 @@ import { testA11y } from 'cypress/support/utils';
 describe('Collection Statistics Page', () => {
     const COLLECTIONSTATISTICSPAGE = '/statistics/collections/'.concat(Cypress.env('DSPACE_TEST_COLLECTION'));
 
-    it('should load if you click on "Statistics" from a Collection page', () => {
-        cy.visit('/collections/'.concat(Cypress.env('DSPACE_TEST_COLLECTION')));
-        cy.get('ds-navbar ds-link-menu-item a[data-test="link-menu-item.menu.section.statistics"]').click();
-        cy.location('pathname').should('eq', COLLECTIONSTATISTICSPAGE);
-    });
+  // NOTE: the statistics option was removed from the navbar - add it there in the future and uncomment this test
+    // it('should load if you click on "Statistics" from a Collection page', () => {
+    //     cy.visit('/collections/'.concat(Cypress.env('DSPACE_TEST_COLLECTION')));
+    //     cy.get('ds-navbar ds-link-menu-item a[data-test="link-menu-item.menu.section.statistics"]').click();
+    //     cy.location('pathname').should('eq', COLLECTIONSTATISTICSPAGE);
+    // });
 
     it('should contain a "Total visits" section', () => {
         cy.visit(COLLECTIONSTATISTICSPAGE);

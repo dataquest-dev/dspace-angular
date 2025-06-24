@@ -11,6 +11,9 @@ import { BrowseService } from '../../../../../core/browse/browse.service';
 import { BrowseServiceStub } from '../../../../../shared/testing/browse-service.stub';
 import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-definition-data.service';
 import { BrowseDefinitionDataServiceStub } from '../../../../../shared/testing/browse-definition-data-service.stub';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { createSuccessfulRemoteDataObject$ } from '../../../../../shared/remote-data.utils';
+import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
 
 let comp: ItemPageUriFieldComponent;
 let fixture: ComponentFixture<ItemPageUriFieldComponent>;
@@ -20,6 +23,17 @@ const mockValue = 'test value';
 const mockLabel = 'test label';
 
 describe('ItemPageUriFieldComponent', () => {
+  let mockConfigurationDataService: ConfigurationDataService;
+
+  mockConfigurationDataService = jasmine.createSpyObj('configurationDataService', {
+    findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
+      name: 'property',
+      values: [
+        'value'
+      ]
+    })),
+  });
+
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot({
@@ -32,6 +46,7 @@ describe('ItemPageUriFieldComponent', () => {
         { provide: APP_CONFIG, useValue: environment },
         { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub },
         { provide: BrowseService, useValue: BrowseServiceStub },
+        { provide: ConfigurationDataService, useValue: mockConfigurationDataService }
       ],
       declarations: [ItemPageUriFieldComponent, MetadataUriValuesComponent],
       schemas: [NO_ERRORS_SCHEMA]

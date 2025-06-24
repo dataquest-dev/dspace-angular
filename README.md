@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/DSpace/dspace-angular/workflows/Build/badge.svg?branch=main)](https://github.com/DSpace/dspace-angular/actions?query=workflow%3ABuild) [![Coverage Status](https://codecov.io/gh/DSpace/dspace-angular/branch/main/graph/badge.svg)](https://codecov.io/gh/DSpace/dspace-angular) [![Universal Angular](https://img.shields.io/badge/universal-angular2-brightgreen.svg?style=flat)](https://github.com/angular/universal)
+[![Build](https://github.com/dataquest-dev/dspace-angular/actions/workflows/build.yml/badge.svg)](https://github.com/dataquest-dev/dspace-angular/actions/workflows/build.yml) [![codecov](https://codecov.io/gh/dataquest-dev/dspace-angular/branch/dtq-dev/graph/badge.svg?token=DQ7QIZN8S6)](https://codecov.io/gh/dataquest-dev/dspace-angular) [![Universal Angular](https://img.shields.io/badge/universal-angular2-brightgreen.svg?style=flat)](https://github.com/angular/universal)
 
 dspace-angular
 ==============
@@ -569,3 +569,8 @@ The full license is available in the [LICENSE](LICENSE) file or online at http:/
 
 DSpace uses third-party libraries which may be distributed under different licenses. Those licenses are listed
 in the [LICENSES_THIRD_PARTY](LICENSES_THIRD_PARTY) file.
+
+Additional tools
+----------------
+
+This project is tested with BrowserStack.

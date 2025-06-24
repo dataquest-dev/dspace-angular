@@ -24,6 +24,7 @@ import { FilterVocabularyConfig } from './filter-vocabulary-config';
 import { DiscoverySortConfig } from './discovery-sort.config';
 import { LiveRegionConfig } from '../app/shared/live-region/live-region.config';
 import { SearchConfig } from './search-page-config.interface';
+import { MatomoConfig } from './matomo-config';
 
 export class DefaultAppConfig implements AppConfig {
   production = false;
@@ -273,7 +274,7 @@ export class DefaultAppConfig implements AppConfig {
       sortField: 'dc.date.accessioned',
     },
     topLevelCommunityList: {
-      pageSize: 5
+      pageSize: 15
     }
   };
 
@@ -362,15 +363,6 @@ export class DefaultAppConfig implements AppConfig {
           }
         },
         {
-          // Insert <link rel="icon" href="assets/dspace/images/favicons/favicon.svg" type="image/svg+xml"/> into the <head> of the page.
-          tagName: 'link',
-          attributes: {
-            'rel': 'icon',
-            'href': 'assets/dspace/images/favicons/favicon.svg',
-            'type': 'image/svg+xml',
-          }
-        },
-        {
           // Insert <link rel="apple-touch-icon" href="assets/dspace/images/favicons/apple-touch-icon.png"/> into the <head> of the page.
           tagName: 'link',
           attributes: {
@@ -446,5 +438,15 @@ export class DefaultAppConfig implements AppConfig {
 
   search: SearchConfig = {
     filterPlaceholdersCount: 5
+  };
+
+  // NOTE: you must disable/enable in the backend the signposting feature to make it work `signposting.enabled`
+  signpostingEnabled = false;
+
+  // Matomo configuration
+  matomo: MatomoConfig = {
+    hostUrl: 'http://localhost:8135/',
+    siteId: '1',
+    dimensionId: 1
   };
 }
