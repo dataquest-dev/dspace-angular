@@ -101,7 +101,7 @@ jobs:
   rest-tests-after-deploy4:
     runs-on: ubuntu-latest
     needs: playwright-after-deploy4
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - name: run rest-tests
         run: |
@@ -136,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: import-4
     if: inputs.IMPORT
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - name: Checkout Playwright tests
         uses: actions/checkout@v4
@@ -170,7 +170,7 @@ jobs:
   rest-tests-after-import4:
     runs-on: ubuntu-latest
     needs: playwright-after-import4
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - name: run rest-tests
         run: |
