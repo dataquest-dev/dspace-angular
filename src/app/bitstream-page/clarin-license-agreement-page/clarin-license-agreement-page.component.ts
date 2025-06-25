@@ -123,9 +123,9 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   licenseContentSeznam: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   /**
-   * If agree button is clicked, loading triggers
+   * Indicates when the submission is in progress and resets after completion
    */
-  isLoading: boolean = false;
+  isLoading = false;
 
   constructor(
     protected clarinLicenseResourceMappingService: ClarinLicenseResourceMappingService,
