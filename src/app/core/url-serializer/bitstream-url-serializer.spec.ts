@@ -40,4 +40,15 @@ describe('BitstreamUrlSerializer', () => {
     const expected = new DefaultUrlSerializer().parse(url);
     expect(result).toEqual(expected);
   });
+
+  it('should encode the filename and preserve query parameters in /bitstream/ URLs', () => {
+    const originalUrl = '/bitstream/handle/123/456/some file.pdf?sequence=3&isAllowed=y';
+    const expectedEncodedFilename = 'some%20file.pdf';
+    const expectedUrl = `/bitstream/handle/123/456/${expectedEncodedFilename}?sequence=3&isAllowed=y`;
+
+    const result: UrlTree = serializer.parse(originalUrl);
+
+    const resultUrl = new DefaultUrlSerializer().serialize(result);
+    expect(resultUrl).toBe(expectedUrl);
+  });
 });
