@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Bitstream } from '../../core/shared/bitstream.model';
 import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { finalize, switchMap, take } from 'rxjs/operators';
 import { followLink } from '../../shared/utils/follow-link-config.model';
 import { ClarinUserRegistration } from '../../core/shared/clarin/clarin-user-registration.model';
 import { ClarinUserMetadata } from '../../core/shared/clarin/clarin-user-metadata.model';
@@ -122,6 +122,11 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
    */
   licenseContentSeznam: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
+  /**
+   * If agree button is clicked, loading triggers
+   */
+  isLoading: boolean = false;
+
   constructor(
     protected clarinLicenseResourceMappingService: ClarinLicenseResourceMappingService,
     protected configurationDataService: ConfigurationDataService,
@@ -186,6 +191,8 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
+
     const requestId = this.requestService.generateRequestId();
     // Response type must be `text` because it throws response as error byd status code is 200 (Success).
     const requestOptions: HttpOptions = Object.create({
@@ -216,7 +223,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     const response = this.rdbService.buildFromRequestUUID(requestId);
     // Process response
     response
-      .pipe(getFirstCompletedRemoteData())
+      .pipe(getFirstCompletedRemoteData(), finalize(() => this.isLoading = false))
       .subscribe(responseRD$ => {
         if (hasFailed(responseRD$.state)) {
           this.notificationService.error(
