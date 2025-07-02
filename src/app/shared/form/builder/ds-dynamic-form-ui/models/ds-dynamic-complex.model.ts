@@ -123,13 +123,8 @@ export class DynamicComplexModel extends DynamicConcatModel {
         if (this.name === SPONSOR_METADATA_NAME) {
           // if funding type is `EU`
           if (index === FUNDING_TYPE_INDEX && DEFAULT_EU_FUNDING_TYPES.includes(val.value)) {
-            isEUFund = true;
-          }
-          // if funding type is `EU` and input field is `openaire_id` -> show `openaire_id` readonly input field
-          if (index === EU_IDENTIFIER_INDEX && isEUFund && val.value.includes(EU_PROJECT_PREFIX)) {
+            // Show EU identifier input field
             (this.get(EU_IDENTIFIER_INDEX) as DsDynamicInputModel).hidden = false;
-          } else {
-            (this.get(EU_IDENTIFIER_INDEX) as DsDynamicInputModel).hidden = true;
           }
         }
       } else if (hasValue((this.get(index) as DsDynamicInputModel))) {
