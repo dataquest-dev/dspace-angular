@@ -109,8 +109,6 @@ export class DynamicComplexModel extends DynamicConcatModel {
     // remove undefined values
     values = values.filter(v => v);
 
-    // if funding type is `EU`
-    let isEUFund = false;
     values.forEach((val, index) =>  {
       if (val.value) {
         // do not set value if it bigger than allowed length
