@@ -13,7 +13,7 @@ import { getItemPageRoute } from '../../../item-page-routing-paths';
 import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
 import { RemoteData } from 'src/app/core/data/remote-data';
 import { PaginatedList } from 'src/app/core/data/paginated-list.model';
-import { Bitstream } from 'src/app/core/shared/bitstream.model';
+import {Bitstream, SYNCHRONIZED_STORES_NUMBER} from 'src/app/core/shared/bitstream.model';
 import { Observable, BehaviorSubject, switchMap, shareReplay, Subscription } from 'rxjs';
 import { PaginationComponentOptions } from '../../../../shared/pagination/pagination-component-options.model';
 import { FieldUpdates } from '../../../../core/data/object-updates/field-updates.model';
@@ -22,6 +22,7 @@ import { BundleDataService } from '../../../../core/data/bundle-data.service';
 import { followLink } from '../../../../shared/utils/follow-link-config.model';
 import {
   getAllSucceededRemoteData,
+  getFirstSucceededRemoteData, getRemoteDataPayload,
   paginatedListToArray,
 } from '../../../../core/shared/operators';
 import { ObjectUpdatesService } from '../../../../core/data/object-updates/object-updates.service';
@@ -38,7 +39,9 @@ import {
   MOVE_KEY, SelectionAction
 } from '../item-bitstreams.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { hasValue, hasNoValue } from '../../../../shared/empty.util';
+import {hasValue, hasNoValue, isUndefined} from '../../../../shared/empty.util';
+import {BitstreamChecksum, CheckSum} from '../../../../core/shared/bitstream-checksum.model';
+import {BitstreamChecksumDataService} from '../../../../core/bitstream-checksum-data.service';
 
 @Component({
   selector: 'ds-item-edit-bitstream-bundle',
@@ -149,6 +152,25 @@ export class ItemEditBitstreamBundleComponent implements OnInit, OnDestroy {
    */
   subscriptions: Subscription[] = [];
 
+  /**
+   * True on mouseover, false otherwise
+   */
+  showChecksumValues = false;
+
+  /**
+   * Object containing all checksums
+   */
+  checkSum$: Observable<BitstreamChecksum>;
+
+  /**
+   * Compute checksum - the whole file must be downloaded to compute the checksum
+   */
+  computedChecksum = false;
+
+  /**
+   * True if the bitstream is being downloaded and the checksum is being computed
+   */
+  loading = false;
 
   constructor(
     protected viewContainerRef: ViewContainerRef,
@@ -158,6 +180,7 @@ export class ItemEditBitstreamBundleComponent implements OnInit, OnDestroy {
     protected paginationService: PaginationService,
     protected requestService: RequestService,
     protected itemBitstreamsService: ItemBitstreamsService,
+    private bitstreamChecksumDataService: BitstreamChecksumDataService
   ) {
   }
 
@@ -543,5 +566,60 @@ export class ItemEditBitstreamBundleComponent implements OnInit, OnDestroy {
     // Increments page by one because zero-indexing is way easier for calculations but the pagination component
     // uses one-indexing.
     this.paginationComponent.doPageChange(page + 1);
+  }
+
+
+  /**
+   * Compare if two checksums are equal
+   *
+   * @param checksum1 e.g. DB checksum
+   * @param checksum2 e.g. Active store checksum (local or S3)
+   */
+  compareChecksums(checksum1: CheckSum, checksum2: CheckSum): boolean {
+    return checksum1?.value === checksum2?.value && checksum1?.checkSumAlgorithm === checksum2?.checkSumAlgorithm;
+  }
+
+  /**
+   * Compare if all checksums are equal (DB, Active store, Synchronized store)
+   *
+   * @param bitstreamChecksum which contains all checksums
+   */
+  checksumsAreEqual(bitstreamChecksum: BitstreamChecksum): boolean {
+    if (hasNoValue(bitstreamChecksum)){
+      return false;
+    }
+    const bitstream = this.itemBitstreamsService.getSelectedBitstream()?.bitstream;
+
+    if (this.isBitstreamSynchronized(bitstream)) {
+      // Compare DB and Active store checksums
+      // Compare DB and Synchronized and Active store checksums
+      return this.compareChecksums(bitstreamChecksum.databaseChecksum, bitstreamChecksum.activeStore) &&
+        this.compareChecksums(bitstreamChecksum.synchronizedStore, bitstreamChecksum.activeStore);
+    }
+    // Compare DB and Active store checksums
+    return this.compareChecksums(bitstreamChecksum.databaseChecksum, bitstreamChecksum.activeStore);
+  }
+
+  /**
+   * Check if the bitstream is stored in both stores (S3 and local)
+   */
+  isBitstreamSynchronized(bitstream: BitstreamTableEntry = undefined): boolean {
+    if (isUndefined(bitstream)) {
+      bitstream = this.itemBitstreamsService.getSelectedBitstream()?.bitstream;
+    }
+    return bitstream?.bitstream.storeNumber === SYNCHRONIZED_STORES_NUMBER;
+  }
+
+  computeChecksum() {
+    this.loading = true;
+    const bitstream = this.itemBitstreamsService.getSelectedBitstream()?.bitstream?.bitstream;
+    // Send request to get bitstream checksum
+    this.checkSum$ = this.bitstreamChecksumDataService.findByHref(bitstream._links?.checksum?.href)
+      .pipe(getFirstSucceededRemoteData(), getRemoteDataPayload(),
+        map(value => {
+          this.computedChecksum = true;
+          this.loading = false;
+          return value;
+        }));
   }
 }

@@ -3,6 +3,7 @@ import { Item } from '../../core/shared/item.model';
 import { Version } from '../../core/shared/version.model';
 import { RemoteData } from '../../core/data/remote-data';
 import {
+  BehaviorSubject,
   combineLatest,
   Observable,
   of,
@@ -432,19 +433,12 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
       take(1),
     );
 
-    const result$ = combineLatest([includeSubmitter$, isAdmin$]).pipe(
+    return combineLatest([includeSubmitter$, isAdmin$]).pipe(
       map(([includeSubmitter, isAdmin]) => {
         return includeSubmitter && isAdmin;
       })
     );
 
-    if (isNotNull(this.showSubmitter$.value)) {
-      return;
-    }
-
-    result$.subscribe(res => {
-      this.showSubmitter$.next(res);
-    });
   }
 
   /**

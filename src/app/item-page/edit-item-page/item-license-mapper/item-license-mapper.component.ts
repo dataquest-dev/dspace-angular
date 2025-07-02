@@ -19,6 +19,7 @@ import { NotificationsService } from '../../../shared/notifications/notification
 import { TranslateService } from '@ngx-translate/core';
 import { getLicensesManageTablePath, getLicensesModulePath } from '../../../app-routing-paths';
 import { isNull } from '../../../shared/empty.util';
+import {RequestParam} from '../../../core/cache/models/request-param.model';
 
 @Component({
   selector: 'ds-item-license-mapper',
@@ -113,12 +114,10 @@ export class ItemLicenseMapperComponent implements OnInit {
       // Create request options - add license name to search params
       const options = {
         searchParams: [
-          {
-            fieldName: 'name',
-            fieldValue: licenseName
-          }
+          new RequestParam('name', licenseName)
         ]
       };
+
 
       // Fetch license by name and set it to currentLicense
       this.clarinLicenseService.searchBy('byName', options, false)

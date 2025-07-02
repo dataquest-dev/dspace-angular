@@ -372,7 +372,9 @@ export class ItemBitstreamsService {
       // Format column
       new ResponsiveColumnSizes(2, 2, 2, 2, 2),
       // Actions column
-      new ResponsiveColumnSizes(6, 5, 4, 3, 3)
+      new ResponsiveColumnSizes(6, 5, 4, 3, 3),
+      // Store synchronization columns
+      new ResponsiveColumnSizes(2, 2, 2, 2, 2)
     ]);
   }
 

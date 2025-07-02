@@ -15,6 +15,7 @@ import {
   DynamicClarinNameModel
 } from '../ds-dynamic-form-ui/models/clarin-name.model';
 import { DsDynamicInputModelConfig } from '../ds-dynamic-form-ui/models/ds-dynamic-input.model';
+import {TranslateService} from '@ngx-translate/core';
 
 /**
  * Parser where is created DynamicClarinNameModel for the `author` input field.
@@ -28,8 +29,9 @@ export class ClarinNameFieldParser extends FieldParser {
     @Inject(PARSER_OPTIONS) parserOptions: ParserOptions,
     protected separator: string,
     protected firstPlaceholder: string = 'form.last-name',
-    protected secondPlaceholder: string = 'form.first-name') {
-    super(submissionId, configData, initFormValues, parserOptions);
+    protected secondPlaceholder: string = 'form.first-name',
+    protected translate: TranslateService) {
+    super(submissionId, configData, initFormValues, parserOptions, translate);
     this.separator = separator;
   }
 

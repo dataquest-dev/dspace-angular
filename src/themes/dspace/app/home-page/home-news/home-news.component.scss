@@ -18,65 +18,67 @@
       object-position: top;
     }
 
-  div.background-image {
-    color: var($gray-800);
-    background-color: var(--ds-clarin-home-news-background-color);
-    .container {
-      position: relative;
-      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
-      background-color: #f2f2f2;
-      border-bottom: solid 1px #e5e5e5;
-      border-radius: 0 !important;
+    div.background-image {
+      color: var($gray-800);
+      background-color: var(--ds-clarin-home-news-background-color);
 
-      &:before, &:after {
-        content: '';
-        display: block;
-        width: var(--ds-banner-background-gradient-width);
-        height: 100%;
-        top: 0;
+      .container {
+        position: relative;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+        background-color: #f2f2f2;
+        border-bottom: solid 1px #e5e5e5;
+        border-radius: 0 !important;
+
+        &:before, &:after {
+          content: '';
+          display: block;
+          width: var(--ds-banner-background-gradient-width);
+          height: 100%;
+          top: 0;
+          position: absolute;
+        }
+
+        &:before {
+          background: linear-gradient(to left, var(--ds-banner-text-background), transparent);
+          left: calc(-1 * var(--ds-banner-background-gradient-width));
+
+        }
+
+        &:after {
+          background: linear-gradient(to right, var(--ds-banner-text-background), transparent);
+          right: calc(-1 * var(--ds-banner-background-gradient-width));
+        }
+      }
+
+
+      small.credits {
+        a {
+          color: inherit;
+        }
+
+        opacity: 0.3;
         position: absolute;
-      }
-
-      &:before {
-        background: linear-gradient(to left, var(--ds-banner-text-background), transparent);
-        left: calc(-1 * var(--ds-banner-background-gradient-width));
-
-      }
-
-      &:after {
-        background: linear-gradient(to right, var(--ds-banner-text-background), transparent);
-        right: calc(-1 * var(--ds-banner-background-gradient-width));
+        right: var(--bs-spacer);
+        bottom: 0;
       }
     }
 
+    .jumbotron {
+      background-color: transparent;
+    }
 
-    small.credits {
-      a {
-        color: inherit;
+    a {
+      color: var(--ds-home-news-link-color);
+
+      @include hover {
+        color: var(--ds-home-news-link-hover-color);
       }
-
-      opacity: 0.3;
-      position: absolute;
-      right: var(--bs-spacer);
-      bottom: 0;
     }
-  }
 
-  .jumbotron {
-    background-color: transparent;
-  }
-
-  a {
-    color: var(--ds-home-news-link-color);
-
-    @include hover {
-      color: var(--ds-home-news-link-hover-color);
+    .lead {
+      font-size: 1.25rem;
+      font-weight: 400;
     }
-  }
-
-  .lead {
-    font-size: 1.25rem;
-    font-weight: 400;
   }
 }
 
