@@ -210,7 +210,7 @@ jobs:
     steps:
       - name: vanilla import
         env:
-          FNAME: 2024.7.4._zcu_pub_imported.sql
+          FNAME: dump.sql
         run: |
           export DATADIR=/opt/dspace-data/zcu-dump/$FNAME
           export DNAME=dspace$INSTANCE
