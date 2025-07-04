@@ -47,7 +47,7 @@
     </span>
     <span class="pl-1">
       <a class="preview-btn collapsed" data-toggle="collapse" *ngIf="couldPreview()" role="button"
-         href="#file_file_{{ fileInput.id }}">
+        (click)="showPreview()" href="#file_file_{{ fileInput.id }}">
         <i class="fa fa-eye">&nbsp;</i>
         {{'item.file.description.preview' | translate}}
       </a>
