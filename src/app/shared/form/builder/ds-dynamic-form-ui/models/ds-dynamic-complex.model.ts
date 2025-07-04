@@ -109,8 +109,6 @@ export class DynamicComplexModel extends DynamicConcatModel {
     // remove undefined values
     values = values.filter(v => v);
 
-    // if funding type is `EU`
-    let isEUFund = false;
     values.forEach((val, index) =>  {
       if (val.value) {
         // do not set value if it bigger than allowed length
@@ -123,13 +121,8 @@ export class DynamicComplexModel extends DynamicConcatModel {
         if (this.name === SPONSOR_METADATA_NAME) {
           // if funding type is `EU`
           if (index === FUNDING_TYPE_INDEX && DEFAULT_EU_FUNDING_TYPES.includes(val.value)) {
-            isEUFund = true;
-          }
-          // if funding type is `EU` and input field is `openaire_id` -> show `openaire_id` readonly input field
-          if (index === EU_IDENTIFIER_INDEX && isEUFund && val.value.includes(EU_PROJECT_PREFIX)) {
+            // Show EU identifier input field
             (this.get(EU_IDENTIFIER_INDEX) as DsDynamicInputModel).hidden = false;
-          } else {
-            (this.get(EU_IDENTIFIER_INDEX) as DsDynamicInputModel).hidden = true;
           }
         }
       } else if (hasValue((this.get(index) as DsDynamicInputModel))) {
