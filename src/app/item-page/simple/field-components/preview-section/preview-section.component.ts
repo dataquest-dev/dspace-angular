@@ -13,20 +13,13 @@ import { ConfigurationDataService } from '../../../../core/data/configuration-da
 })
 export class PreviewSectionComponent implements OnInit {
   @Input() item: Item;
+  @Input() listOfFiles: MetadataBitstream[];
 
-  listOfFiles: BehaviorSubject<MetadataBitstream[]> = new BehaviorSubject<MetadataBitstream[]>([] as any);
   emailToContact: string;
 
-  constructor(protected registryService: RegistryService,
-              private configService: ConfigurationDataService) {} // Modified
+  constructor(private configService: ConfigurationDataService) {} // Modified
 
   ngOnInit(): void {
-    this.registryService
-      .getMetadataBitstream(this.item.handle, 'ORIGINAL')
-      .pipe(getAllSucceededRemoteListPayload())
-      .subscribe((data: MetadataBitstream[]) => {
-        this.listOfFiles.next(data);
-      });
     this.configService.findByPropertyName('lr.help.mail')?.subscribe(remoteData => {
       this.emailToContact = remoteData.payload?.values?.[0];
     });
