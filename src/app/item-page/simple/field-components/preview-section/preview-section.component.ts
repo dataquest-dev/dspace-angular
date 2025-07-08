@@ -32,5 +32,7 @@ export class PreviewSectionComponent implements OnInit {
     });
   }
 
-
+  isArrayAndEmpty(value: unknown): boolean {
+    return Array.isArray(value) && value.length === 0;
+  }
 }
