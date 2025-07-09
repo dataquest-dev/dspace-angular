@@ -1,6 +1,6 @@
 <ng-container *ngIf="(listOfFiles | async) as files; else loading">
   <!-- Show "No files" message -->
-  <div *ngIf="isArrayAndEmpty(files)" class="text-center text-muted my-3">
+  <div *ngIf="hasNoFiles" class="text-center text-muted my-3">
     {{ 'item.view.box.no-files.message' | translate }}
   </div>
 
