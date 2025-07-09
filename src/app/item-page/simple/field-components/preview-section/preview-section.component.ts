@@ -16,7 +16,7 @@ export class PreviewSectionComponent implements OnInit {
 
   listOfFiles: BehaviorSubject<MetadataBitstream[]> = new BehaviorSubject<MetadataBitstream[]>([] as any);
   emailToContact: string;
-  hasNoFiles = true;
+  hasNoFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   constructor(protected registryService: RegistryService,
               private configService: ConfigurationDataService) {} // Modified
@@ -27,7 +27,7 @@ export class PreviewSectionComponent implements OnInit {
       .pipe(getAllSucceededRemoteListPayload())
       .subscribe((data: MetadataBitstream[]) => {
         this.listOfFiles.next(data);
-        this.hasNoFiles = !Array.isArray(data) || data.length === 0;
+        this.hasNoFiles.next(!Array.isArray(data) || data.length === 0);
       });
     this.configService.findByPropertyName('lr.help.mail')?.subscribe(remoteData => {
       this.emailToContact = remoteData.payload?.values?.[0];
