@@ -147,14 +147,19 @@ export class ClarinItemBoxViewComponent implements OnInit {
     this.itemUri = getItemPageRoute(this.item);
     this.itemDescription = this.item?.firstMetadataValue('dc.description');
     this.itemPublisher = this.item?.firstMetadataValue('dc.publisher');
-    this.publisherRedirectLink = this.baseUrl + '/search?f.publisher=' + encodeURIComponent(this.itemPublisher)
-      + ',equals';
     this.itemDate = this.clarinDateService.composeItemDate(this.item);
 
     await this.assignBaseUrl();
+    this.publisherRedirectLink = this.getSearchEndpoint() + '?f.publisher=' + encodeURIComponent(this.itemPublisher)
+      + ',equals';
     this.getItemCommunity();
     this.loadItemLicense();
     this.getItemFilesSize();
+  }
+
+  private getSearchEndpoint(): string {
+    // Return the search endpoint URL for with the base URL. Remove trailing slashes to ensure a clean URL.
+    return this.baseUrl.replace(/\/+$/, '') +  '/search';
   }
 
   private getItemFilesSize() {
@@ -193,8 +198,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
           .pipe(getFirstSucceededRemoteDataPayload())
           .subscribe((community: Community) => {
             this.itemCommunity.next(community);
-            const encodedRedirectLink = this.baseUrl +
-              '/search?f.items_owning_community=' + encodeURIComponent(this.dsoNameService.getName(community)) + ',equals';
+            const encodedRedirectLink = this.getSearchEndpoint() + '?f.items_owning_community=' + encodeURIComponent(this.dsoNameService.getName(community)) + ',equals';
             this.communitySearchRedirect.next(encodedRedirectLink);
           });
       });
