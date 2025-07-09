@@ -125,7 +125,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   /**
    * Indicates when the submission is in progress and resets after completion
    */
-  isLoading = false;
+  isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     protected clarinLicenseResourceMappingService: ClarinLicenseResourceMappingService,
@@ -191,7 +191,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+    this.isLoading.next(true);
 
     const requestId = this.requestService.generateRequestId();
     // Response type must be `text` because it throws response as error byd status code is 200 (Success).
@@ -223,7 +223,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     const response = this.rdbService.buildFromRequestUUID(requestId);
     // Process response
     response
-      .pipe(getFirstCompletedRemoteData(), finalize(() => this.isLoading = false))
+      .pipe(getFirstCompletedRemoteData(), finalize(() => this.isLoading.next(false)))
       .subscribe(responseRD$ => {
         if (hasFailed(responseRD$.state)) {
           this.notificationService.error(

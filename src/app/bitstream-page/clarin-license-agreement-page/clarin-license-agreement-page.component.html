@@ -88,15 +88,15 @@
   </div>
   <div class="row pt-3">
     <div class="col-12">
-      <button class="btn btn-success max-width" [disabled]="error$.value.length !== 0 || isLoading" (click)="accept()">
+      <button class="btn btn-success max-width" [disabled]="error$.value.length !== 0 || (isLoading | async)" (click)="accept()">
 
         <!-- normal state -->
-      <ng-container *ngIf="!isLoading">
+      <ng-container *ngIf="!(isLoading | async)">
         {{'clarin.license.agreement.button.agree' | translate}}
       </ng-container>
 
       <!-- loading state -->
-      <ng-container *ngIf="isLoading">
+      <ng-container *ngIf="isLoading | async">
         <span
           class="spinner-border spinner-border-sm"
           role="status"
