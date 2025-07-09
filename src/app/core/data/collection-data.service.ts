@@ -35,6 +35,7 @@ import { FindListOptions } from './find-list-options.model';
 import { Community } from '../shared/community.model';
 import { dataService } from './base/data-service.decorator';
 
+
 @Injectable()
 @dataService(COLLECTION)
 export class CollectionDataService extends ComColDataService<Collection> {
@@ -175,7 +176,6 @@ export class CollectionDataService extends ComColDataService<Collection> {
     const searchHref = 'findSubmitAuthorized';
     const options = new FindListOptions();
     options.elementsPerPage = 1;
-
     return this.searchBy(searchHref, options).pipe(
       filter((collections: RemoteData<PaginatedList<Collection>>) => !collections.isResponsePending),
       take(1),
