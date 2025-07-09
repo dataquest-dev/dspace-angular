@@ -1,9 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
-import { RegistryService } from 'src/app/core/registry/registry.service';
 import { Item } from 'src/app/core/shared/item.model';
-import { getAllSucceededRemoteListPayload } from 'src/app/core/shared/operators';
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 
 @Component({
