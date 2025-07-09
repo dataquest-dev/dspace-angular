@@ -38,6 +38,15 @@ export class FileDescriptionComponent implements OnInit, OnDestroy {
   handlers_added = false;
   playPromise: Promise<void>;
 
+  /**
+   * Whether the user has clicked the "Show Preview" button for non-video files.
+   */
+  public isPreviewVisible = false;
+  /**
+   * Whether the preview data is currently being loaded for non-video files.
+   */
+  public isLoadingPreview = false;
+
   private subscriptions: Subscription = new Subscription();
 
   constructor(protected halService: HALEndpointService,
@@ -54,30 +63,12 @@ export class FileDescriptionComponent implements OnInit, OnDestroy {
       .subscribe(remoteData => {
       this.emailToContact = remoteData?.payload?.values?.[0];
     });
-    this.content_url$ = this.bitstreamService.findById(this.fileInput.id, true, false, followLink('thumbnail'))
-      .pipe(getFirstCompletedRemoteData(),
-            switchMap((remoteData: RemoteData<Bitstream>) => {
-              if (remoteData.hasSucceeded) {
-                if (remoteData.payload?.thumbnail){
-                  this.thumbnail_url$ = remoteData.payload?.thumbnail.pipe(
-                    switchMap((thumbnailRD: RemoteData<Bitstream>) => {
-                      if (thumbnailRD.hasSucceeded) {
-                        return this.buildUrl(thumbnailRD.payload?._links.content.href);
-                      } else {
-                        return of('');
-                      }
-                    }),
-                  );
-                } else {
-                  this.thumbnail_url$ = of('');
-                }
-                return of(remoteData.payload?._links.content.href);
-              }
-            }
-      ));
-    this.content_url$.pipe(take(1)).subscribe((url) => {
-      this.content_url = url;
-    });
+
+    // If the file is a video, load its data immediately as before.
+    // For all other file types, we will wait for the user to click a button.
+    if (this.isVideo()) {
+      this.loadPreviewData();
+    }
   }
 
   ngAfterViewInit() {
@@ -109,6 +100,57 @@ export class FileDescriptionComponent implements OnInit, OnDestroy {
         })
       );
     }
+  }
+
+  /**
+   * Called when the user clicks the "Show Preview" button for a non-video file.
+   * It sets flags to show the preview section and a loading indicator,
+   * then starts fetching the required data.
+   */
+  public showPreview(): void {
+    this.isLoadingPreview = true;
+    this.isPreviewVisible = true;
+    this.loadPreviewData();
+  }
+
+  /**
+   * A helper method to determine if the file is a video.
+   */
+  public isVideo(): boolean {
+    return this.fileInput?.format.startsWith('video/');
+  }
+
+  /**
+   * Fetches the bitstream content URL and thumbnail.
+   * It is called on-demand for other previews.
+   */
+  private loadPreviewData(): void {
+    this.content_url$ = this.bitstreamService.findById(this.fileInput.id, true, false, followLink('thumbnail'))
+      .pipe(getFirstCompletedRemoteData(),
+            switchMap((remoteData: RemoteData<Bitstream>) => {
+              // Hide loading indicator once the request is complete
+              this.isLoadingPreview = false;
+              if (remoteData.hasSucceeded) {
+                if (remoteData.payload?.thumbnail){
+                  this.thumbnail_url$ = remoteData.payload?.thumbnail.pipe(
+                    switchMap((thumbnailRD: RemoteData<Bitstream>) => {
+                      if (thumbnailRD.hasSucceeded) {
+                        return this.buildUrl(thumbnailRD.payload?._links.content.href);
+                      } else {
+                        return of('');
+                      }
+                    }),
+                  );
+                } else {
+                  this.thumbnail_url$ = of('');
+                }
+                return of(remoteData.payload?._links.content.href);
+              }
+            }
+      ));
+    this.content_url$.pipe(take(1)).subscribe((url) => {
+      this.content_url = url;
+    });
   }
 
   private add_short_lived_token_handling_to_video_playback(video: HTMLVideoElement) {

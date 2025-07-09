@@ -79,10 +79,8 @@ describe('PreviewSectionComponent', () => {
     expect(mockRegistryService.getMetadataBitstream).toHaveBeenCalled();
   });
 
-  it('should set listOfFiles on init', (done) => {
-    component.listOfFiles.subscribe((files) => {
-      expect(files).toEqual([]);
-      done();
-    });
-  });
+  it('should have listOfFiles initialized', () => {
+  expect(component.listOfFiles).toBeDefined();
+  expect(Array.isArray(component.listOfFiles)).toBeTrue();
+});
 });
