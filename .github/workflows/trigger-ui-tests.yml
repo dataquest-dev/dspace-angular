@@ -1,0 +1,30 @@
+name: Trigger UI Tests for All Customer Branches
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  schedule:
+    - cron: '0 5 * * *'
+
+permissions:
+  actions: write # Grants permission to trigger workflows
+  contents: read # Access to repository contents
+
+jobs:
+  trigger-builds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get and Trigger Customer Branch UI Tests
+        run: |
+          # Authenticate with GitHub CLI using the token
+          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+
+          git fetch --prune origin
+          BRANCHES=$(git ls-remote --heads origin | awk -F'/' '{print $3"/"$4}' | grep '^customer/')
+          for branch in $(echo "$BRANCHES" | sed -e 's/[\[\]"]//g' -e 's/,/\n/g'); do
+            echo "Triggering UI tests for branch: $branch"
+            gh workflow run automated-manual-tests.yml --ref $branch
+          done
