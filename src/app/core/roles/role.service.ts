@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import {Observable, of, of as observableOf} from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { Observable, of, of as observableOf } from 'rxjs';
 
 import { RoleType } from './role-types';
 import { CollectionDataService } from '../data/collection-data.service';
