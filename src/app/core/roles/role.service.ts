@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, of as observableOf } from 'rxjs';
+import {Observable, of, of as observableOf} from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { RoleType } from './role-types';
@@ -24,9 +24,8 @@ export class RoleService {
    * Check if current user is a submitter
    */
   isSubmitter(): Observable<boolean> {
-    return this.collectionService.hasAuthorizedCollection().pipe(
-      distinctUntilChanged()
-    );
+    // TODO find a way to check if user has submitted items, not just if they have a collection with the submitter role
+    return of(true);
   }
 
   /**

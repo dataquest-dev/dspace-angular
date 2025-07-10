@@ -97,38 +97,7 @@ export class MyDSpaceConfigurationService extends SearchConfigurationService {
     // override parent class initialization
     this._defaults = null;
     this.initDefaults();
-    this.isSubmitter$ = of(true);
-
-  const defaults = new PaginatedSearchOptions({
-    pagination: Object.assign(new PaginationComponentOptions(), { id: 'page-id', currentPage: 1, pageSize: 1 }),
-    sort: new SortOptions('score', SortDirection.DESC),
-    configuration: 'workspace',
-    query: '',
-    scope: ''
-  });
-
-  console.log('defailt', defaults);
-  this.isSubmitter$ = this.searchService.search(
-    defaults,
-    undefined,
-    false,
-    true,
-    // ...followLinks
-    ).pipe(
-     filter((results: RemoteData<SearchObjects<DSpaceObject>>) => !results.isResponsePending),
-    take(1),
-    map((results: RemoteData<SearchObjects<DSpaceObject>>) => results.payload.totalElements > 0)).pipe(distinctUntilChanged());
-    // .subscribe((results: RemoteData<SearchObjects<DSpaceObject>>) => {
-    //   console.log('res', results);
-    //   if (results.hasSucceeded) {
-    //     console.log('eeeere');
-    //     if (results.payload?.page?.length > 0) {
-    //       this.isSubmitter$ = of(true);
-    //     } else {
-    //       this.isSubmitter$ = of(true);
-    //     }
-    //   }
-    // });
+    this.isSubmitter$ = this.roleService.isSubmitter();
     this.isController$ = this.roleService.isController();
     this.isAdmin$ = this.roleService.isAdmin();
   }
