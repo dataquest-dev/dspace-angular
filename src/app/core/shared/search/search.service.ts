@@ -115,7 +115,6 @@ export class SearchService implements OnDestroy {
   }
 
   getEndpoint(searchOptions?: PaginatedSearchOptions): Observable<string> {
-    console.log('fwefwef');
     return this.halService.getEndpoint(this.searchLinkPath).pipe(
       map((url: string) => {
         if (hasValue(searchOptions)) {
@@ -140,7 +139,6 @@ export class SearchService implements OnDestroy {
    */
   search<T extends DSpaceObject>(searchOptions?: PaginatedSearchOptions, responseMsToLive?: number, useCachedVersionIfAvailable = true, reRequestOnStale = true, ...linksToFollow: FollowLinkConfig<T>[]): Observable<RemoteData<SearchObjects<T>>> {
     const href$ = this.getEndpoint(searchOptions);
-    console.log('1');
 
     href$.pipe(
       take(1),
@@ -182,7 +180,7 @@ export class SearchService implements OnDestroy {
    */
   searchEntries<T extends DSpaceObject>(searchOptions?: PaginatedSearchOptions): Observable<RemoteData<SearchObjects<T>>> {
     const href$ = this.getEndpoint(searchOptions);
-    console.log('2');
+
     const sqr$ = href$.pipe(
       switchMap((href: string) => this.rdb.buildFromHref<SearchObjects<T>>(href))
     );

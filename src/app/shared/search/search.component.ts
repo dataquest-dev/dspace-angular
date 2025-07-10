@@ -338,7 +338,6 @@ export class SearchComponent implements OnInit {
         combinedOptions.query = this.query;
       }
       const newSearchOptions = new PaginatedSearchOptions(combinedOptions);
-      console.log('new', newSearchOptions);
       // check if search options are changed
       // if so retrieve new related results otherwise skip it
       if (JSON.stringify(newSearchOptions) !== JSON.stringify(this.searchOptions$.value)) {
@@ -431,7 +430,6 @@ export class SearchComponent implements OnInit {
    * @protected
    */
   protected retrieveSearchResults(searchOptions: PaginatedSearchOptions) {
-    console.log('3');
     this.resultsRD$.next(null);
     this.lastSearchOptions = searchOptions;
     let followLinks = [

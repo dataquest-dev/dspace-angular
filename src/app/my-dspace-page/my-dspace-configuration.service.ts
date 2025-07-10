@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { combineLatest, Observable, of } from 'rxjs';
-import { distinctUntilChanged, filter, first, map, take } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 
 import { MyDSpaceConfigurationValueType } from './my-dspace-configuration-value-type';
 import { RoleService } from '../core/roles/role.service';
@@ -17,13 +17,6 @@ import { HALEndpointService } from '../core/shared/hal-endpoint.service';
 import { RequestService } from '../core/data/request.service';
 import { RemoteDataBuildService } from '../core/cache/builders/remote-data-build.service';
 import { Context } from '../core/shared/context.model';
-import { PaginatedSearchOptions } from '../shared/search/models/paginated-search-options.model';
-import { SearchService } from '../core/shared/search/search.service';
-import { getFirstCompletedRemoteData } from '../core/shared/operators';
-import { RemoteData } from '../core/data/remote-data';
-import { SearchObjects } from '../shared/search/models/search-objects.model';
-import { DSpaceObject } from '../core/shared/dspace-object.model';
-import { PaginatedList } from '../core/data/paginated-list.model';
 
 export const MyDSpaceConfigurationToContextMap = new Map([
   [MyDSpaceConfigurationValueType.Workspace, Context.Workspace],
@@ -89,14 +82,14 @@ export class MyDSpaceConfigurationService extends SearchConfigurationService {
               protected linkService: LinkService,
               protected halService: HALEndpointService,
               protected requestService: RequestService,
-              protected rdb: RemoteDataBuildService,
-              protected searchService: SearchService) {
+              protected rdb: RemoteDataBuildService) {
 
     super(routeService, paginationService, route, linkService, halService, requestService, rdb);
 
     // override parent class initialization
     this._defaults = null;
     this.initDefaults();
+
     this.isSubmitter$ = this.roleService.isSubmitter();
     this.isController$ = this.roleService.isController();
     this.isAdmin$ = this.roleService.isAdmin();

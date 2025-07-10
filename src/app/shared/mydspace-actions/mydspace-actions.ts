@@ -91,8 +91,6 @@ export abstract class MyDSpaceActionsComponent<T extends DSpaceObject, TService 
 
     this.router.navigated = false;
     const url = decodeURIComponent(this.router.url);
-    console.log('tu som 2');
-    console.log(url);
     // override the route reuse strategy
     this.router.routeReuseStrategy.shouldReuseRoute = () => {
       return false;

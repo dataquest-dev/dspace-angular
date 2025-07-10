@@ -518,11 +518,9 @@ export class SubmissionService {
    * Redirect to MyDspace page
    */
   redirectToMyDSpace() {
-    console.log('fwefwwqqqqqqqqq');
     // This assures that the cache is empty before redirecting to mydspace.
     // See https://github.com/DSpace/dspace-angular/pull/468
     this.searchService.getEndpoint().pipe(
-      tap(() => console.log('wef')),
       take(1),
       tap((url) => this.requestService.removeByHrefSubstring(url)),
       // Now, do redirect.
