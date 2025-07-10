@@ -3,8 +3,13 @@
     "has_discojuice": true,
     "has_whats_new": true,
     "has_profile_and_logout_link": false,
-    "can_create_item_test": "disabled",
-    "author_has_one_field": true
+    "has_contact_person": false,
+    "has_resource_select": false,
+    "has_resource_type": true,
+    "has_license_select": true,
+    "has_size_input": true,
+    "has_size_dropdown": false,
+    "has_identifier_input": true
   },
   "locators": {
     "title": "LINDAT/CLARIAH-CZ Repository Home",
