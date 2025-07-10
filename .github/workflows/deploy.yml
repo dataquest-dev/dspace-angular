@@ -63,6 +63,7 @@ jobs:
     needs: deploy-2
     if: '!inputs.IMPORT'
     uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
 
   rest-tests-after-deploy2:
     runs-on: ubuntu-latest
