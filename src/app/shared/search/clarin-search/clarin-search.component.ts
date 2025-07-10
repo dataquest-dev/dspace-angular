@@ -108,7 +108,6 @@ export class ClarinSearchComponent extends SearchComponent implements OnInit {
         combinedOptions.query = this.query;
       }
       const newSearchOptions = new PaginatedSearchOptions(combinedOptions);
-      console.log('new', newSearchOptions);
       // check if search options are changed
       // if so retrieve new related results otherwise skip it
       if (JSON.stringify(newSearchOptions) !== JSON.stringify(this.searchOptions$.value)) {
