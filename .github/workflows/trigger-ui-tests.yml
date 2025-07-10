@@ -26,5 +26,5 @@ jobs:
           BRANCHES=$(git ls-remote --heads origin | awk -F'/' '{print $3"/"$4}' | grep '^customer/')
           for branch in $(echo "$BRANCHES" | sed -e 's/[\[\]"]//g' -e 's/,/\n/g'); do
             echo "Triggering UI tests for branch: $branch"
-            gh workflow run automated-manual-tests.yml --ref $branch
+            gh workflow run playwright-tests.yml --ref $branch
           done

@@ -1,4 +1,4 @@
-name: Automated manual tests
+name: Playwright tests
 
 on:
   workflow_dispatch:
