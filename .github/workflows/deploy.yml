@@ -64,39 +64,10 @@ jobs:
           docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f /opt/dspace-envs/4/extra.yml up -d --no-build
 
   playwright-after-deploy4:
-    runs-on: dspace-test-1
     needs: deploy-4
-    timeout-minutes: 45
     if: '!inputs.IMPORT'
-    steps:
-      - name: Checkout Playwright tests
-        uses: actions/checkout@v4
-        with:
-          repository: dataquest-dev/dspace-ui-tests
-          path: dspace-ui-tests
-          token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
-
-      - name: Checkout main repository
-        uses: actions/checkout@v4
-        with:
-          path: this-repository
-
-      - name: Copy customer config to UI tests repository for merging
-        run: |
-          cp this-repository/config/config.zcu.ui.tests.json dspace-ui-tests/customer-constants/
-
-      - name: test
-        working-directory: dspace-ui-tests/scripts
-        env:
-          HOME_URL: http://dev-5.pc:84/
-          NAME: ZCU
-        run: |
-          ./test.sh
-
-      - uses: mazoea/ga-maz/end@master
-        with:
-          CHOWN_DIR: ./
-        if: ${{ always() }}
+    uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
 
   rest-tests-after-deploy4:
     runs-on: ubuntu-latest
@@ -133,39 +104,10 @@ jobs:
 
 
   playwright-after-import4:
-    runs-on: ubuntu-latest
     needs: import-4
     if: inputs.IMPORT
-    timeout-minutes: 45
-    steps:
-      - name: Checkout Playwright tests
-        uses: actions/checkout@v4
-        with:
-          repository: dataquest-dev/dspace-ui-tests
-          path: dspace-ui-tests
-          token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
-
-      - name: Checkout main repository
-        uses: actions/checkout@v4
-        with:
-          path: this-repository
-
-      - name: Copy customer config to UI tests repository for merging
-        run: |
-          cp this-repository/config/config.zcu.ui.tests.json dspace-ui-tests/customer-constants/
-
-      - name: test
-        working-directory: dspace-ui-tests/scripts
-        env:
-          HOME_URL: http://dev-5.pc:84/
-          NAME: ZCU
-        run: |
-          ./test.sh
-
-      - uses: mazoea/ga-maz/end@master
-        with:
-          CHOWN_DIR: ./
-        if: ${{ always() }}
+    uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
 
   rest-tests-after-import4:
     runs-on: ubuntu-latest
