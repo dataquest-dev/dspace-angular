@@ -1,10 +1,10 @@
 <header class="header">
   <ds-clarin-navbar-top></ds-clarin-navbar-top>
   <div class="lindat-common2 lindat-common-header">
-    <header data-version="3.0.5" data-build="05eff1186f12528f221a63b021c7b7dc81301429">
+    <header data-version="3.5.0" data-build="67e455771cd6a00647a289a5d7b0c8a3380d3410">
       <nav class="lindat-navbar lindat-navbar-expand-lg lindat-justify-content-between lindat-navbar-dark ">
         <div class="lindat-block lindat-block--clariah-theme-branding">
-          <a routerLink="/home" class="lindat-navbar-brand lindat-d-flex lindat-align-items-center " aria-label="">
+          <a href="/" class="lindat-navbar-brand lindat-d-flex lindat-align-items-center " aria-label="">
             <img src="./assets/images/LINDAT-CLARIAH-cz-gray_0.svg" width="auto" height="53" style="height: 53px !important;" alt="LINDAT/CLARIAH-CZ logo" class="" />
           </a>
         </div>
@@ -40,7 +40,7 @@
                      onclick="this.parentNode.querySelector('.lindat-dropdown-toggle+div.lindat-dropdown-menu').classList.toggle('lindat-show'); return false;">{{'navbar.about' | translate}}</a>
                   <div class="lindat-dropdown-menu">
                     <a href="{{ '/' + translateSlug('partners') }}" class="lindat-dropdown-item">{{'navbar.about.partners' | translate}}</a>
-                    <a href="files/mission-en.pdf" class="lindat-dropdown-item">{{'navbar.about.mission-statement' | translate}}</a>
+                    <a href="/files/mission-en.pdf" class="lindat-dropdown-item">{{'navbar.about.mission-statement' | translate}}</a>
                     <a href="https://www.clarin.eu/" class="lindat-dropdown-item">{{'navbar.about.clarin' | translate}}</a>
                     <a href="https://www.dariah.eu/" class="lindat-dropdown-item">{{'navbar.about.dariah' | translate}}</a>
                     <a href="{{ '/' + translateSlug('integration') }}" class="lindat-dropdown-item">{{'navbar.about.service-integrations' | translate}}</a>
@@ -61,7 +61,6 @@
               </li>
             </ul>
           </div>
-          <slot name="languageswitcher"></slot>
         </div>
       </nav>
     </header>

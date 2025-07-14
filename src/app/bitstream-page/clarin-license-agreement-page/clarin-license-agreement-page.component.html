@@ -25,7 +25,7 @@
   <div class="row pt-3">
     <div class="col-12">
       <span>{{'clarin.license.agreement.signer.header.info.0' | translate}}</span>
-      <a [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">{{'clarin.license.agreement.signer.header.info.1' | translate}}</a>
+      <a class="ml-1 mr-1" [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">{{'clarin.license.agreement.signer.header.info.1' | translate}}</a>
       <span>{{'clarin.license.agreement.signer.header.info.2' | translate}}</span>
     </div>
   </div>
@@ -88,8 +88,14 @@
   </div>
   <div class="row pt-3">
     <div class="col-12">
-      <button class="btn btn-success max-width" [disabled]="error$.value.length !== 0" (click)="accept()">
+      <button class="btn btn-success max-width" [disabled]="error$.value.length !== 0 || (isLoading | async)" (click)="accept()">
         {{'clarin.license.agreement.button.agree' | translate}}
+        <span
+          *ngIf="isLoading | async"
+          class="ml-1 spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
       </button>
     </div>
   </div>
