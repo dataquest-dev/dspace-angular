@@ -3,8 +3,10 @@
       "has_discojuice": false,
       "has_whats_new": false,
       "has_profile_and_logout_link": true,
-      "can_create_item_test": "enabled",
-      "author_has_one_field": false
+      "has_resource_select": false,
+      "has_contact_person": false,
+      "has_license_select": false,
+      "has_size_dropdown": false
     },
     "locators": {
       "title": "DSpace :: Home",
