@@ -33,7 +33,6 @@ services:
       # This allows us to generate statistics in e2e tests so that statistics pages can be tested thoroughly.
       solr__D__statistics__P__autoCommit: 'false'
       LOGGING_CONFIG: /dspace/config/log4j2-container.xml
-    image: "${DOCKER_REGISTRY:-docker.io}/${DOCKER_OWNER:-dspace}/dspace:${DSPACE_VER:-dspace-7_x-test}"
     depends_on:
     - dspacedb
     image: ${DSPACE_CI_IMAGE:-dataquest/dspace:dspace-7_x-test}
