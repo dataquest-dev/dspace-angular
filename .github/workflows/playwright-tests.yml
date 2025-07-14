@@ -23,7 +23,7 @@ jobs:
 
       - name: Copy customer config to UI tests repository for merging
         run: |
-          cp this-repository/config/config.uk.ui.tests.json dspace-ui-tests/customer-constants/
+          cp this-repository/config/config.zcu.ui.tests.json dspace-ui-tests/customer-constants/
       - name: test
         working-directory: dspace-ui-tests/scripts
         env:
