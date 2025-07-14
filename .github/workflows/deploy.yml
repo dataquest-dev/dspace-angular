@@ -58,39 +58,10 @@ jobs:
           ./start.sh dspace-$INSTANCE
 
   playwright-after-deploy6:
-    runs-on: dspace-test-1
     needs: deploy-6
-    timeout-minutes: 45
     if: '!inputs.IMPORT'
-    steps:
-      - name: Checkout Playwright tests
-        uses: actions/checkout@v4
-        with:
-          repository: dataquest-dev/dspace-ui-tests
-          path: dspace-ui-tests
-          token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
-
-      - name: Checkout main repository
-        uses: actions/checkout@v4
-        with:
-          path: this-repository
-
-      - name: Copy customer config to UI tests repository for merging
-        run: |
-          cp this-repository/config/config.tul.ui.tests.json dspace-ui-tests/customer-constants/
-
-      - name: test
-        working-directory: dspace-ui-tests/scripts
-        env:
-          HOME_URL: http://dev-5.pc:86/
-          NAME: TUL
-        run: |
-          ./test.sh
-
-      - uses: mazoea/ga-maz/end@master
-        with:
-          CHOWN_DIR: ./
-        if: ${{ always() }}
+    uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
 
   rest-tests-after-deploy6:
     runs-on: ubuntu-latest
@@ -127,39 +98,10 @@ jobs:
 
 
   playwright-after-import6:
-    runs-on: ubuntu-latest
     needs: import-6
     if: inputs.IMPORT
-    timeout-minutes: 45
-    steps:
-      - name: Checkout Playwright tests
-        uses: actions/checkout@v4
-        with:
-          repository: dataquest-dev/dspace-ui-tests
-          path: dspace-ui-tests
-          token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
-
-      - name: Checkout main repository
-        uses: actions/checkout@v4
-        with:
-          path: this-repository
-
-      - name: Copy customer config to UI tests repository for merging
-        run: |
-          cp this-repository/config/config.tul.ui.tests.json dspace-ui-tests/customer-constants/
-
-      - name: test
-        working-directory: dspace-ui-tests/scripts
-        env:
-          HOME_URL: http://dev-5.pc:86/
-          NAME: TUL
-        run: |
-          ./test.sh
-
-      - uses: mazoea/ga-maz/end@master
-        with:
-          CHOWN_DIR: ./
-        if: ${{ always() }}
+    uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
 
   rest-tests-after-import6:
     runs-on: ubuntu-latest
