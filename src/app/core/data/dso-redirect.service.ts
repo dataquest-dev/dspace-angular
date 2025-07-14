@@ -8,7 +8,7 @@
 /* eslint-disable max-classes-per-file */
 import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { hasValue } from '../../shared/empty.util';
 import { RemoteDataBuildService } from '../cache/builders/remote-data-build.service';
 import { ObjectCacheService } from '../cache/object-cache.service';
@@ -19,7 +19,7 @@ import { RequestService } from './request.service';
 import { getFirstCompletedRemoteData } from '../shared/operators';
 import { DSpaceObject } from '../shared/dspace-object.model';
 import { IdentifiableDataService } from './base/identifiable-data.service';
-import { getDSORoute } from '../../app-routing-paths';
+import { getDSORoute, getForbiddenRoute } from '../../app-routing-paths';
 import { HardRedirectService } from '../services/hard-redirect.service';
 import { APP_CONFIG, AppConfig } from '../../../config/app-config.interface';
 import { Router } from '@angular/router';
@@ -45,7 +45,7 @@ class DsoByIdOrUUIDDataService extends IdentifiableDataService<DSpaceObject> {
       // interpolate id/uuid as query parameter
       (endpoint: string, resourceID: string): string => {
         return endpoint.replace(/{\?id}/, `?id=${resourceID}`)
-                       .replace(/{\?uuid}/, `?uuid=${resourceID}`);
+          .replace(/{\?uuid}/, `?uuid=${resourceID}`);
       },
     );
   }
@@ -110,10 +110,21 @@ export class DsoRedirectService {
         }
         // Redirect to login page if the user is not authenticated to see the requested page
         if (response.hasFailed && (response.statusCode === 401 || response.statusCode === 403)) {
-          // Extract redirect URL - remove `https://.../namespace` from the current URL. Keep only `handle/...`
-          const redirectUrl = this.extractHandlePath(window.location.href);
-          this.authService.setRedirectUrl(redirectUrl);
-          this.router.navigateByUrl('login');
+          const isAuthenticated$ = this.authService.isAuthenticated();
+          isAuthenticated$
+            .pipe(take(1))
+            .subscribe((isAuthenticated) => {
+              if (!isAuthenticated) {
+                // If the user is not authenticated, redirect to login page
+                // Extract redirect URL - remove `https://.../namespace` from the current URL. Keep only `handle/...`
+                const redirectUrl = this.extractHandlePath(window.location.href);
+                this.authService.setRedirectUrl(redirectUrl);
+                this.router.navigateByUrl('login');
+              } else {
+                // If the user is authenticated but still has no access, redirect to forbidden page
+                this.router.navigateByUrl(getForbiddenRoute());
+              }
+            });
         }
       })
     );
