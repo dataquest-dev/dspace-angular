@@ -102,6 +102,17 @@ function loginViaForm(email: string, password: string): void {
   cy.get('[data-test="password"]').type(password);
   // Click login button
   cy.get('[data-test="login-button"]').click();
+  // The user could be redirected to the home page or the user agreement page
+  // If redirected to user agreement page, accept it
+  cy.get('body').then(($body) => {
+    if ($body.find('ds-end-user-agreement').length > 0) {
+      // Check the checkbox
+      cy.get('input[type="checkbox"]#user-agreement-accept').check({ force: true });
+
+      // Click the submit button
+      cy.get('button[type="submit"]').click();
+    }
+  });
 }
 // Add as a Cypress command (i.e. assign to 'cy.loginViaForm')
 Cypress.Commands.add('loginViaForm', loginViaForm);
