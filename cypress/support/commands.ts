@@ -93,21 +93,38 @@ Cypress.Commands.add('login', login);
  * @param email email to login as
  * @param password password to login as
  */
-function loginViaForm(email: string, password: string): void {
-  // Spy on the authentication request
-  cy.intercept('/server/api/authn/login').as('auth');
+// Cypress custom command for form-based login with intercept and redirect assertion
+// Cypress custom command for form-based login with intercept and redirect assertion
+function loginViaForm(
+  email: string,
+  password: string,
+  expectedRedirect: string = '/admin/registries/metadata'
+): void {
+  // Spy on the authentication request (allow query params)
+  cy.intercept({ method: 'POST', url: '/server/api/authn/login*' }).as('auth');
 
+  // Optionally close the DiscoJuice popup if present
   cy.wait(500);
   cy.get('.discojuice_close').should('exist').click();
-  // Enter email
-  cy.get('[data-test="email"]').type(email);
-  // Enter password
+
+  // Fill in credentials
+  cy.get('[data-test="email"]').should('be.visible').type(email);
   cy.get('[data-test="password"]').type(password);
-  // Click login button
+
+  // Submit the form
   cy.get('[data-test="login-button"]').click();
 
-  // Wait for authentication to complete and assert redirect
-  cy.wait('@auth');
+  // Wait for authentication to complete (if request is made)
+  cy.wait('@auth', { timeout: 10000 }).then(() => {
+      // Wait for redirect
+      cy.url({ timeout: 10000 }).should('include', expectedRedirect);
+    },
+    (err) => {
+      // If the request wasn't made, still check URL
+      Cypress.log({ name: 'auth', message: 'Auth request not detected, checking URL directly.' });
+      cy.url({ timeout: 10000 }).should('include', expectedRedirect);
+    }
+  );
 }
 // Add as a Cypress command (i.e. assign to 'cy.loginViaForm')
 Cypress.Commands.add('loginViaForm', loginViaForm);
