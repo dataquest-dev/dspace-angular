@@ -36,7 +36,7 @@
   --ds-footer-z-index: 0;
   --ds-sidebar-z-index: 20;
 
-  --ds-header-bg: #{$white};
+  --ds-header-bg: #{$cyan};
   --ds-header-logo-height: 50px;
   --ds-header-logo-height-xs: 50px;
   --ds-header-icon-color: #{$link-color};
@@ -44,8 +44,8 @@
   --ds-navbar-bg: var(--ds-header-bg);
   --ds-header-navbar-border-top-color: #{$white};
   --ds-header-navbar-border-bottom-color: #{$gray-400};
-  --ds-navbar-link-color: #{$cyan};
-  --ds-navbar-link-color-hover: #{darken($cyan, 15%)};
+  --ds-navbar-link-color: #fff;
+  --ds-navbar-link-color-hover: darken(#fff, 15%);
   --ds-expandable-navbar-bg: var(--ds-navbar-bg);
   --ds-expandable-navbar-link-color: var(--ds-navbar-link-color);
   --ds-expandable-navbar-link-color-hover: var(--ds-navbar-link-color-hover);
