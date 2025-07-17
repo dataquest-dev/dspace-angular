@@ -2,20 +2,25 @@ import { testA11y } from 'cypress/support/utils';
 
 describe('Metadata Registry', () => {
   beforeEach(() => {
+    // 1️⃣ Set intercept first
     cy.intercept('POST', '**/server/api/authn/login*').as('auth');
-    // Must login as an Admin to see the page
+
+    // 2️⃣ Visit protected page (triggers redirection to login)
     cy.visit('/admin/registries/metadata');
-    cy.loginViaForm(Cypress.env('DSPACE_TEST_ADMIN_USER'), Cypress.env('DSPACE_TEST_ADMIN_PASSWORD'));
-// Gather all matching requests (if any)
-    // 4) wait for auth POST if it happens (no .catch())
-    cy.wait('@auth', {timeout: 10000, log: false})
-      .then(interception => {
-        cy.log(`Auth POST seen (${interception.response?.statusCode})`);
-      })
-      .then(() => {
-        // 5) Always assert URL redirect
-        cy.url({timeout: 10000}).should('include', '/admin/registries/metadata');
-      });
+
+    // 3️⃣ Perform form login
+    cy.loginViaForm(
+      Cypress.env('DSPACE_TEST_ADMIN_USER'),
+      Cypress.env('DSPACE_TEST_ADMIN_PASSWORD')
+    );
+
+    // 4️⃣ Wait for the auth POST (if it happens)
+    cy.wait('@auth', { timeout: 10000 }).then(interception => {
+      cy.log(`Auth POST caught with status ${interception.response?.statusCode}`);
+    });
+
+    // 5️⃣ Finally, assert the redirect always happened
+    cy.url({ timeout: 10000 }).should('include', '/admin/registries/metadata');
   });
 
   it('should pass accessibility tests', () => {
