@@ -94,6 +94,9 @@ Cypress.Commands.add('login', login);
  * @param password password to login as
  */
 function loginViaForm(email: string, password: string): void {
+  // Spy on the authentication request
+  cy.intercept('/server/api/authn/login').as('auth');
+
   cy.wait(500);
   cy.get('.discojuice_close').should('exist').click();
   // Enter email
@@ -102,6 +105,9 @@ function loginViaForm(email: string, password: string): void {
   cy.get('[data-test="password"]').type(password);
   // Click login button
   cy.get('[data-test="login-button"]').click();
+
+  // Wait for authentication to complete and assert redirect
+  cy.wait('@auth');
 }
 // Add as a Cypress command (i.e. assign to 'cy.loginViaForm')
 Cypress.Commands.add('loginViaForm', loginViaForm);
