@@ -1720,6 +1720,8 @@
 
   "footer.link.contact-us": "Contact us",
 
+  "footer.link.university": "University Library",
+
   "footer.theme.by.message": "Theme by",
 
   "forgot-email.form.header": "Forgot Password",
@@ -1973,7 +1975,7 @@
 
   "home-page.library.name": "VSB - Technical University of Ostrava",
 
-  "home-page.library.description": "",
+  "home-page.library.description": "Digital repository of VSB-TUO",
 
   "handle-table.breadcrumbs": "Handles",
 
@@ -4013,7 +4015,7 @@
 
   "repository.title": "DSpace Repository",
 
-  "repository.title.prefix": "VSB-TUO Repository",
+  "repository.title.prefix": "DSpace at VSB-TUO",
 
   "repository.title.prefixDSpace": "DSpace",
 

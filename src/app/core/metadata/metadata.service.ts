@@ -128,7 +128,7 @@ export class MetadataService {
       const title = this.translate.get(routeInfo.data.value.title, routeInfo.data.value);
       combineLatest([titlePrefix, title]).pipe(take(1)).subscribe(([translatedTitlePrefix, translatedTitle]: [string, string]) => {
         this.addMetaTag('title', translatedTitlePrefix + translatedTitle);
-        this.title.setTitle(translatedTitlePrefix + translatedTitle);
+        this.title.setTitle(translatedTitlePrefix + " - " + translatedTitle);
       });
     }
     if (routeInfo.data.value.description) {
