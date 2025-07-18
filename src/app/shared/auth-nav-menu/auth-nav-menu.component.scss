@@ -17,7 +17,8 @@
 
   &:hover, &:focus {
     background-color: white;
-    color: var(--lt-zcu-pub-blue);
+    color: var(--ds-header-icon-color-hover);
+
     border-radius: 2px;
     transition: background-color 0.2s ease-out;
   }

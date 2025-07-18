@@ -1,0 +1,22 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="128" height="128">
+	<title>vsb-symbol-logo</title>
+	<defs>
+		<image  width="150" height="150" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWAQMAAAAGz+OhAAAAAXNSR0IB2cksfwAAAANQTFRFAKSZ5MJv1wAAACJJREFUeJztyDEBAAAMAqDZv/QCWMADTnItzjnnnHPOual7gKkAl+HWDHoAAAAASUVORK5CYII="/>
+	</defs>
+	<style>
+		.s0 { fill: #00a499 } 
+	</style>
+	<use id="Layer 1" href="#img1" x="0" y="0"/>
+	<filter id="f0">
+		<feFlood flood-color="#ffffff" flood-opacity="1" />
+		<feBlend mode="normal" in2="SourceGraphic"/>
+		<feComposite in2="SourceAlpha" operator="in" />
+	</filter>
+	<g id="Folder 1" filter="url(#f0)">
+		<path fill-rule="evenodd" class="s0" d="m33.8 22.5v70.1h-6v-70.1z"/>
+		<path fill-rule="evenodd" class="s0" d="m102.8 41.6v70.1h-6.1v-70.1z"/>
+		<path fill-rule="evenodd" class="s0" d="m126 22.5v70.1h-6v-70.1z"/>
+		<path fill-rule="evenodd" class="s0" d="m79.9 60.8v70.1h-6v-70.1z"/>
+		<path fill-rule="evenodd" class="s0" d="m56.6 41.6v70.1h-6v-70.1z"/>
+	</g>
+</svg>

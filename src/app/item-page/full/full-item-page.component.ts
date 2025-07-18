@@ -19,10 +19,6 @@ import { AuthorizationDataService } from '../../core/data/feature-authorization/
 import { ServerResponseService } from '../../core/services/server-response.service';
 import { SignpostingDataService } from '../../core/data/signposting-data.service';
 import { LinkHeadService } from '../../core/services/link-head.service';
-import { RegistryService } from 'src/app/core/registry/registry.service';
-import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
-import { makeLinks } from '../../shared/clarin-shared-util';
-import { SEPARATOR } from 'src/app/shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 
 /**
  * This component renders a full item page.
@@ -37,8 +33,6 @@ import { SEPARATOR } from 'src/app/shared/form/builder/ds-dynamic-form-ui/models
   animations: [fadeInOut]
 })
 export class FullItemPageComponent extends ItemPageComponent implements OnInit, OnDestroy {
-  protected readonly makeLinks = makeLinks;
-  protected readonly SEPARATOR = SEPARATOR;
 
   itemRD$: BehaviorSubject<RemoteData<Item>>;
 
@@ -62,10 +56,8 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
     protected signpostingDataService: SignpostingDataService,
     protected linkHeadService: LinkHeadService,
     @Inject(PLATFORM_ID) protected platformId: string,
-    protected halService: HALEndpointService,
-    protected registryService: RegistryService
   ) {
-    super(route, router, items, authService, authorizationService, responseService, signpostingDataService, linkHeadService, platformId, registryService, halService);
+    super(route, router, items, authService, authorizationService, responseService, signpostingDataService, linkHeadService, platformId);
   }
 
   /*** AoT inheritance fix, will hopefully be resolved in the near future **/

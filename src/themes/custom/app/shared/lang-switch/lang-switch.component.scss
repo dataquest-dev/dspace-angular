@@ -1,0 +1,18 @@
+.dropdown-toggle::after {
+  display:none;
+}
+
+.dropdown-toggle {
+  color: white;
+
+  &:hover, &:focus {
+    background-color: white;
+    color: var(--lt-zcu-pub-blue);
+    border-radius: 2px;
+    transition: background-color 0.2s ease-out;
+  }
+}
+
+.dropdown-item {
+  cursor: pointer;
+}

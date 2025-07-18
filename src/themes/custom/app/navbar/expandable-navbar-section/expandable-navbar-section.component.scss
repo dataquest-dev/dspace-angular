@@ -1,0 +1,47 @@
+.expandable-navbar-section {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dropdown-menu {
+  background-color: var(--ds-expandable-navbar-bg);
+  overflow: hidden;
+  min-width: 100%;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  ::ng-deep a.nav-link {
+    color: var(--lt-zcu-pub-blue) !important;
+    padding-right: var(--bs-spacer);
+    padding-left: var(--bs-spacer);
+    white-space: nowrap;
+
+    &:hover, &:focus {
+      color: #16181b !important;
+      text-decoration: none;
+      background-color: #e9ecef;
+      border-radius: 0 !important;
+    }
+
+    &:active {
+      color: white !important;
+      text-decoration: none;
+      background-color: #43515f;
+    }
+  }
+}
+
+/** Mobile menu styling **/
+@media screen and (max-width: map-get($grid-breakpoints, md)) {
+  .dropdown-toggle {
+    &:after {
+      float: right;
+      margin-top: calc(var(--bs-spacer) / 2);
+    }
+  }
+  .dropdown-menu {
+    border: 0;
+
+  }
+}

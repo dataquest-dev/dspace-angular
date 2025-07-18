@@ -10,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LogInPasswordComponent } from './log-in-password.component';
 import { authReducer } from '../../../../core/auth/auth.reducer';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { AuthServiceStub } from '../../../testing/auth-service.stub';
 import { storeModuleConfig } from '../../../../app.reducer';
 import { AuthMethod } from '../../../../core/auth/models/auth.method';
 import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
@@ -17,7 +18,6 @@ import { HardRedirectService } from '../../../../core/services/hard-redirect.ser
 import { BrowserOnlyMockPipe } from '../../../testing/browser-only-mock.pipe';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
 import { AuthorizationDataServiceStub } from '../../../testing/authorization-service.stub';
-import { AuthServiceStub } from 'src/app/shared/testing/auth-service.stub';
 
 describe('LogInPasswordComponent', () => {
 
@@ -107,6 +107,7 @@ describe('LogInPasswordComponent', () => {
     // verify Store.dispatch() is invoked
     expect(page.navigateSpy.calls.any()).toBe(true, 'Store.dispatch not invoked');
   });
+
 });
 
 /**

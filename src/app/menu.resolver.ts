@@ -69,7 +69,6 @@ export class MenuResolver implements Resolve<boolean> {
    * Initialize all menus
    */
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    console.log('herre');
     return combineLatest([
       this.createPublicMenu$(),
       this.createAdminMenu$(),
@@ -140,13 +139,9 @@ export class MenuResolver implements Resolve<boolean> {
             }
           );
         }
-        menuList.forEach((menuSection) => {
-          console.log('menusec', menuSection);
-
-          this.menuService.addSection(MenuID.PUBLIC, Object.assign(menuSection, {
+        menuList.forEach((menuSection) => this.menuService.addSection(MenuID.PUBLIC, Object.assign(menuSection, {
           shouldPersistOnRouteChange: true
-        }))
-        });
+        })));
       });
 
     return this.waitForMenu$(MenuID.PUBLIC);

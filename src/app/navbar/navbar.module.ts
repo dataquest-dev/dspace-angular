@@ -13,7 +13,6 @@ import { MenuModule } from '../shared/menu/menu.module';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { ThemedNavbarComponent } from './themed-navbar.component';
-import { ClarinNavbarTopComponent } from '../clarin-navbar-top/clarin-navbar-top.component';
 
 const effects = [
   NavbarEffects
@@ -24,7 +23,6 @@ const ENTRY_COMPONENTS = [
   NavbarSectionComponent,
   ExpandableNavbarSectionComponent,
   ThemedExpandableNavbarSectionComponent,
-  ClarinNavbarTopComponent
 ];
 
 @NgModule({
@@ -45,8 +43,7 @@ const ENTRY_COMPONENTS = [
   exports: [
     ThemedNavbarComponent,
     NavbarSectionComponent,
-    ThemedExpandableNavbarSectionComponent,
-    ClarinNavbarTopComponent
+    ThemedExpandableNavbarSectionComponent
   ]
 })
 

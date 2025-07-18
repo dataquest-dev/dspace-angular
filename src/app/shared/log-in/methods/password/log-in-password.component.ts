@@ -3,10 +3,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { select, Store } from '@ngrx/store';
-import {
-  AuthenticateAction,
-  ResetAuthenticationMessagesAction
-} from '../../../../core/auth/auth.actions';
+import { Observable } from 'rxjs';
+import { AuthenticateAction, ResetAuthenticationMessagesAction } from '../../../../core/auth/auth.actions';
 
 import { getAuthenticationError, getAuthenticationInfo, } from '../../../../core/auth/selectors';
 import { isNotEmpty } from '../../../empty.util';
@@ -15,12 +13,11 @@ import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
 import { renderAuthMethodFor } from '../log-in.methods-decorator';
 import { AuthMethod } from '../../../../core/auth/models/auth.method';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
 import { CoreState } from '../../../../core/core-state.model';
 import { getForgotPasswordRoute, getRegisterRoute } from '../../../../app-routing-paths';
 import { FeatureID } from '../../../../core/data/feature-authorization/feature-id';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
-import { HardRedirectService } from 'src/app/core/services/hard-redirect.service';
-import { Observable } from 'rxjs';
 
 /**
  * /users/sign-in
@@ -92,7 +89,8 @@ export class LogInPasswordComponent implements OnInit {
    * Lifecycle hook that is called after data-bound properties of a directive are initialized.
    * @method ngOnInit
    */
-  public async ngOnInit() {
+  public ngOnInit() {
+
     // set formGroup
     this.form = this.formBuilder.group({
       email: ['', Validators.required],
@@ -100,8 +98,8 @@ export class LogInPasswordComponent implements OnInit {
     });
 
     // set error
-    this.error = this.store.pipe(
-      select(getAuthenticationError),
+    this.error = this.store.pipe(select(
+      getAuthenticationError),
       map((error) => {
         this.hasError = (isNotEmpty(error));
         return error;
