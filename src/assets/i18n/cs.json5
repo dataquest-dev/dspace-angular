@@ -8433,4 +8433,6 @@
   "change.submitter.page.items.handle.message": "Handle záznamu: ",
   // "change.submitter.page.items.name.message": "Item's name: ",
   "change.submitter.page.items.name.message": "Název záznamu: ",
+//  "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+  "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
 }

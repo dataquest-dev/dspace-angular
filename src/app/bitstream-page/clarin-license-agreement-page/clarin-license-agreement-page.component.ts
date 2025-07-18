@@ -144,7 +144,8 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     private requestService: RequestService,
     private clarinUserMetadataDataService: ClarinUserMetadataDataService,
     private htmlContentService: HtmlContentService,
-    protected fileService: FileService) { }
+    protected fileService: FileService,
+    protected notificationsService: NotificationsService) { }
 
    ngOnInit(): void {
     // Load CurrentItem by bitstreamID to show itemHandle
@@ -263,7 +264,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
    * @param downloadToken
    * @private
    */
-  private async redirectToDownload(downloadToken: string | null = null): Promise<void> {
+  private async redirectToDownload(downloadToken?: string): Promise<void> {
     try {
       const bitstream = await firstValueFrom(this.bitstream$.pipe(take(1)));
 
@@ -281,7 +282,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       const redirectUrl = `${fileLink}${tokenParam}`;
       this.hardRedirectService.redirect(redirectUrl);
     } catch (error) {
-      console.error('Failed to redirect to download:', error);
+      this.notificationsService.error(this.translateService.instant('clarin-license-agreement-page.download-error'));
     }
   }
 
