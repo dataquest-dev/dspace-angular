@@ -48,6 +48,16 @@
       [fields]="['dc.publisher']"
       [label]="'item.page.publisher'">
     </ds-generic-item-page-field>
+    <div class="row mt-4 mb-4 badges">
+      <ds-dimensions-badge
+        *ngIf="object?.metadata?.['dc.identifier.doi']?.[0]?.value"
+        [doi]="object.metadata['dc.identifier.doi'][0].value">
+      </ds-dimensions-badge>
+      <ds-altmetric-badge class="ml-4"
+        *ngIf="object?.metadata?.['dc.identifier.doi']?.[0]?.value"
+        [doi]="object.metadata['dc.identifier.doi'][0].value">
+      </ds-altmetric-badge>
+    </div>
   </div>
   <div class="col-xs-12 col-md-6">
     <ds-item-page-abstract-field [item]="object"></ds-item-page-abstract-field>
