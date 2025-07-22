@@ -40,7 +40,6 @@ export class ClarinRefCitationComponent implements OnInit {
    */
   itemNameText: string;
 
-
   /**
    * The content of the reference box, which will be displayed in the tooltip.
    * This content is fetched from the RefBox Controller.
@@ -73,6 +72,7 @@ export class ClarinRefCitationComponent implements OnInit {
           console.error('Failed to fetch refbox content:', error);
           this.refboxContent.next(this.EMPTY_CONTENT);
       });
+    this.itemNameText = this.item?.firstMetadataValue('dc.title');
   }
 
   /**
