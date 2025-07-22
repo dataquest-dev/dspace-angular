@@ -2,8 +2,16 @@ import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'ds-altmetric-badge',
-  template: `<div data-badge-type="donut" class="altmetric-embed" [attr.data-doi]="doi"></div>`,
-  styles: []
+  template: `<div data-badge-type="donut" class="altmetric-embed" [attr.data-doi]="doi" data-badge-popover="right"></div>`,
+  styles: [`
+    :host {
+      display: inline-block;
+    }
+    .altmetric-embed:hover {
+      transform: scale(1.05);
+      transition: transform 0.2s ease;
+    }
+  `]
 })
 export class AltmetricBadgeComponent implements OnInit {
   @Input() doi: string;
