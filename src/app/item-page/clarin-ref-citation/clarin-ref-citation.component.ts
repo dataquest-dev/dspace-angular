@@ -96,12 +96,13 @@ export class ClarinRefCitationComponent implements OnInit {
     );
     this.requestService.send(getRequest);
 
+    const EMPTY_CONTENT = 'Cannot fetch the ref box content';
     try {
       const res: any = await this.rdbService.buildFromRequestUUID(requestId)
         .pipe(getFirstSucceededRemoteData()).toPromise();
-      return res?.payload?.displayText || '';
+      return res?.payload?.displayText || EMPTY_CONTENT;
     } catch (error) {
-      return of('Cannot fetch the ref box content');
+      return of(EMPTY_CONTENT);
     }
   }
 
