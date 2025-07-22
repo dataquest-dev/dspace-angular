@@ -138,7 +138,6 @@ export class ClarinRefCitationComponent implements OnInit {
     const requestId = this.requestService.generateRequestId();
     // Create the request
     const getRequest = new GetRequest(requestId, this.halService.getRootHref() + '/core/refbox/citations?type=' +
-      // citationType + '&handle=' + this.getHandle(), requestOptions);
     citationType + '&handle=' + this.item?.handle);
 
     // Call get request
