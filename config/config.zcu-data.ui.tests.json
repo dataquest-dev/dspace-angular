@@ -1,0 +1,18 @@
+{
+  "env": {
+    "has_discojuice": false,
+    "has_profile_and_logout_link": true,
+    "has_resource_select": false,
+    "has_contact_person": false,
+    "has_license_select": false,
+    "has_size_dropdown": false,
+    "has_imported_items": false
+  },
+  "locators": {
+    "title": "DSpace at University of West Bohemia Home",
+    "profile_link": "a[href=\"/profile\"]",
+    "logout_link": "button[data-test=\"logout-button\"]",
+    "signon_link": "a[data-test=\"login-menu\"]",
+    "result_card": "li[data-test=\"list-object\"]"
+  }
+}
