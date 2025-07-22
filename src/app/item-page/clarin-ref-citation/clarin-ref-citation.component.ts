@@ -49,7 +49,7 @@ export class ClarinRefCitationComponent implements OnInit {
   /**
    * The raw content of the reference box, which is fetched from the RefBox Controller.
    */
-  refBoxCopyContent = '';
+  refboxCopyContent = '';
 
   /**
    * The text to be displayed when the ref box content is empty or cannot be fetched.
@@ -71,11 +71,11 @@ export class ClarinRefCitationComponent implements OnInit {
   ngOnInit(): void {
     void this.fetchRefBoxContent()
       .then((content) => {
-        this.refBoxCopyContent = content; // Store raw HTML
+        this.refboxCopyContent = content; // Store raw HTML
         this.refboxContent.next(this.sanitizer.bypassSecurityTrustHtml(content));
       }).catch((error) => {
         console.error('Failed to fetch refbox content:', error);
-        this.refBoxCopyContent = this.EMPTY_CONTENT;
+        this.refboxCopyContent = this.EMPTY_CONTENT;
         this.refboxContent.next(this.EMPTY_CONTENT);
       });
     this.itemNameText = this.item?.firstMetadataValue('dc.title');
@@ -87,9 +87,9 @@ export class ClarinRefCitationComponent implements OnInit {
    */
   copyText() {
     let plainText = this.EMPTY_CONTENT;
-    if (this.refBoxCopyContent) {
+    if (this.refboxCopyContent) {
       const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = this.refBoxCopyContent;
+      tempDiv.innerHTML = this.refboxCopyContent;
       plainText = tempDiv.textContent || '';
     }
     this.clipboard.copy(plainText);
