@@ -10,7 +10,7 @@ import { RequestService } from '../../core/data/request.service';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { BehaviorSubject } from 'rxjs';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 
 /**
@@ -44,7 +44,12 @@ export class ClarinRefCitationComponent implements OnInit {
    * The content of the reference box, which will be displayed in the tooltip.
    * This content is fetched from the RefBox Controller.
    */
-  refboxContent: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+  refboxContent: BehaviorSubject<SafeHtml> = new BehaviorSubject<SafeHtml>(null);
+
+  /**
+   * The raw content of the reference box, which is fetched from the RefBox Controller.
+   */
+  refBoxCopyContent = '';
 
   /**
    * The text to be displayed when the ref box content is empty or cannot be fetched.
@@ -66,11 +71,12 @@ export class ClarinRefCitationComponent implements OnInit {
   ngOnInit(): void {
     void this.fetchRefBoxContent()
       .then((content) => {
-        // Sanitize the content to prevent XSS attacks
+        this.refBoxCopyContent = content; // Store raw HTML
         this.refboxContent.next(this.sanitizer.bypassSecurityTrustHtml(content));
       }).catch((error) => {
-          console.error('Failed to fetch refbox content:', error);
-          this.refboxContent.next(this.EMPTY_CONTENT);
+        console.error('Failed to fetch refbox content:', error);
+        this.refBoxCopyContent = this.EMPTY_CONTENT;
+        this.refboxContent.next(this.EMPTY_CONTENT);
       });
     this.itemNameText = this.item?.firstMetadataValue('dc.title');
   }
@@ -80,11 +86,10 @@ export class ClarinRefCitationComponent implements OnInit {
    * Remove the html tags from the text and copy only the plain text.
    */
   copyText() {
-    const displayText = this.refboxContent.value;
     let plainText = this.EMPTY_CONTENT;
-    if (displayText) {
+    if (this.refBoxCopyContent) {
       const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = displayText;
+      tempDiv.innerHTML = this.refBoxCopyContent;
       plainText = tempDiv.textContent || '';
     }
     this.clipboard.copy(plainText);
