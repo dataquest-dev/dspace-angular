@@ -88,9 +88,9 @@ export class ClarinRefCitationComponent implements OnInit {
   copyText() {
     let plainText = this.EMPTY_CONTENT;
     if (this.refboxCopyContent) {
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = this.refboxCopyContent;
-      plainText = tempDiv.textContent || '';
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(this.refboxCopyContent, 'text/html');
+      plainText = doc.body.textContent || '';
     }
     this.clipboard.copy(plainText);
     setTimeout(() => {
