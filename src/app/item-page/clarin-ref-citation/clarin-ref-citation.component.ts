@@ -9,8 +9,8 @@ import { GetRequest } from '../../core/data/request.models';
 import { RequestService } from '../../core/data/request.service';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
-import { BehaviorSubject, of } from 'rxjs';
-import { ItemIdentifierService } from '../../shared/item-identifier.service';
+import { BehaviorSubject } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 /**
@@ -40,16 +40,17 @@ export class ClarinRefCitationComponent implements OnInit {
    */
   itemNameText: string;
 
-  /**
-   * The authors of the item. Fetched from the metadata.
-   */
-  authors: string[] = [];
 
   /**
    * The content of the reference box, which will be displayed in the tooltip.
    * This content is fetched from the RefBox Controller.
    */
   refboxContent: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+
+  /**
+   * The text to be displayed when the ref box content is empty or cannot be fetched.
+   */
+  EMPTY_CONTENT = 'Cannot fetch the ref box content';
 
   constructor(private configurationService: ConfigurationDataService,
               private clipboard: Clipboard,
@@ -58,15 +59,19 @@ export class ClarinRefCitationComponent implements OnInit {
               private requestService: RequestService,
               protected rdbService: RemoteDataBuildService,
               protected halService: HALEndpointService,
-              private itemIdentifierService: ItemIdentifierService) {
+              private sanitizer: DomSanitizer) {
     // Configure the tooltip to show on click - `Copied` message
     config.triggers = 'click';
   }
 
   ngOnInit(): void {
     void this.fetchRefBoxContent()
-      .then((res) => {
-        this.refboxContent.next(res);
+      .then((content) => {
+        // Sanitize the content to prevent XSS attacks
+        this.refboxContent.next(this.sanitizer.bypassSecurityTrustHtml(content));
+      }).catch((error) => {
+          console.error('Failed to fetch refbox content:', error);
+          this.refboxContent.next(this.EMPTY_CONTENT);
       });
   }
 
@@ -74,11 +79,14 @@ export class ClarinRefCitationComponent implements OnInit {
    * Copy the text from the reference box to the clipboard.
    * Remove the html tags from the text and copy only the plain text.
    */
-  async copyText() {
+  copyText() {
     const displayText = this.refboxContent.value;
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = displayText;
-    const plainText = tempDiv.textContent || '';
+    let plainText = this.EMPTY_CONTENT;
+    if (displayText) {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = displayText;
+      plainText = tempDiv.textContent || '';
+    }
     this.clipboard.copy(plainText);
     setTimeout(() => {
       this.tooltipRef.close();
@@ -88,7 +96,7 @@ export class ClarinRefCitationComponent implements OnInit {
   /**
    * Fetch the content of the reference box from the RefBox Controller.
    */
-  async fetchRefBoxContent() {
+  async fetchRefBoxContent(): Promise<string> {
     const requestId = this.requestService.generateRequestId();
     const getRequest = new GetRequest(
       requestId,
@@ -96,13 +104,12 @@ export class ClarinRefCitationComponent implements OnInit {
     );
     this.requestService.send(getRequest);
 
-    const EMPTY_CONTENT = 'Cannot fetch the ref box content';
     try {
       const res: any = await this.rdbService.buildFromRequestUUID(requestId)
         .pipe(getFirstSucceededRemoteData()).toPromise();
-      return res?.payload?.displayText || EMPTY_CONTENT;
+      return res?.payload?.displayText || this.EMPTY_CONTENT;
     } catch (error) {
-      return of(EMPTY_CONTENT);
+      return this.EMPTY_CONTENT;
     }
   }
 
