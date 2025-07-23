@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Bitstream } from '../../core/shared/bitstream.model';
-import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
-import { finalize, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, firstValueFrom, Observable, of as observableOf } from 'rxjs';
+import { filter, finalize, switchMap, take } from 'rxjs/operators';
 import { followLink } from '../../shared/utils/follow-link-config.model';
 import { ClarinUserRegistration } from '../../core/shared/clarin/clarin-user-registration.model';
 import { ClarinUserMetadata } from '../../core/shared/clarin/clarin-user-metadata.model';
@@ -35,13 +35,13 @@ import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-bu
 import { HttpOptions } from '../../core/dspace-rest/dspace-rest.service';
 import { Router } from '@angular/router';
 import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
-import { getBitstreamContentRoute } from '../../app-routing-paths';
 import { hasFailed } from 'src/app/core/data/request-entry-state.model';
 import { FindListOptions } from '../../core/data/find-list-options.model';
 import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
 import { ClarinUserMetadataDataService } from '../../core/data/clarin/clarin-user-metadata.service';
 import { HtmlContentService } from '../../shared/html-content.service';
+import { FileService } from '../../core/shared/file.service';
 
 /**
  * The component shows the user's filled in user metadata and the user can fill in other required user metadata.
@@ -143,7 +143,9 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     private hardRedirectService: HardRedirectService,
     private requestService: RequestService,
     private clarinUserMetadataDataService: ClarinUserMetadataDataService,
-    private htmlContentService: HtmlContentService) { }
+    private htmlContentService: HtmlContentService,
+    protected fileService: FileService,
+    protected notificationsService: NotificationsService) { }
 
    ngOnInit(): void {
     // Load CurrentItem by bitstreamID to show itemHandle
@@ -242,7 +244,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
         } else {
           // Or just download the bitstream by download token
           const downloadToken = Object.values(responseRD$?.payload).join('');
-          this.redirectToDownload(downloadToken);
+          void this.redirectToDownload(downloadToken);
         }
       });
   }
@@ -255,23 +257,33 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     return this.router.routerState.snapshot.url.endsWith('/zip');
   }
 
-  private redirectToDownload(downloadToken = null) {
-    // 1. Get bitstream
-    // 2. Get bitstream download link
-    // 3. Get bitstream content download link and check if there is `authorization-token` in to query params
-    let bitstream = null;
-    this.bitstream$
-      .pipe(take(1))
-      .subscribe(bitstream$ => {
-        bitstream = bitstream$;
-      });
-    let bitstreamDownloadPath = getBitstreamContentRoute(bitstream);
-    if (isNotEmpty(downloadToken)) {
-      bitstreamDownloadPath = this.halService.getRootHref() + '/core' + bitstreamDownloadPath +
-        '?dtoken=' + downloadToken;
-    }
+  /**
+   * Redirects to the download link of the bitstream.
+   * If a download token is provided, it appends it as a query parameter.
+   *
+   * @param downloadToken
+   * @private
+   */
+  private async redirectToDownload(downloadToken?: string): Promise<void> {
+    try {
+      const bitstream = await firstValueFrom(this.bitstream$.pipe(take(1)));
 
-    this.hardRedirectService.redirect(bitstreamDownloadPath);
+      const fileLink = await firstValueFrom(
+        this.fileService.retrieveFileDownloadLink(bitstream._links.content.href).pipe(
+          filter(hasValue),
+          take(1)
+        )
+      );
+
+      // Determine whether the URL already contains query parameters
+      const hasQueryParams = fileLink.includes('?');
+      const tokenParam = downloadToken ? `${hasQueryParams ? '&' : '?'}dtoken=${downloadToken}` : '';
+
+      const redirectUrl = `${fileLink}${tokenParam}`;
+      this.hardRedirectService.redirect(redirectUrl);
+    } catch (error) {
+      this.notificationsService.error(this.translateService.instant('clarin-license-agreement-page.download-error'));
+    }
   }
 
   public getMetadataValueByKey(metadataKey: string) {
