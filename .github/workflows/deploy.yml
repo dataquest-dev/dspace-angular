@@ -219,7 +219,7 @@ jobs:
 
 
   playwright-after-import8:
-    runs-on: ubuntu-latest
+    runs-on: dspace-test-1
     needs: import-8
     if: inputs.IMPORT
     timeout-minutes: 45
