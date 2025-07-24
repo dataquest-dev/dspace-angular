@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Item } from '../../core/shared/item.model';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
-import { isEmpty, isNotEmpty, isNull, isUndefined } from '../../shared/empty.util';
 import { getFirstSucceededRemoteData } from '../../core/shared/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NgbModal, NgbTooltip, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -11,16 +10,8 @@ import { RequestService } from '../../core/data/request.service';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { BehaviorSubject } from 'rxjs';
-import {
-  DOI_METADATA_FIELD, HANDLE_METADATA_FIELD,
-} from '../simple/field-components/clarin-generic-item-field/clarin-generic-item-field.component';
-import { ItemIdentifierService } from '../../shared/item-identifier.service';
-import { AUTHOR_METADATA_FIELDS } from '../../core/shared/clarin/constants';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-/**
- * If the item has more authors do not add all authors to the citation but add there a shortcut.
- */
-export const ET_AL_TEXT = 'et al.';
 
 /**
  * The citation part in the ref-box component.
@@ -45,37 +36,25 @@ export class ClarinRefCitationComponent implements OnInit {
   @ViewChild('tooltip', {static: false}) tooltipRef: NgbTooltip;
 
   /**
-   * The parameters retrieved from the Item metadata for creating the citation in the proper way.
-   */
-  /**
-   * Author and issued year
-   */
-  citationText: string;
-  /**
-   * Whole Handle URI
-   */
-  identifierURI: string;
-  /**
    * Name of the Item
    */
   itemNameText: string;
-  /**
-   * The nam of the organization which provides the repository
-   */
-  repositoryNameText: string;
-  /**
-   * BehaviorSubject to store the prettified identifier.
-   */
-  prettifiedIdentifier: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-  /**
-   * The item has DOI or not.
-   */
-  hasDoi = false;
 
   /**
-   * The authors of the item. Fetched from the metadata.
+   * The content of the reference box, which will be displayed in the tooltip.
+   * This content is fetched from the RefBox Controller.
    */
-  authors: string[] = [];
+  refboxContent: BehaviorSubject<SafeHtml> = new BehaviorSubject<SafeHtml>(null);
+
+  /**
+   * The raw content of the reference box, which is fetched from the RefBox Controller.
+   */
+  refboxCopyContent = '';
+
+  /**
+   * The text to be displayed when the ref box content is empty or cannot be fetched.
+   */
+  EMPTY_CONTENT = 'Cannot fetch the ref box content';
 
   constructor(private configurationService: ConfigurationDataService,
               private clipboard: Clipboard,
@@ -84,146 +63,59 @@ export class ClarinRefCitationComponent implements OnInit {
               private requestService: RequestService,
               protected rdbService: RemoteDataBuildService,
               protected halService: HALEndpointService,
-              private itemIdentifierService: ItemIdentifierService) {
+              private sanitizer: DomSanitizer) {
     // Configure the tooltip to show on click - `Copied` message
     config.triggers = 'click';
   }
 
   ngOnInit(): void {
-    this.authors = this.item.allMetadataValues(AUTHOR_METADATA_FIELDS);
-    // First Part could be authors or publisher
-    let firstPart = this.getAuthors();
-    const year = this.getYear();
-
-    // Show publisher instead of author if author is none
-    if (isEmpty(firstPart)) {
-      firstPart = this.item.firstMetadataValue('dc.publisher');
-    }
-
-    let citationArray = [firstPart, year];
-    // Filter null values
-    citationArray = citationArray.filter(textValue => {
-      return isNotEmpty(textValue);
-    });
-
-    this.hasDoi = this.hasItemDoi();
-    this.citationText = citationArray.join(', ');
-    this.itemNameText = this.getTitle();
-    this.identifierURI = this.getIdentifierUri(this.whichIdentifierMetadataField());
-    void this.itemIdentifierService.prettifyIdentifier(this.identifierURI, [this.whichIdentifierMetadataField()])
-      .then((value: string) => {
-        this.prettifiedIdentifier.next(value);
+    void this.fetchRefBoxContent()
+      .then((content) => {
+        this.refboxCopyContent = content; // Store raw HTML
+        this.refboxContent.next(this.sanitizer.bypassSecurityTrustHtml(content));
+      }).catch((error) => {
+        console.error('Failed to fetch refbox content:', error);
+        this.refboxCopyContent = this.EMPTY_CONTENT;
+        this.refboxContent.next(this.EMPTY_CONTENT);
       });
-    void this.getRepositoryName().then(res => {
-      this.repositoryNameText = res?.payload?.values?.[0];
-    });
+    this.itemNameText = this.item?.firstMetadataValue('dc.title');
   }
 
   /**
-   * After click on the `Copy` icon the text will be formatted and copied for the user.
+   * Copy the text from the reference box to the clipboard.
+   * Remove the html tags from the text and copy only the plain text.
    */
   copyText() {
-    const tabChar = '  ';
-    let authorWithItemName = this.citationText + ',\n' + tabChar + this.itemNameText;
-    this.clipboard.copy(authorWithItemName + ', ' +
-      this.repositoryNameText + ', \n' + tabChar + this.identifierURI);
+    let plainText = this.EMPTY_CONTENT;
+    if (this.refboxCopyContent) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(this.refboxCopyContent, 'text/html');
+      plainText = doc.body.textContent || '';
+    }
+    this.clipboard.copy(plainText);
     setTimeout(() => {
       this.tooltipRef.close();
     }, 700);
   }
 
-  getRepositoryName(): Promise<any> {
-    return this.configurationService.findByPropertyName('dspace.name')
-      .pipe(getFirstSucceededRemoteData()).toPromise();
-  }
-
   /**
-   * Get the identifier URI from the item metadata. If the item has DOI, return the DOI, otherwise return the handle.
+   * Fetch the content of the reference box from the RefBox Controller.
    */
-  getIdentifierUri(identifierMetadataField) {
-    return this.item.firstMetadataValue(identifierMetadataField);
-  }
+  async fetchRefBoxContent(): Promise<string> {
+    const requestId = this.requestService.generateRequestId();
+    const getRequest = new GetRequest(
+      requestId,
+      this.halService.getRootHref() + '/core/refbox?handle=' + this.item?.handle
+    );
+    this.requestService.send(getRequest);
 
-  /**
-   * Check if the item has DOI.
-   */
-  hasItemDoi() {
-    return this.item?.allMetadata(DOI_METADATA_FIELD)?.length > 0;
-  }
-
-  /**
-   * If the item has DOI, return the DOI metadata field, otherwise return the handle metadata field.
-   */
-  whichIdentifierMetadataField() {
-    return this.hasDoi ? DOI_METADATA_FIELD : HANDLE_METADATA_FIELD;
-  }
-
-  getHandle() {
-    // Separate the handle from the full URI
-    const fullUri = this.getIdentifierUri(this.whichIdentifierMetadataField());
-    const handleWord = 'handle/';
-    const startHandleIndex = fullUri.indexOf('handle/') + handleWord.length;
-    return fullUri.substr(startHandleIndex);
-  }
-
-  /**
-   * Check if the Item has any author metadata.
-   * @param authorMetadata
-   */
-  hasNoAuthor(authorMetadata: string[] = []) {
-    return isEmpty(authorMetadata);
-  }
-
-  getAuthors() {
-    let authorText = '';
-    const authorMetadata = this.authors;
-    if (isUndefined(authorMetadata) || isNull(authorMetadata)) {
-      return null;
+    try {
+      const res: any = await this.rdbService.buildFromRequestUUID(requestId)
+        .pipe(getFirstSucceededRemoteData()).toPromise();
+      return res?.payload?.displayText || this.EMPTY_CONTENT;
+    } catch (error) {
+      return this.EMPTY_CONTENT;
     }
-
-    // If metadata value is `(:unav) Unknown author` return null
-    if (this.hasNoAuthor(authorMetadata)) {
-      return null;
-    }
-
-    // If there is only one author
-    if (authorMetadata.length === 1) {
-      return authorMetadata[0];
-    }
-
-    // If there are less than 5 authors
-    if (authorMetadata.length <= 5) {
-      let authors_list = authorMetadata.join('; ');
-      // Replace last `;` with `and`
-      authors_list = authors_list.replace(/;([^;]*)$/, ' and$1');
-      return authors_list;
-    }
-
-    // If there are more than 5 authors
-    // Get only first author and add `et al.` at the end
-    authorText = authorMetadata[0] + '; ' + ET_AL_TEXT;
-    return authorText;
-  }
-
-  getYear() {
-    const yearMetadata = this.item.metadata['dc.date.issued'];
-    if (isUndefined(yearMetadata) || isNull(yearMetadata)) {
-      return null;
-    }
-
-    // The issued date is in the format '2000-01-01'
-    const issuedDateValues = yearMetadata[0]?.value?.split('-');
-    // Extract the year and return
-    return issuedDateValues[0];
-  }
-
-  getTitle() {
-    const titleMetadata = this.item.metadata['dc.title'];
-    if (isUndefined(titleMetadata) || isNull(titleMetadata)) {
-      return null;
-    }
-
-    return titleMetadata[0]?.value;
   }
 
   /**
@@ -259,8 +151,7 @@ export class ClarinRefCitationComponent implements OnInit {
     const requestId = this.requestService.generateRequestId();
     // Create the request
     const getRequest = new GetRequest(requestId, this.halService.getRootHref() + '/core/refbox/citations?type=' +
-      // citationType + '&handle=' + this.getHandle(), requestOptions);
-    citationType + '&handle=' + this.getHandle());
+    citationType + '&handle=' + this.item?.handle);
 
     // Call get request
     this.requestService.send(getRequest);
