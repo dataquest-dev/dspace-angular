@@ -57,6 +57,7 @@
               <th scope="col">{{labelPrefix + 'table.id' | translate}}</th>
               <th scope="col">{{labelPrefix + 'table.name' | translate}}</th>
               <th scope="col">{{labelPrefix + 'table.email' | translate}}</th>
+              <th scope="col">{{labelPrefix + 'table.lastActive' | translate}}</th>
               <th>{{labelPrefix + 'table.edit' | translate}}</th>
             </tr>
             </thead>
@@ -66,6 +67,7 @@
               <td>{{epersonDto.eperson.id}}</td>
               <td>{{ dsoNameService.getName(epersonDto.eperson) }}</td>
               <td>{{epersonDto.eperson.email}}</td>
+              <td>{{epersonDto.eperson.lastActive | date:dateFormat:'UTC'}}</td>
               <td>
                 <div class="btn-group edit-field">
                   <button [routerLink]="getEditEPeoplePage(epersonDto.eperson.id)"
