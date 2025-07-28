@@ -1,6 +1,6 @@
 {
   "env": {
-    "default_collection_of_tests": true
+    "lindat_specific_tests": true
   },
   "locators": {
     "title": "LINDAT/CLARIAH-CZ Repository Home"  
