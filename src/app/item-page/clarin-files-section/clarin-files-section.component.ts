@@ -107,9 +107,8 @@ export class ClarinFilesSectionComponent implements OnInit {
       return file.name;
     });
 
-    this.command = `curl -o allzip.zip ` + this.halService.getRootHref() + `/core/items/${this.item.id}/allzip?handleId=${this.itemHandle}`;
+    this.command = 'curl -o "allzip.zip" "' + this.halService.getRootHref() + '/core/items/' + this.item.id + '/allzip?handleId=' + this.itemHandle + '"';
   }
-
   loadDownloadZipConfigProperties() {
     this.configurationService.findByPropertyName('download.all.limit.min.file.count')
       .pipe(
