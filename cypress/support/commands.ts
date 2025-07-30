@@ -100,7 +100,7 @@ function loginViaForm(
   password: string
 ): void {
   // Spy on the authentication request (allow query params)
-  cy.intercept({ method: 'POST', url: '/server/api/authn/login*' }).as('auth');
+  // cy.intercept({ method: 'POST', url: '/server/api/authn/login*' }).as('auth');
 
   // Optionally close the DiscoJuice popup if present
   cy.wait(500);
