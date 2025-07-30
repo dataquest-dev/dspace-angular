@@ -88,8 +88,14 @@
   </div>
   <div class="row pt-3">
     <div class="col-12">
-      <button class="btn btn-success max-width" [disabled]="error$.value.length !== 0" (click)="accept()">
+      <button class="btn btn-success max-width" [disabled]="error$.value.length !== 0 || (isLoading | async)" (click)="accept()">
         {{'clarin.license.agreement.button.agree' | translate}}
+        <span
+          *ngIf="isLoading | async"
+          class="ml-1 spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
       </button>
     </div>
   </div>
