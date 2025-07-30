@@ -22,6 +22,8 @@ import { IdentifiableDataService } from './base/identifiable-data.service';
 import { getDSORoute } from '../../app-routing-paths';
 import { HardRedirectService } from '../services/hard-redirect.service';
 import { APP_CONFIG, AppConfig } from '../../../config/app-config.interface';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 
 const ID_ENDPOINT = 'pid';
 const UUID_ENDPOINT = 'dso';
@@ -76,7 +78,9 @@ export class DsoRedirectService {
     protected rdbService: RemoteDataBuildService,
     protected objectCache: ObjectCacheService,
     protected halService: HALEndpointService,
-    private hardRedirectService: HardRedirectService
+    private hardRedirectService: HardRedirectService,
+    private router: Router,
+    private authService: AuthService,
   ) {
     this.dataService = new DsoByIdOrUUIDDataService(requestService, rdbService, objectCache, halService);
   }
@@ -104,7 +108,24 @@ export class DsoRedirectService {
             }
           }
         }
+        // Redirect to login page if the user is not authenticated to see the requested page
+        if (response.hasFailed && (response.statusCode === 401 || response.statusCode === 403)) {
+          // Extract redirect URL - remove `https://.../namespace` from the current URL. Keep only `handle/...`
+          const redirectUrl = this.extractHandlePath(window.location.href);
+          this.authService.setRedirectUrl(redirectUrl);
+          this.router.navigateByUrl('login');
+        }
       })
     );
+  }
+
+  /**
+   * Extract the handle path from the given URL. Return only `/handle/{PREFIX}/{SUFFIX}`.
+   * @param url the URL to extract the handle path from
+   */
+  extractHandlePath(url: string): string | null {
+    const regex = /\/handle\/[\w.\/-]+$/;
+    const match = url.match(regex);
+    return match ? match[0].substring(1) : null;
   }
 }

@@ -17,9 +17,11 @@ import {
   INFO_MODULE_PATH,
   INTERNAL_SERVER_ERROR,
   LEGACY_BITSTREAM_MODULE_PATH,
+  LICENSES_MODULE_PATH,
   PROFILE_MODULE_PATH,
   REGISTER_PATH,
   REQUEST_COPY_MODULE_PATH,
+  CONTRACT_PAGE_MODULE_PATH,
   WORKFLOW_ITEM_MODULE_PATH,
 } from './app-routing-paths';
 import { COLLECTION_MODULE_PATH } from './collection-page/collection-page-routing-paths';
@@ -42,6 +44,8 @@ import { MenuResolver } from './menu.resolver';
 import { ThemedPageErrorComponent } from './page-error/themed-page-error.component';
 import { HomePageResolver } from './home-page/home-page.resolver';
 import { ViewTrackerResolverService } from './statistics/angulartics/dspace/view-tracker-resolver.service';
+import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
+import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
 
 @NgModule({
   imports: [
@@ -167,6 +171,11 @@ import { ViewTrackerResolverService } from './statistics/angulartics/dspace/view
             canActivate: [SiteAdministratorGuard, EndUserAgreementCurrentUserGuard]
           },
           {
+            path: 'contact',
+            loadChildren: () => import('./contact-page/contact-page.module')
+              .then((m) => m.ContactPageModule)
+          },
+          {
             path: 'login',
             loadChildren: () => import('./login-page/login-page.module')
               .then((m) => m.LoginPageModule)
@@ -247,7 +256,31 @@ import { ViewTrackerResolverService } from './statistics/angulartics/dspace/view
               .then((m) => m.SubscriptionsPageRoutingModule),
             canActivate: [AuthenticatedGuard]
           },
-          { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent },
+          {
+            path: LICENSES_MODULE_PATH,
+            loadChildren: () => import('./clarin-licenses/clarin-license.module').then((m) => m.ClarinLicenseModule),
+          },
+          {
+            path: CONTRACT_PAGE_MODULE_PATH,
+            loadChildren: () => import('./license-contract-page/license-contract-page.module')
+              .then((m) => m.LicenseContractPageModule),
+            canActivate: [EndUserAgreementCurrentUserGuard]
+          },
+          {
+            path: HANDLE_TABLE_MODULE_PATH,
+            loadChildren: () => import('./handle-page/handle-page.module').then((m) => m.HandlePageModule),
+            canActivate: [SiteAdministratorGuard],
+          },
+          {
+            path: STATIC_PAGE_PATH,
+            loadChildren: () => import('./static-page/static-page.module').then((m) => m.StaticPageModule),
+          },
+          {
+            path: 'share-submission',
+            loadChildren: () => import('./share-submission/share-submission.module').then((m) => m.ShareSubmissionModule),
+            canActivate: [AuthenticatedGuard, EndUserAgreementCurrentUserGuard]
+          },
+          { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent }
         ]
       }
     ], {

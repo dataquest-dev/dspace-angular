@@ -46,6 +46,7 @@ import {
 import {
   EditRelationshipListWrapperComponent
 } from './item-relationships/edit-relationship-list-wrapper/edit-relationship-list-wrapper.component';
+import { ItemLicenseMapperComponent } from './item-license-mapper/item-license-mapper.component';
 
 /**
  * Module that contains all components related to the Edit Item page administrator functionality
@@ -92,6 +93,7 @@ import {
     ItemCurateComponent,
     ItemAccessControlComponent,
     EditRelationshipListWrapperComponent,
+    ItemLicenseMapperComponent,
   ],
   providers: [
     BundleDataService,

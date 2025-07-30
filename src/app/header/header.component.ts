@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { MenuService } from '../shared/menu/menu.service';
 import { MenuID } from '../shared/menu/menu-id.model';
 import { HostWindowService, WidthCategory } from '../shared/host-window.service';
+import { LocaleService } from '../core/locale/locale.service';
 
 /**
  * Represents the header with the logo and simple navigation
@@ -26,6 +27,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     protected menuService: MenuService,
     protected windowService: HostWindowService,
+    private localeService: LocaleService,
   ) {
   }
 
@@ -35,5 +37,42 @@ export class HeaderComponent implements OnInit {
 
   public toggleNavbar(): void {
     this.menuService.toggleMenu(this.menuID);
+  }
+
+  /**
+  * Returns the current language code from the locale service
+  * @returns {string} The current language code
+  */
+  getLangCode(): string {
+    return this.localeService.getCurrentLanguageCode();
+  }
+
+  /**
+  * Returns the current language code only if it's Czech ('cs'), otherwise returns an empty string
+  * @returns {string} The language code if Czech, empty string otherwise
+  */
+  getLangCodeIfCzech(): string {
+    return this.localeService.getCurrentLanguageCode() === 'cs' ? 'cs' : '';
+  }
+
+  /**
+  * Translates English slugs to their Czech equivalents when the current language is Czech
+  * @param {string} slug - The English slug to translate
+  * @returns {string} The translated slug if in Czech, the original slug if in English, or empty string if translation not found
+  */
+  translateSlug(slug: string): string {
+    const currentLang = this.localeService.getCurrentLanguageCode();
+    if (currentLang === 'en') {
+      return slug;
+    }
+
+    const translations = {
+      'partners': this.getLangCodeIfCzech() + '/' + 'partneri',
+      'integration': this.getLangCodeIfCzech() + '/' + 'integrace',
+      'partnership': this.getLangCodeIfCzech() + '/' + 'partnerstvi',
+      'services': 'sluzby'
+    };
+
+    return translations[slug] || '';
   }
 }

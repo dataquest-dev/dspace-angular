@@ -5,8 +5,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { By } from '@angular/platform-browser';
-
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
 
@@ -17,15 +15,25 @@ import { TranslateLoaderMock } from '../shared/mocks/translate-loader.mock';
 import { storeModuleConfig } from '../app.reducer';
 import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';
 import { AuthorizationDataServiceStub } from '../shared/testing/authorization-service.stub';
-import { APP_CONFIG } from '../../config/app-config.interface';
-import { environment } from '../../environments/environment.test';
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
+import { ConfigurationProperty } from '../core/shared/configuration-property.model';
 
 let comp: FooterComponent;
 let fixture: ComponentFixture<FooterComponent>;
 let de: DebugElement;
 let el: HTMLElement;
+let mockConfigurationDataService: ConfigurationDataService;
 
 describe('Footer component', () => {
+  mockConfigurationDataService = jasmine.createSpyObj('configurationDataService', {
+    findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
+      name: 'themed.by.url',
+      values: [
+        'some.url'
+      ]
+    }))
+  });
 
   // waitForAsync beforeEach
   beforeEach(waitForAsync(() => {
@@ -40,7 +48,8 @@ describe('Footer component', () => {
       providers: [
         FooterComponent,
         { provide: AuthorizationDataService, useClass: AuthorizationDataServiceStub },
-        { provide: APP_CONFIG, useValue: environment },
+        FooterComponent,
+        { provide: ConfigurationDataService, useValue: mockConfigurationDataService }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });
@@ -51,10 +60,6 @@ describe('Footer component', () => {
     fixture = TestBed.createComponent(FooterComponent);
 
     comp = fixture.componentInstance; // component test instance
-
-    // query for the title <p> by CSS element selector
-    de = fixture.debugElement.query(By.css('p'));
-    el = de.nativeElement;
   });
 
   it('should create footer', inject([FooterComponent], (app: FooterComponent) => {

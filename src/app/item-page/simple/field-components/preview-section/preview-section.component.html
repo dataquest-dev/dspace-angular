@@ -1,0 +1,10 @@
+<!-- Loading Spinner -->
+<div *ngIf="(listOfFiles | async)?.length === 0" class="d-flex flex-column justify-content-center align-items-center my-3">
+  <div class="spinner-border text-primary" role="status"></div>
+  <div class="px-4 pt-2">{{'item.preview.loading-files' | translate}}
+    <a *ngIf="emailToContact" [href]="'mailto:' + emailToContact" class="email-text">{{ emailToContact }}</a>
+  </div>
+</div>
+<div *ngFor="let file of (listOfFiles | async)">
+  <ds-file-description [fileInput] = 'file'></ds-file-description>
+</div>

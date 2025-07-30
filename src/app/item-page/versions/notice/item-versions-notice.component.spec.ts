@@ -57,7 +57,6 @@ describe('ItemVersionsNoticeComponent', () => {
   );
 
   beforeEach(waitForAsync(() => {
-
     TestBed.configureTestingModule({
       declarations: [ItemVersionsNoticeComponent],
       imports: [TranslateModule.forRoot(), RouterTestingModule.withRoutes([])],

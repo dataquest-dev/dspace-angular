@@ -39,7 +39,8 @@ export function getMockFormBuilderService(): FormBuilderService {
           {match: 'VISIBLE', operator: 'OR', when: [{id: 'dc.type', value: 'boundType'}]}
         ]
       }
-    )
+    ),
+    setTypeBindFieldFromConfig: {},
   });
 
 }

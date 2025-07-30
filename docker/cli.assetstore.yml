@@ -12,6 +12,10 @@
 # https://github.com/DSpace/DSpace/blob/main/dspace/src/main/docker-compose/cli.assetstore.yml
 #
 # Therefore, it should be kept in sync with that file
+
+networks:
+  dspacenet:
+
 services:
   dspace-cli:
     environment:

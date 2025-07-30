@@ -193,7 +193,6 @@ export class FormComponent implements OnDestroy, OnInit {
                 const model: DynamicFormControlModel = this.formBuilderService.findById(fieldId, formModel, fieldIndex);
                 this.formService.addErrorToField(field, model, error.message);
                 this.changeDetectorRef.detectChanges();
-
               }
             });
 

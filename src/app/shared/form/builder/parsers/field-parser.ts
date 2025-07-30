@@ -142,6 +142,15 @@ export abstract class FieldParser {
     }
   }
 
+  public setVocabularyOptionsInComplexInput(controlModel, complexDefinitionInput) {
+    if (isNotEmpty(this.configData.selectableMetadata) && isNotEmpty(complexDefinitionInput['value-pairs-name'])) {
+      controlModel.vocabularyOptions = new VocabularyOptions(
+        complexDefinitionInput['value-pairs-name'],
+        true
+      );
+    }
+  }
+
   public setValues(modelConfig: DsDynamicInputModelConfig, fieldValue: any, forceValueAsObj: boolean = false, groupModel?: boolean) {
     if (isNotEmpty(fieldValue)) {
       if (groupModel) {
@@ -301,6 +310,8 @@ export abstract class FieldParser {
       controlModel.hint = this.configData.hints || '&nbsp;';
     }
     controlModel.placeholder = this.configData.label;
+    // Hide full input field when style is set as `display: none`
+    controlModel.hidden = this.configData.style === 'd-none';
 
     if (this.configData.mandatory && setErrors) {
       this.markAsRequired(controlModel);
@@ -321,6 +332,9 @@ export abstract class FieldParser {
         this.parserOptions.typeField);
     }
 
+    if (isNotEmpty(this.configData.typeBindField)) {
+      controlModel.typeBindField = this.configData.typeBindField;
+    }
     return controlModel;
   }
 

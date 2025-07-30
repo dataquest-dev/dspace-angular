@@ -463,3 +463,7 @@ search:
 accessibility:
   # The duration in days after which the accessibility settings cookie expires
   cookieExpirationDuration: 7
+
+matomo:
+  hostUrl: http://localhost:8135/
+  siteId: 1

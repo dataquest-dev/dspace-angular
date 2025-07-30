@@ -22,6 +22,11 @@ export function getBitstreamModuleRoute() {
 export function getBitstreamDownloadRoute(bitstream): string {
   return new URLCombiner(getBitstreamModuleRoute(), bitstream.uuid, 'download').toString();
 }
+
+export function getBitstreamContentRoute(bitstream): string {
+  return new URLCombiner(getBitstreamModuleRoute(), bitstream.uuid, 'content').toString();
+}
+
 export function getBitstreamRequestACopyRoute(item, bitstream): { routerLink: string, queryParams: any } {
   const url = new URLCombiner(getItemModuleRoute(), item.uuid, 'request-a-copy').toString();
   return {
@@ -131,4 +136,20 @@ export const SUBSCRIPTIONS_MODULE_PATH = 'subscriptions';
 
 export function getSubscriptionsModuleRoute() {
   return `/${SUBSCRIPTIONS_MODULE_PATH}`;
+}
+
+export const LICENSES_MODULE_PATH = 'licenses';
+export function getLicensesModulePath() {
+  return `/${LICENSES_MODULE_PATH}`;
+}
+
+
+export const LICENSES_MANAGE_TABLE_PATH = 'manage-table';
+export function getLicensesManageTablePath() {
+  return `/${LICENSES_MANAGE_TABLE_PATH}`;
+}
+
+export const CONTRACT_PAGE_MODULE_PATH = 'contract';
+export function getLicenseContractPagePath() {
+  return `/${CONTRACT_PAGE_MODULE_PATH}`;
 }

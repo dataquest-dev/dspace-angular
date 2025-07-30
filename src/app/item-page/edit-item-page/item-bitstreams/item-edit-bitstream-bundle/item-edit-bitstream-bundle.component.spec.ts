@@ -20,6 +20,7 @@ import { FieldChangeType } from '../../../../core/data/object-updates/field-chan
 import { createSuccessfulRemoteDataObject$ } from '../../../../shared/remote-data.utils';
 import { createPaginatedList } from '../../../../shared/testing/utils.test';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { BitstreamChecksumDataService } from '../../../../core/bitstream-checksum-data.service';
 
 describe('ItemEditBitstreamBundleComponent', () => {
   let comp: ItemEditBitstreamBundleComponent;
@@ -51,6 +52,10 @@ describe('ItemEditBitstreamBundleComponent', () => {
     getBitstreams: createSuccessfulRemoteDataObject$(createPaginatedList([])),
   });
 
+  const bitstreamChecksumService = jasmine.createSpyObj('bitstreamChecksumService', {
+    findByHref: createSuccessfulRemoteDataObject$({})
+  });
+
   let objectUpdatesService: any;
   let itemBitstreamsService: ItemBitstreamsServiceStub;
 
@@ -71,6 +76,7 @@ describe('ItemEditBitstreamBundleComponent', () => {
         { provide: PaginationService, useValue: new PaginationServiceStub() },
         { provide: RequestService, useValue: getMockRequestService() },
         { provide: ItemBitstreamsService, useValue: itemBitstreamsService },
+        { provide: BitstreamChecksumDataService, useValue: itemBitstreamsService },
       ],
       schemas: [
         NO_ERRORS_SCHEMA

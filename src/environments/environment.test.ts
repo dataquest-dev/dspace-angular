@@ -352,4 +352,12 @@ export const environment: BuildConfig = {
   accessibility: {
     cookieExpirationDuration: 7,
   },
+
+  signpostingEnabled: true,
+
+  matomo: {
+    hostUrl: 'http://localhost:8135/',
+    siteId: '1',
+    dimensionId: 1
+  }
 };
