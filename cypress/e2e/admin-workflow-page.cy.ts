@@ -1,5 +1,3 @@
-import { testA11y } from 'cypress/support/utils';
-
 describe('Admin Workflow Page', () => {
   beforeEach(() => {
     // Must login as an Admin to see the page

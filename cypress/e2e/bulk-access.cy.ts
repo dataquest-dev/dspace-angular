@@ -1,6 +1,3 @@
-import { testA11y } from 'cypress/support/utils';
-import { Options } from 'cypress-axe';
-
 describe('Bulk Access', () => {
   beforeEach(() => {
     // Must login as an Admin to see the page

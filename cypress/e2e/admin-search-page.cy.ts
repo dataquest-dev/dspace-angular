@@ -1,5 +1,3 @@
-import { testA11y } from 'cypress/support/utils';
-
 describe('Admin Search Page', () => {
   beforeEach(() => {
     // Must login as an Admin to see the page
