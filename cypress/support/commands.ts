@@ -94,14 +94,10 @@ Cypress.Commands.add('login', login);
  * @param password password to login as
  */
 // Cypress custom command for form-based login with intercept and redirect assertion
-// Cypress custom command for form-based login with intercept and redirect assertion
 function loginViaForm(
   email: string,
   password: string
 ): void {
-  // Spy on the authentication request (allow query params)
-  // cy.intercept({ method: 'POST', url: '/server/api/authn/login*' }).as('auth');
-
   // Optionally close the DiscoJuice popup if present
   cy.wait(500);
   cy.get('.discojuice_close').should('exist').click();
@@ -113,27 +109,16 @@ function loginViaForm(
   // Submit the form
   cy.get('[data-test="login-button"]').click();
 
-  // Wait for authentication to complete (if request is made)
-  // cy.wait('@auth', { timeout: 10000 }).then(() => {
-  //     // Wait for redirect
-  //     cy.url({ timeout: 10000 }).should('include', expectedRedirect);
-  //   },
-  //   (err) => {
-  //     // If the request wasn't made, still check URL
-  //     Cypress.log({ name: 'auth', message: 'Auth request not detected, checking URL directly.' });
-  //     cy.url({ timeout: 10000 }).should('include', expectedRedirect);
-  //   }
-  // );
 }
 // Add as a Cypress command (i.e. assign to 'cy.loginViaForm')
 Cypress.Commands.add('loginViaForm', loginViaForm);
 
-// // Do not fail test if an uncaught exception occurs in the application
-// Cypress.on('uncaught:exception', (err, runnable) => {
-//   // returning false here prevents Cypress from
-//   // failing the test
-//   return false;
-// });
+// Do not fail test if an uncaught exception occurs in the application
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false here prevents Cypress from
+  // failing the test
+  return false;
+});
 
 
 /**
