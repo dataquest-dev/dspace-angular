@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 
 import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import difference from 'lodash/difference';
+import { BehaviorSubject, Subscription, take, of as observableOf } from 'rxjs';
 
 import { NotificationsService } from '../notifications.service';
 import { AppState } from '../../../app.reducer';
@@ -18,6 +17,13 @@ import { notificationsStateSelector } from '../selectors';
 import { INotification } from '../models/notification.model';
 import { NotificationsState } from '../notifications.reducers';
 import { INotificationBoardOptions } from '../../../../config/notifications-config.interfaces';
+import { LiveRegionService } from '../../live-region/live-region.service';
+import { hasNoValue, isNotEmptyOperator } from '../../empty.util';
+import {
+  AccessibilitySettingsService
+} from '../../../accessibility/accessibility-settings.service';
+import cloneDeep from 'lodash/cloneDeep';
+import differenceWith from 'lodash/differenceWith';
 
 @Component({
   selector: 'ds-notifications-board',
@@ -49,9 +55,13 @@ export class NotificationsBoardComponent implements OnInit, OnDestroy {
    */
   public isPaused$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  constructor(private service: NotificationsService,
-              private store: Store<AppState>,
-              private cdr: ChangeDetectorRef) {
+  constructor(
+    protected service: NotificationsService,
+    protected store: Store<AppState>,
+    protected cdr: ChangeDetectorRef,
+    protected liveRegionService: LiveRegionService,
+    protected accessibilitySettingsService: AccessibilitySettingsService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -61,13 +71,13 @@ export class NotificationsBoardComponent implements OnInit, OnDestroy {
           this.notifications = [];
         } else if (state.length > this.notifications.length) {
           // Add
-          const newElem = difference(state, this.notifications);
+          const newElem = differenceWith(state, this.notifications, this.byId);
           newElem.forEach((notification) => {
             this.add(notification);
           });
         } else {
           // Remove
-          const delElem = difference(this.notifications, state);
+          const delElem = differenceWith(this.notifications, state, this.byId);
           delElem.forEach((notification) => {
             this.notifications = this.notifications.filter((item: INotification) => item.id !== notification.id);
 
@@ -77,6 +87,9 @@ export class NotificationsBoardComponent implements OnInit, OnDestroy {
       });
   }
 
+  private byId = (notificationA: INotification, notificationB: INotification) =>
+    notificationA.id === notificationB.id;
+
   // Add the new notification to the notification array
   add(item: INotification): void {
     const toBlock: boolean = this.block(item);
@@ -84,7 +97,23 @@ export class NotificationsBoardComponent implements OnInit, OnDestroy {
       if (this.notifications.length >= this.maxStack) {
         this.notifications.splice(this.notifications.length - 1, 1);
       }
-      this.notifications.splice(0, 0, item);
+
+      // It would be a bit better to handle the retrieval of configured settings in the NotificationsService.
+      // Due to circular dependencies this is difficult to implement.
+      this.accessibilitySettingsService.getAsNumber('notificationTimeOut', item.options.timeOut)
+        .pipe(take(1)).subscribe(timeOut => {
+          if (timeOut < 0) {
+            timeOut = 0;
+          }
+
+          // Deep clone because the unaltered item is read-only
+          const modifiedNotification = cloneDeep(item);
+          modifiedNotification.options.timeOut = timeOut;
+          this.notifications.splice(0, 0, modifiedNotification);
+        this.addContentToLiveRegion(modifiedNotification);
+        this.cdr.detectChanges();
+      });
+
     } else {
       // Remove the notification from the store
       // This notification was in the store, but not in this.notifications
@@ -93,29 +122,44 @@ export class NotificationsBoardComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Adds the content of the notification (if any) to the live region, so it can be announced by screen readers.
+   */
+  private addContentToLiveRegion(item: INotification) {
+    let content = item.content;
+
+    if (!item.options.announceContentInLiveRegion || hasNoValue(content)) {
+      return;
+    }
+
+    if (typeof content === 'string') {
+      content = observableOf(content);
+    }
+
+    content.pipe(
+      isNotEmptyOperator(),
+      take(1),
+    ).subscribe(contentStr => this.liveRegionService.addMessage(contentStr));
+  }
+
+  /**
+   * Whether to block the provided item because a duplicate notification with the exact same information already
+   * exists within the notifications array.
+   * @param item The item to check
+   * @return true if the notifications array already contains a notification with the exact same information as the
+   * provided item. false otherwise.
+   * @private
+   */
   private block(item: INotification): boolean {
     const toCheck = item.html ? this.checkHtml : this.checkStandard;
+
     this.notifications.forEach((notification) => {
       if (toCheck(notification, item)) {
         return true;
       }
     });
 
-    if (this.notifications.length > 0) {
-      this.notifications.forEach((notification) => {
-        if (toCheck(notification, item)) {
-          return true;
-        }
-      });
-    }
-
-    let comp: INotification;
-    if (this.notifications.length > 0) {
-      comp = this.notifications[0];
-    } else {
-      return false;
-    }
-    return toCheck(comp, item);
+    return false;
   }
 
   private checkStandard(checker: INotification, item: INotification): boolean {

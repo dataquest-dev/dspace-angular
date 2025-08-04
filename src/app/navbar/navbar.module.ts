@@ -13,6 +13,7 @@ import { MenuModule } from '../shared/menu/menu.module';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { ThemedNavbarComponent } from './themed-navbar.component';
+import { HoverOutsideDirective } from '../shared/utils/hover-outside.directive';
 import { ClarinNavbarTopComponent } from '../clarin-navbar-top/clarin-navbar-top.component';
 
 const effects = [
@@ -27,6 +28,10 @@ const ENTRY_COMPONENTS = [
   ClarinNavbarTopComponent
 ];
 
+const DIRECTIVES = [
+  HoverOutsideDirective,
+];
+
 @NgModule({
   imports: [
     CommonModule,
@@ -37,12 +42,14 @@ const ENTRY_COMPONENTS = [
     CoreModule.forRoot()
   ],
   declarations: [
+    ...DIRECTIVES,
     ...ENTRY_COMPONENTS,
     NavbarComponent,
     ThemedNavbarComponent,
   ],
   providers: [],
   exports: [
+    ...DIRECTIVES,
     ThemedNavbarComponent,
     NavbarSectionComponent,
     ThemedExpandableNavbarSectionComponent,

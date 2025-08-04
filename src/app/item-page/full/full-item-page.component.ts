@@ -13,7 +13,6 @@ import { Item } from '../../core/shared/item.model';
 
 import { fadeInOut } from '../../shared/animations/fade';
 import { hasValue } from '../../shared/empty.util';
-import { AuthService } from '../../core/auth/auth.service';
 import { Location } from '@angular/common';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { ServerResponseService } from '../../core/services/server-response.service';
@@ -55,7 +54,6 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
     protected route: ActivatedRoute,
     protected router: Router,
     protected items: ItemDataService,
-    protected authService: AuthService,
     protected authorizationService: AuthorizationDataService,
     protected _location: Location,
     protected responseService: ServerResponseService,
@@ -65,7 +63,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
     protected halService: HALEndpointService,
     protected registryService: RegistryService
   ) {
-    super(route, router, items, authService, authorizationService, responseService, signpostingDataService, linkHeadService, platformId, registryService, halService);
+    super(route, router, items, authorizationService, responseService, signpostingDataService, linkHeadService, platformId, registryService, halService);
   }
 
   /*** AoT inheritance fix, will hopefully be resolved in the near future **/

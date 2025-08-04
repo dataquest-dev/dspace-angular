@@ -10,7 +10,31 @@ export const environment: BuildConfig = {
   universal: {
     preboot: true,
     async: true,
-    time: false
+    time: false,
+    inlineCriticalCss: false,
+    transferState: true,
+    replaceRestUrl: false,
+    excludePathPatterns: [
+      {
+        pattern: '^/communities/[a-f0-9-]{36}/browse(/.*)?$',
+        flag: 'i',
+      },
+      {
+        pattern: '^/collections/[a-f0-9-]{36}/browse(/.*)?$',
+        flag: 'i',
+      },
+      { pattern: '^/browse/' },
+      { pattern: '^/search' },
+      { pattern: '^/community-list$' },
+      { pattern: '^/statistics/?' },
+      { pattern: '^/admin/' },
+      { pattern: '^/processes/?' },
+      { pattern: '^/notifications/' },
+      { pattern: '^/access-control/' },
+      { pattern: '^/health$' },
+    ],
+    enableSearchComponent: false,
+    enableBrowseComponent: false,
   },
 
   // Angular Universal server settings.
@@ -297,6 +321,7 @@ export const environment: BuildConfig = {
   info: {
     enableEndUserAgreement: true,
     enablePrivacyStatement: true,
+    enableCookieConsentPopup: true,
   },
   markdown: {
     enabled: false,
@@ -314,6 +339,19 @@ export const environment: BuildConfig = {
       enabled: true
     }
   ],
+
+  liveRegion: {
+    messageTimeOutDurationMs: 30000,
+    isVisible: false,
+  },
+
+  search: {
+    filterPlaceholdersCount: 5
+  },
+
+  accessibility: {
+    cookieExpirationDuration: 7,
+  },
 
   signpostingEnabled: true,
 

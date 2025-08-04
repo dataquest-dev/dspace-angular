@@ -45,6 +45,7 @@ import { CoreState } from '../core-state.model';
 import { AuthorizationDataService } from '../data/feature-authorization/authorization-data.service';
 import { getDownloadableBitstream } from '../shared/bitstream.operators';
 import { APP_CONFIG, AppConfig } from '../../../config/app-config.interface';
+import { FindListOptions } from '../data/find-list-options.model';
 
 /**
  * The base selector function to select the metaTag section in the store
@@ -160,6 +161,7 @@ export class MetadataService {
     this.setCitationKeywordsTag();
 
     this.setCitationAbstractUrlTag();
+    this.setCitationDoiTag();
     this.setCitationPdfUrlTag();
     this.setCitationPublisherTag();
 
@@ -182,7 +184,6 @@ export class MetadataService {
     // this.setCitationIssueTag();
     // this.setCitationFirstPageTag();
     // this.setCitationLastPageTag();
-    // this.setCitationDOITag();
     // this.setCitationPMIDTag();
 
     // this.setCitationFullTextTag();
@@ -346,6 +347,18 @@ export class MetadataService {
 
 
   /**
+   * Add <meta name="citation_doi" ... >  to the <head>
+   */
+  private setCitationDoiTag(): void {
+    if (this.currentObject.value instanceof Item) {
+      let doi = this.getMetaTagValue('dc.identifier.doi');
+      if (hasValue(doi)) {
+        this.addMetaTag('citation_doi', doi);
+      }
+    }
+  }
+
+  /**
    * Add <meta name="citation_pdf_url" ... >  to the <head>
    */
   private setCitationPdfUrlTag(): void {
@@ -358,6 +371,7 @@ export class MetadataService {
         'ORIGINAL',
         true,
         true,
+        new FindListOptions(),
         followLink('primaryBitstream'),
         followLink('bitstreams', {
             findListOptions: {

@@ -18,8 +18,6 @@ networks:
 
 services:
   dspace-cli:
-    networks:
-      dspacenet: {}
     environment:
       # This assetstore zip is available from https://github.com/DSpace-Labs/AIP-Files/releases/tag/demo-entities-data
       - LOADASSETS=https://github.com/DSpace-Labs/AIP-Files/releases/download/demo-entities-data/assetstore.tar.gz
@@ -34,5 +32,6 @@ services:
           tar xvfz /tmp/assetstore.tar.gz
         fi
 
+        /dspace/bin/dspace index-discovery -b
         /dspace/bin/dspace oai import
         /dspace/bin/dspace oai clean-cache

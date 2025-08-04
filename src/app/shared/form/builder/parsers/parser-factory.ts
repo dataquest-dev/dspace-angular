@@ -19,6 +19,7 @@ import { SeriesFieldParser } from './series-field-parser';
 import { TagFieldParser } from './tag-field-parser';
 import { TextareaFieldParser } from './textarea-field-parser';
 import { DisabledFieldParser } from './disabled-field-parser';
+import { TranslateService } from '@ngx-translate/core';
 import { AutocompleteFieldParser } from './autocomplete-field-parser';
 import { ComplexFieldParser } from './complex-field-parser';
 import { ClarinNameFieldParser } from './clarin-name-field-parser';
@@ -28,6 +29,7 @@ const fieldParserDeps = [
   CONFIG_DATA,
   INIT_FORM_VALUES,
   PARSER_OPTIONS,
+  TranslateService
 ];
 
 /**

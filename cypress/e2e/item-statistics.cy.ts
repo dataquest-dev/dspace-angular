@@ -1,15 +1,15 @@
-import { REGEX_MATCH_NON_EMPTY_TEXT, TEST_ENTITY_PUBLICATION } from 'cypress/support/e2e';
+import { REGEX_MATCH_NON_EMPTY_TEXT } from 'cypress/support/e2e';
 import { testA11y } from 'cypress/support/utils';
 
 describe('Item Statistics Page', () => {
-    const ITEMSTATISTICSPAGE = '/statistics/items/'.concat(TEST_ENTITY_PUBLICATION);
+    const ITEMSTATISTICSPAGE = '/statistics/items/'.concat(Cypress.env('DSPACE_TEST_ENTITY_PUBLICATION'));
 
-    // NOTE add statistics to the navbar and change this test
-    // it('should load if you click on "Statistics" from an Item/Entity page', () => {
-    //     cy.visit('/entities/publication/'.concat(TEST_ENTITY_PUBLICATION));
-    //     cy.get('ds-navbar ds-link-menu-item a[title="Statistics"]').click();
-    //     cy.location('pathname').should('eq', ITEMSTATISTICSPAGE);
-    // });
+  // NOTE add statistics to the navbar and change this test
+  //   it('should load if you click on "Statistics" from an Item/Entity page', () => {
+  //       cy.visit('/entities/publication/'.concat(Cypress.env('DSPACE_TEST_ENTITY_PUBLICATION')));
+  //       cy.get('a[data-test="link-menu-item.menu.section.statistics"]').click();
+  //       cy.location('pathname').should('eq', ITEMSTATISTICSPAGE);
+  //   });
 
     it('should contain element ds-item-statistics-page when navigating to an item statistics page', () => {
         cy.visit(ITEMSTATISTICSPAGE);
@@ -24,8 +24,7 @@ describe('Item Statistics Page', () => {
 
     it('should contain a "Total visits per month" section', () => {
         cy.visit(ITEMSTATISTICSPAGE);
-        // Check just for existence because this table is empty in CI environment as it's historical data
-        cy.get('.'.concat(TEST_ENTITY_PUBLICATION).concat('_TotalVisitsPerMonth')).should('exist');
+        cy.get('table[data-test="TotalVisitsPerMonth"]').should('be.visible');
     });
 
     it('should pass accessibility tests', () => {

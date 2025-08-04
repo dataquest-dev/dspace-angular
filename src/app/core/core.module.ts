@@ -185,6 +185,7 @@ import { FlatBrowseDefinition } from './shared/flat-browse-definition.model';
 import { ValueListBrowseDefinition } from './shared/value-list-browse-definition.model';
 import { NonHierarchicalBrowseDefinition } from './shared/non-hierarchical-browse-definition';
 import { BulkAccessConditionOptions } from './config/models/bulk-access-condition-options.model';
+import { SubmissionParentBreadcrumbsService } from './submission/submission-parent-breadcrumb.service';
 import { ClarinLicenseDataService } from './data/clarin/clarin-license-data.service';
 import { ClarinLicenseLabelDataService } from './data/clarin/clarin-license-label-data.service';
 import { HandleDataService } from './data/handle-data.service';
@@ -267,6 +268,7 @@ const PROVIDERS = [
   NotificationsService,
   WorkspaceitemDataService,
   WorkflowItemDataService,
+  SubmissionParentBreadcrumbsService,
   DSpaceObjectDataService,
   ConfigurationDataService,
   DSOChangeAnalyzer,

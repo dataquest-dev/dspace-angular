@@ -42,6 +42,7 @@ services:
       # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests
       # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
       proxies__P__trusted__P__ipranges: '172.2${INSTANCE}.0'
+      LOGGING_CONFIG: /dspace/config/log4j2-container.xml
       #S3 config
       assetstore__P__index__P__primary: ${S3_STORAGE:-0}
       assetstore__P__s3__P__enabled: ${S3_ENABLED:-false}
@@ -57,7 +58,7 @@ services:
     depends_on:
     - dspacedb
     networks:
-      dspacenet:
+      - dspacenet
     ports:
       # BE server port
     - published: 808${INSTANCE}
@@ -118,7 +119,7 @@ services:
       POSTGRES_PASSWORD: dspace
     image: ${DSPACE_DB_IMAGE:-dataquest/dspace-postgres-pgcrypto:dspace-7_x}
     networks:
-      dspacenet:
+      - dspacenet
     ports:
     - published: 543${INSTANCE}
       target: 543${INSTANCE}
@@ -126,6 +127,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
+    # Keep Postgres data directory between reboots
     - pgdata:/pgdata
     command: -p 543${INSTANCE}
   # DSpace Solr container
@@ -136,7 +138,7 @@ services:
     container_name: dspacesolr${INSTANCE}
     image: ${DSPACE_SOLR_IMAGE:-dataquest/dspace-solr:dspace-7_x}
     networks:
-      dspacenet:
+      - dspacenet
     ports:
     - published: 898${INSTANCE}
       target: 898${INSTANCE}
