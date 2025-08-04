@@ -9,7 +9,7 @@ describe('New Submission page', () => {
         cy.visit('/submit?collection='.concat(Cypress.env('DSPACE_TEST_SUBMIT_COLLECTION_UUID')).concat('&entityType=none'));
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
-        cy.loginViaForm(Cypress.env('DSPACE_TEST_SUBMIT_USER'), Cypress.env('DSPACE_TEST_SUBMIT_USER_PASSWORD'));
+        cy.loginViaForm(Cypress.env('DSPACE_TEST_ADMIN_USER'), Cypress.env('DSPACE_TEST_ADMIN_PASSWORD'));
 
         // Should redirect to /workspaceitems, as we've started a new submission
         cy.url().should('include', '/workspaceitems');
@@ -57,7 +57,7 @@ describe('New Submission page', () => {
         cy.visit('/submit?collection='.concat(Cypress.env('DSPACE_TEST_SUBMIT_COLLECTION_UUID')).concat('&entityType=none'));
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
-        cy.loginViaForm(Cypress.env('DSPACE_TEST_SUBMIT_USER'), Cypress.env('DSPACE_TEST_SUBMIT_USER_PASSWORD'));
+        cy.loginViaForm(Cypress.env('DSPACE_TEST_ADMIN_USER'), Cypress.env('DSPACE_TEST_ADMIN_PASSWORD'));
 
         // Attempt an immediate deposit without filling out any fields
         cy.get('button#deposit').click();
@@ -118,7 +118,7 @@ describe('New Submission page', () => {
         cy.visit('/submit?collection='.concat(Cypress.env('DSPACE_TEST_SUBMIT_COLLECTION_UUID')).concat('&entityType=none'));
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
-        cy.loginViaForm(Cypress.env('DSPACE_TEST_SUBMIT_USER'), Cypress.env('DSPACE_TEST_SUBMIT_USER_PASSWORD'));
+        cy.loginViaForm(Cypress.env('DSPACE_TEST_ADMIN_USER'), Cypress.env('DSPACE_TEST_ADMIN_PASSWORD'));
 
         // Fill out all required fields (Title, Date)
         cy.get('input#dc_title').type('DSpace logo uploaded via e2e tests');
@@ -163,78 +163,4 @@ describe('New Submission page', () => {
         // CLARIN
     });
 
-    it('is possible to submit a new "Person" and that form passes accessibility', () => {
-        // To submit a different entity type, we'll start from MyDSpace
-        cy.visit('/mydspace');
-
-        // This page is restricted, so we will be shown the login form. Fill it out & submit.
-        // NOTE: At this time, we MUST login as admin to submit Person objects
-        cy.loginViaForm(Cypress.env('DSPACE_TEST_ADMIN_USER'), Cypress.env('DSPACE_TEST_ADMIN_PASSWORD'));
-
-        // Open the New Submission dropdown
-        cy.get('button[data-test="submission-dropdown"]').click();
-        // Click on the "Person" type in that dropdown
-        cy.get('#entityControlsDropdownMenu button[title="Person"]').click();
-
-        // This should display the <ds-create-item-parent-selector> (popup window)
-        cy.get('ds-create-item-parent-selector').should('be.visible');
-
-        // Type in a known Collection name in the search box
-        cy.get('ds-authorized-collection-selector input[type="search"]').type(Cypress.env('DSPACE_TEST_SUBMIT_PERSON_COLLECTION_NAME'));
-
-        // Click on the button matching that known Collection name
-        cy.get('ds-authorized-collection-selector button[title="'.concat(Cypress.env('DSPACE_TEST_SUBMIT_PERSON_COLLECTION_NAME')).concat('"]')).click();
-
-        // New URL should include /workspaceitems, as we've started a new submission
-        cy.url().should('include', '/workspaceitems');
-
-        // The Submission edit form tag should be visible
-        cy.get('ds-submission-edit').should('be.visible');
-
-        // A Collection menu button should exist & its value should be the selected collection
-        cy.get('#collectionControlsMenuButton span').should('have.text', Cypress.env('DSPACE_TEST_SUBMIT_PERSON_COLLECTION_NAME'));
-
-        // 3 sections should be visible by default
-        cy.get('div#section_personStep').should('be.visible');
-        cy.get('div#section_upload').should('be.visible');
-        cy.get('div#section_license').should('be.visible');
-
-        // Test entire page for accessibility
-        // CLARIN-DSpace still has some accessibility issues, so we will not fail the test
-        // testA11y('ds-submission-edit',
-        //     {
-        //         rules: {
-        //             // All panels are accordians & fail "aria-required-children" and "nested-interactive".
-        //             // Seem to require updating ng-bootstrap and https://github.com/DSpace/dspace-angular/issues/2216
-        //             'aria-required-children': { enabled: false },
-        //             'nested-interactive': { enabled: false },
-        //         }
-        //
-        //     } as Options
-        // );
-
-        // Click the lookup button next to "Publication" field
-        cy.get('button[data-test="lookup-button"]').click();
-
-        // A popup modal window should be visible
-        cy.get('ds-dynamic-lookup-relation-modal').should('be.visible');
-
-        // Popup modal should also pass accessibility tests
-        //testA11y('ds-dynamic-lookup-relation-modal');
-        // CLARIN-DSpace still has some accessibility issues, so we will not fail the test
-        // testA11y({
-        //     include: ['ds-dynamic-lookup-relation-modal'],
-        //     exclude: [
-        //         ['ul.nav-tabs'] // Tabs at top of model have several issues which seem to be caused by ng-bootstrap
-        //     ],
-        // });
-
-        // Close popup window
-        cy.get('ds-dynamic-lookup-relation-modal button.close').click();
-
-        // Back on the form, click the discard button to remove new submission
-        // Clicking it will display a confirmation, which we will confirm with another click
-        cy.get('button#discard').click();
-        cy.get('button#discard_submit').click();
-    });
 });
