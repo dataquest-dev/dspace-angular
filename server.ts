@@ -273,6 +273,10 @@ function serverSideRender(req, res, sendToUser: boolean = true) {
     requestUrl: req.originalUrl,
   }, (err, data) => {
     if (hasNoValue(err) && hasValue(data)) {
+      // Fix missing base href in SSR output
+      const baseHref = `${environment.ui.nameSpace}${environment.ui.nameSpace.endsWith('/') ? '' : '/'}`;
+      data = data.replace(/<base href=".*?">/, `<base href="${baseHref}">`);
+
       // Replace REST URL with UI URL
         if (environment.universal.replaceRestUrl && REST_BASE_URL !== environment.rest.baseUrl) {
           data = data.replace(new RegExp(REST_BASE_URL, 'g'), environment.rest.baseUrl);
