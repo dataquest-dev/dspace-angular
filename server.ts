@@ -273,10 +273,6 @@ function serverSideRender(req, res, sendToUser: boolean = true) {
     requestUrl: req.originalUrl,
   }, (err, data) => {
     if (hasNoValue(err) && hasValue(data)) {
-      // Fix missing base href in SSR output
-      const baseHref = `${environment.ui.nameSpace}${environment.ui.nameSpace.endsWith('/') ? '' : '/'}`;
-      data = data.replace(/<base href=".*?">/, `<base href="${baseHref}">`);
-
       // Replace REST URL with UI URL
         if (environment.universal.replaceRestUrl && REST_BASE_URL !== environment.rest.baseUrl) {
           data = data.replace(new RegExp(REST_BASE_URL, 'g'), environment.rest.baseUrl);
@@ -307,13 +303,24 @@ function serverSideRender(req, res, sendToUser: boolean = true) {
   });
 }
 
-/**
- * Send back response to user to trigger direct client-side rendering (CSR)
- * @param req current request
- * @param res current response
- */
+// Read file once at startup
+const indexHtmlContent = readFileSync(indexHtml, 'utf8');
+
 function clientSideRender(req, res) {
-  res.sendFile(indexHtml);
+  const namespace = environment.ui.nameSpace || '/';
+  let html = indexHtmlContent;
+  // Replace base href dynamically
+  html = html.replace(
+    /<base href="[^"]*">/,
+    `<base href="${namespace.endsWith('/') ? namespace : namespace + '/'}">`
+  );
+
+  // Replace REST URL with UI URL
+  if (environment.universal.replaceRestUrl && REST_BASE_URL !== environment.rest.baseUrl) {
+    html = html.replace(new RegExp(REST_BASE_URL, 'g'), environment.rest.baseUrl);
+  }
+
+  res.send(html);
 }
 
 
