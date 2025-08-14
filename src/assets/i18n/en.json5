@@ -6065,4 +6065,198 @@
   "metadata-export-search.submit.error.limit-exceeded": "Only the first {{limit}} items will be exported",
 
   "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+
+  "admin.registries.bitstream-formats.table.selected": "Selected bitstream formats",
+
+  "admin.registries.bitstream-formats.select": "Select",
+
+  "admin.registries.bitstream-formats.deselect": "Deselect",
+
+  "admin.registries.metadata.schemas.select": "Select",
+
+  "admin.registries.metadata.schemas.deselect": "Deselect",
+
+  "admin.registries.metadata.schemas.table.selected": "Selected schemas",
+
+  "admin.registries.schema.fields.select": "Select",
+
+  "admin.registries.schema.fields.deselect": "Deselect",
+
+  "admin.registries.schema.fields.table.selected": "Selected metadata fields",
+
+  "pagination.page-number-bar": "Control bar for page navigation, relative to element with ID: ",
+
+  "browse.taxonomy_srsc.title": "Browsing by Subject Category",
+
+  "collection.create.breadcrumbs": "Create collection",
+
+  "collection.browse.logo": "Browse for a collection logo",
+
+  "collection.logo": "Collection logo",
+
+  "collection.select.table.selected": "Selected collections",
+
+  "collection.select.table.select": "Select collection",
+
+  "collection.select.table.deselect": "Deselect collection",
+
+  "communityList.expand": "Expand {{ name }}",
+
+  "communityList.collapse": "Collapse {{ name }}",
+
+  "community.browse.logo": "Browse for a community logo",
+
+  "community.create.breadcrumbs": "Create Community",
+
+  "community.logo": "Community logo",
+
+  "dynamic-list.load-more": "Load more",
+
+  "dropdown.clear": "Clear selection",
+
+  "dropdown.clear.tooltip": "Clear the selected option",
+
+  "error.profile-groups": "Error retrieving profile groups",
+
+  "file-download-link.restricted": "Restricted bitstream",
+
+  "form.number-picker.decrement": "Decrement {{field}}",
+
+  "form.number-picker.increment": "Increment {{field}}",
+
+  "form.date-picker.placeholder.year": "Year",
+
+  "form.date-picker.placeholder.month": "Month",
+
+  "form.date-picker.placeholder.day": "Day",
+
+  "item.edit.bitstreams.bundle.table.aria-label": "Bitstreams in the  {{ bundle }} Bundle",
+
+  "item.edit.bitstreams.bundle.tooltip": "You can move a bitstream to a different page by dropping it on the page number.",
+
+  "item.edit.bitstreams.edit.live.cancel": "{{ bitstream }} was returned to position {{ toIndex }} and is no longer selected.",
+
+  "item.edit.bitstreams.edit.live.clear": "{{ bitstream }} is no longer selected.",
+
+  "item.edit.bitstreams.edit.live.loading": "Waiting for move to complete.",
+
+  "item.edit.bitstreams.edit.live.select": "{{ bitstream }} is selected.",
+
+  "item.edit.bitstreams.edit.live.move": "{{ bitstream }} is now in position {{ toIndex }}.",
+
+  "item.edit.bitstreams.info-alert": "Bitstreams can be reordered within their bundles by holding the drag handle and moving the mouse. Alternatively, bitstreams can be moved using the keyboard in the following way: Select the bitstream by pressing enter when the bitstream's drag handle is in focus. Move the bitstream up or down using the arrow keys. Press enter again to confirm the current position of the bitstream.",
+
+  "item.edit.bitstreams.load-more.link": "Load more",
+
+  "item.edit.metadata.edit.language": "Edit language",
+
+  "item.edit.metadata.edit.value": "Edit value",
+
+  "item.edit.metadata.metadatafield": "Edit field",
+
+  "item.select.table.selected": "Selected items",
+
+  "item.select.table.select": "Select item",
+
+  "item.select.table.deselect": "Deselect item",
+
+  "itemtemplate.edit.metadata.edit.language": "Edit language",
+
+  "itemtemplate.edit.metadata.edit.value": "Edit value",
+
+  "itemtemplate.edit.metadata.metadatafield": "Edit field",
+
+  "menu.header.nav.description": "Admin navigation bar",
+
+  "nav.expandable-navbar-section-suffix": "(submenu)",
+
+  "orgunit.search.results.head": "Organizational Unit Search Results",
+
+  "process.new.select-parameter": "Select parameter",
+
+  "process.new.add-parameter": "Add a parameter...",
+
+  "process.new.delete-parameter": "Delete parameter",
+
+  "process.new.parameter.label": "Parameter value",
+
+  "process.overview.delete-process": "Delete process",
+
+  "resource-policies.form.name.hint": "Max 30 characters",
+
+  "resource-policies.table.headers.select-all": "Select all",
+
+  "resource-policies.table.headers.deselect-all": "Deselect all",
+
+  "resource-policies.table.headers.select": "Select",
+
+  "resource-policies.table.headers.deselect": "Deselect",
+
+  "search.filters.remove": "Remove filter of type {{ type }} with value {{ value }}",
+
+  "search.filters.applied.f.itemtype": "Type",
+
+  "search.filters.filter.itemtype.head": "Type",
+
+  "search.filters.filter.itemtype.placeholder": "Type",
+
+  "search.filters.filter.itemtype.label": "Search type",
+
+  "selectable-list-item-control.deselect": "Deselect item",
+
+  "selectable-list-item-control.select": "Select item",
+
+  "sorting.person.familyName.ASC": "Surname Ascending",
+
+  "sorting.person.familyName.DESC": "Surname Descending",
+
+  "sorting.person.givenName.ASC": "Name Ascending",
+
+  "sorting.person.givenName.DESC": "Name Descending",
+
+  "sorting.person.birthDate.ASC": "Birth Date Ascending",
+
+  "sorting.person.birthDate.DESC": "Birth Date Descending",
+
+  "submission.sections.general.no-entity": "No entity types found",
+
+  "vocabulary-treeview.search.form.search-placeholder": "Filter results by typing the first few letters",
+
+  "person.orcid-tooltip.authenticated": "{{orcid}}",
+
+  "person.orcid-tooltip.not-authenticated": "{{orcid}} (unconfirmed)",
+
+  "system-wide-alert-form.select-date-by-calendar": "Select date using calendar",
+
+  "access-control-item-toggle.enable": "Enable option to perform changes on the item's metadata",
+
+  "access-control-item-toggle.disable": "Disable option to perform changes on the item's metadata",
+
+  "access-control-bitstream-toggle.enable": "Enable option to perform changes on the bitstreams",
+
+  "access-control-bitstream-toggle.disable": "Disable option to perform changes on the bitstreams",
+
+  "access-control-bitstreams-select": "Select bitstreams",
+
+  "access-control-remove": "Remove access condition",
+
+  "process.overview.unknown.user": "Unknown",
+
+  "browse.search-form.placeholder": "Search the repository",
+
+  "file-download-link.download": "Download ",
+
+  "register-page.registration.aria.label": "Enter your e-mail address",
+
+  "forgot-email.form.aria.label": "Enter your e-mail address",
+
+  "search-facet-option.update.announcement": "The page will be reloaded. Filter {{ filter }} is selected.",
+
+  "live-region.ordering.instructions": "Press spacebar to reorder {{ itemName }}.",
+
+  "live-region.ordering.status": "{{ itemName }}, grabbed. Current position in list: {{ index }} of  {{ length }}. Press up and down arrow keys to change position, SpaceBar to drop, Escape to cancel.",
+
+  "live-region.ordering.moved": "{{ itemName }}, moved to position {{ index }} of {{ length }}. Press up and down arrow keys to change position, SpaceBar to drop, Escape to cancel.",
+
+  "live-region.ordering.dropped": "{{ itemName }}, dropped at position {{ index }} of {{ length }}.",
 }
