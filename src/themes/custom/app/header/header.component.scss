@@ -1,9 +1,10 @@
+.header {
+  background-color: var(--ds-header-bg);
+}
+
 @media screen and (min-width: map-get($grid-breakpoints, md)) {
   nav.navbar {
     display: none;
-  }
-  .header {
-    background-color: var(--ds-header-bg);
   }
 }
 
