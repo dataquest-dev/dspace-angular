@@ -56,6 +56,7 @@ a.navbar-brand img {
 .navbar-nav {
   ::ng-deep a.ds-menu-item {
     width: 100%;
+    padding: .5rem 1rem;
     color: white;
 
     &:hover, &:focus {
