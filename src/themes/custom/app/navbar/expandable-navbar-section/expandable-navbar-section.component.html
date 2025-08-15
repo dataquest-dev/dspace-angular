@@ -1,4 +1,4 @@
-<div class="ds-menu-item-wrapper text-md-center"
+<div class="ds-menu-item-wrapper dropdown expandable-navbar-section text-md-center"
      [id]="'expandable-navbar-section-' + section.id"
      (mouseenter)="onMouseEnter($event)"
      (mouseleave)="onMouseLeave($event)"
@@ -13,7 +13,7 @@
      data-test="navbar-section-toggler"
      [attr.aria-expanded]="(active$ | async).valueOf()"
      [attr.aria-controls]="expandableNavbarSectionId()"
-     class="d-flex flex-row flex-nowrap align-items-center gapx-1 ds-menu-toggler-wrapper"
+     class="d-flex flex-row flex-nowrap align-items-center gapx-1 ds-menu-toggler-wrapper ds-menu-item"
      [class.disabled]="section.model?.disabled">
       <span class="flex-fill">
         <ng-container
