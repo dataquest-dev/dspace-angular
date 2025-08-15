@@ -14,7 +14,6 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { ThemedNavbarComponent } from './themed-navbar.component';
 import { HoverOutsideDirective } from '../shared/utils/hover-outside.directive';
-import { ClarinNavbarTopComponent } from '../clarin-navbar-top/clarin-navbar-top.component';
 
 const effects = [
   NavbarEffects
@@ -25,7 +24,6 @@ const ENTRY_COMPONENTS = [
   NavbarSectionComponent,
   ExpandableNavbarSectionComponent,
   ThemedExpandableNavbarSectionComponent,
-  ClarinNavbarTopComponent
 ];
 
 const DIRECTIVES = [
@@ -52,8 +50,7 @@ const DIRECTIVES = [
     ...DIRECTIVES,
     ThemedNavbarComponent,
     NavbarSectionComponent,
-    ThemedExpandableNavbarSectionComponent,
-    ClarinNavbarTopComponent
+    ThemedExpandableNavbarSectionComponent
   ]
 })
 
