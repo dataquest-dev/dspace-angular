@@ -17,13 +17,13 @@ import { ListableObject } from '../object-collection/shared/listable-object.mode
   selector: 'ds-themed-search',
   templateUrl: '../theme-support/themed.component.html',
 })
-export class ThemedSearchComponent extends ThemedComponent<SearchComponent> implements SearchComponent {
+export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
   protected inAndOutputNames: (keyof SearchComponent & keyof this)[] = [
     'configurationList',
     'context',
     'configuration',
     'fixedFilterQuery',
-    'hiddenQuery',
+    // 'hiddenQuery',
     'useCachedVersionIfAvailable',
     'inPlaceSearch',
     'linkType',
@@ -42,7 +42,7 @@ export class ThemedSearchComponent extends ThemedComponent<SearchComponent> impl
     'showScopeSelector',
     'trackStatistics',
     'query',
-    'scope',
+    // 'scope',
     'resultFound',
     'deselectObject',
     'selectObject',
