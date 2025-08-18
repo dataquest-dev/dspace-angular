@@ -133,14 +133,40 @@ jobs:
 
       - name: cleanup database duplicates
         run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
           export DDBNAME=dspacedb${{inputs.INSTANCE}}
+
+          echo "Stopping DSpace container before database cleanup..."
+          docker stop $DNAME || true
+
+          echo "Waiting for connections to close..."
+          sleep 5
+
           echo "Cleaning up duplicate entries after data import..."
           chmod +x ./build-scripts/run/cleanup-db-duplicates.sh
           ./build-scripts/run/cleanup-db-duplicates.sh ${{inputs.INSTANCE}}
 
+          echo "Terminating any remaining database connections..."
+          docker exec $DDBNAME /bin/bash -c "psql -p 10563 -U dspace -d postgres -c \"
+          SELECT pg_terminate_backend(pg_stat_activity.pid)
+          FROM pg_stat_activity
+          WHERE pg_stat_activity.datname = 'dspace'
+            AND pg_stat_activity.pid <> pg_backend_pid();
+          \""
+
+          echo "Waiting for connections to fully terminate..."
+          sleep 3
+
       - name: run database migration
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
+
+          echo "Starting DSpace container for migration..."
+          docker start $DNAME
+
+          echo "Waiting for DSpace to be ready..."
+          sleep 10
+
           echo "Running DSpace database migration..."
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
 
