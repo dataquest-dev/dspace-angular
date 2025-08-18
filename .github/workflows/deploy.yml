@@ -81,28 +81,28 @@ jobs:
       - name: vanilla import
         env:
           FNAME: old_dump.sql
-    run: |
-      export DATADIR=$CONFIG_PATH/${{inputs.INSTANCE}}/dump/$FNAME
-      export DNAME=dspace${{inputs.INSTANCE}}
-      export DDBNAME=dspacedb${{inputs.INSTANCE}}
-
-      echo "====="
-      docker stop $DNAME || true
-
-      echo "====="
-      # echo Starting vanilla import DB
-      docker cp $DATADIR $DDBNAME:/tmp/
-      # drop + create + import + cleanup
-      docker exec $DDBNAME /bin/bash -c "dropdb -U dspace -p 10563 dspace && createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace && psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME && rm /tmp/$FNAME"
-      echo "====="
-      docker start $DNAME
-      sleep 60
-      docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
-      echo "====="
-      # new user will not be accepted unless restarted
-      docker restart $DNAME
-      sleep 60
-      echo "====="
+        run: |
+          export DATADIR=$CONFIG_PATH/${{inputs.INSTANCE}}/dump/$FNAME
+          export DNAME=dspace${{inputs.INSTANCE}}
+          export DDBNAME=dspacedb${{inputs.INSTANCE}}
+    
+          echo "====="
+          docker stop $DNAME || true
+    
+          echo "====="
+          # echo Starting vanilla import DB
+          docker cp $DATADIR $DDBNAME:/tmp/
+          # drop + create + import + cleanup
+          docker exec $DDBNAME /bin/bash -c "dropdb -U dspace -p 10563 dspace && createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace && psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME && rm /tmp/$FNAME"
+          echo "====="
+          docker start $DNAME
+          sleep 60
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
+          echo "====="
+          # new user will not be accepted unless restarted
+          docker restart $DNAME
+          sleep 60
+          echo "====="
 
       - name: dspace healthcheck
         run: |
