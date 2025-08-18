@@ -117,15 +117,37 @@ jobs:
           "
           # Restart database container to clear all locks and connections
           docker restart $DDBNAME
-          sleep 30
+
+          # Wait for database to be ready
+          echo "Waiting for database to be ready..."
+          for i in {1..60}; do
+            if docker exec $DDBNAME pg_isready -p 10563 -U dspace; then
+              echo "Database is ready!"
+              break
+            fi
+            echo "Database not ready yet, waiting... ($i/60)"
+            sleep 2
+          done
+
           docker start $DNAME
-          sleep 60
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
-          echo "====="
-          # new user will not be accepted unless restarted
-          docker restart $DNAME
-          sleep 60
-          echo "====="
+
+          # Wait for DSpace container to be healthy
+          echo "Waiting for DSpace container to be ready..."
+          for i in {1..60}; do
+            if docker exec $DNAME test -f /dspace/bin/dspace; then
+              echo "DSpace container is ready!"
+              break
+            fi
+            echo "DSpace container not ready yet, waiting... ($i/60)"
+            sleep 3
+          done
+          
+#          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored -Dflyway.lockRetryCount=50 && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
+#          echo "====="
+#          # new user will not be accepted unless restarted
+#          docker restart $DNAME
+#          sleep 60
+#          echo "====="
 
       - name: dspace healthcheck
         run: |
