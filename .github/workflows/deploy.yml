@@ -99,14 +99,29 @@ jobs:
           psql -p 10563 -U dspace -d dspace -c \"
             DO \\\$\\\$
             BEGIN
+              -- Create dspace5 role if it doesn't exist
               IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'dspace5') THEN
                 CREATE ROLE dspace5;
                 GRANT dspace5 TO dspace;
                 ALTER ROLE dspace5 LOGIN;
                 ALTER ROLE dspace5 INHERIT;
               END IF;
+
+              -- Create postgres role if it doesn't exist
+              IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'postgres') THEN
+                CREATE ROLE postgres;
+                GRANT postgres TO dspace;
+                ALTER ROLE postgres LOGIN;
+                ALTER ROLE postgres INHERIT;
+                ALTER ROLE postgres SUPERUSER;
+                ALTER ROLE postgres CREATEDB;
+                ALTER ROLE postgres CREATEROLE;
+              END IF;
             END
             \\\$\\\$;
+
+            -- Create pgcrypto extension if it doesn't exist (required by DSpace)
+            CREATE EXTENSION IF NOT EXISTS pgcrypto;
           \" &&
           psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
           rm /tmp/$FNAME
