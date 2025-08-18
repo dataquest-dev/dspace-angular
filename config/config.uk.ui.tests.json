@@ -14,7 +14,8 @@
   "locators": {
     "title": "LINDAT/CLARIAH-CZ Repository Home",
     "profile_link": "a[href=\"/profile\"]",
-    "logout_link": "a[href=\"/logout\"]"
+    "logout_link": "a[href=\"/logout\"]",
+    "new_section": "[role=\"button\"]:has-text(\"New\")"
   },
   "urls": {
   "oaipmh_response": "http://dev-5.pc:82/server/oai/request?verb=ListRecords&metadataPrefix=oai_dc",
