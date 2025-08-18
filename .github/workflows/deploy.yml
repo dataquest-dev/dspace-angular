@@ -101,26 +101,11 @@ jobs:
             psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
             psql -p 10563 -U dspace -d dspace -c 'CREATE EXTENSION IF NOT EXISTS pgcrypto;' &&
             psql -p 10563 -U dspace -d dspace -c \"
-              -- Comprehensive cleanup of duplicate entries before migration
-
-              -- First, let's check what tables actually exist and their names
-              \\\\echo 'Checking existing tables...';
-
-              -- Clean up epersongroup2eperson duplicates (case variations)
+              -- Clean up duplicate entries before migration
               DO \\\$cleanup\\\$
               BEGIN
-                -- Try different case variations of the table name
+                -- Clean up epersongroup2eperson duplicates
                 IF EXISTS (SELECT 1 FROM information_schema.tables WHERE LOWER(table_name) = 'epersongroup2eperson') THEN
-                  \\\\echo 'Cleaning epersongroup2eperson duplicates...';
-
-                  -- First show how many duplicates we have
-                  PERFORM (SELECT COUNT(*) FROM (
-                    SELECT eperson_group_id, eperson_id, COUNT(*)
-                    FROM epersongroup2eperson
-                    GROUP BY eperson_group_id, eperson_id
-                    HAVING COUNT(*) > 1
-                  ) dups);
-
                   -- Delete duplicates, keeping only the first occurrence
                   WITH ranked AS (
                     SELECT ctid, row_number() OVER (PARTITION BY eperson_group_id, eperson_id ORDER BY ctid) AS rn
@@ -142,17 +127,15 @@ jobs:
                   ) THEN
                     RAISE EXCEPTION 'Failed to clean all duplicates from epersongroup2eperson';
                   END IF;
-
-                  \\\\echo 'epersongroup2eperson cleanup completed successfully';
                 END IF;
 
-                -- Check for other possible table name variations
-                IF EXISTS (SELECT 1 FROM information_schema.tables WHERE LOWER(table_name) = 'epersongroup2workspace') THEN
+                -- Clean other potential duplicate tables
+                IF EXISTS (SELECT 1 FROM information_schema.tables WHERE LOWER(table_name) = 'epersongroup2workspaceitem') THEN
                   WITH ranked AS (
                     SELECT ctid, row_number() OVER (PARTITION BY eperson_group_id, workspace_item_id ORDER BY ctid) AS rn
-                    FROM epersongroup2workspace
+                    FROM epersongroup2workspaceitem
                   )
-                  DELETE FROM epersongroup2workspace WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
+                  DELETE FROM epersongroup2workspaceitem WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
                 END IF;
 
                 IF EXISTS (SELECT 1 FROM information_schema.tables WHERE LOWER(table_name) = 'collection2item') THEN
@@ -179,8 +162,6 @@ jobs:
                   DELETE FROM community2community WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
                 END IF;
               END \\\$cleanup\\\$;
-
-              \\\\echo 'All duplicate cleanup completed';
             \" &&
             rm /tmp/$FNAME
           "
