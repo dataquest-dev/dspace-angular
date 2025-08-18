@@ -102,6 +102,7 @@ jobs:
         run: |
           export DDBNAME=dspacedb${{inputs.INSTANCE}}
           echo "Cleaning up duplicate entries after data import..."
+          chmod +x ./build-scripts/run/cleanup-db-duplicates.sh
           ./build-scripts/run/cleanup-db-duplicates.sh ${{inputs.INSTANCE}}
 
       - name: run database migration
