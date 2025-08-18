@@ -101,22 +101,16 @@ jobs:
             psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
             psql -p 10563 -U dspace -d dspace -c 'CREATE EXTENSION IF NOT EXISTS pgcrypto;' &&
             psql -p 10563 -U dspace -d dspace -c \"
-              -- Clean up duplicate entries before migration
               DO \\\$cleanup\\\$
               BEGIN
-                -- Clean up epersongroup2eperson duplicates
                 IF EXISTS (SELECT 1 FROM information_schema.tables WHERE LOWER(table_name) = 'epersongroup2eperson') THEN
-                  -- Delete duplicates, keeping only the first occurrence
                   WITH ranked AS (
                     SELECT ctid, row_number() OVER (PARTITION BY eperson_group_id, eperson_id ORDER BY ctid) AS rn
                     FROM epersongroup2eperson
                   )
                   DELETE FROM epersongroup2eperson
-                  WHERE ctid IN (
-                    SELECT ctid FROM ranked WHERE rn > 1
-                  );
+                  WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
 
-                  -- Verify cleanup worked
                   IF EXISTS (
                     SELECT 1 FROM (
                       SELECT eperson_group_id, eperson_id, COUNT(*)
@@ -125,41 +119,8 @@ jobs:
                       HAVING COUNT(*) > 1
                     ) remaining_dups
                   ) THEN
-                    RAISE EXCEPTION 'Failed to clean all duplicates from epersongroup2eperson';
+                    RAISE EXCEPTION 'Failed to clean duplicates from epersongroup2eperson';
                   END IF;
-                END IF;
-
-                -- Clean other potential duplicate tables
-                IF EXISTS (SELECT 1 FROM information_schema.tables WHERE LOWER(table_name) = 'epersongroup2workspaceitem') THEN
-                  WITH ranked AS (
-                    SELECT ctid, row_number() OVER (PARTITION BY eperson_group_id, workspace_item_id ORDER BY ctid) AS rn
-                    FROM epersongroup2workspaceitem
-                  )
-                  DELETE FROM epersongroup2workspaceitem WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
-                END IF;
-
-                IF EXISTS (SELECT 1 FROM information_schema.tables WHERE LOWER(table_name) = 'collection2item') THEN
-                  WITH ranked AS (
-                    SELECT ctid, row_number() OVER (PARTITION BY collection_id, item_id ORDER BY ctid) AS rn
-                    FROM collection2item
-                  )
-                  DELETE FROM collection2item WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
-                END IF;
-
-                IF EXISTS (SELECT 1 FROM information_schema.tables WHERE LOWER(table_name) = 'community2collection') THEN
-                  WITH ranked AS (
-                    SELECT ctid, row_number() OVER (PARTITION BY community_id, collection_id ORDER BY ctid) AS rn
-                    FROM community2collection
-                  )
-                  DELETE FROM community2collection WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
-                END IF;
-
-                IF EXISTS (SELECT 1 FROM information_schema.tables WHERE LOWER(table_name) = 'community2community') THEN
-                  WITH ranked AS (
-                    SELECT ctid, row_number() OVER (PARTITION BY parent_comm_id, child_comm_id ORDER BY ctid) AS rn
-                    FROM community2community
-                  )
-                  DELETE FROM community2community WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
                 END IF;
               END \\\$cleanup\\\$;
             \" &&
