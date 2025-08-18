@@ -13,6 +13,7 @@
     "profile_link": "a[href=\"/profile\"]",
     "logout_link": "button[data-test=\"logout-button\"]",
     "signon_link": "a[data-test=\"login-menu\"]",
-    "result_card": "li[data-test=\"list-object\"]"
+    "result_card": "li[data-test=\"list-object\"]",
+    "new_section": "[role=\"button\"]:has-text(\"New\")"
   }
 }
