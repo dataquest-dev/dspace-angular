@@ -91,63 +91,37 @@ jobs:
           echo "====="
           # echo Starting vanilla import DB
           docker cp $DATADIR $DDBNAME:/tmp/
-          # Terminate connections, drop, create, import, add required extensions, cleanup
-          docker exec $DDBNAME /bin/bash -c "
-            psql -p 10563 -U dspace -d postgres -c \"SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'dspace' AND pid <> pg_backend_pid();\" &&
-            dropdb -U dspace -p 10563 dspace &&
-            createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace &&
-            (psql -p 10563 -U dspace -d postgres -c \"CREATE ROLE postgres SUPERUSER;\" || true) &&
-            (psql -p 10563 -U dspace -d postgres -c \"CREATE ROLE dspace5 IN ROLE dspace;\" || true) &&
-            psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
-            psql -p 10563 -U dspace -d dspace -c 'CREATE EXTENSION IF NOT EXISTS pgcrypto;' &&
-            psql -p 10563 -U dspace -d dspace -c \"
-              WITH ranked AS (
-                SELECT ctid, row_number() OVER (PARTITION BY eperson_group_id, eperson_id ORDER BY ctid) AS rn
-                FROM epersongroup2eperson
-              )
-              DELETE FROM epersongroup2eperson
-              WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
-            \" &&
-            rm /tmp/$FNAME
-          "
+          # drop + create + import + cleanup
+          docker exec $DDBNAME /bin/bash -c "dropdb -U dspace -p 10563 dspace && createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace && psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME && rm /tmp/$FNAME"
           echo "====="
-          # Ensure all database connections are closed before starting DSpace
-          docker exec $DDBNAME /bin/bash -c "
-            psql -p 10563 -U dspace -d postgres -c \"SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'dspace' AND pid <> pg_backend_pid();\"
-          "
-          # Restart database container to clear all locks and connections
-          docker restart $DDBNAME
-
-          # Wait for database to be ready
-          echo "Waiting for database to be ready..."
-          for i in {1..60}; do
-            if docker exec $DDBNAME pg_isready -p 10563 -U dspace; then
-              echo "Database is ready!"
-              break
-            fi
-            echo "Database not ready yet, waiting... ($i/60)"
-            sleep 2
-          done
-
           docker start $DNAME
 
-          # Wait for DSpace container to be healthy
-          echo "Waiting for DSpace container to be ready..."
-          for i in {1..60}; do
-            if docker exec $DNAME test -f /dspace/bin/dspace; then
-              echo "DSpace container is ready!"
-              break
-            fi
-            echo "DSpace container not ready yet, waiting... ($i/60)"
-            sleep 3
-          done
-          
-#          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored -Dflyway.lockRetryCount=50 && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
-#          echo "====="
-#          # new user will not be accepted unless restarted
-#          docker restart $DNAME
-#          sleep 60
-#          echo "====="
+      - uses: actions/checkout@v4
+
+      - name: cleanup database duplicates
+        run: |
+          export DDBNAME=dspacedb${{inputs.INSTANCE}}
+          echo "Cleaning up duplicate entries after data import..."
+          ./build-scripts/run/cleanup-db-duplicates.sh ${{inputs.INSTANCE}}
+
+      - name: run database migration
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Running DSpace database migration..."
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
+
+      - name: create administrator
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Creating DSpace administrator..."
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
+
+      - name: restart dspace container
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Restarting DSpace container..."
+          docker restart $DNAME
+          sleep 60
 
       - name: dspace healthcheck
         run: |
