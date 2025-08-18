@@ -300,6 +300,8 @@ import { ReplacePipe } from './utils/replace.pipe';
 import { ClarinDateService } from './clarin-date.service';
 import { ItemIdentifierService } from './item-identifier.service';
 import { ClarinLicenseRequiredInfoCheckedPipe } from './utils/clarin-license-required-info-checked.pipe';
+import { DimensionsBadgeComponent } from './dimensions-badge/dimensions-badge.component';
+import { AltmetricBadgeComponent } from './altmetric-badge/altmetric-badge.component';
 
 const MODULES = [
   CommonModule,
@@ -537,6 +539,8 @@ const DIRECTIVES = [
     ...COMPONENTS,
     ...ENTRY_COMPONENTS,
     ...DIRECTIVES,
+    DimensionsBadgeComponent,
+    AltmetricBadgeComponent,
   ],
   providers: [
     ...PROVIDERS
@@ -548,6 +552,8 @@ const DIRECTIVES = [
     ...ENTRY_COMPONENTS,
     ...DIRECTIVES,
     TranslateModule,
+    DimensionsBadgeComponent,
+    AltmetricBadgeComponent,
   ]
 })
 

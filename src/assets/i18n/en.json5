@@ -1727,6 +1727,10 @@
 
   "footer.link.contact-us": "Contact us",
 
+  "footer.link.university": "University Library",
+
+  "footer.theme.by.message": "Theme by",
+
   "forgot-email.form.header": "Forgot Password",
 
   "forgot-email.form.info": "Enter the email address associated with the account.",
@@ -2014,7 +2018,9 @@
 
   "home-page.new-items.message": "Most Viewed Items - Last Month",
 
+  "home-page.library.name": "VSB - Technical University of Ostrava",
 
+  "home-page.library.description": "Digital repository of VSB-TUO",
 
   "handle-table.breadcrumbs": "Handles",
 
@@ -4074,7 +4080,7 @@
 
   "repository.title": "DSpace Repository",
 
-  "repository.title.prefix": "LINDAT/CLARIAH-CZ Repository ",
+  "repository.title.prefix": "DSpace at VSB-TUO",
 
   "repository.title.prefixDSpace": "DSpace",
 

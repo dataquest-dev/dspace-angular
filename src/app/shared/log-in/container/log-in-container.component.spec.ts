@@ -17,16 +17,6 @@ import { AuthMethodType } from '../../../core/auth/models/auth.method-type';
 import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
 import { AuthorizationDataServiceStub } from '../../testing/authorization-service.stub';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of as observableOf } from 'rxjs';
-import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
-import { RouterMock } from '../../mocks/router.mock';
-import { createSuccessfulRemoteDataObject$ } from '../../remote-data.utils';
-import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CookieService } from '../../../core/services/cookie.service';
-import { CookieServiceMock } from '../../mocks/cookie.service.mock';
-import { NotificationsServiceStub } from '../../testing/notifications-service.stub';
-import { NotificationsService } from '../../notifications/notifications.service';
 
 describe('LogInContainerComponent', () => {
 
@@ -36,29 +26,12 @@ describe('LogInContainerComponent', () => {
   const authMethod = new AuthMethod(AuthMethodType.Password, 0);
 
   let hardRedirectService: HardRedirectService;
-  let configurationDataService: ConfigurationDataService;
-  let authService: any;
-  let notificationService: NotificationsServiceStub;
 
   beforeEach(waitForAsync(() => {
     hardRedirectService = jasmine.createSpyObj('hardRedirectService', {
       redirect: {},
       getCurrentRoute: {}
     });
-    authService = jasmine.createSpyObj('authService', {
-      isAuthenticated: observableOf(true),
-      setRedirectUrl: {},
-      setRedirectUrlIfNotSet: {}
-    });
-    configurationDataService = jasmine.createSpyObj('configurationDataService', {
-      findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
-        name: 'dspace.ui.url',
-        values: [
-          'some url'
-        ]
-      }))
-    });
-    notificationService = new NotificationsServiceStub();
 
     // refine the test module by declaring the test component
     TestBed.configureTestingModule({
@@ -77,19 +50,6 @@ describe('LogInContainerComponent', () => {
         { provide: AuthService, useClass: AuthServiceStub },
         { provide: AuthorizationDataService, useClass: AuthorizationDataServiceStub },
         { provide: HardRedirectService, useValue: hardRedirectService },
-        { provide: ConfigurationDataService, useValue: configurationDataService },
-        { provide: ActivatedRoute, useValue: {
-            params: observableOf({}),
-            data: observableOf({ metadata: 'title' }),
-            snapshot: {
-              queryParams: new Map([
-                ['redirectUrl', 'some url'],
-              ])
-            }
-          } },
-        { provide: Router, useValue: new RouterMock() },
-        { provide: CookieService, useClass: CookieServiceMock },
-        { provide: NotificationsService, useValue: notificationService },
         LogInContainerComponent
       ],
       schemas: [
