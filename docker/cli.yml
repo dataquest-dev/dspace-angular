@@ -13,21 +13,34 @@
 #
 # Therefore, it should be kept in sync with that file
 networks:
-  dspacenet:
+  # Default to using network named 'dspacenet' from docker-compose-rest.yml.
+  # Its full name will be prepended with the project name (e.g. "-p d7" means it will be named "d7_dspacenet")
+  # If COMPOSITE_PROJECT_NAME is missing, default value will be "docker" (name of folder this file is in)
+  default:
+    name: ${COMPOSE_PROJECT_NAME:-docker}_dspacenet
     external: false
-
 services:
   dspace-cli:
     image: "${DOCKER_OWNER:-dataquest}/dspace-cli:${DSPACE_VER:-dspace-7_x}"
     container_name: dspace-cli
     environment:
       TZ: ${TIMEZONE:-Europe/Bratislava}
+      # Below syntax may look odd, but it is how to override dspace.cfg settings via env variables.
+      # See https://github.com/DSpace/DSpace/blob/main/dspace/config/config-definition.xml
+      # __P__ => "." (e.g. dspace__P__dir => dspace.dir)
+      # __D__ => "-" (e.g. google__D__metadata => google-metadata)
+      # dspace.dir
       dspace__P__dir: /dspace
       dspace__P__server__P__url: ${REST_URL:-http://127.0.0.1:8080/server}
       dspace__P__ui__P__url: ${UI_URL:-http://127.0.0.1:4000}
       dspace__P__name: 'DSpace Started with Docker Compose'
+      # db.url: Ensure we are using the 'dspacedb' image for our database
       db__P__url: 'jdbc:postgresql://dspacedb:${PG_PORT}/dspace'
+      # solr.server: Ensure we are using the 'dspacesolr' image for Solr
+
       solr__P__server: http://dspacesolr:${SOLR_PORT}/solr
+
+      # S3
       assetstore__P__index__P__primary: ${S3_STORAGE:-0}
       assetstore__P__s3__P__enabled: ${S3_ENABLED:-false}
       assetstore__P__s3__P__useRelativePath: ${S3_RELATIVE_PATH:-false}
@@ -36,12 +49,13 @@ services:
       assetstore__P__s3__P__awsAccessKey: ${S3_ACCESS:-}
       assetstore__P__s3__P__awsSecretKey: ${S3_SECRET:-}
       assetstore__P__s3__P__awsRegionName: ${S3_REGION_NAME:-}
+
       assetstore__P__s3__P__pathStyleAccessEnabled: ${S3_PATH_STYLE_ACCESS:-false}
       assetstore__P__s3__P__endpoint: ${S3_ENDPOINT:-}
     volumes:
-      - "assetstore:/dspace/assetstore"
-      - dspace_cli_logs:/dspace/log
-      - ./local.cfg:/dspace/config/local.cfg
+    - "assetstore:/dspace/assetstore"
+    - dspace_cli_logs:/dspace/log
+    - ./local.cfg:/dspace/config/local.cfg
     entrypoint: /dspace/bin/dspace
     command: help
     tty: true
