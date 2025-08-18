@@ -91,8 +91,26 @@ jobs:
           echo "====="
           # echo Starting vanilla import DB
           docker cp $DATADIR $DDBNAME:/tmp/
-          # drop + create + import + cleanup
-          docker exec $DDBNAME /bin/bash -c "dropdb -U dspace -p 10563 dspace && createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace && psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME && rm /tmp/$FNAME"
+
+          # Create dspace5 user as subgroup of dspace and prepare database
+          docker exec $DDBNAME /bin/bash -c "
+          dropdb -U dspace -p 10563 dspace || true &&
+          createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace &&
+          psql -p 10563 -U dspace -d dspace -c \"
+            DO \\\$\\\$
+            BEGIN
+              IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'dspace5') THEN
+                CREATE ROLE dspace5;
+                GRANT dspace5 TO dspace;
+                ALTER ROLE dspace5 LOGIN;
+                ALTER ROLE dspace5 INHERIT;
+              END IF;
+            END
+            \\\$\\\$;
+          \" &&
+          psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
+          rm /tmp/$FNAME
+          "
           echo "====="
           docker start $DNAME
 

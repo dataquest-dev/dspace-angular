@@ -21,7 +21,10 @@ WHERE ctid NOT IN (
 
 -- Verify cleanup
 SELECT COUNT(*) as total_records FROM EPersonGroup2EPerson;
-SELECT COUNT(DISTINCT eperson_group_id, eperson_id) as unique_pairs FROM EPersonGroup2EPerson;
+SELECT COUNT(*) as unique_pairs FROM (
+    SELECT DISTINCT eperson_group_id, eperson_id
+    FROM EPersonGroup2EPerson
+) t;
 "
 
 echo "Executing duplicate cleanup..."
