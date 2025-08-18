@@ -72,7 +72,7 @@ jobs:
   import-3:
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
     if: inputs.IMPORT
-    timeout-minutes: 120
+    timeout-minutes: 900
     needs: deploy-3
     env:
       INSTANCE: ${{inputs.INSTANCE}}
@@ -165,26 +165,26 @@ jobs:
           \""
 
           echo "Running DSpace database migration..."
-#          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
-#
-#          echo "Waiting for DSpace to be ready..."
-#          sleep 10
-#
-#      - name: create administrator
-#        run: |
-#          export DNAME=dspace${{inputs.INSTANCE}}
-#          echo "Creating DSpace administrator..."
-#          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
-#
-#      - name: restart dspace container
-#        run: |
-#          export DNAME=dspace${{inputs.INSTANCE}}
-#          echo "Restarting DSpace container..."
-#          docker restart $DNAME
-#          sleep 60
-#
-#      - name: dspace healthcheck
-#        run: |
-#          export DNAME=dspace${{inputs.INSTANCE}}
-#          echo "dspace healthcheck:"
-#          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
+
+          echo "Waiting for DSpace to be ready..."
+          sleep 10
+
+      - name: create administrator
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Creating DSpace administrator..."
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
+
+      - name: restart dspace container
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Restarting DSpace container..."
+          docker restart $DNAME
+          sleep 60
+
+      - name: dspace healthcheck
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "dspace healthcheck:"
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
