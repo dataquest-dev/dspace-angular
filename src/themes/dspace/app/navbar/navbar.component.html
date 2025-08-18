@@ -3,10 +3,7 @@
 </ng-container>
 <div class="navbar-nav h-100 align-items-md-stretch gapx-3" role="menubar" id="main-site-navigation" [ngClass]="(isMobile$ | async) ? 'navbar-nav-mobile' : 'navbar-nav-desktop'">
   <a class="navbar-brand my-2" routerLink="/home">
-    <img src="assets/images/dspace-logo.svg" [attr.alt]="'menu.header.image.logo' | translate" />
-  </a>
-  <a href="https://www.clarin.eu/">
-    <img class="clarin-logo" src="assets/images/clarin-logo.svg" alt="Clarin logo" >
+    <img src="assets/images/vsb-cs-logo-w.svg" [attr.alt]="'menu.header.image.logo' | translate" />
   </a>
   <ng-container *ngFor="let section of (sections | async)">
     <ng-container

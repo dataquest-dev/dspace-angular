@@ -1,0 +1,13 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="150" height="150">
+	<title>vsb-cs-logo</title>
+	<style>
+		.s0 { fill: #00a499 } 
+	</style>
+	<g id="Folder 1">
+		<path fill-rule="evenodd" class="s0" d="m9 6v18.7h-1.6v-18.7z"/>
+		<path fill-rule="evenodd" class="s0" d="m27.4 11.1v18.7h-1.6v-18.7z"/>
+		<path fill-rule="evenodd" class="s0" d="m33.6 6v18.7h-1.6v-18.7z"/>
+		<path fill-rule="evenodd" class="s0" d="m21.3 16.2v18.7h-1.6v-18.7z"/>
+		<path fill-rule="evenodd" class="s0" d="m15.1 11.1v18.7h-1.6v-18.7z"/>
+	</g>
+</svg>

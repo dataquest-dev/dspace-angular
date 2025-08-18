@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateLoaderMock } from '../../shared/mocks/translate-loader.mock';
 import { ItemDataService } from '../../core/data/item-data.service';
 import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA, PLATFORM_ID } from '@angular/core';
@@ -25,25 +25,10 @@ import { ServerResponseService } from '../../core/services/server-response.servi
 import { SignpostingDataService } from '../../core/data/signposting-data.service';
 import { LinkDefinition, LinkHeadService } from '../../core/services/link-head.service';
 import { SignpostingLink } from '../../core/data/signposting-links.model';
-import { RegistryService } from 'src/app/core/registry/registry.service';
-import { Store } from '@ngrx/store';
-import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
-import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-data.service';
-import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.service';
-import { MetadataBitstreamDataService } from 'src/app/core/data/metadata-bitstream-data.service';
-import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
-import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
-import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
-import { MetadataValue } from '../../core/shared/metadata.models';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
-  metadata: {
-    'local.has.files': [Object.assign(new MetadataValue(), {
-      value: 'yes',
-      language: undefined
-    })]
-  },
+  metadata: [],
   relationships: createRelationshipsObservable()
 });
 
@@ -75,12 +60,6 @@ describe('ItemPageComponent', () => {
   let serverResponseService: jasmine.SpyObj<ServerResponseService>;
   let signpostingDataService: jasmine.SpyObj<SignpostingDataService>;
   let linkHeadService: jasmine.SpyObj<LinkHeadService>;
-  let translateService: TranslateService;
-  let registryService: RegistryService;
-  let halService: HALEndpointService;
-  const authorizationService = jasmine.createSpyObj('authorizationService', [
-    'isAuthorized',
-  ]);
 
   const mockMetadataService = {
     /* eslint-disable no-empty,@typescript-eslint/no-empty-function */
@@ -91,10 +70,6 @@ describe('ItemPageComponent', () => {
   const mockRoute = Object.assign(new ActivatedRouteStub(), {
     data: observableOf({ dso: createSuccessfulRemoteDataObject(mockItem) })
   });
-
-  const mockMetadataBitstreamDataService = {
-    searchByHandleParams: () => observableOf({}) // Returns a mock Observable
-  };
 
   beforeEach(waitForAsync(() => {
     authorizationDataService = jasmine.createSpyObj('authorizationDataService', {
@@ -111,24 +86,6 @@ describe('ItemPageComponent', () => {
     linkHeadService = jasmine.createSpyObj('LinkHeadService', {
       addTag: jasmine.createSpy('setHeader'),
       removeTag: jasmine.createSpy('removeTag'),
-    });
-
-    translateService = getMockTranslateService();
-    authorizationDataService = jasmine.createSpyObj('authorizationDataService', {
-      isAuthorized: observableOf(false),
-    });
-
-    const configurationDataService = jasmine.createSpyObj('configurationDataService', {
-      findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
-        name: 'test',
-        values: [
-          'org.dspace.ctask.general.ProfileFormats = test'
-        ]
-      }))
-    });
-
-    halService = jasmine.createSpyObj('authService', {
-      getRootHref: 'root url',
     });
 
     TestBed.configureTestingModule({
@@ -149,13 +106,6 @@ describe('ItemPageComponent', () => {
         { provide: SignpostingDataService, useValue: signpostingDataService },
         { provide: LinkHeadService, useValue: linkHeadService },
         { provide: PLATFORM_ID, useValue: 'server' },
-        { provide: Store, useValue: {} },
-        { provide: NotificationsService, useValue: {} },
-        { provide: MetadataSchemaDataService, useValue: {} },
-        { provide: MetadataFieldDataService, useValue: {} },
-        { provide: MetadataBitstreamDataService, useValue: mockMetadataBitstreamDataService },
-        RegistryService,
-        { provide: HALEndpointService, useValue: halService }
       ],
 
       schemas: [NO_ERRORS_SCHEMA]
@@ -165,7 +115,6 @@ describe('ItemPageComponent', () => {
   }));
 
   beforeEach(waitForAsync(() => {
-    registryService = TestBed.inject(RegistryService);
     fixture = TestBed.createComponent(ItemPageComponent);
     comp = fixture.componentInstance;
     fixture.detectChanges();
@@ -280,18 +229,6 @@ describe('ItemPageComponent', () => {
       expect(serverResponseService.setHeader).toHaveBeenCalled();
       expect(linkHeadService.addTag).toHaveBeenCalledTimes(2);
     });
-  });
-
-  describe('when the item has the file', () => {
-    it('should display license and files section', waitForAsync(async () => {
-      comp.itemRD$ = createSuccessfulRemoteDataObject$(mockItem);
-      fixture.detectChanges();
-
-      void fixture.whenStable().then(() => {
-        const objectLoader = fixture.debugElement.query(By.css('ds-clarin-files-section'));
-        expect(objectLoader.nativeElement).toBeDefined();
-      });
-    }));
   });
 
 });

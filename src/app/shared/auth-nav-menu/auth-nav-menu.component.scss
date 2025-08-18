@@ -12,11 +12,15 @@
   background-color: transparent !important;
 }
 
-.loginLink, .dropdownLogin, .logoutLink, .dropdownLogout, dropdown-toggle {
-  color: var(--ds-header-icon-color);
+.loginLink, .dropdownLogin, .logoutLink, .dropdownLogout {
+  color: white;
 
   &:hover, &:focus {
+    background-color: white;
     color: var(--ds-header-icon-color-hover);
+
+    border-radius: 2px;
+    transition: background-color 0.2s ease-out;
   }
 }
 
