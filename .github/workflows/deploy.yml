@@ -134,7 +134,6 @@ jobs:
       - name: cleanup database duplicates
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
-          export DDBNAME=dspacedb${{inputs.INSTANCE}}
 
           echo "Stopping DSpace container before database cleanup..."
           docker stop $DNAME || true
@@ -152,6 +151,7 @@ jobs:
       - name: run database migration
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
+          export DDBNAME=dspacedb${{inputs.INSTANCE}}
 
           echo "Starting DSpace container for migration..."
           docker start $DNAME
