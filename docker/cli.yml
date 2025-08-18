@@ -1,3 +1,24 @@
+#
+# The contents of this file are subject to the license and copyright
+# detailed in the LICENSE and NOTICE files at the root of the source
+# tree and available online at
+#
+# http://www.dspace.org/license/
+#
+
+#
+# This is a copy of the docker-compose-cli.yml that is available in the DSpace/DSpace
+# (Backend) at:
+# https://github.com/DSpace/DSpace/blob/main/docker-compose-cli.yml
+#
+# Therefore, it should be kept in sync with that file
+networks:
+  # Default to using network named 'dspacenet' from docker-compose-rest.yml.
+  # Its full name will be prepended with the project name (e.g. "-p d7" means it will be named "d7_dspacenet")
+  # If COMPOSITE_PROJECT_NAME is missing, default value will be "docker" (name of folder this file is in)
+  default:
+    name: ${COMPOSE_PROJECT_NAME:-docker}_dspacenet
+    external: true
 services:
   dspace-cli:
     image: "${DOCKER_OWNER:-dataquest}/dspace-cli:${DSPACE_VER:-dspace-7_x}"
@@ -32,19 +53,14 @@ services:
       assetstore__P__s3__P__pathStyleAccessEnabled: ${S3_PATH_STYLE_ACCESS:-false}
       assetstore__P__s3__P__endpoint: ${S3_ENDPOINT:-}
     volumes:
-      - "assetstore:/dspace/assetstore"
-      - dspace_cli_logs:/dspace/log
-    #- ./local.cfg:/dspace/config/local.cfg
+    - "assetstore:/dspace/assetstore"
+    - dspace_cli_logs:/dspace/log
+    - ./local.cfg:/dspace/config/local.cfg
     entrypoint: /dspace/bin/dspace
     command: help
-    networks:
-      - dspacenet
     tty: true
     stdin_open: true
 
 volumes:
   assetstore:
   dspace_cli_logs:
-
-networks:
-  dspacenet:
