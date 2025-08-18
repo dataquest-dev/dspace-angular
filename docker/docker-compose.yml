@@ -6,15 +6,12 @@
 # http://www.dspace.org/license/
 #
 
-# Docker Compose for running the DSpace Angular UI for testing/development
-# Requires also running a REST API backend (either locally or remotely),
-# for example via 'docker-compose-rest.yml'
 networks:
   dspacenet:
 services:
   dspace-angular:
     restart: unless-stopped
-    container_name: dspace-angular${INSTANCE}
+    container_name: dspace-angular${DSPACE_PORT}
     environment:
       TZ: ${TIMEZONE:-Europe/Bratislava}
       DSPACE_UI_SSL: 'false'
@@ -27,22 +24,27 @@ services:
       DSPACE_REST_PORT: ${DSPACE_REST_PORT:-8080}
       DSPACE_REST_NAMESPACE: ${DSPACE_REST_NAMESPACE:-/server}
     image: ${DSPACE_UI_IMAGE:-dataquest/dspace-angular:dspace-7_x}
-    volumes:
-    - ./config.prod.yml:/app/config/config.prod.yml
-#    - ./aai.js:/app/dist/browser/aai.js
-#    - ./dspace-ui.json:/app/docker/dspace-ui.json:rw
+    #volumes:
+    #  - ./config.prod.yml:/app/config/config.prod.yml
+    #    - ./aai.js:/app/dist/browser/aai.js
+    #    - ./dspace-ui.json:/app/docker/dspace-ui.json:rw
     build:
       context: ..
       dockerfile: Dockerfile
     networks:
       dspacenet:
+    # Force container to use local DNS resolver to avoid external nameserver issues
+    # Configure via env vars, with safe defaults to localhost
+    dns:
+      - ${DNS_PRIMARY:-127.0.0.1}
+      - ${DNS_SECONDARY:-127.0.0.1}
     entrypoint: ${FE_CMD:-/bin/sh -c "pm2-runtime start docker/dspace-ui.json > /dev/null 2> /dev/null"}
     ports:
-    - published: 400${INSTANCE}
-      target: 4000
-      host_ip: ${HOST_IP:-127.0.0.1}
-    - published: 987${INSTANCE}
-      target: 987${INSTANCE}
-      host_ip: ${HOST_IP:-127.0.0.1}
+      - published: ${DSPACE_FE_PORT}
+        target: 4000
+        host_ip: ${HOST_IP:-127.0.0.1}
+      #- published: 987${INSTANCE}
+      #  target: 987${INSTANCE}
+      #  host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
