@@ -101,28 +101,12 @@ jobs:
             psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
             psql -p 10563 -U dspace -d dspace -c 'CREATE EXTENSION IF NOT EXISTS pgcrypto;' &&
             psql -p 10563 -U dspace -d dspace -c \"
-              DO \\\$cleanup\\\$
-              BEGIN
-                IF EXISTS (SELECT 1 FROM information_schema.tables WHERE LOWER(table_name) = 'epersongroup2eperson') THEN
-                  WITH ranked AS (
-                    SELECT ctid, row_number() OVER (PARTITION BY eperson_group_id, eperson_id ORDER BY ctid) AS rn
-                    FROM epersongroup2eperson
-                  )
-                  DELETE FROM epersongroup2eperson
-                  WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
-
-                  IF EXISTS (
-                    SELECT 1 FROM (
-                      SELECT eperson_group_id, eperson_id, COUNT(*)
-                      FROM epersongroup2eperson
-                      GROUP BY eperson_group_id, eperson_id
-                      HAVING COUNT(*) > 1
-                    ) remaining_dups
-                  ) THEN
-                    RAISE EXCEPTION 'Failed to clean duplicates from epersongroup2eperson';
-                  END IF;
-                END IF;
-              END \\\$cleanup\\\$;
+              WITH ranked AS (
+                SELECT ctid, row_number() OVER (PARTITION BY eperson_group_id, eperson_id ORDER BY ctid) AS rn
+                FROM epersongroup2eperson
+              )
+              DELETE FROM epersongroup2eperson
+              WHERE ctid IN (SELECT ctid FROM ranked WHERE rn > 1);
             \" &&
             rm /tmp/$FNAME
           "
