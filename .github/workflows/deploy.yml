@@ -44,7 +44,7 @@ on:
 
 jobs:
   deploy-3:
-    if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8563
+    if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8563'
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
     timeout-minutes: 10
     env:
