@@ -111,6 +111,10 @@ jobs:
             rm /tmp/$FNAME
           "
           echo "====="
+          # Ensure all database connections are closed before starting DSpace
+          docker exec $DDBNAME /bin/bash -c "
+            psql -p 10563 -U dspace -d postgres -c \"SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'dspace' AND pid <> pg_backend_pid();\"
+          "
           docker start $DNAME
           sleep 60
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
