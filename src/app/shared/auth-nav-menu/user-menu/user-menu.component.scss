@@ -8,6 +8,7 @@
       .ds-menu-item-wrapper {
         a.ds-menu-item, &.username-email-wrapper {
           padding: var(--ds-user-menu-item-vertical-padding) var(--ds-user-menu-dropdown-padding);
+          text-decoration: none;
         }
 
         a.ds-menu-item {
@@ -16,6 +17,10 @@
           &:hover {
             color: var(--ds-expandable-navbar-link-color-hover);
             background-color: var(--ds-user-menu-dropdown-link-background-hover);
+          }
+          &:active, &:focus {
+            color: white;
+            background-color: var(--ds-expandable-navbar-bg);
           }
         }
       }
