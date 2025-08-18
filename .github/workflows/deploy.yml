@@ -86,14 +86,20 @@ jobs:
           export DNAME=dspace${{inputs.INSTANCE}}
           export DDBNAME=dspacedb${{inputs.INSTANCE}}
 
-          echo "====="
           docker stop $DNAME || true
 
           echo "====="
           # echo Starting vanilla import DB
           docker cp $DATADIR $DDBNAME:/tmp/
-          # drop + create + import + add required extensions + cleanup
-          docker exec $DDBNAME /bin/bash -c "dropdb -U dspace -p 10563 dspace && createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace && psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME && psql -p 10563 -U dspace -d dspace -c 'CREATE EXTENSION IF NOT EXISTS pgcrypto;' && rm /tmp/$FNAME"
+          # Terminate connections, drop, create, import, add required extensions, cleanup
+          docker exec $DDBNAME /bin/bash -c "
+            psql -p 10563 -U dspace -d postgres -c \"SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'dspace' AND pid <> pg_backend_pid();\" &&
+            dropdb -U dspace -p 10563 dspace &&
+            createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace &&
+            psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
+            psql -p 10563 -U dspace -d dspace -c 'CREATE EXTENSION IF NOT EXISTS pgcrypto;' &&
+            rm /tmp/$FNAME
+          "
           echo "====="
           docker start $DNAME
           sleep 60
