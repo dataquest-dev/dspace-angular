@@ -96,6 +96,8 @@ jobs:
             psql -p 10563 -U dspace -d postgres -c \"SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'dspace' AND pid <> pg_backend_pid();\" &&
             dropdb -U dspace -p 10563 dspace &&
             createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace &&
+            psql -p 10563 -U dspace -d postgres -c \"CREATE ROLE IF NOT EXISTS postgres SUPERUSER;\" &&
+            psql -p 10563 -U dspace -d postgres -c \"CREATE ROLE IF NOT EXISTS dspace5 IN ROLE dspace;\" &&
             psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
             psql -p 10563 -U dspace -d dspace -c 'CREATE EXTENSION IF NOT EXISTS pgcrypto;' &&
             rm /tmp/$FNAME
