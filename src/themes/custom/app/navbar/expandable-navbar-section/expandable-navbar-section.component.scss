@@ -6,18 +6,20 @@
 }
 
 .dropdown-menu {
-  background-color: var(--ds-expandable-navbar-bg);
+  background-color: #fff;
   overflow: hidden;
   min-width: 100%;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  ::ng-deep a.nav-link {
+
+  ::ng-deep a.ds-menu-item {
     color: var(--lt-vsb-tuo-cyan) !important;
     padding-right: var(--bs-spacer);
     padding-left: var(--bs-spacer);
     white-space: nowrap;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       color: white !important;
       text-decoration: none;
       background-color: var(--lt-vsb-tuo-cyan);
@@ -40,8 +42,8 @@
       margin-top: calc(var(--bs-spacer) / 2);
     }
   }
+
   .dropdown-menu {
     border: 0;
-
   }
 }
