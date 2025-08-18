@@ -146,11 +146,6 @@ jobs:
           chmod +x ./build-scripts/run/cleanup-db-duplicates.sh
           ./build-scripts/run/cleanup-db-duplicates.sh ${{inputs.INSTANCE}}
 
-          echo "Terminating any remaining database connections..."
-          docker exec $DDBNAME /bin/bash -c "psql -p 10563 -U dspace -d postgres -c \"
-          SELECT pg_terminate_backend(pid) FROM pg_locks WHERE locktype = 'advisory';
-          \""
-
           echo "Waiting for connections and locks to fully terminate..."
           sleep 15
 
@@ -163,6 +158,11 @@ jobs:
 
           echo "Waiting longer for DSpace to be fully ready and locks to clear..."
           sleep 20
+
+          echo "Terminating any remaining database connections..."
+          docker exec $DDBNAME /bin/bash -c "psql -p 10563 -U dspace -d postgres -c \"
+          SELECT pg_terminate_backend(pid) FROM pg_locks WHERE locktype = 'advisory';
+          \""
 
           echo "Running DSpace database migration..."
 #          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
