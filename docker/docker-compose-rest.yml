@@ -97,10 +97,13 @@ services:
       # It used to fail when the `server` folder did not exist in `/webapps`.
       # This will create a symlink from the webapps directory to the server directory with the custom namespace
       # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
+      # removed from `while`, because: not needed here
+      # There is problem in the database when `database migrate` is called here and then from the import run from the
+      # `deploy action`
+      # /dspace/bin/dspace database migrate force
+      # /dspace/bin/start-handle-server
       - |
         while (!</dev/tcp/dspacedb/${PG_PORT}) > /dev/null 2>&1; do sleep 1; done;
-        /dspace/bin/dspace database migrate force
-        /dspace/bin/start-handle-server
         ./custom_run.sh
   # DSpace database container
   dspacedb:

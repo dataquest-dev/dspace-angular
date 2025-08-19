@@ -1,36 +1,42 @@
-name: 'Erase dspace db'
-description: 'CI/CD Erase db'
-
+name: 'Erase Database'
+description: 'Erase and recreate the DSpace database and clean up database volumes (preserving assetstore)'
 inputs:
   INSTANCE:
-    description: 'port suffix'
+    description: 'DSpace instance identifier'
     required: true
-    type: string
   NAME:
-    description: 'docker compose project name'
+    description: 'Container name'
     required: true
-    type: string
 
 runs:
   using: "composite"
   steps:
-
-    - name: stop and remove containers
+    - name: Erase and recreate database
       shell: bash
-      env:
-        INSTANCE: ${{ inputs.INSTANCE }}
       run: |
-        docker stop dspacesolr$INSTANCE dspacedb$INSTANCE dspace$INSTANCE dspace-angular$INSTANCE || true
-        docker rm   dspacesolr$INSTANCE dspacedb$INSTANCE dspace$INSTANCE dspace-angular$INSTANCE || true
+        export DNAME=${{ inputs.NAME }}
+        export DDBNAME=dspacedb${{ inputs.INSTANCE }}
+        export PROJECT_NAME=dspace-${{ inputs.INSTANCE }}
 
-    - name: remove volumes
-      shell: bash
-      env:
-        NAME: ${{ inputs.NAME }}
-      run: |
-          # # condition below was found by accident and appears to be useless. Investigate later.
-          # be sure to have INSTANCE set
-          # if [[ "x${NAME}" != "dspace-" ]]; then
-            docker volume rm $(docker volume ls --filter name="${NAME}_" -q) || true
-          # fi;
+        echo "Stopping DSpace container..."
+        docker stop $DNAME || true
 
+        echo "Stopping database container..."
+        docker stop $DDBNAME || true
+
+        echo "Removing database volumes (preserving assetstore)..."
+        # Remove database-specific volumes but keep assetstore
+        docker volume rm ${PROJECT_NAME}_pgdata || true
+        docker volume rm ${PROJECT_NAME}_postgres_data || true
+
+        echo "Starting database container..."
+        docker start $DDBNAME || true
+
+        # Wait for database to be ready
+        echo "Waiting for database to be ready..."
+        sleep 10
+
+        echo "Creating fresh database..."
+        docker exec $DDBNAME /bin/bash -c "createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace"
+
+        echo "Database erased, volumes cleaned, and recreated successfully (assetstore preserved)"
