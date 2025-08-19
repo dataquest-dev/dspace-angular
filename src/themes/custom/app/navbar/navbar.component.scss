@@ -37,6 +37,7 @@ nav.navbar {
   @media screen and (max-width: map-get($grid-breakpoints, md)-0.02) {
     > .navbar-inner-container {
       padding: 0 var(--bs-spacer);
+      background-color: var(--lt-vsb-tuo-cyan);
       a.navbar-brand {
         display: none;
       }
@@ -46,7 +47,6 @@ nav.navbar {
     }
     padding: 0;
   }
-  height: 80px;
 }
 
 a.navbar-brand img {
