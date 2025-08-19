@@ -39,7 +39,7 @@ export class NavbarComponent extends MenuComponent implements OnInit {
 
   public isMobile$: Observable<boolean>;
 
-public logoSrc: string;
+  public logoSrc: string;
 
   constructor(protected menuService: MenuService,
     protected injector: Injector,
@@ -61,6 +61,9 @@ public logoSrc: string;
     this.setLogo();
   }
 
+  /**
+   * Sets the logo source based on the current language code
+   */
   setLogo() {
     this.logoSrc = this.localeService.getCurrentLanguageCode() === 'cs'
       ? 'assets/images/vsb-cs-logo-w.svg'
