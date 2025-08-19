@@ -46,7 +46,7 @@ jobs:
   deploy-3:
     if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8563'
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
-    timeout-minutes: 10
+    timeout-minutes: 60
     env:
       INSTANCE: '8563'
       CONFIG_PATH: /opt/dspace-envs/${{inputs.INSTANCE}}
