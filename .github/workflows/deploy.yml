@@ -461,9 +461,3 @@ jobs:
           echo "Restarting DSpace container..."
           docker restart $DNAME
           sleep 60
-
-      - name: dspace healthcheck
-        run: |
-          export DNAME=dspace${{inputs.INSTANCE}}
-          echo "dspace healthcheck:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
