@@ -397,8 +397,6 @@ jobs:
           END \\\$\\\$;
           \""
 
-          echo "Running DSpace database migration..."
-
           echo "Running conditional sequence updates..."
           docker exec $DDBNAME /bin/bash -c "psql -p 10563 -U dspace -d dspace -c \"
           DO \\\$\\\$
@@ -443,6 +441,12 @@ jobs:
               END IF;
           END \\\$\\\$;
           \""
+
+          echo "Running DSpace database migration..."
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
+
+          echo "Waiting for DSpace to be ready..."
+          sleep 10
 
 
       - name: create administrator
