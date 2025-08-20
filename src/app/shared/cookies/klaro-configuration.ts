@@ -33,9 +33,9 @@ export const klaroConfiguration: any = {
   hideLearnMore: false,
 
   /*
-  Override cookies modal styles according to customer requirements.
+  Override cookies modal styles according to customer VSB-TUO requirements.
    */
-  stylePrefix: 'klaro customer-cookies',
+  stylePrefix: 'klaro vsb-tuo-cookies',
 
   /*
   Setting 'acceptAll' to 'true' will show an "accept all" button in the notice and
