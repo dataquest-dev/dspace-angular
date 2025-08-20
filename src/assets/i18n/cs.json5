@@ -1205,9 +1205,6 @@
   // "browse.comcol.by.title": "By Title",
   "browse.comcol.by.title": "Podle názvu",
 
-  // "browse.comcol.by.language": "By Language",
-  "browse.comcol.by.language": "Podle jazyka",
-
   // "browse.comcol.head": "Browse",
   "browse.comcol.head": "Procházet",
 
@@ -4487,12 +4484,6 @@
   // "menu.section.browse_global_by_title": "By Title",
   "menu.section.browse_global_by_title": "Podle názvu",
 
-  // "menu.section.browse_global_by_language": "By Language",
-  "menu.section.browse_global_by_language": "Podle jazyka",
-
-  // "menu.section.browse_global_by_type": "By Type",
-  "menu.section.browse_global_by_type": "Podle typu",
-
   // "menu.section.browse_global_communities_and_collections": "Communities & Collections",
   "menu.section.browse_global_communities_and_collections": "Komunity & kolekce",
 
@@ -5525,8 +5516,8 @@
   // "repository.title": "DSpace Repository",
   "repository.title": "Institucionální digitální repozitář",
 
-  // "repository.title.prefix": "DSpace at MENDELU",
-  "repository.title.prefix": "DSpace MENDELU",
+  // "repository.title.prefix": "DSpace Repository :: ",
+  "repository.title.prefix": "LINDAT/CLARIAH-CZ Repozitář",
 
   // "resource-policies.add.button": "Add",
   "resource-policies.add.button": "Přidat",
@@ -5962,33 +5953,6 @@
 
   // "search.filters.filter.organizationFoundingDate.label": "Search date founded",
   "search.filters.filter.organizationFoundingDate.label": "Hledat datum založení",
-
-  // "search.filters.filter.rightsAccess.head": "Rights Access",
-  "search.filters.filter.rightsAccess.head": "Přístupová práva",
-
-  // "search.filters.filter.rightsAccess.placeholder": "Rights Access",
-  "search.filters.filter.rightsAccess.placeholder": "Přístupová práva",
-
-  // "search.filters.filter.rightsAccess.label": "Search rights access",
-  "search.filters.filter.rightsAccess.label": "Hledat přístupová práva",
-
-  // "search.filters.filter.publisher.head": "Publisher",
-  "search.filters.filter.publisher.head": "Nakladatel",
-
-  // "search.filters.filter.publisher.placeholder": "Publisher",
-  "search.filters.filter.publisher.placeholder": "Nakladatel",
-
-  // "search.filters.filter.publisher.label": "Search publisher",
-  "search.filters.filter.publisher.label": "Hledat vydavatele",
-
-  // "search.filters.filter.relationIspartofseries.head": "Source Title",
-  "search.filters.filter.relationIspartofseries.head": "Zdrojový dokument",
-
-  // "search.filters.filter.relationIspartofseries.placeholder": "Source Title",
-  "search.filters.filter.relationIspartofseries.placeholder": "Zdrojový dokument",
-
-  // "search.filters.filter.relationIspartofseries.label": "Search source title",
-  "search.filters.filter.relationIspartofseries.label": "Hledat zdrojový dokument",
 
   // "search.filters.filter.scope.head": "Scope",
   "search.filters.filter.scope.head": "Rozsah",
@@ -8759,12 +8723,6 @@
   // "footer.link.contact-us": "Contact us",
   "footer.link.contact-us": "Kontaktujte nás",
 
-  // "footer.link.university": "University Library",
-  "footer.link.university": "Univerzitni Knihovna",
-
-  // "footer.theme.by.message": "Theme by",
-  "footer.theme.by.message": "Theme by",
-
   // "form.other-information.credit-name": "Credit Name",
   "form.other-information.credit-name": "Preferované jméno",
 
@@ -8824,12 +8782,6 @@
 
   // "home-page.new-items.message": "Most Viewed Items - Last Month",
   "home-page.new-items.message": "Nejnavštěvovanější záznamy - za poslední měsíc",
-
-  // "home-page.library.name": "MENDELU - Mendel University in Brno",
-  "home-page.library.name": "MENDELU - Mendelova univerzita v Brne",
-
-  // "home-page.library.description": "Digital repository of MENDELU",
-  "home-page.library.description": "Digitální repozitář MENDELU",
 
   // "handle-table.breadcrumbs": "Handles",
   "handle-table.breadcrumbs": "Handle",

@@ -2989,10 +2989,6 @@
 
   "menu.section.browse_global_by_title": "By Title",
 
-  "menu.section.browse_global_by_language": "By Language",
-
-  "menu.section.browse_global_by_type": "By Type",
-
   "menu.section.browse_global_communities_and_collections": "Communities & Collections",
 
   "menu.section.control_panel": "Control Panel",
@@ -3681,7 +3677,7 @@
 
   "repository.title": "DSpace Repository",
 
-  "repository.title.prefix": "DSpace at MENDELU",
+  "repository.title.prefix": "LINDAT/CLARIAH-CZ Repository ",
 
   "resource-policies.add.button": "Add",
 
@@ -5607,10 +5603,6 @@
 
   "footer.link.contact-us": "Contact us",
 
-  "footer.link.university": "University Library",
-
-  "footer.theme.by.message": "Theme by",
-
   "form.other-information.credit-name": "Credit Name",
 
   "form.other-information.other-names": "Other Names",
@@ -5648,10 +5640,6 @@
   "home-page.whats-new.message": "What's New",
 
   "home-page.new-items.message": "Most Viewed Items - Last Month",
-
-  "home-page.library.name": "MENDELU - Mendel University in Brno",
-
-  "home-page.library.description": "Digital repository of MENDELU",
 
   "handle-table.breadcrumbs": "Handles",
 
