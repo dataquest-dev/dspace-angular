@@ -2989,6 +2989,10 @@
 
   "menu.section.browse_global_by_title": "By Title",
 
+  "menu.section.browse_global_by_language": "By Language",
+
+  "menu.section.browse_global_by_type": "By Type",
+
   "menu.section.browse_global_communities_and_collections": "Communities & Collections",
 
   "menu.section.control_panel": "Control Panel",
@@ -3968,6 +3972,24 @@
   "search.filters.filter.organizationFoundingDate.placeholder": "Date Founded",
 
   "search.filters.filter.organizationFoundingDate.label": "Search date founded",
+
+  "search.filters.filter.rightsAccess.head": "Rights Access",
+
+  "search.filters.filter.rightsAccess.placeholder": "Rights Access",
+
+  "search.filters.filter.rightsAccess.label": "Search rights access",
+
+  "search.filters.filter.publisher.head": "Publisher",
+
+  "search.filters.filter.publisher.placeholder": "Publisher",
+
+  "search.filters.filter.publisher.label": "Search publisher",
+
+  "search.filters.filter.relationIspartofseries.head": "Source Title",
+
+  "search.filters.filter.relationIspartofseries.placeholder": "Source Title",
+
+  "search.filters.filter.relationIspartofseries.label": "Search source title",
 
   "search.filters.filter.scope.head": "Scope",
 
