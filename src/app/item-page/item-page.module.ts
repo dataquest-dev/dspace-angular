@@ -57,6 +57,7 @@ import { ItemAlertsComponent } from './alerts/item-alerts.component';
 import { ItemVersionsModule } from './versions/item-versions.module';
 import { BitstreamRequestACopyPageComponent } from './bitstreams/request-a-copy/bitstream-request-a-copy-page.component';
 import { FileSectionComponent } from './simple/field-components/file-section/file-section.component';
+import { TotalDownloadsComponent } from './simple/field-components/file-section/total-downloads.component';
 import { ItemSharedModule } from './item-shared.module';
 import { DsoPageModule } from '../shared/dso-page/dso-page.module';
 import { ThemedItemAlertsComponent } from './alerts/themed-item-alerts.component';
@@ -90,6 +91,7 @@ import { ClarinIdentifierItemFieldComponent } from './simple/field-components/cl
 import { ClarinDateItemFieldComponent } from './simple/field-components/clarin-date-item-field/clarin-date-item-field.component';
 import { ClarinDescriptionItemFieldComponent } from './simple/field-components/clarin-description-item-field/clarin-description-item-field.component';
 import { ClarinFilesSectionComponent } from './clarin-files-section/clarin-files-section.component';
+import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -99,6 +101,7 @@ const ENTRY_COMPONENTS = [
 
 const DECLARATIONS = [
   FileSectionComponent,
+  TotalDownloadsComponent,
   ThemedFileSectionComponent,
   ItemPageComponent,
   ThemedItemPageComponent,
@@ -181,6 +184,9 @@ const DECLARATIONS = [
   ],
   exports: [
     ...DECLARATIONS,
+  ],
+  providers: [
+    UsageReportDataService,
   ]
 })
 export class ItemPageModule {

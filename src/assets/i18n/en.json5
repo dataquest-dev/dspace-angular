@@ -2529,6 +2529,8 @@
 
   "item.page.files": "Files",
 
+  "item.page.files.downloads": "Downloads",
+
   "item.page.filesection.description": "Description:",
 
   "item.page.filesection.download": "Download",

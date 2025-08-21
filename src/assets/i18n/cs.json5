@@ -3794,6 +3794,9 @@
   // "item.page.files": "Files",
   "item.page.files": "Soubory",
 
+  // "item.page.files.downloads": "Downloads",
+  "item.page.files.downloads": "Stažení",
+
   // "item.page.filesection.description": "Description:",
   "item.page.filesection.description": "Popis:",
 
