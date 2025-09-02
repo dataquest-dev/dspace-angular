@@ -6244,4 +6244,8 @@
   "change.submitter.page.items.name.message": "Item's name: ",
 
   "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+
+  "footer.link.university": "University Library",
+
+  "footer.theme.by.message": "Theme by"
 }

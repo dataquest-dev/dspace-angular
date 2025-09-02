@@ -4486,13 +4486,13 @@
 
   // "menu.section.browse_global_by_title": "By Title",
   "menu.section.browse_global_by_title": "Podle názvu",
-  
+
   // "menu.section.browse_global_by_language": "By Language",
   "menu.section.browse_global_by_language": "Podle jazyka",
-  
+
   // "menu.section.browse_global_by_type": "By Type",
   "menu.section.browse_global_by_type": "Podle typu",
-  
+
   // "menu.section.browse_global_communities_and_collections": "Communities & Collections",
   "menu.section.browse_global_communities_and_collections": "Komunity & kolekce",
 
@@ -5962,31 +5962,31 @@
 
   // "search.filters.filter.organizationFoundingDate.label": "Search date founded",
   "search.filters.filter.organizationFoundingDate.label": "Hledat datum založení",
-  
+
   // "search.filters.filter.rightsAccess.head": "Rights Access",
   "search.filters.filter.rightsAccess.head": "Přístupová práva",
-  
+
   // "search.filters.filter.rightsAccess.placeholder": "Rights Access",
   "search.filters.filter.rightsAccess.placeholder": "Přístupová práva",
-  
+
   // "search.filters.filter.rightsAccess.label": "Search rights access",
   "search.filters.filter.rightsAccess.label": "Hledat přístupová práva",
-  
+
   // "search.filters.filter.publisher.head": "Publisher",
   "search.filters.filter.publisher.head": "Nakladatel",
-  
+
   // "search.filters.filter.publisher.placeholder": "Publisher",
   "search.filters.filter.publisher.placeholder": "Nakladatel",
-  
+
   // "search.filters.filter.publisher.label": "Search publisher",
   "search.filters.filter.publisher.label": "Hledat vydavatele",
-  
+
   // "search.filters.filter.relationIspartofseries.head": "Source Title",
   "search.filters.filter.relationIspartofseries.head": "Zdrojový dokument",
-  
+
   // "search.filters.filter.relationIspartofseries.placeholder": "Source Title",
   "search.filters.filter.relationIspartofseries.placeholder": "Zdrojový dokument",
-  
+
   // "search.filters.filter.relationIspartofseries.label": "Search source title",
   "search.filters.filter.relationIspartofseries.label": "Hledat zdrojový dokument",
 
@@ -11578,4 +11578,16 @@
 
   // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
   "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
+
+  // "footer.link.coar-notify-support": "COAR Notify",
+  "footer.link.coar-notify-support": "COAR Notify",
+
+  // "footer.link.contact-us":"Contact us",
+  "footer.link.contact-us": "Kontaktujte nás",
+
+  // "footer.link.university": "University Library",
+  "footer.link.university": "Univerzitni Knihovna",
+
+  // "footer.theme.by.message": "Theme by",
+  "footer.theme.by.message": "Theme by"
 }
