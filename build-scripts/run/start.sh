@@ -27,9 +27,17 @@ echo "====="
 #docker compose --env-file $ENVFILE -p $PROJECT -f docker/matomo-w-db.yml pull
 #docker compose --env-file $ENVFILE -p $PROJECT -f docker/matomo-w-db.yml up -d --no-build
 
+# Ensure CLI container uses the same project network
+export COMPOSE_PROJECT_NAME=$PROJECT
+
 # docker-compose-rest.yml must be last, since it specifies network in more detail. If it is not last, there is "root must be a mapping" error.
+echo "Creating administrator user..."
 docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml run --rm dspace-cli create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest
+
+echo "Creating regular user..."
 docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml run --rm dspace-cli user --add -m user@test.edu -g meno -s priezvisko -l en -p user -o dataquest
+
+echo "Checking DSpace version..."
 docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml run --rm dspace-cli version
 
 echo "====="
