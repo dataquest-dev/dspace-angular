@@ -29,8 +29,9 @@
   --ds-header-bg: var(--lt-vsb-tuo-cyan);
   --ds-header-logo-height: 50px;
   --ds-header-logo-height-xs: 50px;
-  --ds-header-icon-color: var(--lt-vsb-tuo-cyan-hover);
-  --ds-header-icon-color-hover: darken(var(--lt-vsb-tuo-cyan-hover), 15%);
+  $header-icon-color: #fff;
+  --ds-header-icon-color: #{$header-icon-color};
+  --ds-header-icon-color-hover: #{darken($header-icon-color, 15%)};
   --ds-navbar-bg: var(--ds-header-bg);
   --ds-header-navbar-border-top-color: #{$white};
   --ds-header-navbar-border-bottom-color: #{$gray-400};
