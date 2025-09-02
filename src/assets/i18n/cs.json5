@@ -1205,6 +1205,9 @@
   // "browse.comcol.by.title": "By Title",
   "browse.comcol.by.title": "Podle názvu",
 
+  // "browse.comcol.by.type": "By Type",
+  "browse.comcol.by.type": "Podle typu",
+
   // "browse.comcol.head": "Browse",
   "browse.comcol.head": "Procházet",
 
