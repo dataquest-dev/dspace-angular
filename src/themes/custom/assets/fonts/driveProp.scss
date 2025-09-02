@@ -1,0 +1,53 @@
+@font-face {
+  font-family: "DriveProp";
+  src: url("/assets/fonts/DriveProp-Regular.woff2") format("woff2"),
+       url("/assets/fonts/DriveProp-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DriveProp";
+  src: url("/assets/fonts/DriveProp-Italic.woff2") format("woff2"),
+       url("/assets/fonts/DriveProp-Italic.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DriveProp";
+  src: url("/assets/fonts/DriveProp-Medium.woff2") format("woff2"),
+       url("/assets/fonts/DriveProp-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DriveProp";
+  src: url("/assets/fonts/DriveProp-MediumItalic.woff2") format("woff2"),
+       url("/assets/fonts/DriveProp-MediumItalic.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DriveProp";
+  src: url("/assets/fonts/DriveProp-Bold.woff2") format("woff2"),
+       url("/assets/fonts/DriveProp-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DriveProp";
+  src: url("/assets/fonts/DriveProp-BoldItalic.woff2") format("woff2"),
+       url("/assets/fonts/DriveProp-BoldItalic.woff") format("woff");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}

@@ -1,6 +1,61 @@
 @font-face {
   font-family: "Drive";
-  src: url("/assets/fonts/Drive-Light.otf") format("opentype");
+  src: url("/assets/fonts/Drive-Thin.woff2") format("woff2"),
+       url("/assets/fonts/Drive-Thin.woff") format("woff");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-ThinItalic.woff2") format("woff2"),
+       url("/assets/fonts/Drive-ThinItalic.woff") format("woff");
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-Hairline.woff2") format("woff2"),
+       url("/assets/fonts/Drive-Hairline.woff") format("woff");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-HairlineItalic.woff2") format("woff2"),
+       url("/assets/fonts/Drive-HairlineItalic.woff") format("woff");
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-Extralight.woff2") format("woff2"),
+       url("/assets/fonts/Drive-Extralight.woff") format("woff");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-ExtralightItalic.woff2") format("woff2"),
+       url("/assets/fonts/Drive-ExtralightItalic.woff") format("woff");
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-Light.woff2") format("woff2"),
+       url("/assets/fonts/Drive-Light.woff") format("woff");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -8,7 +63,17 @@
 
 @font-face {
   font-family: "Drive";
-  src: url("/assets/fonts/Drive-Regular.otf") format("opentype");
+  src: url("/assets/fonts/Drive-LightItalic.woff2") format("woff2"),
+       url("/assets/fonts/Drive-LightItalic.woff") format("woff");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-Regular.woff2") format("woff2"),
+       url("/assets/fonts/Drive-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -16,15 +81,8 @@
 
 @font-face {
   font-family: "Drive";
-  src: url("/assets/fonts/Drive-Medium.otf") format("opentype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Drive";
-  src: url("/assets/fonts/Drive-Italic.otf") format("opentype");
+  src: url("/assets/fonts/Drive-Italic.woff2") format("woff2"),
+       url("/assets/fonts/Drive-Italic.woff") format("woff");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -32,7 +90,44 @@
 
 @font-face {
   font-family: "Drive";
-  src: url("/assets/fonts/Drive-Bold.otf") format("opentype");
+  src: url("/assets/fonts/Drive-Book.woff2") format("woff2"),
+       url("/assets/fonts/Drive-Book.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-BookItalic.woff2") format("woff2"),
+       url("/assets/fonts/Drive-BookItalic.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-Medium.woff2") format("woff2"),
+       url("/assets/fonts/Drive-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-MediumItalic.woff2") format("woff2"),
+       url("/assets/fonts/Drive-MediumItalic.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-Bold.woff2") format("woff2"),
+       url("/assets/fonts/Drive-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -40,8 +135,27 @@
 
 @font-face {
   font-family: "Drive";
-  src: url("/assets/fonts/Drive-Extrabold.otf") format("opentype");
+  src: url("/assets/fonts/Drive-BoldItalic.woff2") format("woff2"),
+       url("/assets/fonts/Drive-BoldItalic.woff") format("woff");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-Extrabold.woff2") format("woff2"),
+       url("/assets/fonts/Drive-Extrabold.woff") format("woff");
   font-weight: 800;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Drive";
+  src: url("/assets/fonts/Drive-ExtraboldItalic.woff2") format("woff2"),
+       url("/assets/fonts/Drive-ExtraboldItalic.woff") format("woff");
+  font-weight: 800;
+  font-style: italic;
   font-display: swap;
 }
