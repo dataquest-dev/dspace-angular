@@ -1244,6 +1244,9 @@
   // "browse.metadata.title.breadcrumbs": "Browse by Title",
   "browse.metadata.title.breadcrumbs": "Procházet podle názvu",
 
+  // "browse.metadata.type.breadcrumbs": "Browse by Type",
+  "browse.metadata.type.breadcrumbs": "Procházet podle typu",
+
   // "pagination.next.button": "Next",
   "pagination.next.button": "Další",
 
