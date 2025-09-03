@@ -16,6 +16,7 @@ import { HardRedirectService } from '../core/services/hard-redirect.service';
 import { Bitstream } from '../core/shared/bitstream.model';
 import { getFirstCompletedRemoteData } from '../core/shared/operators';
 import { hasNoValue } from '../shared/empty.util';
+import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 
 /**
  * Redirects to a bitstream based on the handle of the item, and the sequence id or the filename of the
@@ -30,6 +31,7 @@ export const legacyBitstreamURLRedirectGuard: CanActivateFn = (
   bitstreamDataService: BitstreamDataService = inject(BitstreamDataService),
   serverHardRedirectService: HardRedirectService = inject(HardRedirectService),
   router: Router = inject(Router),
+  appConfig: AppConfig = inject(APP_CONFIG),
 ): Observable<UrlTree | boolean> => {
   const prefix = route.params.prefix;
   const suffix = route.params.suffix;
@@ -46,7 +48,11 @@ export const legacyBitstreamURLRedirectGuard: CanActivateFn = (
     getFirstCompletedRemoteData(),
     map((rd: RemoteData<Bitstream>) => {
       if (rd.hasSucceeded && !rd.hasNoContent) {
-        serverHardRedirectService.redirect(new URL(`/bitstreams/${rd.payload.uuid}/download`, serverHardRedirectService.getCurrentOrigin()).href, 301);
+        // Get the UI namespace to construct the correct redirect URL
+        const { nameSpace } = appConfig.ui;
+        const namespacePrefix = nameSpace === '/' ? '' : nameSpace;
+        const redirectPath = `${namespacePrefix}/bitstreams/${rd.payload.uuid}/download`;
+        serverHardRedirectService.redirect(new URL(redirectPath, serverHardRedirectService.getCurrentOrigin()).href, 301);
         return false;
       } else {
         return router.createUrlTree([PAGE_NOT_FOUND_PATH]);

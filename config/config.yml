@@ -1,5 +1,8 @@
 debug: false
 
+ui:
+  nameSpace: /repository
+
 rest:
   ssl: false
   host: localhost
