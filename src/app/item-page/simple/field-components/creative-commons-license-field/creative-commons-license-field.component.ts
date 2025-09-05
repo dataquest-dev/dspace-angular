@@ -108,14 +108,17 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
    * Initialize Creative Commons license information
    */
   private initializeCcLicense(): void {
+    // Cache the metadata URL extraction to avoid repeated calls
+    const metadataUrl = this.extractUrlFromMetadata();
+    
     // Check if item has CC_LICENSE bundle and extract license information
     const ccLicenseBundle$ = this.bundleService.findByItemAndName(this.item, CC_CONSTANTS.BUNDLE_NAME);
-    
+
     this.hasCcLicense$ = ccLicenseBundle$.pipe(
       map((bundleRD: RemoteData<Bundle>) => {
         // Check if CC_LICENSE bundle exists OR if CC license metadata exists
         const hasBundleLicense = bundleRD.hasSucceeded && isNotEmpty(bundleRD.payload);
-        const hasMetadataLicense = isNotEmpty(this.extractUrlFromMetadata());
+        const hasMetadataLicense = isNotEmpty(metadataUrl);
         return hasBundleLicense || hasMetadataLicense;
       }),
       catchError(() => of(false))
@@ -134,18 +137,18 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
           const bitstreams = bitstreamsRD.payload;
           if (bitstreams.page.length > 0) {
             // Look for license URL in bitstream metadata or name
-            const licenseBitstream = bitstreams.page.find(bitstream => 
-              bitstream.name.includes('license') || 
+            const licenseBitstream = bitstreams.page.find(bitstream =>
+              bitstream.name.includes('license') ||
               bitstream.metadata[CC_CONSTANTS.METADATA_FIELDS[0]]?.[0]?.value
             );
-            const url = licenseBitstream?.metadata[CC_CONSTANTS.METADATA_FIELDS[0]]?.[0]?.value || 
-                       this.extractUrlFromMetadata() || 
+            const url = licenseBitstream?.metadata[CC_CONSTANTS.METADATA_FIELDS[0]]?.[0]?.value ||
+                       metadataUrl ||
                        '';
             return of(url);
           }
         }
-        // Fallback to metadata-based detection
-        return of(this.extractUrlFromMetadata());
+        // Fallback to cached metadata-based detection
+        return of(metadataUrl);
       }),
       catchError(() => of(''))
     );
@@ -205,7 +208,7 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
    */
   getCcIconClass(licenseName: string): string {
     const lowerName = licenseName.toLowerCase();
-    
+
     if (CC_CONSTANTS.LICENSE_TYPE_PATTERNS.CC0.some(pattern => lowerName.includes(pattern))) {
       return CC_CONSTANTS.ICON_CLASSES.ZERO;
     } else if (CC_CONSTANTS.LICENSE_TYPE_PATTERNS.BY_NC_ND.some(pattern => lowerName.includes(pattern))) {
@@ -221,7 +224,7 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
     } else if (CC_CONSTANTS.LICENSE_TYPE_PATTERNS.BY.some(pattern => lowerName.includes(pattern))) {
       return `${CC_CONSTANTS.ICON_CLASSES.BASE} ${CC_CONSTANTS.ICON_CLASSES.BY}`;
     }
-    
+
     return CC_CONSTANTS.ICON_CLASSES.BASE;
   }
 
@@ -230,9 +233,9 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
    */
   getLicenseType(licenseName: string): string {
     if (!licenseName) return '';
-    
+
     const name = licenseName.toLowerCase();
-    
+
     if (CC_CONSTANTS.LICENSE_TYPE_PATTERNS.CC0.some(pattern => name.includes(pattern))) {
       return CC_CONSTANTS.TEMPLATE_SWITCH_CASES.CC0;
     } else if (CC_CONSTANTS.LICENSE_TYPE_PATTERNS.BY_NC_ND.some(pattern => name.includes(pattern))) {
@@ -250,21 +253,5 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
     } else {
       return '';
     }
-  }
-
-  /**
-   * Debug helper: Get metadata values for a given field
-   */
-  getMetadataValues(field: string): string {
-    if (!this.item || !this.item.metadata) {
-      return CC_CONSTANTS.DEFAULT_MESSAGES.NO_METADATA;
-    }
-    
-    const values = this.item.allMetadata(field);
-    if (values && values.length > 0) {
-      return values.map(v => v.value).join('; ');
-    }
-    
-    return CC_CONSTANTS.DEFAULT_MESSAGES.NO_VALUES;
   }
 }
