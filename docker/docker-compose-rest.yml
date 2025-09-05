@@ -101,10 +101,9 @@ services:
       # /dspace/bin/dspace database migrate force
       # /dspace/bin/start-handle-server
       - |
-        apt update
-        apt install -y ldap-utils
+        apt update && apt install -y ldap-utils && apt clean && rm -rf /var/lib/apt/lists/*
         mkdir -p /etc/ldap
-        echo "TLS_CACERT /etc/ssl/certs/ca-certificates.crt" >> /etc/ldap/ldap.conf
+        grep -qxF "TLS_CACERT /etc/ssl/certs/ca-certificates.crt" /etc/ldap/ldap.conf || echo "TLS_CACERT /etc/ssl/certs/ca-certificates.crt" >> /etc/ldap/ldap.conf
         export LDAPTLS_CACERT=/etc/ssl/certs/ca-certificates.crt
         ./custom_run.sh
   # DSpace Solr container
