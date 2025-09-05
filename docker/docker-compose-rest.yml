@@ -96,11 +96,16 @@ services:
       # This will create a symlink from the webapps directory to the server directory with the custom namespace
       # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
       # removed from `while`, because: not needed here
-      # There is problem in the database when `database migrate` is called here and then from the import run from the
+      # There is problem in the database when `database migrate` is called here and then from the
       # `deploy action`
       # /dspace/bin/dspace database migrate force
       # /dspace/bin/start-handle-server
       - |
+        apt update
+        apt install -y ldap-utils
+        mkdir -p /etc/ldap
+        echo "TLS_CACERT /etc/ssl/certs/ca-certificates.crt" >> /etc/ldap/ldap.conf
+        export LDAPTLS_CACERT=/etc/ssl/certs/ca-certificates.crt
         ./custom_run.sh
   # DSpace Solr container
   dspacesolr:
