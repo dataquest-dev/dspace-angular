@@ -36,7 +36,6 @@
 
         i {
           font-size: 1.1rem;
-          transition: transform 0.2s ease;
 
           &.fa-creative-commons {
             color: #f39c12;
@@ -70,7 +69,7 @@
       }
 
       &:hover .cc-icons i {
-        transform: scale(1.05);
+        font-size: 1.2rem;
       }
     }
 
