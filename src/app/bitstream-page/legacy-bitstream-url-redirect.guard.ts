@@ -9,6 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 import { PAGE_NOT_FOUND_PATH } from '../app-routing-paths';
 import { BitstreamDataService } from '../core/data/bitstream-data.service';
 import { RemoteData } from '../core/data/remote-data';
@@ -30,6 +31,7 @@ export const legacyBitstreamURLRedirectGuard: CanActivateFn = (
   bitstreamDataService: BitstreamDataService = inject(BitstreamDataService),
   serverHardRedirectService: HardRedirectService = inject(HardRedirectService),
   router: Router = inject(Router),
+  appConfig: AppConfig = inject(APP_CONFIG),
 ): Observable<UrlTree | boolean> => {
   const prefix = route.params.prefix;
   const suffix = route.params.suffix;
@@ -46,7 +48,10 @@ export const legacyBitstreamURLRedirectGuard: CanActivateFn = (
     getFirstCompletedRemoteData(),
     map((rd: RemoteData<Bitstream>) => {
       if (rd.hasSucceeded && !rd.hasNoContent) {
-        serverHardRedirectService.redirect(new URL(`/bitstreams/${rd.payload.uuid}/download`, serverHardRedirectService.getCurrentOrigin()).href, 301);
+        const nameSpace = appConfig.ui.nameSpace?.replace(/\/$/, '') || '';
+        const redirectUrl = new URL(nameSpace + `/bitstreams/${rd.payload.uuid}/download`, serverHardRedirectService.getCurrentOrigin()).href;
+        console.log('Legacy bitstream URL redirecting to:', redirectUrl);
+        serverHardRedirectService.redirect(redirectUrl, 301);
         return false;
       } else {
         return router.createUrlTree([PAGE_NOT_FOUND_PATH]);
