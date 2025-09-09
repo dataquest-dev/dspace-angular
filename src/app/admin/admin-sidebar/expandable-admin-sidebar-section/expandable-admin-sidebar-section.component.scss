@@ -12,20 +12,9 @@
         padding-left: var(--ds-admin-sidebar-section-indent);
       }
 
-      /* Remove vertical padding from the wrapper and apply it to the anchor */
-      .sidebar-item {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-      }
       .sidebar-item .ds-menu-item {
         padding-top: var(--ds-admin-sidebar-item-padding);
         padding-bottom: var(--ds-admin-sidebar-item-padding);
-      }
-
-      /* In case an anchor also has .sidebar-item, reset it to avoid double padding */
-      .ds-menu-item.sidebar-item {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
       }
     }
   }
