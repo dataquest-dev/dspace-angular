@@ -48,21 +48,9 @@ export const legacyBitstreamURLRedirectGuard: CanActivateFn = (
     getFirstCompletedRemoteData(),
     map((rd: RemoteData<Bitstream>) => {
       if (rd.hasSucceeded && !rd.hasNoContent) {
-        let nameSpace = (appConfig.ui.nameSpace || '').replace(/^\/+|\/+$/g, '');
-        // Neutralize any absolute-like values (http:, https:, //, protocol-relative URLs, or invalid characters)
-        const allowedNamespaceRegex = /^[a-zA-Z0-9_-]+$/;
-        // Check for absolute URLs, protocol-relative URLs, or invalid characters
-        if (
-          nameSpace.startsWith('http:') ||
-          nameSpace.startsWith('https:') ||
-          nameSpace.startsWith('//') ||
-          nameSpace.match(/^\/[^\/]/) || // protocol-relative URL: single slash followed by non-slash
-          !allowedNamespaceRegex.test(nameSpace)
-        ) {
-          nameSpace = '';
-        }
-        const redirectPath = nameSpace ? `/${nameSpace}/bitstreams/${rd.payload.uuid}/download` : `/bitstreams/${rd.payload.uuid}/download`;
-        const redirectUrl = new URL(redirectPath, serverHardRedirectService.getCurrentOrigin()).href;
+        const nameSpace = appConfig.ui.nameSpace?.replace(/\/$/, '') || '';
+        const redirectUrl = new URL(nameSpace + `/bitstreams/${rd.payload.uuid}/download`, serverHardRedirectService.getCurrentOrigin()).href;
+        console.log('Legacy bitstream URL redirecting to:', redirectUrl);
         serverHardRedirectService.redirect(redirectUrl, 301);
         return false;
       } else {
