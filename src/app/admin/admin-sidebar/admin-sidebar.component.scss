@@ -133,8 +133,7 @@
     }
 
     div#sidebar-collapse-toggle-container {
-      .sidebar-collapsible-element-inner-wrapper {
-      }
+      background-color: var(--ds-admin-sidebar-header-bg);
     }
   }
 }
