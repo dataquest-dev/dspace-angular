@@ -137,7 +137,7 @@ jobs:
       # and load assetstore from a cached copy
       - name: Start DSpace REST Backend via Docker (for e2e tests)
         run: |
-          docker compose -f ./docker/docker-compose-ci.yml up -d
+          docker compose -f ./docker/docker-compose-ci.yml up -d --remove-orphans
           docker compose -f ./docker/cli.yml -f ./docker/cli.assetstore.yml run --rm dspace-cli
           docker container ls
 
@@ -310,7 +310,7 @@ jobs:
         run: kill -9 $(lsof -t -i:4000)
 
       - name: Shutdown Docker containers
-        run: docker compose -f ./docker/docker-compose-ci.yml down
+        run: docker compose -f ./docker/docker-compose-ci.yml down --remove-orphans
 
 #  # Codecov upload is a separate job in order to allow us to restart this separate from the entire build/test
 #  # job above. This is necessary because Codecov uploads seem to randomly fail at times.

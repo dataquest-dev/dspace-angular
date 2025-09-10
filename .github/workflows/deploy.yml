@@ -67,7 +67,7 @@ jobs:
           cd ../..
           # use customized docker-compose file for the `85` port because the server is exposed with the namespace `repository`
           # `/repository/server`
-          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build
+          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
 
   import-3:
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1

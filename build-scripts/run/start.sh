@@ -17,7 +17,7 @@ docker pull $DSPACE_UI_IMAGE
 pushd ../..
 echo "====="
 docker compose --env-file $ENVFILE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml pull
-docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/docker-compose-rest.yml up -d --no-build
+docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/docker-compose-rest.yml up -d --no-build --remove-orphans
 popd
 
 # Create admin user
