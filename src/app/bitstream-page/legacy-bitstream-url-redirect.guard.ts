@@ -50,7 +50,6 @@ export const legacyBitstreamURLRedirectGuard: CanActivateFn = (
       if (rd.hasSucceeded && !rd.hasNoContent) {
         const nameSpace = appConfig.ui.nameSpace?.replace(/\/$/, '') || '';
         const redirectUrl = new URL(nameSpace + `/bitstreams/${rd.payload.uuid}/download`, serverHardRedirectService.getCurrentOrigin()).href;
-        console.log('Legacy bitstream URL redirecting to:', redirectUrl);
         serverHardRedirectService.redirect(redirectUrl, 301);
         return false;
       } else {
