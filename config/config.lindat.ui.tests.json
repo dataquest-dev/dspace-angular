@@ -1,6 +1,6 @@
 {
   "locators": {
-    "title": "LINDAT/CLARIAH-CZ Repository Home"  
+    "title": "LINDAT/CLARIAH-CZ Repository Home"
   },
   "urls": {
     "oaipmh_response": "https://dev-5.pc:8443/repository/server/oai/request?verb=ListRecords&metadataPrefix=oai_dc",
