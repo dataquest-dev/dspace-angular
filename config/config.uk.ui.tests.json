@@ -9,7 +9,8 @@
     "has_license_select": true,
     "has_size_input": true,
     "has_size_dropdown": false,
-    "has_identifier_input": true
+    "has_identifier_input": true,
+    "can_search_untranslated_keys": false
   },
   "locators": {
     "title": "LINDAT/CLARIAH-CZ Repository Home",
