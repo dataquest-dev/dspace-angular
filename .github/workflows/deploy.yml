@@ -146,7 +146,7 @@ jobs:
     steps:
       - name: vanilla import
         env:
-          FNAME: dspace_tul_dump_2024.10.08.sql
+          FNAME: dspace_tul_dump_2025.09.16.sql
         run: |
           export DATADIR=/opt/dspace-data/tul-dump/$FNAME
           export DNAME=dspace$INSTANCE
