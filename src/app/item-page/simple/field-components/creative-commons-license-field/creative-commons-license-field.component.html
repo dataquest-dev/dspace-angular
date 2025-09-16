@@ -1,0 +1,66 @@
+<div class="clarin-item-page-field justify-content-start" *ngIf="hasCcLicense$ | async">
+  <div class="d-flex">
+    <div><i class="fab fa-creative-commons fa-xs"></i></div>
+    <div class="pl-1"><b>{{ 'item.page.cc-license' | translate }}</b></div>
+  </div>
+  <div>
+    <div>
+      <ng-container *ngIf="(ccLicenseUrl$ | async) as licenseUrl">
+        <ng-container *ngIf="(ccLicenseName$ | async) as licenseName">
+          <div class="cc-license-content">
+            <div class="cc-license-row">
+              <a [href]="licenseUrl" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="cc-license-link">
+                <div class="cc-icons">
+                  <ng-container [ngSwitch]="getLicenseType(licenseName)">
+                    <ng-container *ngSwitchCase="'by'">
+                      <i class="fab fa-creative-commons"></i>
+                      <i class="fab fa-creative-commons-by"></i>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'by-sa'">
+                      <i class="fab fa-creative-commons"></i>
+                      <i class="fab fa-creative-commons-by"></i>
+                      <i class="fab fa-creative-commons-sa"></i>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'by-nc'">
+                      <i class="fab fa-creative-commons"></i>
+                      <i class="fab fa-creative-commons-by"></i>
+                      <i class="fab fa-creative-commons-nc"></i>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'by-nc-sa'">
+                      <i class="fab fa-creative-commons"></i>
+                      <i class="fab fa-creative-commons-by"></i>
+                      <i class="fab fa-creative-commons-nc"></i>
+                      <i class="fab fa-creative-commons-sa"></i>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'by-nd'">
+                      <i class="fab fa-creative-commons"></i>
+                      <i class="fab fa-creative-commons-by"></i>
+                      <i class="fab fa-creative-commons-nd"></i>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'by-nc-nd'">
+                      <i class="fab fa-creative-commons"></i>
+                      <i class="fab fa-creative-commons-by"></i>
+                      <i class="fab fa-creative-commons-nc"></i>
+                      <i class="fab fa-creative-commons-nd"></i>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'cc0'">
+                      <i class="fab fa-creative-commons"></i>
+                      <i class="fab fa-creative-commons-zero"></i>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      <i class="fab fa-creative-commons"></i>
+                    </ng-container>
+                  </ng-container>
+                </div>
+                <span class="cc-license-text">{{ licenseName }}</span>
+              </a>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>
