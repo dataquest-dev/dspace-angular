@@ -20,7 +20,6 @@
   },
   "urls": {
   "oaipmh_response": "http://dev-5.pc:82/server/oai/request?verb=ListRecords&metadataPrefix=oai_dc",
-  "redirect_to_login": "http://dev-5.pc:82/login?redirectUrl=http:%2F%2Fdev-5.pc:82%2Fhome",
-  "not_exposed_data": "http://dev-5.pc:82/server/oai/request?verb=GetRecord&metadataPrefix=cmdi&identifier=oai:dev-5.pc:20.500.12800/1-4740"
+  "redirect_to_login": "http://dev-5.pc:82/login?redirectUrl=http:%2F%2Fdev-5.pc:82%2Fhome"
   }
 }
