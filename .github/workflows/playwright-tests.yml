@@ -23,13 +23,13 @@ jobs:
 
       - name: Copy customer config to UI tests repository for merging
         run: |
-          cp this-repository/config/config.lindat.ui.tests.json dspace-ui-tests/customer-constants/
+          cp this-repository/config/config.vsb-tuo.ui.tests.json dspace-ui-tests/customer-constants/
 
       - name: test
         working-directory: dspace-ui-tests/scripts
         env:
-          HOME_URL: https://dev-5.pc:8443/repository/
-          NAME: LINDAT
+          HOME_URL: http://dev-6.pc:8563/
+          NAME: VSB-TUO
         run: |
           ./test.sh
 
