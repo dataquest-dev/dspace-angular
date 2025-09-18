@@ -51,7 +51,8 @@ export class TotalDownloadsComponent implements OnInit {
    * and if enabled, fetches the total download statistics for the item specified by itemUuid.
    * The component will:
    * 1. Check the 'item.view.total.downloads.enabled' configuration property
-   * 2. If enabled (or config not found - defaults to true), call the UsageReportDataService
+   * 2. If enabled (configuration value is 'true'), call the UsageReportDataService,
+   *    if config is not found, defaults to false
    * 3. Aggregate all download counts (views) from all bitstreams in the response
    * 4. Set the totalDownloads property with the sum
    * 5. Handle errors gracefully by setting totalDownloads to 0 and logging the error
@@ -78,7 +79,7 @@ export class TotalDownloadsComponent implements OnInit {
         this.totalDownloadsEnabled.next(itemViewTotalDownloadsEnabled === 'true');
 
         // Only fetch download statistics if the feature is enabled
-        if (this.totalDownloadsEnabled) {
+        if (this.totalDownloadsEnabled.value) {
           this.fetchDownloadStatistics();
         } else {
           this.totalDownloads = 0; // Ensure it's 0 when disabled
