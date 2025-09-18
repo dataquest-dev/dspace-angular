@@ -53,6 +53,8 @@ services:
       assetstore__P__s3__P__awsRegionName: ${S3_REGION_NAME:-}
       assetstore__P__s3__P__pathStyleAccessEnabled: ${S3_PATH_STYLE_ACCESS:-false}
       assetstore__P__s3__P__endpoint: ${S3_ENDPOINT:-}
+      # CNRI Handle prefix
+      handle__P__prefix: 10084
     image: ${DSPACE_REST_IMAGE:-dataquest/dspace:dtq-dev-7.5}
     networks:
       - dspacenet
