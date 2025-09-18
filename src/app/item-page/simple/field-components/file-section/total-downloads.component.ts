@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UsageReportDataService } from 'src/app/core/statistics/usage-report-data.service';
+import { ConfigurationDataService } from 'src/app/core/data/configuration-data.service';
 import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 
 /**
  * Component that displays the total number of downloads for all bitstreams within a DSpace item.
@@ -26,7 +27,13 @@ export class TotalDownloadsComponent implements OnInit {
    * The total number of downloads across all bitstreams for the item.
    * Defaults to 0 and will show 0 if no data is available or an error occurs.
    */
-  totalDownloads: number = 0;
+  totalDownloads = 0;
+
+  /**
+   * Flag indicating whether the total downloads feature is enabled in the configuration.
+   * Defaults to false to hide downloads unless explicitly enabled in configuration.
+   */
+  totalDownloadsEnabled = new BehaviorSubject<boolean>(false);
 
   /**
    * The translation key for the downloadsLabel displayed alongside the download count.
@@ -34,15 +41,20 @@ export class TotalDownloadsComponent implements OnInit {
   readonly downloadsLabel = 'item.page.files.downloads';
 
 
-  constructor(private usageReportDataService: UsageReportDataService) { }
+  constructor(
+    private usageReportDataService: UsageReportDataService,
+    private configService: ConfigurationDataService
+  ) { }
 
   /**
-   * Fetches the total download statistics for the item specified by itemUuid.
+   * Fetches the configuration to check if total downloads should be shown,
+   * and if enabled, fetches the total download statistics for the item specified by itemUuid.
    * The component will:
-   * 1. Call the UsageReportDataService with the item UUID and 'TotalDownloads' report type
-   * 2. Aggregate all download counts (views) from all bitstreams in the response
-   * 3. Set the totalDownloads property with the sum
-   * 4. Handle errors gracefully by setting totalDownloads to 0 and logging the error
+   * 1. Check the 'item.view.total.downloads.enabled' configuration property
+   * 2. If enabled (or config not found - defaults to true), call the UsageReportDataService
+   * 3. Aggregate all download counts (views) from all bitstreams in the response
+   * 4. Set the totalDownloads property with the sum
+   * 5. Handle errors gracefully by setting totalDownloads to 0 and logging the error
    *
    * @throws Will log an error to console if the API call fails, but won't throw an exception
    */
@@ -51,6 +63,34 @@ export class TotalDownloadsComponent implements OnInit {
       return;
     }
 
+    // First, check if total downloads feature is enabled in configuration
+    this.configService.findByPropertyName('item.view.total.downloads.enabled')
+      .pipe(
+        catchError(error => {
+          console.error('Failed to fetch total downloads configuration:', error);
+          // Default to true if configuration cannot be retrieved
+          return of(null);
+        })
+      )
+      .subscribe(configData => {
+        // Extract configuration value, default to 'true' if not found
+        const itemViewTotalDownloadsEnabled = configData?.payload?.values?.[0];
+        this.totalDownloadsEnabled.next(itemViewTotalDownloadsEnabled === 'true');
+
+        // Only fetch download statistics if the feature is enabled
+        if (this.totalDownloadsEnabled) {
+          this.fetchDownloadStatistics();
+        } else {
+          this.totalDownloads = 0; // Ensure it's 0 when disabled
+        }
+      });
+  }
+
+  /**
+   * Private method to fetch download statistics from the usage report service.
+   * This method is called only when the total downloads feature is enabled.
+   */
+  private fetchDownloadStatistics(): void {
     const reportType = 'TotalDownloads';
     this.usageReportDataService.getStatistic(this.itemUuid, reportType)
       .pipe(
