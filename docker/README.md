@@ -66,7 +66,7 @@ docker-compose -p d7 -f docker/docker-compose.yml up -d
 
 Create an administrator
 ```
-docker-compose -p d7 -f docker/cli.yml run --rm dspace-cli create-administrator -e test@test.edu -f admin -l user -p admin -c en
+docker-compose -p d7 -f docker/cli.yml run --rm dspace-cli create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p admin -c en
 ```
 
 Load content from AIP files
