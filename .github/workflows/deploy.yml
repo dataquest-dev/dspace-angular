@@ -465,7 +465,7 @@ jobs:
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
           echo "Creating DSpace administrator..."
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e test@test.edu -f admin -l user -p admin -c en -o dataquest"
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p admin -c en -o dataquest"
 
       - name: rebuild discovery index and run oai import
         run: |
