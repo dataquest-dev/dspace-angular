@@ -30,7 +30,7 @@ export class TotalDownloadsComponent implements OnInit {
    * The total number of downloads across all bitstreams for the item.
    * Defaults to 0 and will show 0 if no data is available or an error occurs.
    */
-  totalDownloads = 0;
+  totalDownloads: number | null = 0;
 
   /**
    * Flag indicating whether the total downloads feature is enabled in the configuration.
