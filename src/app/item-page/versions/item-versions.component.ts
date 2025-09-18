@@ -182,6 +182,11 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
   createVersionTitle$: Observable<string>;
 
   /**
+   * Toggle state for version history table
+   */
+  showVersionHistory = false;
+
+  /**
    * Show `Editor` column in the table.
    */
   showSubmitter$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
@@ -224,6 +229,13 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
    */
   isAnyBeingEdited(): boolean {
     return this.versionBeingEditedNumber != null;
+  }
+
+  /**
+   * Toggle the visibility of version history table
+   */
+  toggleVersionHistory(): void {
+    this.showVersionHistory = !this.showVersionHistory;
   }
 
   /**
@@ -465,7 +477,7 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
       getRemoteDataPayload(),
       map((versions: PaginatedList<Version>) => ({
         totalElements: versions.totalElements,
-        versionDTOs: (versions?.page ?? []).map((version: Version) => ({
+        versionDTOs: (versions?.page ?? []).reverse().map((version: Version) => ({
           version: version,
           canEditVersion: this.canEditVersion$(version),
           canDeleteVersion: this.canDeleteVersion$(version),
