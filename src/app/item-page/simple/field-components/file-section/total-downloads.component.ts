@@ -7,9 +7,12 @@ import { BehaviorSubject, of } from 'rxjs';
 /**
  * Component that displays the total number of downloads for all bitstreams within a DSpace item.
  *
- * This component fetches download statistics for a given item using its UUID and aggregates
- * the download counts from all bitstreams associated with that item. The result is displayed
- * as a single total download count.
+ * This component checks the 'item.view.total.downloads.enabled' configuration property
+ * to determine if download statistics should be displayed. If enabled, it fetches download
+ * statistics for a given item using its UUID and aggregates the download counts from all
+ * bitstreams associated with that item. The result is displayed as a single total download count.
+ *
+ * If the configuration is disabled or set to 'false', the component will not be displayed.
  */
 @Component({
   selector: 'ds-total-downloads',
@@ -31,7 +34,8 @@ export class TotalDownloadsComponent implements OnInit {
 
   /**
    * Flag indicating whether the total downloads feature is enabled in the configuration.
-   * Defaults to false to hide downloads unless explicitly enabled in configuration.
+   * Uses BehaviorSubject to allow reactive updates. Defaults to false and will only be
+   * set to true if the configuration explicitly contains 'true' value.
    */
   totalDownloadsEnabled = new BehaviorSubject<boolean>(false);
 
@@ -51,11 +55,11 @@ export class TotalDownloadsComponent implements OnInit {
    * and if enabled, fetches the total download statistics for the item specified by itemUuid.
    * The component will:
    * 1. Check the 'item.view.total.downloads.enabled' configuration property
-   * 2. If enabled (configuration value is 'true'), call the UsageReportDataService,
-   *    if config is not found, defaults to false
+   * 2. If enabled (configuration value is explicitly 'true'), call the UsageReportDataService
+   *    If configuration is not found or fails to load, defaults to false (disabled)
    * 3. Aggregate all download counts (views) from all bitstreams in the response
    * 4. Set the totalDownloads property with the sum
-   * 5. Handle errors gracefully by setting totalDownloads to 0 and logging the error
+   * 5. Handle errors gracefully by returning null and logging the error
    *
    * @throws Will log an error to console if the API call fails, but won't throw an exception
    */
@@ -69,12 +73,12 @@ export class TotalDownloadsComponent implements OnInit {
       .pipe(
         catchError(error => {
           console.error('Failed to fetch total downloads configuration:', error);
-          // Default to true if configuration cannot be retrieved
+          // Default to false if configuration cannot be retrieved
           return of(null);
         })
       )
       .subscribe(configData => {
-        // Extract configuration value, default to 'true' if not found
+        // Extract configuration value, default to 'false' if not found
         const itemViewTotalDownloadsEnabled = configData?.payload?.values?.[0];
         this.totalDownloadsEnabled.next(itemViewTotalDownloadsEnabled === 'true');
 
@@ -82,7 +86,7 @@ export class TotalDownloadsComponent implements OnInit {
         if (this.totalDownloadsEnabled.value) {
           this.fetchDownloadStatistics();
         } else {
-          this.totalDownloads = 0; // Ensure it's 0 when disabled
+          this.totalDownloads = null; // Ensure it's null when disabled
         }
       });
   }
