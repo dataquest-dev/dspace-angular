@@ -62,24 +62,30 @@ function addMatomoStatistics() {
     return;
   }
 
-  (window as any)._paq = (window as any)._paq || [];
+  try {
+    (window as any)._paq = (window as any)._paq || [];
 
-  // Push all configuration commands first
-  (window as any)._paq.push(['setTrackerUrl', environment.matomo.hostUrl + 'matomo.php']);
-  (window as any)._paq.push(['setSiteId', environment.matomo.siteId]);
-  (window as any)._paq.push(['enableLinkTracking']);
+    // Push all configuration commands first
+    (window as any)._paq.push(['setTrackerUrl', environment.matomo.hostUrl + 'matomo.php']);
+    (window as any)._paq.push(['setSiteId', environment.matomo.siteId]);
+    (window as any)._paq.push(['enableLinkTracking']);
 
-  const g = document.createElement('script');
-  g.type = 'text/javascript';
-  g.async = true;
-  g.defer = true;
-  g.src = environment.matomo.hostUrl + 'matomo.js';
-  document.getElementsByTagName('head')[0].appendChild(g);
+    const g = document.createElement('script');
+    g.type = 'text/javascript';
+    g.async = true;
+    g.defer = true;
+    g.src = environment.matomo.hostUrl + 'matomo.js';
+    document.getElementsByTagName('head')[0].appendChild(g);
+  } catch (error) {
+    if (!environment.production) {
+      console.error('Error initializing Matomo:', error);
+    }
+  }
 }
 
 // support async tag or hmr
 if (document.readyState === 'complete' && !hasTransferState) {
   void main();
 } else {
-    document.addEventListener('DOMContentLoaded', () => main());
+  document.addEventListener('DOMContentLoaded', () => void main());
 }
