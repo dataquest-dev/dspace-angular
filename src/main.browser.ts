@@ -81,5 +81,5 @@ function addMatomoStatistics() {
 if (document.readyState === 'complete' && !hasTransferState) {
   void main();
 } else {
-  document.addEventListener('DOMContentLoaded', () => void main());
+    document.addEventListener('DOMContentLoaded', () => main());
 }
