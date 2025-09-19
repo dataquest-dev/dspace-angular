@@ -114,18 +114,23 @@ export class BrowserInitService extends InitService {
         // in pageTrack context. So we add it to page_view events, and remove it after the page view.
         // page_view events are fired via view-track.component, and exposes dc.identifier.uri via properties
         const dimensionId = this.appConfig.matomo.dimensionId;
-        this.angulartics2Matomo.eventTrack = function (action: string, properties?: any) {
-          if (action === 'page_view') {
-            if (properties.dc_identifier) {
-              (window as any)._paq.push(['setCustomDimension', dimensionId, properties.dc_identifier]);
+
+        // Only set up custom dimensions if dimensionId is configured
+        if (dimensionId) {
+          this.angulartics2Matomo.eventTrack = function (action: string, properties?: any) {
+            if (action === 'page_view') {
+              if (properties.dc_identifier) {
+                (window as any)._paq.push(['setCustomDimension', dimensionId, properties.dc_identifier]);
+              }
             }
-          }
-        };
-        let pageTrack = this.angulartics2Matomo.pageTrack;
-        this.angulartics2Matomo.pageTrack = function (path: string) {
-          pageTrack.call(this, path);
-          (window as any)._paq.push(['deleteCustomDimension', dimensionId]);
-        };
+          };
+          let pageTrack = this.angulartics2Matomo.pageTrack;
+          this.angulartics2Matomo.pageTrack = function (path: string) {
+            pageTrack.call(this, path);
+            (window as any)._paq.push(['deleteCustomDimension', dimensionId]);
+          };
+        }
+
         this.angulartics2Matomo.startTracking();
       }
 

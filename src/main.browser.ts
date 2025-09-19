@@ -65,7 +65,8 @@ function addMatomoStatistics() {
     g.src = environment.matomo.hostUrl + 'matomo.js';
     document.getElementsByTagName('head')[0].appendChild(g);
   } catch (error) {
-    // Silently fail if Matomo initialization fails
+     // Log the error to help with debugging Matomo initialization issues
+    console.warn('Matomo initialization failed:', error);
     return;
   }
 }
