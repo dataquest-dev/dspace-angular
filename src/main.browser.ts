@@ -27,9 +27,9 @@ const main = () => {
     enableProdMode();
   }
 
-  addMatomoStatistics();
   if (hasTransferState) {
     // Configuration will be taken from transfer state during initialization
+    addMatomoStatistics();
     return bootstrap();
   } else {
     // Configuration must be fetched explicitly
@@ -38,6 +38,7 @@ const main = () => {
       .then((appConfig: AppConfig) => {
         // extend environment with app config for browser when not prerendered
         extendEnvironmentWithAppConfig(environment, appConfig);
+        addMatomoStatistics();
         return bootstrap();
       });
   }
@@ -45,11 +46,13 @@ const main = () => {
 
 function addMatomoStatistics() {
   // Debug: Log the matomo configuration
-  console.log('Matomo config check:', {
-    hasMatomo: !!environment.matomo,
-    enabled: environment.matomo?.enabled,
-    full: environment.matomo
-  });
+  if (!environment.production) {
+    console.log('Matomo config check:', {
+      hasMatomo: !!environment.matomo,
+      enabled: environment.matomo?.enabled,
+      full: environment.matomo
+    });
+  }
 
   // Check if Matomo is enabled in the environment configuration
   if (!environment.matomo || !environment.matomo.enabled) {
