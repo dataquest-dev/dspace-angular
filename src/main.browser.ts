@@ -44,30 +44,39 @@ const main = () => {
 };
 
 function addMatomoStatistics() {
+  // Debug: Log the matomo configuration
+  console.log('Matomo config check:', {
+    hasMatomo: !!environment.matomo,
+    enabled: environment.matomo?.enabled,
+    full: environment.matomo
+  });
+
+  // Check if Matomo is enabled in the environment configuration
+  if (!environment.matomo || !environment.matomo.enabled) {
+    console.log('Matomo is disabled, skipping initialization');
+    return;
+  }
+
+  console.log('Matomo is enabled, initializing...');
+
   (window as any)._paq = (window as any)._paq || [];
 
-  void fetch('assets/config.json')
-    .then((response) => response.json())
-    .then((config) => {
-      const matomoConfig = config.matomo;
+  // Push all configuration commands first
+  (window as any)._paq.push(['setTrackerUrl', environment.matomo.hostUrl + 'matomo.php']);
+  (window as any)._paq.push(['setSiteId', environment.matomo.siteId]);
+  (window as any)._paq.push(['enableLinkTracking']);
 
-      // Push all configuration commands first
-      (window as any)._paq.push(['setTrackerUrl', matomoConfig.hostUrl + 'matomo.php']);
-      (window as any)._paq.push(['setSiteId', matomoConfig.siteId]);
-      (window as any)._paq.push(['enableLinkTracking']);
-
-      const g = document.createElement('script');
-      g.type = 'text/javascript';
-      g.async = true;
-      g.defer = true;
-      g.src = matomoConfig.hostUrl + 'matomo.js';
-      document.getElementsByTagName('head')[0].appendChild(g);
-    });
+  const g = document.createElement('script');
+  g.type = 'text/javascript';
+  g.async = true;
+  g.defer = true;
+  g.src = environment.matomo.hostUrl + 'matomo.js';
+  document.getElementsByTagName('head')[0].appendChild(g);
 }
 
 // support async tag or hmr
 if (document.readyState === 'complete' && !hasTransferState) {
-  main();
+  void main();
 } else {
-  document.addEventListener('DOMContentLoaded', main);
+  document.addEventListener('DOMContentLoaded', () => void main());
 }

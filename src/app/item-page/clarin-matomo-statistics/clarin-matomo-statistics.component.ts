@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { RemoteData } from '../../core/data/remote-data';
 import { Item } from '../../core/shared/item.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'ds-clarin-matomo-statistics',
@@ -26,6 +27,9 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
   itemRD$: BehaviorSubject<Item> = new BehaviorSubject<Item>(null);
+  
+  // Flag to track if Matomo is enabled
+  public matomoEnabled = false;
 
   // Month shortcut with full name
   public months = [
@@ -130,6 +134,14 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    // Check if Matomo is enabled in the environment
+    this.matomoEnabled = environment.matomo?.enabled || false;
+    
+    // If Matomo is disabled, don't fetch statistics
+    if (!this.matomoEnabled) {
+      return;
+    }
+
     this.route.data.pipe(
       map((data) => data.dso as RemoteData<Item>))
       .subscribe(data => {

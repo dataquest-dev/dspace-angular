@@ -107,26 +107,30 @@ export class BrowserInitService extends InitService {
       this.initRouteListeners();
       this.themeService.listenForThemeChanges(true);
       this.trackAuthTokenExpiration();
-      // ideally we'd add the custom dimension to the 'trackPageView' action only, but don't have that information
-      // in pageTrack context. So we add it to page_view events, and remove it after the page view.
-      // page_view events are fired via view-track.component, and exposes dc.identifier.uri via properties
-      this.angulartics2Matomo.eventTrack = function (action: string, properties?: any) {
-        if (action === 'page_view') {
-          if (properties.dc_identifier) {
-            (window as any)._paq.push(['setCustomDimension', environment.matomo.dimensionId, properties.dc_identifier]);
+      
+      // Only initialize Matomo if it's enabled in configuration
+      if (this.appConfig.matomo && this.appConfig.matomo.enabled) {
+        // ideally we'd add the custom dimension to the 'trackPageView' action only, but don't have that information
+        // in pageTrack context. So we add it to page_view events, and remove it after the page view.
+        // page_view events are fired via view-track.component, and exposes dc.identifier.uri via properties
+        this.angulartics2Matomo.eventTrack = function (action: string, properties?: any) {
+          if (action === 'page_view') {
+            if (properties.dc_identifier) {
+              (window as any)._paq.push(['setCustomDimension', this.appConfig.matomo.dimensionId, properties.dc_identifier]);
+            }
           }
-        }
-      };
-      let pageTrack = this.angulartics2Matomo.pageTrack;
-      this.angulartics2Matomo.pageTrack = function (path: string) {
-        pageTrack.call(this, path);
-        (window as any)._paq.push(['deleteCustomDimension', environment.matomo.dimensionId]);
-      };
-      this.angulartics2Matomo.startTracking();
+        }.bind(this);
+        let pageTrack = this.angulartics2Matomo.pageTrack;
+        this.angulartics2Matomo.pageTrack = function (path: string) {
+          pageTrack.call(this, path);
+          (window as any)._paq.push(['deleteCustomDimension', this.appConfig.matomo.dimensionId]);
+        }.bind(this);
+        this.angulartics2Matomo.startTracking();
+      }
 
       this.initKlaro();
 
-      await this.authenticationReady$().toPromise();
+      await firstValueFrom(this.authenticationReady$());
 
       return true;
     };
@@ -197,7 +201,7 @@ export class BrowserInitService extends InitService {
    * @private
    */
   private closeAuthCheckSubscription() {
-    firstValueFrom(this.authenticationReady$()).then(() => {
+    void firstValueFrom(this.authenticationReady$()).then(() => {
         this.sub.unsubscribe();
       });
   }

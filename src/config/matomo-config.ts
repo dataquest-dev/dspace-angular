@@ -5,6 +5,8 @@ import { Config } from './config.interface';
  */
 export class MatomoConfig implements Config {
 
+  public enabled: boolean;
+
   public hostUrl: string;
 
   public siteId: string;
