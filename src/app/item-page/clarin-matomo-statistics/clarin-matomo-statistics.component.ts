@@ -135,8 +135,8 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
   ngOnInit(): void {
     // Check if Matomo is enabled in the environment
-    this.matomoEnabled = environment.matomo?.enabled || false;
-    
+    this.matomoEnabled = environment.matomo?.enabled === true;
+
     // If Matomo is disabled, don't fetch statistics
     if (!this.matomoEnabled) {
       return;
