@@ -4394,8 +4394,8 @@
   // "loading.top-level-communities": "Loading top-level communities...",
   "loading.top-level-communities": "Načítají se komunity nejvyšší úrovně...",
 
-  // "login.form.email": "Email address",
-  "login.form.email": "E-mailová adresa",
+  // "login.form.email": "Personal number",
+  "login.form.email": "Osobní číslo",
 
   // "login.form.forgot-password": "Have you forgotten your password?",
   "login.form.forgot-password": "Zapomněli jste své heslo?",
