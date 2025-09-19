@@ -45,20 +45,8 @@ const main = () => {
 };
 
 function addMatomoStatistics() {
-  // Debug: Log the matomo configuration
-  if (!environment.production) {
-    console.log('Matomo config check:', {
-      hasMatomo: !!environment.matomo,
-      enabled: environment.matomo?.enabled,
-      full: environment.matomo
-    });
-  }
-
   // Check if Matomo is enabled in the environment configuration
   if (!environment.matomo || !environment.matomo.enabled) {
-    if (!environment.production) {
-      console.log('Matomo is disabled, skipping initialization');
-    }
     return;
   }
 
@@ -77,9 +65,8 @@ function addMatomoStatistics() {
     g.src = environment.matomo.hostUrl + 'matomo.js';
     document.getElementsByTagName('head')[0].appendChild(g);
   } catch (error) {
-    if (!environment.production) {
-      console.error('Error initializing Matomo:', error);
-    }
+    // Silently fail if Matomo initialization fails
+    return;
   }
 }
 
