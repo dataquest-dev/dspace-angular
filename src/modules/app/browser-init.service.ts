@@ -107,9 +107,9 @@ export class BrowserInitService extends InitService {
       this.initRouteListeners();
       this.themeService.listenForThemeChanges(true);
       this.trackAuthTokenExpiration();
-      
-      // Only initialize Matomo if it's enabled in configuration
-      if (this.appConfig.matomo && this.appConfig.matomo.enabled) {
+
+      // Only initialize Matomo if it's configured with required properties
+      if (this.appConfig.matomo && this.appConfig.matomo.hostUrl && this.appConfig.matomo.siteId) {
         // ideally we'd add the custom dimension to the 'trackPageView' action only, but don't have that information
         // in pageTrack context. So we add it to page_view events, and remove it after the page view.
         // page_view events are fired via view-track.component, and exposes dc.identifier.uri via properties
