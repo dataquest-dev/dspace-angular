@@ -57,8 +57,6 @@ function addMatomoStatistics() {
     return;
   }
 
-  console.log('Matomo is enabled, initializing...');
-
   (window as any)._paq = (window as any)._paq || [];
 
   // Push all configuration commands first

@@ -7,7 +7,7 @@ Edit `src/environments/environment.ts`:
 ```typescript
 matomo: {
   enabled: false,
-  hostUrl: 'http://localhost:8135/',
+  hostUrl: 'https://your-matomo-server.com/',
   siteId: '1',
   dimensionId: 1
 }
