@@ -28,6 +28,9 @@ matomo: {
 
 - **Development**: `src/environments/environment.ts`
 - **Production**: `src/environments/environment.production.ts`
+- **Global/Server-side**: `config/config.example.yml` (and `config/config.yml` in production)
+- **Runtime (if applicable)**: `config.json`
+> **Note:** The `enabled` flag for Matomo may be present in multiple configuration files. Ensure you update all relevant files (`environment.ts`, `environment.production.ts`, `config/config.example.yml`, and any runtime `config.json`) to avoid conflicts or unexpected behavior.
 
 ## After Changes
 

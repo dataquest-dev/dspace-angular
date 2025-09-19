@@ -56,7 +56,9 @@ function addMatomoStatistics() {
 
   // Check if Matomo is enabled in the environment configuration
   if (!environment.matomo || !environment.matomo.enabled) {
-    console.log('Matomo is disabled, skipping initialization');
+    if (!environment.production) {
+      console.log('Matomo is disabled, skipping initialization');
+    }
     return;
   }
 
