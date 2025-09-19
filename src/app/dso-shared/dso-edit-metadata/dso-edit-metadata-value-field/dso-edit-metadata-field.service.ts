@@ -32,25 +32,38 @@ export class DsoEditMetadataFieldService {
 
   /**
    * Find the vocabulary of the given {@link mdField} for the given item.
+   * In DSpace 7, vocabularies are not discovered by metadata field and collection,
+   * but we can determine authority fields by their metadata field name and provide
+   * a basic vocabulary-like configuration to enable authority field functionality.
    *
    * @param dso The item
    * @param mdField The metadata field
    */
   findDsoFieldVocabulary(dso: DSpaceObject, mdField: string): Observable<Vocabulary> {
-    if (isNotEmpty(mdField)) {
-      const owningCollection$: Observable<Collection> = this.itemService.findByHref(dso._links.self.href, true, true, followLink('owningCollection')).pipe(
-        getFirstSucceededRemoteDataPayload(),
-        switchMap((item: Item) => item.owningCollection),
-        getFirstSucceededRemoteDataPayload(),
-      );
-
-      return owningCollection$.pipe(
-        switchMap((c: Collection) => this.vocabularyService.getVocabularyByMetadataAndCollection(mdField, c.uuid).pipe(
-          getFirstSucceededRemoteDataPayload(),
-        )),
-      );
-    } else {
-      return observableOf(undefined);
+    // Check if this field is a known authority field based on common patterns
+    const authorityFields = [
+      'dc.contributor.author',
+      'dc.creator',
+      'dc.contributor.editor',
+      'dc.contributor.advisor',
+      'dc.contributor.other',
+      'dcterms.creator',
+      'dcterms.contributor'
+    ];
+    
+    if (authorityFields.includes(mdField)) {
+      // Return a basic vocabulary configuration that enables authority field functionality
+      const authVocabulary = new Vocabulary();
+      authVocabulary.name = mdField; // Use original field name so VocabularyService can recognize it
+      authVocabulary.id = 'authority-' + mdField.replace(/\./g, '-');
+      authVocabulary.scrollable = false;
+      authVocabulary.hierarchical = false;
+      authVocabulary.preloadLevel = 0;
+      authVocabulary.type = 'vocabulary';
+      return observableOf(authVocabulary);
     }
+    
+    // For non-authority fields, return undefined to use regular text fields
+    return observableOf(undefined);
   }
 }

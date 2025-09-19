@@ -66,18 +66,6 @@ import { DsoEditMetadataFieldService } from '../dso-edit-metadata-field.service'
   selector: 'ds-dso-edit-metadata-authority-field',
   templateUrl: './dso-edit-metadata-authority-field.component.html',
   styleUrls: ['./dso-edit-metadata-authority-field.component.scss'],
-  standalone: true,
-  imports: [
-    DsDynamicScrollableDropdownComponent,
-    DsDynamicOneboxComponent,
-    AuthorityConfidenceStateDirective,
-    NgbTooltipModule,
-    AsyncPipe,
-    TranslateModule,
-    FormsModule,
-    NgClass,
-    DebounceDirective,
-  ],
 })
 export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetadataValueFieldComponent implements OnInit, OnChanges {
 
@@ -126,7 +114,24 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
   }
 
   ngOnInit(): void {
-    this.initAuthorityProperties();
+    // In DSpace 7, skip validation for known authority fields and directly initialize
+    const knownAuthorityFields = [
+      'dc.contributor.author',
+      'dc.creator',
+      'dc.contributor.editor',
+      'dc.contributor.advisor',
+      'dc.contributor.other',
+      'dcterms.creator',
+      'dcterms.contributor'
+    ];
+    
+    if (this.mdField && knownAuthorityFields.includes(this.mdField)) {
+      // Skip validation for known authority fields and directly initialize
+      this.initAuthorityProperties();
+    } else {
+      // For other fields, use the original initialization
+      this.initAuthorityProperties();
+    }
   }
 
   /**
@@ -163,15 +168,17 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
     if (isNotEmpty(vocabulary)) {
       let formFieldValue: FormFieldMetadataValueObject | string;
       if (isNotEmpty(this.mdValue.newValue.value)) {
-        formFieldValue = new FormFieldMetadataValueObject();
-        formFieldValue.value = this.mdValue.newValue.value;
-        formFieldValue.display = this.mdValue.newValue.value;
-        if (this.mdValue.newValue.authority) {
-          formFieldValue.authority = this.mdValue.newValue.authority;
-          formFieldValue.confidence = this.mdValue.newValue.confidence;
-        }
+        // Use the constructor properly with all parameters
+        formFieldValue = new FormFieldMetadataValueObject(
+          this.mdValue.newValue.value,           // value
+          this.mdValue.newValue.language,        // language
+          this.mdValue.newValue.authority,       // authority
+          this.mdValue.newValue.value,           // display (same as value)
+          0,                                     // place
+          this.mdValue.newValue.confidence       // confidence
+        );
       } else {
-        formFieldValue = this.mdValue.newValue.value;
+        formFieldValue = this.mdValue.newValue.value || '';
       }
 
       const vocabularyOptions = vocabulary ? {
@@ -227,14 +234,31 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
           this.mdValue.newValue.confidence = ConfidenceType.CF_UNSET;
         }
 
-        // Only ask if the current mdField have a period character to reduce request
+        // In DSpace 7, skip validation and directly initialize authority properties for known fields
         if (changes.mdField.currentValue.includes('.')) {
-          this.validateMetadataField().subscribe((isValid: boolean) => {
-            if (isValid) {
-              this.initAuthorityProperties();
-              this.cdr.detectChanges();
-            }
-          });
+          const knownAuthorityFields = [
+            'dc.contributor.author',
+            'dc.creator',
+            'dc.contributor.editor',
+            'dc.contributor.advisor',
+            'dc.contributor.other',
+            'dcterms.creator',
+            'dcterms.contributor'
+          ];
+          
+          if (knownAuthorityFields.includes(changes.mdField.currentValue)) {
+            // Skip validation for known authority fields and directly initialize
+            this.initAuthorityProperties();
+            this.cdr.detectChanges();
+          } else {
+            // For other fields, use validation as before
+            this.validateMetadataField().subscribe((isValid: boolean) => {
+              if (isValid) {
+                this.initAuthorityProperties();
+                this.cdr.detectChanges();
+              }
+            });
+          }
         }
       }
     }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, switchMap, mergeMap } from 'rxjs/operators';
 import { FollowLinkConfig, followLink } from '../../../shared/utils/follow-link-config.model';
 import { RequestService } from '../../data/request.service';
@@ -8,6 +8,10 @@ import { PaginatedList } from '../../data/paginated-list.model';
 import { Vocabulary } from './models/vocabulary.model';
 import { VocabularyEntry } from './models/vocabulary-entry.model';
 import { isNotEmpty } from '../../../shared/empty.util';
+import { ExternalSourceDataService } from '../../data/external-source-data.service';
+import { ExternalSourceEntry } from '../../shared/external-source-entry.model';
+import { PaginatedSearchOptions } from '../../../shared/search/models/paginated-search-options.model';
+import { PaginationComponentOptions } from '../../../shared/pagination/pagination-component-options.model';
 import {
   getFirstSucceededRemoteDataPayload,
   getFirstSucceededRemoteListPayload,
@@ -20,6 +24,8 @@ import { PageInfo } from '../../shared/page-info.model';
 import { FindListOptions } from '../../data/find-list-options.model';
 import { VocabularyEntryDetailsDataService } from './vocabulary-entry-details.data.service';
 import { VocabularyDataService } from './vocabulary.data.service';
+import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
+import { buildPaginatedList } from '../../data/paginated-list.model';
 
 /**
  * A service responsible for fetching/sending data from/to the REST API on the vocabularies endpoint
@@ -32,6 +38,7 @@ export class VocabularyService {
     protected requestService: RequestService,
     protected vocabularyDataService: VocabularyDataService,
     protected vocabularyEntryDetailDataService: VocabularyEntryDetailsDataService,
+    protected externalSourceDataService: ExternalSourceDataService,
   ) {
   }
 
@@ -124,6 +131,58 @@ export class VocabularyService {
    *    Return an observable that emits object list
    */
   getVocabularyEntriesByValue(value: string, exact: boolean, vocabularyOptions: VocabularyOptions, pageInfo: PageInfo): Observable<RemoteData<PaginatedList<VocabularyEntry>>> {
+    // Handle authority fields specially for DSpace 7 compatibility
+    const authorityFields = ['dc.contributor.author', 'dc.creator', 'dc.contributor.editor', 'dc.contributor.advisor'];
+    if (authorityFields.includes(vocabularyOptions.name)) {
+      // For authority fields, use ORCID external source if there's search text
+      if (value && value.length >= 2) {
+        // Create search options for ORCID
+        const paginationOptions = Object.assign(new PaginationComponentOptions(), {
+          id: 'orcid-search',
+          currentPage: pageInfo.currentPage || 1,
+          pageSize: pageInfo.elementsPerPage || 10
+        });
+        
+        const searchOptions = new PaginatedSearchOptions({
+          query: value,
+          pagination: paginationOptions
+        });
+        
+        // Use ORCID external source (try both orcid and orcidV2)
+        return this.externalSourceDataService.getExternalSourceEntries('orcid', searchOptions).pipe(
+          map((orcidResponse: RemoteData<PaginatedList<ExternalSourceEntry>>) => {
+            if (orcidResponse.hasSucceeded && orcidResponse.payload.page.length > 0) {
+              // Convert ExternalSourceEntry to VocabularyEntry
+              const vocabularyEntries: VocabularyEntry[] = orcidResponse.payload.page.map(entry => {
+                const vocabEntry = new VocabularyEntry();
+                // Display shows author name + ORCID for selection
+                vocabEntry.display = `${entry.display} (ORCID: ${entry.id})`;
+                // Value should be just the author name (what goes in the main field)
+                vocabEntry.value = entry.display; 
+                // Authority is the ORCID ID (what goes in the authority field)
+                vocabEntry.authority = entry.id;
+                vocabEntry.otherInformation = { orcid: entry.id };
+                return vocabEntry;
+              });
+              
+              const resultList = buildPaginatedList(pageInfo, vocabularyEntries);
+              return createSuccessfulRemoteDataObject$(resultList);
+            } else {
+              // If orcid fails, try orcidV2 or return empty list
+              const emptyList = buildPaginatedList(new PageInfo(), []);
+              return createSuccessfulRemoteDataObject$(emptyList);
+            }
+          }),
+          // Handle errors by returning empty list
+          switchMap(result => result)
+        );
+      } else {
+        // Return empty list if no search text
+        const emptyList = buildPaginatedList(new PageInfo(), []);
+        return createSuccessfulRemoteDataObject$(emptyList);
+      }
+    }
+
     const options: VocabularyFindOptions = new VocabularyFindOptions(
       null,
       value,

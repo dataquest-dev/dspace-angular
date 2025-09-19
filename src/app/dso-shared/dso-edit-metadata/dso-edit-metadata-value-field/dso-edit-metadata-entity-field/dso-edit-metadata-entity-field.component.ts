@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgFor } from '@angular/common';
 import {
   Component,
   OnInit,
@@ -19,12 +19,6 @@ import { AbstractDsoEditMetadataValueFieldComponent } from '../abstract-dso-edit
   selector: 'ds-dso-edit-metadata-entity-field',
   templateUrl: './dso-edit-metadata-entity-field.component.html',
   styleUrls: ['./dso-edit-metadata-entity-field.component.scss'],
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    FormsModule,
-    TranslateModule,
-  ],
 })
 export class DsoEditMetadataEntityFieldComponent extends AbstractDsoEditMetadataValueFieldComponent implements OnInit {
 
@@ -43,6 +37,13 @@ export class DsoEditMetadataEntityFieldComponent extends AbstractDsoEditMetadata
     this.entities$ = this.entityTypeService.findAll({ elementsPerPage: 100, currentPage: 1 }).pipe(
       getFirstSucceededRemoteListPayload(),
     );
+  }
+
+  /**
+   * Track by function for ngFor
+   */
+  trackByLabel(index: number, entity: ItemType): string {
+    return entity.label;
   }
 
 }
