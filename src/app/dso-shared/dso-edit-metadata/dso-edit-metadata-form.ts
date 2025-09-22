@@ -222,8 +222,28 @@ export class DsoEditMetadataForm {
     this.addValueToField(this.newValue, mdField);
     // Set the place property to match the new value's position within its field
     const place = this.fields[mdField].length - 1;
-    this.fields[mdField][place].originalValue.place = place;
-    this.fields[mdField][place].newValue.place = place;
+    
+    console.log(`Setting metadata field ${mdField}, position ${place}, total values: ${this.fields[mdField].length}`);
+    console.log(`Change type: ${this.fields[mdField][place].change}`);
+    console.log(`Existing values in ${mdField}:`, this.fields[mdField].map((v, i) => ({ 
+      index: i, 
+      originalPlace: v.originalValue.place, 
+      newPlace: v.newValue.place, 
+      value: v.newValue.value, 
+      change: v.change 
+    })));
+    
+    // For new values (ADD operation), don't modify originalValue.place since it represents the original state
+    // For ADD operations, originalValue.place should remain undefined (as initialized)
+    if (this.fields[mdField][place].change === DsoEditMetadataChangeType.ADD) {
+      // Don't set originalValue.place for ADD operations - it should remain undefined
+      this.fields[mdField][place].newValue.place = place;
+      console.log(`Set ADD operation - originalValue.place: ${this.fields[mdField][place].originalValue.place} (unchanged), newValue.place: ${place}`);
+    } else {
+      this.fields[mdField][place].originalValue.place = place;
+      this.fields[mdField][place].newValue.place = place;
+      console.log(`Set non-ADD operation - originalValue.place: ${place}, newValue.place: ${place}`);
+    }
     this.newValue = undefined;
   }
 
@@ -394,34 +414,120 @@ export class DsoEditMetadataForm {
    */
   getOperations(moveAnalyser: ArrayMoveChangeAnalyzer<number>): Operation[] {
     const operations: Operation[] = [];
+    console.log('=== Getting operations for all fields ===');
     Object.entries(this.fields).forEach(([field, values]: [string, DsoEditMetadataValue[]]) => {
+      console.log(`Field ${field} has ${values.length} values:`);
+      values.forEach((v, i) => {
+        console.log(`  [${i}] originalPlace: ${v.originalValue.place}, newPlace: ${v.newValue.place}, value: "${v.newValue.value}", change: ${v.change}`);
+      });
       const replaceOperations: MetadataPatchReplaceOperation[] = [];
       const removeOperations: MetadataPatchRemoveOperation[] = [];
       const addOperations: MetadataPatchAddOperation[] = [];
       [...values]
-        .sort((a: DsoEditMetadataValue, b: DsoEditMetadataValue) => a.originalValue.place - b.originalValue.place)
+        .sort((a: DsoEditMetadataValue, b: DsoEditMetadataValue) => {
+          // Handle ADD operations that might have undefined originalValue.place
+          const aPlace = a.originalValue.place ?? Number.MAX_SAFE_INTEGER;
+          const bPlace = b.originalValue.place ?? Number.MAX_SAFE_INTEGER;
+          return aPlace - bPlace;
+        })
         .forEach((value: DsoEditMetadataValue) => {
+          console.log(`Processing ${field} value:`, {
+            hasChange: hasValue(value.change),
+            changeType: value.change,
+            changeTypeName: value.change === DsoEditMetadataChangeType.REMOVE ? 'REMOVE' : 
+                           value.change === DsoEditMetadataChangeType.UPDATE ? 'UPDATE' : 
+                           value.change === DsoEditMetadataChangeType.ADD ? 'ADD' : 'UNKNOWN',
+            value: value.newValue.value
+          });
           if (hasValue(value.change)) {
             if (value.change === DsoEditMetadataChangeType.UPDATE) {
               // Only changes to value or language are considered "replace" operations. Changes to place are considered "move", which is processed below.
               if (value.originalValue.value !== value.newValue.value || value.originalValue.language !== value.newValue.language || 
                   value.originalValue.authority !== value.newValue.authority || value.originalValue.confidence !== value.newValue.confidence) {
-                replaceOperations.push(new MetadataPatchReplaceOperation(field, value.originalValue.place, {
-                  value: value.newValue.value,
-                  language: value.newValue.language,
-                  authority: value.newValue.authority,
-                  confidence: value.newValue.confidence,
-                }));
+                // CRITICAL CHECK: Validate that this is truly an existing metadata value
+                if (value.originalValue.place === undefined || value.originalValue.place === null) {
+                  console.error(`Invalid originalValue.place for UPDATE operation on ${field}. This should be ADD instead:`, value);
+                  console.log(`Converting UPDATE to ADD because originalValue.place is undefined/null`);
+                  // Convert this to an ADD operation and continue processing as ADD
+                  value.change = DsoEditMetadataChangeType.ADD;
+                }
+                
+                // Additional safety check: if originalValue has no real content, treat as ADD
+                else if (!value.originalValue.value || value.originalValue.value.trim() === '') {
+                  console.log(`Converting UPDATE to ADD because originalValue has no content:`, value.originalValue);
+                  value.change = DsoEditMetadataChangeType.ADD;
+                }
               }
+            }
+            
+            // Now process the operation based on the (possibly updated) change type
+            if (value.change === DsoEditMetadataChangeType.UPDATE) {
+              console.log(`Using REPLACE for UPDATE operation on ${field}[${value.originalValue.place}] instead of REMOVE + ADD:`);
+              console.log(`Full originalValue object:`, value.originalValue);
+              console.log(`Full newValue object:`, value.newValue);
+              console.log(`Backend metadata state check: Is this really an UPDATE or should it be an ADD?`);
+              console.log(`All values in ${field} with their original places:`, values.map((v, i) => ({ 
+                arrayIndex: i, 
+                originalPlace: v.originalValue.place, 
+                newPlace: v.newValue.place, 
+                value: v.newValue.value, 
+                change: v.change 
+              })));
+              console.log(`Comparison:`, {
+                original: { 
+                  value: value.originalValue.value, 
+                  language: value.originalValue.language,
+                  authority: value.originalValue.authority, 
+                  confidence: value.originalValue.confidence 
+                },
+                new: { 
+                  value: value.newValue.value, 
+                  language: value.newValue.language,
+                  authority: value.newValue.authority, 
+                  confidence: value.newValue.confidence 
+                }
+              });
+              
+              // Create REPLACE data - include authority/confidence only for ORCID authors
+              const replaceData: any = {
+                value: value.newValue.value,
+                language: value.newValue.language || null,
+              };
+              
+              // Only include authority and confidence if this is an ORCID author
+              if (value.newValue.authority && value.newValue.authority.trim() !== '') {
+                replaceData.authority = value.newValue.authority;
+                replaceData.confidence = (value.newValue.confidence !== undefined && value.newValue.confidence !== -1) ? value.newValue.confidence : null;
+              }
+              
+              console.log(`REPLACE operation data:`, replaceData);
+              
+              // Use REPLACE operation for UPDATE changes to existing metadata
+              replaceOperations.push(new MetadataPatchReplaceOperation(field, value.originalValue.place, replaceData));
             } else if (value.change === DsoEditMetadataChangeType.REMOVE) {
+              // Validate that originalValue.place is defined for REMOVE operations
+              if (value.originalValue.place === undefined || value.originalValue.place === null) {
+                console.error(`Invalid originalValue.place for REMOVE operation on ${field}:`, value);
+                return;
+              }
+              console.log(`Creating REMOVE operation for ${field}[${value.originalValue.place}]`);
               removeOperations.push(new MetadataPatchRemoveOperation(field, value.originalValue.place));
             } else if (value.change === DsoEditMetadataChangeType.ADD) {
-              addOperations.push(new MetadataPatchAddOperation(field, {
+              console.log(`Creating ADD operation for ${field}:`, { value: value.newValue.value, authority: value.newValue.authority, confidence: value.newValue.confidence });
+              
+              // Create ADD data - include authority/confidence only for ORCID authors
+              const addData: any = {
                 value: value.newValue.value,
-                language: value.newValue.language,
-                authority: value.newValue.authority,
-                confidence: value.newValue.confidence,
-              }));
+                language: value.newValue.language || null,
+              };
+              
+              // Only include authority and confidence if this is an ORCID author
+              if (value.newValue.authority && value.newValue.authority.trim() !== '') {
+                addData.authority = value.newValue.authority;
+                addData.confidence = (value.newValue.confidence !== undefined && value.newValue.confidence !== -1) ? value.newValue.confidence : null;
+              }
+              
+              addOperations.push(new MetadataPatchAddOperation(field, addData));
             } else {
               console.warn('Illegal metadata change state detected for', value);
             }

@@ -7,10 +7,11 @@
 
 .orcid-link {
   text-decoration: none;
-  color: inherit;
+  color: var(--lt-vsb-tuo-cyan); // Use the VSB cyan color
   
   &:hover {
     text-decoration: underline;
+    color: var(--lt-vsb-tuo-cyan-hover); // Use the VSB cyan hover color
   }
 }
 

@@ -233,7 +233,7 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
           changes.mdField.previousValue !== changes.mdField.currentValue) {
           // Clear authority value in case it has been assigned with the previous metadataField used
           this.mdValue.newValue.authority = null;
-          this.mdValue.newValue.confidence = ConfidenceType.CF_UNSET;
+          this.mdValue.newValue.confidence = null; // Changed from ConfidenceType.CF_UNSET (-1) to null to prevent backend errors
         }
 
         // In DSpace 7, skip validation and directly initialize authority properties for known fields
@@ -298,7 +298,7 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
         this.mdValue.newValue.confidence = ConfidenceType.CF_ACCEPTED;
       } else {
         this.mdValue.newValue.authority = null;
-        this.mdValue.newValue.confidence = ConfidenceType.CF_UNSET;
+        this.mdValue.newValue.confidence = null; // Changed from ConfidenceType.CF_UNSET (-1) to null to prevent backend errors
       }
       // Manually mark as changed since confirmChanges doesn't detect authority changes
       this.mdValue.change = DsoEditMetadataChangeType.UPDATE;
@@ -307,7 +307,7 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
       // The event is undefined when the user clears the selection in scrollable dropdown
       this.mdValue.newValue.value = '';
       this.mdValue.newValue.authority = null;
-      this.mdValue.newValue.confidence = ConfidenceType.CF_UNSET;
+      this.mdValue.newValue.confidence = null; // Changed from ConfidenceType.CF_UNSET (-1) to null to prevent backend errors
       // Manually mark as changed since confirmChanges doesn't detect authority changes
       this.mdValue.change = DsoEditMetadataChangeType.UPDATE;
       this.confirm.emit(false);
