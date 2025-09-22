@@ -67,8 +67,6 @@ import { FullItemPageComponent } from './app/item-page/full/full-item-page.compo
 import { LoginPageComponent } from './app/login-page/login-page.component';
 import { LogoutPageComponent } from './app/logout-page/logout-page.component';
 import { CreateProfileComponent } from './app/register-page/create-profile/create-profile.component';
-import { ForgotEmailComponent } from './app/forgot-password/forgot-password-email/forgot-email.component';
-import { ForgotPasswordFormComponent } from './app/forgot-password/forgot-password-form/forgot-password-form.component';
 import { ProfilePageComponent } from './app/profile-page/profile-page.component';
 import { RegisterEmailComponent } from './app/register-page/register-email/register-email.component';
 import { MyDSpacePageComponent } from './app/my-dspace-page/my-dspace-page.component';
@@ -191,8 +189,6 @@ const DECLARATIONS = [
   LoginPageComponent,
   LogoutPageComponent,
   CreateProfileComponent,
-  ForgotEmailComponent,
-  ForgotPasswordFormComponent,
   ProfilePageComponent,
   RegisterEmailComponent,
   MyDSpacePageComponent,
