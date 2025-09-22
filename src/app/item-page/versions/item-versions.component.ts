@@ -586,6 +586,14 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
         map((item: Item) => this.dsoNameService.getName(item)));
   }
 
+  /**
+   * Get the display name for a version item
+   * @param versionItem the item to get the name for
+   */
+  getVersionItemDisplayName(versionItem: Item): string {
+    return versionItem.firstMetadataValue('dc.title') || versionItem.name || 'Untitled';
+  }
+
   getItemHandleFromVersion(version: Version) {
     return version.item
       .pipe(

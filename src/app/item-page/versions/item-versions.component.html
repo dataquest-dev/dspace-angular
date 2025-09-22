@@ -1,8 +1,8 @@
 <div *ngIf="(versionsDTO$ | async) as versionsDTO; else noItemVersion" class="mb-2">
   <div *ngIf="(versionRD$ | async)?.payload as itemVersion">
-    
+
     <!-- Toggle Header -->
-    <div class="d-flex align-items-center mb-2" style="cursor: pointer;" (click)="toggleVersionHistory()">
+    <div class="d-flex align-items-center mb-2 cursor-pointer" (click)="toggleVersionHistory()">
       <h4 class="mb-0 me-2">{{ "item.version.history.head" | translate }}</h4>
       <i class="fas" [ngClass]="showVersionHistory ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
     </div>
@@ -39,13 +39,13 @@
                     <ng-template #itemNameWithLink>
                       <ng-container *ngIf="(versionDTO.version.item | async)?.payload as versionItem">
                         <a [routerLink]="getVersionRoute(versionDTO.version.id)">
-                          {{ versionItem.firstMetadataValue('dc.title') || versionItem.name || 'Untitled' }}
+                          {{ getVersionItemDisplayName(versionItem) }}
                         </a>
                       </ng-container>
                     </ng-template>
                     <ng-template #itemNameWithoutLink>
                       <ng-container *ngIf="(versionDTO.version.item | async)?.payload as versionItem">
-                        {{ versionItem.firstMetadataValue('dc.title') || versionItem.name || 'Untitled' }}
+                        {{ getVersionItemDisplayName(versionItem) }}
                       </ng-container>
                     </ng-template>
                     <span *ngIf="versionDTO.version.id === itemVersion?.id">*</span>
@@ -102,7 +102,7 @@
         <div>*&nbsp;{{ "item.version.history.selected" | translate }}</div>
       </ds-pagination>
     </div>
-    
+
   </div>
 </div>
 <ng-template #noItemVersion>
