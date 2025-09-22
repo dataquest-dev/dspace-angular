@@ -41,4 +41,38 @@ describe('PlainTextMetadataListElementComponent', () => {
     expect(fixture.debugElement.query(By.css('a.ds-browse-link')).nativeElement.innerHTML).toContain(mockMetadataRepresentation.value);
   });
 
+  it('should correctly detect ORCID authority', () => {
+    const orcidRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+      key: 'dc.contributor.author',
+      value: 'John Doe',
+      authority: '0000-0002-1825-0097',
+      confidence: 600
+    });
+    comp.mdRepresentation = orcidRepresentation;
+    expect(comp.isOrcidAuthority()).toBe(true);
+  });
+
+  it('should return false for non-ORCID authority', () => {
+    const nonOrcidRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+      key: 'dc.contributor.author',
+      value: 'Jane Smith',
+      authority: 'not-an-orcid',
+      confidence: 600
+    });
+    comp.mdRepresentation = nonOrcidRepresentation;
+    expect(comp.isOrcidAuthority()).toBe(false);
+  });
+
+  it('should generate correct ORCID profile URL', () => {
+    const orcidRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+      key: 'dc.contributor.author',
+      value: 'John Doe',
+      authority: '0000-0002-1825-0097',
+      confidence: 600
+    });
+    comp.mdRepresentation = orcidRepresentation;
+    const expectedUrl = 'https://orcid.org/0000-0002-1825-0097';
+    expect(comp.getOrcidUrl()).toBe(expectedUrl);
+  });
+
 });

@@ -5,12 +5,13 @@
   gap: 0.25rem;
 }
 
-.ds-orcid-link {
+.orcid-link {
   text-decoration: none;
-  color: inherit;
+  color: var(--lt-vsb-tuo-cyan); // Use the VSB cyan color
   
   &:hover {
     text-decoration: underline;
+    color: var(--lt-vsb-tuo-cyan-hover); // Use the VSB cyan hover color
   }
 }
 
@@ -25,7 +26,10 @@
 }
 
 .orcid-icon {
-  width: 16px;
-  height: 16px;
-  vertical-align: middle;
+  color: #a6ce39;  // Official ORCID green color
+  font-size: 1em;
+  
+  &:hover {
+    opacity: 0.8;
+  }
 }

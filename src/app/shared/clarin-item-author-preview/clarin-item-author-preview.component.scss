@@ -1,3 +1,14 @@
 /**
 This is a styling file for the clarin-item-author-preview component.
  */
+
+// ORCID icon styling
+.fa-orcid {
+  color: #a6ce39;  // Official ORCID green color
+  font-size: 1em;
+  margin-left: 0.25rem;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+}

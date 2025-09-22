@@ -222,8 +222,16 @@ export class DsoEditMetadataForm {
     this.addValueToField(this.newValue, mdField);
     // Set the place property to match the new value's position within its field
     const place = this.fields[mdField].length - 1;
-    this.fields[mdField][place].originalValue.place = place;
-    this.fields[mdField][place].newValue.place = place;
+    
+    // For new values (ADD operation), don't modify originalValue.place since it represents the original state
+    // For ADD operations, originalValue.place should remain undefined (as initialized)
+    if (this.fields[mdField][place].change === DsoEditMetadataChangeType.ADD) {
+      // Don't set originalValue.place for ADD operations - it should remain undefined
+      this.fields[mdField][place].newValue.place = place;
+    } else {
+      this.fields[mdField][place].originalValue.place = place;
+      this.fields[mdField][place].newValue.place = place;
+    }
     this.newValue = undefined;
   }
 
@@ -399,26 +407,67 @@ export class DsoEditMetadataForm {
       const removeOperations: MetadataPatchRemoveOperation[] = [];
       const addOperations: MetadataPatchAddOperation[] = [];
       [...values]
-        .sort((a: DsoEditMetadataValue, b: DsoEditMetadataValue) => a.originalValue.place - b.originalValue.place)
+        .sort((a: DsoEditMetadataValue, b: DsoEditMetadataValue) => {
+          // Handle ADD operations that might have undefined originalValue.place
+          const aPlace = a.originalValue.place ?? Number.MAX_SAFE_INTEGER;
+          const bPlace = b.originalValue.place ?? Number.MAX_SAFE_INTEGER;
+          return aPlace - bPlace;
+        })
         .forEach((value: DsoEditMetadataValue) => {
           if (hasValue(value.change)) {
             if (value.change === DsoEditMetadataChangeType.UPDATE) {
               // Only changes to value or language are considered "replace" operations. Changes to place are considered "move", which is processed below.
-              if (value.originalValue.value !== value.newValue.value || value.originalValue.language !== value.newValue.language) {
-                replaceOperations.push(new MetadataPatchReplaceOperation(field, value.originalValue.place, {
-                  value: value.newValue.value,
-                  language: value.newValue.language,
-                }));
+              if (value.originalValue.value !== value.newValue.value || value.originalValue.language !== value.newValue.language || 
+                  value.originalValue.authority !== value.newValue.authority || value.originalValue.confidence !== value.newValue.confidence) {
+                // CRITICAL CHECK: Validate that this is truly an existing metadata value
+                if (value.originalValue.place === undefined || value.originalValue.place === null) {
+                  // Convert this to an ADD operation and continue processing as ADD
+                  value.change = DsoEditMetadataChangeType.ADD;
+                }
+                
+                // Additional safety check: if originalValue has no real content, treat as ADD
+                else if (!value.originalValue.value || value.originalValue.value.trim() === '') {
+                  value.change = DsoEditMetadataChangeType.ADD;
+                }
               }
+            }
+            
+            // Now process the operation based on the (possibly updated) change type
+            if (value.change === DsoEditMetadataChangeType.UPDATE) {
+              // Create REPLACE data - include authority/confidence only for ORCID authors
+              const replaceData: any = {
+                value: value.newValue.value,
+                language: value.newValue.language || null,
+              };
+              
+              // Only include authority and confidence if this is an ORCID author
+              if (value.newValue.authority && value.newValue.authority.trim() !== '') {
+                replaceData.authority = value.newValue.authority;
+                replaceData.confidence = (value.newValue.confidence !== undefined && value.newValue.confidence !== -1) ? value.newValue.confidence : null;
+              }
+              
+              // Use REPLACE operation for UPDATE changes to existing metadata
+              replaceOperations.push(new MetadataPatchReplaceOperation(field, value.originalValue.place, replaceData));
             } else if (value.change === DsoEditMetadataChangeType.REMOVE) {
+              // Validate that originalValue.place is defined for REMOVE operations
+              if (value.originalValue.place === undefined || value.originalValue.place === null) {
+                return;
+              }
               removeOperations.push(new MetadataPatchRemoveOperation(field, value.originalValue.place));
             } else if (value.change === DsoEditMetadataChangeType.ADD) {
-              addOperations.push(new MetadataPatchAddOperation(field, {
+              // Create ADD data - include authority/confidence only for ORCID authors
+              const addData: any = {
                 value: value.newValue.value,
-                language: value.newValue.language,
-              }));
-            } else {
-              console.warn('Illegal metadata change state detected for', value);
+                language: value.newValue.language || null,
+              };
+              
+              // Only include authority and confidence if this is an ORCID author
+              if (value.newValue.authority && value.newValue.authority.trim() !== '') {
+                addData.authority = value.newValue.authority;
+                addData.confidence = (value.newValue.confidence !== undefined && value.newValue.confidence !== -1) ? value.newValue.confidence : null;
+              }
+              
+              addOperations.push(new MetadataPatchAddOperation(field, addData));
             }
           }
         });

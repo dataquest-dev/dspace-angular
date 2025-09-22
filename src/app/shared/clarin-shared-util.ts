@@ -63,18 +63,28 @@ export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
   }
   const itemAuthorsLocal = [];
   authorsMV.forEach((authorMV: MetadataValue) => {
-    let value: string, operator: string;
-    if (authorMV.authority) {
-      value = encodeURIComponent(authorMV.authority);
-      operator = 'authority';
+    let authorUrl: string;
+    const isOrcidAuthority = authorMV.authority && /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(authorMV.authority);
+    
+    if (isOrcidAuthority) {
+      // Create direct ORCID profile link for ORCID authorities
+      authorUrl = `https://orcid.org/${authorMV.authority}`;
     } else {
-      value = encodeURIComponent(authorMV.value);
-      operator = 'equals';
+      // Create search link for non-ORCID authorities or values without authority
+      let value: string, operator: string;
+      if (authorMV.authority) {
+        value = encodeURIComponent(authorMV.authority);
+        operator = 'authority';
+      } else {
+        value = encodeURIComponent(authorMV.value);
+        operator = 'equals';
+      }
+      authorUrl = baseUrl + '/search?f.author=' + value + ',' + operator;
     }
-    const authorSearchLink = baseUrl + '/search?f.author=' + value + ',' + operator;
+    
     const authorNameLink = Object.assign(new AuthorNameLink(), {
       name: authorMV.value,
-      url: authorSearchLink,
+      url: authorUrl,
       isAuthority: !!authorMV.authority
     });
     itemAuthorsLocal.push(authorNameLink);

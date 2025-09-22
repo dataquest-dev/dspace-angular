@@ -7,7 +7,24 @@
   target="_blank" [href]="mdRepresentation.getValue()" role="link" tabindex="0">
     {{mdRepresentation.getValue()}}
   </a>
-  <span *ngIf="(mdRepresentation.representationType=='authority_controlled')" class="dont-break-out">{{mdRepresentation.getValue()}}</span>
+  
+  <!-- Authority controlled metadata with ORCID link and icon -->
+  <span *ngIf="(mdRepresentation.representationType=='authority_controlled') && isOrcidAuthority()" class="dont-break-out orcid-author">
+    <a class="orcid-link" [href]="getOrcidUrl()" target="_blank" rel="noopener noreferrer" 
+       title="View ORCID profile for {{mdRepresentation.getValue()}}">
+      {{mdRepresentation.getValue()}}
+    </a>
+    <a class="orcid-badge" [href]="getOrcidUrl()" target="_blank" rel="noopener noreferrer"
+       title="ORCID profile">
+      <i class="fa-brands fa-orcid orcid-icon"></i>
+    </a>
+  </span>
+  
+  <!-- Authority controlled metadata without ORCID -->
+  <span *ngIf="(mdRepresentation.representationType=='authority_controlled') && !isOrcidAuthority()" class="dont-break-out">
+    {{mdRepresentation.getValue()}}
+  </span>
+  
   <a *ngIf="(mdRepresentation.representationType=='browse_link')"
      class="dont-break-out ds-browse-link"
      [routerLink]="['/browse/', mdRepresentation.browseDefinition.id]"
