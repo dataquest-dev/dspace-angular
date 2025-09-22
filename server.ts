@@ -276,10 +276,12 @@ function serverSideRender(req, res, sendToUser: boolean = true) {
     originUrl: environment.ui.baseUrl,
     requestUrl: req.originalUrl,
   }, (err, data) => {
+    if (res.headersSent && hasValue(err)) {
+      console.warn('Server-side rendering failed after the response was committed.');
+    }
+    // If headers were already sent, then do nothing else, it is probably a
+    // redirect response
     if (res.headersSent) {
-      if (hasValue(err)) {
-        console.warn('Server-side rendering failed after the response was committed.');
-      }
       return;
     }
     if (hasNoValue(err) && hasValue(data)) {
