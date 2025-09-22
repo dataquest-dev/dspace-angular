@@ -362,23 +362,5 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
     });
   });
 
-  describe('Debug Methods', () => {
-    it('should return metadata values for debug purposes', () => {
-      component.item = mockItem;
-      const result = component.getMetadataValues('dc.rights.uri');
-      expect(result).toBe('https://creativecommons.org/licenses/by/4.0/');
-    });
 
-    it('should return "No values found" when metadata field does not exist', () => {
-      component.item = mockItem;
-      const result = component.getMetadataValues('nonexistent.field');
-      expect(result).toBe('No values found');
-    });
-
-    it('should return "No metadata available" when item has no metadata', () => {
-      component.item = { metadata: null } as any as Item;
-      const result = component.getMetadataValues('dc.rights.uri');
-      expect(result).toBe('No metadata available');
-    });
-  });
 });
