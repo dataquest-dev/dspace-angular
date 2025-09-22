@@ -190,7 +190,7 @@ export class DSpaceObject extends ListableObject implements CacheableObject {
       const md = new MetadataValue();
       md.value = value;
       md.authority = null;
-      md.confidence = null; // Changed from -1 to null to prevent backend errors
+      md.confidence = -1;
       md.language = language || null;
       md.place = index;
       return md;

@@ -5779,6 +5779,10 @@
 
   "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.:",
 
+  "item.edit.metadata.edit.authority.key": "Edit authority key",
+
+  "item.edit.metadata.authority.label": "Authority: ",
+
   "item.edit.tabs.license.head": "License",
 
   "item.edit.license.head": "Current License",
