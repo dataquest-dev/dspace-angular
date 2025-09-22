@@ -42,6 +42,7 @@ import { Vocabulary } from '../../../../core/submission/vocabularies/models/voca
 import { VocabularyOptions } from '../../../../core/submission/vocabularies/models/vocabulary-options.model';
 import { isNotEmpty } from '../../../../shared/empty.util';
 import { DsDynamicOneboxComponent } from '../../../../shared/form/builder/ds-dynamic-form-ui/models/onebox/dynamic-onebox.component';
+import { DsoEditMetadataChangeType } from '../../dso-edit-metadata-form';
 import {
   DsDynamicOneboxModelConfig,
   DynamicOneboxModel,
@@ -168,12 +169,13 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
     if (isNotEmpty(vocabulary)) {
       let formFieldValue: FormFieldMetadataValueObject | string;
       if (isNotEmpty(this.mdValue.newValue.value)) {
-        // Use the constructor properly with all parameters
+        // For authority fields, use the original value without display modification
+        // The form field should show just the author name, not the ORCID information
         formFieldValue = new FormFieldMetadataValueObject(
-          this.mdValue.newValue.value,           // value
+          this.mdValue.newValue.value,           // value (just the author name)
           this.mdValue.newValue.language,        // language
-          this.mdValue.newValue.authority,       // authority
-          this.mdValue.newValue.value,           // display (same as value)
+          this.mdValue.newValue.authority,       // authority (ORCID ID)
+          this.mdValue.newValue.value,           // display (same as value for form input)
           0,                                     // place
           this.mdValue.newValue.confidence       // confidence
         );
@@ -298,12 +300,16 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
         this.mdValue.newValue.authority = null;
         this.mdValue.newValue.confidence = ConfidenceType.CF_UNSET;
       }
+      // Manually mark as changed since confirmChanges doesn't detect authority changes
+      this.mdValue.change = DsoEditMetadataChangeType.UPDATE;
       this.confirm.emit(false);
     } else {
       // The event is undefined when the user clears the selection in scrollable dropdown
       this.mdValue.newValue.value = '';
       this.mdValue.newValue.authority = null;
       this.mdValue.newValue.confidence = ConfidenceType.CF_UNSET;
+      // Manually mark as changed since confirmChanges doesn't detect authority changes
+      this.mdValue.change = DsoEditMetadataChangeType.UPDATE;
       this.confirm.emit(false);
     }
   }
@@ -332,9 +338,13 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
   onChangeAuthorityKey() {
     if (this.mdValue.newValue.authority === '') {
       this.mdValue.newValue.confidence = ConfidenceType.CF_NOVALUE;
+      // Manually mark as changed since confirmChanges doesn't detect authority changes
+      this.mdValue.change = DsoEditMetadataChangeType.UPDATE;
       this.confirm.emit(false);
     } else if (this.mdValue.newValue.authority !== this.mdValue.originalValue.authority) {
       this.mdValue.newValue.confidence = ConfidenceType.CF_ACCEPTED;
+      // Manually mark as changed since confirmChanges doesn't detect authority changes
+      this.mdValue.change = DsoEditMetadataChangeType.UPDATE;
       this.confirm.emit(false);
     }
   }

@@ -404,10 +404,13 @@ export class DsoEditMetadataForm {
           if (hasValue(value.change)) {
             if (value.change === DsoEditMetadataChangeType.UPDATE) {
               // Only changes to value or language are considered "replace" operations. Changes to place are considered "move", which is processed below.
-              if (value.originalValue.value !== value.newValue.value || value.originalValue.language !== value.newValue.language) {
+              if (value.originalValue.value !== value.newValue.value || value.originalValue.language !== value.newValue.language || 
+                  value.originalValue.authority !== value.newValue.authority || value.originalValue.confidence !== value.newValue.confidence) {
                 replaceOperations.push(new MetadataPatchReplaceOperation(field, value.originalValue.place, {
                   value: value.newValue.value,
                   language: value.newValue.language,
+                  authority: value.newValue.authority,
+                  confidence: value.newValue.confidence,
                 }));
               }
             } else if (value.change === DsoEditMetadataChangeType.REMOVE) {
@@ -416,6 +419,8 @@ export class DsoEditMetadataForm {
               addOperations.push(new MetadataPatchAddOperation(field, {
                 value: value.newValue.value,
                 language: value.newValue.language,
+                authority: value.newValue.authority,
+                confidence: value.newValue.confidence,
               }));
             } else {
               console.warn('Illegal metadata change state detected for', value);

@@ -89,7 +89,7 @@ export class DsDynamicOneboxComponent extends DsDynamicVocabularyComponent imple
   search = (text$: Observable<string>) => {
     return text$.pipe(
       merge(this.click$),
-      debounceTime(300),
+      debounceTime(150),
       distinctUntilChanged(),
       tap(() => this.changeSearchingStatus(true)),
       switchMap((term) => {
@@ -255,11 +255,15 @@ export class DsDynamicOneboxComponent extends DsDynamicVocabularyComponent imple
    * @param init Representing if is init value or not.
    */
   setCurrentValue(value: any, init = false): void {
+    console.log('setCurrentValue called - value:', value, 'init:', init);
     let result: string;
     if (init) {
+      console.log('setCurrentValue - calling getInitValueFromModel');
       this.getInitValueFromModel()
         .subscribe((formValue: FormFieldMetadataValueObject) => {
+          console.log('setCurrentValue - getInitValueFromModel returned:', formValue);
           this.currentValue = formValue;
+          console.log('setCurrentValue - currentValue set to:', this.currentValue);
           this.cdr.detectChanges();
         });
     } else {
@@ -270,6 +274,7 @@ export class DsDynamicOneboxComponent extends DsDynamicVocabularyComponent imple
       }
 
       this.currentValue = result;
+      console.log('setCurrentValue - non-init currentValue set to:', this.currentValue);
       this.cdr.detectChanges();
     }
 
@@ -279,6 +284,41 @@ export class DsDynamicOneboxComponent extends DsDynamicVocabularyComponent imple
     this.subs
       .filter((sub) => hasValue(sub))
       .forEach((sub) => sub.unsubscribe());
+  }
+
+  /**
+   * Override getInitValueFromModel to handle ORCID authority fields properly
+   * For ORCID fields, don't try to look up the authority ID in the vocabulary,
+   * just return the original FormFieldMetadataValueObject with the author name
+   */
+  getInitValueFromModel(): Observable<FormFieldMetadataValueObject> {
+    // Debug logging to understand what's happening
+    console.log('getInitValueFromModel - model.value:', this.model.value);
+    console.log('getInitValueFromModel - vocabularyOptions:', this.model.vocabularyOptions);
+    
+    if (isNotEmpty(this.model.value) && 
+        (this.model.value instanceof FormFieldMetadataValueObject) && 
+        !this.model.value.hasAuthorityToGenerate() &&
+        this.model.value.hasAuthority()) {
+      
+      console.log('Has authority, value:', this.model.value.value);
+      console.log('Authority:', this.model.value.authority);
+      console.log('Vocabulary name:', this.model.vocabularyOptions?.name);
+      
+      // Check if this is an ORCID field by looking at the authority value (ORCID format: 0000-0000-0000-0000)
+      const authority = this.model.value.authority;
+      const isORCID = authority && /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(authority);
+      
+      if (isORCID) {
+        console.log('Returning original value for ORCID field');
+        // For ORCID fields, return the original value without vocabulary lookup
+        return observableOf(this.model.value);
+      }
+    }
+    
+    console.log('Using parent implementation');
+    // For other fields, use the parent implementation
+    return super.getInitValueFromModel();
   }
 
 }

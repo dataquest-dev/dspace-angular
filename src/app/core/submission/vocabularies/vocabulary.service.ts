@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { map, switchMap, mergeMap } from 'rxjs/operators';
+import { map, switchMap, mergeMap, catchError } from 'rxjs/operators';
 import { FollowLinkConfig, followLink } from '../../../shared/utils/follow-link-config.model';
 import { RequestService } from '../../data/request.service';
 import { RemoteData } from '../../data/remote-data';
@@ -150,8 +150,8 @@ export class VocabularyService {
         
         // Use ORCID external source (try both orcid and orcidV2)
         return this.externalSourceDataService.getExternalSourceEntries('orcid', searchOptions).pipe(
-          map((orcidResponse: RemoteData<PaginatedList<ExternalSourceEntry>>) => {
-            if (orcidResponse.hasSucceeded && orcidResponse.payload.page.length > 0) {
+          switchMap((orcidResponse: RemoteData<PaginatedList<ExternalSourceEntry>>) => {
+            if (orcidResponse.hasSucceeded && orcidResponse.payload && orcidResponse.payload.page.length > 0) {
               // Convert ExternalSourceEntry to VocabularyEntry
               const vocabularyEntries: VocabularyEntry[] = orcidResponse.payload.page.map(entry => {
                 const vocabEntry = new VocabularyEntry();
@@ -168,13 +168,16 @@ export class VocabularyService {
               const resultList = buildPaginatedList(pageInfo, vocabularyEntries);
               return createSuccessfulRemoteDataObject$(resultList);
             } else {
-              // If orcid fails, try orcidV2 or return empty list
+              // Return empty list if no results
               const emptyList = buildPaginatedList(new PageInfo(), []);
               return createSuccessfulRemoteDataObject$(emptyList);
             }
           }),
-          // Handle errors by returning empty list
-          switchMap(result => result)
+          catchError(() => {
+            // On error, return empty list
+            const emptyList = buildPaginatedList(new PageInfo(), []);
+            return createSuccessfulRemoteDataObject$(emptyList);
+          })
         );
       } else {
         // Return empty list if no search text
