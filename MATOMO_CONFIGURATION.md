@@ -26,7 +26,7 @@ matomo: {
 
 - environment.test.ts
 - default-app-config.ts
-- config.example.ts
+- config.example.yml
 
 ## After Changes
 
