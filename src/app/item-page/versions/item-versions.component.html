@@ -1,14 +1,16 @@
-<div *ngIf="(versionsDTO$ | async) as versionsDTO; else noItemVersion" class="mb-2">
-  <div *ngIf="(versionRD$ | async)?.payload as itemVersion">
-
-    <!-- Toggle Header -->
-    <div class="d-flex align-items-center mb-2 cursor-pointer" (click)="toggleVersionHistory()">
-      <h4 class="mb-0 me-2">{{ "item.version.history.head" | translate }}</h4>
-      <i class="fas" [ngClass]="showVersionHistory ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+<div *ngIf="(versionsDTO$ | async) as versionsDTO; else noItemVersion">
+  <div *ngIf="(versionRD$ | async)?.payload as itemVersion" class="row clarin-item-page-field">
+    <div class="col-lg-3 col-2-5 d-flex align-self-start">
+      <div><i [class]="'fas ' + iconName + ' fa-xs'"></i></div>
+      <!-- Toggle Header -->
+      <div class="pl-1 d-flex align-items-center cursor-pointer" (click)="toggleVersionHistory()">
+        <b class="mb-0 me-2">{{ "item.version.history.head" | translate }}</b>
+        <i class="fas" [ngClass]="showVersionHistory ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+      </div>
     </div>
 
     <!-- Collapsible Content -->
-    <div class="collapse" [ngClass]="{'show': showVersionHistory}">
+    <div class="col-lg-9 collapse" [ngClass]="{'show': showVersionHistory}">
       <ds-pagination *ngIf="versionsDTO.versionDTOs.length > 0"
                      (paginationChange)="onPageChange()"
                      [hideGear]="true"

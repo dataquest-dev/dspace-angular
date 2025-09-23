@@ -81,6 +81,11 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
   @Input() item: Item;
 
   /**
+   * Fontawesome v5. icon name with default settings.
+   */
+  @Input() iconName: string;
+
+  /**
    * An option to display the list of versions, even when there aren't any.
    * Instead of the table, an alert will be displayed, notifying the user there are no other versions present
    * for the current item.
