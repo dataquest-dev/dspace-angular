@@ -148,17 +148,19 @@ export class VocabularyService {
           pagination: paginationOptions
         });
         
-        // Use ORCID external source (try both orcid and orcidV2)
-        return this.externalSourceDataService.getExternalSourceEntries('orcid', searchOptions).pipe(
-          switchMap((orcidResponse: RemoteData<PaginatedList<ExternalSourceEntry>>) => {
-            if (orcidResponse.hasSucceeded && orcidResponse.payload && orcidResponse.payload.page.length > 0) {
+        // Use ORCID external source with proper completion handling  
+        return this.externalSourceDataService.getExternalSourceEntries('orcid', searchOptions, false, false).pipe(
+          // Use the existing DSpace operator to ensure completion
+          getFirstSucceededRemoteDataPayload(),
+          switchMap((paginatedList: PaginatedList<ExternalSourceEntry>) => {
+            if (paginatedList && paginatedList.page.length > 0) {
               // Convert ExternalSourceEntry to VocabularyEntry
-              const vocabularyEntries: VocabularyEntry[] = orcidResponse.payload.page.map(entry => {
+              const vocabularyEntries: VocabularyEntry[] = paginatedList.page.map(entry => {
                 const vocabEntry = new VocabularyEntry();
                 // Display shows author name + ORCID for selection
                 vocabEntry.display = `${entry.display} (ORCID: ${entry.id})`;
-                // Value should be just the author name (what goes in the main field)
-                vocabEntry.value = entry.display; 
+                // Value should be just the author name (what goes in the main field)  
+                vocabEntry.value = entry.display;
                 // Authority is the ORCID ID (what goes in the authority field)
                 vocabEntry.authority = entry.id;
                 vocabEntry.otherInformation = { orcid: entry.id };
@@ -173,8 +175,9 @@ export class VocabularyService {
               return createSuccessfulRemoteDataObject$(emptyList);
             }
           }),
-          catchError(() => {
-            // On error, return empty list
+          catchError((error) => {
+            console.warn('ORCID lookup failed:', error);
+            // Return empty list on error rather than falling back
             const emptyList = buildPaginatedList(new PageInfo(), []);
             return createSuccessfulRemoteDataObject$(emptyList);
           })

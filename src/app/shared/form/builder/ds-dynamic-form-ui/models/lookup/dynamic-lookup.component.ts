@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, O
 import { UntypedFormGroup } from '@angular/forms';
 
 import { of as observableOf, Subscription } from 'rxjs';
-import { catchError, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, finalize } from 'rxjs/operators';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicFormLayoutService, DynamicFormValidationService } from '@ng-dynamic-forms/core';
 
@@ -230,8 +230,13 @@ export class DsDynamicLookupComponent extends DsDynamicVocabularyComponent imple
           []
         ))
       ),
-      distinctUntilChanged())
-      .subscribe((list: PaginatedList<VocabularyEntry>) => {
+      distinctUntilChanged(),
+      finalize(() => {
+        // Always reset loading state regardless of success or error
+        this.loading = false;
+        this.cdr.detectChanges();
+      })
+    ).subscribe((list: PaginatedList<VocabularyEntry>) => {
         this.optionsList = list.page;
         this.updatePageInfo(
           list.pageInfo.elementsPerPage,
@@ -239,8 +244,6 @@ export class DsDynamicLookupComponent extends DsDynamicVocabularyComponent imple
           list.pageInfo.totalElements,
           list.pageInfo.totalPages
         );
-        this.loading = false;
-        this.cdr.detectChanges();
       }));
   }
 
