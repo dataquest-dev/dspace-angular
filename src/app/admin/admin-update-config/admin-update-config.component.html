@@ -1,0 +1,201 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+          <i class="fas fa-cogs me-2"></i>
+          {{ 'admin.update-config.title' | translate }}
+        </h2>
+        <button 
+          class="btn btn-outline-secondary" 
+          (click)="loadConfigFiles()"
+          [disabled]="loading"
+          title="{{ 'admin.update-config.refresh.tooltip' | translate }}">
+          <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
+          {{ 'admin.update-config.refresh' | translate }}
+        </button>
+      </div>
+
+      <!-- Loading indicator -->
+      <div *ngIf="loading && configFiles.length === 0" class="text-center py-4">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">{{ 'admin.update-config.loading' | translate }}</span>
+        </div>
+        <p class="mt-2">{{ 'admin.update-config.loading-files' | translate }}</p>
+      </div>
+
+      <!-- File Selection Card -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-folder-open me-2"></i>
+            {{ 'admin.update-config.file-selection.title' | translate }}
+          </h5>
+          <p class="card-text text-muted">
+            {{ 'admin.update-config.description' | translate }}
+          </p>
+          
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <label for="fileSelect" class="form-label fw-bold">
+                <i class="fas fa-file-code me-2 text-primary"></i>
+                {{ 'admin.update-config.file-selection.label' | translate }}
+              </label>
+              <select 
+                id="fileSelect"
+                class="form-select form-select-lg" 
+                [(ngModel)]="selectedFile" 
+                (ngModelChange)="onFileSelect($event)"
+                [disabled]="loading || configFiles.length === 0">
+                <option [ngValue]="null">{{ getFileSelectionText() }}</option>
+                <option *ngFor="let file of configFiles" [ngValue]="file">
+                  📄 {{ file.fileName || '[No Name]' }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6" *ngIf="selectedFile">
+              <div class="file-info mt-3 mt-md-0 p-3 bg-light rounded">
+                <h6 class="mb-2">
+                  <i class="fas fa-info-circle text-info me-1"></i>
+                  File Information
+                </h6>
+                <small class="text-muted">
+                  <strong>📁 File:</strong> {{ selectedFile.fileName }}<br>
+                  <strong>📊 Size:</strong> {{ selectedFile.size | number }} bytes<br>
+                  <strong>🕐 Modified:</strong> {{ selectedFile.lastModified | date:'short' }}<br>
+                  <strong>⚡ Status:</strong> 
+                  <span class="badge bg-success">Ready for editing</span>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- File Content Loading -->
+      <div *ngIf="loading && selectedFile" class="text-center py-4">
+        <div class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">{{ 'admin.update-config.loading' | translate }}</span>
+        </div>
+        <p class="mt-2">{{ 'admin.update-config.loading-content' | translate }}</p>
+      </div>
+
+      <!-- XML Editor Card -->
+      <div *ngIf="selectedFile && !loading" class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-code me-2"></i>
+              {{ 'admin.update-config.editor.title' | translate }}: {{ selectedFile.fileName }}
+            </h5>
+            
+            <!-- Action Buttons -->
+            <div class="d-flex flex-wrap gap-2" role="group">
+              <button 
+                class="btn btn-outline-secondary btn-lg" 
+                (click)="resetContent()"
+                [disabled]="!hasUnsavedChanges() || loading || saving"
+                title="Reset to last saved version">
+                <i class="fas fa-undo me-2"></i>
+                Undo Changes
+              </button>
+              <button 
+                class="btn btn-outline-warning btn-lg" 
+                (click)="resetToOriginalFile()"
+                [disabled]="loading || saving"
+                title="Reload file from config/config-be/ directory">
+                <i class="fas fa-sync me-2"></i>
+                Reload File
+              </button>
+              <button 
+                class="btn btn-success btn-lg px-4" 
+                (click)="saveFile()"
+                [disabled]="!hasUnsavedChanges() || loading || saving"
+                title="Save changes directly to config/config-be/ directory">
+                <i class="fas fa-save me-2" *ngIf="!saving"></i>
+                <i class="fas fa-spinner fa-spin me-2" *ngIf="saving"></i>
+                <strong>{{ saving ? 'Saving to File...' : 'Save to File' }}</strong>
+              </button>
+            </div>
+          </div>
+
+          <!-- Config File Editor Notice -->
+          <div class="alert alert-info mb-3 d-flex align-items-center">
+            <i class="fas fa-cogs me-2 text-primary"></i>
+            <div>
+              <strong>Configuration Editor</strong><br>
+              <small>Directly editing files in <code>config/config-be/{{ selectedFile?.fileName }}</code>. Changes are saved immediately to the configuration directory.</small>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div *ngIf="hasUnsavedChanges()" class="alert alert-warning py-2">
+              <i class="fas fa-edit me-1"></i>
+              {{ 'admin.update-config.validation.unsaved-changes' | translate }}
+            </div>
+          </div>
+
+          <!-- Text Editor -->
+          <div class="position-relative">
+            <label for="xmlContent" class="form-label">
+              {{ 'admin.update-config.editor.content' | translate }}
+            </label>
+            <textarea 
+              id="xmlContent"
+              class="form-control font-monospace xml-editor"
+              [(ngModel)]="fileContent"
+              (ngModelChange)="onContentChange()"
+              placeholder="{{ 'admin.update-config.editor.placeholder' | translate }}"
+              rows="25"
+              [disabled]="saving"
+              spellcheck="false">
+            </textarea>
+            
+            <!-- Character count -->
+            <small class="text-muted position-absolute" style="bottom: 10px; right: 15px; background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 3px;">
+              {{ fileContent.length }} {{ 'admin.update-config.editor.characters' | translate }}
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Section -->
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-info-circle text-info me-2"></i>
+            {{ 'admin.update-config.help.title' | translate }}
+          </h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <h6>{{ 'admin.update-config.help.important.title' | translate }}</h6>
+              <ul class="list-unstyled">
+                <li class="mb-2">
+                  <i class="fas fa-exclamation-triangle text-warning me-1"></i>
+                  {{ 'admin.update-config.help.important.backup' | translate }}
+                </li>
+                <li class="mb-2">
+                  <i class="fas fa-server text-info me-1"></i>
+                  {{ 'admin.update-config.help.important.restart' | translate }}
+                </li>
+                <li class="mb-2">
+                  <i class="fas fa-shield-alt text-success me-1"></i>
+                  {{ 'admin.update-config.help.important.validation' | translate }}
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h6>{{ 'admin.update-config.help.allowed-files.title' | translate }}</h6>
+              <p class="text-muted small">
+                {{ 'admin.update-config.help.allowed-files.description' | translate }}
+              </p>
+              <code class="small">/config/config-be/*.xml</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
