@@ -51,6 +51,10 @@ function addMatomoStatistics() {
     .then((config) => {
       const matomoConfig = config.matomo;
 
+      if (!matomoConfig?.enabled) {
+        return;
+      }
+
       // Push all configuration commands first
       (window as any)._paq.push(['setTrackerUrl', matomoConfig.hostUrl + 'matomo.php']);
       (window as any)._paq.push(['setSiteId', matomoConfig.siteId]);

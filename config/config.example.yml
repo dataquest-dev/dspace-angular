@@ -465,5 +465,6 @@ accessibility:
   cookieExpirationDuration: 7
 
 matomo:
+  enabled: false
   hostUrl: http://localhost:8135/
   siteId: 1
