@@ -65,12 +65,7 @@ function addMatomoStatistics() {
     g.src = environment.matomo.hostUrl + 'matomo.js';
     document.getElementsByTagName('head')[0].appendChild(g);
   } catch (error) {
-    // Log error unless in a test environment to aid debugging in production
-    if (!('test' in environment && environment.test)) {
-      // Log the error to the console for visibility in production and development
-      console.error('Matomo initialization failed:', error);
-    }
-    // Silently fail in test environments to avoid interfering with tests
+    console.error('Matomo initialization failed:', error);
     return;
   }
 }

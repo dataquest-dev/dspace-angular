@@ -27,8 +27,7 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
   itemRD$: BehaviorSubject<Item> = new BehaviorSubject<Item>(null);
-  
-  // Flag to track if Matomo is enabled
+
   public matomoEnabled = false;
 
   // Month shortcut with full name
@@ -134,7 +133,6 @@ export class ClarinMatomoStatisticsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    // Check if Matomo is enabled in the environment
     this.matomoEnabled = environment.matomo?.enabled === true;
 
     // If Matomo is disabled, don't fetch statistics
