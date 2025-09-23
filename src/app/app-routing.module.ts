@@ -12,7 +12,6 @@ import {
   BITSTREAM_MODULE_PATH,
   ERROR_PAGE,
   FORBIDDEN_PATH,
-  FORGOT_PASSWORD_PATH,
   HEALTH_PAGE_PATH,
   INFO_MODULE_PATH,
   INTERNAL_SERVER_ERROR,
@@ -103,12 +102,6 @@ import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
             loadChildren: () => import('./register-page/register-page.module')
               .then((m) => m.RegisterPageModule),
             canActivate: [SiteRegisterGuard]
-          },
-          {
-            path: FORGOT_PASSWORD_PATH,
-            loadChildren: () => import('./forgot-password/forgot-password.module')
-              .then((m) => m.ForgotPasswordModule),
-            canActivate: [EndUserAgreementCurrentUserGuard]
           },
           {
             path: COMMUNITY_MODULE_PATH,
