@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AdminUpdateConfigService, ConfigFile } from './admin-update-config.service';
 import { Observable } from 'rxjs';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
@@ -46,7 +46,8 @@ export class AdminUpdateConfigComponent implements OnInit {
   constructor(
     private configService: AdminUpdateConfigService,
     private notificationsService: NotificationsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -54,7 +55,7 @@ export class AdminUpdateConfigComponent implements OnInit {
   }
 
   /**
-   * Load available config files from /config/config-be/
+   * Load available config files
    */
   loadConfigFiles(): void {
     this.loading = true;
@@ -62,14 +63,15 @@ export class AdminUpdateConfigComponent implements OnInit {
       next: (files) => {
         this.configFiles = files;
         this.loading = false;
+        this.cdr.detectChanges(); // Force change detection
       },
       error: (error) => {
-
         this.loading = false;
         this.notificationsService.error(
           this.translateService.instant('admin.update-config.error.load-files.title'),
           this.translateService.instant('admin.update-config.error.load-files.message')
         );
+        this.cdr.detectChanges(); // Force change detection
       }
     });
   }
@@ -82,10 +84,12 @@ export class AdminUpdateConfigComponent implements OnInit {
       this.selectedFile = null;
       this.fileContent = '';
       this.originalContent = '';
+      this.cdr.detectChanges(); // Force change detection when clearing selection
       return;
     }
 
     this.selectedFile = file;
+    this.cdr.detectChanges(); // Force change detection when file is selected
     this.loadFileContent(file.fileName);
   }
 
@@ -94,6 +98,7 @@ export class AdminUpdateConfigComponent implements OnInit {
    */
   loadFileContent(filename: string): void {
     this.loading = true;
+    this.cdr.detectChanges(); // Force change detection to show loading spinner
 
     // Instant subscription - no delays!
     this.configService.getConfigFileContent(filename).subscribe({
@@ -101,10 +106,15 @@ export class AdminUpdateConfigComponent implements OnInit {
         this.fileContent = content;
         this.originalContent = content;
         this.loading = false;
+        this.cdr.detectChanges(); // Force change detection to hide loading spinner
       },
       error: (error) => {
         this.loading = false;
-        this.notificationsService.error('Load Failed', `Could not load ${filename}`);
+        this.notificationsService.error(
+          this.translateService.instant('admin.update-config.error.load-content.title'),
+          this.translateService.instant('admin.update-config.error.load-content.message', { fileName: filename })
+        );
+        this.cdr.detectChanges(); // Force change detection on error
       }
     });
   }
@@ -117,7 +127,7 @@ export class AdminUpdateConfigComponent implements OnInit {
   }
 
   /**
-   * Save the current config file to /config/config-be/
+   * Save the current config file
    */
   saveFile(): void {
     if (!this.selectedFile || this.saving) {
@@ -125,6 +135,7 @@ export class AdminUpdateConfigComponent implements OnInit {
     }
 
     this.saving = true;
+    this.cdr.detectChanges(); // Force change detection to show saving state
 
     this.configService.saveConfigFile(this.selectedFile.fileName, this.fileContent).subscribe({
       next: (result) => {
@@ -132,18 +143,20 @@ export class AdminUpdateConfigComponent implements OnInit {
         this.originalContent = this.fileContent;
         
         this.notificationsService.success(
-          'File Saved Successfully!', 
-          `${this.selectedFile?.fileName} has been updated successfully`
+          this.translateService.instant('admin.update-config.success.save.title'), 
+          this.translateService.instant('admin.update-config.success.save.message', { fileName: this.selectedFile?.fileName })
         );
         
         this.loadConfigFiles();
+        this.cdr.detectChanges(); // Force change detection after save
       },
       error: (error) => {
         this.saving = false;
         this.notificationsService.error(
-          'Save Failed',
-          `Could not save ${this.selectedFile?.fileName}`
+          this.translateService.instant('admin.update-config.error.save.title'),
+          this.translateService.instant('admin.update-config.error.save.message', { fileName: this.selectedFile?.fileName })
         );
+        this.cdr.detectChanges(); // Force change detection on error
       }
     });
   }
@@ -156,7 +169,7 @@ export class AdminUpdateConfigComponent implements OnInit {
   }
 
   /**
-   * Reset to original file (reload from config/config-be/)
+   * Reset to original file
    */
   resetToOriginalFile(): void {
     if (!this.selectedFile) {
@@ -164,6 +177,7 @@ export class AdminUpdateConfigComponent implements OnInit {
     }
 
     this.loading = true;
+    this.cdr.detectChanges(); // Force change detection to show loading state
     
     this.configService.reloadOriginalContent(this.selectedFile.fileName).subscribe({
       next: (originalContent) => {
@@ -172,13 +186,18 @@ export class AdminUpdateConfigComponent implements OnInit {
         this.loading = false;
         
         this.notificationsService.success(
-          'File Reloaded!', 
-          `Reloaded ${this.selectedFile?.fileName} from server`
+          this.translateService.instant('admin.update-config.success.reload.title'), 
+          this.translateService.instant('admin.update-config.success.reload.message', { fileName: this.selectedFile?.fileName })
         );
+        this.cdr.detectChanges(); // Force change detection after reload
       },
       error: (error) => {
         this.loading = false;
-        this.notificationsService.error('Reload Failed', 'Could not reload original file');
+        this.notificationsService.error(
+          this.translateService.instant('admin.update-config.error.reload.title'),
+          this.translateService.instant('admin.update-config.error.reload.message')
+        );
+        this.cdr.detectChanges(); // Force change detection on error
       }
     });
   }
