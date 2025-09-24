@@ -114,12 +114,10 @@
       [iconName]="'fa-sitemap'"
       [separator]="'<br />'">
     </ds-clarin-collections-item-field>
-    <ds-item-versions
+    <ds-clarin-item-versions-field
       [item]="object"
-      [iconName]="'fa-history'"
-      [displayTitle]="false"
-      [displayActions]="true">
-    </ds-item-versions>
+      [iconName]="'fa-history'">
+    </ds-clarin-item-versions-field>
     <div class="clarin-item-page-field">
       <a [routerLink]="[itemPageRoute + '/full']">
         {{"item.page.link.full" | translate}}

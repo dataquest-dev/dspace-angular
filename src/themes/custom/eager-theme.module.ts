@@ -44,7 +44,6 @@ import { CollectionDropdownComponent } from './app/shared/collection-dropdown/co
 import { SharedBrowseByModule } from '../../app/shared/browse-by/shared-browse-by.module';
 import { ResultsBackButtonModule } from '../../app/shared/results-back-button/results-back-button.module';
 import { DsoPageModule } from '../../app/shared/dso-page/dso-page.module';
-import { ItemVersionsModule } from '../../app/item-page/versions/item-versions.module';
 import { FileDownloadLinkComponent } from './app/shared/file-download-link/file-download-link.component';
 import { StartsWithDateComponent } from './app/shared/starts-with/date/starts-with-date.component';
 import { StartsWithTextComponent } from './app/shared/starts-with/text/starts-with-text.component';
@@ -112,7 +111,6 @@ const DECLARATIONS = [
     ResultsBackButtonModule,
     ItemPageModule,
     ItemSharedModule,
-    ItemVersionsModule,
     DsoPageModule,
   ],
   declarations: DECLARATIONS,

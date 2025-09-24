@@ -81,11 +81,6 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
   @Input() item: Item;
 
   /**
-   * Fontawesome v5. icon name with default settings.
-   */
-  @Input() iconName: string;
-
-  /**
    * An option to display the list of versions, even when there aren't any.
    * Instead of the table, an alert will be displayed, notifying the user there are no other versions present
    * for the current item.
@@ -145,6 +140,12 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
   hasDraftVersion$: Observable<boolean>;
 
   /**
+   * Check if the current user is an admin
+   * Used to control component visibility
+   */
+  isAdmin$: Observable<boolean>;
+
+  /**
    * The amount of versions to display per page
    */
   pageSize = 10;
@@ -185,11 +186,6 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
 
   canCreateVersion$: Observable<boolean>;
   createVersionTitle$: Observable<string>;
-
-  /**
-   * Toggle state for version history table
-   */
-  showVersionHistory = false;
 
   /**
    * Show `Editor` column in the table.
@@ -234,13 +230,6 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
    */
   isAnyBeingEdited(): boolean {
     return this.versionBeingEditedNumber != null;
-  }
-
-  /**
-   * Toggle the visibility of version history table
-   */
-  toggleVersionHistory(): void {
-    this.showVersionHistory = !this.showVersionHistory;
   }
 
   /**
@@ -459,6 +448,22 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
   }
 
   /**
+   * Check if the current user is an admin (collection admin, community admin, or site admin)
+   * @returns Observable<boolean> true if user has admin privileges
+   */
+  isAdmin(): Observable<boolean> {
+    return combineLatest([
+      this.authorizationService.isAuthorized(FeatureID.IsCollectionAdmin),
+      this.authorizationService.isAuthorized(FeatureID.IsCommunityAdmin),
+      this.authorizationService.isAuthorized(FeatureID.AdministratorOf),
+    ]).pipe(
+      map(([isCollectionAdmin, isCommunityAdmin, isSiteAdmin]) => {
+        return isCollectionAdmin || isCommunityAdmin || isSiteAdmin;
+      })
+    );
+  }
+
+  /**
    * Check if the current user can delete the version
    * @param version
    */
@@ -555,6 +560,9 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
 
       this.canCreateVersion$ = this.authorizationService.isAuthorized(FeatureID.CanCreateVersion, this.item.self);
 
+      // Initialize admin check for component visibility
+      this.isAdmin$ = this.isAdmin();
+
       // If there is a draft item in the version history the 'Create version' button is disabled and a different tooltip message is shown
       this.hasDraftVersion$ = this.versionHistoryRD$.pipe(
         getFirstSucceededRemoteDataPayload(),
@@ -589,14 +597,6 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
       .pipe(
         getFirstSucceededRemoteDataPayload(),
         map((item: Item) => this.dsoNameService.getName(item)));
-  }
-
-  /**
-   * Get the display name for a version item
-   * @param versionItem the item to get the name for
-   */
-  getVersionItemDisplayName(versionItem: Item): string {
-    return versionItem.firstMetadataValue('dc.title') || versionItem.name || 'Untitled';
   }
 
   getItemHandleFromVersion(version: Version) {

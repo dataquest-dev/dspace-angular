@@ -1,0 +1,46 @@
+<div class="row clarin-item-page-field justify-content-start" *ngIf="showMetadataValue | async">
+  <div class="col-lg-3 col-2-5 d-flex align-self-start">
+    <div><i [class]="'fas ' + iconName + ' fa-xs'"></i></div>
+    <!-- Toggle Header -->
+    <div class="pl-1 d-flex align-items-center cursor-pointer" (click)="toggleVersionHistory()">
+      <b class="mb-0 me-2">{{ "item.version.history.head" | translate }}</b>
+      <i class="fas" [ngClass]="showVersionHistory ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+    </div>
+  </div>
+
+  <!-- Collapsible Content -->
+  <div class="col-lg-9 collapse" [ngClass]="{'show': showVersionHistory}">
+    <div *ngIf="(versionsDTO$ | async) as versionsDTO">
+      <div *ngIf="(versionRD$ | async)?.payload as itemVersion">
+        <ul class="list-unstyled dropdown-versions">
+          <li *ngFor="let versionDTO of versionsDTO.versionDTOs" [id]="'version-row-' + versionDTO.version.id">
+            <!-- Get the ID of the workspace/workflow item (`undefined` if they don't exist).
+            Conditionals inside *ngVar are needed in order to avoid useless calls. -->
+            <ng-container
+              *ngVar="((hasDraftVersion$ | async) ? getWorkspaceId(versionDTO.version.item) : undefined) as workspaceId$">
+              <ng-container
+                *ngVar=" ((workspaceId$ | async) ? undefined : getWorkflowId(versionDTO.version.item)) as workflowId$">
+                  <span
+                    *ngIf="(workspaceId$ | async) || (workflowId$ | async); then itemNameWithoutLink else itemNameWithLink"></span>
+                  <ng-template #itemNameWithLink>
+                    <ng-container *ngIf="(versionDTO.version.item | async)?.payload as versionItem">
+                      <a [routerLink]="getVersionRoute(versionDTO.version.id)">
+                        {{ getVersionItemDisplayName(versionItem) }}
+                      </a>
+                    </ng-container>
+                  </ng-template>
+                  <ng-template #itemNameWithoutLink>
+                    <ng-container *ngIf="(versionDTO.version.item | async)?.payload as versionItem">
+                      {{ getVersionItemDisplayName(versionItem) }}
+                    </ng-container>
+                  </ng-template>
+                  <span *ngIf="versionDTO.version.id === itemVersion?.id">*</span>
+              </ng-container>
+            </ng-container>
+          </li>
+        </ul>
+        <div>*&nbsp;{{ "item.version.history.selected" | translate }}</div>
+      </div>
+    </div>
+  </div>
+</div>
