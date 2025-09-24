@@ -10,7 +10,7 @@ const routes: Routes = [
     component: AdminUpdateConfigComponent,
     resolve: { breadcrumb: I18nBreadcrumbResolver },
     canActivate: [SiteAdministratorGuard],
-    data: { title: 'admin.update-config.title', breadcrumbKey: 'admin.update-config.breadcrumbs' }
+    data: { title: 'admin.update-config.title', breadcrumbKey: 'admin.update-config' }
   }
 ];
 
