@@ -3059,6 +3059,8 @@
 
   "menu.section.icon.workflow": "Administer workflow menu section",
 
+  "menu.section.icon.update_config": "Update Configuration menu section",
+
   "menu.section.icon.unpin": "Unpin sidebar",
 
   "menu.section.import": "Import",
@@ -5407,6 +5409,8 @@
 
   "menu.section.system-wide-alert": "System-wide Alert",
 
+  "menu.section.update-config": "Update Config",
+
   "system-wide-alert.form.header": "System-wide Alert",
 
   "system-wide-alert-form.retrieval.error": "Something went wrong retrieving the system-wide alert",
@@ -5438,6 +5442,131 @@
   "system-wide-alert.form.create.success": "The system-wide alert was successfully created",
 
   "system-wide-alert.form.create.error": "Something went wrong when creating the system-wide alert",
+
+  "admin.update-config.title": "Update Configuration",
+  
+  "admin.update-config.description": "Edit DSpace configuration files through the web interface.",
+  
+  "admin.update-config.select.file": "Select Configuration File",
+  
+  "admin.update-config.select.file.placeholder": "Choose a file to edit...",
+  
+  "admin.update-config.file.info": "File",
+  
+  "admin.update-config.last.modified": "Last modified",
+  
+  "admin.update-config.content": "File Content",
+  
+  "admin.update-config.valid": "Valid",
+  
+  "admin.update-config.invalid": "Invalid",
+  
+  "admin.update-config.validation.errors": "Configuration Validation Errors",
+  
+  "admin.update-config.save": "Save Configuration",
+  
+  "admin.update-config.reset": "Reset",
+  
+  "admin.update-config.help.title": "Important Notes",
+  
+  "admin.update-config.help.backup": "Always backup configuration files before making changes.",
+  
+  "admin.update-config.help.validate": "Ensure your configuration is valid before saving to prevent system errors.",
+  
+  "admin.update-config.help.restart": "Changes may require application restart to take effect.",
+  
+  "admin.update-config.help.directory": "Only files in /config/config-be/ directory can be edited for security reasons.",
+  
+  "admin.update-config.success.save.title": "Configuration Saved",
+  
+  "admin.update-config.success.save.message": "{{message}}",
+  
+  "admin.update-config.error.save.title": "Save Failed",
+  
+  "admin.update-config.error.save.message": "Unable to save configuration file. Please check the logs and try again.",
+  
+  "admin.update-config.error.load.title": "Load Failed",
+  
+  "admin.update-config.error.load.message": "Unable to load configuration file: {{fileName}}",
+  
+  // Additional translation keys for enhanced UI
+  "admin.update-config.refresh": "Refresh",
+  "admin.update-config.refresh.tooltip": "Reload configuration files list",
+  "admin.update-config.loading": "Loading...",
+  "admin.update-config.loading-files": "Loading configuration files...",
+  "admin.update-config.loading-content": "Loading file content...",
+  
+  "admin.update-config.file-selection.title": "File Selection",
+  "admin.update-config.file-selection.label": "Select Configuration File",
+  
+  "admin.update-config.file-info.path": "Path",
+  "admin.update-config.file-info.modified": "Last Modified",
+  
+  "admin.update-config.select.choose-file": "Choose a configuration file to edit",
+  "admin.update-config.select.no-files": "No configuration files found",
+  
+  "admin.update-config.editor.title": "Configuration Editor",
+  "admin.update-config.editor.content": "File Content",
+  "admin.update-config.editor.placeholder": "Select a file to begin editing...",
+  "admin.update-config.editor.characters": "characters",
+  "admin.update-config.editor.save": "Save Changes",
+  "admin.update-config.editor.save.tooltip": "Save changes to the configuration file",
+  "admin.update-config.editor.reset": "Reset",
+  "admin.update-config.editor.reset.tooltip": "Reset content to original version",
+  
+  "admin.update-config.validation.valid": "Configuration is valid",
+  "admin.update-config.validation.invalid": "Configuration contains errors - please fix before saving",
+  "admin.update-config.validation.unsaved-changes": "File has unsaved changes",
+  
+  "admin.update-config.help.important.title": "Before You Start",
+  "admin.update-config.help.important.backup": "Always backup configuration files before making changes",
+  "admin.update-config.help.important.restart": "DSpace may require restart after configuration changes",
+  "admin.update-config.help.important.validation": "Configuration validation prevents saving invalid files",
+  
+  "admin.update-config.help.allowed-files.title": "Editable Files",
+  "admin.update-config.help.allowed-files.description": "Only configuration files in the server configuration directory can be edited for security reasons:",
+  
+  "admin.update-config.error.load-files.title": "Load Error",
+  "admin.update-config.error.load-files.message": "Failed to load configuration files list",
+  
+  // Breadcrumb
+  "admin.update-config.breadcrumbs": "Update Configuration",
+  
+  // File Information
+  "admin.update-config.file-info.title": "File Information",
+  "admin.update-config.file-info.name": "File",
+  "admin.update-config.file-info.size": "Size",
+  "admin.update-config.file-info.bytes": "bytes",
+  "admin.update-config.file-info.modified": "Modified",
+  "admin.update-config.file-info.status": "Status",
+  "admin.update-config.file-info.ready": "Ready for editing",
+  
+  // Action Buttons
+  "admin.update-config.buttons.undo": "Undo Changes",
+  "admin.update-config.buttons.undo.tooltip": "Reset to last saved version",
+  "admin.update-config.buttons.reload": "Reload File",
+  "admin.update-config.buttons.reload.tooltip": "Reload file from server",
+  "admin.update-config.buttons.save": "Save to File",
+  "admin.update-config.buttons.save.tooltip": "Save changes to configuration file",
+  "admin.update-config.buttons.saving": "Saving to File...",
+  
+  // Editor Notice
+  "admin.update-config.editor.notice.title": "File Editor",
+  "admin.update-config.editor.notice.description": "Editing configuration file {{fileName}}. Changes are saved immediately to the server.",
+  
+  // Success Messages
+  "admin.update-config.success.save.title": "File Saved Successfully",
+  "admin.update-config.success.save.message": "{{fileName}} has been updated successfully",
+  "admin.update-config.success.reload.title": "File Reloaded",
+  "admin.update-config.success.reload.message": "Reloaded {{fileName}} from server",
+  
+  // Error Messages
+  "admin.update-config.error.load-content.title": "Load Failed",
+  "admin.update-config.error.load-content.message": "Could not load {{fileName}}",
+  "admin.update-config.error.save.title": "Save Failed",
+  "admin.update-config.error.save.message": "Could not save {{fileName}}",
+  "admin.update-config.error.reload.title": "Reload Failed",
+  "admin.update-config.error.reload.message": "Could not reload original file",
 
   "admin.system-wide-alert.breadcrumbs": "System-wide Alerts",
 
