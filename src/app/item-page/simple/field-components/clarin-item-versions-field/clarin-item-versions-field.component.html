@@ -3,7 +3,7 @@
     <div><i [class]="'fas ' + iconName + ' fa-xs'"></i></div>
     <!-- Toggle Header -->
     <div class="pl-1 d-flex align-items-center cursor-pointer" (click)="toggleVersionHistory()">
-      <b class="mb-0 me-2">{{ "item.version.history.head" | translate }}</b>
+      <b class="mr-1">{{ "item.version.history.head" | translate }}</b>
       <i class="fas" [ngClass]="showVersionHistory ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
     </div>
   </div>
