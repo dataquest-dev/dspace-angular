@@ -669,6 +669,20 @@ export class MenuResolver implements Resolve<boolean> {
           icon: 'exclamation-circle',
           index: 14
         },
+        
+        /* Update Config */
+        {
+          id: 'update_config',
+          active: false,
+          visible: authorized,
+          model: {
+            type: MenuItemType.LINK,
+            text: 'menu.section.update-config',
+            link: '/admin/update-config'
+          } as LinkMenuItemModel,
+          icon: 'cogs',
+          index: 15
+        },
       ];
 
       menuList.forEach((menuSection) => this.menuService.addSection(MenuID.ADMIN, Object.assign(menuSection, {
