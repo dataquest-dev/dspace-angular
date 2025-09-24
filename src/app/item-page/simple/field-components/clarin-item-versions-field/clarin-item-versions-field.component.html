@@ -7,14 +7,20 @@
       (click)="toggleVersionHistory()"
       role="button"
       tabindex="0"
-      [attr.aria-expanded]="showVersionHistory">
+      [attr.aria-expanded]="showVersionHistory"
+      aria-controls="version-history-content"
+      [attr.aria-label]="(showVersionHistory ? 'Collapse' : 'Expand') + ' version history'">
       <b class="mr-1">{{ "item.version.history.head" | translate }}</b>
       <i class="fas" [ngClass]="showVersionHistory ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
     </div>
   </div>
 
   <!-- Collapsible Content -->
-  <div class="col-lg-9 collapse" [ngClass]="{'show': showVersionHistory}">
+  <div
+    id="version-history-content"
+    class="col-lg-9 collapse"
+    [ngClass]="{'show': showVersionHistory}"
+    [attr.aria-hidden]="!showVersionHistory">
     <div *ngIf="(versionsDTO$ | async) as versionsDTO">
       <div *ngIf="(versionRD$ | async)?.payload as itemVersion">
         <ul class="list-unstyled dropdown-versions">
