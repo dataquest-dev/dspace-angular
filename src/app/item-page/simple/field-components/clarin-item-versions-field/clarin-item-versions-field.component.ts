@@ -157,7 +157,7 @@ export class ClarinItemVersionsFieldComponent implements OnDestroy, OnInit {
    * Get the ID of the workspace item, if present, otherwise return undefined
    * @param versionItem the item for which retrieve the workspace item id
    */
-  getWorkspaceId(versionItem): Observable<string> {
+  getWorkspaceId(versionItem: Observable<RemoteData<Item>>): Observable<string> {
     return versionItem.pipe(
       getFirstSucceededRemoteDataPayload(),
       map((item: Item) => item.uuid),
@@ -171,7 +171,7 @@ export class ClarinItemVersionsFieldComponent implements OnDestroy, OnInit {
    * Get the ID of the workflow item, if present, otherwise return undefined
    * @param versionItem the item for which retrieve the workspace item id
    */
-  getWorkflowId(versionItem): Observable<string> {
+  getWorkflowId(versionItem: Observable<RemoteData<Item>>): Observable<string> {
     return versionItem.pipe(
       getFirstSucceededRemoteDataPayload(),
       map((item: Item) => item.uuid),
