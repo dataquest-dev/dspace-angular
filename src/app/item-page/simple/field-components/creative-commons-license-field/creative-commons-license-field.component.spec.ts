@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
@@ -8,7 +7,6 @@ import { CreativeCommonsLicenseFieldComponent } from './creative-commons-license
 import { BundleDataService } from '../../../../core/data/bundle-data.service';
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
 import { Item } from '../../../../core/shared/item.model';
-import { RemoteData } from '../../../../core/data/remote-data';
 import { Bundle } from '../../../../core/shared/bundle.model';
 import { PaginatedList, buildPaginatedList } from '../../../../core/data/paginated-list.model';
 import { Bitstream } from '../../../../core/shared/bitstream.model';
@@ -33,10 +31,23 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
     })
   } as any as Item;
 
+  // Item with no license metadata or bitstream license
+  const mockItemNoLicenseAtAll = {
+    uuid: 'test-item-uuid-no-license-at-all',
+    metadata: {
+      'dc.title': [{ value: 'Test Item' }]
+    },
+    allMetadata: jasmine.createSpy('allMetadata').and.callFake((field: string) => {
+      return mockItemNoLicenseAtAll.metadata[field] || [];
+    })
+  } as any as Item;
+
   const mockItemWithoutLicense = {
     uuid: 'test-item-uuid-no-license',
     metadata: {
-      'dc.title': [{ value: 'Test Item' }]
+      'dc.title': [{ value: 'Test Item' }],
+      // Add dc.identifier.uri for bitstream license extraction
+      'dc.identifier.uri': [{ value: 'https://creativecommons.org/licenses/by-nc-sa/3.0/' }]
     },
     allMetadata: jasmine.createSpy('allMetadata').and.callFake((field: string) => {
       return mockItemWithoutLicense.metadata[field] || [];
@@ -120,7 +131,7 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
     });
 
     it('should return false when no Creative Commons license is found', (done) => {
-      component.item = mockItemWithoutLicense;
+      component.item = mockItemNoLicenseAtAll;
       bundleDataService.findByItemAndName.and.returnValue(of(createFailedRemoteDataObject<Bundle>()));
 
       component.ngOnInit();
@@ -149,6 +160,8 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
     });
 
     it('should extract license URL from bitstream metadata', (done) => {
+      // Use an item without metadata license URL
+      component.item = mockItemWithoutLicense;
       bundleDataService.findByItemAndName.and.returnValue(of(createSuccessfulRemoteDataObject(mockBundle)));
       bitstreamDataService.findAllByItemAndBundleName.and.returnValue(
         of(createSuccessfulRemoteDataObject(buildPaginatedList(new PageInfo(), [mockBitstream])))
@@ -163,7 +176,7 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
     });
 
     it('should return empty string when no license URL is found', (done) => {
-      component.item = mockItemWithoutLicense;
+  component.item = mockItemNoLicenseAtAll;
       bundleDataService.findByItemAndName.and.returnValue(of(createFailedRemoteDataObject<Bundle>()));
 
       component.ngOnInit();
@@ -192,7 +205,7 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
     });
 
     it('should return empty string when no license URL is available', (done) => {
-      component.item = mockItemWithoutLicense;
+  component.item = mockItemNoLicenseAtAll;
       bundleDataService.findByItemAndName.and.returnValue(of(createFailedRemoteDataObject<Bundle>()));
 
       component.ngOnInit();
@@ -272,7 +285,7 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
 
     urlTestCases.forEach(testCase => {
       it(`should extract '${testCase.expected}' from URL '${testCase.url}'`, () => {
-        const result = component['extractLicenseNameFromUrl'](testCase.url);
+        const result = component.extractLicenseNameFromUrl(testCase.url);
         expect(result).toBe(testCase.expected);
       });
     });
@@ -281,13 +294,13 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
   describe('Metadata Extraction', () => {
     it('should extract Creative Commons URL from dc.rights.uri', () => {
       component.item = mockItem;
-      const result = component['extractUrlFromMetadata']();
+      const result = component.extractUrlFromMetadata();
       expect(result).toBe('https://creativecommons.org/licenses/by/4.0/');
     });
 
     it('should return empty string when no Creative Commons URL is found in metadata', () => {
-      component.item = mockItemWithoutLicense;
-      const result = component['extractUrlFromMetadata']();
+  component.item = mockItemNoLicenseAtAll;
+      const result = component.extractUrlFromMetadata();
       expect(result).toBe('');
     });
 
@@ -303,14 +316,14 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
       } as any as Item;
 
       component.item = itemWithDifferentField;
-      const result = component['extractUrlFromMetadata']();
+      const result = component.extractUrlFromMetadata();
       expect(result).toBe('https://creativecommons.org/licenses/by-sa/3.0/');
     });
   });
 
   describe('Component Template Integration', () => {
     it('should not display license field when no license is present', () => {
-      component.item = mockItemWithoutLicense;
+  component.item = mockItemNoLicenseAtAll;
       bundleDataService.findByItemAndName.and.returnValue(of(createFailedRemoteDataObject<Bundle>()));
 
       component.ngOnInit();
@@ -320,7 +333,7 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
       expect(licenseElement).toBeNull();
     });
 
-    it('should display license field when Creative Commons license is present', () => {
+    it('should display license field when Creative Commons license is present', (done) => {
       component.item = mockItem;
       bundleDataService.findByItemAndName.and.returnValue(of(createFailedRemoteDataObject<Bundle>()));
 
@@ -331,6 +344,7 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
         fixture.detectChanges();
         const licenseElement = fixture.debugElement.query(By.css('.clarin-item-page-field'));
         expect(licenseElement).toBeTruthy();
+        done();
       }, 100);
     });
   });

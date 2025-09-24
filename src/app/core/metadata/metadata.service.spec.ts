@@ -193,7 +193,7 @@ describe('MetadataService', () => {
     tick();
     expect(title.setTitle).toHaveBeenCalledTimes(2);
     expect((title.setTitle as jasmine.Spy).calls.argsFor(0)).toEqual(['Test PowerPoint Document']);
-    expect((title.setTitle as jasmine.Spy).calls.argsFor(1)).toEqual(['DSpace :: Translated Route Title']);
+    expect((title.setTitle as jasmine.Spy).calls.argsFor(1)).toEqual(['DSpace ::  - Translated Route Title']);
   }));
 
   it('other navigation should add title and description', fakeAsync(() => {
@@ -207,7 +207,7 @@ describe('MetadataService', () => {
       }
     });
     tick();
-    expect(title.setTitle).toHaveBeenCalledWith('DSpace :: Dummy Title');
+    expect(title.setTitle).toHaveBeenCalledWith('DSpace ::  - Dummy Title');
     expect(meta.addTag).toHaveBeenCalledWith({
       name: 'title',
       content: 'DSpace :: Dummy Title'

@@ -14,6 +14,7 @@ import { By } from '@angular/platform-browser';
 import { BtnDisabledDirective } from '../../../shared/btn-disabled.directive';
 import { DsoEditMetadataFieldServiceStub } from '../../../shared/testing/dso-edit-metadata-field.service.stub';
 import { DsoEditMetadataFieldService } from '../dso-edit-metadata-value-field/dso-edit-metadata-field.service';
+import { MetadataService } from '../../../core/metadata/metadata.service';
 
 const EDIT_BTN = 'edit';
 const CONFIRM_BTN = 'confirm';
@@ -60,6 +61,7 @@ describe('DsoEditMetadataValueComponent', () => {
         { provide: RelationshipDataService, useValue: relationshipService },
         { provide: DSONameService, useValue: dsoNameService },
         { provide: DsoEditMetadataFieldService, useValue: dsoEditMetadataFieldService },
+        { provide: MetadataService, useValue: jasmine.createSpyObj('MetadataService', ['processRemoteData', 'listenForRouteChange']) },
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -74,7 +76,7 @@ describe('DsoEditMetadataValueComponent', () => {
   });
 
   it('should not show a badge', () => {
-    expect(fixture.debugElement.query(By.css('ds-themed-type-badge'))).toBeNull();
+    expect(fixture.debugElement.query(By.css('ds-type-badge'))).toBeNull();
   });
 
   describe('when no changes have been made', () => {
@@ -126,7 +128,7 @@ describe('DsoEditMetadataValueComponent', () => {
   });
 
   describe('when the metadata value is virtual', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       metadataValue = Object.assign(new MetadataValue(), {
         value: 'Virtual Name',
         language: 'en',
@@ -137,10 +139,11 @@ describe('DsoEditMetadataValueComponent', () => {
       component.mdValue = editMetadataValue;
       component.ngOnInit();
       fixture.detectChanges();
+      await fixture.whenStable();
     });
 
     it('should show a badge', () => {
-      expect(fixture.debugElement.query(By.css('ds-themed-type-badge'))).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('ds-type-badge'))).toBeTruthy();
     });
 
     assertButton(EDIT_BTN, true, true);

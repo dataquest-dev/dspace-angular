@@ -5,6 +5,7 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
 import { ItemDataService } from '../../../../core/data/item-data.service';
 import { MetadataField } from '../../../../core/metadata/metadata-field.model';
@@ -26,6 +27,7 @@ import { createPaginatedList } from '../../../../shared/testing/utils.test';
 import { VocabularyServiceStub } from '../../../../shared/testing/vocabulary-service.stub';
 import { DsoEditMetadataValue } from '../../dso-edit-metadata-form';
 import { DsoEditMetadataAuthorityFieldComponent } from './dso-edit-metadata-authority-field.component';
+import { DsoEditMetadataFieldService } from '../dso-edit-metadata-field.service';
 
 describe('DsoEditMetadataAuthorityFieldComponent', () => {
   let component: DsoEditMetadataAuthorityFieldComponent;
@@ -35,6 +37,7 @@ describe('DsoEditMetadataAuthorityFieldComponent', () => {
   let itemService: ItemDataService;
   let registryService: RegistryService;
   let notificationsService: NotificationsService;
+  let dsoEditMetadataFieldService: jasmine.SpyObj<DsoEditMetadataFieldService>;
 
   let dso: DSpaceObject;
 
@@ -116,6 +119,9 @@ describe('DsoEditMetadataAuthorityFieldComponent', () => {
       queryMetadataFields: createSuccessfulRemoteDataObject$(createPaginatedList(metadataFields)),
     });
     notificationsService = jasmine.createSpyObj('notificationsService', ['error', 'success']);
+    dsoEditMetadataFieldService = jasmine.createSpyObj('DsoEditMetadataFieldService', {
+      findDsoFieldVocabulary: of(null) // Default return value - will be overridden per test
+    });
 
     metadataValue = Object.assign(new MetadataValue(), {
       value: 'Regular Name',
@@ -144,15 +150,14 @@ describe('DsoEditMetadataAuthorityFieldComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [
-        DsoEditMetadataAuthorityFieldComponent,
-        TranslateModule.forRoot(),
-      ],
+      declarations: [DsoEditMetadataAuthorityFieldComponent],
+      imports: [TranslateModule.forRoot()],
       providers: [
         { provide: VocabularyService, useValue: vocabularyService },
         { provide: ItemDataService, useValue: itemService },
         { provide: RegistryService, useValue: registryService },
         { provide: NotificationsService, useValue: notificationsService },
+        { provide: DsoEditMetadataFieldService, useValue: dsoEditMetadataFieldService },
       ],
     }).overrideComponent(DsoEditMetadataAuthorityFieldComponent, {
       remove: {
@@ -171,7 +176,7 @@ describe('DsoEditMetadataAuthorityFieldComponent', () => {
 
   describe('when the metadata field uses a scrollable vocabulary and is editing', () => {
     beforeEach(waitForAsync(() => {
-      spyOn(vocabularyService, 'getVocabularyByMetadataAndCollection').and.returnValue(createSuccessfulRemoteDataObject$(mockVocabularyScrollable));
+      dsoEditMetadataFieldService.findDsoFieldVocabulary.and.returnValue(of(mockVocabularyScrollable));
       metadataValue = Object.assign(new MetadataValue(), {
         value: 'Authority Controlled value',
         language: 'en',
@@ -187,7 +192,7 @@ describe('DsoEditMetadataAuthorityFieldComponent', () => {
     }));
 
     it('should render the DsDynamicScrollableDropdownComponent', () => {
-      expect(vocabularyService.getVocabularyByMetadataAndCollection).toHaveBeenCalled();
+      expect(dsoEditMetadataFieldService.findDsoFieldVocabulary).toHaveBeenCalled();
       expect(fixture.debugElement.query(By.css('ds-dynamic-scrollable-dropdown'))).toBeTruthy();
     });
 
@@ -201,7 +206,7 @@ describe('DsoEditMetadataAuthorityFieldComponent', () => {
 
   describe('when the  metadata field uses a hierarchical vocabulary and is editing', () => {
     beforeEach(waitForAsync(() => {
-      spyOn(vocabularyService, 'getVocabularyByMetadataAndCollection').and.returnValue(createSuccessfulRemoteDataObject$(mockVocabularyHierarchical));
+      dsoEditMetadataFieldService.findDsoFieldVocabulary.and.returnValue(of(mockVocabularyHierarchical));
       metadataValue = Object.assign(new MetadataValue(), {
         value: 'Authority Controlled value',
         language: 'en',
@@ -217,7 +222,7 @@ describe('DsoEditMetadataAuthorityFieldComponent', () => {
     }));
 
     it('should render the DsDynamicOneboxComponent', () => {
-      expect(vocabularyService.getVocabularyByMetadataAndCollection).toHaveBeenCalled();
+      expect(dsoEditMetadataFieldService.findDsoFieldVocabulary).toHaveBeenCalled();
       expect(fixture.debugElement.query(By.css('ds-dynamic-onebox'))).toBeTruthy();
     });
 
@@ -231,7 +236,7 @@ describe('DsoEditMetadataAuthorityFieldComponent', () => {
 
   describe('when the metadata field uses a suggester vocabulary and is editing', () => {
     beforeEach(waitForAsync(() => {
-      spyOn(vocabularyService, 'getVocabularyByMetadataAndCollection').and.returnValue(createSuccessfulRemoteDataObject$(mockVocabularySuggester));
+      dsoEditMetadataFieldService.findDsoFieldVocabulary.and.returnValue(of(mockVocabularySuggester));
       spyOn(component.confirm, 'emit');
       metadataValue = Object.assign(new MetadataValue(), {
         value: 'Authority Controlled value',
@@ -249,7 +254,7 @@ describe('DsoEditMetadataAuthorityFieldComponent', () => {
     }));
 
     it('should render the DsDynamicOneboxComponent', () => {
-      expect(vocabularyService.getVocabularyByMetadataAndCollection).toHaveBeenCalled();
+      expect(dsoEditMetadataFieldService.findDsoFieldVocabulary).toHaveBeenCalled();
       expect(fixture.debugElement.query(By.css('ds-dynamic-onebox'))).toBeTruthy();
     });
 
@@ -350,7 +355,7 @@ describe('DsoEditMetadataAuthorityFieldComponent', () => {
 
         expect(component.mdValue.newValue.value).toBe(event.value);
         expect(component.mdValue.newValue.authority).toBeNull();
-        expect(component.mdValue.newValue.confidence).toBe(ConfidenceType.CF_UNSET);
+        expect(component.mdValue.newValue.confidence).toBeNull();
         expect(component.confirm.emit).toHaveBeenCalledWith(false);
       });
 

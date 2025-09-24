@@ -12,10 +12,8 @@ describe('DsoEditMetadataTextFieldComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        DsoEditMetadataTextFieldComponent,
-        TranslateModule.forRoot(),
-      ],
+      declarations: [DsoEditMetadataTextFieldComponent],
+      imports: [TranslateModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DsoEditMetadataTextFieldComponent);

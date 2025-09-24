@@ -18,10 +18,8 @@ describe('DsoEditMetadataEntityFieldComponent', () => {
     entityTypeService = new EntityTypeDataServiceStub();
 
     await TestBed.configureTestingModule({
-      imports: [
-        DsoEditMetadataEntityFieldComponent,
-        TranslateModule.forRoot(),
-      ],
+      declarations: [DsoEditMetadataEntityFieldComponent],
+      imports: [TranslateModule.forRoot()],
       providers: [
         { provide: EntityTypeDataService, useValue: entityTypeService },
       ],

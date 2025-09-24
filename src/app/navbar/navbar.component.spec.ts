@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { of as observableOf } from 'rxjs';
+import { LocaleService } from '../core/locale/locale.service';
 
 import { NavbarComponent } from './navbar.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -121,14 +122,15 @@ describe('NavbarComponent', () => {
         RouterTestingModule],
       declarations: [NavbarComponent],
       providers: [
-        Injector,
-        { provide: ThemeService, useValue: getMockThemeService() },
-        { provide: MenuService, useValue: menuService },
-        { provide: HostWindowService, useValue: new HostWindowServiceStub(800) },
-        { provide: ActivatedRoute, useValue: routeStub },
-        { provide: BrowseService, useValue: { getBrowseDefinitions: createSuccessfulRemoteDataObject$(buildPaginatedList(undefined, browseDefinitions)) } },
-        { provide: AuthorizationDataService, useValue: authorizationService },
-        provideMockStore({ initialState }),
+  Injector,
+  { provide: ThemeService, useValue: getMockThemeService() },
+  { provide: MenuService, useValue: menuService },
+  { provide: HostWindowService, useValue: new HostWindowServiceStub(800) },
+  { provide: ActivatedRoute, useValue: routeStub },
+  { provide: BrowseService, useValue: { getBrowseDefinitions: createSuccessfulRemoteDataObject$(buildPaginatedList(undefined, browseDefinitions)) } },
+  { provide: AuthorizationDataService, useValue: authorizationService },
+  { provide: LocaleService, useValue: { getCurrentLanguage: () => 'en', setCurrentLanguage: () => {}, getAvailableLanguages: () => ['en'], languageChange: observableOf('en') } },
+  provideMockStore({ initialState }),
       ],
       schemas: [NO_ERRORS_SCHEMA]
     })
