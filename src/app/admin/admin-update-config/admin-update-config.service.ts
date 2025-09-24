@@ -60,8 +60,6 @@ export class AdminUpdateConfigService {
    * Get content of a specific config file from backend API
    */
   getConfigFileContent(filename: string): Observable<string> {
-    console.log(`� Loading ${filename} from DSpace API`);
-
     return this.http.get(`${this.apiBaseUrl}/${filename}/content`, {
       responseType: 'text',
       headers: new HttpHeaders({
