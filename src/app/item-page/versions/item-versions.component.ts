@@ -202,7 +202,7 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
    * Loading of the name from the items handles for the items which are stored in the metadata dc.relation.replaces` and
    * `dc.relation.isreplacedby`
    * Names are stored in this dict to avoid endless calling rest API to get the name of the Item.
-   * @protected
+   * @protected Accessible to extending components that may need to cache item names from handles
    */
   protected nameCache: { [handle: string]: string } = {};
 
