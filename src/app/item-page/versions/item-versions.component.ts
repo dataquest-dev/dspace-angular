@@ -448,22 +448,6 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Check if the current user is an admin (collection admin, community admin, or site admin)
-   * @returns Observable<boolean> true if user has admin privileges
-   */
-  isAdmin(): Observable<boolean> {
-    return combineLatest([
-      this.authorizationService.isAuthorized(FeatureID.IsCollectionAdmin),
-      this.authorizationService.isAuthorized(FeatureID.IsCommunityAdmin),
-      this.authorizationService.isAuthorized(FeatureID.AdministratorOf),
-    ]).pipe(
-      map(([isCollectionAdmin, isCommunityAdmin, isSiteAdmin]) => {
-        return isCollectionAdmin || isCommunityAdmin || isSiteAdmin;
-      })
-    );
-  }
-
-  /**
    * Check if the current user can delete the version
    * @param version
    */
@@ -561,7 +545,7 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
       this.canCreateVersion$ = this.authorizationService.isAuthorized(FeatureID.CanCreateVersion, this.item.self);
 
       // Initialize admin check for component visibility
-      this.isAdmin$ = this.isAdmin();
+      this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
 
       // If there is a draft item in the version history the 'Create version' button is disabled and a different tooltip message is shown
       this.hasDraftVersion$ = this.versionHistoryRD$.pipe(
