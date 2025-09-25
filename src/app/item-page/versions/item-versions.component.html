@@ -16,6 +16,9 @@
         <thead>
         <tr>
           <th scope="col">{{ "item.version.history.table.version" | translate }}</th>
+          <th scope="col" *ngIf="(showSubmitter() | async)">{{ "item.version.history.table.editor" | translate }}</th>
+          <th scope="col">{{ "item.version.history.table.date" | translate }}</th>
+          <th scope="col">{{ "item.version.history.table.summary" | translate }}</th>
         </tr>
         </thead>
         <tbody>
@@ -91,6 +94,52 @@
 
               </ng-container>
             </ng-container>
+          </td>
+          <td class="version-row-element-editor" *ngIf="(showSubmitter() | async)">
+            {{ versionDTO.version.submitterName }}
+          </td>
+          <td class="version-row-element-date">
+            {{ versionDTO.version.created | date : 'yyyy-MM-dd HH:mm:ss' }}
+          </td>
+          <td class="version-row-element-summary">
+            <div class="float-left">
+              <ng-container
+                *ngIf="isThisBeingEdited(versionDTO.version); then editSummary else showSummary"></ng-container>
+              <ng-template #showSummary>{{ versionDTO.version.summary }}</ng-template>
+              <ng-template #editSummary>
+                <input [attr.aria-label]="'item.version.history.table.action.editSummary' | translate"
+                       [(ngModel)]="versionBeingEditedSummary" (keyup.enter)="onSummarySubmit()"
+                       class="form-control" type="text"/>
+              </ng-template>
+            </div>
+
+            <div class="float-right btn-group edit-field space-children-mr" *ngIf="displayActions">
+              <!--DISCARD EDIT -->
+              <ng-container *ngIf="(versionDTO.canEditVersion | async) && isThisBeingEdited(versionDTO.version)">
+                <button class="btn btn-sm"
+                        [ngClass]="isThisBeingEdited(versionDTO.version) ? 'btn-outline-warning' : 'btn-outline-primary'"
+                        (click)="disableVersionEditing()"
+                        title="{{'item.version.history.table.action.discardSummary' | translate}}">
+                  <i class="fas fa-undo-alt fa-fw"></i>
+                </button>
+              </ng-container>
+              <!--EDIT / SAVE-->
+              <ng-container *ngIf="versionDTO.canEditVersion | async">
+                <button class="btn btn-outline-primary btn-sm version-row-element-edit"
+                        *ngIf="!isThisBeingEdited(versionDTO.version)"
+                        [dsBtnDisabled]="isAnyBeingEdited()"
+                        (click)="enableVersionEditing(versionDTO.version)"
+                        title="{{'item.version.history.table.action.editSummary' | translate}}">
+                  <i class="fas fa-edit fa-fw"></i>
+                </button>
+                <button class="btn btn-outline-success btn-sm"
+                        *ngIf="isThisBeingEdited(versionDTO.version)"
+                        (click)="onSummarySubmit()"
+                        title="{{'item.version.history.table.action.saveSummary' | translate}}">
+                  <i class="fas fa-check fa-fw"></i>
+                </button>
+              </ng-container>
+            </div>
           </td>
         </tr>
         </tbody>
