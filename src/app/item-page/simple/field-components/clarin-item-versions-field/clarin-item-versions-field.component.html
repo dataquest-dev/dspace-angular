@@ -5,6 +5,7 @@
     <div
       class="pl-1 d-flex align-items-center"
       (click)="toggleVersionHistory()"
+      (keydown.enter)="toggleVersionHistory()"
       role="button"
       tabindex="0"
       [attr.aria-expanded]="showVersionHistory"
