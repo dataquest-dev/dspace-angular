@@ -4,11 +4,6 @@ import { map } from 'rxjs/operators';
 import { ItemVersionsComponent } from '../../../versions/item-versions.component';
 import { Item } from '../../../../core/shared/item.model';
 
-interface VersionsDTO {
-  totalElements: number;
-  versionDTOs: any[];
-}
-
 /**
  * Clarin-specific field component for User/Anonymous view of item version history that extends ItemVersionsComponent
  */
@@ -42,7 +37,7 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
     // Set up clarin-specific showMetadataValue logic
     if (this.versionsDTO$) {
       this.showMetadataValue = this.versionsDTO$.pipe(
-        map((versionsDTO: VersionsDTO) => versionsDTO && versionsDTO.totalElements > 1)
+        map((versionsDTO: any) => versionsDTO && versionsDTO.totalElements > 1)
       );
     } else {
       // Fallback: always show if user is admin
