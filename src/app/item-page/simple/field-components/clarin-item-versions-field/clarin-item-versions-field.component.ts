@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Item } from '../../../../core/shared/item.model';
 import { Version } from '../../../../core/shared/version.model';
 import { RemoteData } from '../../../../core/data/remote-data';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { VersionHistory } from '../../../../core/shared/version-history.model';
 import {
   getAllSucceededRemoteData,
@@ -220,7 +220,7 @@ export class ClarinItemVersionsFieldComponent implements OnDestroy, OnInit {
       );
     } else {
       // No version history available
-      this.showMetadataValue = new Observable(observer => observer.next(false));
+      this.showMetadataValue = of(false);
     }
   }
 
