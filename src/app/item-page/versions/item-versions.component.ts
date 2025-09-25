@@ -202,25 +202,25 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
    * Loading of the name from the items handles for the items which are stored in the metadata dc.relation.replaces` and
    * `dc.relation.isreplacedby`
    * Names are stored in this dict to avoid endless calling rest API to get the name of the Item.
-   * @private
+   * @protected
    */
-  private nameCache: { [handle: string]: string } = {};
+  protected nameCache: { [handle: string]: string } = {};
 
-  constructor(private versionHistoryService: VersionHistoryDataService,
-              private versionService: VersionDataService,
-              private itemService: ItemDataService,
-              private paginationService: PaginationService,
-              private formBuilder: UntypedFormBuilder,
-              private modalService: NgbModal,
-              private notificationsService: NotificationsService,
-              private translateService: TranslateService,
-              private router: Router,
-              private itemVersionShared: ItemVersionsSharedService,
-              private authorizationService: AuthorizationDataService,
-              private workspaceItemDataService: WorkspaceitemDataService,
-              private workflowItemDataService: WorkflowItemDataService,
-              private configurationService: ConfigurationDataService,
-              private dsoNameService: DSONameService
+  constructor(protected versionHistoryService: VersionHistoryDataService,
+              protected versionService: VersionDataService,
+              protected itemService: ItemDataService,
+              protected paginationService: PaginationService,
+              protected formBuilder: UntypedFormBuilder,
+              protected modalService: NgbModal,
+              protected notificationsService: NotificationsService,
+              protected translateService: TranslateService,
+              protected router: Router,
+              protected itemVersionShared: ItemVersionsSharedService,
+              protected authorizationService: AuthorizationDataService,
+              protected workspaceItemDataService: WorkspaceitemDataService,
+              protected workflowItemDataService: WorkflowItemDataService,
+              protected configurationService: ConfigurationDataService,
+              protected dsoNameService: DSONameService
   ) {
   }
 
