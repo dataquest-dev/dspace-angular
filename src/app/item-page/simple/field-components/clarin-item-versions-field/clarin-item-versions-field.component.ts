@@ -74,4 +74,12 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
   getVersionItemDisplayName(versionItem: Item): string {
     return versionItem?.firstMetadataValue('dc.title') || versionItem?.name || 'Untitled';
   }
+
+  /**
+   * Get the appropriate aria-label for the toggle button
+   * @returns The aria-label text for accessibility
+   */
+  getToggleAriaLabel(): string {
+    return (this.showVersionHistory ? 'Collapse' : 'Expand') + ' version history';
+  }
 }
