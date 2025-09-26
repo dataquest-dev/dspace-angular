@@ -10,7 +10,7 @@
               </div>
               <div class="row text-left">
                 <span class="col-6">{{'contact-us.email' | translate}}</span>
-                <a *ngIf="emailToContact | async as email" [href]="'mailto:' + email" class="col-6">
+                <a *ngIf="emailToContact$ | async as email" [href]="'mailto:' + email" class="col-6">
                   {{ email }}
                 </a>
               </div>

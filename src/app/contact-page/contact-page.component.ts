@@ -8,14 +8,15 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './contact-page.component.html'
 })
 export class ContactPageComponent implements OnInit {
-  emailToContact: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  emailToContact$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
   constructor(
     private configService: ConfigurationDataService
   ) {}
 
   ngOnInit(): void {
     this.configService.findByPropertyName('lr.help.mail').subscribe(remoteData => {
-      this.emailToContact.next(remoteData.payload.values[0]);
-    });
+        this.emailToContact$.next(remoteData?.payload?.values?.[0] || '');
+      });
   }
 }
