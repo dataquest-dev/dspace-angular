@@ -88,7 +88,7 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
    * This method optimizes the template logic by pre-computing the conditional check
    * @param versionItem the version item's observable
    */
-  getVersionWorkspaceId(versionItem: Observable<any>): Observable<string | undefined> {
+  getVersionWorkspaceId(versionItem: Observable<Item>): Observable<string | undefined> {
     return combineLatest([
       this.hasDraftVersion$ ?? of(false),
       of(versionItem)
@@ -105,7 +105,7 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
    * @param versionItem the version item's observable
    * @param workspaceId$ the workspace ID observable
    */
-  getVersionWorkflowId(versionItem: Observable<any>, workspaceId$: Observable<string | undefined>): Observable<string | undefined> {
+  getVersionWorkflowId(versionItem: Observable<Item>, workspaceId$: Observable<string | undefined>): Observable<string | undefined> {
     return workspaceId$.pipe(
       switchMap((workspaceId) =>
         workspaceId ? of(undefined) : this.getWorkflowId(versionItem)
