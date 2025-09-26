@@ -100,7 +100,6 @@ function loginViaForm(
 ): void {
   // Optionally close the DiscoJuice popup if present
   cy.wait(500);
-  cy.get('.discojuice_close').should('exist').click();
 
   // Fill in credentials
   cy.get('[data-test="email"]').should('be.visible').type(email);
