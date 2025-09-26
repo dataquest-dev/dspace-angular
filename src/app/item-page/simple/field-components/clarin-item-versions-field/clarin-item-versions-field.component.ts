@@ -89,12 +89,9 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
    * @param versionItem the version item's observable
    */
   getVersionWorkspaceId(versionItem: Observable<Item>): Observable<string | undefined> {
-    return combineLatest([
-      this.hasDraftVersion$ ?? of(false),
-      of(versionItem)
-    ]).pipe(
-      switchMap(([hasDraftVersion, item]) =>
-        hasDraftVersion ? this.getWorkspaceId(item) : of(undefined)
+    return (this.hasDraftVersion$ ?? of(false)).pipe(
+      switchMap(hasDraftVersion =>
+        hasDraftVersion ? this.getWorkspaceId(versionItem) : of(undefined)
       )
     );
   }
