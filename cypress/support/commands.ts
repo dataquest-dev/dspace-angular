@@ -98,7 +98,6 @@ function loginViaForm(
   email: string,
   password: string
 ): void {
-  // Optionally close the DiscoJuice popup if present
   cy.wait(500);
 
   // Fill in credentials
