@@ -12,6 +12,6 @@
   border-radius: 4px;
   padding: 2%;
 
-  max-height: var(--ds-dso-selector-list-max-height) / 2;
+  max-height: calc(var(--ds-dso-selector-list-max-height) / 2);
   overflow-y: auto;
 }
