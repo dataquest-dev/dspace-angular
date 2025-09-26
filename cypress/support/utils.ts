@@ -40,5 +40,35 @@ export const testA11y = (context?: any, options?: Options) => {
             { id: 'color-contrast', enabled: false },
         ]
     });
-    cy.checkA11y(context, options, terminalLog);
+
+    // If a selector string was provided, ensure it exists and is visible first
+    if (typeof context === 'string') {
+        cy.get(context, { timeout: 15000 }).should('be.visible');
+        cy.checkA11y(context, options, terminalLog);
+        return;
+    }
+
+    // If a concrete element/JQuery is provided, ensure it exists first
+    if (context) {
+        cy.wrap(context).should('exist').then(($el) => {
+            const node = ($el && ($el as any).get) ? ($el as any).get(0) : $el;
+            cy.checkA11y(node as any, options, terminalLog);
+        });
+        return;
+    }
+
+    // Fallback: run against the whole page after ensuring body is visible
+    cy.get('body', { timeout: 15000 }).should('be.visible');
+    cy.checkA11y(undefined, options, terminalLog);
+};
+
+// Optional helper: only run a11y if selector exists in the page (useful for empty tabs/pages)
+export const testA11yIfExists = (selector: string, options?: Options) => {
+    cy.get('body').then(($body) => {
+        if ($body.find(selector).length > 0) {
+            testA11y(selector, options);
+        } else {
+            cy.task('log', `Skipping a11y: no content for selector "${selector}"`);
+        }
+    });
 };
