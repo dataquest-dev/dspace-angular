@@ -1,3 +1,44 @@
 /**
-  The file for styling `handle-table.component.html`. No styling needed.
+ * Styling for handle-table component search functionality
  */
+
+.search-input-container {
+  flex: 1;
+}
+
+.search-input {
+  width: 100%;
+
+  &:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+  }
+}
+
+.search-dropdown-container {
+  width: 100%;
+
+  .search-dropdown-button {
+    width: 100%;
+    text-align: left;
+    background: white;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+
+    &:focus {
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    &:disabled {
+      background-color: #f8f9fa;
+      color: #6c757d;
+      cursor: not-allowed;
+    }
+
+    span {
+      color: #495057;
+    }
+  }
+}

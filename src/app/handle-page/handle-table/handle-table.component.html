@@ -11,7 +11,7 @@
                 class="btn btn-outline-secondary dropdown-toggle"
                 data-bs-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
-          <span *ngIf="searchOption != null" [ngModel]="searchOption" name="searchOption" ngDefaultControl>{{searchOption}}</span>
+          <span *ngIf="searchOption != null">{{searchOption}}</span>
           <span *ngIf="searchOption == null" >{{'handle-table.dropdown.search-option' | translate}}</span>
         </button>
         <div ngbDropdownMenu aria-labelledby="resultdropdown">
@@ -21,57 +21,66 @@
         </div>
       </div>
 
-        <!-- Default disabled search input when no option is selected -->
-        <input *ngIf="!searchOption"
-               type="text"
-               id="clarin-dc-search-box"
-               class="form-control"
-               aria-label="Text input with dropdown button"
-               placeholder="Please select a search option first"
-               disabled>
+        <!-- Search input area -->
+        <div class="search-input-container">
+          <!-- Default disabled search input when no option is selected -->
+          <input *ngIf="!searchOption"
+                 type="text"
+                 class="form-control search-input"
+                 placeholder="Please select a search option first"
+                 disabled>
 
-        <!-- Text input for Handle search -->
-        <input *ngIf="searchOption === handleOption"
-               type="text"
-               id="clarin-dc-search-box"
-               class="form-control"
-               aria-label="Text input with dropdown button"
-               [(ngModel)]="searchQuery"
-               [disabled]="!searchOption">
+          <!-- Text input for Handle search -->
+          <input *ngIf="searchOption === handleOption"
+                 type="text"
+                 class="form-control search-input"
+                 [(ngModel)]="searchQuery"
+                 placeholder="Enter handle">
 
-        <!-- Dropdown for Internal search -->
-        <div *ngIf="searchOption === internalOption" ngbDropdown class="form-control p-0">
-          <button id="internaldropdown" type="button"
-                  ngbDropdownToggle
-                  class="btn btn-outline-secondary dropdown-toggle w-100 text-left border-0"
-                  data-bs-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false"
-                  [disabled]="!searchOption">
-            <span *ngIf="searchQuery" [ngModel]="searchQuery" name="searchQuery" ngDefaultControl>{{searchQuery === 'yes' ? 'Yes' : 'No'}}</span>
-            <span *ngIf="!searchQuery">Select internal option</span>
-          </button>
-          <div ngbDropdownMenu aria-labelledby="internaldropdown">
-            <button class="dropdown-item" (click)="setInternalOption('yes')">Yes</button>
-            <button class="dropdown-item" (click)="setInternalOption('no')">No</button>
+          <!-- Dropdown for Internal search -->
+          <div *ngIf="searchOption === internalOption"
+               ngbDropdown
+               class="search-dropdown-container">
+            <button type="button"
+                    ngbDropdownToggle
+                    class="search-dropdown-button"
+                    [attr.aria-label]="'Select internal option'">
+              <span>{{ getInternalDisplayText() }}</span>
+            </button>
+            <div ngbDropdownMenu>
+              <button class="dropdown-item"
+                      (click)="setSearchValue('yes')"
+                      type="button">Yes</button>
+              <button class="dropdown-item"
+                      (click)="setSearchValue('no')"
+                      type="button">No</button>
+            </div>
           </div>
-        </div>
 
-        <!-- Dropdown for Resource Type search -->
-        <div *ngIf="searchOption === resourceTypeOption" ngbDropdown class="form-control p-0">
-          <button id="resourcetypedropdown" type="button"
-                  ngbDropdownToggle
-                  class="btn btn-outline-secondary dropdown-toggle w-100 text-left border-0"
-                  data-bs-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false"
-                  [disabled]="!searchOption">
-            <span *ngIf="searchQuery" [ngModel]="searchQuery" name="searchQuery" ngDefaultControl>{{getResourceTypeDisplayName(searchQuery)}}</span>
-            <span *ngIf="!searchQuery">Select resource type</span>
-          </button>
-          <div ngbDropdownMenu aria-labelledby="resourcetypedropdown">
-            <button class="dropdown-item" (click)="setResourceTypeOption('site')">Site</button>
-            <button class="dropdown-item" (click)="setResourceTypeOption('community')">Community</button>
-            <button class="dropdown-item" (click)="setResourceTypeOption('collection')">Collection</button>
-            <button class="dropdown-item" (click)="setResourceTypeOption('item')">Item</button>
+          <!-- Dropdown for Resource Type search -->
+          <div *ngIf="searchOption === resourceTypeOption"
+               ngbDropdown
+               class="search-dropdown-container">
+            <button type="button"
+                    ngbDropdownToggle
+                    class="search-dropdown-button"
+                    [attr.aria-label]="'Select resource type'">
+              <span>{{ getResourceTypeDisplayText() }}</span>
+            </button>
+            <div ngbDropdownMenu>
+              <button class="dropdown-item"
+                      (click)="setSearchValue('site')"
+                      type="button">Site</button>
+              <button class="dropdown-item"
+                      (click)="setSearchValue('community')"
+                      type="button">Community</button>
+              <button class="dropdown-item"
+                      (click)="setSearchValue('collection')"
+                      type="button">Collection</button>
+              <button class="dropdown-item"
+                      (click)="setSearchValue('item')"
+                      type="button">Item</button>
+            </div>
           </div>
         </div>
 

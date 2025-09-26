@@ -364,38 +364,71 @@ export class HandleTableComponent implements OnInit {
   }
 
   /**
-   * Set the internal search option value.
-   * @param value 'yes' or 'no'
+   * Set the search value for any search type
+   * @param value The search value to set
    */
-  setInternalOption(value: string) {
+  setSearchValue(value: string): void {
     this.searchQuery = value;
   }
 
   /**
-   * Set the resource type search option value.
-   * @param value resource type string
+   * Get display text for internal search dropdown
    */
-  setResourceTypeOption(value: string) {
-    this.searchQuery = value;
-  }
-
-  /**
-   * Get display name for resource type value.
-   * @param value resource type string
-   */
-  getResourceTypeDisplayName(value: string): string {
-    switch (value) {
-      case 'site':
-        return 'Site';
-      case 'community':
-        return 'Community';
-      case 'collection':
-        return 'Collection';
-      case 'item':
-        return 'Item';
-      default:
-        return value;
+  getInternalDisplayText(): string {
+    if (!this.searchQuery) {
+      return 'Select internal option';
     }
+    return this.searchQuery === 'yes' ? 'Yes' : 'No';
+  }
+
+  /**
+   * Get display text for resource type search dropdown
+   */
+  getResourceTypeDisplayText(): string {
+    if (!this.searchQuery) {
+      return 'Select resource type';
+    }
+    return this.getResourceTypeDisplayName(this.searchQuery);
+  }
+
+  /**
+   * Get capitalized display name for resource type value
+   */
+  private getResourceTypeDisplayName(value: string): string {
+    const resourceTypeMap: Record<string, string> = {
+      site: 'Site',
+      community: 'Community',
+      collection: 'Collection',
+      item: 'Item'
+    };
+    return resourceTypeMap[value] || value;
+  }
+
+  /**
+   * Parse internal search query to server format
+   */
+  private parseInternalSearchQuery(searchQuery: string): string {
+    if (searchQuery === 'yes') {
+      return 'internal';
+    } else if (searchQuery === 'no') {
+      return 'external';
+    }
+    return searchQuery;
+  }
+
+  /**
+   * Parse resource type search query to server format (converts to numeric ID)
+   */
+  private parseResourceTypeSearchQuery(searchQuery: string): string {
+    const resourceTypeIdMap: Record<string, number> = {
+      item: 2,
+      collection: 3,
+      community: 4,
+      site: 5
+    };
+
+    const id = resourceTypeIdMap[searchQuery];
+    return id ? id.toString() : '-1';
   }
 
   /**
@@ -418,35 +451,13 @@ export class HandleTableComponent implements OnInit {
           parsedSearchOption = HANDLE_SEARCH_OPTION;
           break;
         case this.internalOption:
-          // if the handle doesn't have the URL - is internal, if it does - is external
           parsedSearchOption = URL_SEARCH_OPTION;
-          if (this.searchQuery.toLowerCase() === 'yes') {
-            parsedSearchQuery = 'internal';
-          } else if (this.searchQuery.toLowerCase() === 'no') {
-            parsedSearchQuery = 'external';
-          }
+          parsedSearchQuery = this.parseInternalSearchQuery(this.searchQuery);
           break;
         case this.resourceTypeOption:
           parsedSearchOption = RESOURCE_TYPE_SEARCH_OPTION;
-          // parse resourceType from string to the number because the resourceType is integer on the server
-          switch (this.searchQuery.toLowerCase()) {
-            case ITEM.toLowerCase():
-              parsedSearchQuery = '' + 2;
-              break;
-            case COLLECTION.toLowerCase():
-              parsedSearchQuery = '' + 3;
-              break;
-            case COMMUNITY.toLowerCase():
-              parsedSearchQuery = '' + 4;
-              break;
-            case SITE.toLowerCase():
-              parsedSearchQuery = '' + 5;
-              break;
-            // no results for invalid search inputs
-            default:
-              parsedSearchQuery = '' + -1;
-              break;
-          }
+          parsedSearchQuery = this.parseResourceTypeSearchQuery(this.searchQuery);
+          break;
           break;
       }
     }
