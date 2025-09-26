@@ -359,6 +359,43 @@ export class HandleTableComponent implements OnInit {
    */
   setSearchOption(event) {
     this.searchOption = event?.target?.innerHTML;
+    // Reset search query when changing search option
+    this.searchQuery = '';
+  }
+
+  /**
+   * Set the internal search option value.
+   * @param value 'yes' or 'no'
+   */
+  setInternalOption(value: string) {
+    this.searchQuery = value;
+  }
+
+  /**
+   * Set the resource type search option value.
+   * @param value resource type string
+   */
+  setResourceTypeOption(value: string) {
+    this.searchQuery = value;
+  }
+
+  /**
+   * Get display name for resource type value.
+   * @param value resource type string
+   */
+  getResourceTypeDisplayName(value: string): string {
+    switch (value) {
+      case 'site':
+        return 'Site';
+      case 'community':
+        return 'Community';
+      case 'collection':
+        return 'Collection';
+      case 'item':
+        return 'Item';
+      default:
+        return value;
+    }
   }
 
   /**
