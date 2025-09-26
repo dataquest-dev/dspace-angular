@@ -4,14 +4,15 @@
             <h1>{{'contact-us.title' | translate}}</h1>
             <div>
               <p>{{'contact-us.description' | translate}}</p>
-              <div class="text-left">
-                <span>{{'contact-us.form' | translate}} </span>
-                <a routerLink="info/feedback" class="ml-4">{{'contact-us.feedback' | translate}}</a>
+              <div class="row text-left">
+                <span class="col-6">{{'contact-us.form' | translate}} </span>
+                <a [routerLink]="'/info/feedback'" class="col-6">{{'contact-us.feedback' | translate}}</a>
               </div>
-              <div class="text-left">
-                <span>{{'contact-us.email' | translate}}</span>
-                <a *ngIf="emailToContact" [href]="'mailto:' + emailToContact" class="email-text"
-                >{{emailToContact}}</a>
+              <div class="row text-left">
+                <span class="col-6">{{'contact-us.email' | translate}}</span>
+                <a *ngIf="emailToContact$ | async as email" [href]="'mailto:' + email" class="col-6">
+                  {{ email }}
+                </a>
               </div>
             </div>
           </div>
