@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, combineLatest } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { ItemVersionsComponent } from '../../../versions/item-versions.component';
 import { Item } from '../../../../core/shared/item.model';
 import { Version } from '../../../../core/shared/version.model';
@@ -81,5 +81,35 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
    */
   getToggleAriaLabel(): string {
     return (this.showVersionHistory ? 'Collapse' : 'Expand') + ' version history';
+  }
+
+  /**
+   * Get workspace ID for a version item if there's a draft version, otherwise return undefined
+   * This method optimizes the template logic by pre-computing the conditional check
+   * @param versionItem the version item's observable
+   */
+  getVersionWorkspaceId(versionItem: Observable<any>): Observable<string | undefined> {
+    return combineLatest([
+      this.hasDraftVersion$ || of(false),
+      of(versionItem)
+    ]).pipe(
+      switchMap(([hasDraftVersion, item]) =>
+        hasDraftVersion ? this.getWorkspaceId(item) : of(undefined)
+      )
+    );
+  }
+
+  /**
+   * Get workflow ID for a version item if workspace ID is not available
+   * This method optimizes the template logic by handling the conditional workflow ID logic
+   * @param versionItem the version item's observable
+   * @param workspaceId$ the workspace ID observable
+   */
+  getVersionWorkflowId(versionItem: Observable<any>, workspaceId$: Observable<string | undefined>): Observable<string | undefined> {
+    return workspaceId$.pipe(
+      switchMap((workspaceId) =>
+        workspaceId ? of(undefined) : this.getWorkflowId(versionItem)
+      )
+    );
   }
 }
