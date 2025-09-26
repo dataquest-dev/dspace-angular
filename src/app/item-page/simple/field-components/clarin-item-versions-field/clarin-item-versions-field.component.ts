@@ -56,7 +56,7 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
       );
     } else {
       // Fallback: check if isAdmin$ is available, otherwise hide the component
-      this.showMetadataValue = this.isAdmin$ || of(false);
+      this.showMetadataValue = this.isAdmin$ ? this.isAdmin$ : of(false);
     }
   }
 
