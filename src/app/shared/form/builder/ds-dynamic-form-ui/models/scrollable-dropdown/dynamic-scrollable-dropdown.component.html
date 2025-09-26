@@ -48,7 +48,7 @@
         <i>{{ 'dropdown.clear' | translate }}</i>
       </button>
       <button class="dropdown-item collection-item text-truncate" *ngFor="let listEntry of optionsList; let i = index"
-              [class.active]="inputFormatter(listEntry) === (currentValue | async) || i === selectedIndex"
+              [class.active]="i === selectedIndex"
               (keydown.enter)="onSelect(listEntry); sdRef.close()" (mousedown)="onSelect(listEntry); sdRef.close()"
               title="{{ inputFormatter(listEntry) }}" role="option"
               [attr.id]="inputFormatter(listEntry) === (currentValue|async) ? ('combobox_' + id + '_selected') : null">

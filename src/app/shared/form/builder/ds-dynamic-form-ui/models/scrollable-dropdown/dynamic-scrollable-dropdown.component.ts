@@ -96,32 +96,6 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   }
 
   /**
-   * Compute the index of the current form value within optionsList.
-   * Returns -1 when there is no current value or it cannot be matched.
-   */
-  private getIndexForCurrentValue(): number {
-    try {
-      if (!this.optionsList || this.optionsList.length === 0) { return -1; }
-      const rawVal = this.group?.get(this.model.id)?.value;
-      if (isEmpty(rawVal)) { return -1; }
-
-      let currentStr: string;
-      if (typeof rawVal === 'string') {
-        currentStr = rawVal;
-      } else if (this.useFindAllService) {
-        currentStr = rawVal?.[this.model.displayKey];
-      } else {
-        currentStr = rawVal?.display;
-      }
-      if (isEmpty(currentStr)) { return -1; }
-
-      return this.optionsList.findIndex((le: any) => this.inputFormatter(le) === currentStr);
-    } catch {
-      return -1;
-    }
-  }
-
-  /**
    * Get service and method to use to retrieve dropdown options
    */
   getDataFromService(): Observable<RemoteData<PaginatedList<CacheableObject>>> {
@@ -140,9 +114,9 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
       tap(() => this.loading = false),
     ).subscribe((list: PaginatedList<CacheableObject>) => {
       this.optionsList = list.page;
-      if (fromInit && this.model.value) {
-        this.setCurrentValue(this.model.value, true);
-      }
+        if (fromInit && this.model.value) {
+          this.setCurrentValue(this.model.value, true);
+        }
 
       this.updatePageInfo(
         list.pageInfo.elementsPerPage,
@@ -150,11 +124,7 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
         list.pageInfo.totalElements,
         list.pageInfo.totalPages
       );
-
-      // Determine which option should be highlighted by default based on current value
-      const idx = this.getIndexForCurrentValue();
-      this.selectedIndex = (idx >= 0) ? idx : -1;
-
+      this.selectedIndex = 0;
       this.cdr.detectChanges();
     });
   }
