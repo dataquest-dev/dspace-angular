@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ItemVersionsComponent } from '../../../versions/item-versions.component';
 import { Item } from '../../../../core/shared/item.model';
@@ -55,8 +55,8 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
         map((versionsDTO: VersionsDTO) => versionsDTO && versionsDTO.totalElements > 1)
       );
     } else {
-      // Fallback: always show if user is admin
-      this.showMetadataValue = this.isAdmin$;
+      // Fallback: check if isAdmin$ is available, otherwise hide the component
+      this.showMetadataValue = this.isAdmin$ || of(false);
     }
   }
 
