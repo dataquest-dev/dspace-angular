@@ -50,14 +50,14 @@
                 [disabled]="loading || configFiles.length === 0">
                 <option [ngValue]="null">{{ getFileSelectionText() }}</option>
                 <option *ngFor="let file of configFiles" [ngValue]="file">
-                  <i class="fas fa-file me-1"></i>{{ file.fileName || '[No Name]' }}
+                  <i class="fas fa-file mr-1"></i>{{ file.fileName || '[No Name]' }}
                 </option>
               </select>
             </div>
             <div class="col-md-6" *ngIf="selectedFile">
               <div class="file-info mt-3 mt-md-0 p-3 bg-light rounded">
                 <h6 class="mb-2">
-                  <i class="fas fa-info-circle text-info me-1"></i>
+                  <i class="fas fa-info-circle text-info mr-1"></i>
                   {{ 'admin.update-config.file-info.title' | translate }}
                 </h6>
                 <small class="text-muted">
@@ -86,7 +86,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="card-title mb-0">
-              <i class="fas fa-code me-2"></i>
+              <i class="fas fa-code mr-1"></i>
               {{ 'admin.update-config.editor.title' | translate }}: {{ selectedFile.fileName }}
             </h5>
 
@@ -114,7 +114,7 @@
                 [disabled]="!hasUnsavedChanges() || loading || saving"
                 [title]="'admin.update-config.buttons.save.tooltip' | translate">
                 <i class="fas fa-save mr-2" *ngIf="!saving"></i>
-                <i class="fas fa-spinner fa-spin me-2" *ngIf="saving"></i>
+                <i class="fas fa-spinner fa-spin mr-2" *ngIf="saving"></i>
                 <strong>{{ saving ? ('admin.update-config.buttons.saving' | translate) : ('admin.update-config.buttons.save' | translate) }}</strong>
               </button>
             </div>
@@ -122,7 +122,7 @@
 
           <!-- Config File Editor Notice -->
           <div class="alert alert-info mb-3 d-flex align-items-center">
-            <i class="fas fa-cogs me-2 text-primary"></i>
+            <i class="fas fa-cogs mr-1 text-primary"></i>
             <div>
               <strong>{{ 'admin.update-config.editor.notice.title' | translate }}</strong><br>
               <small>{{ 'admin.update-config.editor.notice.description' | translate:{ fileName: selectedFile?.fileName } }}</small>
@@ -131,7 +131,7 @@
 
           <div class="mb-3">
             <div *ngIf="hasUnsavedChanges()" class="alert alert-warning py-2">
-              <i class="fas fa-edit me-1"></i>
+              <i class="fas fa-edit mr-1"></i>
               {{ 'admin.update-config.validation.unsaved-changes' | translate }}
             </div>
           </div>
