@@ -2,7 +2,8 @@
   "env": {
     "has_discojuice": false,
     "has_whats_new": false,
-    "has_profile_and_logout_link": true
+    "has_profile_and_logout_link": true,
+    "has_loading_issue": true
   },
   "locators": {
     "title": "VSB-TUO Repository - Home",
