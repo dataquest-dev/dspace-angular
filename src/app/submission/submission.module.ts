@@ -72,6 +72,7 @@ import {SubmissionSectionIdentifiersComponent} from './sections/identifiers/sect
 import {SubmissionSectionClarinLicenseDistributionComponent} from './sections/clarin-license-distribution/clarin-license-distribution.component';
 import {SubmissionSectionClarinNoticeComponent} from './sections/clarin-notice/clarin-notice.component';
 
+
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
   SubmissionSectionUploadComponent,
