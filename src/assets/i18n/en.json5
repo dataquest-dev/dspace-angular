@@ -1675,6 +1675,28 @@
 
   "error.validation.metadata.qualifier.max-length": "This field may not contain more than 64 characters",
 
+  // Evyuka validation messages
+  "error.validation.evyuka.subject.version.required": "Vyberte kódy všech verzí předmětu, kterých se dokument týká. Dokument bude dostupný pouze vyjmenovaným verzím předmětů.",
+
+  "error.validation.evyuka.subject.required": "Vyberte kódy všech předmětů, kterých se dokument týká. Dokument bude rovněž společný pro všechny verze těchto předmětů.",
+
+  "error.validation.evyuka.discipline.required": "Vyberte kódy všech studijních oborů, kterých se dokument týká.",
+
+  "error.validation.evyuka.programme.required": "Vyberte kódy všech studijních programů, kterých se dokument týká.",
+
+  // Complex validation messages
+  "error.validation.evyuka.codes.all.required": "Alespoň jedno z polí musí být vyplněno: Kód verze předmětu, Kód předmětu, Kód studijního oboru, Kód studijního programu",
+
+  "error.validation.evyuka.codes.subject.only.required": "Alespoň jedno z polí musí být vyplněno: Kód verze předmětu, Kód předmětu",
+
+  "error.validation.evyuka.codes.discipline.only.required": "Alespoň jedno z polí musí být vyplněno: Kód studijního oboru, Kód studijního programu",
+
+  "error.validation.evyuka.subject.codes.required": "Následující atributy dokumentu (kód verze předmětu a kód předmětu) slouží k propojení a <b>zveřejnění odkazu na dokument na stránkách detailu předmětu</b> v rámci portálu <a href=\"https://www.vsb.cz/e-vyuka\">E-výuka</a>. Jedná-li se o studijní oporu určenou pouze pro obor/program, tak následující kódy nevyplňujte. Návod pro správný výběr výběr kódů z číselníků je dostupný na stránkách s návody.",
+
+  "error.validation.evyuka.discipline.programme.codes.required": "Následující atributy dokumentu (kód studijního oboru a kód studijního programu) slouží k propojení a <b>zveřejnění odkazu na dokument na stránkách detailu oboru/programu</b> v rámci portálu <a href=\"https://www.vsb.cz/e-vyuka\">E-výuka</a>. Jedná-li se o studijní oporu určenou pouze pro předmět, tak následující kódy nevyplňujte. Návod pro správný výběr výběr kódů z číselníků je dostupný na stránkách s návody.",
+
+  "error.validation.evyuka.combined.groups.required": "Následující atributy dokumentu slouží k propojení a zveřejnění odkazu na dokument v rámci portálu <a href=\"https://www.vsb.cz/e-vyuka\">E-výuka</a>. Vyplňte příslušné kódy podle typu studijní opory: pro předmětové opory vyplňte kód verze předmětu a kód předmětu (odkaz se zobrazí <b>na stránkách detailu předmětu</b>), pro oborové/programové opory vyplňte kód studijního oboru a kód studijního programu (odkaz se zobrazí <b>na stránkách detailu oboru/programu</b>). Návod pro správný výběr výběr kódů z číselníků je dostupný na stránkách s návody.",
+
   "feed.description": "RSS feed",
 
   "file-download-link.restricted": "Restricted bitstream",
@@ -5444,67 +5466,67 @@
   "system-wide-alert.form.create.error": "Something went wrong when creating the system-wide alert",
 
   "admin.update-config.title": "Update Configuration",
-  
+
   "admin.update-config.description": "Edit DSpace configuration files through the web interface.",
-  
+
   "admin.update-config.select.file": "Select Configuration File",
-  
+
   "admin.update-config.select.file.placeholder": "Choose a file to edit...",
-  
+
   "admin.update-config.file.info": "File",
-  
+
   "admin.update-config.last.modified": "Last modified",
-  
+
   "admin.update-config.content": "File Content",
-  
+
   "admin.update-config.valid": "Valid",
-  
+
   "admin.update-config.invalid": "Invalid",
-  
+
   "admin.update-config.validation.errors": "Configuration Validation Errors",
-  
+
   "admin.update-config.save": "Save Configuration",
-  
+
   "admin.update-config.reset": "Reset",
-  
+
   "admin.update-config.help.title": "Important Notes",
-  
+
   "admin.update-config.help.backup": "Always backup configuration files before making changes.",
-  
+
   "admin.update-config.help.validate": "Ensure your configuration is valid before saving to prevent system errors.",
-  
+
   "admin.update-config.help.restart": "Changes may require application restart to take effect.",
-  
+
   "admin.update-config.help.directory": "Only files in /config/config-be/ directory can be edited for security reasons.",
-  
+
   "admin.update-config.success.save.title": "Configuration Saved",
-  
+
   "admin.update-config.success.save.message": "{{message}}",
-  
+
   "admin.update-config.error.save.title": "Save Failed",
-  
+
   "admin.update-config.error.save.message": "Unable to save configuration file. Please check the logs and try again.",
-  
+
   "admin.update-config.error.load.title": "Load Failed",
-  
+
   "admin.update-config.error.load.message": "Unable to load configuration file: {{fileName}}",
-  
+
   // Additional translation keys for enhanced UI
   "admin.update-config.refresh": "Refresh",
   "admin.update-config.refresh.tooltip": "Reload configuration files list",
   "admin.update-config.loading": "Loading...",
   "admin.update-config.loading-files": "Loading configuration files...",
   "admin.update-config.loading-content": "Loading file content...",
-  
+
   "admin.update-config.file-selection.title": "File Selection",
   "admin.update-config.file-selection.label": "Select Configuration File",
-  
+
   "admin.update-config.file-info.path": "Path",
   "admin.update-config.file-info.modified": "Last Modified",
-  
+
   "admin.update-config.select.choose-file": "Choose a configuration file to edit",
   "admin.update-config.select.no-files": "No configuration files found",
-  
+
   "admin.update-config.editor.title": "Configuration Editor",
   "admin.update-config.editor.content": "File Content",
   "admin.update-config.editor.placeholder": "Select a file to begin editing...",
@@ -5513,25 +5535,25 @@
   "admin.update-config.editor.save.tooltip": "Save changes to the configuration file",
   "admin.update-config.editor.reset": "Reset",
   "admin.update-config.editor.reset.tooltip": "Reset content to original version",
-  
+
   "admin.update-config.validation.valid": "Configuration is valid",
   "admin.update-config.validation.invalid": "Configuration contains errors - please fix before saving",
   "admin.update-config.validation.unsaved-changes": "File has unsaved changes",
-  
+
   "admin.update-config.help.important.title": "Before You Start",
   "admin.update-config.help.important.backup": "Always backup configuration files before making changes",
   "admin.update-config.help.important.restart": "DSpace may require restart after configuration changes",
   "admin.update-config.help.important.validation": "Configuration validation prevents saving invalid files",
-  
+
   "admin.update-config.help.allowed-files.title": "Editable Files",
   "admin.update-config.help.allowed-files.description": "Only configuration files in the server configuration directory can be edited for security reasons:",
-  
+
   "admin.update-config.error.load-files.title": "Load Error",
   "admin.update-config.error.load-files.message": "Failed to load configuration files list",
-  
+
   // Breadcrumb
   "admin.update-config.breadcrumbs": "Update Configuration",
-  
+
   // File Information
   "admin.update-config.file-info.title": "File Information",
   "admin.update-config.file-info.name": "File",
@@ -5540,7 +5562,7 @@
   "admin.update-config.file-info.modified": "Modified",
   "admin.update-config.file-info.status": "Status",
   "admin.update-config.file-info.ready": "Ready for editing",
-  
+
   // Action Buttons
   "admin.update-config.buttons.undo": "Undo Changes",
   "admin.update-config.buttons.undo.tooltip": "Reset to last saved version",
@@ -5549,17 +5571,17 @@
   "admin.update-config.buttons.save": "Save to File",
   "admin.update-config.buttons.save.tooltip": "Save changes to configuration file",
   "admin.update-config.buttons.saving": "Saving to File...",
-  
+
   // Editor Notice
   "admin.update-config.editor.notice.title": "File Editor",
   "admin.update-config.editor.notice.description": "Editing configuration file {{fileName}}. Changes are saved immediately to the server.",
-  
+
   // Success Messages
   "admin.update-config.success.save.title": "File Saved Successfully",
   "admin.update-config.success.save.message": "{{fileName}} has been updated successfully",
   "admin.update-config.success.reload.title": "File Reloaded",
   "admin.update-config.success.reload.message": "Reloaded {{fileName}} from server",
-  
+
   // Error Messages
   "admin.update-config.error.load-content.title": "Load Failed",
   "admin.update-config.error.load-content.message": "Could not load {{fileName}}",
