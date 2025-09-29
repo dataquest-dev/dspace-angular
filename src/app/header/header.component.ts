@@ -21,6 +21,8 @@ export class HeaderComponent implements OnInit {
   public isAuthenticated: Observable<boolean>;
   public isMobile$: Observable<boolean>;
 
+  public logoSrc: string;
+
   menuID = MenuID.PUBLIC;
   maxMobileWidth = WidthCategory.SM;
 
@@ -33,6 +35,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.isMobile$ = this.windowService.isUpTo(this.maxMobileWidth);
+    this.setLogo();
   }
 
   public toggleNavbar(): void {
@@ -74,5 +77,14 @@ export class HeaderComponent implements OnInit {
     };
 
     return translations[slug] || '';
+  }
+
+  /**
+   * Sets the logo source based on the current language code
+   */
+  setLogo() {
+    this.logoSrc = this.localeService.getCurrentLanguageCode() === 'cs'
+      ? 'assets/images/mendel-logo-cs.png'
+      : 'assets/images/mendel-logo-en.png';
   }
 }

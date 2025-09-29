@@ -1,19 +1,23 @@
 :root {
 
   --lt-common-navbar-height: 80px;
+  --lt-mendelu-cyan: #80c55b;
+  --lt-mendelu-cyan-hover: #318935;
+  --lt-mendelu-cyan-lighter: #8ef893;
+  --lt-mendelu-black: #231f20;
+  --lt-mendelu-darkgray: #828899;
+  --lt-mendelu-lightgray: #fafafa;
+
   --lt-clarin-purple: #7479b8;
 
   --lt-clarin-yellow-bg: #fcf8e3;;
   --lt-clarin-yellow-border: #fbeed5;
-
   --lt-clarin-red-bg: #f2dede;
   --lt-clarin-red-text: #b94a48;
   --lt-clarin-red-border: #eed3d7;
-
   --lt-clarin-blue-bg: #d9edf7;
   --lt-clarin-blue-text: #3a87ad;
   --lt-clarin-blue-border: #bce8f1;
-
   --lt-clarin-gray-border: #d7d7d7;
 
   --ds-content-spacing: #{$spacer}; // equivalent to Bootstrap spaces of size 3

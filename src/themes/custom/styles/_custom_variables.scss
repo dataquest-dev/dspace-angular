@@ -1,8 +1,8 @@
 :root {
-  --lt-mendelu-cyan: #00a499;
-  --lt-mendelu-cyan-hover: #026962;
-  --lt-mendelu-cyan-lighter: #52e3d9;
-  --lt-mendelu-black: #171f2b;
+  --lt-mendelu-cyan: #80c55b;
+  --lt-mendelu-cyan-hover: #318935;
+  --lt-mendelu-cyan-lighter: #8ef893;
+  --lt-mendelu-black: #231f20;
   --lt-mendelu-darkgray: #828899;
   --lt-mendelu-lightgray: #fafafa;
 
@@ -29,13 +29,14 @@
   --ds-header-bg: var(--lt-mendelu-cyan);
   --ds-header-logo-height: 50px;
   --ds-header-logo-height-xs: 50px;
-  --ds-header-icon-color: #{$link-color};
-  --ds-header-icon-color-hover: #{$link-hover-color};
+  $header-icon-color: #fff;
+  --ds-header-icon-color: #{$header-icon-color};
+  --ds-header-icon-color-hover: #{darken($header-icon-color, 15%)};
   --ds-navbar-bg: var(--ds-header-bg);
   --ds-header-navbar-border-top-color: #{$white};
   --ds-header-navbar-border-bottom-color: #{$gray-400};
-  --ds-navbar-link-color: #fff;
-  --ds-navbar-link-color-hover: darken(#fff, 15%);
+  --ds-navbar-link-color: var(--lt-mendelu-cyan);
+  --ds-navbar-link-color-hover: var(--lt-mendelu-cyan-hover);
   --ds-expandable-navbar-bg: var(--ds-navbar-bg);
   --ds-expandable-navbar-link-color: var(--ds-navbar-link-color);
   --ds-expandable-navbar-link-color-hover: var(--ds-navbar-link-color-hover);

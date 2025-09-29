@@ -4,7 +4,7 @@
     [attr.aria-label]="'nav.user-profile-menu-and-logout' |translate" id="user-menu-dropdown">
   <li class="ds-menu-item-wrapper username-email-wrapper" role="presentation">
     {{dsoNameService.getName(user$ | async)}}<br>
-    <span class="text-muted">{{(user$ | async)?.email}}</span>
+    <b>{{(user$ | async)?.email}}</b>
   </li>
   <li class="ds-menu-item-wrapper" role="presentation">
     <a class="ds-menu-item" role="menuitem"

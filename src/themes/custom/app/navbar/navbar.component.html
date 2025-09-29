@@ -5,7 +5,7 @@
   <!-- TODO remove navbar-container class when https://github.com/twbs/bootstrap/issues/24726 is fixed -->
   <div class="navbar-inner-container w-100 h-100" [class.container]="!(isMobile$ | async)">
     <a class="navbar-brand my-2" routerLink="/home">
-      <img src="assets/images/mendelu-logo.svg" [attr.alt]="'menu.header.image.logo' | translate" />
+      <img [src]="logoSrc" [attr.alt]="'menu.header.image.logo' | translate" />
     </a>
 
     <div class="w-100 h-100">
@@ -22,7 +22,7 @@
         </div>
       </div>
     </div>
-    <div class="navbar-buttons d-flex align-items-center gapx-1">
+    <div class="navbar-buttons d-flex align-items-center gapx-2">
       <ds-themed-search-navbar class="navbar-collapsed"></ds-themed-search-navbar>
       <ds-themed-lang-switch class="navbar-collapsed"></ds-themed-lang-switch>
       <ds-context-help-toggle class="navbar-collapsed"></ds-context-help-toggle>
