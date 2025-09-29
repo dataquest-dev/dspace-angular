@@ -1,5 +1,5 @@
 nav {
-  background-color: var(--lt-vsb-tuo-cyan);
+  background-color: var(--lt-mendelu-cyan);
 }
 
 nav.navbar {
@@ -7,7 +7,7 @@ nav.navbar {
 }
 
 .navbar-nav {
-  background-color: var(--lt-vsb-tuo-cyan);
+  background-color: var(--lt-mendelu-cyan);
 }
 
 /** Mobile menu styling **/
@@ -61,7 +61,7 @@ a.navbar-brand img {
 
     &:hover, &:focus {
       background-color: white;
-      color: var(--lt-vsb-tuo-cyan);
+      color: var(--lt-mendelu-cyan);
       border-radius: 2px;
       transition: background-color 0.2s ease-out;
     }

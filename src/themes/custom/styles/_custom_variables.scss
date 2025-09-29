@@ -1,10 +1,10 @@
 :root {
-  --lt-vsb-tuo-cyan: #00a499;
-  --lt-vsb-tuo-cyan-hover: #026962;
-  --lt-vsb-tuo-cyan-lighter: #52e3d9;
-  --lt-vsb-tuo-black: #171f2b;
-  --lt-vsb-tuo-darkgray: #828899;
-  --lt-vsb-tuo-lightgray: #fafafa;
+  --lt-mendelu-cyan: #00a499;
+  --lt-mendelu-cyan-hover: #026962;
+  --lt-mendelu-cyan-lighter: #52e3d9;
+  --lt-mendelu-black: #171f2b;
+  --lt-mendelu-darkgray: #828899;
+  --lt-mendelu-lightgray: #fafafa;
 
   --ds-content-spacing: #{$spacer}; // equivalent to Bootstrap spaces of size 3
 
@@ -26,7 +26,7 @@
   --ds-footer-z-index: 0;
   --ds-sidebar-z-index: 20;
 
-  --ds-header-bg: var(--lt-vsb-tuo-cyan);
+  --ds-header-bg: var(--lt-mendelu-cyan);
   --ds-header-logo-height: 50px;
   --ds-header-logo-height-xs: 50px;
   --ds-header-icon-color: #{$link-color};

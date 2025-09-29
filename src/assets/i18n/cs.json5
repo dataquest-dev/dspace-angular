@@ -8795,11 +8795,11 @@
   // "home-page.new-items.message": "Most Viewed Items - Last Month",
   "home-page.new-items.message": "Nejnavštěvovanější záznamy - za poslední měsíc",
 
-  // "home-page.library.name": "VSB - Technical University of Ostrava",
-  "home-page.library.name": "VŠB – Technická univerzita Ostrava",
+  // "home-page.library.name": "MENDELU - Mendel University in Brno",
+  "home-page.library.name": "MENDELU - Mendelova univerzita v Brne",
 
-  // "home-page.library.description": "Digital repository of VSB-TUO",
-  "home-page.library.description": "Digitální repozitář VŠB-TUO",
+  // "home-page.library.description": "Digital repository of MENDELU",
+  "home-page.library.description": "Digitální repozitář MENDELU",
 
   // "handle-table.breadcrumbs": "Handles",
   "handle-table.breadcrumbs": "Handle",
