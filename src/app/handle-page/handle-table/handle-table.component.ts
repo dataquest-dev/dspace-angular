@@ -376,9 +376,12 @@ export class HandleTableComponent implements OnInit {
    */
   getInternalDisplayText(): string {
     if (!this.searchQuery) {
-      return 'Select internal option';
+      return this.translateService.instant('handle-table.search.internal.select');
     }
-    return this.searchQuery === 'yes' ? 'Yes' : 'No';
+    const translationKey = this.searchQuery === 'yes'
+      ? 'handle-table.search.internal.yes'
+      : 'handle-table.search.internal.no';
+    return this.translateService.instant(translationKey);
   }
 
   /**
@@ -386,22 +389,35 @@ export class HandleTableComponent implements OnInit {
    */
   getResourceTypeDisplayText(): string {
     if (!this.searchQuery) {
-      return 'Select resource type';
+      return this.translateService.instant('handle-table.search.resource-type.select');
     }
     return this.getResourceTypeDisplayName(this.searchQuery);
   }
 
   /**
-   * Get capitalized display name for resource type value
+   * Get translated display name for resource type value
    */
   private getResourceTypeDisplayName(value: string): string {
-    const resourceTypeMap: Record<string, string> = {
-      site: 'Site',
-      community: 'Community',
-      collection: 'Collection',
-      item: 'Item'
-    };
-    return resourceTypeMap[value] || value;
+    const translationKey = `handle-table.search.resource-type.${value}`;
+    return this.translateService.instant(translationKey);
+  }
+
+  /**
+   * Get translated resource type name for table display
+   * Converts constants like 'Community', 'Collection', 'Item', 'Site' to translated strings
+   */
+  getTranslatedResourceType(resourceTypeID: string): string {
+    if (!resourceTypeID) {
+      return '';
+    }
+
+    // Map the constant values to lowercase for translation keys
+    const resourceTypeKey = resourceTypeID.toLowerCase();
+    const translationKey = `handle-table.search.resource-type.${resourceTypeKey}`;
+
+    // Return translated value, fallback to original if translation not found
+    const translated = this.translateService.instant(translationKey);
+    return translated !== translationKey ? translated : resourceTypeID;
   }
 
   /**
@@ -457,7 +473,6 @@ export class HandleTableComponent implements OnInit {
         case this.resourceTypeOption:
           parsedSearchOption = RESOURCE_TYPE_SEARCH_OPTION;
           parsedSearchQuery = this.parseResourceTypeSearchQuery(this.searchQuery);
-          break;
           break;
       }
     }
