@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../app.reducer';
 import { isAuthenticated } from '../core/auth/selectors';
+import { LocaleService } from '../core/locale/locale.service';
 
 /**
  * Component representing the public navbar
@@ -38,6 +39,8 @@ export class NavbarComponent extends MenuComponent implements OnInit {
 
   public isMobile$: Observable<boolean>;
 
+  public logoSrc: string;
+
   constructor(protected menuService: MenuService,
     protected injector: Injector,
               public windowService: HostWindowService,
@@ -46,6 +49,7 @@ export class NavbarComponent extends MenuComponent implements OnInit {
               public route: ActivatedRoute,
               protected themeService: ThemeService,
               private store: Store<AppState>,
+              private localeService: LocaleService
   ) {
     super(menuService, injector, authorizationService, route, themeService);
   }
@@ -54,5 +58,12 @@ export class NavbarComponent extends MenuComponent implements OnInit {
     super.ngOnInit();
     this.isMobile$ = this.windowService.isUpTo(this.maxMobileWidth);
     this.isAuthenticated$ = this.store.pipe(select(isAuthenticated));
+    this.setLogo();
+  }
+
+  setLogo() {
+    this.logoSrc = this.localeService.getCurrentLanguageCode() === 'cs'
+      ? '/assets/images/mendelu-logo-cs.png'
+      : '/assets/images/mendelu-logo-en.png';
   }
 }

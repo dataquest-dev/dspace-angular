@@ -1205,6 +1205,9 @@
   // "browse.comcol.by.title": "By Title",
   "browse.comcol.by.title": "Podle názvu",
 
+  // "browse.comcol.by.language": "By Language",
+  "browse.comcol.by.language": "Podle jazyka",
+
   // "browse.comcol.head": "Browse",
   "browse.comcol.head": "Procházet",
 
@@ -4484,6 +4487,9 @@
   // "menu.section.browse_global_by_title": "By Title",
   "menu.section.browse_global_by_title": "Podle názvu",
 
+  // "menu.section.browse_global_by_language": "By Language",
+  "menu.section.browse_global_by_language": "Podle jazyka",
+
   // "menu.section.browse_global_communities_and_collections": "Communities & Collections",
   "menu.section.browse_global_communities_and_collections": "Komunity & kolekce",
 
@@ -5516,8 +5522,8 @@
   // "repository.title": "DSpace Repository",
   "repository.title": "Institucionální digitální repozitář",
 
-  // "repository.title.prefix": "DSpace Repository :: ",
-  "repository.title.prefix": "LINDAT/CLARIAH-CZ Repozitář",
+  // "repository.title.prefix": "DSpace at MENDELU",
+  "repository.title.prefix": "DSpace MENDELU",
 
   // "resource-policies.add.button": "Add",
   "resource-policies.add.button": "Přidat",
@@ -8723,6 +8729,12 @@
   // "footer.link.contact-us": "Contact us",
   "footer.link.contact-us": "Kontaktujte nás",
 
+  // "footer.link.university": "University Library",
+  "footer.link.university": "Univerzitni Knihovna",
+
+  // "footer.theme.by.message": "Theme by",
+  "footer.theme.by.message": "Theme by",
+
   // "form.other-information.credit-name": "Credit Name",
   "form.other-information.credit-name": "Preferované jméno",
 
@@ -8782,6 +8794,12 @@
 
   // "home-page.new-items.message": "Most Viewed Items - Last Month",
   "home-page.new-items.message": "Nejnavštěvovanější záznamy - za poslední měsíc",
+
+  // "home-page.library.name": "VSB - Technical University of Ostrava",
+  "home-page.library.name": "VŠB – Technická univerzita Ostrava",
+
+  // "home-page.library.description": "Digital repository of VSB-TUO",
+  "home-page.library.description": "Digitální repozitář VŠB-TUO",
 
   // "handle-table.breadcrumbs": "Handles",
   "handle-table.breadcrumbs": "Handle",

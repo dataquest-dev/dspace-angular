@@ -37,7 +37,7 @@ export class FooterComponent implements OnInit {
 
   constructor(
     @Optional() private cookies: KlaroService,
-    private authorizationService: AuthorizationDataService,
+    protected authorizationService: AuthorizationDataService,
     protected configurationDataService: ConfigurationDataService
   ) {
     this.showSendFeedback$ = this.authorizationService.isAuthorized(FeatureID.CanSendFeedback);
@@ -46,6 +46,7 @@ export class FooterComponent implements OnInit {
   ngOnInit(): void {
     this.loadThemedByProps();
   }
+
   showCookieSettings() {
     if (hasValue(this.cookies)) {
       this.cookies.showSettings();

@@ -1,6 +1,7 @@
 // This file combines the other scss files in to one. You usually shouldn't edit this file directly
 
 @import './_theme_sass_variable_overrides.scss';
+@import './_mendelu_sass_variable_overrides.scss';
 @import '../../../styles/_variables.scss';
 @import '../../../styles/_mixins.scss';
 @import '../../../styles/helpers/font_awesome_imports.scss';
