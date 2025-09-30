@@ -66,7 +66,7 @@ export class NavbarComponent extends MenuComponent implements OnInit {
    */
   setLogo() {
     this.logoSrc = this.localeService.getCurrentLanguageCode() === 'cs'
-      ? '/assets/images/mendelu-logo-cs.svg'
-      : '/assets/images/mendelu-logo-en.svg';
+      ? '/assets/images/mendel-uni-logo-w-cs.svg'
+      : '/assets/images/mendel-uni-logo-w-en.svg';
   }
 }
