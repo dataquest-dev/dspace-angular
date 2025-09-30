@@ -43,9 +43,9 @@
 
   $admin-sidebar-bg: darken(#2B4E72, 17%);
   $admin-sidebar-active-bg: darken($admin-sidebar-bg, 3%);
-  --ds-admin-sidebar-bg: #{$admin-sidebar-bg};
-  --ds-admin-sidebar-active-bg: #{$admin-sidebar-active-bg};
-  --ds-admin-sidebar-header-bg: #{darken($admin-sidebar-bg, 7%)};
+  --ds-admin-sidebar-bg: #292B2F;
+  --ds-admin-sidebar-active-bg: #222427;
+  --ds-admin-sidebar-header-bg: #181a1c;
 
   --ds-dark-scrollbar-bg: #{$admin-sidebar-active-bg};
   --ds-dark-scrollbar-alt-bg: #{lighten($admin-sidebar-active-bg, 2%)};

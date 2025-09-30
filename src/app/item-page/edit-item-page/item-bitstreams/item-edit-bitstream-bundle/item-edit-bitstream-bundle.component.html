@@ -41,7 +41,7 @@
               <button [routerLink]="[itemPageRoute, 'bitstreams', 'new']"
                       [queryParams]="{bundle: bundle.id}"
                       [attr.aria-label]="'item.edit.bitstreams.bundle.edit.buttons.upload' | translate"
-                      class="btn btn-outline-success btn-sm"
+                      class="btn btn-outline-secondary btn-sm"
                       title="{{'item.edit.bitstreams.bundle.edit.buttons.upload' | translate}}">
                 <i class="fas fa-upload fa-fw"></i>
               </button>
@@ -126,15 +126,6 @@
                     <i class="fas fa-undo-alt fa-fw"></i>
                   </button>
                 </div>
-              </div>
-            </td>
-            <td class="{{columnSizes.columns[4].buildClasses()}} row-element d-flex align-items-center justify-content-center">
-              <div class="float-left d-flex align-items-center overflow-hidden">
-              <span class="text-center">
-                <i [class]="isBitstreamSynchronized(entry) ? 'fas fa-check' : 'fas fa-times'"></i>
-              </span>
-              <span class="pl-1">|</span>
-              <div class="pl-1" [ngTemplateOutlet]="checksum"></div>
               </div>
             </td>
           </tr>
