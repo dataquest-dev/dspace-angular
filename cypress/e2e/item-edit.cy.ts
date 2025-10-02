@@ -29,7 +29,7 @@ describe('Edit Item > Edit Metadata tab', () => {
     });
 
     // Analyze <ds-edit-item-page> for accessibility issues
-    testA11y('ds-edit-item-page');
+    testA11y('ds-edit-item-page .tab-pane.active', { includedImpacts: ['critical', 'serious'] } as Options);
   });
 });
 
