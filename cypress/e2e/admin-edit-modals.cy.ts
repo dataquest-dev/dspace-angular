@@ -18,8 +18,8 @@ describe('Admin Edit Modals', () => {
 
     cy.get('a[data-test="menu.section.edit_community"]').click();
 
-    // Analyze <ds-edit-community-selector> for accessibility
-    testA11y('ds-edit-community-selector');
+    // Analyze <ds-themed-edit-community-selector> for accessibility
+    testA11y('ds-themed-edit-community-selector');
   });
 
   it('Edit Collection modal should pass accessibility tests', () => {
