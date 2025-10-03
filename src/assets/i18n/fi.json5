@@ -273,9 +273,6 @@
   // "admin.registries.schema.fields.table.id": "ID",
   "admin.registries.schema.fields.table.id": "ID",
 
-  // "admin.registries.schema.fields.table.id": "ID",
-  "admin.registries.schema.fields.table.id": "ID",
-
   // "admin.registries.schema.fields.table.scopenote": "Scope Note",
   "admin.registries.schema.fields.table.scopenote": "Soveltamisala",
 
@@ -333,6 +330,38 @@
   // "admin.registries.schema.title": "Metadata Schema Registry",
   "admin.registries.schema.title": "Metadataskeemarekisteri",
 
+  // "admin.access-control.bulk-access.breadcrumbs": "Bulk Access Management",
+  // TODO New key - Add a translation
+  "admin.access-control.bulk-access.breadcrumbs": "Bulk Access Management",
+
+  // "administrativeBulkAccess.search.results.head": "Search Results",
+  // TODO New key - Add a translation
+  "administrativeBulkAccess.search.results.head": "Search Results",
+
+  // "admin.access-control.bulk-access": "Bulk Access Management",
+  // TODO New key - Add a translation
+  "admin.access-control.bulk-access": "Bulk Access Management",
+
+  // "admin.access-control.bulk-access.title": "Bulk Access Management",
+  // TODO New key - Add a translation
+  "admin.access-control.bulk-access.title": "Bulk Access Management",
+
+  // "admin.access-control.bulk-access-browse.header": "Step 1: Select Objects",
+  // TODO New key - Add a translation
+  "admin.access-control.bulk-access-browse.header": "Step 1: Select Objects",
+
+  // "admin.access-control.bulk-access-browse.search.header": "Search",
+  // TODO New key - Add a translation
+  "admin.access-control.bulk-access-browse.search.header": "Search",
+
+  // "admin.access-control.bulk-access-browse.selected.header": "Current selection({{number}})",
+  // TODO New key - Add a translation
+  "admin.access-control.bulk-access-browse.selected.header": "Current selection({{number}})",
+
+  // "admin.access-control.bulk-access-settings.header": "Step 2: Operation to Perform",
+  // TODO New key - Add a translation
+  "admin.access-control.bulk-access-settings.header": "Step 2: Operation to Perform",
+
   // "admin.access-control.epeople.actions.delete": "Delete EPerson",
   "admin.access-control.epeople.actions.delete": "Poista käyttäjä",
 
@@ -350,6 +379,22 @@
 
   // "admin.access-control.epeople.title": "EPeople",
   "admin.access-control.epeople.title": "DSpace Angular :: Käyttäjät",
+
+  // "admin.access-control.epeople.edit.breadcrumbs": "New EPerson",
+  // TODO New key - Add a translation
+  "admin.access-control.epeople.edit.breadcrumbs": "New EPerson",
+
+  // "admin.access-control.epeople.edit.title": "New EPerson",
+  // TODO New key - Add a translation
+  "admin.access-control.epeople.edit.title": "New EPerson",
+
+  // "admin.access-control.epeople.add.breadcrumbs": "Add EPerson",
+  // TODO New key - Add a translation
+  "admin.access-control.epeople.add.breadcrumbs": "Add EPerson",
+
+  // "admin.access-control.epeople.add.title": "Add EPerson",
+  // TODO New key - Add a translation
+  "admin.access-control.epeople.add.title": "Add EPerson",
 
   // "admin.access-control.epeople.head": "EPeople",
   "admin.access-control.epeople.head": "Käyttäjät",
@@ -468,8 +513,9 @@
   // "admin.access-control.epeople.form.goToGroups": "Add to groups",
   "admin.access-control.epeople.form.goToGroups": "Lisää ryhmiin",
 
-  // "admin.access-control.epeople.notification.deleted.failure": "Failed to delete EPerson: \"{{name}}\"",
-  "admin.access-control.epeople.notification.deleted.failure": "Käyttäjän poisto epäonnistui: \"{{name}}\"",
+  // "admin.access-control.epeople.notification.deleted.failure": "Error occurred when trying to delete EPerson with id \"{{id}}\" with code: \"{{statusCode}}\" and message: \"{{restResponse.errorMessage}}\"",
+  // TODO New key - Add a translation
+  "admin.access-control.epeople.notification.deleted.failure": "Error occurred when trying to delete EPerson with id \"{{id}}\" with code: \"{{statusCode}}\" and message: \"{{restResponse.errorMessage}}\"",
 
   // "admin.access-control.epeople.notification.deleted.success": "Successfully deleted EPerson: \"{{name}}\"",
   "admin.access-control.epeople.notification.deleted.success": "Käyttäjä poistettu: \"{{name}}\"",
@@ -481,9 +527,10 @@
   "admin.access-control.groups.breadcrumbs": "Ryhmät",
 
   // "admin.access-control.groups.singleGroup.breadcrumbs": "Edit Group",
-  // "admin.access-control.groups.singleGroup.breadcrumbs": "Ryhmän muokkaus",
+  "admin.access-control.groups.title.singleGroup": "Ryhmän muokkaus",
 
   // "admin.access-control.groups.title.singleGroup": "Edit Group",
+  // TODO Source message changed - Revise the translation
   "admin.access-control.groups.title.singleGroup": "Ryhmän muokkaus",
 
   // "admin.access-control.groups.title.addGroup": "New Group",
@@ -618,12 +665,6 @@
   // "admin.access-control.groups.form.members-list.headMembers": "Current Members",
   "admin.access-control.groups.form.members-list.headMembers": "Nykyiset jäsenet",
 
-  // "admin.access-control.groups.form.members-list.search.scope.metadata": "Metadata",
-  "admin.access-control.groups.form.members-list.search.scope.metadata": "Metadata",
-
-  // "admin.access-control.groups.form.members-list.search.scope.email": "E-mail (exact)",
-  "admin.access-control.groups.form.members-list.search.scope.email": "Sähköpostiosoite (oikea)",
-
   // "admin.access-control.groups.form.members-list.search.button": "Search",
   "admin.access-control.groups.form.members-list.search.button": "Hae",
 
@@ -708,9 +749,6 @@
   // "admin.access-control.groups.form.subgroups-list.table.edit.buttons.add": "Add subgroup with name \"{{name}}\"",
   "admin.access-control.groups.form.subgroups-list.table.edit.buttons.add": "Lisää alarymä nimellä \"{{name}}\"",
 
-  // "admin.access-control.groups.form.subgroups-list.table.edit.currentGroup": "Current group",
-  "admin.access-control.groups.form.subgroups-list.table.edit.currentGroup": "Nykyinen ryhmä",
-
   // "admin.access-control.groups.form.subgroups-list.notification.success.addSubgroup": "Successfully added subgroup: \"{{name}}\"",
   "admin.access-control.groups.form.subgroups-list.notification.success.addSubgroup": "Lisätty alaryhmä: \"{{name}}\"",
 
@@ -741,11 +779,13 @@
   // "admin.access-control.groups.form.tooltip.editGroupPage": "On this page, you can modify the properties and members of a group. In the top section, you can edit the group name and description, unless this is an admin group for a collection or community, in which case the group name and description are auto-generated and cannot be edited. In the following sections, you can edit group membership. See [the wiki](https://wiki.lyrasis.org/display/DSDOC7x/Create+or+manage+a+user+group) for more details.",
   "admin.access-control.groups.form.tooltip.editGroupPage": "Tällä sivulla voit muokata ryhmän ominaisuuksia ja jäseniä. Yläosassa voit muokata ryhmän nimeä ja kuvausta, paitsi jos kyseessä on kokoelman tai yhteisön ylläpitäjäryhmä, jolloin ryhmän nimi ja kuvaus luodaan automaattisesti, eikä niitä voi muokata. Muissa osioissa voit muokata ryhmän jäsenyyttä. Katso lisätietoja wiki-sivulta (https://wiki.lyrasis.org/display/DSDOC7x/Create+or+manage+a+user+group).",
 
-  // "admin.access-control.groups.form.tooltip.editGroup.addEpeople": "To add or remove an EPerson to/from this group, either click the 'Browse All' button or use the search bar below to search for users (use the dropdown to the left of the search bar to choose whether to search by metadata or by email). Then click the plus icon for each user you wish to add in the list below, or the trash can icon for each user you wish to remove. The list below may have several pages: use the page controls below the list to navigate to the next pages. Once you are ready, save your changes by clicking the 'Save' button in the top section.",
+  // "admin.access-control.groups.form.tooltip.editGroup.addEpeople": "To add or remove an EPerson to/from this group, either click the 'Browse All' button or use the search bar below to search for users (use the dropdown to the left of the search bar to choose whether to search by metadata or by email). Then click the plus icon for each user you wish to add in the list below, or the trash can icon for each user you wish to remove. The list below may have several pages: use the page controls below the list to navigate to the next pages.",
+  // TODO Source message changed - Revise the translation
   "admin.access-control.groups.form.tooltip.editGroup.addEpeople": "Voit lisätä tai poistaa ryhmän käyttäjän joko napsauttamalla 'Selaa kaikkia' -painiketta tai käyttämällä alla olevaa hakupalkkia käyttäjien etsimiseen (käytä hakupalkin vasemmalla puolella olevaa pudotusvalikkoa valitaksesi, haetaanko metatietojen vai sähköpostin perusteella). Napsauta sitten plus-kuvaketta jokaisen käyttäjän kohdalla, jonka haluat lisätä alla olevaan luetteloon, tai roskakorikuvaketta jokaisen käyttäjän kohdalla, jonka haluat poistaa. Alla olevassa luettelossa voi olla useita sivuja: voit siirtyä seuraaville sivuille luettelon alapuolella olevilla sivunohjaimilla. Kun olet valmis, tallenna muutokset napsauttamalla yläosassa olevaa Tallenna-painiketta.",
 
-  // "admin.access-control.groups.form.tooltip.editGroup.addSubgroups": "To add or remove a Subgroup to/from this group, either click the 'Browse All' button or use the search bar below to search for users. Then click the plus icon for each user you wish to add in the list below, or the trash can icon for each user you wish to remove. The list below may have several pages: use the page controls below the list to navigate to the next pages. Once you are ready, save your changes by clicking the 'Save' button in the top section.",
-  "admin.access-control.groups.form.tooltip.editGroup.addSubgroups": "Jos haluat lisätä tai poistaa alaryhmän tähän ryhmään tai tästä ryhmästä, napsauta joko 'Selaa kaikkia' -painiketta tai käytä alla olevaa hakupalkkia ryhmien etsimiseen. Napsauta sitten luettelossa plus-kuvaketta jokaisen ryhmän kohdalla, jonka haluat lisätä, tai roskakorikuvaketta jokaisen ryhmän kohdalla, jonka haluat poistaa. Luettelossa voi olla useita sivuja: voit siirtyä seuraaville sivuille luettelon alapuolella olevilla sivunohjaimilla. Kun olet valmis, tallenna muutokset napsauttamalla yläosassa olevaa Tallenna-painiketta.",
+  // "admin.access-control.groups.form.tooltip.editGroup.addSubgroups": "To add or remove a Subgroup to/from this group, either click the 'Browse All' button or use the search bar below to search for groups. Then click the plus icon for each group you wish to add in the list below, or the trash can icon for each group you wish to remove. The list below may have several pages: use the page controls below the list to navigate to the next pages.",
+  // TODO New key - Add a translation
+  "admin.access-control.groups.form.tooltip.editGroup.addSubgroups": "To add or remove a Subgroup to/from this group, either click the 'Browse All' button or use the search bar below to search for groups. Then click the plus icon for each group you wish to add in the list below, or the trash can icon for each group you wish to remove. The list below may have several pages: use the page controls below the list to navigate to the next pages.",
 
   // "admin.search.breadcrumbs": "Administrative Search",
   "admin.search.breadcrumbs": "Ylläpitäjän haku",
@@ -915,12 +955,6 @@
   // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.headMembers": "Current Members",
   "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.headMembers": "Nykyiset jäsenet",
 
-  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.scope.metadata": "Metadata",
-  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.scope.metadata": "Metadata",
-
-  // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.scope.email": "E-mail (exact)",
-  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.scope.email": "Sähköpostiosoite (oikea)",
-
   // "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.button": "Search",
   "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.search.button": "Hae",
 
@@ -990,8 +1024,140 @@
   // "bitstream.download.page": "Now downloading {{bitstream}}...",
   "bitstream.download.page": "Nyt ladataan {{bitstream}}...",
 
-  // "bitstream.download.page.back": "Back",
+  // "clarin.license.agreement.breadcrumbs": "License Agreement",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.breadcrumbs": "License Agreement",
+
+  // "clarin.license.agreement.title": "License Agreement",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.title": "License Agreement",
+
+  // "clarin.license.agreement.header.info": "The requested content is distributed under one or more licence(s). You have to agree to the licence(s) below before you can obtain the content. Please, view the licence(s) by clicking on the button(s) and read it carefully. The data filled below might be shared with the submitter of the item and/or for creating statistics.",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.header.info": "The requested content is distributed under one or more licence(s). You have to agree to the licence(s) below before you can obtain the content. Please, view the licence(s) by clicking on the button(s) and read it carefully. The data filled below might be shared with the submitter of the item and/or for creating statistics.",
+
+  // "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
+
+  // "clarin.license.agreement.item.handle": "Item handle",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.item.handle": "Item handle",
+
+  // "clarin.license.agreement.bitstream.name": "Bitstream",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.bitstream.name": "Bitstream",
+
+  // "clarin.license.agreement.signer.name": "Signer",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.name": "Signer",
+
+  // "clarin.license.agreement.signer.id": "User ID",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.id": "User ID",
+
+  // "clarin.license.agreement.token.info": "You will receive an email with download instructions.",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.token.info": "You will receive an email with download instructions.",
+
+  // "clarin.license.agreement.signer.ip.address": "Ip Address",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.ip.address": "Ip Address",
+
+  // "clarin.license.agreement.signer.SEND_TOKEN": "E-mail",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.SEND_TOKEN": "E-mail",
+
+  // "clarin.license.agreement.signer.NAME": "Name (given name and surname)",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.NAME": "Name (given name and surname)",
+
+  // "clarin.license.agreement.signer.DOB": "Date of birth",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.DOB": "Date of birth",
+
+  // "clarin.license.agreement.signer.ADDRESS": "Address",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.ADDRESS": "Address",
+
+  // "clarin.license.agreement.signer.COUNTRY": "Country",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.COUNTRY": "Country",
+
+  // "clarin.license.agreement.signer.EXTRA_EMAIL": "E-mail",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.EXTRA_EMAIL": "E-mail",
+
+  // "clarin.license.agreement.signer.ORGANIZATION": "Organization",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.ORGANIZATION": "Organization",
+
+  // "clarin.license.agreement.signer.REQUIRED_ORGANIZATION": "Organization",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.REQUIRED_ORGANIZATION": "Organization",
+
+  // "clarin.license.agreement.signer.INTENDED_USE": "Intended use",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.INTENDED_USE": "Intended use",
+
+  // "clarin.license.agreement.signer.ACA_ORG_NAME_AND_SEAT": "Name and seat (address) of your academic institution",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.ACA_ORG_NAME_AND_SEAT": "Name and seat (address) of your academic institution",
+
+  // "clarin.license.agreement.button.agree": "I AGREE",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.button.agree": "I AGREE",
+
+  // "clarin.license.agreement.warning": "By clicking on the button below I, SIGNER with the above ID, agree to the LICENCE(s) restricting the usage of requested BITSTREAM(s).",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.warning": "By clicking on the button below I, SIGNER with the above ID, agree to the LICENCE(s) restricting the usage of requested BITSTREAM(s).",
+
+  // "clarin.license.agreement.notification.error.required.info": "You must fill in required info.",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.notification.error.required.info": "You must fill in required info.",
+
+  // "clarin.license.agreement.error.message.cannot.download": ["Something went wrong and you cannot download this bitstream, please contact", " Help Desk."],
+  // TODO New key - Add a translation
+  "clarin.license.agreement.error.message.cannot.download": ["Something went wrong and you cannot download this bitstream, please contact", " Help Desk."],
+
+  // "clarin.license.agreement.notification.check.email": "You will receive email with download link.",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.notification.check.email": "You will receive email with download link.",
+
+  // "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
+
+  // "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
+  // TODO New key - Add a translation
+  "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
+
+  // "bitstream.download.page.back": "Back" ,
+  // TODO Source message changed - Revise the translation
   "bitstream.download.page.back": "Paluu",
+
+
+  // "clarin.license.all-page.title": "Available Licenses",
+  // TODO New key - Add a translation
+  "clarin.license.all-page.title": "Available Licenses",
+
+  // "clarin.license.all-page.source": "Source:",
+  // TODO New key - Add a translation
+  "clarin.license.all-page.source": "Source:",
+
+  // "clarin.license.all-page.labels": "Labels:",
+  // TODO New key - Add a translation
+  "clarin.license.all-page.labels": "Labels:",
+
+  // "clarin.license.all-page.extra-information": "Extra information required:",
+  // TODO New key - Add a translation
+  "clarin.license.all-page.extra-information": "Extra information required:",
+
+  // "clarin.license.all-page.extra-information.default": "NONE",
+  // TODO New key - Add a translation
+  "clarin.license.all-page.extra-information.default": "NONE",
+
+
 
   // "bitstream.edit.authorizations.link": "Edit bitstream's Policies",
   "bitstream.edit.authorizations.link": "Muokkaa tiedostokäytäntöjä",
@@ -1152,8 +1318,16 @@
   // "browse.comcol.by.srsc": "By Subject Category",
   "browse.comcol.by.srsc": "Aihekategorian mukaan",
 
+  // "browse.comcol.by.nsi": "By Norwegian Science Index",
+  // TODO New key - Add a translation
+  "browse.comcol.by.nsi": "By Norwegian Science Index",
+
   // "browse.comcol.by.title": "By Title",
   "browse.comcol.by.title": "Nimekkeen mukaan",
+
+  // "browse.comcol.by.language": "By Language",
+  // TODO New key - Add a translation
+  "browse.comcol.by.language": "By Language",
 
   // "browse.comcol.head": "Browse",
   "browse.comcol.head": "Selaa",
@@ -1173,6 +1347,14 @@
   // "browse.metadata.title": "Title",
   "browse.metadata.title": "Nimeke",
 
+  // "browse.metadata.language": "Language",
+  // TODO New key - Add a translation
+  "browse.metadata.language": "Language",
+
+  // "browse.metadata.language.breadcrumbs": "Browse by Language",
+  // TODO New key - Add a translation
+  "browse.metadata.language.breadcrumbs": "Browse by Language",
+
   // "browse.metadata.author.breadcrumbs": "Browse by Author",
   "browse.metadata.author.breadcrumbs": "Selaa tekijän mukaan",
 
@@ -1184,6 +1366,10 @@
 
   // "browse.metadata.srsc.breadcrumbs": "Browse by Subject Category",
   "browse.metadata.srsc.breadcrumbs": "Selaa aihekategorian luokan mukaan",
+
+  // "browse.metadata.nsi.breadcrumbs": "Browse by Norwegian Science Index",
+  // TODO New key - Add a translation
+  "browse.metadata.nsi.breadcrumbs": "Browse by Norwegian Science Index",
 
   // "browse.metadata.title.breadcrumbs": "Browse by Title",
   "browse.metadata.title.breadcrumbs": "Selaa nimekkeen mukaan",
@@ -1292,6 +1478,30 @@
 
   // "claimed-declined-task-search-result-list-element.title": "Declined, sent back to Review Manager's workflow",
   "claimed-declined-task-search-result-list-element.title": "Kieltäydytty, lähetetty takaisin päätarkastajan työnkulkuun",
+
+  // "contact-us.breadcrumbs": "Contact Us",
+  // TODO New key - Add a translation
+  "contact-us.breadcrumbs": "Contact Us",
+
+  // "contact-us.title": "Contact Us",
+  // TODO New key - Add a translation
+  "contact-us.title": "Contact Us",
+
+  // "contact-us.description": "DSpace administrators may be contacted at:",
+  // TODO New key - Add a translation
+  "contact-us.description": "DSpace administrators may be contacted at:",
+
+  // "contact-us.form": "On-line form: ",
+  // TODO New key - Add a translation
+  "contact-us.form": "On-line form: ",
+
+  // "contact-us.feedback": "Feedback",
+  // TODO New key - Add a translation
+  "contact-us.feedback": "Feedback",
+
+  // "contact-us.email": "Email: ",
+  // TODO New key - Add a translation
+  "contact-us.email": "Email: ",
 
   // "collection.create.head": "Create a Collection",
   "collection.create.head": "Luo kokoelma",
@@ -1427,6 +1637,14 @@
 
   // "collection.edit.return": "Back",
   "collection.edit.return": "Paluu",
+
+  // "collection.edit.tabs.access-control.head": "Access Control",
+  // TODO New key - Add a translation
+  "collection.edit.tabs.access-control.head": "Access Control",
+
+  // "collection.edit.tabs.access-control.title": "Collection Edit - Access Control",
+  // TODO New key - Add a translation
+  "collection.edit.tabs.access-control.title": "Collection Edit - Access Control",
 
   // "collection.edit.tabs.curate.head": "Curate",
   "collection.edit.tabs.curate.head": "Kuratoi",
@@ -1649,7 +1867,6 @@
 
   // "collection.source.controls.reset.submit.error": "Something went wrong with initiating the reset and reimport",
   "collection.source.controls.reset.submit.error": "Virhe nollauksen ja uudelleenimportoinnin valmistelussa",
-
   // "collection.source.controls.reset.failed": "An error occurred during the reset and reimport",
   "collection.source.controls.reset.failed": "Virhe nollauksessa ja uudelleenimportoinnissa",
 
@@ -1781,6 +1998,14 @@
 
   // "community.edit.tabs.curate.title": "Community Edit - Curate",
   "community.edit.tabs.curate.title": "Yhteisön muokkaus - Kuratoi",
+
+  // "community.edit.tabs.access-control.head": "Access Control",
+  // TODO New key - Add a translation
+  "community.edit.tabs.access-control.head": "Access Control",
+
+  // "community.edit.tabs.access-control.title": "Community Edit - Access Control",
+  // TODO New key - Add a translation
+  "community.edit.tabs.access-control.title": "Community Edit - Access Control",
 
   // "community.edit.tabs.metadata.head": "Edit Metadata",
   "community.edit.tabs.metadata.head": "Muokkaa metadataa",
@@ -1914,10 +2139,12 @@
   // "community.all-lists.head": "Subcommunities and Collections",
   "community.all-lists.head": "Alayhteisöt ja kokoelmat",
 
-  // "community.sub-collection-list.head": "Collections of this Community",
+  // "community.sub-collection-list.head": "Collections in this Community",
+  // TODO Source message changed - Revise the translation
   "community.sub-collection-list.head": "Yhteisön kokoelmat",
 
-  // "community.sub-community-list.head": "Communities of this Community",
+  // "community.sub-community-list.head": "Communities in this Community",
+  // TODO Source message changed - Revise the translation
   "community.sub-community-list.head": "Yhteisön alayhteisöt",
 
   // "cookies.consent.accept-all": "Accept all",
@@ -2037,6 +2264,10 @@
   // "curation-task.task.citationpage.label": "Generate Citation Page",
   "curation-task.task.citationpage.label": "Luo viittaussivu",
 
+  // "curation-task.task.checkhandles.label": "Check Item Handles",
+  // TODO New key - Add a translation
+  "curation-task.task.checkhandles.label": "Check Item Handles",
+
   // "curation-task.task.checklinks.label": "Check Links in Metadata",
   "curation-task.task.checklinks.label": "Tarkista metadatan linkit",
 
@@ -2055,8 +2286,9 @@
   // "curation-task.task.vscan.label": "Virus Scan",
   "curation-task.task.vscan.label": "Virusskannaus",
 
-  // "curation-task.task.register-doi.label": "Register DOI",
-  "curation-task.task.register-doi.label": "Rekisteröi DOI",
+  // "curation-task.task.registerdoi.label": "Register DOI",
+  // TODO New key - Add a translation
+  "curation-task.task.registerdoi.label": "Register DOI",
 
   // "curation.form.task-select.label": "Task:",
   "curation.form.task-select.label": "Tehtävä:",
@@ -2346,6 +2578,10 @@
   // "error.validation.license.notgranted": "You must grant this license to complete your submission. If you are unable to grant this license at this time you may save your work and return later or remove the submission.",
   "error.validation.license.notgranted": "Tallennusprosessia ei voi päättää, ellet hyväksy julkaisulisenssiä. Voit myös tallentaa tiedot ja jatkaa tallennusta myöhemmin tai poistaa kaikki syöttämäsi tiedot.",
 
+  // "error.validation.clarin-license.notgranted": "You must choose one of the resource licenses.",
+  // TODO New key - Add a translation
+  "error.validation.clarin-license.notgranted": "You must choose one of the resource licenses.",
+
   // "error.validation.pattern": "This input is restricted by the current pattern: {{ pattern }}.",
   "error.validation.pattern": "Syötteen on noudatettava seuraavaa kaavaa: {{ pattern }}.",
 
@@ -2385,31 +2621,8 @@
   // "error.validation.metadata.qualifier.max-length": "This field may not contain more than 64 characters",
   "error.validation.metadata.qualifier.max-length": "Kenttään voi laittaa vain 64 merkkiä",
 
-  // "feed.description": "Syndication feed",
-  "feed.description": "Jakelusyöte",
-
-  // "file-section.error.header": "Error obtaining files for this item",
-  "file-section.error.header": "Virhe tietueen tiedostoja noudettaessa",
-
-  // "error.validation.metadata.name.max-length": "This field may not contain more than 32 characters",
-  "error.validation.metadata.name.max-length": "Kenttään voi laittaa vain 32 merkkiä",
-
-  // "error.validation.metadata.namespace.max-length": "This field may not contain more than 256 characters",
-  "error.validation.metadata.namespace.max-length": "Kenttään voi laittaa vain 256 merkkiä",
-
-  // "error.validation.metadata.element.invalid-pattern": "This field cannot contain dots, commas or spaces. Please use the Qualifier field instead",
-  "error.validation.metadata.element.invalid-pattern": "Kenttään ei voi syöttää pisteitä, pilkkuja tai välilyöntejä. Käytä tämän kentän sijasta Elementti- ja Tarkenne-kenttiä.",
-
-  // "error.validation.metadata.element.max-length": "This field may not contain more than 64 characters",
-  "error.validation.metadata.element.max-length": "Kenttään voi laittaa vain 64 merkkiä",
-
-  // "error.validation.metadata.qualifier.invalid-pattern": "This field cannot contain dots, commas or spaces",
-  "error.validation.metadata.qualifier.invalid-pattern": "Kenttään ei voi syöttää pisteitä, pilkkuja tai välilyöntejä",
-
-  // "error.validation.metadata.qualifier.max-length": "This field may not contain more than 64 characters",
-  "error.validation.metadata.qualifier.max-length": "Kenttään voi laittaa vain 64 merkkiä",
-
-  // "feed.description": "Syndication feed",
+  // "feed.description": "RSS feed",
+  // TODO Source message changed - Revise the translation
   "feed.description": "Jakelusyöte",
 
   // "file-section.error.header": "Error obtaining files for this item",
@@ -2435,6 +2648,10 @@
 
   // "footer.link.feedback": "Send Feedback",
   "footer.link.feedback": "Lähetä palautetta",
+
+  // "footer.link.contact-us": "Contact us",
+  // TODO New key - Add a translation
+  "footer.link.contact-us": "Contact us",
 
   // "forgot-email.form.header": "Forgot Password",
   "forgot-email.form.header": "Unohtunut salasana",
@@ -2589,6 +2806,14 @@
   // "form.other-information.orcid": "ORCID",
   "form.other-information.orcid": "ORCID-tunniste",
 
+  // "form.other-information.credit-name": "Credit Name",
+  // TODO New key - Add a translation
+  "form.other-information.credit-name": "Credit Name",
+
+  // "form.other-information.other-names": "Other Names",
+  // TODO New key - Add a translation
+  "form.other-information.other-names": "Other Names",
+
   // "form.remove": "Remove",
   "form.remove": "Poista",
 
@@ -2733,7 +2958,8 @@
   // "health-page.section.no-issues": "No issues detected",
   "health-page.section.no-issues": "Ei havaittuja ongelmia",
 
-  // "home.description": "",
+  // "home.description": "DSpace is a digital service that collects, preserves, and distributes digital material. Repositories are important tools for preserving an organization's legacy; they facilitate digital preservation and scholarly communication.",
+  // TODO Source message changed - Revise the translation
   "home.description": "",
 
   // "home.breadcrumbs": "Home",
@@ -2750,6 +2976,301 @@
 
   // "home.top-level-communities.help": "Select a community to browse its collections.",
   "home.top-level-communities.help": "Valitse yhteisö, jonka kokoelmia haluat selata.",
+
+
+  // "home-page.carousel.ldata.info": "Linguistic Data and NLP Tools",
+  // TODO New key - Add a translation
+  "home-page.carousel.ldata.info": "Linguistic Data and NLP Tools",
+
+  // "home-page.carousel.ldata.find": "Find",
+  // TODO New key - Add a translation
+  "home-page.carousel.ldata.find": "Find",
+
+  // "home-page.carousel.ldata.citation-support": "Citation Support (with Persistent IDs)",
+  // TODO New key - Add a translation
+  "home-page.carousel.ldata.citation-support": "Citation Support (with Persistent IDs)",
+
+  // "home-page.carousel.deposit.header": "Deposit Free and Safe",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.header": "Deposit Free and Safe",
+
+  // "home-page.carousel.deposit.info": "License of your Choice (Open licenses encouraged)",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.info": "License of your Choice (Open licenses encouraged)",
+
+  // "home-page.carousel.deposit.find": "Easy to Find",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.find": "Easy to Find",
+
+  // "home-page.carousel.deposit.cite": "Easy to Cite",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.cite": "Easy to Cite",
+
+  // "home-page.carousel.deposit.citation": "“There ought to be only one grand dépôt of art in the world, to\n                        which the artist might repair with his works, and on presenting them\n                        receive what he required... ”",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.citation": "“There ought to be only one grand dépôt of art in the world, to\n                        which the artist might repair with his works, and on presenting them\n                        receive what he required... ”",
+
+  // "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
+
+  // "home-page.search": "Search",
+  // TODO New key - Add a translation
+  "home-page.search": "Search",
+
+  // "home-page.advanced-search": "Advanced Search",
+  // TODO New key - Add a translation
+  "home-page.advanced-search": "Advanced Search",
+
+  // "home-page.hyperlink.author.message": "Author",
+  // TODO New key - Add a translation
+  "home-page.hyperlink.author.message": "Author",
+
+  // "home-page.hyperlink.subject.message": "Subject",
+  // TODO New key - Add a translation
+  "home-page.hyperlink.subject.message": "Subject",
+
+  // "home-page.hyperlink.language.message": "Language (ISO)",
+  // TODO New key - Add a translation
+  "home-page.hyperlink.language.message": "Language (ISO)",
+
+  // "home-page.hyperlink.view-more.message": "... View More",
+  // TODO New key - Add a translation
+  "home-page.hyperlink.view-more.message": "... View More",
+
+  // "home-page.whats-new.message": "What's New",
+  // TODO New key - Add a translation
+  "home-page.whats-new.message": "What's New",
+
+  // "home-page.new-items.message": "Most Viewed Items - Last Month",
+  // TODO New key - Add a translation
+  "home-page.new-items.message": "Most Viewed Items - Last Month",
+
+
+
+  // "handle-table.breadcrumbs": "Handles",
+  // TODO New key - Add a translation
+  "handle-table.breadcrumbs": "Handles",
+
+  // "handle-table.new-handle.breadcrumbs": "New Handle",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.breadcrumbs": "New Handle",
+
+  // "handle-table.edit-handle.breadcrumbs": "Edit Handle",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.breadcrumbs": "Edit Handle",
+
+  // "handle-table.global-actions.breadcrumbs": "Global Actions",
+  // TODO New key - Add a translation
+  "handle-table.global-actions.breadcrumbs": "Global Actions",
+
+
+  // "handle-table.new-handle.form-handle-input-text": "Handle",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.form-handle-input-text": "Handle",
+
+  // "handle-table.new-handle.form-handle-input-placeholder": "Enter handle",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.form-handle-input-placeholder": "Enter handle",
+
+  // "handle-table.new-handle.form-url-input-text": "URL",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.form-url-input-text": "URL",
+
+  // "handle-table.new-handle.form-url-input-placeholder": "Enter URL",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.form-url-input-placeholder": "Enter URL",
+
+  // "handle-table.new-handle.form-button-submit": "Submit",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.form-button-submit": "Submit",
+
+
+  // "handle-table.new-handle.notify.error": "Server Error - Cannot create new handle",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.notify.error": "Server Error - Cannot create new handle",
+
+  // "handle-table.new-handle.notify.successful": "The new handle was created!",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.notify.successful": "The new handle was created!",
+
+
+  // "handle-table.edit-handle.notify.error": "Server Error - Cannot edit this handle",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.notify.error": "Server Error - Cannot edit this handle",
+
+  // "handle-table.edit-handle.notify.successful": "The handle was edited!",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.notify.successful": "The handle was edited!",
+
+
+  // "handle-table.delete-handle.notify.error": "Server Error - Cannot delete this handle",
+  // TODO New key - Add a translation
+  "handle-table.delete-handle.notify.error": "Server Error - Cannot delete this handle",
+
+  // "handle-table.delete-handle.notify.successful": "The handle was deleted!",
+  // TODO New key - Add a translation
+  "handle-table.delete-handle.notify.successful": "The handle was deleted!",
+
+
+
+  // "handle-table.edit-handle.form-handle-input-text": "Handle",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-handle-input-text": "Handle",
+
+  // "handle-table.edit-handle.form-handle-input-placeholder": "Enter new handle",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-handle-input-placeholder": "Enter new handle",
+
+  // "handle-table.edit-handle.form-url-input-text": "URL",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-url-input-text": "URL",
+
+  // "handle-table.edit-handle.form-url-input-placeholder": "Enter new URL",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-url-input-placeholder": "Enter new URL",
+
+  // "handle-table.edit-handle.form-archive-input-check": "Archive old handle?",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-archive-input-check": "Archive old handle?",
+
+  // "handle-table.edit-handle.form-button-submit": "Submit",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-button-submit": "Submit",
+
+  // "handle-table.edit-handle.form-id-input-text": "ID",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-id-input-text": "ID",
+
+  // "handle-table.edit-handle.form-id-input-placeholder": "...",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-id-input-placeholder": "...",
+
+  // "handle-page.title": "Handles",
+  // TODO New key - Add a translation
+  "handle-page.title": "Handles",
+
+  // "handle-table.title": "Handle List",
+  // TODO New key - Add a translation
+  "handle-table.title": "Handle List",
+
+  // "handle-table.table.handle": "Handle",
+  // TODO New key - Add a translation
+  "handle-table.table.handle": "Handle",
+
+  // "handle-table.table.internal": "Is Internal",
+  // TODO New key - Add a translation
+  "handle-table.table.internal": "Is Internal",
+
+  // "handle-table.table.is-internal": "Yes",
+  // TODO New key - Add a translation
+  "handle-table.table.is-internal": "Yes",
+
+  // "handle-table.table.not-internal": "No",
+  // TODO New key - Add a translation
+  "handle-table.table.not-internal": "No",
+
+  // "handle-table.table.url": "URL",
+  // TODO New key - Add a translation
+  "handle-table.table.url": "URL",
+
+  // "handle-table.table.resource-type": "Resource type",
+  // TODO New key - Add a translation
+  "handle-table.table.resource-type": "Resource type",
+
+  // "handle-table.table.resource-id": "Resource id",
+  // TODO New key - Add a translation
+  "handle-table.table.resource-id": "Resource id",
+
+  // "handle-table.button.new-handle": "New external handle",
+  // TODO New key - Add a translation
+  "handle-table.button.new-handle": "New external handle",
+
+  // "handle-table.button.edit-handle": "Edit handle",
+  // TODO New key - Add a translation
+  "handle-table.button.edit-handle": "Edit handle",
+
+  // "handle-table.button.delete-handle": "Delete handle",
+  // TODO New key - Add a translation
+  "handle-table.button.delete-handle": "Delete handle",
+
+  // "handle-table.dropdown.search-option": "Search option",
+  // TODO New key - Add a translation
+  "handle-table.dropdown.search-option": "Search option",
+
+  // "handle-table.dropdown.search-button": "Search",
+  // TODO New key - Add a translation
+  "handle-table.dropdown.search-button": "Search",
+
+
+
+  // "handle-table.global-actions.title": "Global Actions",
+  // TODO New key - Add a translation
+  "handle-table.global-actions.title": "Global Actions",
+
+  // "handle-table.global-actions.actions-list-message": "This is the list of available global actions.",
+  // TODO New key - Add a translation
+  "handle-table.global-actions.actions-list-message": "This is the list of available global actions.",
+
+  // "handle-table.global-actions.button.change-prefix": "Change handle prefix",
+  // TODO New key - Add a translation
+  "handle-table.global-actions.button.change-prefix": "Change handle prefix",
+
+  // "handle-table.change-handle-prefix.form-old-prefix-input-text": "Old prefix",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-old-prefix-input-text": "Old prefix",
+
+  // "handle-table.change-handle-prefix.form-old-prefix-input-error": "Valid old prefix is required",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-old-prefix-input-error": "Valid old prefix is required",
+
+  // "handle-table.change-handle-prefix.form-old-prefix-input-placeholder": "Enter old prefix",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-old-prefix-input-placeholder": "Enter old prefix",
+
+  // "handle-table.change-handle-prefix.form-new-prefix-input-text": "New prefix",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-new-prefix-input-text": "New prefix",
+
+  // "handle-table.change-handle-prefix.form-new-prefix-input-placeholder": "Enter new prefix",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-new-prefix-input-placeholder": "Enter new prefix",
+
+  // "handle-table.change-handle-prefix.form-new-prefix-input-error": "Valid new prefix is required",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-new-prefix-input-error": "Valid new prefix is required",
+
+  // "handle-table.change-handle-prefix.form-archive-input-check": "Archive old handles?",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-archive-input-check": "Archive old handles?",
+
+  // "handle-table.change-handle-prefix.notify.started": "Changing of the prefix has been started, it will take some time.",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.notify.started": "Changing of the prefix has been started, it will take some time.",
+
+  // "handle-table.change-handle-prefix.notify.successful": "The global prefix was changed!",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.notify.successful": "The global prefix was changed!",
+
+  // "handle-table.change-handle-prefix.notify.error": "Server Error - Cannot change the global prefix",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.notify.error": "Server Error - Cannot change the global prefix",
+
+  // "handle-table.change-handle-prefix.notify.error.empty-table": "Server Error - Cannot change the global prefix because no Handle exist.",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.notify.error.empty-table": "Server Error - Cannot change the global prefix because no Handle exist.",
+
+
+
+  // "licenses.manage-table.breadcrumbs": "License administration",
+  // TODO New key - Add a translation
+  "licenses.manage-table.breadcrumbs": "License administration",
+
+  // "licenses.breadcrumbs": "Licenses",
+  // TODO New key - Add a translation
+  "licenses.breadcrumbs": "Licenses",
+
+
 
   // "info.end-user-agreement.accept": "I have read and I agree to the End User Agreement",
   "info.end-user-agreement.accept": "Olen lukenut ja hyväksyn käyttöoikeussopimuksen",
@@ -2913,6 +3434,10 @@
   // "item.edit.bitstreams.empty": "This item doesn't contain any bitstreams. Click the upload button to create one.",
   "item.edit.bitstreams.empty": "Tietueeseen ei liity tiedostoja. Valitse latauspainike luodaksesi tiedoston.",
 
+  // "item.edit.bitstreams.headers.synchronized": "Sync | Checksum",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.headers.synchronized": "Sync | Checksum",
+
   // "item.edit.bitstreams.headers.actions": "Actions",
   "item.edit.bitstreams.headers.actions": "Toiminnot",
 
@@ -2966,6 +3491,39 @@
 
   // "item.edit.bitstreams.upload-button": "Upload",
   "item.edit.bitstreams.upload-button": "Lataa",
+
+  // "item.edit.bitstreams.checksum.algorithm": "Algorithm: ",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.algorithm": "Algorithm: ",
+
+  // "item.edit.bitstreams.checksum.value": "Value: ",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.value": "Value: ",
+
+  // "item.edit.bitstreams.checksum.database": "DB",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.database": "DB",
+
+  // "item.edit.bitstreams.checksum.active-store": "Active store",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.active-store": "Active store",
+
+  // "item.edit.bitstreams.checksum.sync-store": "Sync store",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.sync-store": "Sync store",
+
+  // "item.edit.bitstreams.checksum.popover.warning.header": "Warning:",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.popover.warning.header": "Warning:",
+
+  // "item.edit.bitstreams.checksum.popover.warning.body": "The file must be downloaded for the checksum to be computed.:",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.popover.warning.body": "The file must be downloaded for the checksum to be computed.:",
+
+  // "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.:",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.:",
+
 
   // "item.edit.delete.cancel": "Cancel",
   "item.edit.delete.cancel": "Peruuta",
@@ -3234,6 +3792,10 @@
   // "item.edit.move.inheritpolicies.description": "Inherit the default policies of the destination collection",
   "item.edit.move.inheritpolicies.description": "Peri kohdekokoelman oletuskäytännöt",
 
+  // "item.edit.move.inheritpolicies.tooltip": "Warning: When enabled, the read access policy for the item and any files associated with the item will be replaced by the default read access policy of the collection. This cannot be undone.",
+  // TODO New key - Add a translation
+  "item.edit.move.inheritpolicies.tooltip": "Warning: When enabled, the read access policy for the item and any files associated with the item will be replaced by the default read access policy of the collection. This cannot be undone.",
+
   // "item.edit.move.move": "Move",
   "item.edit.move.move": "Siirrä",
 
@@ -3366,6 +3928,14 @@
   // "item.edit.curate.title": "Curate Item: {{item}}",
   "item.edit.curate.title": "Kuratoi tietuetta: {{item}}",
 
+  // "item.edit.tabs.access-control.head": "Access Control",
+  // TODO New key - Add a translation
+  "item.edit.tabs.access-control.head": "Access Control",
+
+  // "item.edit.tabs.access-control.title": "Item Edit - Access Control",
+  // TODO New key - Add a translation
+  "item.edit.tabs.access-control.title": "Item Edit - Access Control",
+
   // "item.edit.tabs.metadata.head": "Metadata",
   "item.edit.tabs.metadata.head": "Tietueen metadata",
 
@@ -3483,6 +4053,50 @@
   // "item.edit.withdraw.success": "The item was withdrawn successfully",
   "item.edit.withdraw.success": "Tietue poistettu käytöstä",
 
+  // "item.edit.tabs.license.head": "License",
+  // TODO New key - Add a translation
+  "item.edit.tabs.license.head": "License",
+
+  // "item.edit.license.head": "Current License",
+  // TODO New key - Add a translation
+  "item.edit.license.head": "Current License",
+
+  // "item.edit.license.select.license.initial-value.message": "-Select License-",
+  // TODO New key - Add a translation
+  "item.edit.license.select.license.initial-value.message": "-Select License-",
+
+  // "item.edit.license.select.license.select.message": "Select a license",
+  // TODO New key - Add a translation
+  "item.edit.license.select.license.select.message": "Select a license",
+
+  // "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
+  // TODO New key - Add a translation
+  "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
+
+  // "item.edit.license.define.license.message": "Define a new license",
+  // TODO New key - Add a translation
+  "item.edit.license.define.license.message": "Define a new license",
+
+  // "item.edit.license.button.name.update": "Update",
+  // TODO New key - Add a translation
+  "item.edit.license.button.name.update": "Update",
+
+  // "item.edit.license.button.name.return": "Return",
+  // TODO New key - Add a translation
+  "item.edit.license.button.name.return": "Return",
+
+  // "item.edit.license.remove.license.message": "Remove License",
+  // TODO New key - Add a translation
+  "item.edit.license.remove.license.message": "Remove License",
+
+  // "item.edit.license.update.success": "License updated successfully",
+  // TODO New key - Add a translation
+  "item.edit.license.update.success": "License updated successfully",
+
+  // "item.edit.license.update.error": "Error: cannot update license",
+  // TODO New key - Add a translation
+  "item.edit.license.update.error": "Error: cannot update license",
+
   // "item.orcid.return": "Back",
   "item.orcid.return": "Paluu",
 
@@ -3543,6 +4157,34 @@
   // "workflow-item.search.result.list.element.supervised.remove-tooltip": "Remove supervision group",
   "workflow-item.search.result.list.element.supervised.remove-tooltip": "Poista ohjausryhmä",
 
+  // "item.page.project-url": "Project URL",
+  // TODO New key - Add a translation
+  "item.page.project-url": "Project URL",
+
+  // "item.page.demo.uri": "Demo URL",
+  // TODO New key - Add a translation
+  "item.page.demo.uri": "Demo URL",
+
+  // "item.page.referenced-by": "Referenced by",
+  // TODO New key - Add a translation
+  "item.page.referenced-by": "Referenced by",
+
+  // "item.page.type": "Type",
+  // TODO New key - Add a translation
+  "item.page.type": "Type",
+
+  // "item.page.size-info": "Size",
+  // TODO New key - Add a translation
+  "item.page.size-info": "Size",
+
+  // "item.page.language": "Language(s)",
+  // TODO New key - Add a translation
+  "item.page.language": "Language(s)",
+
+  // "item.page.sponsor": "Acknowledgement",
+  // TODO New key - Add a translation
+  "item.page.sponsor": "Acknowledgement",
+
   // "item.page.abstract": "Abstract",
   "item.page.abstract": "Tiivistelmä",
 
@@ -3561,11 +4203,16 @@
   // "item.page.collections.load-more": "Load more",
   "item.page.collections.load-more": "Lataa lisää",
 
-  // "item.page.date": "Date",
+  // "item.page.date": "Date issued",
+  // TODO Source message changed - Revise the translation
   "item.page.date": "Päivämäärä",
 
   // "item.page.edit": "Edit this item",
   "item.page.edit": "Muokkaa tietuetta",
+
+  // "item.page.statistics": "Show item statistics",
+  // TODO New key - Add a translation
+  "item.page.statistics": "Show item statistics",
 
   // "item.page.files": "Files",
   "item.page.files": "Tiedostot",
@@ -3588,11 +4235,23 @@
   // "item.page.journal.search.title": "Articles in this journal",
   "item.page.journal.search.title": "Artikkelit tässä julkaisussa",
 
-  // "item.page.link.full": "Full item page",
+  // "item.page.link.full": "Show full item record",
+  // TODO Source message changed - Revise the translation
   "item.page.link.full": "Tietueen kaikki tiedot",
 
-  // "item.page.link.simple": "Simple item page",
+  // "item.page.link.simple": "Show simple item record",
+  // TODO Source message changed - Revise the translation
   "item.page.link.simple": "Tietueen suppeat tiedot",
+
+  // "item.page.users.note": "User's note:",
+  // TODO New key - Add a translation
+  "item.page.users.note": "User's note:",
+
+  // "item.page.orcid.title": "ORCID",
+  "item.page.orcid.title": "ORCID-tunniste",
+
+  // "item.page.orcid.tooltip": "Open ORCID setting page",
+  "item.page.orcid.tooltip": "Avaa ORCID-asetusten sivu",
 
   // "item.page.orcid.title": "ORCID",
   "item.page.orcid.title": "ORCID-tunniste",
@@ -3621,11 +4280,17 @@
   // "item.page.relationships.isOrgUnitOfProject": "Research Projects",
   "item.page.relationships.isOrgUnitOfProject": "Tutkimusprojektit",
 
-  // "item.page.subject": "Keywords",
+  // "item.page.subject": "Subject(s)",
+  // TODO Source message changed - Revise the translation
   "item.page.subject": "Avainsanat",
 
-  // "item.page.uri": "URI",
+  // "item.page.uri": "Item identifier",
+  // TODO Source message changed - Revise the translation
   "item.page.uri": "URL-osoite",
+
+  // "item.page.doi": "DOI",
+  // TODO New key - Add a translation
+  "item.page.doi": "DOI",
 
   // "item.page.bitstreams.view-more": "Show more",
   "item.page.bitstreams.view-more": "Näytä lisää",
@@ -3645,7 +4310,8 @@
   // "item.page.version.create": "Create new version",
   "item.page.version.create": "Luo uusi versio",
 
-  // "item.page.version.hasDraft": "A new version cannot be created because there is an inprogress submission in the version history",
+  // "item.page.version.hasDraft": "A new version cannot be created because there is an in-progress submission in the version history",
+  // TODO Source message changed - Revise the translation
   "item.page.version.hasDraft": "Uutta versiota ei voida luoda, koska versiohistoriassa on kesken oleva tallennus.",
 
   // "item.page.claim.button": "Claim",
@@ -3653,6 +4319,34 @@
 
   // "item.page.claim.tooltip": "Claim this item as profile",
   "item.page.claim.tooltip": "Ota tämä kohde profiiliksi",
+
+  // "item.page.license.message": ["This item is", "and licensed under:"],
+  // TODO New key - Add a translation
+  "item.page.license.message": ["This item is", "and licensed under:"],
+
+  // "item.page.matomo-statistics.views.button": "Views",
+  // TODO New key - Add a translation
+  "item.page.matomo-statistics.views.button": "Views",
+
+  // "item.page.matomo-statistics.downloads.button": "Downloads",
+  // TODO New key - Add a translation
+  "item.page.matomo-statistics.downloads.button": "Downloads",
+
+  // "item.page.acknowledgement.project-name": "Project name:",
+  // TODO New key - Add a translation
+  "item.page.acknowledgement.project-name": "Project name:",
+
+  // "item.page.acknowledgement.project-code": "Project code:",
+  // TODO New key - Add a translation
+  "item.page.acknowledgement.project-code": "Project code:",
+
+  // "item.page.date.cca.message": "The exact date is unknown",
+  // TODO New key - Add a translation
+  "item.page.date.cca.message": "The exact date is unknown",
+
+  // "item.page.date.composed.message": "This item is composed of parts issued in",
+  // TODO New key - Add a translation
+  "item.page.date.composed.message": "This item is composed of parts issued in",
 
   // "item.preview.dc.identifier.uri": "Identifier:",
   "item.preview.dc.identifier.uri": "Tunnus:",
@@ -3696,7 +4390,8 @@
   // "item.preview.dc.identifier": "Identifier:",
   "item.preview.dc.identifier": "Tunnisteet:",
 
-  // "item.preview.dc.relation.ispartof": "Journal or Serie",
+  // "item.preview.dc.relation.ispartof": "Journal or Series",
+  // TODO Source message changed - Revise the translation
   "item.preview.dc.relation.ispartof": "Kausijulkaisu tai sarja",
 
   // "item.preview.dc.identifier.doi": "DOI",
@@ -3732,6 +4427,138 @@
   // "item.preview.oaire.fundingStream": "Funding Stream:",
   "item.preview.oaire.fundingStream": "Rahoituslähde:",
 
+  // "item.preview.authors.show.everyone": "Show everyone",
+  // TODO New key - Add a translation
+  "item.preview.authors.show.everyone": "Show everyone",
+
+  // "item.preview.authors.et.al": " ; et al.",
+  // TODO New key - Add a translation
+  "item.preview.authors.et.al": " ; et al.",
+
+  // "item.preview.loading-files": "Loading files... This may take a few seconds as file previews are being generated. If the process takes too long, please contact the system administrator",
+  // TODO New key - Add a translation
+  "item.preview.loading-files": "Loading files... This may take a few seconds as file previews are being generated. If the process takes too long, please contact the system administrator",
+
+  // "item.preview.no-preview": "The file preview has not been generated yet. Please try again later or contact the system administrator",
+  // TODO New key - Add a translation
+  "item.preview.no-preview": "The file preview has not been generated yet. Please try again later or contact the system administrator",
+
+  // "item.refbox.modal.copy.instruction": ["Press", "ctrl + c", "to copy"],
+  // TODO New key - Add a translation
+  "item.refbox.modal.copy.instruction": ["Press", "ctrl + c", "to copy"],
+
+  // "item.refbox.modal.submit": "Ok",
+  // TODO New key - Add a translation
+  "item.refbox.modal.submit": "Ok",
+
+  // "item.refbox.citation.featured-service.message": "Please use the following text to cite this item or export to a predefined format:",
+  // TODO New key - Add a translation
+  "item.refbox.citation.featured-service.message": "Please use the following text to cite this item or export to a predefined format:",
+
+  // "item.refbox.citation.bibtex.button": "bibtex",
+  // TODO New key - Add a translation
+  "item.refbox.citation.bibtex.button": "bibtex",
+
+  // "item.refbox.citation.cmdi.button": "cmdi",
+  // TODO New key - Add a translation
+  "item.refbox.citation.cmdi.button": "cmdi",
+
+  // "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
+  // TODO New key - Add a translation
+  "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
+
+  // "item.refbox.featured-service.share.message": "Share",
+  // TODO New key - Add a translation
+  "item.refbox.featured-service.share.message": "Share",
+
+  // "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
+  // TODO New key - Add a translation
+  "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
+
+
+  // "item.view.box.author.message": "Author(s):",
+  // TODO New key - Add a translation
+  "item.view.box.author.message": "Author(s):",
+
+  // "item.view.box.publisher.message": "Publisher:",
+  // TODO New key - Add a translation
+  "item.view.box.publisher.message": "Publisher:",
+
+  // "item.view.box.files.message": ["This item contains", "files"],
+  // TODO New key - Add a translation
+  "item.view.box.files.message": ["This item contains", "files"],
+
+  // "item.view.box.one.file.message": "This item contains 1 file",
+  // TODO New key - Add a translation
+  "item.view.box.one.file.message": "This item contains 1 file",
+
+  // "item.view.box.no-files.message": "This item contains no files.",
+  // TODO New key - Add a translation
+  "item.view.box.no-files.message": "This item contains no files.",
+
+  // "item.view.box.description.message": "Description:",
+  // TODO New key - Add a translation
+  "item.view.box.description.message": "Description:",
+
+
+  // "item.view.box.author.preview.and": "and",
+  // TODO New key - Add a translation
+  "item.view.box.author.preview.and": "and",
+
+  // "item.view.box.author.preview.show-everyone": "show everyone",
+  // TODO New key - Add a translation
+  "item.view.box.author.preview.show-everyone": "show everyone",
+
+
+  // "item.file.description.not.supported.video": "Your browser does not support the video tag.",
+  // TODO New key - Add a translation
+  "item.file.description.not.supported.video": "Your browser does not support the video tag.",
+
+  // "item.file.description.name": "Name",
+  // TODO New key - Add a translation
+  "item.file.description.name": "Name",
+
+  // "item.file.description.size": "Size",
+  // TODO New key - Add a translation
+  "item.file.description.size": "Size",
+
+  // "item.file.description.format": "Format",
+  // TODO New key - Add a translation
+  "item.file.description.format": "Format",
+
+  // "item.file.description.description": "Description",
+  // TODO New key - Add a translation
+  "item.file.description.description": "Description",
+
+  // "item.file.description.checksum": "MD5",
+  // TODO New key - Add a translation
+  "item.file.description.checksum": "MD5",
+
+  // "item.file.description.download.file": "Download file",
+  // TODO New key - Add a translation
+  "item.file.description.download.file": "Download file",
+
+  // "item.file.description.preview": "Preview",
+  // TODO New key - Add a translation
+  "item.file.description.preview": "Preview",
+
+  // "item.file.description.file.preview": "File Preview",
+  // TODO New key - Add a translation
+  "item.file.description.file.preview": "File Preview",
+
+  // "item.page.files.head": "Files in this item",
+  // TODO New key - Add a translation
+  "item.page.files.head": "Files in this item",
+
+  // "item.page.download.button.command.line": "Download instructions for command line",
+  // TODO New key - Add a translation
+  "item.page.download.button.command.line": "Download instructions for command line",
+
+  // "item.page.download.button.all.files.zip": "Download all files in item",
+  // TODO New key - Add a translation
+  "item.page.download.button.all.files.zip": "Download all files in item",
+
+
   // "item.select.confirm": "Confirm selected",
   "item.select.confirm": "Vahvista valinta",
 
@@ -3764,6 +4591,14 @@
 
   // "item.version.history.table.version": "Version",
   "item.version.history.table.version": "Versio",
+
+  // "item.version.history.table.name": "Name",
+  // TODO New key - Add a translation
+  "item.version.history.table.name": "Name",
+
+  // "item.version.history.table.handle": "Handle",
+  // TODO New key - Add a translation
+  "item.version.history.table.handle": "Handle",
 
   // "item.version.history.table.item": "Item",
   "item.version.history.table.item": "Tietue",
@@ -3804,7 +4639,8 @@
   // "item.version.history.table.action.deleteVersion": "Delete version",
   "item.version.history.table.action.deleteVersion": "Poista versio",
 
-  // "item.version.history.table.action.hasDraft": "A new version cannot be created because there is an inprogress submission in the version history",
+  // "item.version.history.table.action.hasDraft": "A new version cannot be created because there is an in-progress submission in the version history",
+  // TODO Source message changed - Revise the translation
   "item.version.history.table.action.hasDraft": "Uutta versiota ei voida luoda, koska versiohistoriassa on kesken oleva tallennus.",
 
   // "item.version.notice": "This is not the latest version of this item. The latest version can be found <a href='{{destination}}'>here</a>.",
@@ -3849,7 +4685,8 @@
   // "item.version.create.notification.failure": "New version has not been created",
   "item.version.create.notification.failure": "Uutta versiota ei luotu",
 
-  // "item.version.create.notification.inProgress": "A new version cannot be created because there is an inprogress submission in the version history",
+  // "item.version.create.notification.inProgress": "A new version cannot be created because there is an in-progress submission in the version history",
+  // TODO Source message changed - Revise the translation
   "item.version.create.notification.inProgress": "Uutta versiota ei voida luoda, koska versiohistoriassa on kesken oleva tallennus.",
 
   // "item.version.delete.modal.header": "Delete version",
@@ -3893,6 +4730,38 @@
 
   // "itemtemplate.edit.metadata.edit.buttons.drag": "Drag to reorder",
   "itemtemplate.edit.metadata.edit.buttons.drag": "Raahaa uudelleenjärjestääksesi",
+
+  // "item.tombstone.withdrawn.message": "This item is withdrawn",
+  // TODO New key - Add a translation
+  "item.tombstone.withdrawn.message": "This item is withdrawn",
+
+  // "item.tombstone.no.available.message": "The selected item is withdrawn and is no longer available.",
+  // TODO New key - Add a translation
+  "item.tombstone.no.available.message": "The selected item is withdrawn and is no longer available.",
+
+  // "item.tombstone.withdrawal.reason.message": "The reason for withdrawal:",
+  // TODO New key - Add a translation
+  "item.tombstone.withdrawal.reason.message": "The reason for withdrawal:",
+
+  // "item.tombstone.withdrawal.reason.default.value": "The reason wasn't specified.",
+  // TODO New key - Add a translation
+  "item.tombstone.withdrawal.reason.default.value": "The reason wasn't specified.",
+
+  // "item.tombstone.restricted.contact.help": ["Your user account does not have the credentials to view this item. Please contact the", "Help Desk", "if you have any questions."],
+  // TODO New key - Add a translation
+  "item.tombstone.restricted.contact.help": ["Your user account does not have the credentials to view this item. Please contact the", "Help Desk", "if you have any questions."],
+
+  // "item.tombstone.replaced.another-repository.message": "This item is managed by another repository",
+  // TODO New key - Add a translation
+  "item.tombstone.replaced.another-repository.message": "This item is managed by another repository",
+
+  // "item.tombstone.replaced.locations.message": "You will find this item at the following location(s):",
+  // TODO New key - Add a translation
+  "item.tombstone.replaced.locations.message": "You will find this item at the following location(s):",
+
+  // "item.tombstone.replaced.help-desk.message": ["The author(s) asked us to hide this submission.", "We still keep all the data and metadata of the original submission but the submission", "is now located at the above url(s). If you need the contents of the original submission, contact us at our", "Help Desk."],
+  // TODO New key - Add a translation
+  "item.tombstone.replaced.help-desk.message": ["The author(s) asked us to hide this submission.", "We still keep all the data and metadata of the original submission but the submission", "is now located at the above url(s). If you need the contents of the original submission, contact us at our", "Help Desk."],
 
   // "itemtemplate.edit.metadata.edit.buttons.edit": "Edit",
   "itemtemplate.edit.metadata.edit.buttons.edit": "Muokkaa",
@@ -4137,9 +5006,6 @@
   // "login.form.new-user": "New user? Click here to register.",
   "login.form.new-user": "Uusi käyttäjä? Rekisteröidy tästä.",
 
-  // "login.form.or-divider": "or",
-  "login.form.or-divider": "tai",
-
   // "login.form.oidc": "Log in with OIDC",
   "login.form.oidc": "Kirjaudu OIDC-tunnuksella",
 
@@ -4154,6 +5020,17 @@
 
   // "login.form.submit": "Log in",
   "login.form.submit": "Kirjaudu sisään",
+
+  // "login.form.or-divider": "or",
+  "login.form.or-divider": "tai",
+
+  // "login.auth.failed.shibboleth.title": "Shibboleth authentication failed",
+  // TODO New key - Add a translation
+  "login.auth.failed.shibboleth.title": "Shibboleth authentication failed",
+
+  // "login.auth.failed.shibboleth.message": "Authentication failed because your IDP did not send the required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .",
+  // TODO New key - Add a translation
+  "login.auth.failed.shibboleth.message": "Authentication failed because your IDP did not send the required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .",
 
   // "login.title": "Login",
   "login.title": "Sisäänkirjautuminen",
@@ -4170,6 +5047,133 @@
   // "logout.title": "Logout",
   "logout.title": "Uloskirjautuminen",
 
+
+  // "clarin.help-desk.name": "Help Desk",
+  // TODO New key - Add a translation
+  "clarin.help-desk.name": "Help Desk",
+
+  // "clarin.auth-failed.error.message": "Authentication Failed",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.error.message": "Authentication Failed",
+
+  // "clarin.auth-failed.warning.reason.message": "Reason!",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.warning.reason.message": "Reason!",
+
+  // "clarin.auth-failed.warning.important.message": "Important!",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.warning.important.message": "Important!",
+
+  // "clarin.auth-failed.warning.no-email.message": ["Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.", "If you have any question contact the ","Help Desk."],
+  // TODO New key - Add a translation
+  "clarin.auth-failed.warning.no-email.message": ["Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.", "If you have any question contact the ","Help Desk."],
+
+  // "clarin.auth-failed.warning.email-info": "This address will be verified and remembered until your IDP provides a different one. You will still sign in through your IDP.",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.warning.email-info": "This address will be verified and remembered until your IDP provides a different one. You will still sign in through your IDP.",
+
+  // "clarin.auth-failed.warning.has-email.message": ["Your IDP (home organization) has not provided your email address.", "You are registered by the e-mail: ", ". Try to login with that e-mail.", " If you have any login issues contact the ", "Help Desk."],
+  // TODO New key - Add a translation
+  "clarin.auth-failed.warning.has-email.message": ["Your IDP (home organization) has not provided your email address.", "You are registered by the e-mail: ", ". Try to login with that e-mail.", " If you have any login issues contact the ", "Help Desk."],
+
+  // "clarin.auth-failed.netid": "netid",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.netid": "netid",
+
+  // "clarin.auth-failed.fname": "First Name",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.fname": "First Name",
+
+  // "clarin.auth-failed.lname": "Last Name",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.lname": "Last Name",
+
+  // "clarin.auth-failed.email": "Email",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.email": "Email",
+
+  // "clarin.auth-failed.button.submit": "Submit",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.button.submit": "Submit",
+
+  // "clarin.auth-failed.button.login": "Redirect to login",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.button.login": "Redirect to login",
+
+  // "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
+
+  // "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
+
+
+
+  // "clarin.auth-failed.duplicate-user.header.message": "Authentication Failed",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.duplicate-user.header.message": "Authentication Failed",
+
+  // "clarin.auth-failed.duplicate-user.error.message": ["Your email", "is already associated with a different user. It is also possible that you used a different identity provider to before. For more information please contact our", "Help Desk"],
+  // TODO New key - Add a translation
+  "clarin.auth-failed.duplicate-user.error.message": ["Your email", "is already associated with a different user. It is also possible that you used a different identity provider to before. For more information please contact our", "Help Desk"],
+
+
+
+  // "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
+  // TODO New key - Add a translation
+  "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
+
+  // "clarin.missing-headers.contact-us.message": "If you have any questions you can contact the ",
+  // TODO New key - Add a translation
+  "clarin.missing-headers.contact-us.message": "If you have any questions you can contact the ",
+
+
+  // "clarin.autoregistration.successful.message": "You have been successfully registered.",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.successful.message": "You have been successfully registered.",
+
+  // "clarin.autoregistration.error.message": "Error: registration failed.",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.error.message": "Error: registration failed.",
+
+  // "clarin.autoregistration.welcome.message": "Welcome to",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.welcome.message": "Welcome to",
+
+  // "clarin.autoregistration.privacy.statement": "Privacy statement",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.privacy.statement": "Privacy statement",
+
+  // "clarin.autoregistration.information.released.by.idp.message": "The information released by your IdP (home organisation) is shown below.",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.information.released.by.idp.message": "The information released by your IdP (home organisation) is shown below.",
+
+  // "clarin.autoregistration.table.header": "Header",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.table.header": "Header",
+
+  // "clarin.autoregistration.table.value": "Value",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.table.value": "Value",
+
+  // "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in","However we may log the attributes and keep them for a time period."],
+  // TODO New key - Add a translation
+  "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in","However we may log the attributes and keep them for a time period."],
+
+  // "clarin.autoregistration.button.continue.to.login": "Continue to login",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.button.continue.to.login": "Continue to login",
+
+  // "clarin.autoregistration.token.not.valid.message": "Verification token is not valid.",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.token.not.valid.message": "Verification token is not valid.",
+
+  // "clarin.autologin.error.message": "Something went wrong, the user cannot be signed in automatically.",
+  // TODO New key - Add a translation
+  "clarin.autologin.error.message": "Something went wrong, the user cannot be signed in automatically.",
+
+
   // "menu.header.admin": "Management",
   "menu.header.admin": "Hallinto",
 
@@ -4184,6 +5188,10 @@
 
   // "menu.section.access_control_authorizations": "Authorizations",
   "menu.section.access_control_authorizations": "Käyttöoikeudet",
+
+  // "menu.section.access_control_bulk": "Bulk Access Management",
+  // TODO New key - Add a translation
+  "menu.section.access_control_bulk": "Bulk Access Management",
 
   // "menu.section.access_control_groups": "Groups",
   "menu.section.access_control_groups": "Ryhmät",
@@ -4221,8 +5229,16 @@
   // "menu.section.browse_global_by_srsc": "By Subject Category",
   "menu.section.browse_global_by_srsc": "Aihekategorian mukaan",
 
+  // "menu.section.browse_global_by_nsi": "By Norwegian Science Index",
+  // TODO New key - Add a translation
+  "menu.section.browse_global_by_nsi": "By Norwegian Science Index",
+
   // "menu.section.browse_global_by_title": "By Title",
   "menu.section.browse_global_by_title": "Nimekkeen mukaan",
+
+  // "menu.section.browse_global_by_language": "By Language",
+  // TODO New key - Add a translation
+  "menu.section.browse_global_by_language": "By Language",
 
   // "menu.section.browse_global_communities_and_collections": "Communities & Collections",
   "menu.section.browse_global_communities_and_collections": "Yhteisöt & kokoelmat",
@@ -4304,6 +5320,14 @@
 
   // "menu.section.icon.statistics_task": "Statistics Task menu section",
   "menu.section.icon.statistics_task": "Tilastot",
+
+  // "menu.section.icon.statistics": "Show site statistics",
+  // TODO New key - Add a translation
+  "menu.section.icon.statistics": "Show site statistics",
+
+  // "menu.section.icon.submissions": "Show my submissions",
+  // TODO New key - Add a translation
+  "menu.section.icon.submissions": "Show my submissions",
 
   // "menu.section.icon.workflow": "Administer workflow menu section",
   "menu.section.icon.workflow": "Työnkulku hallinta",
@@ -4398,6 +5422,18 @@
   // "menu.section.workflow": "Administer Workflow",
   "menu.section.workflow": "Hallinnoi työnkulkua",
 
+  // "menu.section.handle": "Manage Handles",
+  // TODO New key - Add a translation
+  "menu.section.handle": "Manage Handles",
+
+  // "menu.section.licenses": "License Administration",
+  // TODO New key - Add a translation
+  "menu.section.licenses": "License Administration",
+
+  // "menu.section.submissions": "Submissions",
+  // TODO New key - Add a translation
+  "menu.section.submissions": "Submissions",
+
   // "metadata-export-search.tooltip": "Export search results as CSV",
   "metadata-export-search.tooltip": "Eksportoi Hakutulokset CSV-tiedostona",
 
@@ -4406,6 +5442,30 @@
 
   // "metadata-export-search.submit.error": "Starting the export has failed",
   "metadata-export-search.submit.error": "Eksportoinnin aloittaminen epäonnistui",
+
+  // "autocomplete.suggestion.sponsor.funding-code": "Funding code",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.sponsor.funding-code": "Funding code",
+
+  // "autocomplete.suggestion.sponsor.project-name": "Project name",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.sponsor.project-name": "Project name",
+
+  // "autocomplete.suggestion.language.iso": "ISO",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.language.iso": "ISO",
+
+  // "autocomplete.suggestion.language.title": "Language",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.language.title": "Language",
+
+  // "autocomplete.suggestion.sponsor.empty": "N/A",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.sponsor.empty": "N/A",
+
+  // "autocomplete.suggestion.sponsor.eu": "EU",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.sponsor.eu": "EU",
 
   // "mydspace.breadcrumbs": "MyDSpace",
   "mydspace.breadcrumbs": "Oma DSpace",
@@ -4620,10 +5680,12 @@
   // "pagination.results-per-page": "Results Per Page",
   "pagination.results-per-page": "Tuloksia sivulla",
 
-  // "pagination.showing.detail": "{{ range }} of {{ total }}",
+  // "pagination.showing.detail": "{{ range }} out of {{ total }} results",
+  // TODO Source message changed - Revise the translation
   "pagination.showing.detail": "{{ range }} / {{ total }}",
 
-  // "pagination.showing.label": "Now showing ",
+  // "pagination.showing.label": "Showing ",
+  // TODO Source message changed - Revise the translation
   "pagination.showing.label": "Näytetään ",
 
   // "pagination.sort-direction": "Sort Options",
@@ -5223,8 +6285,13 @@
   // "repository.title": "DSpace Repository",
   "repository.title": "Julkaisuarkisto",
 
-  // "repository.title.prefix": "DSpace Repository :: ",
+  // "repository.title.prefix": "LINDAT/CLARIAH-CZ Repository ",
+  // TODO Source message changed - Revise the translation
   "repository.title.prefix": "Julkaisuarkisto :: ",
+
+  // "repository.title.prefixDSpace": "DSpace",
+  // TODO New key - Add a translation
+  "repository.title.prefixDSpace": "DSpace",
 
   // "resource-policies.add.button": "Add",
   "resource-policies.add.button": "Lisää",
@@ -5397,6 +6464,155 @@
   // "resource-policies.table.headers.title.for.collection": "Policies for Collection",
   "resource-policies.table.headers.title.for.collection": "Kokoelmakäytännöt",
 
+  // "root.skip-to-content": "Skip to main content",
+  // TODO New key - Add a translation
+  "root.skip-to-content": "Skip to main content",
+
+  // "clarin-license-table.title": "License Administration",
+  // TODO New key - Add a translation
+  "clarin-license-table.title": "License Administration",
+
+  // "clarin-license.table.name": "License Name",
+  // TODO New key - Add a translation
+  "clarin-license.table.name": "License Name",
+
+  // "clarin-license.table.definition": "Definition (URL)",
+  // TODO New key - Add a translation
+  "clarin-license.table.definition": "Definition (URL)",
+
+  // "clarin-license.table.confirmation": "Confirmation",
+  // TODO New key - Add a translation
+  "clarin-license.table.confirmation": "Confirmation",
+
+  // "clarin-license.table.required-user-info": "Required user info",
+  // TODO New key - Add a translation
+  "clarin-license.table.required-user-info": "Required user info",
+
+  // "clarin-license.table.label": "License Label",
+  // TODO New key - Add a translation
+  "clarin-license.table.label": "License Label",
+
+  // "clarin-license.table.extended-labels": "Extended Labels",
+  // TODO New key - Add a translation
+  "clarin-license.table.extended-labels": "Extended Labels",
+
+  // "clarin-license.table.bitstreams": "Used by Bitstreams",
+  // TODO New key - Add a translation
+  "clarin-license.table.bitstreams": "Used by Bitstreams",
+
+  // "clarin-license.button.define": "Define",
+  // TODO New key - Add a translation
+  "clarin-license.button.define": "Define",
+
+  // "clarin-license.button.define-license": "Define License",
+  // TODO New key - Add a translation
+  "clarin-license.button.define-license": "Define License",
+
+  // "clarin-license.button.define-license-label": "Define License Label",
+  // TODO New key - Add a translation
+  "clarin-license.button.define-license-label": "Define License Label",
+
+  // "clarin-license.button.edit-license": "Edit License",
+  // TODO New key - Add a translation
+  "clarin-license.button.edit-license": "Edit License",
+
+  // "clarin-license.button.delete-license": "Delete License",
+  // TODO New key - Add a translation
+  "clarin-license.button.delete-license": "Delete License",
+
+  // "clarin-license.button.search": "Search",
+  // TODO New key - Add a translation
+  "clarin-license.button.search": "Search",
+
+  // "clarin-license.button.search.placeholder": "Search by the license name ...",
+  // TODO New key - Add a translation
+  "clarin-license.button.search.placeholder": "Search by the license name ...",
+
+
+  // "clarin-license.define-license-form.form-name": "Define new license",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.form-name": "Define new license",
+
+  // "clarin-license.define-license-form.input-name": "License name",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.input-name": "License name",
+
+  // "clarin-license.define-license-form.input-definition-url": "License Definition URL",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.input-definition-url": "License Definition URL",
+
+  // "clarin-license.define-license-form.input-confirmation": "License requires confirmation",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.input-confirmation": "License requires confirmation",
+
+  // "clarin-license.define-license-form.license-labels": "License Labels",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.license-labels": "License Labels",
+
+  // "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
+
+  // "clarin-license.define-license-form.required-info": "Additional required user info",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.required-info": "Additional required user info",
+
+  // "clarin-license.define-license-form.submit-button": "Save",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.submit-button": "Save",
+
+  // "clarin-license.define-license.notification.successful-content": "License was defined successfully",
+  // TODO New key - Add a translation
+  "clarin-license.define-license.notification.successful-content": "License was defined successfully",
+
+  // "clarin-license.define-license.notification.error-content": "Error: cannot define new License",
+  // TODO New key - Add a translation
+  "clarin-license.define-license.notification.error-content": "Error: cannot define new License",
+
+  // "clarin-license.edit-license.notification.successful-content": "License was updated successfully",
+  // TODO New key - Add a translation
+  "clarin-license.edit-license.notification.successful-content": "License was updated successfully",
+
+  // "clarin-license.edit-license.notification.error-content": "Error: cannot edit the License",
+  // TODO New key - Add a translation
+  "clarin-license.edit-license.notification.error-content": "Error: cannot edit the License",
+
+  // "clarin-license.delete-license.notification.successful-content": "License was deleted successfully",
+  // TODO New key - Add a translation
+  "clarin-license.delete-license.notification.successful-content": "License was deleted successfully",
+
+  // "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
+  // TODO New key - Add a translation
+  "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
+
+
+
+  // "clarin-license-label.define-license-label.input-label": "Short Label (max 5. chars)",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.input-label": "Short Label (max 5. chars)",
+
+  // "clarin-license-label.define-license-label.input-title": "Label Title",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.input-title": "Label Title",
+
+  // "clarin-license-label.define-license-label.input-is-extended": "Is extended",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.input-is-extended": "Is extended",
+
+  // "clarin-license-label.define-license-label.input-icon": "Icon",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.input-icon": "Icon",
+
+  // "clarin-license-label.define-license-label.notification.successful-content": "License Label was defined successfully",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.notification.successful-content": "License Label was defined successfully",
+
+  // "clarin-license-label.define-license-label.notification.error-content": "Error: cannot define new License Label",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.notification.error-content": "Error: cannot define new License Label",
+
+
+
   // "search.description": "",
   "search.description": "",
 
@@ -5430,17 +6646,23 @@
   // "search.filters.applied.f.entityType": "Item Type",
   "search.filters.applied.f.entityType": "Tietueen tyyppi",
 
-  // "search.filters.applied.f.has_content_in_original_bundle": "Has files",
+  // "search.filters.applied.f.has_content_in_original_bundle": "Contain Files",
+  // TODO Source message changed - Revise the translation
   "search.filters.applied.f.has_content_in_original_bundle": "On tiedostoja",
 
-  // "search.filters.applied.f.itemtype": "Type",
-  "search.filters.applied.f.itemtype": "Tyyppi",
+  // "search.filters.applied.f.type": "Type",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.type": "Type",
 
   // "search.filters.applied.f.namedresourcetype": "Status",
   "search.filters.applied.f.namedresourcetype": "Tila",
 
   // "search.filters.applied.f.subject": "Subject",
   "search.filters.applied.f.subject": "Asiasana",
+
+  // "search.filters.applied.f.subjectFirstValue": "Subject",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.subjectFirstValue": "Subject",
 
   // "search.filters.applied.f.submitter": "Submitter",
   "search.filters.applied.f.submitter": "Tallentaja",
@@ -5459,6 +6681,22 @@
 
   // "search.filters.applied.f.withdrawn": "Withdrawn",
   "search.filters.applied.f.withdrawn": "Poistettu käytöstä",
+
+  // "search.filters.applied.f.rights": "Rights",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.rights": "Rights",
+
+  // "search.filters.applied.f.language": "Language (ISO)",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.language": "Language (ISO)",
+
+  // "search.filters.applied.f.items_owning_community": "Community",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.items_owning_community": "Community",
+
+  // "search.filters.applied.f.publisher": "Publisher",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.publisher": "Publisher",
 
   // "search.filters.filter.author.head": "Author",
   "search.filters.filter.author.head": "Tekijä",
@@ -5559,17 +6797,21 @@
   // "search.filters.filter.expand": "Expand filter",
   "search.filters.filter.expand": "Laajenna suodinta",
 
-  // "search.filters.filter.has_content_in_original_bundle.head": "Has files",
+  // "search.filters.filter.has_content_in_original_bundle.head": "Contain Files",
+  // TODO Source message changed - Revise the translation
   "search.filters.filter.has_content_in_original_bundle.head": "On tiedostoja",
 
-  // "search.filters.filter.itemtype.head": "Type",
-  "search.filters.filter.itemtype.head": "Tyyppi",
+  // "search.filters.filter.type.head": "Type",
+  // TODO New key - Add a translation
+  "search.filters.filter.type.head": "Type",
 
-  // "search.filters.filter.itemtype.placeholder": "Type",
-  "search.filters.filter.itemtype.placeholder": "Tyyppi",
+  // "search.filters.filter.type.placeholder": "Type",
+  // TODO New key - Add a translation
+  "search.filters.filter.type.placeholder": "Type",
 
-  // "search.filters.filter.itemtype.label": "Search type",
-  "search.filters.filter.itemtype.label": "Hakutyyppi",
+  // "search.filters.filter.type.label": "Search type",
+  // TODO New key - Add a translation
+  "search.filters.filter.type.label": "Search type",
 
   // "search.filters.filter.jobTitle.head": "Job Title",
   "search.filters.filter.jobTitle.head": "Tehtävänimike",
@@ -5673,11 +6915,39 @@
   // "search.filters.filter.supervisedBy.head": "Supervised By",
   "search.filters.filter.supervisedBy.head": "Ohjaajana:",
 
+  // "search.filters.filter.rights.head": "Rights",
+  // TODO New key - Add a translation
+  "search.filters.filter.rights.head": "Rights",
+
+  // "search.filters.filter.language.head": "Language (ISO)",
+  // TODO New key - Add a translation
+  "search.filters.filter.language.head": "Language (ISO)",
+
+  // "search.filters.filter.items_owning_community.head": "Community",
+  // TODO New key - Add a translation
+  "search.filters.filter.items_owning_community.head": "Community",
+
   // "search.filters.filter.supervisedBy.placeholder": "Supervised By",
   "search.filters.filter.supervisedBy.placeholder": "Ohjaajana:",
 
   // "search.filters.filter.supervisedBy.label": "Search Supervised By",
   "search.filters.filter.supervisedBy.label": "Hae ohjaajan mukaan",
+
+  // "search.filters.filter.rights.label": "Search rights",
+  // TODO New key - Add a translation
+  "search.filters.filter.rights.label": "Search rights",
+
+  // "search.filters.filter.rights.placeholder": "Rights",
+  // TODO New key - Add a translation
+  "search.filters.filter.rights.placeholder": "Rights",
+
+  // "search.filters.filter.items_owning_community.label": "Search community",
+  // TODO New key - Add a translation
+  "search.filters.filter.items_owning_community.label": "Search community",
+
+  // "search.filters.filter.items_owning_community.placeholder": "Community",
+  // TODO New key - Add a translation
+  "search.filters.filter.items_owning_community.placeholder": "Community",
 
   // "search.filters.entityType.JournalIssue": "Journal Issue",
   "search.filters.entityType.JournalIssue": "Kausijulkaisun numero",
@@ -5700,13 +6970,42 @@
   // "search.filters.discoverable.false": "Yes",
   "search.filters.discoverable.false": "Kyllä",
 
+  // "search.filters.namedresourcetype.Archived": "Archived",
+  // TODO New key - Add a translation
+  "search.filters.namedresourcetype.Archived": "Archived",
+
+  // "search.filters.namedresourcetype.Validation": "Validation",
+  // TODO New key - Add a translation
+  "search.filters.namedresourcetype.Validation": "Validation",
+
+  // "search.filters.namedresourcetype.Waiting for Controller": "Waiting for Controller",
+  // TODO New key - Add a translation
+  "search.filters.namedresourcetype.Waiting for Controller": "Waiting for Controller",
+
+  // "search.filters.namedresourcetype.Workflow": "Workflow",
+  // TODO New key - Add a translation
+  "search.filters.namedresourcetype.Workflow": "Workflow",
+
+  // "search.filters.namedresourcetype.Workspace": "Workspace",
+  // TODO New key - Add a translation
+  "search.filters.namedresourcetype.Workspace": "Workspace",
+
   // "search.filters.withdrawn.true": "Yes",
   "search.filters.withdrawn.true": "Kyllä",
 
   // "search.filters.withdrawn.false": "No",
   "search.filters.withdrawn.false": "Ei",
 
-  // "search.filters.head": "Filters",
+  // "search.filters.filter.language.label": "Search language",
+  // TODO New key - Add a translation
+  "search.filters.filter.language.label": "Search language",
+
+  // "search.filters.filter.language.placeholder": "Language",
+  // TODO New key - Add a translation
+  "search.filters.filter.language.placeholder": "Language",
+
+  // "search.filters.head": "Limit your search",
+  // TODO Source message changed - Revise the translation
   "search.filters.head": "Suodattimet",
 
   // "search.filters.reset": "Reset filters",
@@ -5784,10 +7083,12 @@
   // "sorting.DESC": "Descending",
   "sorting.DESC": "Nouseva",
 
-  // "sorting.dc.title.ASC": "Title Ascending",
+  // "sorting.dc.title.ASC": "Title Asc",
+  // TODO Source message changed - Revise the translation
   "sorting.dc.title.ASC": "Nimeke (A-Ö)",
 
-  // "sorting.dc.title.DESC": "Title Descending",
+  // "sorting.dc.title.DESC": "Title Desc",
+  // TODO Source message changed - Revise the translation
   "sorting.dc.title.DESC": "Nimeke (Ö-A)",
 
   // "sorting.score.ASC": "Least Relevant",
@@ -5796,10 +7097,12 @@
   // "sorting.score.DESC": "Most Relevant",
   "sorting.score.DESC": "Relevantein",
 
-  // "sorting.dc.date.issued.ASC": "Date Issued Ascending",
+  // "sorting.dc.date.issued.ASC": "Date Issued Asc",
+  // TODO Source message changed - Revise the translation
   "sorting.dc.date.issued.ASC": "Julkaisuaika nouseva",
 
-  // "sorting.dc.date.issued.DESC": "Date Issued Descending",
+  // "sorting.dc.date.issued.DESC": "Date Issued Desc",
+  // TODO Source message changed - Revise the translation
   "sorting.dc.date.issued.DESC": "Julkaisuaika laskeva",
 
   // "sorting.dc.date.accessioned.ASC": "Accessioned Date Ascending",
@@ -6552,6 +7855,18 @@
   // "submission.sections.submit.progressbar.describe.steptwo": "Describe",
   "submission.sections.submit.progressbar.describe.steptwo": "Kuvaile",
 
+  // "submission.sections.submit.progressbar.describe.dataciterequired": "Required Properties",
+  // TODO New key - Add a translation
+  "submission.sections.submit.progressbar.describe.dataciterequired": "Required Properties",
+
+  // "submission.sections.submit.progressbar.describe.dataciterecommended": "Recommended Properties",
+  // TODO New key - Add a translation
+  "submission.sections.submit.progressbar.describe.dataciterecommended": "Recommended Properties",
+
+  // "submission.sections.submit.progressbar.describe.dataciteoptional": "Optional Properties",
+  // TODO New key - Add a translation
+  "submission.sections.submit.progressbar.describe.dataciteoptional": "Optional Properties",
+
   // "submission.sections.submit.progressbar.detect-duplicate": "Potential duplicates",
   "submission.sections.submit.progressbar.detect-duplicate": "Mahdollisia kaksoiskappaleita",
 
@@ -6564,11 +7879,19 @@
   // "submission.sections.submit.progressbar.sherpapolicy": "Sherpa policies",
   "submission.sections.submit.progressbar.sherpapolicy": "Sherpa-käytännöt",
 
+  // "submission.sections.submit.progressbar.clarin-license": "Pick license",
+  // TODO New key - Add a translation
+  "submission.sections.submit.progressbar.clarin-license": "Pick license",
+
   // "submission.sections.submit.progressbar.upload": "Upload files",
   "submission.sections.submit.progressbar.upload": "Lataa tiedostoja",
 
   // "submission.sections.submit.progressbar.sherpaPolicies": "Publisher open access policy information",
   "submission.sections.submit.progressbar.sherpaPolicies": "Tietoa julkaisijan open access -käytännöistä",
+
+  // "submission.sections.submit.progressbar.clarin-notice": "Notice",
+  // TODO New key - Add a translation
+  "submission.sections.submit.progressbar.clarin-notice": "Notice",
 
   // "submission.sections.sherpa-policy.title-empty": "No publisher policy information available. If your work has an associated ISSN, please enter it above to see any related publisher open access policies.",
   "submission.sections.sherpa-policy.title-empty": "Ei tietoa julkausijan käytännöistä. Jos työlläsi on ISSN-tunnus, syötä se alapuolella olevan kenttään nähdäksesi siihen liittyvät julkaisijan open access -käytännöt.",
@@ -6698,6 +8021,10 @@
 
   // "submission.sections.upload.upload-successful": "Upload successful",
   "submission.sections.upload.upload-successful": "Lataus valmis",
+
+  // "submission.sections.upload.upload-failed.size-limit-exceeded": "File size exceeds the maximum upload size",
+  // TODO New key - Add a translation
+  "submission.sections.upload.upload-failed.size-limit-exceeded": "File size exceeds the maximum upload size",
 
   // "submission.sections.accesses.form.discoverable-description": "When checked, this item will be discoverable in search/browse. When unchecked, the item will only be available via a direct link and will never appear in search/browse.",
   "submission.sections.accesses.form.discoverable-description": "Kun tämä on valittu, tietue on löydettävissä haussa ja selailtaessa. Kun tätä ei ole valittu, tietue on saatavilla vain suoran linkin kautta, eikä se näy haussa tai selailtaessa.",
@@ -6831,6 +8158,114 @@
   // "submission.sections.sherpa.error.message": "There was an error retrieving sherpa informations",
   "submission.sections.sherpa.error.message": "Virhe haettaessa Sherpa-tietoja",
 
+  // "contract.breadcrumbs": "Distribution License Agreement",
+  // TODO New key - Add a translation
+  "contract.breadcrumbs": "Distribution License Agreement",
+
+  // "contract.message.distribution-license-agreement": "Distribution License Agreement",
+  // TODO New key - Add a translation
+  "contract.message.distribution-license-agreement": "Distribution License Agreement",
+
+  // "submission.sections.clarin-license.head.read-accept": "Read and accept the ",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.read-accept": "Read and accept the ",
+
+  // "submission.sections.clarin-license.head.license-agreement": "Distribution License Agreement",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-agreement": "Distribution License Agreement",
+
+  // "submission.sections.clarin-license.head.license-decision-message": "By checking this box, you agree to the Distribution License Agreement for this repository to reproduce, translate and distribute your submissions worldwide.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-decision-message": "By checking this box, you agree to the Distribution License Agreement for this repository to reproduce, translate and distribute your submissions worldwide.",
+
+  // "submission.sections.clarin-license.head.license-question-help-desk": ["If you have questions regarding this licence please contact the", "Help Desk"],
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-question-help-desk": ["If you have questions regarding this licence please contact the", "Help Desk"],
+
+  // "submission.sections.clarin-license.head.license-select-resource": "Select the resource license",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-select-resource": "Select the resource license",
+
+  // "submission.sections.clarin-license.head.license-select-providing": ["The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ", "License List Page", "."],
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-select-providing": ["The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ", "License List Page", "."],
+
+  // "submission.sections.clarin-license.head.license-open-selector": "OPEN License Selector",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-open-selector": "OPEN License Selector",
+
+  // "submission.sections.clarin-license.head.license-select-or": "- OR -",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-select-or": "- OR -",
+
+  // "submission.sections.clarin-license.head.license-dropdown-info": "If you already know under which license you want to distribute your work, please select from the dropdown below.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-dropdown-info": "If you already know under which license you want to distribute your work, please select from the dropdown below.",
+
+  // "submission.sections.clarin-license.head.license-not-supported-message": "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\".",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-supported-message": "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\".",
+
+  // "submission.sections.clarin-license.head.license-select-default-value": "Select a License ...",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-select-default-value": "Select a License ...",
+
+  // "submission.sections.clarin-license.head.license-more-details": "See more details for the licenses",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-more-details": "See more details for the licenses",
+
+  // "submission.sections.clarin-license.head.license-do-not-suits-needs": "None of these licenses suits your needs",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-do-not-suits-needs": "None of these licenses suits your needs",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceeds": "If you need to use a license we currently do not offer, proceed as follows:",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-offer-proceeds": "If you need to use a license we currently do not offer, proceed as follows:",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-link": "Obtain a link (or a copy) to the license.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-offer-proceed-link": "Obtain a link (or a copy) to the license.",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Send an email to", "Help Desk", "with the license details."],
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Send an email to", "Help Desk", "with the license details."],
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-wait": "Save the unfinished submission and wait. We will add the license to the selection list and contact you.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-offer-proceed-wait": "Save the unfinished submission and wait. We will add the license to the selection list and contact you.",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-continue": "You will be able to continue the submission afterwards.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-offer-proceed-continue": "You will be able to continue the submission afterwards.",
+
+  // "submission.sections.clarin-license.toggle.off-text": "Click to accept",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.toggle.off-text": "Click to accept",
+
+  // "submission.sections.clarin-license.toggle.on-text": "Accepted",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.toggle.on-text": "Accepted",
+
+  // "submission.sections.clarin-notice.message": ["The submission process for this collection (\"","\") is still being fine-tuned. If you find yourself unable to continue the submission because you can't provide the required information, because the required format for a field is too strict, because there's no appropriate field for your information, or for any other reason", "let us know"],
+  // TODO New key - Add a translation
+  "submission.sections.clarin-notice.message": ["The submission process for this collection (\"","\") is still being fine-tuned. If you find yourself unable to continue the submission because you can't provide the required information, because the required format for a field is too strict, because there's no appropriate field for your information, or for any other reason", "let us know"],
+
+  // "submission.sections.clarin-notice.toggle.on-text": "Confirmed",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-notice.toggle.on-text": "Confirmed",
+
+  // "submission.sections.clarin-notice.toggle.off-text": "Click to confirm",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-notice.toggle.off-text": "Click to confirm",
+
+  // "submission.sections.clarin-notice.toggle.message": "By checking this box, you confirm that you read the text above and that you understand it.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-notice.toggle.message": "By checking this box, you confirm that you read the text above and that you understand it.",
+
+  // "submission.sections.clarin-notice.error": "Please confirm that you have read the Notice.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-notice.error": "Please confirm that you have read the Notice.",
+
   // "submission.submit.breadcrumbs": "New submission",
   "submission.submit.breadcrumbs": "Uusi tallennus",
 
@@ -6866,6 +8301,22 @@
 
   // "submission.workflow.generic.submit_score-help": "",
   "submission.workflow.generic.submit_score-help": "",
+
+  // "submission.workflow.generic.share-submission": "Share submission",
+  // TODO New key - Add a translation
+  "submission.workflow.generic.share-submission": "Share submission",
+
+  // "submission.workflow.generic.share-submission.tooltip": "Share submission",
+  // TODO New key - Add a translation
+  "submission.workflow.generic.share-submission.tooltip": "Share submission",
+
+  // "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
+  // TODO New key - Add a translation
+  "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
+
+  // "submission.workflow.share-submission.email.error": "Cannot send the email with share link",
+  // TODO New key - Add a translation
+  "submission.workflow.share-submission.email.error": "Cannot send the email with share link",
 
   // "submission.workflow.tasks.claimed.approve": "Approve",
   "submission.workflow.tasks.claimed.approve": "Hyväksy",
@@ -7286,6 +8737,18 @@
 
   // "idle-modal.log-out": "Log out",
   "idle-modal.log-out": "Kirjaudu ulos",
+
+  // "language.english": "English",
+  // TODO New key - Add a translation
+  "language.english": "English",
+
+  // "language.czech": "Czech",
+  // TODO New key - Add a translation
+  "language.czech": "Czech",
+
+  // "repository.policy.page": "Change me: policy page",
+  // TODO New key - Add a translation
+  "repository.policy.page": "Change me: policy page",
 
   // "idle-modal.extend-session": "Extend session",
   "idle-modal.extend-session": "Pidennä istuntoa",
@@ -7730,5 +9193,219 @@
 
   // "admin.system-wide-alert.title": "System-wide Alerts",
   "admin.system-wide-alert.title": "Järjestelmänlaajuiset hälytykset",
+
+  // "item-access-control-title": "This form allows you to perform changes to the access conditions of the item's metadata or its bitstreams.",
+  // TODO New key - Add a translation
+  "item-access-control-title": "This form allows you to perform changes to the access conditions of the item's metadata or its bitstreams.",
+
+  // "collection-access-control-title": "This form allows you to perform changes to the access conditions of all the items owned by this collection. Changes may be performed to either all Item metadata or all content (bitstreams).",
+  // TODO New key - Add a translation
+  "collection-access-control-title": "This form allows you to perform changes to the access conditions of all the items owned by this collection. Changes may be performed to either all Item metadata or all content (bitstreams).",
+
+  // "community-access-control-title": "This form allows you to perform changes to the access conditions of all the items owned by any collection under this community. Changes may be performed to either all Item metadata or all content (bitstreams).",
+  // TODO New key - Add a translation
+  "community-access-control-title": "This form allows you to perform changes to the access conditions of all the items owned by any collection under this community. Changes may be performed to either all Item metadata or all content (bitstreams).",
+
+  // "access-control-item-header-toggle": "Item's Metadata",
+  // TODO New key - Add a translation
+  "access-control-item-header-toggle": "Item's Metadata",
+
+  // "access-control-bitstream-header-toggle": "Bitstreams",
+  // TODO New key - Add a translation
+  "access-control-bitstream-header-toggle": "Bitstreams",
+
+  // "access-control-mode": "Mode",
+  // TODO New key - Add a translation
+  "access-control-mode": "Mode",
+
+  // "access-control-access-conditions": "Access conditions",
+  // TODO New key - Add a translation
+  "access-control-access-conditions": "Access conditions",
+
+  // "access-control-no-access-conditions-warning-message": "Currently, no access conditions are specified below. If executed, this will replace the current access conditions with the default access conditions inherited from the owning collection.",
+  // TODO New key - Add a translation
+  "access-control-no-access-conditions-warning-message": "Currently, no access conditions are specified below. If executed, this will replace the current access conditions with the default access conditions inherited from the owning collection.",
+
+  // "access-control-replace-all": "Replace access conditions",
+  // TODO New key - Add a translation
+  "access-control-replace-all": "Replace access conditions",
+
+  // "access-control-add-to-existing": "Add to existing ones",
+  // TODO New key - Add a translation
+  "access-control-add-to-existing": "Add to existing ones",
+
+  // "access-control-limit-to-specific": "Limit the changes to specific bitstreams",
+  // TODO New key - Add a translation
+  "access-control-limit-to-specific": "Limit the changes to specific bitstreams",
+
+  // "access-control-process-all-bitstreams": "Update all the bitstreams in the item",
+  // TODO New key - Add a translation
+  "access-control-process-all-bitstreams": "Update all the bitstreams in the item",
+
+  // "access-control-bitstreams-selected": "bitstreams selected",
+  // TODO New key - Add a translation
+  "access-control-bitstreams-selected": "bitstreams selected",
+
+  // "access-control-cancel": "Cancel",
+  // TODO New key - Add a translation
+  "access-control-cancel": "Cancel",
+
+  // "access-control-execute": "Execute",
+  // TODO New key - Add a translation
+  "access-control-execute": "Execute",
+
+  // "access-control-add-more": "Add more",
+  // TODO New key - Add a translation
+  "access-control-add-more": "Add more",
+
+  // "access-control-select-bitstreams-modal.title": "Select bitstreams",
+  // TODO New key - Add a translation
+  "access-control-select-bitstreams-modal.title": "Select bitstreams",
+
+  // "access-control-select-bitstreams-modal.no-items": "No items to show.",
+  // TODO New key - Add a translation
+  "access-control-select-bitstreams-modal.no-items": "No items to show.",
+
+  // "access-control-select-bitstreams-modal.close": "Close",
+  // TODO New key - Add a translation
+  "access-control-select-bitstreams-modal.close": "Close",
+
+  // "access-control-option-label": "Access condition type",
+  // TODO New key - Add a translation
+  "access-control-option-label": "Access condition type",
+
+  // "access-control-option-note": "Choose an access condition to apply to selected objects.",
+  // TODO New key - Add a translation
+  "access-control-option-note": "Choose an access condition to apply to selected objects.",
+
+  // "access-control-option-start-date": "Grant access from",
+  // TODO New key - Add a translation
+  "access-control-option-start-date": "Grant access from",
+
+  // "access-control-option-start-date-note": "Select the date from which the related access condition is applied",
+  // TODO New key - Add a translation
+  "access-control-option-start-date-note": "Select the date from which the related access condition is applied",
+
+  // "access-control-option-end-date": "Grant access until",
+  // TODO New key - Add a translation
+  "access-control-option-end-date": "Grant access until",
+
+  // "access-control-option-end-date-note": "Select the date until which the related access condition is applied",
+  // TODO New key - Add a translation
+  "access-control-option-end-date-note": "Select the date until which the related access condition is applied",
+
+  // "vocabulary-treeview.search.form.add": "Add",
+  // TODO New key - Add a translation
+  "vocabulary-treeview.search.form.add": "Add",
+
+
+  // "navbar.repository": "Repository",
+  // TODO New key - Add a translation
+  "navbar.repository": "Repository",
+
+  // "navbar.community-list": "Catalog",
+  // TODO New key - Add a translation
+  "navbar.community-list": "Catalog",
+
+  // "navbar.education": "Education",
+  // TODO New key - Add a translation
+  "navbar.education": "Education",
+
+  // "navbar.project": "Projects",
+  // TODO New key - Add a translation
+  "navbar.project": "Projects",
+
+  // "navbar.tools": "Tools",
+  // TODO New key - Add a translation
+  "navbar.tools": "Tools",
+
+  // "navbar.services": "Services",
+  // TODO New key - Add a translation
+  "navbar.services": "Services",
+
+  // "navbar.about": "About",
+  // TODO New key - Add a translation
+  "navbar.about": "About",
+
+  // "navbar.about.partners": "Partners",
+  // TODO New key - Add a translation
+  "navbar.about.partners": "Partners",
+
+  // "navbar.about.mission-statement": "Mission Statement",
+  // TODO New key - Add a translation
+  "navbar.about.mission-statement": "Mission Statement",
+
+  // "navbar.about.clarin": "CLARIN",
+  // TODO New key - Add a translation
+  "navbar.about.clarin": "CLARIN",
+
+  // "navbar.about.dariah": "DARIAH",
+  // TODO New key - Add a translation
+  "navbar.about.dariah": "DARIAH",
+
+  // "navbar.about.service-integrations": "Service integrations",
+  // TODO New key - Add a translation
+  "navbar.about.service-integrations": "Service integrations",
+
+  // "navbar.about.project-partnership": "Project partnerships",
+  // TODO New key - Add a translation
+  "navbar.about.project-partnership": "Project partnerships",
+
+  // "share.submission.breadcrumbs": "Share submission",
+  // TODO New key - Add a translation
+  "share.submission.breadcrumbs": "Share submission",
+
+  // "share.submission.page.title": "Share link",
+  // TODO New key - Add a translation
+  "share.submission.page.title": "Share link",
+
+  // "share.submission.page.share-link.message.start": "To pass your submission to another user give them the following link: ",
+  // TODO New key - Add a translation
+  "share.submission.page.share-link.message.start": "To pass your submission to another user give them the following link: ",
+
+  // "share.submission.page.share-link.message.end": ". You will also receive an email with this link.",
+  // TODO New key - Add a translation
+  "share.submission.page.share-link.message.end": ". You will also receive an email with this link.",
+
+  // "change.submitter.breadcrumbs": "Change submitter",
+  // TODO New key - Add a translation
+  "change.submitter.breadcrumbs": "Change submitter",
+
+  // "change.submitter.page.title": "Change submitter",
+  // TODO New key - Add a translation
+  "change.submitter.page.title": "Change submitter",
+
+  // "change.submitter.page.message": "This items currently belongs to: ",
+  // TODO New key - Add a translation
+  "change.submitter.page.message": "This items currently belongs to: ",
+
+  // "change.submitter.page.button.take-it": "Take it",
+  // TODO New key - Add a translation
+  "change.submitter.page.button.take-it": "Take it",
+
+  // "change.submitter.page.changed-successfully": "The submitter has been successfully changed",
+  // TODO New key - Add a translation
+  "change.submitter.page.changed-successfully": "The submitter has been successfully changed",
+
+  // "change.submitter.page.changed-error": "An error occurred while changing the submitter",
+  // TODO New key - Add a translation
+  "change.submitter.page.changed-error": "An error occurred while changing the submitter",
+
+  // "change.submitter.page.cannot.see.submitter.message": "You do not have permission to see submitter information.",
+  // TODO New key - Add a translation
+  "change.submitter.page.cannot.see.submitter.message": "You do not have permission to see submitter information.",
+
+  // "change.submitter.page.items.handle.message": "Item's handle: ",
+  // TODO New key - Add a translation
+  "change.submitter.page.items.handle.message": "Item's handle: ",
+
+  // "change.submitter.page.items.name.message": "Item's name: ",
+  // TODO New key - Add a translation
+  "change.submitter.page.items.name.message": "Item's name: ",
+
+  // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+  // TODO New key - Add a translation
+  "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+
 
 }
