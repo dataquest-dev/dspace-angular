@@ -779,7 +779,6 @@
   "admin.access-control.groups.form.tooltip.editGroupPage": "In questa pagina è possibile modificare le proprietà e i membri di un gruppo. Nella sezione in alto, è possibile modificare il nome e la descrizione del gruppo, a meno che non si tratti di un gruppo di amministratori di una collection o una community. In quel caso il nome e la descrizione del gruppo sono generati automaticamente e non possono essere modificati. Nelle sezioni successive è possibile modificare l'appartenenza al gruppo. Per maggiori dettagli, vedere [la wiki](https://wiki.lyrasis.org/display/DSDOC7x/Create+o+gestire+un+gruppo+utente)",
 
   // "admin.access-control.groups.form.tooltip.editGroup.addEpeople": "To add or remove an EPerson to/from this group, either click the 'Browse All' button or use the search bar below to search for users (use the dropdown to the left of the search bar to choose whether to search by metadata or by email). Then click the plus icon for each user you wish to add in the list below, or the trash can icon for each user you wish to remove. The list below may have several pages: use the page controls below the list to navigate to the next pages.",
-  // TODO Source message changed - Revise the translation
   "admin.access-control.groups.form.tooltip.editGroup.addEpeople": "Per aggiungere o rimuovere un EPerson a/da questo gruppo, cliccare sul pulsante 'Sfoglia tutti' o utilizzare la barra di ricerca in basso per cercare gli utenti (utilizzare il menu a tendina a sinistra della barra di ricerca per selezionare la ricerca per metadati o per e-mail). Cliccare quindi sull'icona + per ogni utente che si desidera aggiungere nell'elenco sottostante o sull'icona del cestino per ogni utente che si desidera rimuovere. L'elenco può avere diverse pagine: utilizzare i controlli di pagina in basso per spostarsi alle pagine successive. Per salvare le modifiche, cliccare sul pulsante 'Salvare' nella sezione in alto.",
 
   // "admin.access-control.groups.form.tooltip.editGroup.addSubgroups": "To add or remove a Subgroup to/from this group, either click the 'Browse All' button or use the search bar below to search for groups. Then click the plus icon for each group you wish to add in the list below, or the trash can icon for each group you wish to remove. The list below may have several pages: use the page controls below the list to navigate to the next pages.",
@@ -1137,8 +1136,7 @@
   // TODO New key - Add a translation
   "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
 
-  // "bitstream.download.page.back": "Back" ,
-  // TODO Source message changed - Revise the translation
+  // "bitstream.download.page.back": "Back",
   "bitstream.download.page.back": "Indietro",
 
 
@@ -2150,11 +2148,9 @@
   "community.all-lists.head": "Sub-community e collections",
 
   // "community.sub-collection-list.head": "Collections in this Community",
-  // TODO Source message changed - Revise the translation
   "community.sub-collection-list.head": "Collections di questa community",
 
   // "community.sub-community-list.head": "Communities in this Community",
-  // TODO Source message changed - Revise the translation
   "community.sub-community-list.head": "Communities di questa Community",
 
   // "cookies.consent.accept-all": "Accept all",
@@ -2297,8 +2293,7 @@
   "curation-task.task.vscan.label": "Scansione antivirus",
 
   // "curation-task.task.registerdoi.label": "Register DOI",
-  // TODO New key - Add a translation
-  "curation-task.task.registerdoi.label": "Register DOI",
+  "curation-task.task.registerdoi.label": "Registra DOI",
 
   // "curation.form.task-select.label": "Task:",
   "curation.form.task-select.label": "Task:",
@@ -2663,11 +2658,9 @@
   "footer.link.privacy-policy": "Informativa sulla privacy",
 
   // "footer.link.end-user-agreement": "End User Agreement",
-  // TODO Source message changed - Revise the translation
   "footer.link.end-user-agreement": "Accordo con l'utente finale",
 
   // "footer.link.feedback": "Send Feedback",
-  // TODO Source message changed - Revise the translation
   "footer.link.feedback": "Invia Feedback",
 
   // "footer.link.contact-us": "Contact us",
@@ -5251,8 +5244,7 @@
   "menu.section.browse_community_by_title": "Per titolo",
 
   // "menu.section.browse_global": "All of DSpace",
-  // TODO New key - Add a translation
-  "menu.section.browse_global": "All of DSpace",
+  "menu.section.browse_global": "Tutto DSpace",
 
   // "menu.section.browse_global_by_author": "By Author",
   "menu.section.browse_global_by_author": "Per autore",
@@ -5719,11 +5711,9 @@
   "pagination.results-per-page": "Risultati per pagina",
 
   // "pagination.showing.detail": "{{ range }} out of {{ total }} results",
-  // TODO Source message changed - Revise the translation
   "pagination.showing.detail": "{{ range }} di {{ total }}",
 
   // "pagination.showing.label": "Showing ",
-  // TODO Source message changed - Revise the translation
   "pagination.showing.label": "Ora in mostra ",
 
   // "pagination.sort-direction": "Sort Options",
@@ -5970,7 +5960,6 @@
   "profile.card.security": "Sicurezza",
 
   // "profile.form.submit": "Save",
-  // TODO Source message changed - Revise the translation
   "profile.form.submit": "Aggiorna profilo",
 
   // "profile.groups.head": "Authorization groups you belong to",
@@ -6687,12 +6676,10 @@
   "search.filters.applied.f.entityType": "Tipo di item",
 
   // "search.filters.applied.f.has_content_in_original_bundle": "Contain Files",
-  // TODO Source message changed - Revise the translation
   "search.filters.applied.f.has_content_in_original_bundle": "Ha file",
 
   // "search.filters.applied.f.type": "Type",
-  // TODO New key - Add a translation
-  "search.filters.applied.f.type": "Type",
+  "search.filters.applied.f.type": "Tipo",
 
   // "search.filters.applied.f.namedresourcetype": "Status",
   "search.filters.applied.f.namedresourcetype": "Stato",
@@ -6838,20 +6825,16 @@
   "search.filters.filter.expand": "Espandi filtro",
 
   // "search.filters.filter.has_content_in_original_bundle.head": "Contain Files",
-  // TODO Source message changed - Revise the translation
   "search.filters.filter.has_content_in_original_bundle.head": "Ha file",
 
   // "search.filters.filter.type.head": "Type",
-  // TODO New key - Add a translation
-  "search.filters.filter.type.head": "Type",
+  "search.filters.filter.type.head": "Tipo",
 
   // "search.filters.filter.type.placeholder": "Type",
-  // TODO New key - Add a translation
-  "search.filters.filter.type.placeholder": "Type",
+  "search.filters.filter.type.placeholder": "Tipo",
 
   // "search.filters.filter.type.label": "Search type",
-  // TODO New key - Add a translation
-  "search.filters.filter.type.label": "Search type",
+  "search.filters.filter.type.label": "Tipo di ricerca",
 
   // "search.filters.filter.jobTitle.head": "Job Title",
   "search.filters.filter.jobTitle.head": "Titolo di lavoro",
@@ -7124,11 +7107,9 @@
   "sorting.DESC": "Decrescente",
 
   // "sorting.dc.title.ASC": "Title Asc",
-  // TODO Source message changed - Revise the translation
   "sorting.dc.title.ASC": "Titolo crescente",
 
   // "sorting.dc.title.DESC": "Title Desc",
-  // TODO Source message changed - Revise the translation
   "sorting.dc.title.DESC": "Titolo decrescente",
 
   // "sorting.score.ASC": "Least Relevant",
@@ -7138,11 +7119,9 @@
   "sorting.score.DESC": "Maggior rilevanza",
 
   // "sorting.dc.date.issued.ASC": "Date Issued Asc",
-  // TODO Source message changed - Revise the translation
   "sorting.dc.date.issued.ASC": "Data di pubblicazione Ascendente",
 
   // "sorting.dc.date.issued.DESC": "Date Issued Desc",
-  // TODO Source message changed - Revise the translation
   "sorting.dc.date.issued.DESC": "Data di pubblicazione Discendente",
 
   // "sorting.dc.date.accessioned.ASC": "Accessioned Date Ascending",
@@ -7203,7 +7182,6 @@
   "submission.general.cancel": "Annulla",
 
   // "submission.general.cannot_submit": "You don't have permission to make a new submission.",
-  // TODO Source message changed - Revise the translation
   "submission.general.cannot_submit": "Non hai i privilegi per fare una nuova immissione.",
 
   // "submission.general.deposit": "Deposit",
@@ -7786,7 +7764,6 @@
   "submission.sections.describe.relationship-lookup.selection-tab.title": "Risultati della ricerca",
 
   // "submission.sections.describe.relationship-lookup.name-variant.notification.content": "Would you like to save \"{{ value }}\" as a name variant for this person so you and others can reuse it for future submissions? If you don't you can still use it for this submission.",
-  // TODO Source message changed - Revise the translation
   "submission.sections.describe.relationship-lookup.name-variant.notification.content": "Desideri salvare \"{{ value }}\" come variante del nome per questa persona in modo che tu e altri possiate riutilizzarlo per immissioni future? Se non lo fai, puoi comunque usarlo per questa immissione.",
 
   // "submission.sections.describe.relationship-lookup.name-variant.notification.confirm": "Save a new name variant",
@@ -7850,7 +7827,6 @@
   "submission.sections.general.no-sections": "Nessuna opzione disponibile",
 
   // "submission.sections.general.save_error_notice": "There was an issue when saving the item, please try again later.",
-  // TODO Source message changed - Revise the translation
   "submission.sections.general.save_error_notice": "Si è verificato un errore imprevisto durante il salvataggio dell'item. Aggiorna la pagina e riprova. Dopo aver aggiornato le modifiche non salvate potrebbero andare perse.",
 
   // "submission.sections.general.save_success_notice": "Submission saved successfully.",
@@ -8319,7 +8295,6 @@
   "submission.workflow.generic.delete": "Elimina",
 
   // "submission.workflow.generic.delete-help": "Select this option to discard this item. You will then be asked to confirm it.",
-  // TODO Source message changed - Revise the translation
   "submission.workflow.generic.delete-help": "Se si desidera eliminare questo item, selezionare \"Elimina\".  Ti verrà quindi chiesto di confermarlo.",
 
   // "submission.workflow.generic.edit": "Edit",
