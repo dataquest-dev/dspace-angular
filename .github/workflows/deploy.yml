@@ -107,21 +107,15 @@ jobs:
           # echo Starting vanilla import DB
           docker cp $DATADIR $DDBNAME:/tmp/
 
-          # Create dspace5 user as subgroup of dspace and prepare database
-          docker exec $DDBNAME /bin/bash -c "
-          dropdb -U dspace -p 10563 dspace || true &&
-          createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace
-          "
-
           echo "Copying database setup script to container..."
           docker cp $DBROLESETUP $DDBNAME:/tmp/
 
-          echo "Setting up database roles and extensions..."
-          docker exec $DDBNAME /bin/bash -c "psql -p 10563 -U dspace -d dspace -f /tmp/$DBROLEFNAME"
-
-          echo "Importing database dump..."
+          # Create database, import dump, setup roles and extensions, then cleanup
           docker exec $DDBNAME /bin/bash -c "
+          dropdb -U dspace -p 10563 dspace || true &&
+          createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace &&
           psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
+          psql -p 10563 -U dspace -d dspace -f /tmp/$DBROLEFNAME &&
           rm /tmp/$FNAME /tmp/$DBROLEFNAME
           "
           echo "====="
