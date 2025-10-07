@@ -20,10 +20,6 @@ on:
         required: false
         default: false
         type: boolean
-      MANAGE_IMPORT:
-        required: false
-        default: false
-        type: boolean
 
   workflow_dispatch:
     inputs:
@@ -45,10 +41,6 @@ on:
         required: false
         type: string
         default: 'dev-6'
-      MANAGE_IMPORT:
-        required: false
-        default: false
-        type: boolean
 
 jobs:
   deploy-3:
