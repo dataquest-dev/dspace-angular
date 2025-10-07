@@ -93,10 +93,13 @@ jobs:
       - name: vanilla import
         env:
           FNAME: old_dump.sql
+          DBROLEFNAME: setup-db-roles.sql
+          SYNCSEQFNAME: sync-sequences.sql
         run: |
           export DATADIR=$CONFIG_PATH/${{inputs.INSTANCE}}/dump/$FNAME
           export DNAME=dspace${{inputs.INSTANCE}}
           export DDBNAME=dspacedb${{inputs.INSTANCE}}
+          export DBROLESETUP=$CONFIG_PATH/${{inputs.INSTANCE}}/$DBROLEFNAME
 
           docker stop $DNAME || true
 
@@ -107,36 +110,19 @@ jobs:
           # Create dspace5 user as subgroup of dspace and prepare database
           docker exec $DDBNAME /bin/bash -c "
           dropdb -U dspace -p 10563 dspace || true &&
-          createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace &&
-          psql -p 10563 -U dspace -d dspace -c \"
-            DO \\\$\\\$
-            BEGIN
-              -- Create dspace5 role if it doesn't exist
-              IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'dspace5') THEN
-                CREATE ROLE dspace5;
-                GRANT dspace5 TO dspace;
-                ALTER ROLE dspace5 LOGIN;
-                ALTER ROLE dspace5 INHERIT;
-              END IF;
+          createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace
+          "
 
-              -- Create postgres role if it doesn't exist
-              IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'postgres') THEN
-                CREATE ROLE postgres;
-                GRANT postgres TO dspace;
-                ALTER ROLE postgres LOGIN;
-                ALTER ROLE postgres INHERIT;
-                ALTER ROLE postgres SUPERUSER;
-                ALTER ROLE postgres CREATEDB;
-                ALTER ROLE postgres CREATEROLE;
-              END IF;
-            END
-            \\\$\\\$;
+          echo "Copying database setup script to container..."
+          docker cp $DBROLESETUP $DDBNAME:/tmp/
 
-            -- Create pgcrypto extension if it doesn't exist (required by DSpace)
-            CREATE EXTENSION IF NOT EXISTS pgcrypto;
-          \" &&
+          echo "Setting up database roles and extensions..."
+          docker exec $DDBNAME /bin/bash -c "psql -p 10563 -U dspace -d dspace -f /tmp/$DBROLEFNAME"
+
+          echo "Importing database dump..."
+          docker exec $DDBNAME /bin/bash -c "
           psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
-          rm /tmp/$FNAME
+          rm /tmp/$FNAME /tmp/$DBROLEFNAME
           "
           echo "====="
           docker start $DNAME
@@ -164,6 +150,7 @@ jobs:
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
           export DDBNAME=dspacedb${{inputs.INSTANCE}}
+          export SYNCSEQSETUP=$CONFIG_PATH/${{inputs.INSTANCE}}/$SYNCSEQFNAME
 
           echo "Starting DSpace container for migration..."
           docker start $DNAME
@@ -177,10 +164,10 @@ jobs:
           \""
 
           echo "Copying sequence synchronization script to database container..."
-          docker cp ./build-scripts/run/sync-sequences.sql $DDBNAME:/tmp/
+          docker cp $SYNCSEQSETUP $DDBNAME:/tmp/
 
           echo "Synchronizing database sequences before migration..."
-          docker exec $DDBNAME /bin/bash -c "psql -p 10563 -U dspace -d dspace -f /tmp/sync-sequences.sql"
+          docker exec $DDBNAME /bin/bash -c "psql -p 10563 -U dspace -d dspace -f /tmp/$SYNCSEQFNAME"
 
 
 
