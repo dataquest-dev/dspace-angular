@@ -1466,6 +1466,8 @@
 
   "curation-task.task.citationpage.label": "Generate Citation Page",
 
+  "curation-task.task.checkhandles.label": "Check Item Handles",
+
   "curation-task.task.checklinks.label": "Check Links in Metadata",
 
   "curation-task.task.noop.label": "NOOP",
