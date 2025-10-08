@@ -166,7 +166,7 @@ jobs:
 
 
           echo "Running DSpace database migration..."
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
+          docker exec $DNAME /bin/bash "cd /dspace/bin && ./dspace database migrate ignored"
 
           echo "Waiting for DSpace to be ready..."
           sleep 10
@@ -176,16 +176,16 @@ jobs:
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
           echo "Creating DSpace administrator..."
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p admin -c en -o dataquest"
+          docker exec $DNAME /bin/bash "cd /dspace/bin && ./dspace create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p admin -c en -o dataquest"
 
       - name: rebuild discovery index and run oai import
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
           echo "Rebuilding discovery index..."
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace index-discovery -b"
+          docker exec $DNAME /bin/bash "/dspace/bin/dspace index-discovery -b"
           
           echo "Running OAI import..."
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace oai import -c"
+          docker exec $DNAME /bin/bash "/dspace/bin/dspace oai import -c"
 
       - name: restart dspace container
         run: |
