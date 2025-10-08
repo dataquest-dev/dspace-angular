@@ -26,6 +26,10 @@
   cursor: pointer;
 }
 
+.cm-list-input:checked+.cm-list-label .slider {
+  background-color: var(--lt-vsb-tuo-cyan) !important;
+}
+
 .vsb-tuo-cookies {
   .cm-modal {
     box-shadow: 0 10px 15px 0 rgba(0,0,0,0.2), 10px 10px 10px 2px rgba(0,0,0,0.19) !important;
@@ -35,10 +39,6 @@
 
   .cm-header span, .cm-list-title {
     color: #fff !important;
-  }
-
-  .slider.round.active {
-    background-color: var(--lt-vsb-tuo-cyan) !important;
   }
 
   .cn-body a {
