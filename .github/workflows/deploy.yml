@@ -100,6 +100,7 @@ jobs:
           export DNAME=dspace${{inputs.INSTANCE}}
           export DDBNAME=dspacedb${{inputs.INSTANCE}}
           export DBROLESETUP=$CONFIG_PATH/${{inputs.INSTANCE}}/$DBROLEFNAME
+          export DBSYNCSEQ=$CONFIG_PATH/${{inputs.INSTANCE}}/$SYNCSEQFNAME
 
           docker stop $DNAME || true
 
@@ -107,16 +108,20 @@ jobs:
           # echo Starting vanilla import DB
           docker cp $DATADIR $DDBNAME:/tmp/$FNAME
 
-          echo "Copying database setup script to container..."
-          docker cp $DBROLESETUP $DDBNAME:/tmp/$SYNCSEQFNAME
+          echo "Copying script for sync-sequences to database container..."
+          docker cp $DBSYNCSEQ $DDBNAME:/tmp/$DBSYNCSEQ
 
+          echo "Copying script for setup db roles to container..."
+          docker cp $DBROLESETUP $DDBNAME:/tmp/$DBROLESETUP
+          
           # Create database, import dump, setup roles and extensions, then cleanup
           docker exec $DDBNAME /bin/bash -c "
           dropdb -U dspace -p 10563 dspace || true &&
           createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace &&
           psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
           psql -p 10563 -U dspace -d dspace -f /tmp/$DBROLEFNAME &&
-          rm /tmp/$FNAME /tmp/$DBROLEFNAME
+          psql -p 10563 -U dspace -d dspace -f /tmp/$SYNCSEQFNAME &&
+          rm /tmp/$FNAME /tmp/$DBROLEFNAME /tmp/$SYNCSEQFNAME
           "
           echo "====="
           docker start $DNAME
