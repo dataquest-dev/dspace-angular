@@ -2507,7 +2507,7 @@
   // "error.validation.metadata.qualifier.max-length": "This field may not contain more than 64 characters",
   "error.validation.metadata.qualifier.max-length": "Toto pole nesmí obsahovat více než 64 znaků",
 
-  // "feed.description": "Syndication feed",
+  // "feed.description": "RSS feed",
   "feed.description": "Synchronizační kanál",
 
   // "file-download-link.restricted": "Restricted bitstream",
@@ -3785,7 +3785,7 @@
   // "item.page.collections.load-more": "Load more",
   "item.page.collections.load-more": "Načíst další",
 
-  // "item.page.date": "Date",
+  // "item.page.date": "Date issued",
   "item.page.date": "Datum",
 
   // "item.page.edit": "Edit this item",
@@ -3845,7 +3845,7 @@
   // "item.page.relationships.isOrgUnitOfProject": "Research Projects",
   "item.page.relationships.isOrgUnitOfProject": "Výzkumné projekty",
 
-  // "item.page.subject": "Keywords",
+  // "item.page.subject": "Subject(s)",
   "item.page.subject": "Klíčová slova",
 
   // "item.page.uri": "Item identifier",
@@ -9248,7 +9248,6 @@
   // "language.czech": "Czech",
   "language.czech": "Čeština",
 
-  // This is not used!
   // "repository.policy.page": "Change me: policy page",
   "repository.policy.page": "policy page",
 
