@@ -89,12 +89,11 @@ jobs:
     env:
       INSTANCE: ${{inputs.INSTANCE}}
       CONFIG_PATH: /opt/dspace-envs/
+      FNAME: old_dump.sql
+      DBROLEFNAME: setup-db-roles.sql
+      SYNCSEQFNAME: sync-sequences.sql
     steps:
       - name: vanilla import
-        env:
-          FNAME: old_dump.sql
-          DBROLEFNAME: setup-db-roles.sql
-          SYNCSEQFNAME: sync-sequences.sql
         run: |
           export DATADIR=$CONFIG_PATH/${{inputs.INSTANCE}}/dump/$FNAME
           export DNAME=dspace${{inputs.INSTANCE}}
