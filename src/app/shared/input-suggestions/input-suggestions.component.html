@@ -3,7 +3,9 @@
       (keydown.arrowdown)="shiftFocusDown($event)"
       (keydown.arrowup)="shiftFocusUp($event)" (keydown.esc)="close()"
       (dsClickOutside)="close();">
+    <label for="name + '-input'" class="sr-only">{{placeholder}}</label>
     <input #inputField type="text" [(ngModel)]="value" [name]="name"
+           [id]="name + '-input'"
            class="form-control suggestion_input"
            [ngClass]="{'is-invalid': !valid}"
            [dsDebounce]="debounceTime" (onDebounce)="find($event)"
