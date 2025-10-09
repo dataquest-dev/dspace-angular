@@ -198,10 +198,3 @@ jobs:
           
           echo "Running OAI import..."
           docker exec $DNAME /bin/bash -c "/dspace/bin/dspace oai import -c"
-
-      - name: final restart
-        run: |
-          export DNAME=dspace${{inputs.INSTANCE}}
-          echo "Final restart of DSpace container..."
-          docker restart $DNAME
-          sleep 30
