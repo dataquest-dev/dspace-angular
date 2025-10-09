@@ -105,10 +105,10 @@ jobs:
 
           echo "====="
           # echo Starting vanilla import DB
-          docker cp $DATADIR $DDBNAME:/tmp/
+          docker cp $DATADIR $DDBNAME:/tmp/$FNAME
 
           echo "Copying database setup script to container..."
-          docker cp $DBROLESETUP $DDBNAME:/tmp/
+          docker cp $DBROLESETUP $DDBNAME:/tmp/$SYNCSEQFNAME
 
           # Create database, import dump, setup roles and extensions, then cleanup
           docker exec $DDBNAME /bin/bash -c "
