@@ -146,7 +146,6 @@ jobs:
 
           echo "Running database cleanup SQL script..."
           docker exec $DDBNAME /bin/bash -c "
-          dropdb -U dspace -p 10563 dspace || true &&
           psql -p 10563 -U dspace -d dspace -f /tmp/$CLEANUPFNAME &&
           rm /tmp/$CLEANUPFNAME
           "
