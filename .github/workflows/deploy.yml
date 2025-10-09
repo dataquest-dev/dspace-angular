@@ -170,7 +170,13 @@ jobs:
           echo "Waiting for DSpace to be ready..."
           sleep 10
 
-
+      - name: restart dspace container
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Restarting DSpace container..."
+          docker restart $DNAME
+          sleep 60
+          
       - name: create administrator
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
@@ -185,10 +191,3 @@ jobs:
           
           echo "Running OAI import..."
           docker exec $DNAME /bin/bash -c "/dspace/bin/dspace oai import -c"
-
-      - name: restart dspace container
-        run: |
-          export DNAME=dspace${{inputs.INSTANCE}}
-          echo "Restarting DSpace container..."
-          docker restart $DNAME
-          sleep 60
