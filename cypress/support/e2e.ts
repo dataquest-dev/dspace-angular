@@ -61,12 +61,6 @@ beforeEach(() => {
 
     // Remove any CSRF cookies saved from prior tests
     cy.clearCookie(DSPACE_XSRF_COOKIE);
-
-    // Mock absent signposting endpoint to avoid 404s during tests
-    cy.intercept('GET', '**/server/signposting/links/**', {
-      statusCode: 200,
-      body: []
-    }).as('signpostingLinks');
 });
 
 // NOTE: FALLBACK_TEST_REST_BASE_URL is only used if Cypress cannot read the REST API BaseURL
