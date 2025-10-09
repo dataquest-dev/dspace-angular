@@ -134,7 +134,7 @@ jobs:
           echo "Waiting for connections to close..."
           sleep 5
 
-          echo "Copying cleanup db duplicities script to database container..."
+          echo "Copying cleanup db duplicates script to database container..."
           docker cp $CLEANUPDB $DDBNAME:/tmp/$CLEANUPDBFNAME
 
           echo "Cleaning up duplicate entries after data import..."
