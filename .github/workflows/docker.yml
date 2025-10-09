@@ -28,9 +28,12 @@ jobs:
     # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
     uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
     with:
-      build_id: dspace-angular
+      build_id: dspace-angular-dev
       image_name: dataquest/dspace-angular
       dockerfile_path: ./Dockerfile
+      tags_flavor: suffix=-dev
+      # As this is a "dev" image, its tags are all suffixed with "-dev". Otherwise, it uses the same
+      # tagging logic as the primary 'dspace/dspace-angular' image above.
       run_python_version_script: true
       python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
@@ -42,16 +45,13 @@ jobs:
   #############################################################
   dspace-angular-dist:
     # Ensure this job never runs on forked repos. It's only executed for 'dataquest/dspace-angular'
-    if: github.repository == 'dataquest-dev/dspace-angular' && false # not used for now
+    if: github.repository == 'dataquest-dev/dspace-angular'
     # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
     uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
     with:
-      build_id: dspace-angular-dist
+      build_id: dspace-angular
       image_name: dspace/dspace-angular
       dockerfile_path: ./Dockerfile.dist
-      # As this is a "dist" image, its tags are all suffixed with "-dist". Otherwise, it uses the same
-      # tagging logic as the primary 'dspace/dspace-angular' image above.
-      tags_flavor: suffix=-dist
       run_python_version_script: true
       python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
