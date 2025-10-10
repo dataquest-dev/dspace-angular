@@ -5745,7 +5745,7 @@
 
   "item.edit.bitstreams.checksum.popover.warning.body": "The file must be downloaded for the checksum to be computed.:",
 
-  "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.:",
+  "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.",
 
   "item.edit.tabs.license.head": "License",
 

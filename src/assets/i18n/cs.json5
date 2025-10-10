@@ -8618,7 +8618,7 @@
   // "item.edit.bitstreams.checksum.popover.warning.body": "The file must be downloaded for the checksum to be computed.:",
   "item.edit.bitstreams.checksum.popover.warning.body": "Soubor musí být stažen, aby bylo možné vypočítat kontrolní součet (checksum).",
 
-  // "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.:",
+  // "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.",
   "item.edit.bitstreams.checksum.popover.info.body": "Stáhněte soubor a vypočítejte kontrolní součet (checksum).",
 
   // "item.edit.tabs.license.head": "License",
@@ -8838,7 +8838,7 @@
   "login.auth.failed.shibboleth.title": "Přihlášení pomocí Shibboleth selhalo",
 
   // "login.auth.failed.shibboleth.message": "Authentication failed because your IDP did not send the required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .",
-  "login.auth.failed.shibboleth.message": "Ověření selhalo, protože váš IDP neodeslal požadované hlavičky Shibboleth. Kontaktujte prosím poradnu e‑mailem: {{ email }} .",
+  "login.auth.failed.shibboleth.message": "Přihlášení selhalo, protože váš IDP neodeslal požadované hlavičky Shibboleth. Kontaktujte prosím poradnu emailem: {{ email }} .",
 
   // "clarin.help-desk.name": "Help Desk",
   "clarin.help-desk.name": "Help Desk",
@@ -9331,6 +9331,4 @@
 
   // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
   "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
-
-
 }
