@@ -8919,7 +8919,7 @@
   "clarin.autoregistration.table.value": "Hodnota",
 
   // "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in", "However we may log the attributes and keep them for a time period."],
-  "clarin.autoregistration.repository.policy.message": ["Používáme pouze povinné attributy tak jak jsou zmíněny v", "Atributy jsou nějaký čas uchovány v záznamech."],
+  "clarin.autoregistration.repository.policy.message": ["Používáme pouze povinné atributy tak jak jsou zmíněny v", "Atributy jsou nějaký čas uchovány v záznamech."],
 
   // "clarin.autoregistration.button.continue.to.login": "Continue to login",
   "clarin.autoregistration.button.continue.to.login": "Pokračovat v přihlašování",
