@@ -5991,6 +5991,16 @@
 
   "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
 
+
+  "login.already-authenticated.header": "You're Already Logged In",
+
+  "login.already-authenticated.message": "You are currently authenticated. Would you like to go to home page or your profile?",
+
+  "login.already-authenticated.go-home": "Home",
+
+  "login.already-authenticated.go-profile": "Profile",
+
+  "login.already-authenticated.logout": "Logout",
   "home.image.glass": "Home page glass magnifier image",
 
   "home.image.lindat-color-line": "Lindat color line image",
