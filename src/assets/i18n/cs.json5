@@ -8437,4 +8437,40 @@
   "change.submitter.page.items.name.message": "Název záznamu: ",
   // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
   "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
+  // "home.image.glass":"Home page glass magnifier image",
+  "home.image.glass": "Obrázek lupy",
+
+  // "home.image.lindat-color-line": "Lindat color line image",
+  "home.image.lindat-color-line": "Barevná linie s barvami LINDAT",
+
+  // "static.deposit.image.step-1": "Step 1 Menu Login image",
+  "static.deposit.image.step-1": "Krok 1: menu - přihlášení",
+
+  // "static.deposit.image.step-2": "Step 2 Menu Submissions image",
+  "static.deposit.image.step-2": "Krok 2: menu - příspěvky",
+
+  // "static.deposit.image.step-2-1": "Step 2.1 Starting a submission image",
+  "static.deposit.image.step-2-1": "Krok 2.1: vytvoření nového příspěvku",
+
+  // "static.deposit.image.step-3": "Step 3 Submission information image",
+  "static.deposit.image.step-3": "Krok 3: informace o příspěvku",
+
+  // "static.deposit.image.step-4": "Step 4 Describing item people and organizations image",
+  "static.deposit.image.step-4": "Krok 4: popis osob a organizací u příspěvku",
+
+  // "static.deposit.image.step-4-1": "Step 4.1 Describing item source details image",
+  "static.deposit.image.step-4-1": "Krok 4.1: podrobnosti o původu příspěvku",
+
+  // "static.deposit.image.step-5": "Step 5 Uploading file image",
+  "static.deposit.image.step-5": "Krok 5: nahrání souboru",
+
+  // "static.deposit.image.step-6-1": "Step 6.1 Distribution license agreement image",
+  "static.deposit.image.step-6-1": "Krok 6.1: Odsouhlasení distribuční licence",
+
+  // "static.deposit.image.step-6-2": "Step 6.2 Selecting license image",
+  "static.deposit.image.step-6-2": "Krok 6.2: Výběru licence",
+
+  // "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
+  "static.deposit.image.step-6-3": "Krok 6.3: Open license selector - nástroj pro výběr licence",
+
 }
