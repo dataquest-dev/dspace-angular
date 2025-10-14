@@ -278,6 +278,8 @@
 
   "admin.access-control.epeople.table.email": "E-mail (exact)",
 
+  "admin.access-control.epeople.table.lastActive": "Last time active",
+
   "admin.access-control.epeople.table.edit": "Edit",
 
   "admin.access-control.epeople.table.edit.buttons.edit": "Edit \"{{name}}\"",

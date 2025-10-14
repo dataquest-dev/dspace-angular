@@ -311,6 +311,9 @@
   // "admin.access-control.epeople.table.email": "Email (exact)",
   // TODO Source message changed - Revise the translation
   "admin.access-control.epeople.table.email": "E-mail (přesný)",
+  // "admin.access-control.epeople.table.lastActive": "Last time active",
+  // TODO Source message changed - Revise the translation
+  "admin.access-control.epeople.table.lastActive": "Naposledy aktivní",
   // "admin.access-control.epeople.table.edit": "Edit",
   "admin.access-control.epeople.table.edit": "Upravit",
   // "admin.access-control.epeople.table.edit.buttons.edit": "Edit \"{{name}}\"",
