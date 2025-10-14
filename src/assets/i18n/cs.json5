@@ -1088,6 +1088,9 @@
   "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
   // "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
   "clarin.bitstream.expired.dtoken.message": "Platnost tokenu pro stahování vypršel, budete přesměrováni na stránku stahování.",
+  // "clarin.bitstream.authorization.denied.message": "Access to download \"{{bitstream}}\" file was denied by the bitstream resource policy.",
+  // TODO Source message changed - Revise the translation
+  "clarin.bitstream.authorization.denied.message": "Přístup ke stažení souboru \"{{bitstream}}\" byl zamítnut.",
   // "bitstream.download.page.back": "Back" ,
   "bitstream.download.page.back": "Zpět",
   // "clarin.license.all-page.title": "Available Licenses",

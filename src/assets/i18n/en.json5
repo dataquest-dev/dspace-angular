@@ -728,6 +728,8 @@
 
   "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
 
+  "clarin.bitstream.authorization.denied.message": "Access to download \"{{bitstream}}\" file was denied by the bitstream resource policy.",
+
   "bitstream.download.page.back": "Back" ,
 
 
