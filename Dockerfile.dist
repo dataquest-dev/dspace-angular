@@ -27,8 +27,8 @@ COPY --chown=node:node docker/dspace-ui.json /app/dspace-ui.json
 RUN mkdir -p /app/dist/browser/assets \
  && touch /app/dist/browser/assets/config.json \
  && chown -R node:node /app/dist/browser/assets \
- && chmod -R 664 /app/dist/browser/assets/config.json \
- && chmod -R g+w /app/dist/browser/assets
+ && chmod -R 755 /app/dist/browser/assets \
+ && chmod 664 /app/dist/browser/assets/config.json
 
 WORKDIR /app
 USER node
