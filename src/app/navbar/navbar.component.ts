@@ -19,6 +19,7 @@ import { Observable } from 'rxjs';
 
 import { AppState } from '../app.reducer';
 import { isAuthenticated } from '../core/auth/selectors';
+import { LocaleService } from '../core/locale/locale.service';
 import { BrowseService } from '../core/browse/browse.service';
 import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';
 import { slideMobileNav } from '../shared/animations/slide';
@@ -66,6 +67,8 @@ export class NavbarComponent extends MenuComponent implements OnInit {
 
   public isMobile$: Observable<boolean>;
 
+  public logoSrc: string;
+
   constructor(protected menuService: MenuService,
     protected injector: Injector,
               public windowService: HostWindowService,
@@ -74,6 +77,7 @@ export class NavbarComponent extends MenuComponent implements OnInit {
               public route: ActivatedRoute,
               protected themeService: ThemeService,
               private store: Store<AppState>,
+              private localeService: LocaleService
   ) {
     super(menuService, injector, authorizationService, route, themeService);
   }
@@ -82,5 +86,15 @@ export class NavbarComponent extends MenuComponent implements OnInit {
     super.ngOnInit();
     this.isMobile$ = this.windowService.isUpTo(this.maxMobileWidth);
     this.isAuthenticated$ = this.store.pipe(select(isAuthenticated));
+    this.setLogo();
+  }
+
+  /**
+   * Sets the logo source based on the current language code
+   */
+  setLogo() {
+    this.logoSrc = this.localeService.getCurrentLanguageCode() === 'cs'
+      ? '/assets/images/mendel-uni-logo-w-cs.svg'
+      : '/assets/images/mendel-uni-logo-w-en.svg';
   }
 }

@@ -76,7 +76,7 @@ export class MyDSpacePageComponent implements OnInit {
   /**
    * List of available view mode
    */
-  viewModeList = [ViewMode.ListElement, ViewMode.DetailedListElement];
+  viewModeList = [ViewMode.ListElement];
 
   constructor(private service: SearchService,
               @Inject(SEARCH_CONFIG_SERVICE) public searchConfigService: MyDSpaceConfigurationService) {
