@@ -50,7 +50,7 @@ jobs:
     uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
     with:
       build_id: dspace-angular
-      image_name: dspace/dspace-angular
+      image_name: dataquest/dspace-angular
       dockerfile_path: ./Dockerfile.dist
       run_python_version_script: true
       python_version_script_dest: src/static-files/VERSION_D.html
