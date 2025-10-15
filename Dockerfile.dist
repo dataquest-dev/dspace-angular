@@ -30,7 +30,6 @@ RUN mkdir -p /app/dist/browser/assets \
  && chmod -R 664 /app/dist/browser/assets/config.json \
  && chmod -R g+w /app/dist/browser/assets
 
-
 WORKDIR /app
 USER node
 ENV NODE_ENV=production
