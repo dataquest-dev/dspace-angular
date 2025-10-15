@@ -27,6 +27,10 @@ COPY --chown=node:node --from=build /app/dist /app/dist
 COPY --chown=node:node config /app/config
 COPY --chown=node:node docker/dspace-ui.json /app/dspace-ui.json
 
+RUN mkdir -p /app/dist/browser/assets \
+ && chown -R node:node /app/dist/browser/assets \
+ && chmod -R g+w /app/dist/browser/assets
+
 WORKDIR /app
 USER node
 ENV NODE_ENV=production
