@@ -5516,7 +5516,7 @@
   // "repository.title": "DSpace Repository",
   "repository.title": "Institucionální digitální repozitář",
 
-  // "repository.title.prefix": "LINDAT/CLARIAH-CZ Repository ",
+  // "repository.title.prefix": "LINDAT/CLARIAH-CZ Repository",
   "repository.title.prefix": "LINDAT/CLARIAH-CZ Repozitář",
 
   // "resource-policies.add.button": "Add",
@@ -5744,7 +5744,7 @@
   // "search.filters.applied.f.entityType": "Item Type",
   "search.filters.applied.f.entityType": "Typ záznamu",
 
-  // "search.filters.applied.f.has_content_in_original_bundle": "Contain Files",
+  // "search.filters.applied.f.has_content_in_original_bundle": "Has Files",
   "search.filters.applied.f.has_content_in_original_bundle": "Má soubory",
 
   // "search.filters.applied.f.itemtype": "Type",
@@ -5879,7 +5879,7 @@
   // "search.filters.filter.expand": "Expand filter",
   "search.filters.filter.expand": "Rozbalit filtr",
 
-  // "search.filters.filter.has_content_in_original_bundle.head": "Contain Files",
+  // "search.filters.filter.has_content_in_original_bundle.head": "Has Files",
   "search.filters.filter.has_content_in_original_bundle.head": "Má soubory",
 
   // "search.filters.filter.itemtype.head": "Type",
@@ -8276,7 +8276,7 @@
   // "clarin.license.agreement.token.info": "You will receive an email with download instructions.",
   "clarin.license.agreement.token.info": "Obdržíte e-mail s pokyny ke stažení.",
 
-  // "clarin.license.agreement.signer.ip.address": "Ip Address",
+  // "clarin.license.agreement.signer.ip.address": "IP Address",
   "clarin.license.agreement.signer.ip.address": "IP adresa",
 
   // "clarin.license.agreement.signer.SEND_TOKEN": "E-mail",
@@ -8597,8 +8597,8 @@
   // "item.edit.bitstreams.headers.synchronized": "Sync | Checksum",
   "item.edit.bitstreams.headers.synchronized": "Synchronizace | Checksum",
 
-  // "item.edit.bitstreams.checksum.algorithm": "Algorithm: ",
-  "item.edit.bitstreams.checksum.algorithm": "Algoritmus: ",
+  // "item.edit.bitstreams.checksum.algorithm": "Algorithm:",
+  "item.edit.bitstreams.checksum.algorithm": "Algoritmus:",
 
   // "item.edit.bitstreams.checksum.value": "Value: ",
   "item.edit.bitstreams.checksum.value": "Hodnota: ",
@@ -8994,7 +8994,7 @@
   "clarin-license.table.extended-labels": "Rozšířené štítky",
 
   // "clarin-license.table.bitstreams": "Used by Bitstreams",
-  "clarin-license.table.bitstreams": "Používána bitstreamem",
+  "clarin-license.table.bitstreams": "Používána soubory",
 
   // "clarin-license.button.define": "Define",
   "clarin-license.button.define": "Definovat",
