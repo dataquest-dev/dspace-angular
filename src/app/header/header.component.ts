@@ -19,7 +19,6 @@ import { ThemedLangSwitchComponent } from '../shared/lang-switch/themed-lang-swi
 import { MenuService } from '../shared/menu/menu.service';
 import { MenuID } from '../shared/menu/menu-id.model';
 import { ContextHelpToggleComponent } from './context-help-toggle/context-help-toggle.component';
-import { LocaleService } from '../core/locale/locale.service';
 
 /**
  * Represents the header with the logo and simple navigation
@@ -49,33 +48,20 @@ export class HeaderComponent implements OnInit {
   public isAuthenticated: Observable<boolean>;
   public isMobile$: Observable<boolean>;
 
-  public logoSrc: string;
-
   menuID = MenuID.PUBLIC;
   maxMobileWidth = WidthCategory.SM;
 
   constructor(
     protected menuService: MenuService,
     protected windowService: HostWindowService,
-    private localeService: LocaleService,
   ) {
   }
 
   ngOnInit(): void {
     this.isMobile$ = this.windowService.isUpTo(this.maxMobileWidth);
-    this.setLogo();
   }
 
   public toggleNavbar(): void {
     this.menuService.toggleMenu(this.menuID);
-  }
-
-    /**
-   * Sets the logo source based on the current language code
-   */
-  setLogo() {
-    this.logoSrc = this.localeService.getCurrentLanguageCode() === 'cs'
-      ? 'assets/images/mendel-logo-cs.png'
-      : 'assets/images/mendel-logo-en.png';
   }
 }

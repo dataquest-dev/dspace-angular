@@ -11,10 +11,10 @@ import { HoverOutsideDirective } from '../../../../../app/shared/utils/hover-out
 
 @Component({
   selector: 'ds-themed-expandable-navbar-section',
-  templateUrl: './expandable-navbar-section.component.html',
-  // templateUrl: '../../../../../app/navbar/expandable-navbar-section/expandable-navbar-section.component.html',
-  styleUrls: ['./expandable-navbar-section.component.scss'],
-  // styleUrls: ['../../../../../app/navbar/expandable-navbar-section/expandable-navbar-section.component.scss'],
+  // templateUrl: './expandable-navbar-section.component.html',
+  templateUrl: '../../../../../app/navbar/expandable-navbar-section/expandable-navbar-section.component.html',
+  // styleUrls: ['./expandable-navbar-section.component.scss'],
+  styleUrls: ['../../../../../app/navbar/expandable-navbar-section/expandable-navbar-section.component.scss'],
   animations: [slide],
   standalone: true,
   imports: [

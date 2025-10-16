@@ -11,10 +11,10 @@ import { ClickOutsideDirective } from '../../../../app/shared/utils/click-outsid
 
 @Component({
   selector: 'ds-themed-search-navbar',
-  styleUrls: ['./search-navbar.component.scss'],
-  // styleUrls: ['../../../../app/search-navbar/search-navbar.component.scss'],
-  templateUrl: './search-navbar.component.html',
-  // templateUrl: '../../../../app/search-navbar/search-navbar.component.html',
+  // styleUrls: ['./search-navbar.component.scss'],
+  styleUrls: ['../../../../app/search-navbar/search-navbar.component.scss'],
+  // templateUrl: './search-navbar.component.html'
+  templateUrl: '../../../../app/search-navbar/search-navbar.component.html',
   standalone: true,
   imports: [
     BrowserOnlyPipe,

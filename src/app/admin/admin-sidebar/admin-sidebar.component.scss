@@ -56,15 +56,6 @@
         padding-bottom: var(--ds-admin-sidebar-item-padding);
       }
 
-      // Remove vertical padding from the wrapper and apply it to the anchor
-      // In case an anchor also has .sidebar-item, reset it to avoid double padding
-      .sidebar-sub-level-item-list {
-        .sidebar-item, .ds-menu-item.sidebar-item {
-          padding-top: 0;
-          padding-bottom: 0;
-        }
-      }
-
       // These classes handle the collapsing behavior
       .sidebar-section-wrapper {
 
@@ -142,7 +133,8 @@
     }
 
     div#sidebar-collapse-toggle-container {
-      background-color: var(--ds-admin-sidebar-header-bg);
+      .sidebar-collapsible-element-inner-wrapper {
+      }
     }
   }
 }
