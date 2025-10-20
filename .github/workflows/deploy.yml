@@ -109,14 +109,14 @@ jobs:
 
           echo "Copying script for setup db roles to container..."
           docker cp $DBROLESETUP $DDBNAME:/tmp/$DBROLEFNAME
-          
+
           # Create database, import dump, setup roles and extensions, then cleanup
           docker exec $DDBNAME /bin/bash -c "
           dropdb -U dspace -p 10563 dspace || true &&
           createdb -U dspace -p 10563 --owner=dspace --encoding=UNICODE dspace &&
           psql -p 10563 -U dspace -d dspace -f /tmp/$FNAME &&
           psql -p 10563 -U dspace -d dspace -f /tmp/$DBROLEFNAME &&
-          rm /tmp/$FNAME /tmp/$DBROLEFNAME 
+          rm /tmp/$FNAME /tmp/$DBROLEFNAME
           "
           echo "====="
           docker start $DNAME
@@ -126,6 +126,7 @@ jobs:
       - name: cleanup database duplicates
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
+          export DDBNAME=dspacedb${{inputs.INSTANCE}}
           export CLEANUPDB=$CONFIG_PATH/${{inputs.INSTANCE}}/$CLEANUPDBFNAME
 
           echo "Stopping DSpace container before database cleanup..."
@@ -140,7 +141,7 @@ jobs:
           echo "Cleaning up duplicate entries after data import..."
           docker exec $DDBNAME /bin/bash -c "
           psql -p 10563 -U dspace -d dspace -f /tmp/$CLEANUPDBFNAME
-          rm /tmp/$CLEANUPDBFNAME 
+          rm /tmp/$CLEANUPDBFNAME
           "
 
           echo "Waiting for connections and locks to fully terminate..."
@@ -183,7 +184,7 @@ jobs:
           echo "Restarting DSpace container..."
           docker restart $DNAME
           sleep 60
-          
+
       - name: create administrator
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
@@ -195,6 +196,6 @@ jobs:
           export DNAME=dspace${{inputs.INSTANCE}}
           echo "Rebuilding discovery index..."
           docker exec $DNAME /bin/bash -c "/dspace/bin/dspace index-discovery -b"
-          
+
           echo "Running OAI import..."
           docker exec $DNAME /bin/bash -c "/dspace/bin/dspace oai import -c"
