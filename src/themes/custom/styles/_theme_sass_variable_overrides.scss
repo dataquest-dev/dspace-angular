@@ -15,9 +15,16 @@
 @import '../assets/fonts/pepi.scss';
 $font-family-sans-serif: 'Pepi', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-/*** UNI COLORS ***/
+/*** MENDELU BRAND COLORS ***/
+// Define brand colors once as SASS variables (single source of truth)
 $mendelu-green: #79be15;
 $mendelu-black: #1c1c1c;
+
+// Optional: Define color variations for consistency
+$mendelu-green-light: lighten($mendelu-green, 15%);
+$mendelu-green-dark: darken($mendelu-green, 15%);
+$mendelu-green-lighter: #92c642; // Lime variant
+$mendelu-green-pale: #D2FC93;    // Pale variant for backgrounds
 
 /*** SEMANTIC COLOR SCHEME ***/
 
@@ -50,11 +57,11 @@ $mendelu-black: #1c1c1c;
 $primary:   $mendelu-green;
 $secondary: #495057;  // As Bootstrap $gray-700
 $success:   #92c642;  // Lime
-$info:      $mendelu-green;  // Light blue
+$info:      $mendelu-green;
 $warning:   #ec9433;  // Orange
 $danger:    #cf4444;  // Red
 $light:     #f8f9fa;  // As Bootstrap $gray-100
-$dark:      #43515f;  // Dark blue
+$dark:      $mendelu-black;
 
 // Add new semantic colors here (you don't need to add existing semantic colors)
 $theme-custom-semantic-colors: (
