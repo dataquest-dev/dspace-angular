@@ -19,6 +19,12 @@ Disallow: /workflowitems
 # Crawlers should be able to access entity pages, but not the facet search links present on entity pages
 Disallow: /entities/*?f
 
+# Do not allow indexing of the bitstreams content
+# It is possible to access bitstream using handle `/bitstream/handle/123/456/some file.pdf`
+Disallow: /bitstream/
+# It is possible to access bitstream using UUID `/server/api/core/bitstreams/UUID/content`
+Disallow: /bitstreams/
+
 # Optionally uncomment the following line ONLY if sitemaps are working
 # and you have verified that your site is being indexed correctly.
 # Disallow: /browse/*
