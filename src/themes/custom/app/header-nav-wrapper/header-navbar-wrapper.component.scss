@@ -6,7 +6,7 @@
   div#header-navbar-wrapper {
     // The header-navbar-wrapper should not have a z-index, otherwise it would cover the media viewer despite its higher z-index
     position: relative; // required by the mobile collapsible navbar
-    border-bottom: var(--ds-header-navbar-border-bottom-style); // gets covered by mobile navbar wrapper, when open
+    // border-bottom: var(--ds-header-navbar-border-bottom-style); // gets covered by mobile navbar wrapper, when open
 
     div#mobile-navbar-wrapper {
       width: 100%;
@@ -19,7 +19,7 @@
         // Following parameters are changed by slideMobileNav animation
         min-height: var(--ds-expandable-navbar-height);
         height: auto;
-        border-bottom: var(--ds-header-navbar-border-bottom-style);
+        // border-bottom: var(--ds-header-navbar-border-bottom-style);
       }
     }
   }
