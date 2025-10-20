@@ -1691,11 +1691,11 @@
 
   "error.validation.evyuka.codes.discipline.only.required": "Alespoň jedno z polí musí být vyplněno: Kód studijního oboru, Kód studijního programu",
 
-  "error.validation.evyuka.subject.codes.required": "Následující atributy dokumentu (kód verze předmětu a kód předmětu) slouží k propojení a <b>zveřejnění odkazu na dokument na stránkách detailu předmětu</b> v rámci portálu <a href=\"https://www.vsb.cz/e-vyuka\">E-výuka</a>. Jedná-li se o studijní oporu určenou pouze pro obor/program, tak následující kódy nevyplňujte. Návod pro správný výběr výběr kódů z číselníků je dostupný na stránkách s návody.",
+  "error.validation.evyuka.subject.codes.required": "Následující atributy dokumentu (kód verze předmětu a kód předmětu) slouží k propojení a <b>zveřejnění odkazu na dokument na stránkách detailu předmětu</b> v rámci portálu <a href=\"https://www.vsb.cz/e-vyuka\">E-výuka</a>. Jedná-li se o studijní oporu určenou pouze pro obor/program, tak následující kódy nevyplňujte. Návod pro správný výběr výběr kódů z číselníků je dostupný <a href=\"https://www.vsb.cz/e-vyuka/cs/navody/\">na stránkách s návody</a>.",
 
-  "error.validation.evyuka.discipline.programme.codes.required": "Následující atributy dokumentu (kód studijního oboru a kód studijního programu) slouží k propojení a <b>zveřejnění odkazu na dokument na stránkách detailu oboru/programu</b> v rámci portálu <a href=\"https://www.vsb.cz/e-vyuka\">E-výuka</a>. Jedná-li se o studijní oporu určenou pouze pro předmět, tak následující kódy nevyplňujte. Návod pro správný výběr výběr kódů z číselníků je dostupný na stránkách s návody.",
+  "error.validation.evyuka.discipline.programme.codes.required": "Následující atributy dokumentu (kód studijního oboru a kód studijního programu) slouží k propojení a <b>zveřejnění odkazu na dokument na stránkách detailu oboru/programu</b> v rámci portálu <a href=\"https://www.vsb.cz/e-vyuka\">E-výuka</a>. Jedná-li se o studijní oporu určenou pouze pro předmět, tak následující kódy nevyplňujte. Návod pro správný výběr výběr kódů z číselníků je dostupný <a href=\"https://www.vsb.cz/e-vyuka/cs/navody/\">na stránkách s návody</a>.",
 
-  "error.validation.evyuka.combined.groups.required": "Následující atributy dokumentu slouží k propojení a zveřejnění odkazu na dokument v rámci portálu <a href=\"https://www.vsb.cz/e-vyuka\">E-výuka</a>. Vyplňte příslušné kódy podle typu studijní opory: pro předmětové opory vyplňte kód verze předmětu a kód předmětu (odkaz se zobrazí <b>na stránkách detailu předmětu</b>), pro oborové/programové opory vyplňte kód studijního oboru a kód studijního programu (odkaz se zobrazí <b>na stránkách detailu oboru/programu</b>). Návod pro správný výběr výběr kódů z číselníků je dostupný na stránkách s návody.",
+  "error.validation.evyuka.combined.groups.required": "Následující atributy dokumentu slouží k propojení a zveřejnění odkazu na dokument v rámci portálu <a href=\"https://www.vsb.cz/e-vyuka\">E-výuka</a>. Vyplňte příslušné kódy podle typu studijní opory: pro předmětové opory vyplňte kód verze předmětu a kód předmětu (odkaz se zobrazí <b>na stránkách detailu předmětu</b>), pro oborové/programové opory vyplňte kód studijního oboru a kód studijního programu (odkaz se zobrazí <b>na stránkách detailu oboru/programu</b>). Návod pro správný výběr výběr kódů z číselníků je dostupný <a href=\"https://www.vsb.cz/e-vyuka/cs/navody/\">na stránkách s návody</a>.",
 
   "feed.description": "RSS feed",
 
@@ -4670,6 +4670,8 @@
   "submission.sections.submit.progressbar.describe.stepone": "Describe",
 
   "submission.sections.submit.progressbar.describe.steptwo": "Describe",
+
+  "submission.sections.submit.progressbar.describe.stepthree": "Describe",
 
   "submission.sections.submit.progressbar.detect-duplicate": "Potential duplicates",
 

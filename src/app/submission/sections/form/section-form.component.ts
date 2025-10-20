@@ -79,6 +79,12 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
   public isLoading = true;
 
   /**
+   * Informational messages to display at the top of the form
+   * @type {string[]}
+   */
+  public infoMessages: string[] = [];
+
+  /**
    * A map representing all field on their way to be removed
    * @type {Map}
    */
@@ -190,6 +196,10 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
     this.formId = this.formService.getUniqueId(this.sectionData.id);
     this.sectionService.dispatchSetSectionFormId(this.submissionId, this.sectionData.id, this.formId);
+    
+    // Extract informational messages from server validation errors
+    this.extractInfoMessages();
+    
     this.formConfigService.findByHref(this.sectionData.config).pipe(
       map((configData: RemoteData<ConfigObject>) => configData.payload),
       tap((config: SubmissionFormsModel) => this.formConfig = config),
@@ -225,6 +235,33 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     this.subs
       .filter((subscription) => hasValue(subscription))
       .forEach((subscription) => subscription.unsubscribe());
+  }
+
+  /**
+   * Extract informational messages from evyuka validation errors
+   * Shows specific error validation messages as informational messages at the top of the form
+   * Only shows info messages when the errors are NOT being displayed (errorsToShow is empty)
+   */
+  protected extractInfoMessages(): void {
+    const evyukaErrorKeys = [
+      'error.validation.evyuka.subject.codes.required',
+      'error.validation.evyuka.discipline.programme.codes.required',
+      'error.validation.evyuka.combined.groups.required'
+    ];
+
+    this.infoMessages = [];
+
+    // Only show info messages if there are no errors being displayed
+    const hasErrorsToShow = this.sectionData?.errorsToShow && this.sectionData.errorsToShow.length > 0;
+    
+    if (!hasErrorsToShow && this.sectionData?.serverValidationErrors) {
+      this.sectionData.serverValidationErrors.forEach((error: SubmissionSectionError) => {
+        // Use the same error message key for informational display
+        if (evyukaErrorKeys.includes(error.message) && !this.infoMessages.includes(error.message)) {
+          this.infoMessages.push(error.message);
+        }
+      });
+    }
   }
 
   /**
@@ -347,6 +384,12 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     const sectionData = sectionState.data as WorkspaceitemSectionFormObject;
     const errors = sectionState.errorsToShow;
 
+    // Update informational messages when section state changes
+    if (sectionState.serverValidationErrors) {
+      this.sectionData.serverValidationErrors = sectionState.serverValidationErrors;
+      this.extractInfoMessages();
+    }
+
     if (isNotEmpty(sectionData) && !isEqual(sectionData, this.sectionData.data)) {
       this.sectionData.data = sectionData;
       if (this.hasMetadataEnrichment(sectionData)) {
@@ -378,6 +421,8 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       .subscribe(() => {
         this.sectionService.checkSectionErrors(this.submissionId, this.sectionData.id, this.formId, errors, this.sectionData.errorsToShow);
         this.sectionData.errorsToShow = errors;
+        // Update info messages based on whether errors are being shown
+        this.extractInfoMessages();
         this.cdr.detectChanges();
       });
   }

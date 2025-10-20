@@ -1,4 +1,7 @@
 <ds-themed-loading *ngIf="isLoading" message="Loading..."></ds-themed-loading>
+<div *ngIf="!isLoading && infoMessages.length > 0" class="alert alert-info evyuka-info-messages mb-3">
+  <div *ngFor="let messageKey of infoMessages" class="evyuka-info-message" [innerHTML]="messageKey | translate"></div>
+</div>
 <ds-form *ngIf="!isLoading && formModel" #formRef="formComponent"
          [formId]="formId"
          [formModel]="formModel"
