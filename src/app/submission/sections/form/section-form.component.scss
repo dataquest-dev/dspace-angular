@@ -1,1 +1,25 @@
-
+.evyuka-info-messages {
+  border-radius: 4px;
+  padding: 1rem;
+  
+  .evyuka-info-message {
+    margin-bottom: 0.5rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    ::ng-deep a {
+      color: #004085;
+      text-decoration: underline;
+      
+      &:hover {
+        color: #002752;
+      }
+    }
+    
+    ::ng-deep b {
+      font-weight: 600;
+    }
+  }
+}
