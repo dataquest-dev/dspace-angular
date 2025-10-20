@@ -11,10 +11,21 @@
     --ds-header-height: 90px;
   }
 
+  --ds-breadcrumb-link-color: #{$mendelu-green};
+  --ds-header-bg: #{$mendelu-green};
+  --ds-navbar-link-color: #{$white};
+  --ds-navbar-link-color-hover: darken(#{$white}, 5%);
+  --ds-header-icon-color: #{$white};
+  --ds-header-icon-color-hover: darken(#{$white}, 5%);
+
   --ds-banner-text-background: rgba(0, 0, 0, 0.58);
   --ds-banner-background-gradient-width: 300px;
 
   --ds-header-navbar-border-bottom-height: 5px;
+
+  --ds-admin-sidebar-bg: #292B2F;
+  --ds-admin-sidebar-active-bg: #{$mendelu-black};
+  --ds-admin-sidebar-header-bg: #{$mendelu-black};
 
   /* set the next two properties as `--ds-header-navbar-border-bottom-*`
   in order to keep the bottom border of the header when navbar is expanded */
