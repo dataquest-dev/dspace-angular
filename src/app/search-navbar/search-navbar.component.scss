@@ -18,6 +18,7 @@ input[type="text"] {
   color: var(--ds-header-icon-color);
   &:hover, &:focus {
     color: var(--ds-header-icon-color-hover);
+    background-color: var(--ds-header-icon-color);
   }
 }
 

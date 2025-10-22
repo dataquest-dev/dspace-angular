@@ -43,21 +43,31 @@
         }
         .ds-menu-item {
           // define here the style for top-level navbar menu items
-          padding: var(--ds-navbar-item-vertical-padding) var(--ds-navbar-item-horizontal-padding);
         }
         .ds-menu-item, .ds-menu-toggler-wrapper {
-          color: var(--ds-navbar-link-color) !important;
+          padding: var(--ds-navbar-item-vertical-padding) var(--ds-navbar-item-horizontal-padding);
+          height: auto;
+          color: var(--ds-navbar-link-color);
+          border-radius: 2px;
           &:hover, &:focus {
-            color: var(--ds-navbar-link-color-hover) !important;
+            color: var(--ds-navbar-link-color-hover);
+            background-color: var(--ds-navbar-link-color);
           }
         }
 
         /* desktop submenu */
 
         .dropdown-menu {
+          border: 1px solid var(--ds-navbar-link-color-hover);
+
           .ds-menu-item {
             // define here the style for second-level navbar menu items
             padding: var(--ds-navbar-dropdown-item-vertical-padding) var(--ds-navbar-dropdown-item-horizontal-padding);
+            color: var(--ds-navbar-link-color-hover);
+            &:hover, &:focus {
+              color: var(--ds-navbar-link-color);
+              background-color: var(--ds-navbar-link-color-hover);
+            }
           }
         }
 
