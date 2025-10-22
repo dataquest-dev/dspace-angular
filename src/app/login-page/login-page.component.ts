@@ -24,12 +24,12 @@ import {
 } from '../core/auth/auth.actions';
 import { AuthTokenInfo } from '../core/auth/models/auth-token-info.model';
 import { isAuthenticated } from '../core/auth/selectors';
+import { LocaleService } from '../core/locale/locale.service';
 import {
   hasValue,
   isNotEmpty,
 } from '../shared/empty.util';
 import { ThemedLogInComponent } from '../shared/log-in/themed-log-in.component';
-import { LocaleService } from '../core/locale/locale.service';
 
 /**
  * This component represents the login page
