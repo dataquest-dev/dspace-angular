@@ -5,8 +5,8 @@ import {
 import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { HeaderNavbarWrapperComponent as BaseComponent } from '../../../../app/header-nav-wrapper/header-navbar-wrapper.component';
 import { ThemedHeaderComponent } from '../../../../app/header/themed-header.component';
+import { HeaderNavbarWrapperComponent as BaseComponent } from '../../../../app/header-nav-wrapper/header-navbar-wrapper.component';
 import { ThemedNavbarComponent } from '../../../../app/navbar/themed-navbar.component';
 import { slideMobileNav } from '../../../../app/shared/animations/slide';
 

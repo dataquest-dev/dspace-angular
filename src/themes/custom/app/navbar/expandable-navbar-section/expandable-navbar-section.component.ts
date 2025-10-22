@@ -22,9 +22,9 @@ import { NavbarSectionComponent } from '../../../../../app/navbar/navbar-section
 import { slide } from '../../../../../app/shared/animations/slide';
 import { isNotEmpty } from '../../../../../app/shared/empty.util';
 import { HostWindowService } from '../../../../../app/shared/host-window.service';
+import { MenuService } from '../../../../../app/shared/menu/menu.service';
 import { MenuID } from '../../../../../app/shared/menu/menu-id.model';
 import { MenuSection } from '../../../../../app/shared/menu/menu-section.model';
-import { MenuService } from '../../../../../app/shared/menu/menu.service';
 import { HoverOutsideDirective } from '../../../../../app/shared/utils/hover-outside.directive';
 
 /**
