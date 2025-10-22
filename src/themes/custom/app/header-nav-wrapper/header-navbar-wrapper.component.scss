@@ -41,9 +41,10 @@
           align-items: center;
           height: 100%;
         }
-
         .ds-menu-item, .ds-menu-toggler-wrapper {
           padding: var(--ds-navbar-item-vertical-padding) var(--ds-navbar-item-horizontal-padding);
+        }
+        .ds-menu-item, .ds-menu-toggler-wrapper {
           height: auto;
           color: var(--ds-navbar-link-color);
           border-radius: 2px;

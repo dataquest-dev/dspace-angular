@@ -23,4 +23,13 @@
       text-decoration: none;
     }
   }
+
+  ::ng-deep {
+    span.ds-menu-item {
+      // Override styles for text menu items in this component
+      background-color: transparent !important;
+      color: inherit !important;
+      padding: 0 !important;
+    }
+  }
 }
