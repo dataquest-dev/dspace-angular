@@ -88,10 +88,6 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-npm-
 
-      # Workaround for npm bug with optional dependencies (https://github.com/npm/cli/issues/4828)
-      - name: Clean node_modules before install
-        run: rm -rf node_modules
-
       - name: Install NPM dependencies
         run: npm clean-install
 
