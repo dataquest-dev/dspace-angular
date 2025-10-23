@@ -89,13 +89,11 @@ jobs:
           restore-keys: ${{ runner.os }}-npm-
 
       # Workaround for npm bug with optional dependencies (https://github.com/npm/cli/issues/4828)
-      - name: Clean before install
-        run: |
-          rm -f package-lock.json
-          rm -rf node_modules
+      - name: Clean node_modules before install
+        run: rm -rf node_modules
 
       - name: Install NPM dependencies
-        run: npm install
+        run: npm clean-install
 
       - name: Build lint plugins
         run: npm run build:lint
