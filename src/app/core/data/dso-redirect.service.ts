@@ -6,8 +6,7 @@
  * http://www.dspace.org/license/
  */
 /* eslint-disable max-classes-per-file */
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 import { hasValue } from '../../shared/empty.util';
@@ -74,17 +73,23 @@ export class DsoRedirectService {
   private dataService: DsoByIdOrUUIDDataService;
 
   constructor(
+    @Inject(APP_CONFIG) protected appConfig: AppConfig,
     protected requestService: RequestService,
     protected rdbService: RemoteDataBuildService,
     protected objectCache: ObjectCacheService,
     protected halService: HALEndpointService,
+    private hardRedirectService: HardRedirectService,
     private router: Router,
+    private authService: AuthService,
   ) {
     this.dataService = new DsoByIdOrUUIDDataService(requestService, rdbService, objectCache, halService);
   }
 
   /**
-   * Retrieve a DSpaceObject by
+   * Redirect to a DSpaceObject's path using the given identifier type and ID.
+   * This is used to redirect paths like "/handle/[prefix]/[suffix]" to the object's path (e.g. /items/[uuid]).
+   * See LookupGuard for more examples.
+   *
    * @param id              the identifier of the object to retrieve
    * @param identifierType  the type of the given identifier (defaults to UUID)
    */
@@ -98,7 +103,8 @@ export class DsoRedirectService {
           if (hasValue(dso.uuid)) {
             let newRoute = getDSORoute(dso);
             if (hasValue(newRoute)) {
-              this.router.navigate([newRoute]);
+              // Use a "301 Moved Permanently" redirect for SEO purposes
+              this.hardRedirectService.redirect(this.appConfig.ui.nameSpace.replace(/\/$/, '') + newRoute, 301);
             }
           }
         }
@@ -122,5 +128,15 @@ export class DsoRedirectService {
         }
       })
     );
+  }
+
+  /**
+   * Extract the handle path from the given URL. Return only `/handle/{PREFIX}/{SUFFIX}`.
+   * @param url the URL to extract the handle path from
+   */
+  extractHandlePath(url: string): string | null {
+    const regex = /\/handle\/[\w.\/-]+$/;
+    const match = url.match(regex);
+    return match ? match[0].substring(1) : null;
   }
 }
