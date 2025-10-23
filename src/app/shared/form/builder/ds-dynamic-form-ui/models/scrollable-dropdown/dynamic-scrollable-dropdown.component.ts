@@ -50,9 +50,11 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   @Output() focus: EventEmitter<any> = new EventEmitter<any>();
 
   public currentValue: Observable<string>;
+  public currentValueStr: string = ''; // Cached string value to avoid async pipe in template
   public loading = false;
   public pageInfo: PageInfo;
   public optionsList: any;
+  public formattedOptions: string[] = []; // Cache of formatted option strings for performance
   public inputText: string = null;
   public selectedIndex = 0;
   public acceptableKeys = ['Space', 'NumpadMultiply', 'NumpadAdd', 'NumpadSubtract', 'NumpadDecimal', 'Semicolon', 'Equal', 'Comma', 'Minus', 'Period', 'Quote', 'Backquote'];
@@ -98,6 +100,7 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   /**
    * Compute the index of the current form value within optionsList.
    * Returns -1 when there is no current value or it cannot be matched.
+   * Uses cached formatted values for efficient lookup.
    */
   private getIndexForCurrentValue(): number {
     try {
@@ -115,7 +118,7 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
       }
       if (isEmpty(currentStr)) { return -1; }
 
-      return this.optionsList.findIndex((le: any) => this.inputFormatter(le) === currentStr);
+      return this.formattedOptions.findIndex((formatted: string) => formatted === currentStr);
     } catch {
       return -1;
     }
@@ -140,6 +143,9 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
       tap(() => this.loading = false),
     ).subscribe((list: PaginatedList<CacheableObject>) => {
       this.optionsList = list.page;
+      // Cache formatted values for performance optimization
+      this.formattedOptions = this.optionsList.map((item: any) => this.inputFormatter(item));
+      
       if (fromInit && this.model.value) {
         this.setCurrentValue(this.model.value, true);
       }
@@ -275,6 +281,8 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
         tap(() => this.loading = false))
         .subscribe((list: PaginatedList<any>) => {
           this.optionsList = this.optionsList.concat(list.page);
+          const newFormattedItems = list.page.map((item: any) => this.inputFormatter(item));
+          this.formattedOptions = this.formattedOptions.concat(newFormattedItems);
           this.updatePageInfo(
             list.pageInfo.elementsPerPage,
             list.pageInfo.currentPage,
@@ -321,6 +329,17 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
     }
 
     this.currentValue = result;
+    result.subscribe((val: string) => {
+      this.currentValueStr = val || '';
+    });
+  }
+
+  /**
+   * TrackBy function for ngFor to optimize rendering performance.
+   * Only re-renders items when the actual data changes.
+   */
+  trackByIndex(index: number, item: any): number {
+    return index;
   }
 
 }
