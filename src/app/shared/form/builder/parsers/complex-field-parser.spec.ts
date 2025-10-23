@@ -2,6 +2,7 @@ import { FormFieldModel } from '../models/form-field.model';
 import { ParserOptions } from './parser-options';
 import { DynamicRowArrayModel } from '../ds-dynamic-form-ui/models/ds-dynamic-row-array-model';
 import {ComplexFieldParser} from './complex-field-parser';
+import { getMockTranslateService } from '../../../mocks/translate.service.mock';
 
 /**
  * The test class for the parser `complex-field-parser.ts`.
@@ -10,6 +11,7 @@ import {ComplexFieldParser} from './complex-field-parser';
 describe('ComplexFieldParser test suite', () => {
   let field: FormFieldModel;
   const initFormValues: any = {};
+  let translateService = getMockTranslateService();
 
   const submissionId = '1234';
   const parserOptions: ParserOptions = {
@@ -45,13 +47,15 @@ describe('ComplexFieldParser test suite', () => {
   });
 
   it('should init parser properly', () => {
-    const parser = new ComplexFieldParser(submissionId, field, initFormValues, parserOptions, separator, []);
+    const parser = new ComplexFieldParser(submissionId, field, initFormValues, parserOptions, separator, [],
+      translateService);
 
     expect(parser instanceof ComplexFieldParser).toBe(true);
   });
 
   it('should return a DynamicRowArrayModel object with expected label', () => {
-    const parser = new ComplexFieldParser(submissionId, field, initFormValues, parserOptions, separator, []);
+    const parser = new ComplexFieldParser(submissionId, field, initFormValues, parserOptions, separator, [],
+      translateService);
 
     const expectedValue = 'Contact person';
     const fieldModel = parser.parse();

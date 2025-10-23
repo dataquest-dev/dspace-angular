@@ -18,9 +18,9 @@ describe('Admin Menu Page', () => {
 
   it('should pass accessibility tests', () => {
     // Check handles redirect url in the <a> tag
-    cy.get('.sidebar-top-level-items a[href = "/handle-table"]').scrollIntoView().should('be.visible');
+    cy.get('ds-admin-sidebar-section a[href = "/handle-table"]').scrollIntoView().should('be.visible');
 
     // Check licenses redirect url in the <a> tag
-    cy.get('.sidebar-top-level-items a[href = "/licenses/manage-table"]').scrollIntoView().should('be.visible');
+    cy.get('ds-admin-sidebar-section a[href = "/licenses/manage-table"]').scrollIntoView().should('be.visible');
   });
 });

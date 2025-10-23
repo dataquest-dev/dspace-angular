@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
 import { SearchComponent } from '../search.component';
 import { SearchService } from '../../../core/shared/search/search.service';
 import { SidebarService } from '../../sidebar/sidebar.service';
@@ -16,6 +16,7 @@ import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs
 import { SortOptions } from '../../../core/cache/models/sort-options.model';
 import { SearchConfig } from '../../../core/shared/search/search-filters/search-config.model';
 import { DSpaceObjectType } from '../../../core/shared/dspace-object-type.model';
+import {APP_CONFIG, AppConfig} from '../../../../config/app-config.interface';
 
 /**
  * This component was created because we customized search item boxes and they was used in the `/mydspace` as well.
@@ -34,8 +35,10 @@ export class ClarinSearchComponent extends SearchComponent implements OnInit {
               protected windowService: HostWindowService,
               @Inject(SEARCH_CONFIG_SERVICE) public searchConfigService: SearchConfigurationService,
               protected routeService: RouteService,
-              protected router: Router) {
-    super(service, sidebarService, windowService, searchConfigService, routeService, router);
+              protected router: Router,
+              @Inject(APP_CONFIG) protected appConfig: AppConfig,
+              @Inject(PLATFORM_ID) public platformId: any) {
+    super(service, sidebarService, windowService, searchConfigService, routeService, router, appConfig, platformId);
   }
 
   /**
@@ -114,7 +117,6 @@ export class ClarinSearchComponent extends SearchComponent implements OnInit {
         // Initialize variables
         this.currentConfiguration$.next(configuration);
         this.currentSortOptions$.next(newSearchOptions.sort);
-        this.currentScope$.next(newSearchOptions.scope);
         this.sortOptionsList$.next(searchSortOptions);
         this.searchOptions$.next(newSearchOptions);
         this.initialized$.next(true);

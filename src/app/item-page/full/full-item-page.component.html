@@ -11,7 +11,6 @@
       </div>
       <ds-themed-item-alerts [item]="item"></ds-themed-item-alerts>
       <ds-item-versions-notice [item]="item"></ds-item-versions-notice>
-      <ds-view-tracker [object]="item"></ds-view-tracker>
       <div *ngIf="!item.isWithdrawn || (isAdmin$|async)" class="full-item-info">
         <div class="d-flex flex-row justify-content-end">
           <ds-dso-edit-menu></ds-dso-edit-menu>

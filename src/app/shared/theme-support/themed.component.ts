@@ -6,7 +6,6 @@ import {
   ComponentRef,
   SimpleChanges,
   OnDestroy,
-  ComponentFactoryResolver,
   ChangeDetectorRef,
   OnChanges,
   HostBinding,
@@ -47,7 +46,6 @@ export abstract class ThemedComponent<T> implements AfterViewInit, OnDestroy, On
   @HostBinding('attr.data-used-theme') usedTheme: string;
 
   constructor(
-    protected resolver: ComponentFactoryResolver,
     protected cdr: ChangeDetectorRef,
     protected themeService: ThemeService,
   ) {
@@ -84,6 +82,9 @@ export abstract class ThemedComponent<T> implements AfterViewInit, OnDestroy, On
   }
 
   initComponentInstance(changes?: SimpleChanges) {
+    if (hasValue(this.themeSub)) {
+      this.themeSub.unsubscribe();
+    }
     this.themeSub = this.themeService?.getThemeName$().subscribe(() => {
       this.renderComponentInstance(changes);
     });
@@ -118,8 +119,9 @@ export abstract class ThemedComponent<T> implements AfterViewInit, OnDestroy, On
 
     this.lazyLoadSub = this.lazyLoadObs.subscribe(([simpleChanges, constructor]: [SimpleChanges, GenericConstructor<T>]) => {
       this.destroyComponentInstance();
-      const factory = this.resolver.resolveComponentFactory(constructor);
-      this.compRef = this.vcr.createComponent(factory, undefined, undefined, [this.themedElementContent.nativeElement.childNodes]);
+      this.compRef = this.vcr.createComponent(constructor, {
+        projectableNodes: [this.themedElementContent.nativeElement.childNodes],
+      });
       if (hasValue(simpleChanges)) {
         this.ngOnChanges(simpleChanges);
       } else {

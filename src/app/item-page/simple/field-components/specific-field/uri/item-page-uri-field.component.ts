@@ -7,6 +7,7 @@ import { MetadataValue } from '../../../../../core/shared/metadata.models';
 import _ from 'lodash';
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-definition-data.service';
+import {BrowseService} from '../../../../../core/browse/browse.service';
 
 @Component({
   selector: 'ds-item-page-uri-field',
@@ -20,8 +21,9 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
 
   doiResolver: string;
   constructor(protected browseDefinitionDataService: BrowseDefinitionDataService,
+              protected browseService: BrowseService,
               private configService: ConfigurationDataService) {
-    super(browseDefinitionDataService);
+    super(browseDefinitionDataService, browseService);
   }
 
   /**
