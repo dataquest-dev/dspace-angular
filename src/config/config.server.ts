@@ -243,7 +243,6 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
       // REST API configuration - only public endpoint
       rest: {
         baseUrl: appConfig.rest?.baseUrl,
-        ssl: appConfig.rest?.ssl,
         nameSpace: appConfig.rest?.nameSpace,
       },
       // UI namespace for routing
@@ -282,7 +281,12 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
       search: appConfig.search,
       accessibility: appConfig.accessibility,
       signpostingEnabled: appConfig.signpostingEnabled,
-      matomo: appConfig.matomo,
+      // Matomo analytics - only expose client-side tracking properties
+      matomo: {
+        hostUrl: appConfig.matomo?.hostUrl,
+        siteId: appConfig.matomo?.siteId,
+        dimensionId: appConfig.matomo?.dimensionId,
+      },
       debug: appConfig.debug,
     };
 
