@@ -248,9 +248,7 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
         },
       }),
       // UI namespace for routing
-      ui: {
-        nameSpace: appConfig.ui?.nameSpace,
-      },
+      ...(appConfig.ui ? { ui: { nameSpace: appConfig.ui.nameSpace } } : {}),
       // Auth configuration - only expose client-side settings (idle timeout, token refresh)
       auth: {
         ui: {
