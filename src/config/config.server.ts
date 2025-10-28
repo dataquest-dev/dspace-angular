@@ -250,8 +250,16 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
       ui: {
         nameSpace: appConfig.ui.nameSpace,
       },
-      // Auth configuration for idle timeout and token refresh
-      auth: appConfig.auth,
+      // Auth configuration - only expose client-side settings (idle timeout, token refresh)
+      auth: {
+        ui: {
+          timeUntilIdle: appConfig.auth?.ui?.timeUntilIdle,
+          idleGracePeriod: appConfig.auth?.ui?.idleGracePeriod,
+        },
+        rest: {
+          timeLeftBeforeTokenRefresh: appConfig.auth?.rest?.timeLeftBeforeTokenRefresh,
+        },
+      },
       // Frontend feature configurations
       languages: appConfig.languages,
       defaultLanguage: appConfig.defaultLanguage,
