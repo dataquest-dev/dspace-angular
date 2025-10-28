@@ -237,7 +237,48 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
   buildBaseUrl(appConfig.rest);
 
   if (isNotEmpty(destConfigPath)) {
-    writeFileSync(destConfigPath, JSON.stringify(appConfig, null, 2));
+    // Create sanitized public config - only expose what frontend actually needs
+    const publicConfig = {
+      production: appConfig.production,
+      // REST API configuration - only public endpoint
+      rest: {
+        baseUrl: appConfig.rest.baseUrl,
+        ssl: appConfig.rest.ssl,
+        nameSpace: appConfig.rest.nameSpace,
+      },
+      // UI namespace for routing
+      ui: {
+        nameSpace: appConfig.ui.nameSpace,
+      },
+      // Auth configuration for idle timeout and token refresh
+      auth: appConfig.auth,
+      // Frontend feature configurations
+      languages: appConfig.languages,
+      defaultLanguage: appConfig.defaultLanguage,
+      themes: appConfig.themes,
+      form: appConfig.form,
+      notifications: appConfig.notifications,
+      submission: appConfig.submission,
+      browseBy: appConfig.browseBy,
+      communityList: appConfig.communityList,
+      homePage: appConfig.homePage,
+      item: appConfig.item,
+      collection: appConfig.collection,
+      mediaViewer: appConfig.mediaViewer,
+      bundle: appConfig.bundle,
+      info: appConfig.info,
+      markdown: appConfig.markdown,
+      vocabularies: appConfig.vocabularies,
+      comcolSelectionSort: appConfig.comcolSelectionSort,
+      liveRegion: appConfig.liveRegion,
+      search: appConfig.search,
+      accessibility: appConfig.accessibility,
+      signpostingEnabled: appConfig.signpostingEnabled,
+      matomo: appConfig.matomo,
+      debug: appConfig.debug,
+    };
+
+    writeFileSync(destConfigPath, JSON.stringify(publicConfig, null, 2));
 
     console.log(`Angular ${bold('config.json')} file generated correctly at ${bold(destConfigPath)} \n`);
   }
