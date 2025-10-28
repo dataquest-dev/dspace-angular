@@ -284,11 +284,13 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
       accessibility: appConfig.accessibility,
       signpostingEnabled: appConfig.signpostingEnabled,
       // Matomo analytics - only expose client-side tracking properties
-      matomo: {
-        hostUrl: appConfig.matomo?.hostUrl,
-        siteId: appConfig.matomo?.siteId,
-        dimensionId: appConfig.matomo?.dimensionId,
-      },
+      ...(appConfig.matomo && {
+        matomo: {
+          hostUrl: appConfig.matomo.hostUrl,
+          siteId: appConfig.matomo.siteId,
+          dimensionId: appConfig.matomo.dimensionId,
+        }
+      }),
       debug: appConfig.debug,
     };
 
