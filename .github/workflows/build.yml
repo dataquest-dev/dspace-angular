@@ -88,6 +88,11 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-npm-
 
+      # Workaround for npm bug with optional dependencies (https://github.com/npm/cli/issues/4828)
+      # Clean npm cache to avoid corrupted Rollup optional dependencies
+      - name: Clean npm cache
+        run: npm cache clean --force
+
       - name: Install NPM dependencies
         run: npm clean-install
 
@@ -331,8 +336,6 @@ jobs:
         uses: Wandalen/wretry.action@v1.3.0
         with:
           action: codecov/codecov-action@v4
-          # Ensure codecov-action throws an error when it fails to upload
-          # This allows us to auto-restart the action if an error is thrown
           with: |
             fail_ci_if_error: true
             token: ${{ secrets.CODECOV_TOKEN }}

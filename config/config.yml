@@ -1,5 +1,141 @@
 rest:
-  ssl: true
-  host: sandbox.dspace.org
-  port: 443
+  ssl: false
+  host: localhost
+  port: 8080
   nameSpace: /server
+
+
+# Theme Config
+themes:
+  # Add additional themes here. In the case where multiple themes match a route, the first one
+  # in this list will get priority. It is advisable to always have a theme that matches
+  # every route as the last one
+  #
+  # # A theme with a handle property will match the community, collection or item with the given
+  # # handle, and all collections and/or items within it
+  # - name: custom
+  #   handle: 10673/1233
+  #
+  # # A theme with a regex property will match the route using a regular expression. If it
+  # # matches the route for a community or collection it will also apply to all collections
+  # # and/or items within it
+  # - name: custom
+  #   regex: collections\/e8043bc2.*
+  #
+  # # A theme with a uuid property will match the community, collection or item with the given
+  # # ID, and all collections and/or items within it
+  # - name: custom
+  #   uuid: 0958c910-2037-42a9-81c7-dca80e3892b4
+  #
+  # # The extends property specifies an ancestor theme (by name). Whenever a themed component is not found
+  # # in the current theme, its ancestor theme(s) will be checked recursively before falling back to default.
+  # - name: custom-A
+  #   extends: custom-B
+  #   # Any of the matching properties above can be used
+  #   handle: 10673/34
+  #
+  # - name: custom-B
+  #   extends: custom
+  #   handle: 10673/12
+  #
+  # # A theme with only a name will match every route
+  # name: custom
+  #
+  # # This theme will use the default bootstrap styling for DSpace components
+  # - name: BASE_THEME_NAME
+  #
+  - name: custom
+    headTags:
+      - tagName: link
+        attributes:
+          rel: icon
+          href: assets/custom/images/favicons/favicon.ico
+          sizes: any
+      - tagName: link
+        attributes:
+          rel: icon
+          href: assets/custom/images/favicons/favicon.svg
+          type: image/svg+xml
+      - tagName: link
+        attributes:
+          rel: apple-touch-icon
+          href: assets/custom/images/favicons/apple-touch-icon.png
+      - tagName: link
+        attributes:
+          rel: manifest
+          href: assets/custom/images/favicons/manifest.webmanifest
+
+
+#info:
+#  # Whether the end user agreement is required before users may use the repository.
+#  # If enabled, the user will be required to accept the agreement before they can use the repository.
+#  # If disabled, the page will not exist and no agreement is required to use the repository
+#  enableEndUserAgreement: false
+#  # Whether the privacy statement should exist or not.
+#  enablePrivacyStatement: false
+
+# Allow only EN and CS languages
+languages:
+  - code: en
+    label: English
+    active: true
+  - code: ca
+    label: Català
+    active: false
+  - code: cs
+    label: Čeština
+    active: true
+  - code: de
+    label: Deutsch
+    active: false
+  - code: es
+    label: Español
+    active: false
+  - code: fr
+    label: Français
+    active: false
+  - code: gd
+    label: Gàidhlig
+    active: false
+  - code: lv
+    label: Latviešu
+    active: false
+  - code: hu
+    label: Magyar
+    active: false
+  - code: nl
+    label: Nederlands
+    active: false
+  - code: pl
+    label: Polski
+    active: false
+  - code: pt-PT
+    label: Português
+    active: false
+  - code: pt-BR
+    label: Português do Brasil
+    active: false
+  - code: fi
+    label: Suomi
+    active: false
+  - code: sv
+    label: Svenska
+    active: false
+  - code: tr
+    label: Türkçe
+    active: false
+  - code: kk
+    label: Қазақ
+    active: false
+  - code: bn
+    label: বাংলা
+    active: false
+  - code: hi
+    label: हिंदी
+    active: false
+  - code: el
+    label: Ελληνικά
+    active: false
+  - code: uk
+    label: Yкраї́нська
+    active: false

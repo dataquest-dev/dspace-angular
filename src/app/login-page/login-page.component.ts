@@ -24,6 +24,7 @@ import {
 } from '../core/auth/auth.actions';
 import { AuthTokenInfo } from '../core/auth/models/auth-token-info.model';
 import { isAuthenticated } from '../core/auth/selectors';
+import { LocaleService } from '../core/locale/locale.service';
 import {
   hasValue,
   isNotEmpty,
@@ -51,6 +52,8 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    */
   sub: Subscription;
 
+  logoSrc: string;
+
   /**
    * Initialize instance variables
    *
@@ -58,7 +61,8 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    * @param {Store<AppState>} store
    */
   constructor(private route: ActivatedRoute,
-              private store: Store<AppState>) {}
+              private store: Store<AppState>,
+              private localeService: LocaleService) {}
 
   /**
    * Initialize instance variables
@@ -66,6 +70,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   ngOnInit() {
     const queryParamsObs = this.route.queryParams;
     const authenticated = this.store.select(isAuthenticated);
+    this.setLogo();
     this.sub = observableCombineLatest(queryParamsObs, authenticated).pipe(
       filter(([params, auth]) => isNotEmpty(params.token) || isNotEmpty(params.expired)),
       take(1),
@@ -86,6 +91,11 @@ export class LoginPageComponent implements OnDestroy, OnInit {
         }
       }
     });
+  }
+  setLogo() {
+    this.logoSrc = this.localeService.getCurrentLanguageCode() === 'cs'
+      ? '/assets/images/mendel-uni-logo-cs.svg'
+      : '/assets/images/mendel-uni-logo-en.svg';
   }
 
   /**

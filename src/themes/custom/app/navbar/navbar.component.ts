@@ -13,10 +13,10 @@ import { slideMobileNav } from '../../../../app/shared/animations/slide';
 
 @Component({
   selector: 'ds-themed-navbar',
-  // styleUrls: ['./navbar.component.scss'],
-  styleUrls: ['../../../../app/navbar/navbar.component.scss'],
-  // templateUrl: './navbar.component.html',
-  templateUrl: '../../../../app/navbar/navbar.component.html',
+  styleUrls: ['./navbar.component.scss'],
+  // styleUrls: ['../../../../app/navbar/navbar.component.scss'],
+  templateUrl: './navbar.component.html',
+  // templateUrl: '../../../../app/navbar/navbar.component.html',
   animations: [slideMobileNav],
   standalone: true,
   imports: [

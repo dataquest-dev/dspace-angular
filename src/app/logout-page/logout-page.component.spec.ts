@@ -7,6 +7,7 @@ import {
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { LocaleService } from '../core/locale/locale.service';
 import { LogoutPageComponent } from './logout-page.component';
 
 describe('LogoutPageComponent', () => {
@@ -20,6 +21,7 @@ describe('LogoutPageComponent', () => {
         LogoutPageComponent,
       ],
       providers: [
+        { provide: LocaleService, useValue: { getCurrentLanguageCode: () => 'en' } },
         provideMockStore(),
       ],
       schemas: [NO_ERRORS_SCHEMA],
