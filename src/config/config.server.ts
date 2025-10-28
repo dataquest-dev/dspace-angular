@@ -242,13 +242,13 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
       production: appConfig.production,
       // REST API configuration - only public endpoint
       rest: {
-        baseUrl: appConfig.rest.baseUrl,
-        ssl: appConfig.rest.ssl,
-        nameSpace: appConfig.rest.nameSpace,
+        baseUrl: appConfig.rest?.baseUrl,
+        ssl: appConfig.rest?.ssl,
+        nameSpace: appConfig.rest?.nameSpace,
       },
       // UI namespace for routing
       ui: {
-        nameSpace: appConfig.ui.nameSpace,
+        nameSpace: appConfig.ui?.nameSpace,
       },
       // Auth configuration - only expose client-side settings (idle timeout, token refresh)
       auth: {
