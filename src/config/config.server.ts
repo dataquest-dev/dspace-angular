@@ -287,7 +287,7 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
           hostUrl: appConfig.matomo.hostUrl,
           siteId: appConfig.matomo.siteId,
           dimensionId: appConfig.matomo.dimensionId,
-        }
+        },
       }),
       debug: appConfig.debug,
     };
