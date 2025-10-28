@@ -241,10 +241,12 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
     const publicConfig = {
       production: appConfig.production,
       // REST API configuration - only public endpoint
-      rest: {
-        baseUrl: appConfig.rest?.baseUrl,
-        nameSpace: appConfig.rest?.nameSpace,
-      },
+      ...(appConfig.rest && {
+        rest: {
+          baseUrl: appConfig.rest.baseUrl,
+          nameSpace: appConfig.rest.nameSpace,
+        },
+      }),
       // UI namespace for routing
       ui: {
         nameSpace: appConfig.ui?.nameSpace,
