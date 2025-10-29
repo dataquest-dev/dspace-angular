@@ -52,7 +52,7 @@ jobs:
       image_name: dataquest-dev/dspace-angular
       dockerfile_path: ./Dockerfile.dist
       # As this is a "dist" image, its tags are all suffixed with "-dist". Otherwise, it uses the same
-      # tagging logic as the primary 'dspace/dspace-angular' image above.
+      # tagging logic as the primary 'dataquest-dev/dspace-angular' image above.
       tags_flavor: suffix=-dist
       run_python_version_script: true
       python_version_script_dest: src/static-files/VERSION_D.html
