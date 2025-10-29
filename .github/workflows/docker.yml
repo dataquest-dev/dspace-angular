@@ -26,7 +26,7 @@ jobs:
     # Ensure this job never runs on forked repos. It's only executed for 'dataquest-dev/dspace-angular'
     if: github.repository == 'dataquest-dev/dspace-angular'
     # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
-    uses: DSpace/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
+    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
     with:
       build_id: dspace-angular-dev
       image_name: dataquest-dev/dspace-angular
@@ -46,7 +46,7 @@ jobs:
     # Ensure this job never runs on forked repos. It's only executed for 'dataquest-dev/dspace-angular'
     if: github.repository == 'dataquest-dev/dspace-angular'
     # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
-    uses: DSpace/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
+    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
     with:
       build_id: dspace-angular-dist
       image_name: dataquest-dev/dspace-angular
