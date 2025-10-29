@@ -65,10 +65,10 @@ jobs:
       REDEPLOY_DEMO_URL:  ${{ secrets.REDEPLOY_DEMO_URL }}
 
   deploy:
-  needs: dspace-angular
-  uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@dtq-dev
-  if: ${{ github.event_name != 'pull_request' }}
-  with:
-    INSTANCE: '5'
-    IMPORT: false
-  secrets: inherit
+    needs: dspace-angular
+    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@dtq-dev
+    if: ${{ github.event_name != 'pull_request' }}
+    with:
+      INSTANCE: '5'
+      IMPORT: false
+    secrets: inherit
