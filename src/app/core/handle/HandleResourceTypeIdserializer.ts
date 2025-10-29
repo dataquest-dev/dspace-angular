@@ -14,6 +14,8 @@ export const HandleResourceTypeIdSerializer = {
         return 3;
       case COMMUNITY:
         return 4;
+      case SITE:
+        return 5;
       default:
         return null;
     }
@@ -27,6 +29,8 @@ export const HandleResourceTypeIdSerializer = {
         return COLLECTION;
       case 4:
         return COMMUNITY;
+      case 5:
+        return SITE;
       default:
         return SITE;
     }

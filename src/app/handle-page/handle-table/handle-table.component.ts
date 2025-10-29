@@ -31,6 +31,7 @@ import {
 import { getCommunityPageRoute } from '../../community-page/community-page-routing-paths';
 import { getCollectionPageRoute } from '../../collection-page/collection-page-routing-paths';
 import { getEntityPageRoute } from '../../item-page/item-page-routing-paths';
+import { HandleResourceTypeIdSerializer } from '../../core/handle/HandleResourceTypeIdserializer';
 
 /**
  * Constants for converting the searchQuery for the server
@@ -398,7 +399,7 @@ export class HandleTableComponent implements OnInit {
    * Get translated display name for resource type value
    */
   private getResourceTypeDisplayName(value: string): string {
-    const translationKey = `handle-table.search.resource-type.${value}`;
+    const translationKey = `handle-table.search.resource-type.${value.toLowerCase()}`;
     return this.translateService.instant(translationKey);
   }
 
@@ -436,14 +437,7 @@ export class HandleTableComponent implements OnInit {
    * Parse resource type search query to server format (converts to numeric ID)
    */
   private parseResourceTypeSearchQuery(searchQuery: string): string {
-    const resourceTypeIdMap: Record<string, number> = {
-      item: 2,
-      collection: 3,
-      community: 4,
-      site: 5
-    };
-
-    const id = resourceTypeIdMap[searchQuery];
+    const id = HandleResourceTypeIdSerializer.Serialize(searchQuery);
     return id ? id.toString() : '-1';
   }
 
