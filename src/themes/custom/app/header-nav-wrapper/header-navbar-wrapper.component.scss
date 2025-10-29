@@ -51,6 +51,7 @@
           &:hover, &:focus {
             color: var(--ds-navbar-link-color-hover);
             background-color: var(--ds-navbar-link-color);
+            transition: background-color .15s ease-out, color .15s ease-out;
           }
         }
 
@@ -66,6 +67,7 @@
             &:hover, &:focus {
               color: var(--ds-navbar-link-color);
               background-color: var(--ds-navbar-link-color-hover);
+              transition: background-color .15s ease-out, color .15s ease-out;
             }
           }
         }
