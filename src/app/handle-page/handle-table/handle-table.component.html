@@ -22,7 +22,7 @@
       </div>
 
         <!-- Search input area -->
-        <div class="search-input-container">
+        <div class="search-input-container flex-fill">
           <!-- Default disabled search input when no option is selected -->
           <input *ngIf="!searchOption"
                  type="text"
@@ -40,10 +40,10 @@
           <!-- Dropdown for Internal search -->
           <div *ngIf="searchOption === internalOption"
                ngbDropdown
-               class="search-dropdown-container">
+               class="search-dropdown-container w-100">
             <button type="button"
                     ngbDropdownToggle
-                    class="search-dropdown-button"
+                    class="search-dropdown-button w-100 text-left"
                     [attr.aria-label]="'handle-table.search.aria.select-internal' | translate">
               <span>{{ getInternalDisplayText() }}</span>
             </button>
@@ -60,10 +60,10 @@
           <!-- Dropdown for Resource Type search -->
           <div *ngIf="searchOption === resourceTypeOption"
                ngbDropdown
-               class="search-dropdown-container">
+               class="search-dropdown-container w-100">
             <button type="button"
                     ngbDropdownToggle
-                    class="search-dropdown-button"
+                    class="search-dropdown-button w-100 text-left"
                     [attr.aria-label]="'handle-table.search.aria.select-resource-type' | translate">
               <span>{{ getResourceTypeDisplayText() }}</span>
             </button>
