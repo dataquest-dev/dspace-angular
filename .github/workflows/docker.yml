@@ -9,11 +9,10 @@ name: Docker images
 on:
   push:
     branches:
-      - main
-      - 'dspace-**'
-    tags:
-      - 'dspace-**'
+      - dtq-dev
+      - customer/*
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read  # to fetch code (actions/checkout)
@@ -27,11 +26,15 @@ jobs:
     # Ensure this job never runs on forked repos. It's only executed for 'dataquest-dev/dspace-angular'
     if: github.repository == 'dataquest-dev/dspace-angular'
     # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
-    uses: DSpace/DSpace/.github/workflows/reusable-docker-build.yml@main
+    uses: DSpace/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
     with:
       build_id: dspace-angular-dev
       image_name: dataquest-dev/dspace-angular
       dockerfile_path: ./Dockerfile
+      # As this is a "dev" image, its tags are all suffixed with "-dev". Otherwise, it uses the same
+      # tagging logic as the primary 'dspace/dspace-angular' image above.
+      run_python_version_script: true
+      python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
@@ -43,7 +46,7 @@ jobs:
     # Ensure this job never runs on forked repos. It's only executed for 'dataquest-dev/dspace-angular'
     if: github.repository == 'dataquest-dev/dspace-angular'
     # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
-    uses: DSpace/DSpace/.github/workflows/reusable-docker-build.yml@main
+    uses: DSpace/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
     with:
       build_id: dspace-angular-dist
       image_name: dataquest-dev/dspace-angular
@@ -51,6 +54,8 @@ jobs:
       # As this is a "dist" image, its tags are all suffixed with "-dist". Otherwise, it uses the same
       # tagging logic as the primary 'dataquest-dev/dspace-angular' image above.
       tags_flavor: suffix=-dist
+      run_python_version_script: true
+      python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
@@ -58,3 +63,12 @@ jobs:
       # these sites as specified in reusable-docker-build.xml
       REDEPLOY_SANDBOX_URL:  ${{ secrets.REDEPLOY_SANDBOX_URL }}
       REDEPLOY_DEMO_URL:  ${{ secrets.REDEPLOY_DEMO_URL }}
+
+  deploy:
+  needs: dspace-angular
+  uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@dtq-dev
+  if: ${{ github.event_name != 'pull_request' }}
+  with:
+    INSTANCE: '5'
+    IMPORT: false
+  secrets: inherit
