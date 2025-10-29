@@ -35,53 +35,32 @@
                  type="text"
                  class="form-control search-input"
                  [(ngModel)]="searchQuery"
+                 (keyup.enter)="searchHandles()"
                  [placeholder]="'handle-table.search.placeholder.handle' | translate">
 
           <!-- Dropdown for Internal search -->
-          <div *ngIf="searchOption === internalOption"
-               ngbDropdown
-               class="search-dropdown-container w-100">
-            <button type="button"
-                    ngbDropdownToggle
-                    class="search-dropdown-button w-100 text-left"
-                    [attr.aria-label]="'handle-table.search.aria.select-internal' | translate">
-              <span>{{ getInternalDisplayText() }}</span>
-            </button>
-            <div ngbDropdownMenu>
-              <button class="dropdown-item"
-                      (click)="setSearchValue('yes')"
-                      type="button">{{'handle-table.search.internal.yes' | translate}}</button>
-              <button class="dropdown-item"
-                      (click)="setSearchValue('no')"
-                      type="button">{{'handle-table.search.internal.no' | translate}}</button>
-            </div>
-          </div>
+          <select *ngIf="searchOption === internalOption"
+                  class="form-select w-100"
+                  [(ngModel)]="searchQuery"
+                  (change)="searchHandles()"
+                  [attr.aria-label]="'handle-table.search.aria.select-internal' | translate">
+            <option value="" disabled selected>{{'handle-table.search.internal.select' | translate}}</option>
+            <option value="yes">{{'handle-table.search.internal.yes' | translate}}</option>
+            <option value="no">{{'handle-table.search.internal.no' | translate}}</option>
+          </select>
 
           <!-- Dropdown for Resource Type search -->
-          <div *ngIf="searchOption === resourceTypeOption"
-               ngbDropdown
-               class="search-dropdown-container w-100">
-            <button type="button"
-                    ngbDropdownToggle
-                    class="search-dropdown-button w-100 text-left"
-                    [attr.aria-label]="'handle-table.search.aria.select-resource-type' | translate">
-              <span>{{ getResourceTypeDisplayText() }}</span>
-            </button>
-            <div ngbDropdownMenu>
-              <button class="dropdown-item"
-                      (click)="setSearchValue('Site')"
-                      type="button">{{'handle-table.search.resource-type.site' | translate}}</button>
-              <button class="dropdown-item"
-                      (click)="setSearchValue('Community')"
-                      type="button">{{'handle-table.search.resource-type.community' | translate}}</button>
-              <button class="dropdown-item"
-                      (click)="setSearchValue('Collection')"
-                      type="button">{{'handle-table.search.resource-type.collection' | translate}}</button>
-              <button class="dropdown-item"
-                      (click)="setSearchValue('Item')"
-                      type="button">{{'handle-table.search.resource-type.item' | translate}}</button>
-            </div>
-          </div>
+          <select *ngIf="searchOption === resourceTypeOption"
+                  class="form-select w-100"
+                  [(ngModel)]="searchQuery"
+                  (change)="searchHandles()"
+                  [attr.aria-label]="'handle-table.search.aria.select-resource-type' | translate">
+            <option value="" disabled selected>{{'handle-table.search.resource-type.select' | translate}}</option>
+            <option value="Site">{{'handle-table.search.resource-type.site' | translate}}</option>
+            <option value="Community">{{'handle-table.search.resource-type.community' | translate}}</option>
+            <option value="Collection">{{'handle-table.search.resource-type.collection' | translate}}</option>
+            <option value="Item">{{'handle-table.search.resource-type.item' | translate}}</option>
+          </select>
         </div>
 
         <span class="input-group-append" (click)="searchHandles()">
