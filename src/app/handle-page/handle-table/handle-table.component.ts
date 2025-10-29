@@ -24,6 +24,7 @@ import { Handle } from '../../core/handle/handle.model';
 import {
   COLLECTION,
   COMMUNITY,
+  INVALID_RESOURCE_TYPE_ID,
   ITEM,
   SITE,
   SUCCESSFUL_RESPONSE_START_CHAR
@@ -438,7 +439,7 @@ export class HandleTableComponent implements OnInit {
    */
   private parseResourceTypeSearchQuery(searchQuery: string): string {
     const id = HandleResourceTypeIdSerializer.Serialize(searchQuery);
-    return id ? id.toString() : '-1';
+    return id ? id.toString() : INVALID_RESOURCE_TYPE_ID.toString();
   }
 
   /**
