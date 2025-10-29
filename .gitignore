@@ -1,5 +1,4 @@
 /.angular/cache
-/.nx
 /__build__
 /__server_build__
 /node_modules
@@ -28,11 +27,11 @@ webpack.records.json
 
 morgan.log
 
-# Yarn no longer used
-yarn.lock
 yarn-error.log
 
 *.css
+
+package-lock.json
 
 .java-version
 
@@ -42,3 +41,9 @@ yarn-error.log
 junit.xml
 
 /src/mirador-viewer/config.local.js
+
+# import data python module
+python_data_import/debug.log.txt
+python_data_import/logs.txt
+python_data_import/date.txt
+*/__pycache__/
