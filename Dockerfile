@@ -11,7 +11,7 @@ WORKDIR /app
 ADD . /app/
 EXPOSE 4000
 
-RUN npm install
+RUN npm install --network-timeout 300000
 
 # When running in dev mode, 4GB of memory is required to build & launch the app.
 # This default setting can be overridden as needed in your shell, via an env file or in docker-compose.
@@ -22,5 +22,8 @@ ENV NODE_OPTIONS="--max_old_space_size=4096"
 # Listen / accept connections from all IP addresses.
 # NOTE: At this time it is only possible to run Docker container in Production mode
 # if you have a public URL. See https://github.com/DSpace/dspace-angular/issues/1485
-ENV NODE_ENV=development
-CMD npm run serve -- --host 0.0.0.0
+ENV NODE_ENV=production
+RUN apk add tzdata
+RUN yarn build:prod
+RUN npm install pm2 -g
+CMD /bin/sh -c "pm2-runtime start docker/dspace-ui.json > /dev/null 2> /dev/null"
