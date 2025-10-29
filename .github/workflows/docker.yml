@@ -31,10 +31,6 @@ jobs:
       build_id: dspace-angular-dev
       image_name: dataquest-dev/dspace-angular
       dockerfile_path: ./Dockerfile
-      # As this is a "dev" image, its tags are all suffixed with "-dev". Otherwise, it uses the same
-      # tagging logic as the primary 'dspace/dspace-angular' image above.
-      run_python_version_script: true
-      python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
@@ -54,8 +50,6 @@ jobs:
       # As this is a "dist" image, its tags are all suffixed with "-dist". Otherwise, it uses the same
       # tagging logic as the primary 'dataquest-dev/dspace-angular' image above.
       tags_flavor: suffix=-dist
-      run_python_version_script: true
-      python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
