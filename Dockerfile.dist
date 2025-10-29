@@ -11,7 +11,7 @@ FROM docker.io/node:18-alpine AS build
 RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY package.json package-lock.json ./
 RUN yarn install --network-timeout 300000
 
 ADD . /app/
