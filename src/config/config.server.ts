@@ -236,7 +236,51 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
   buildBaseUrl(appConfig.rest);
 
   if (isNotEmpty(destConfigPath)) {
-    writeFileSync(destConfigPath, JSON.stringify(appConfig, null, 2));
+    // Create sanitized public config - only expose what frontend actually needs
+    const publicConfig = {
+      production: appConfig.production,
+      // REST API configuration - only public endpoint
+      ...(appConfig.rest && {
+        rest: {
+          baseUrl: appConfig.rest.baseUrl,
+          nameSpace: appConfig.rest.nameSpace,
+        },
+      }),
+      // UI namespace for routing
+      ...(appConfig.ui ? { ui: { nameSpace: appConfig.ui.nameSpace } } : {}),
+      // Auth configuration - only expose client-side settings (idle timeout, token refresh)
+      auth: {
+        ui: {
+          timeUntilIdle: appConfig.auth?.ui?.timeUntilIdle,
+          idleGracePeriod: appConfig.auth?.ui?.idleGracePeriod,
+        },
+        rest: {
+          timeLeftBeforeTokenRefresh: appConfig.auth?.rest?.timeLeftBeforeTokenRefresh,
+        },
+      },
+      // Frontend feature configurations
+      languages: appConfig.languages,
+      defaultLanguage: appConfig.defaultLanguage,
+      themes: appConfig.themes,
+      form: appConfig.form,
+      notifications: appConfig.notifications,
+      submission: appConfig.submission,
+      browseBy: appConfig.browseBy,
+      communityList: appConfig.communityList,
+      homePage: appConfig.homePage,
+      item: appConfig.item,
+      collection: appConfig.collection,
+      mediaViewer: appConfig.mediaViewer,
+      bundle: appConfig.bundle,
+      info: appConfig.info,
+      markdown: appConfig.markdown,
+      vocabularies: appConfig.vocabularies,
+      comcolSelectionSort: appConfig.comcolSelectionSort,
+      signpostingEnabled: appConfig.signpostingEnabled,
+      debug: appConfig.debug,
+    };
+
+    writeFileSync(destConfigPath, JSON.stringify(publicConfig, null, 2));
 
     console.log(`Angular ${bold('config.json')} file generated correctly at ${bold(destConfigPath)} \n`);
   }
