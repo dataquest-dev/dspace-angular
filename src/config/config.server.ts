@@ -245,6 +245,7 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
         rest: {
           baseUrl: appConfig.rest.baseUrl,
           nameSpace: appConfig.rest.nameSpace,
+          ssrBaseUrl: appConfig.rest.ssrBaseUrl,
         },
       }),
       // UI namespace for routing
@@ -263,7 +264,6 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
       cache: {
         msToLive: appConfig.cache?.msToLive,
         control: appConfig.cache?.control,
-        autoSync: appConfig.cache?.autoSync,
       },
       // Frontend feature configurations
       languages: appConfig.languages,
