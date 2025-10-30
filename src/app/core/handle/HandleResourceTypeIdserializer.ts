@@ -32,7 +32,7 @@ export const HandleResourceTypeIdSerializer = {
       case 5:
         return SITE;
       default:
-        return SITE;
+        return null;
     }
   }
 };
