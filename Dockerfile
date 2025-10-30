@@ -11,9 +11,7 @@ WORKDIR /app
 ADD . /app/
 EXPOSE 4000
 
-# We run yarn install with an increased network timeout (5min) to avoid "ESOCKETTIMEDOUT" errors from hub.docker.com
-# See, for example https://github.com/yarnpkg/yarn/issues/5540
-RUN yarn install --network-timeout 300000
+RUN npm install
 
 # When running in dev mode, 4GB of memory is required to build & launch the app.
 # This default setting can be overridden as needed in your shell, via an env file or in docker-compose.
