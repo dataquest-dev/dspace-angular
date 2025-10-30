@@ -11,3 +11,6 @@ If en.json5 or cs.json5 translation files were updated:
 
 ### Manual Testing (if applicable)
 - [ ] Added to [testing scenarios](https://github.com/dataquest-dev/dspace-customers/issues/55)
+
+### Copilot review
+- [ ] Requested review from Copilot
