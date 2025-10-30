@@ -10,4 +10,4 @@ If en.json5 or cs.json5 translation files were updated:
 - [ ] Run `yarn run sync-i18n -t src/assets/i18n/cs.json5 -i` to synchronize messages, and changes are included in this PR.
 
 ### Manual Testing (if applicable)
-- [ ] Added to testing scenarios.
+- [ ] Added to [testing scenarios](https://github.com/dataquest-dev/dspace-customers/issues/55)
