@@ -241,11 +241,9 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
     const publicConfig = {
       production: appConfig.production,
       // REST API configuration - only public endpoint
-      // rest: appConfig.rest,
       ...(appConfig.rest && {
         rest: {
           baseUrl: appConfig.rest.baseUrl,
-          ssl: appConfig.rest.ssl,
           nameSpace: appConfig.rest.nameSpace,
         },
       }),
@@ -261,10 +259,11 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
           timeLeftBeforeTokenRefresh: appConfig.auth?.rest?.timeLeftBeforeTokenRefresh,
         },
       },
-      // Cache configuration - frontend needs msToLive and control settings
+      // Cache configuration - frontend needs msToLive, control, and autoSync settings
       cache: {
         msToLive: appConfig.cache?.msToLive,
         control: appConfig.cache?.control,
+        autoSync: appConfig.cache?.autoSync,
       },
       // Frontend feature configurations
       languages: appConfig.languages,
