@@ -14,7 +14,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
-COPY . .
+ADD . /app/
 # Set memory limit for build process - Angular builds require more memory
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 RUN npm run build:prod
