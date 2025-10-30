@@ -259,11 +259,8 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
           timeLeftBeforeTokenRefresh: appConfig.auth?.rest?.timeLeftBeforeTokenRefresh,
         },
       },
-      // Cache configuration - frontend needs msToLive and control settings
-      cache: {
-        msToLive: appConfig.cache?.msToLive,
-        control: appConfig.cache?.control,
-      },
+      // Cache configuration - frontend needs full cache config for proper operation
+      cache: appConfig.cache,
       // Frontend feature configurations
       languages: appConfig.languages,
       defaultLanguage: appConfig.defaultLanguage,
