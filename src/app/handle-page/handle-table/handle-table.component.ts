@@ -366,45 +366,6 @@ export class HandleTableComponent implements OnInit {
   }
 
   /**
-   * Set the search value for any search type
-   * @param value The search value to set
-   */
-  setSearchValue(value: string): void {
-    this.searchQuery = value;
-  }
-
-  /**
-   * Get display text for internal search dropdown
-   */
-  getInternalDisplayText(): string {
-    if (!this.searchQuery) {
-      return this.translateService.instant('handle-table.search.internal.select');
-    }
-    const translationKey = this.searchQuery === 'yes'
-      ? 'handle-table.search.internal.yes'
-      : 'handle-table.search.internal.no';
-    return this.translateService.instant(translationKey);
-  }
-
-  /**
-   * Get display text for resource type search dropdown
-   */
-  getResourceTypeDisplayText(): string {
-    if (!this.searchQuery) {
-      return this.translateService.instant('handle-table.search.resource-type.select');
-    }
-    return this.getResourceTypeDisplayName(this.searchQuery);
-  }
-
-  /**
-   * Get translated display name for resource type value
-   */
-  private getResourceTypeDisplayName(value: string): string {
-    const translationKey = `handle-table.search.resource-type.${value.toLowerCase()}`;
-    return this.translateService.instant(translationKey);
-  }
-
-  /**
    * Get translated resource type name for table display
    * Converts constants like 'Community', 'Collection', 'Item', 'Site' to translated strings
    */
