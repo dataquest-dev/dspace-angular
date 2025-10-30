@@ -44,7 +44,7 @@
                   [(ngModel)]="searchQuery"
                   (change)="searchHandles()"
                   [attr.aria-label]="'handle-table.search.aria.select-internal' | translate">
-            <option value="" disabled selected>{{'handle-table.search.internal.select' | translate}}</option>
+            <option value="" disabled [selected]="!searchQuery">{{'handle-table.search.internal.select' | translate}}</option>
             <option value="yes">{{'handle-table.search.internal.yes' | translate}}</option>
             <option value="no">{{'handle-table.search.internal.no' | translate}}</option>
           </select>
@@ -55,7 +55,7 @@
                   [(ngModel)]="searchQuery"
                   (change)="searchHandles()"
                   [attr.aria-label]="'handle-table.search.aria.select-resource-type' | translate">
-            <option value="" disabled selected>{{'handle-table.search.resource-type.select' | translate}}</option>
+            <option value="" disabled [selected]="!searchQuery">{{'handle-table.search.resource-type.select' | translate}}</option>
             <option value="Site">{{'handle-table.search.resource-type.site' | translate}}</option>
             <option value="Community">{{'handle-table.search.resource-type.community' | translate}}</option>
             <option value="Collection">{{'handle-table.search.resource-type.collection' | translate}}</option>
