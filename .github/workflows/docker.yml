@@ -4,8 +4,8 @@ name: Docker images
 # Run this Build for all pushes to 'main' or maintenance branches, or tagged releases.
 # Also run for PRs to ensure PR doesn't break Docker build process
 # NOTE: uses "reusable-docker-build.yml" in DSpace/DSpace to actually build each of the Docker images
-# https://github.com/DSpace/DSpace/blob/main/.github/workflows/reusable-docker-build.yml
-# 
+# https://github.com/DSpace/DSpace/blob/dspace-7_x/.github/workflows/reusable-docker-build.yml
+#
 on:
   push:
     branches:
@@ -20,36 +20,40 @@ permissions:
 
 jobs:
   #############################################################
-  # Build/Push the 'dataquest-dev/dspace-angular' image
+  # Build/Push the 'dspace/dspace-angular' image
   #############################################################
   dspace-angular:
-    # Ensure this job never runs on forked repos. It's only executed for 'dataquest-dev/dspace-angular'
+    # Ensure this job never runs on forked repos. It's only executed for 'dspace/dspace-angular'
     if: github.repository == 'dataquest-dev/dspace-angular'
     # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
     uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
     with:
       build_id: dspace-angular-dev
-      image_name: dataquest-dev/dspace-angular
+      image_name: dataquest/dspace-angular
       dockerfile_path: ./Dockerfile
+      tags_flavor: suffix=-dev
+      # As this is a "dev" image, its tags are all suffixed with "-dev". Otherwise, it uses the same
+      # tagging logic as the primary 'dspace/dspace-angular' image above.
+      # run_python_version_script: true
+      # python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
   #############################################################
-  # Build/Push the 'dataquest-dev/dspace-angular' image ('-dist' tag)
+  # Build/Push the 'dataquest/dspace-angular' image ('-dist' tag)
   #############################################################
   dspace-angular-dist:
-    # Ensure this job never runs on forked repos. It's only executed for 'dataquest-dev/dspace-angular'
+    # Ensure this job never runs on forked repos. It's only executed for 'dataquest/dspace-angular'
     if: github.repository == 'dataquest-dev/dspace-angular'
-    # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
+    # Use the reusable-docker-build.yml script from dataquest-dev/DSpace repo to build our Docker image
     uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
     with:
-      build_id: dspace-angular-dist
-      image_name: dataquest-dev/dspace-angular
+      build_id: dspace-angular
+      image_name: dataquest/dspace-angular
       dockerfile_path: ./Dockerfile.dist
-      # As this is a "dist" image, its tags are all suffixed with "-dist". Otherwise, it uses the same
-      # tagging logic as the primary 'dataquest-dev/dspace-angular' image above.
-      tags_flavor: suffix=-dist
+      # run_python_version_script: true
+      # python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
