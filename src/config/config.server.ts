@@ -241,12 +241,14 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
     const publicConfig = {
       production: appConfig.production,
       // REST API configuration - only public endpoint
-      ...(appConfig.rest && {
-        rest: {
-          baseUrl: appConfig.rest.baseUrl,
-          nameSpace: appConfig.rest.nameSpace,
-        },
-      }),
+      rest: appConfig.rest,
+      // ...(appConfig.rest && {
+      //   rest: {
+      //     baseUrl: appConfig.rest.baseUrl,
+      //     ssl: appConfig.rest.ssl,
+      //     nameSpace: appConfig.rest.nameSpace,
+      //   },
+      // }),
       // UI namespace for routing
       ...(appConfig.ui ? { ui: { nameSpace: appConfig.ui.nameSpace } } : {}),
       // Auth configuration - only expose client-side settings (idle timeout, token refresh)
@@ -259,8 +261,11 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
           timeLeftBeforeTokenRefresh: appConfig.auth?.rest?.timeLeftBeforeTokenRefresh,
         },
       },
-      // Cache configuration - frontend needs full cache config for proper operation
-      cache: appConfig.cache,
+      // Cache configuration - frontend needs msToLive and control settings
+      cache: {
+        msToLive: appConfig.cache?.msToLive,
+        control: appConfig.cache?.control,
+      },
       // Frontend feature configurations
       languages: appConfig.languages,
       defaultLanguage: appConfig.defaultLanguage,
