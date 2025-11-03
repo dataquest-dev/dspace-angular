@@ -121,6 +121,12 @@ jobs:
           docker compose -f ./docker/cli.yml -f ./docker/cli.assetstore.yml run --rm dspace-cli
           docker container ls
 
+      # Install compatible Chrome version for Cypress 9.7.0
+      - name: Install Chrome 114
+        run: |
+          wget -q https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb
+          sudo apt install ./google-chrome-stable_114.0.5735.90-1_amd64.deb
+
       # Run integration tests via Cypress.io
       # https://github.com/cypress-io/github-action
       # (NOTE: to run these e2e tests locally, just use 'ng e2e')
