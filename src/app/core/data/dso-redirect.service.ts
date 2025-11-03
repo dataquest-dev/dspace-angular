@@ -128,7 +128,7 @@ export class DsoRedirectService {
   }
 
   /**
-   * Extract the handle path from the given URL. Return only `/handle/{PREFIX}/{SUFFIX}`.
+   * Extract the handle path from the given URL. Return only `handle/{PREFIX}/{SUFFIX}` (without leading slash).
    * @param url the URL to extract the handle path from
    */
   extractHandlePath(url: string): string | null {
