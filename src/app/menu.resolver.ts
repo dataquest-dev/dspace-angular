@@ -47,7 +47,7 @@ import {
 import {
   ExportBatchSelectorComponent
 } from './shared/dso-selector/modal-wrappers/export-batch-selector/export-batch-selector.component';
-import {getLicensesManageTablePath, getLicensesModulePath} from './app-routing-paths';
+import { getLicensesManageTablePath, getLicensesModulePath } from './app-routing-paths';
 
 /**
  * Creates all of the app's menus
@@ -357,7 +357,7 @@ export class MenuResolver implements Resolve<boolean> {
           model: {
             type: MenuItemType.LINK,
             text: 'menu.section.health',
-            link: '/health'
+            link: '/health',
           } as LinkMenuItemModel,
           icon: 'heartbeat',
           index: 13
@@ -385,6 +385,19 @@ export class MenuResolver implements Resolve<boolean> {
             link: '/handle-table'
           } as LinkMenuItemModel,
           icon: 'table',
+          index: 11
+        },
+        /* ePIC Handles */
+        {
+          id: 'epic_handle_table',
+          active: false,
+          visible: isSiteAdmin,
+          model: {
+            type: MenuItemType.LINK,
+            text: 'menu.section.epic-handle',
+            link: '/epic-handle-table/prefix',
+          } as LinkMenuItemModel,
+          icon: 'grip-lines',
           index: 11
         },
         /* License administration */

@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 pb-4">
+      <h2 id="header" class="border-bottom pb-2">{{ 'epic-handle-table.new-handle.title' | translate }}</h2>
+      <p class="text-muted">{{ 'epic-handle-table.new-handle.description' | translate: {prefix: prefix} }}</p>
+    </div>
+  </div>
+
+  <form #newHandle="ngForm" (ngSubmit)="onClickSubmit(newHandle.value)" class="needs-validation">
+    <div class="form-group mb-3">
+      <label for="url" class="form-label">
+        {{ 'epic-handle-table.new-handle.form-url-input-text' | translate }}
+        <span class="text-danger">*</span>
+      </label>
+      <input type="url" class="form-control" id="url" name="url" [(ngModel)]="url"
+        [placeholder]="'epic-handle-table.new-handle.form-url-input-placeholder' | translate" required
+        [disabled]="isLoading">
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="suffix" class="form-label">
+        {{ 'epic-handle-table.new-handle.form-suffix-input-text' | translate }}
+      </label>
+      <input type="text" class="form-control" id="suffix" name="suffix" [(ngModel)]="suffix"
+        [placeholder]="'epic-handle-table.new-handle.form-suffix-input-placeholder' | translate"
+        [disabled]="isSuffixDisabled">
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="subPrefix" class="form-label">
+        {{ 'epic-handle-table.new-handle.form-subprefix-input-text' | translate }}
+      </label>
+      <input type="text" class="form-control" id="subPrefix" name="subPrefix" [(ngModel)]="subPrefix"
+        [placeholder]="'epic-handle-table.new-handle.form-subprefix-input-placeholder' | translate"
+        [disabled]="isSubValuesDisabled">
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="subSuffix" class="form-label">
+        {{ 'epic-handle-table.new-handle.form-subsuffix-input-text' | translate }}
+      </label>
+      <input type="text" class="form-control" id="subSuffix" name="subSuffix" [(ngModel)]="subSuffix"
+        [placeholder]="'epic-handle-table.new-handle.form-subsuffix-input-placeholder' | translate"
+        [disabled]="isSubValuesDisabled">
+    </div>
+
+    <div class="btn-group mt-3">
+      <button type="submit" class="btn btn-primary" [disabled]="!newHandle.form.valid || isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+         {{  hasSuffix ? ('epic-handle-table.edit-handle.form-button-submit' | translate)   : ('epic-handle-table.new-handle.form-button-submit' | translate) }}
+      </button>
+      <button type="button" class="btn btn-secondary ml-2" (click)="onCancel()" [disabled]="isLoading">
+        {{  'epic-handle-table.new-handle.form-button-cancel' | translate }}
+      </button>
+    </div>
+  </form>
+</div>
