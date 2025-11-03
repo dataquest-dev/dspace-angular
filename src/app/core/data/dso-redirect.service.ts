@@ -114,7 +114,7 @@ export class DsoRedirectService {
               if (!isAuthenticated) {
                 // If the user is not authenticated, redirect to login page
                 // Extract redirect URL - remove `https://.../namespace` from the current URL. Keep only `handle/...`
-                const redirectUrl = this.extractHandlePath(window.location.href);
+                const redirectUrl = this.extractHandlePath(window.location.href) ?? window.location.pathname;
                 this.authService.setRedirectUrl(redirectUrl);
                 void this.router.navigateByUrl('login');
               } else {
