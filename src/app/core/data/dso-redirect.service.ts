@@ -107,7 +107,7 @@ export class DsoRedirectService {
           }
           return of(response);
         }
-        
+
         // Handle authentication errors: redirect unauthenticated users to login, authenticated users to forbidden page
         if (response.hasFailed && (response.statusCode === 401 || response.statusCode === 403)) {
           return this.authService.isAuthenticated().pipe(
@@ -116,7 +116,7 @@ export class DsoRedirectService {
               if (!isAuthenticated) {
                 // If the user is not authenticated, redirect to login page
                 // Extract redirect URL - remove `https://.../namespace` from the current URL. Keep only `handle/...`
-                const redirectUrl = this.extractHandlePath(window.location.href) ?? window.location.pathname;
+                const redirectUrl = this.extractHandlePath(window.location.href);
                 this.authService.setRedirectUrl(redirectUrl);
                 void this.router.navigateByUrl('login');
               } else {
@@ -127,7 +127,7 @@ export class DsoRedirectService {
             switchMap(() => of(response))
           );
         }
-        
+
         // Return the response for all other cases
         return of(response);
       })
