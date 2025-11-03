@@ -8,8 +8,8 @@
 /* eslint-disable max-classes-per-file */
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { take, tap, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 import { hasValue } from '../../shared/empty.util';
 import { RemoteDataBuildService } from '../cache/builders/remote-data-build.service';
 import { ObjectCacheService } from '../cache/object-cache.service';
@@ -94,8 +94,7 @@ export class DsoRedirectService {
     this.dataService.setLinkPath(identifierType);
     return this.dataService.findById(id).pipe(
       getFirstCompletedRemoteData(),
-      switchMap((response) => {
-        // Handle successful responses
+      tap((response) => {
         if (response.hasSucceeded) {
           const dso = response.payload;
           if (hasValue(dso.uuid)) {
@@ -105,14 +104,13 @@ export class DsoRedirectService {
               this.hardRedirectService.redirect(this.appConfig.ui.nameSpace.replace(/\/$/, '') + newRoute);
             }
           }
-          return of(response);
         }
-
         // Handle authentication errors: redirect unauthenticated users to login, authenticated users to forbidden page
         if (response.hasFailed && (response.statusCode === 401 || response.statusCode === 403)) {
-          return this.authService.isAuthenticated().pipe(
-            take(1),
-            tap((isAuthenticated) => {
+          const isAuthenticated$ = this.authService.isAuthenticated();
+          isAuthenticated$
+            .pipe(take(1))
+            .subscribe((isAuthenticated) => {
               if (!isAuthenticated) {
                 // If the user is not authenticated, redirect to login page
                 // Extract redirect URL - remove `https://.../namespace` from the current URL. Keep only `handle/...`
@@ -123,19 +121,14 @@ export class DsoRedirectService {
                 // If the user is authenticated but still has no access, redirect to forbidden page
                 void this.router.navigateByUrl(getForbiddenRoute());
               }
-            }),
-            switchMap(() => of(response))
-          );
+            });
         }
-
-        // Return the response for all other cases
-        return of(response);
       })
     );
   }
 
   /**
-   * Extract the handle path from the given URL. Return only `handle/{PREFIX}/{SUFFIX}` (without leading slash).
+   * Extract the handle path from the given URL. Return only `/handle/{PREFIX}/{SUFFIX}`.
    * @param url the URL to extract the handle path from
    */
   extractHandlePath(url: string): string | null {
