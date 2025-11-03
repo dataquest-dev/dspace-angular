@@ -116,7 +116,7 @@ export class DsoRedirectService {
               if (!isAuthenticated) {
                 // If the user is not authenticated, redirect to login page
                 // Extract redirect URL - remove `https://.../namespace` from the current URL. Keep only `handle/...`
-                const redirectUrl = this.extractHandlePath(window.location.href);
+                const redirectUrl = this.extractHandlePath(window.location.href) ?? window.location.pathname;
                 this.authService.setRedirectUrl(redirectUrl);
                 void this.router.navigateByUrl('login');
               } else {
@@ -135,7 +135,7 @@ export class DsoRedirectService {
   }
 
   /**
-   * Extract the handle path from the given URL. Return only `/handle/{PREFIX}/{SUFFIX}`.
+   * Extract the handle path from the given URL. Return only `handle/{PREFIX}/{SUFFIX}` (without leading slash).
    * @param url the URL to extract the handle path from
    */
   extractHandlePath(url: string): string | null {
