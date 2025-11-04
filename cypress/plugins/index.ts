@@ -3,6 +3,20 @@ const fs = require('fs');
 // Plugins enable you to tap into, modify, or extend the internal behavior of Cypress
 // For more info, visit https://on.cypress.io/plugins-api
 module.exports = (on, config) => {
+    // Add Chrome launch arguments for better headless compatibility
+    on('before:browser:launch', (browser, launchOptions) => {
+        if (browser.family === 'chromium' && browser.name !== 'electron') {
+            // Add flags to improve headless Chrome stability
+            launchOptions.args.push('--disable-dev-shm-usage');
+            launchOptions.args.push('--disable-gpu');
+            launchOptions.args.push('--no-sandbox');
+            launchOptions.args.push('--disable-setuid-sandbox');
+            launchOptions.args.push('--disable-software-rasterizer');
+            
+            return launchOptions;
+        }
+    });
+
     on('task', {
         // Define "log" and "table" tasks, used for logging accessibility errors during CI
         // Borrowed from https://github.com/component-driven/cypress-axe#in-cypress-plugins-file
