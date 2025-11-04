@@ -27,7 +27,7 @@ COPY --chown=node:node --from=build /app/dist /app/dist
 COPY --chown=node:node config /app/config
 COPY --chown=node:node docker/dspace-ui.json /app/dspace-ui.json
 
-# user node does not have root priviliges sop we need to ensure that 
+# user node does not have root privileges so we need to ensure that
 # necessary files exist and node has sufficient access rights
 RUN mkdir -p /app/dist/browser/assets \
  && touch /app/dist/browser/assets/config.json \
