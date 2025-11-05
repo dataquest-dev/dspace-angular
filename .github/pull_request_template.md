@@ -1,15 +1,16 @@
-| Phases            | MP | MM  |  MB  | MR |   JM | Total  |
-|-----------------|----:|----:|----:|-----:|-----:|-------:|
-| ETA                  |  0  |  0  |    0 |     0 |      0 |        0 |
-| Developing      |  0  |  0  |    0 |    0 |      0 |         0 |
-| Review             |  0  |  0  |    0 |    0 |      0 |         0 |
-| Total                |   -  |   -  |   -   |  -    |   -    |         0 |
-| ETA est.             |      |      |       |       |         |         0 |
-| ETA cust.           |   -  |   -  |   -  |   -   |   -     |        0 |
 ## Problem description
-### Reported issues
-### Not-reported issues
+
 ## Analysis
 (Write here, if there is needed describe some specific problem. Erase it, when it is not needed.)
 ## Problems
 (Write here, if some unexpected problems occur during solving issues. Erase it, when it is not needed.) 
+
+### Sync verification
+If en.json5 or cs.json5 translation files were updated:
+- [ ] Run `yarn run sync-i18n -t src/assets/i18n/cs.json5 -i` to synchronize messages, and changes are included in this PR.
+
+### Manual Testing (if applicable)
+- [ ] Added to [testing scenarios](https://github.com/dataquest-dev/dspace-customers/issues/55)
+
+### Copilot review
+- [ ] Requested review from Copilot
