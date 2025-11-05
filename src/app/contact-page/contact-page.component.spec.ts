@@ -34,17 +34,14 @@ describe('ContactPageComponent', () => {
   });
 
   it('should create', () => {
-    // @ts-ignore
     expect(component).toBeTruthy();
   });
 
   it('should call findByPropertyName on init', () => {
-    // @ts-ignore
     expect(mockConfigService.findByPropertyName).toHaveBeenCalledWith('lr.help.mail');
   });
 
   it('should set emailToContact from service on init', () => {
-    // @ts-ignore
     expect(component.emailToContact$.value).toBe('test.email@example.com');
   });
 });
