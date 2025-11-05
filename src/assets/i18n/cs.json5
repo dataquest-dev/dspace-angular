@@ -8546,6 +8546,42 @@
   // "handle-table.dropdown.search-button": "Search",
   "handle-table.dropdown.search-button": "Hledat",
 
+  // "handle-table.search.placeholder.no-option": "Please select a search option first",
+  "handle-table.search.placeholder.no-option": "Nejprve vyberte možnost vyhledávání",
+
+  // "handle-table.search.placeholder.handle": "Enter handle",
+  "handle-table.search.placeholder.handle": "Zadejte Handle",
+
+  // "handle-table.search.internal.select": "Select internal option",
+  "handle-table.search.internal.select": "Vyberte možnost interní",
+
+  // "handle-table.search.internal.yes": "Yes",
+  "handle-table.search.internal.yes": "Ano",
+
+  // "handle-table.search.internal.no": "No",
+  "handle-table.search.internal.no": "Ne",
+
+  // "handle-table.search.resource-type.select": "Select resource type",
+  "handle-table.search.resource-type.select": "Vyberte typ zdroje",
+
+  // "handle-table.search.resource-type.site": "Site",
+  "handle-table.search.resource-type.site": "Stránka",
+
+  // "handle-table.search.resource-type.community": "Community",
+  "handle-table.search.resource-type.community": "Komunita",
+
+  // "handle-table.search.resource-type.collection": "Collection",
+  "handle-table.search.resource-type.collection": "Kolekce",
+
+  // "handle-table.search.resource-type.item": "Item",
+  "handle-table.search.resource-type.item": "Záznam",
+
+  // "handle-table.search.aria.select-internal": "Select internal option",
+  "handle-table.search.aria.select-internal": "Vyberte možnost interní",
+
+  // "handle-table.search.aria.select-resource-type": "Select resource type",
+  "handle-table.search.aria.select-resource-type": "Vyberte typ zdroje",
+
   // "handle-table.global-actions.title": "Global Actions",
   "handle-table.global-actions.title": "Globální akce",
 
