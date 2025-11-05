@@ -53,8 +53,8 @@ header {
 
 .page-item.active .page-link{
   z-index: 2 !important;
-  color: #fff !important;
+  color: var(--lt-vsb-tuo-cyan) !important;
   cursor: default !important;
-  background-color: #428bca !important;
-  border-color: #428bca !important;
+  background-color: var(--lt-vsb-tuo-cyan) !important;
+  border-color: var(--lt-vsb-tuo-cyan) !important;
 }

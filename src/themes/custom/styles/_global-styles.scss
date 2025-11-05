@@ -87,12 +87,16 @@ header {
   z-index: 2 !important;
   color: #fff !important;
   cursor: default !important;
-  background-color: #428bca !important;
-  border-color: #428bca !important;
+  background-color: var(--lt-vsb-tuo-cyan) !important;
+  border-color: var(--lt-vsb-tuo-cyan) !important;
 }
 
 a {
   color: var(--lt-vsb-tuo-cyan);
+
+  &:hover {
+    color: var(--lt-vsb-tuo-cyan-hover);
+  }
 }
 
 .badge {
