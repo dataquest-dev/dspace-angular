@@ -65,9 +65,7 @@ export class AdminUpdateConfigService {
       headers: new HttpHeaders({
         'Accept': 'text/plain'
       })
-    }).pipe(
-
-    );
+    });
   }
 
   /**

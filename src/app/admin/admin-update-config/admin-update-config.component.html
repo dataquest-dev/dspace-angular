@@ -50,7 +50,7 @@
                 [disabled]="loading || configFiles.length === 0">
                 <option [ngValue]="null">{{ getFileSelectionText() }}</option>
                 <option *ngFor="let file of configFiles" [ngValue]="file">
-                  <i class="fas fa-file me-1"></i>{{ file.fileName || '[No Name]' }}
+                  <i class="fas fa-file me-1"></i>{{ file.fileName || ('admin.update-config.file.no-name' | translate) }}
                 </option>
               </select>
             </div>

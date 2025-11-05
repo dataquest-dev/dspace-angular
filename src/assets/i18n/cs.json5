@@ -8132,6 +8132,9 @@
   // "admin.update-config.file.info": "File",
   "admin.update-config.file.info": "Soubor",
 
+  // "admin.update-config.file.no-name": "[No Name]",
+  "admin.update-config.file.no-name": "[Bez názvu]",
+
   // "admin.update-config.last.modified": "Last modified",
   "admin.update-config.last.modified": "Naposledy změněno",
 
