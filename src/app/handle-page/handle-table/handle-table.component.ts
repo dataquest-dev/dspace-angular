@@ -387,9 +387,10 @@ export class HandleTableComponent implements OnInit {
    * Parse internal search query to server format
    */
   private parseInternalSearchQuery(searchQuery: string): string {
-    if (searchQuery === 'yes') {
+    const normalizedQuery = searchQuery.toLowerCase();
+    if (normalizedQuery === 'yes') {
       return 'internal';
-    } else if (searchQuery === 'no') {
+    } else if (normalizedQuery === 'no') {
       return 'external';
     }
     return searchQuery;
