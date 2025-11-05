@@ -20,7 +20,7 @@ import { RequestParam } from '../cache/models/request-param.model';
 /**
  * A service to retrieve {@link UsageReport}s from the REST API
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(USAGE_REPORT)
 export class UsageReportDataService extends IdentifiableDataService<UsageReport> implements SearchData<UsageReport> {
   private searchData: SearchDataImpl<UsageReport>;
