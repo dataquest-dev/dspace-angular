@@ -1,10 +1,12 @@
-import { Component, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MetadataValue } from '../../../core/shared/metadata.models';
 import { APP_CONFIG, AppConfig } from '../../../../config/app-config.interface';
 import { BrowseDefinition } from '../../../core/shared/browse-definition.model';
 import { hasValue } from '../../../shared/empty.util';
 import { VALUE_LIST_BROWSE_DEFINITION } from '../../../core/shared/value-list-browse-definition.resource-type';
 import { environment } from '../../../../environments/environment';
+import { TranslateService } from '@ngx-translate/core';
+import { Metadata } from '../../../core/shared/metadata.utils';
 
 /**
  * This component renders the configured 'values' into the ds-metadata-field-wrapper component.
@@ -15,10 +17,11 @@ import { environment } from '../../../../environments/environment';
   styleUrls: ['./metadata-values.component.scss'],
   templateUrl: './metadata-values.component.html'
 })
-export class MetadataValuesComponent implements OnChanges {
+export class MetadataValuesComponent implements OnChanges, OnInit {
 
   constructor(
     @Inject(APP_CONFIG) private appConfig: AppConfig,
+    private translateService: TranslateService,
   ) {
   }
 
@@ -28,7 +31,12 @@ export class MetadataValuesComponent implements OnChanges {
   @Input() mdValues: MetadataValue[];
 
   /**
-   * The seperator used to split the metadata values (can contain HTML)
+   * The filtered metadata values to display (filtered by language)
+   */
+  filteredMdValues: MetadataValue[];
+
+  /**
+   * The separator used to split the metadata values (can contain HTML)
    */
   @Input() separator: string;
 
@@ -56,8 +64,29 @@ export class MetadataValuesComponent implements OnChanges {
 
   @Input() browseDefinition?: BrowseDefinition;
 
+  ngOnInit(): void {
+    this.filterMetadataByLanguage();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     this.renderMarkdown = !!this.appConfig.markdown.enabled && this.enableMarkdown;
+    if (changes.mdValues) {
+      this.filterMetadataByLanguage();
+    }
+  }
+
+  /**
+   * Filter metadata values by current language
+   * Priority: current language > 'en' > null/'*' > any available
+   */
+  private filterMetadataByLanguage(): void {
+    if (!this.mdValues || this.mdValues.length === 0) {
+      this.filteredMdValues = this.mdValues;
+      return;
+    }
+
+    const currentLang = this.translateService.currentLang || 'en';
+    this.filteredMdValues = Metadata.filterByLanguage(this.mdValues, currentLang);
   }
 
   /**

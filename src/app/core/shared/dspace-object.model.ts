@@ -109,10 +109,11 @@ export class DSpaceObject extends ListableObject implements CacheableObject {
    *
    * @param {string|string[]} keyOrKeys The metadata key(s) in scope. Wildcards are supported; see [[Metadata]].
    * @param {MetadataValueFilter} filter The value filter to use. If unspecified, no filtering will be done.
+   * @param {string} preferredLanguage Optional language code for language-aware filtering
    * @returns {MetadataValue[]} the matching values or an empty array.
    */
-  allMetadata(keyOrKeys: string | string[], valueFilter?: MetadataValueFilter): MetadataValue[] {
-    return Metadata.all(this.metadata, keyOrKeys, valueFilter);
+  allMetadata(keyOrKeys: string | string[], valueFilter?: MetadataValueFilter, preferredLanguage?: string): MetadataValue[] {
+    return Metadata.all(this.metadata, keyOrKeys, valueFilter, preferredLanguage);
   }
 
   /**
@@ -120,10 +121,11 @@ export class DSpaceObject extends ListableObject implements CacheableObject {
    *
    * @param {string|string[]} keyOrKeys The metadata key(s) in scope. Wildcards are supported; see [[Metadata]].
    * @param {MetadataValueFilter} filter The value filter to use. If unspecified, no filtering will be done.
+   * @param {string} preferredLanguage Optional language code for language-aware filtering
    * @returns {string[]} the matching string values or an empty array.
    */
-  allMetadataValues(keyOrKeys: string | string[], valueFilter?: MetadataValueFilter): string[] {
-    return Metadata.allValues(this.metadata, keyOrKeys, valueFilter);
+  allMetadataValues(keyOrKeys: string | string[], valueFilter?: MetadataValueFilter, preferredLanguage?: string): string[] {
+    return Metadata.allValues(this.metadata, keyOrKeys, valueFilter, preferredLanguage);
   }
 
   /**
@@ -161,10 +163,12 @@ export class DSpaceObject extends ListableObject implements CacheableObject {
 
   /**
    * Find metadata on a specific field and order all of them using their "place" property.
-   * @param key
+   * @param keyOrKeys metadata field key(s)
+   * @param preferredLanguage Optional language code for language-aware filtering
    */
-  findMetadataSortedByPlace(keyOrKeys: string | string[]): MetadataValue[] {
-    return this.allMetadata(keyOrKeys).sort((a: MetadataValue, b: MetadataValue) => {
+  findMetadataSortedByPlace(keyOrKeys: string | string[], preferredLanguage?: string): MetadataValue[] {
+    const allMd = this.allMetadata(keyOrKeys, undefined, preferredLanguage);
+    return allMd.sort((a: MetadataValue, b: MetadataValue) => {
       if (hasNoValue(a.place) && hasNoValue(b.place)) {
         return 0;
       }

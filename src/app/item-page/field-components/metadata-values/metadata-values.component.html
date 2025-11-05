@@ -1,5 +1,5 @@
 <ds-metadata-field-wrapper [label]="label | translate">
-    <ng-container *ngFor="let mdValue of mdValues; let last=last;">
+    <ng-container *ngFor="let mdValue of filteredMdValues; let last=last;">
       <!--
       Choose a template. Priority: ORCID authority, markdown, link, browse link.
       -->
