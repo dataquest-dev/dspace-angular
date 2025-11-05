@@ -15,6 +15,7 @@ import {
 } from '../../../core/shared/metadata-representation/metadatum/metadatum-representation.model';
 import { BrowseService } from '../../../core/browse/browse.service';
 import { BrowseDefinitionDataService } from '../../../core/browse/browse-definition-data.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'ds-metadata-representation-list',
@@ -62,6 +63,7 @@ export class MetadataRepresentationListComponent extends AbstractIncrementalList
   constructor(
     public relationshipService: RelationshipDataService,
     protected browseDefinitionDataService: BrowseDefinitionDataService,
+    protected translateService: TranslateService,
   ) {
     super();
   }
@@ -71,7 +73,8 @@ export class MetadataRepresentationListComponent extends AbstractIncrementalList
    * @param page  The page to fetch
    */
   getPage(page: number): Observable<MetadataRepresentation[]> {
-    const metadata = this.parentItem.findMetadataSortedByPlace(this.metadataFields);
+    const currentLang = this.translateService.currentLang || 'en';
+    const metadata = this.parentItem.findMetadataSortedByPlace(this.metadataFields, currentLang);
     this.total = metadata.length;
     return this.resolveMetadataRepresentations(metadata, page);
   }

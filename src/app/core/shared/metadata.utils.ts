@@ -30,10 +30,11 @@ export class Metadata {
    * checked in order, and only values from the first with at least one match will be returned.
    * @param {string|string[]} keyOrKeys The metadata key(s) in scope. Wildcards are supported; see above.
    * @param {MetadataValueFilter} filter The value filter to use. If unspecified, no filtering will be done.
+   * @param {string} preferredLanguage The preferred language for filtering metadata. If provided, will filter by language priority.
    * @returns {MetadataValue[]} the matching values or an empty array.
    */
   public static all(mapOrMaps: MetadataMapInterface | MetadataMapInterface[], keyOrKeys: string | string[],
-                    filter?: MetadataValueFilter): MetadataValue[] {
+                    filter?: MetadataValueFilter, preferredLanguage?: string): MetadataValue[] {
     const mdMaps: MetadataMapInterface[] = mapOrMaps instanceof Array ? mapOrMaps : [mapOrMaps];
     const matches: MetadataValue[] = [];
     for (const mdMap of mdMaps) {
@@ -48,10 +49,49 @@ export class Metadata {
         }
       }
       if (!isEmpty(matches)) {
+        // Apply language filtering if preferredLanguage is provided
+        if (isNotEmpty(preferredLanguage)) {
+          return Metadata.filterByLanguage(matches, preferredLanguage);
+        }
         return matches;
       }
     }
     return matches;
+  }
+
+  /**
+   * Filters metadata values by language preference.
+   * Priority: current language > 'en' > '*' or null > any available
+   *
+   * @param {MetadataValue[]} values The metadata values to filter
+   * @param {string} preferredLanguage The preferred language code
+   * @returns {MetadataValue[]} Filtered metadata values
+   */
+  public static filterByLanguage(values: MetadataValue[], preferredLanguage: string): MetadataValue[] {
+    if (isEmpty(values)) {
+      return values;
+    }
+
+    // Try to find values in the preferred language
+    let filtered = values.filter(v => v.language === preferredLanguage);
+    if (isNotEmpty(filtered)) {
+      return filtered;
+    }
+
+    // Try to find values in English
+    filtered = values.filter(v => v.language === 'en');
+    if (isNotEmpty(filtered)) {
+      return filtered;
+    }
+
+    // Try to find values with '*' or null/empty language
+    filtered = values.filter(v => v.language === '*' || !v.language || v.language === '');
+    if (isNotEmpty(filtered)) {
+      return filtered;
+    }
+
+    // Return all values if no preferred language match found
+    return values;
   }
 
   /**
@@ -61,11 +101,12 @@ export class Metadata {
    * checked in order, and only values from the first with at least one match will be returned.
    * @param {string|string[]} keyOrKeys The metadata key(s) in scope. Wildcards are supported; see above.
    * @param {MetadataValueFilter} filter The value filter to use. If unspecified, no filtering will be done.
+   * @param {string} preferredLanguage The preferred language for filtering metadata. If provided, will filter by language priority.
    * @returns {string[]} the matching string values or an empty array.
    */
   public static allValues(mapOrMaps: MetadataMapInterface | MetadataMapInterface[], keyOrKeys: string | string[],
-                          filter?: MetadataValueFilter): string[] {
-    return Metadata.all(mapOrMaps, keyOrKeys, filter).map((mdValue) => mdValue.value);
+                          filter?: MetadataValueFilter, preferredLanguage?: string): string[] {
+    return Metadata.all(mapOrMaps, keyOrKeys, filter, preferredLanguage).map((mdValue) => mdValue.value);
   }
 
   /**
