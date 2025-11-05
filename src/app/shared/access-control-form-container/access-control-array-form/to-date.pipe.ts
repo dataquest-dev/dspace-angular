@@ -1,5 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
+import { dateToNgbDateStructInTimezone } from '../../date.util';
 
 @Pipe({
   // eslint-disable-next-line @angular-eslint/pipe-prefix
@@ -13,11 +14,8 @@ export class ToDatePipe implements PipeTransform {
     }
 
     const date = new Date(dateValue);
-    return {
-      year: date.getFullYear(),
-      month: date.getMonth() + 1,
-      day: date.getDate()
-    } as NgbDateStruct;
+    // Use timezone-aware conversion to properly handle dates in Bratislava timezone
+    return dateToNgbDateStructInTimezone(date);
   }
 
 }

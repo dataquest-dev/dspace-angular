@@ -26,6 +26,7 @@ import { LiveRegionConfig } from '../app/shared/live-region/live-region.config';
 import { SearchConfig } from './search-page-config.interface';
 import { AccessibilitySettingsConfig } from '../app/accessibility/accessibility-settings.config';
 import { MatomoConfig } from './matomo-config';
+import { TimezoneConfig } from './timezone-config.interface';
 
 interface AppConfig extends Config {
   ui: UIServerConfig;
@@ -57,6 +58,7 @@ interface AppConfig extends Config {
   accessibility: AccessibilitySettingsConfig;
   signpostingEnabled: boolean;
   matomo: MatomoConfig;
+  timezone?: TimezoneConfig;
 }
 
 /**

@@ -33,4 +33,11 @@ export const environment: Partial<BuildConfig> = {
     enableSearchComponent: false,
     enableBrowseComponent: false,
   },
+
+  // Timezone settings
+  timezone: {
+    // Default timezone for displaying dates and times
+    // Use IANA timezone identifiers (e.g., 'Europe/Bratislava', 'UTC', 'America/New_York')
+    displayTimezone: 'Europe/Bratislava',
+  },
 };

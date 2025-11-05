@@ -8,7 +8,7 @@ import { PaginatedList } from '../../core/data/paginated-list.model';
 import { SystemWideAlert } from '../system-wide-alert.model';
 import { hasValue, isNotEmpty } from '../../shared/empty.util';
 import { BehaviorSubject, EMPTY, interval, Subscription } from 'rxjs';
-import { zonedTimeToUtc } from 'date-fns-tz';
+// Remove unused import as we now handle dates properly with native Date object
 import { isPlatformBrowser } from '@angular/common';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 
@@ -67,7 +67,7 @@ export class SystemWideAlertBannerComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.systemWideAlert$.pipe(
       switchMap((alert: SystemWideAlert) => {
         if (hasValue(alert) && hasValue(alert.countdownTo)) {
-          const date = zonedTimeToUtc(alert.countdownTo, 'UTC');
+          const date = new Date(alert.countdownTo);
           const timeDifference = date.getTime() - new Date().getTime();
           if (timeDifference > 0) {
             this.allocateTimeUnits(timeDifference);
@@ -95,8 +95,10 @@ export class SystemWideAlertBannerComponent implements OnInit, OnDestroy {
    * @param countdownTo - The date to count down to
    */
   private setTimeDifference(countdownTo: string) {
-    const date = zonedTimeToUtc(countdownTo, 'UTC');
-
+    // The countdownTo string should be parsed as UTC time
+    const date = new Date(countdownTo);
+    
+    // Calculate difference with current time (browser time)
     const timeDifference = date.getTime() - new Date().getTime();
     this.allocateTimeUnits(timeDifference);
   }

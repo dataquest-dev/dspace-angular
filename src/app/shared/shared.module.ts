@@ -28,6 +28,7 @@ import { FileSizePipe } from './utils/file-size-pipe';
 import { MetadataFieldValidator } from './utils/metadatafield-validator.directive';
 import { SafeUrlPipe } from './utils/safe-url-pipe';
 import { ConsolePipe } from './utils/console.pipe';
+import { DateTimezonePipe } from './date-timezone.pipe';
 import {
   CollectionListElementComponent
 } from './object-list/collection-list-element/collection-list-element.component';
@@ -330,6 +331,7 @@ const PIPES = [
   EnumKeysPipe,
   FileSizePipe,
   SafeUrlPipe,
+  DateTimezonePipe,
   TruncatePipe,
   EmphasizePipe,
   CapitalizePipe,

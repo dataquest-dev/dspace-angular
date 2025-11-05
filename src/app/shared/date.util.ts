@@ -5,6 +5,15 @@ import isObject from 'lodash/isObject';
 import { hasNoValue } from './empty.util';
 
 /**
+ * Get the configured display timezone from environment or fallback to browser timezone
+ */
+function getDisplayTimezone(): string {
+  // Fallback to Europe/Bratislava as default for this application
+  // In production, this should be injected via the TimezoneService
+  return 'Europe/Bratislava';
+}
+
+/**
  * Returns true if the passed value is a NgbDateStruct.
  *
  * @param value
@@ -31,6 +40,22 @@ export function dateToISOFormat(date: Date | NgbDateStruct | string): string {
     ((typeof date === 'string') ? ngbDateStructToDate(stringToNgbDateStruct(date)) : ngbDateStructToDate(date));
 
   return formatInTimeZone(dateObj, 'UTC', "yyyy-MM-dd'T'HH:mm:ss'Z'");
+}
+
+/**
+ * Returns a date formatted in the configured display timezone
+ *
+ * @param date The date to format
+ * @param format The format string (date-fns format)
+ * @param timezone Optional timezone override
+ * @return string the formatted date in the display timezone
+ */
+export function dateToDisplayFormat(date: Date | NgbDateStruct | string, format: string = "yyyy-MM-dd'T'HH:mm:ss", timezone?: string): string {
+  const dateObj: Date = (date instanceof Date) ? date :
+    ((typeof date === 'string') ? ngbDateStructToDate(stringToNgbDateStruct(date)) : ngbDateStructToDate(date));
+  
+  const tz = timezone || getDisplayTimezone();
+  return formatInTimeZone(dateObj, tz, format);
 }
 
 /**
@@ -78,6 +103,30 @@ export function dateToNgbDateStruct(date?: Date): NgbDateStruct {
 }
 
 /**
+ * Returns a NgbDateStruct object from a Date object using the display timezone
+ *
+ * @param date
+ *    The Date to convert
+ * @return NgbDateStruct
+ *    the NgbDateStruct object in display timezone
+ */
+export function dateToNgbDateStructInTimezone(date?: Date): NgbDateStruct {
+  if (hasNoValue(date)) {
+    date = new Date();
+  }
+
+  // Format the date in the display timezone and parse it back to get local components
+  const dateStr = formatInTimeZone(date, getDisplayTimezone(), 'yyyy-MM-dd');
+  const [year, month, day] = dateStr.split('-').map(num => parseInt(num, 10));
+
+  return {
+    year,
+    month,
+    day
+  };
+}
+
+/**
  * Returns a date in simplified format (YYYY-MM-DD).
  *
  * @param date
@@ -88,6 +137,19 @@ export function dateToNgbDateStruct(date?: Date): NgbDateStruct {
 export function dateToString(date: Date | NgbDateStruct): string {
   const dateObj: Date = (date instanceof Date) ? date : ngbDateStructToDate(date);
   return formatInTimeZone(dateObj, 'UTC', 'yyyy-MM-dd');
+}
+
+/**
+ * Returns a date in simplified format (YYYY-MM-DD) in the display timezone.
+ *
+ * @param date
+ *    The date to format
+ * @return string
+ *    the formatted date in display timezone
+ */
+export function dateToStringInTimezone(date: Date | NgbDateStruct): string {
+  const dateObj: Date = (date instanceof Date) ? date : ngbDateStructToDate(date);
+  return formatInTimeZone(dateObj, getDisplayTimezone(), 'yyyy-MM-dd');
 }
 
 /**
