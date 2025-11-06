@@ -39,28 +39,32 @@
                  [placeholder]="'handle-table.search.placeholder.handle' | translate">
 
           <!-- Dropdown for Internal search -->
-          <select *ngIf="searchOption === internalOption"
-                  class="form-select w-100"
-                  [(ngModel)]="searchQuery"
-                  (change)="searchHandles()"
-                  [attr.aria-label]="'handle-table.search.aria.select-internal' | translate">
-            <option value="" disabled [selected]="!searchQuery">{{'handle-table.search.internal.select' | translate}}</option>
-            <option value="yes">{{'handle-table.search.internal.yes' | translate}}</option>
-            <option value="no">{{'handle-table.search.internal.no' | translate}}</option>
-          </select>
+          <div *ngIf="searchOption === internalOption" class="select-wrapper">
+            <select class="form-select w-100"
+                    [(ngModel)]="searchQuery"
+                    (change)="searchHandles()"
+                    [attr.aria-label]="'handle-table.search.aria.select-internal' | translate">
+              <option value="" disabled [selected]="!searchQuery">{{'handle-table.search.internal.select' | translate}}</option>
+              <option value="yes">{{'handle-table.search.internal.yes' | translate}}</option>
+              <option value="no">{{'handle-table.search.internal.no' | translate}}</option>
+            </select>
+            <i class="fas fa-chevron-down select-icon"></i>
+          </div>
 
           <!-- Dropdown for Resource Type search -->
-          <select *ngIf="searchOption === resourceTypeOption"
-                  class="form-select w-100"
-                  [(ngModel)]="searchQuery"
-                  (change)="searchHandles()"
-                  [attr.aria-label]="'handle-table.search.aria.select-resource-type' | translate">
-            <option value="" disabled [selected]="!searchQuery">{{'handle-table.search.resource-type.select' | translate}}</option>
-            <option value="Site">{{'handle-table.search.resource-type.site' | translate}}</option>
-            <option value="Community">{{'handle-table.search.resource-type.community' | translate}}</option>
-            <option value="Collection">{{'handle-table.search.resource-type.collection' | translate}}</option>
-            <option value="Item">{{'handle-table.search.resource-type.item' | translate}}</option>
-          </select>
+          <div *ngIf="searchOption === resourceTypeOption" class="select-wrapper">
+            <select class="form-select w-100"
+                    [(ngModel)]="searchQuery"
+                    (change)="searchHandles()"
+                    [attr.aria-label]="'handle-table.search.aria.select-resource-type' | translate">
+              <option value="" disabled [selected]="!searchQuery">{{'handle-table.search.resource-type.select' | translate}}</option>
+              <option value="Site">{{'handle-table.search.resource-type.site' | translate}}</option>
+              <option value="Community">{{'handle-table.search.resource-type.community' | translate}}</option>
+              <option value="Collection">{{'handle-table.search.resource-type.collection' | translate}}</option>
+              <option value="Item">{{'handle-table.search.resource-type.item' | translate}}</option>
+            </select>
+            <i class="fas fa-chevron-down select-icon"></i>
+          </div>
         </div>
 
         <span class="input-group-append" (click)="searchHandles()">

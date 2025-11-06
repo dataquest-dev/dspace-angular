@@ -4,18 +4,20 @@
 
 // Make select elements look like buttons to match previous dropdown styling
 .search-input-container {
+  .select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
   .form-select {
     background: white;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
-    padding: 0.375rem 0.75rem;
+    padding: 0.375rem 2.5rem 0.375rem 0.75rem;
     color: #495057;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 16px 12px;
-    padding-right: 2.5rem;
+    cursor: pointer;
 
     &:focus {
       border-color: #80bdff;
@@ -28,6 +30,16 @@
       color: #6c757d;
       cursor: not-allowed;
     }
+  }
+
+  .select-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #495057;
+    font-size: 0.875rem;
   }
 
   .form-control {
