@@ -4,6 +4,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { ItemVersionsComponent } from '../../../versions/item-versions.component';
 import { Item } from '../../../../core/shared/item.model';
 import { Version } from '../../../../core/shared/version.model';
+import { RemoteData } from '../../../../core/data/remote-data';
 
 /**
  * Local type definition matching the parent component's VersionsDTO structure
@@ -17,6 +18,16 @@ interface VersionDTO {
   version: Version;
   canEditVersion: Observable<boolean>;
   canDeleteVersion: Observable<boolean>;
+}
+
+/**
+ * Enhanced VersionDTO with pre-computed workspace/workflow IDs for template optimization
+ */
+interface EnhancedVersionDTO extends VersionDTO {
+  versionItem$: Observable<RemoteData<Item>>;
+  workspaceId$: Observable<string | undefined>;
+  workflowId$: Observable<string | undefined>;
+  isCurrentVersion: boolean;
 }
 
 /**
@@ -45,6 +56,11 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
    */
   showMetadataValue: Observable<boolean>;
 
+  /**
+   * Enhanced versions with pre-computed workspace/workflow IDs
+   */
+  enhancedVersions$: Observable<EnhancedVersionDTO[]>;
+
   ngOnInit(): void {
     // Call parent's ngOnInit first to set up all the observables
     super.ngOnInit();
@@ -53,6 +69,36 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
     if (this.versionsDTO$) {
       this.showMetadataValue = this.versionsDTO$.pipe(
         map((versionsDTO: VersionsDTO) => versionsDTO && versionsDTO.totalElements > 1)
+      );
+
+      // Pre-compute workspace/workflow IDs to optimize template performance
+      this.enhancedVersions$ = combineLatest([
+        this.versionsDTO$,
+        this.versionRD$
+      ]).pipe(
+        map(([versionsDTO, versionRD]) => {
+          const currentVersionId = versionRD?.payload?.id;
+          return versionsDTO.versionDTOs.map(versionDTO => {
+            const versionItem$ = versionDTO.version.item;
+            const workspaceId$ = (this.hasDraftVersion$ ?? of(false)).pipe(
+              switchMap(hasDraftVersion =>
+                hasDraftVersion ? this.getWorkspaceId(versionItem$) : of(undefined)
+              )
+            );
+            const workflowId$ = workspaceId$.pipe(
+              switchMap((workspaceId) =>
+                workspaceId ? of(undefined) : this.getWorkflowId(versionItem$)
+              )
+            );
+            return {
+              ...versionDTO,
+              versionItem$,
+              workspaceId$,
+              workflowId$,
+              isCurrentVersion: versionDTO.version.id === currentVersionId
+            } as EnhancedVersionDTO;
+          });
+        })
       );
     } else {
       // Fallback: check if isAdmin$ is available, otherwise hide the component
@@ -112,5 +158,14 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
         workspaceId ? of(undefined) : this.getWorkflowId(versionItem)
       )
     );
+  }
+
+  /**
+   * TrackBy function for version list to optimize *ngFor performance
+   * @param index the index of the item
+   * @param versionDTO the version DTO to track
+   */
+  trackByVersionId(index: number, versionDTO: EnhancedVersionDTO): string {
+    return versionDTO.version.id;
   }
 }

@@ -22,37 +22,24 @@
     class="col-lg-9 collapse"
     [ngClass]="{'show': showVersionHistory}"
     [attr.aria-hidden]="!showVersionHistory">
-    <div *ngIf="(versionsDTO$ | async) as versionsDTO">
-      <div *ngIf="(versionRD$ | async)?.payload as itemVersion">
-        <ul class="list-unstyled dropdown-versions">
-          <li *ngFor="let versionDTO of versionsDTO.versionDTOs" [id]="'version-row-' + versionDTO.version.id">
-            <!-- Get the ID of the workspace/workflow item (`undefined` if they don't exist).
-            Using component methods to optimize performance and avoid repeated async evaluations. -->
-            <ng-container
-              *ngVar="getVersionWorkspaceId(versionDTO.version.item) as workspaceId$">
-              <ng-container
-                *ngVar="getVersionWorkflowId(versionDTO.version.item, workspaceId$) as workflowId$">
-                  <span
-                    *ngIf="(workspaceId$ | async) || (workflowId$ | async); then itemNameWithoutLink else itemNameWithLink"></span>
-                  <ng-template #itemNameWithLink>
-                    <ng-container *ngIf="(versionDTO.version.item | async)?.payload as versionItem">
-                      <a [routerLink]="getVersionRoute(versionDTO.version.id)">
-                        {{ getVersionItemDisplayName(versionItem) }}
-                      </a>
-                    </ng-container>
-                  </ng-template>
-                  <ng-template #itemNameWithoutLink>
-                    <ng-container *ngIf="(versionDTO.version.item | async)?.payload as versionItem">
-                      {{ getVersionItemDisplayName(versionItem) }}
-                    </ng-container>
-                  </ng-template>
-                  <span *ngIf="versionDTO.version.id === itemVersion?.id">*</span>
-              </ng-container>
+    <div *ngIf="enhancedVersions$ | async as enhancedVersions">
+      <ul class="list-unstyled dropdown-versions">
+        <li *ngFor="let enhancedVersion of enhancedVersions; trackBy: trackByVersionId"
+            [id]="'version-row-' + enhancedVersion.version.id">
+          <ng-container *ngIf="(enhancedVersion.versionItem$ | async)?.payload as versionItem">
+            <ng-container *ngIf="(enhancedVersion.workspaceId$ | async) || (enhancedVersion.workflowId$ | async); else itemNameWithLink">
+              {{ getVersionItemDisplayName(versionItem) }}
             </ng-container>
-          </li>
-        </ul>
-        <div>*&nbsp;{{ "item.version.history.selected" | translate }}</div>
-      </div>
+            <ng-template #itemNameWithLink>
+              <a [routerLink]="getVersionRoute(enhancedVersion.version.id)">
+                {{ getVersionItemDisplayName(versionItem) }}
+              </a>
+            </ng-template>
+            <span *ngIf="enhancedVersion.isCurrentVersion">*</span>
+          </ng-container>
+        </li>
+      </ul>
+      <div>*&nbsp;{{ "item.version.history.selected" | translate }}</div>
     </div>
   </div>
 </div>
