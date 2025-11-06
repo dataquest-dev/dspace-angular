@@ -80,7 +80,11 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
    * @returns The aria-label text for accessibility
    */
   getToggleAriaLabel(): string {
-    return (this.showVersionHistory ? 'Collapse' : 'Expand') + ' version history';
+    const action = this.showVersionHistory
+      ? this.translateService.instant('item.version.history.collapse')
+      : this.translateService.instant('item.version.history.expand');
+    const history = this.translateService.instant('item.version.history.label');
+    return `${action} ${history}`;
   }
 
   /**

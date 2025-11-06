@@ -3998,6 +3998,15 @@
   // "item.version.history.head": "Version History",
   "item.version.history.head": "Historie verzí",
 
+  // "item.version.history.label": "version history",
+  "item.version.history.label": "historie verzí",
+
+  // "item.version.history.expand": "Expand",
+  "item.version.history.expand": "Rozbalit",
+
+  // "item.version.history.collapse": "Collapse",
+  "item.version.history.collapse": "Sbalit",
+
   // "item.version.history.return": "Back",
   "item.version.history.return": "Zpět",
 
