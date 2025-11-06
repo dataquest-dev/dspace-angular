@@ -5817,6 +5817,12 @@
   // "search.filters.applied.f.withdrawn": "Withdrawn",
   "search.filters.applied.f.withdrawn": "Vyřazeno",
 
+  // "search.filters.applied.f.relationIspartofseries": "Source title",
+  "search.filters.applied.f.relationIspartofseries": "Název zdroje",
+
+  // "search.filters.applied.f.rightsAccess": "Access",
+  "search.filters.applied.f.rightsAccess": "Přístup",
+
   // "search.filters.filter.author.head": "Author",
   "search.filters.filter.author.head": "Autor",
 
