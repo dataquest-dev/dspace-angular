@@ -471,7 +471,7 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
       getRemoteDataPayload(),
       map((versions: PaginatedList<Version>) => ({
         totalElements: versions.totalElements,
-        versionDTOs: (versions?.page ?? []).reverse().map((version: Version) => ({
+        versionDTOs: [...(versions?.page ?? [])].reverse().map((version: Version) => ({
           version: version,
           canEditVersion: this.canEditVersion$(version),
           canDeleteVersion: this.canDeleteVersion$(version),
