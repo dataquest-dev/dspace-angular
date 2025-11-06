@@ -24,6 +24,7 @@ import { Handle } from '../../core/handle/handle.model';
 import {
   COLLECTION,
   COMMUNITY,
+  INVALID_RESOURCE_TYPE_ID,
   ITEM,
   SITE,
   SUCCESSFUL_RESPONSE_START_CHAR
@@ -31,6 +32,7 @@ import {
 import { getCommunityPageRoute } from '../../community-page/community-page-routing-paths';
 import { getCollectionPageRoute } from '../../collection-page/collection-page-routing-paths';
 import { getEntityPageRoute } from '../../item-page/item-page-routing-paths';
+import { HandleResourceTypeIdSerializer } from '../../core/handle/HandleResourceTypeIdserializer';
 
 /**
  * Constants for converting the searchQuery for the server
@@ -359,6 +361,47 @@ export class HandleTableComponent implements OnInit {
    */
   setSearchOption(event) {
     this.searchOption = event?.target?.innerHTML;
+    // Reset search query when changing search option
+    this.searchQuery = '';
+  }
+
+  /**
+   * Get translated resource type name for table display
+   * Converts constants like 'Community', 'Collection', 'Item', 'Site' to translated strings
+   */
+  getTranslatedResourceType(resourceTypeID: string): string {
+    if (!resourceTypeID) {
+      return '';
+    }
+
+    // Map the constant values to lowercase for translation keys
+    const resourceTypeKey = resourceTypeID.toLowerCase();
+    const translationKey = `handle-table.search.resource-type.${resourceTypeKey}`;
+
+    // Return translated value, fallback to original if translation not found
+    const translated = this.translateService.instant(translationKey);
+    return translated !== translationKey ? translated : resourceTypeID;
+  }
+
+  /**
+   * Parse internal search query to server format
+   */
+  private parseInternalSearchQuery(searchQuery: string): string {
+    const normalizedQuery = searchQuery.toLowerCase();
+    if (normalizedQuery === 'yes') {
+      return 'internal';
+    } else if (normalizedQuery === 'no') {
+      return 'external';
+    }
+    return searchQuery;
+  }
+
+  /**
+   * Parse resource type search query to server format (converts to numeric ID)
+   */
+  private parseResourceTypeSearchQuery(searchQuery: string): string {
+    const id = HandleResourceTypeIdSerializer.Serialize(searchQuery);
+    return id ? id.toString() : INVALID_RESOURCE_TYPE_ID.toString();
   }
 
   /**
@@ -381,35 +424,12 @@ export class HandleTableComponent implements OnInit {
           parsedSearchOption = HANDLE_SEARCH_OPTION;
           break;
         case this.internalOption:
-          // if the handle doesn't have the URL - is internal, if it does - is external
           parsedSearchOption = URL_SEARCH_OPTION;
-          if (this.searchQuery.toLowerCase() === 'yes') {
-            parsedSearchQuery = 'internal';
-          } else if (this.searchQuery.toLowerCase() === 'no') {
-            parsedSearchQuery = 'external';
-          }
+          parsedSearchQuery = this.parseInternalSearchQuery(this.searchQuery);
           break;
         case this.resourceTypeOption:
           parsedSearchOption = RESOURCE_TYPE_SEARCH_OPTION;
-          // parse resourceType from string to the number because the resourceType is integer on the server
-          switch (this.searchQuery.toLowerCase()) {
-            case ITEM.toLowerCase():
-              parsedSearchQuery = '' + 2;
-              break;
-            case COLLECTION.toLowerCase():
-              parsedSearchQuery = '' + 3;
-              break;
-            case COMMUNITY.toLowerCase():
-              parsedSearchQuery = '' + 4;
-              break;
-            case SITE.toLowerCase():
-              parsedSearchQuery = '' + 5;
-              break;
-            // no results for invalid search inputs
-            default:
-              parsedSearchQuery = '' + -1;
-              break;
-          }
+          parsedSearchQuery = this.parseResourceTypeSearchQuery(this.searchQuery);
           break;
       }
     }
