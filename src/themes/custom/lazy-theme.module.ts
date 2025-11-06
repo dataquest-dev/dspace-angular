@@ -163,6 +163,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AdminSearchPageComponent } from './app/admin/admin-search-page/admin-search-page.component';
 import { AdminWorkflowPageComponent } from './app/admin/admin-workflow-page/admin-workflow-page.component';
+import { MyDSpaceActionsModule } from 'src/app/shared/mydspace-actions/mydspace-actions.module';
 
 const DECLARATIONS = [
   FileSectionComponent,
@@ -312,6 +313,7 @@ const DECLARATIONS = [
     FormModule,
     RequestCopyModule,
     NgxSkeletonLoaderModule
+    MyDSpaceActionsModule
   ],
   declarations: DECLARATIONS,
   exports: [

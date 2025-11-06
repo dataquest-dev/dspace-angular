@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page/clarin-bitstream-download-page.component';
 import { ClarinLicenseAgreementPageComponent } from './clarin-license-agreement-page/clarin-license-agreement-page.component';
 import { ClarinBitstreamTokenExpiredComponent } from './clarin-bitstream-token-expired/clarin-bitstream-token-expired.component';
+import { ClarinBitstreamAuthorizationDeniedComponent } from './clarin-bitstream-authorization-denied/clarin-bitstream-authorization-denied.component';
 import { ClarinZipDownloadPageComponent } from './clarin-zip-download-page/clarin-zip-download-page.component';
 
 /**
@@ -35,6 +36,7 @@ import { ClarinZipDownloadPageComponent } from './clarin-zip-download-page/clari
     ClarinBitstreamDownloadPageComponent,
     ClarinLicenseAgreementPageComponent,
     ClarinBitstreamTokenExpiredComponent,
+    ClarinBitstreamAuthorizationDeniedComponent,
     ClarinZipDownloadPageComponent
   ]
 })

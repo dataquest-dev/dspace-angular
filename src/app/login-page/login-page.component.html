@@ -7,8 +7,29 @@
           <img class="ml-5 clarin-logo" src="assets/images/clarin-logo.svg" alt="Clarin logo" >
         </a>
       </div>
-      <h1 class="h3 mb-0 font-weight-normal">{{"login.form.header" | translate}}</h1>
-      <ds-themed-log-in
+      <h1 *ngIf="!authenticatedUser; else alreadyAuthenticated" class="h3 mb-0 font-weight-normal">{{"login.form.header" | translate}}</h1>
+      
+       <ng-template #alreadyAuthenticated>
+          <div class="already-authenticated-message">
+            <h1 class="h3 mb-3 font-weight-normal">{{"login.already-authenticated.header" | translate}}</h1>
+            <p class="mb-4">{{"login.already-authenticated.message" | translate}}</p>
+            <div class="action-buttons">
+              <a [routerLink]="['/home']" class="btn btn-primary mr-3">
+                {{"login.already-authenticated.go-home" | translate}}
+              </a>
+              <a [routerLink]="['/profile']" class="btn btn-outline-primary">
+                {{"login.already-authenticated.go-profile" | translate}}
+              </a>
+            </div>
+            <div class="mt-4">
+              <button class="btn btn-link"  [routerLink]="['/logout']">
+                {{"login.already-authenticated.logout" | translate}}
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      
+      <ds-themed-log-in *ngIf="!authenticatedUser" 
       [isStandalonePage]="true"></ds-themed-log-in>
     </div>
   </div>

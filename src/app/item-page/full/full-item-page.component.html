@@ -1,7 +1,7 @@
 <div class="container clarin-shadow remove-padding clarin-home-page-borders clarin-cut-bottom-2 clarin-cut-top-1 pb-2" *ngVar="(itemRD$ | async) as itemRD">
   <div *ngIf="itemRD?.hasSucceeded" @fadeInOut>
     <div *ngIf="itemRD?.payload as item">
-      <div class="card alert-info mb-3" *ngIf="fromSubmissionObject">
+      <div class="card alert-info mb-3" *ngIf="fromSubmissionObject && item?.firstMetadataValue('local.submission.note')">
         <div class="card-header font-weight-bold">
           {{'item.page.users.note' | translate}}
         </div>
@@ -11,6 +11,22 @@
       </div>
       <ds-themed-item-alerts [item]="item"></ds-themed-item-alerts>
       <ds-item-versions-notice [item]="item"></ds-item-versions-notice>
+      <ng-template #workflowActions>
+        <ng-container *ngIf="(item$ | async) && (workflowitem$ | async)">
+          <div class="mb-3 text-right" *ngIf="(claimedTask$ | async) as claimedTaskRD">
+            <ng-container *ngIf="claimedTaskRD?.hasSucceeded && claimedTaskRD?.payload">
+                  <ds-claimed-task-actions
+                    [item]="item$.value"
+                    [object]="claimedTaskRD.payload"
+                    [workflowitem]="workflowitem$.value"
+                    [showViewButton]="false"
+                    (processCompleted)="onWorkflowActionCompleted($event.reloadedObject)">
+                  </ds-claimed-task-actions>
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-template>
+      <ng-container *ngTemplateOutlet="workflowActions"></ng-container>
       <div *ngIf="!item.isWithdrawn || (isAdmin$|async)" class="full-item-info">
         <div class="d-flex flex-row justify-content-end">
           <ds-dso-edit-menu></ds-dso-edit-menu>
@@ -48,6 +64,7 @@
           </div>
         </div>
       </div>
+      <ng-container *ngTemplateOutlet="workflowActions"></ng-container>
     </div>
   </div>
   <div class="simple-view-link my-3" *ngIf="!fromSubmissionObject">
