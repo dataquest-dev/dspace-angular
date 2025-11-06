@@ -3921,7 +3921,6 @@
   "item.preview.dc.rights": "Práva",
 
   // "item.preview.dc.identifier.other": "Other Identifier",
-  // TODO Source message changed - Revise the translation
   "item.preview.dc.identifier.other": "Další identifikátor:",
 
   // "item.preview.dc.relation.issn": "ISSN",
@@ -8515,7 +8514,6 @@
   "handle-table.table.handle": "Handle",
 
   // "handle-table.table.internal": "Is internal",
-  // TODO Source message changed - Revise the translation
   "handle-table.table.internal": "Je interní",
 
   // "handle-table.table.is-internal": "Yes",
@@ -9369,6 +9367,4 @@
 
   // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
   "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
-
-
 }
