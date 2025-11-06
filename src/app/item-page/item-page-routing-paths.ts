@@ -59,3 +59,4 @@ export const UPLOAD_BITSTREAM_PATH = 'bitstreams/new';
 export const ORCID_PATH = 'orcid';
 
 export const MATOMO_STATISTICS_PATH = 'matomo-statistics';
+export const VIEWS_DOWNLOADS_STATISTICS_PATH = 'views-downloads-statistics';

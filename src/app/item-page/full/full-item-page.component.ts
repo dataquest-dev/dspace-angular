@@ -2,7 +2,7 @@ import { filter, map, switchMap, shareReplay, tap, mergeMap } from 'rxjs/operato
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, EMPTY } from 'rxjs';
 
 import { ItemPageComponent } from '../simple/item-page.component';
 import { MetadataMap } from '../../core/shared/metadata.models';
@@ -22,13 +22,15 @@ import { RegistryService } from 'src/app/core/registry/registry.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { makeLinks } from '../../shared/clarin-shared-util';
 import { SEPARATOR } from 'src/app/shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
+import { select, Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.reducer';
+import { isAuthenticated } from 'src/app/core/auth/selectors';
 import { WorkflowItem } from 'src/app/core/submission/models/workflowitem.model';
 import { ClaimedTask } from 'src/app/core/tasks/models/claimed-task-object.model';
 import { ClaimedTaskDataService } from 'src/app/core/tasks/claimed-task-data.service';
 import { LinkService } from '../../core/cache/builders/link.service';
 import { followLink } from '../../shared/utils/follow-link-config.model';
 import { getFirstCompletedRemoteData } from '../../core/shared/operators';
-import { EMPTY } from 'rxjs';
 import { WorkflowAction } from 'src/app/core/tasks/models/workflow-action-object.model';
 
 /**
@@ -62,6 +64,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
 
   subs = [];
 
+  isAuthenticated$: Observable<boolean>;
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
@@ -74,6 +77,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
     @Inject(PLATFORM_ID) protected platformId: string,
     protected halService: HALEndpointService,
     protected registryService: RegistryService,
+    private store: Store<AppState>,
     protected claimedTaskService: ClaimedTaskDataService,
     protected linkService: LinkService
   ) {
@@ -162,6 +166,8 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
         }
       })
     );
+
+    this.isAuthenticated$ = this.store.pipe(select(isAuthenticated));
   }
 
   /**
