@@ -11,7 +11,8 @@ import {
   ITEM_EDIT_PATH,
   MATOMO_STATISTICS_PATH, ORCID_PATH,
   TOMBSTONE_ITEM_PATH,
-  UPLOAD_BITSTREAM_PATH
+  UPLOAD_BITSTREAM_PATH,
+  VIEWS_DOWNLOADS_STATISTICS_PATH
 } from './item-page-routing-paths';
 import { ItemPageAdministratorGuard } from './item-page-administrator.guard';
 import { LinkMenuItemModel } from '../shared/menu/menu-item/models/link.model';
@@ -29,6 +30,7 @@ import { DSOEditMenuResolver } from '../shared/dso-page/dso-edit-menu.resolver';
 import {
   ClarinZipDownloadPageComponent
 } from '../bitstream-page/clarin-zip-download-page/clarin-zip-download-page.component';
+import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/views-downloads-statistics.component';
 
 @NgModule({
   imports: [
@@ -77,6 +79,14 @@ import {
           {
             path: MATOMO_STATISTICS_PATH,
             component: ClarinMatomoStatisticsComponent,
+            resolve: {
+              dso: ItemPageResolver,
+            }
+          },
+          {
+            path: VIEWS_DOWNLOADS_STATISTICS_PATH,
+            component: ViewsDownloadsStatisticsComponent,
+            canActivate: [AuthenticatedGuard],
             resolve: {
               dso: ItemPageResolver,
             }

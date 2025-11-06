@@ -2,9 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Observable, of as observableOf } from 'rxjs';
+import { APP_CONFIG } from '../../../../../config/app-config.interface';
 import { RemoteDataBuildService } from '../../../../core/cache/builders/remote-data-build.service';
 import { ObjectCacheService } from '../../../../core/cache/object-cache.service';
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
@@ -99,6 +100,10 @@ export function getItemPageFieldsTest(mockItem: Item, component) {
         isAuthorized: observableOf(true)
       });
 
+      const initialState = {
+        core: { auth: { loading: false } },
+      };
+
       TestBed.configureTestingModule({
         imports: [
             TranslateModule.forRoot({
@@ -116,7 +121,7 @@ export function getItemPageFieldsTest(mockItem: Item, component) {
           { provide: RelationshipDataService, useValue: {} },
           { provide: ObjectCacheService, useValue: {} },
           { provide: UUIDService, useValue: {} },
-          { provide: Store, useValue: {} },
+          provideMockStore({ initialState }),
           { provide: RemoteDataBuildService, useValue: {} },
           { provide: CommunityDataService, useValue: {} },
           { provide: HALEndpointService, useValue: {} },
@@ -133,6 +138,7 @@ export function getItemPageFieldsTest(mockItem: Item, component) {
           { provide: AuthorizationDataService, useValue: authorizationService },
           { provide: ResearcherProfileDataService, useValue: {} },
           { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub },
+          { provide: APP_CONFIG, useValue: { statistics: { baseUrl: 'http://test.com', endpoint: '/test' } } },
         ],
 
         schemas: [NO_ERRORS_SCHEMA]
@@ -419,6 +425,10 @@ describe('ItemComponent', () => {
     const recentSubmissionsUrl = '/collections/be7b8430-77a5-4016-91c9-90863e50583a?cp.page=3';
 
     beforeEach(waitForAsync(() => {
+      const initialState = {
+        core: { auth: { loading: false } },
+      };
+
       TestBed.configureTestingModule({
         imports: [
           TranslateModule.forRoot({
@@ -436,7 +446,7 @@ describe('ItemComponent', () => {
           { provide: RelationshipDataService, useValue: {} },
           { provide: ObjectCacheService, useValue: {} },
           { provide: UUIDService, useValue: {} },
-          { provide: Store, useValue: {} },
+          provideMockStore({ initialState }),
           { provide: RemoteDataBuildService, useValue: {} },
           { provide: CommunityDataService, useValue: {} },
           { provide: HALEndpointService, useValue: {} },
@@ -452,6 +462,7 @@ describe('ItemComponent', () => {
           { provide: RouteService, useValue: mockRouteService },
           { provide: AuthorizationDataService, useValue: {} },
           { provide: ResearcherProfileDataService, useValue: {} },
+          { provide: APP_CONFIG, useValue: { statistics: { baseUrl: 'http://test.com', endpoint: '/test' } } },
         ],
         schemas: [NO_ERRORS_SCHEMA]
       }).overrideComponent(ItemComponent, {

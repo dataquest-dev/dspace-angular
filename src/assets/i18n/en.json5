@@ -4550,6 +4550,62 @@
 
   "statistics.table.no-name": "(object name could not be loaded)",
 
+  "statistics.views-downloads.back-to-item": "Back to Item",
+
+  "statistics.views-downloads.drill-down-info": "Click on a data point to drill down by year / month.",
+
+  "statistics.views-downloads.views": "Views",
+
+  "statistics.views-downloads.downloads": "Downloads",
+
+  "statistics.views-downloads.back-to-months": "Back to Months",
+
+  "statistics.views-downloads.back-to-years": "Back to Years",
+
+  "statistics.views-downloads.statistics-for": "Statistics for",
+
+  "statistics.views-downloads.loading": "Loading statistics...",
+
+  "statistics.views-downloads.file-wise-statistics": "File-wise Download Statistics",
+
+  "statistics.views-downloads.no-data": "No download statistics available",
+
+  "statistics.views-downloads.error": "Failed to load statistics. Please try again later.",
+
+  "statistics.views-downloads.title.daily": "Daily Statistics for {{month}} {{year}}",
+
+  "statistics.views-downloads.title.monthly": "Monthly Statistics for {{year}}",
+
+  "statistics.views-downloads.title.yearly": "Repository Usage Statistics",
+
+  "statistics.views-downloads.all-months": "All Months",
+
+  "statistics.views-downloads.all-years": "All Years",
+
+  "statistics.views-downloads.months.january": "January",
+
+  "statistics.views-downloads.months.february": "February",
+
+  "statistics.views-downloads.months.march": "March",
+
+  "statistics.views-downloads.months.april": "April",
+
+  "statistics.views-downloads.months.may": "May",
+
+  "statistics.views-downloads.months.june": "June",
+
+  "statistics.views-downloads.months.july": "July",
+
+  "statistics.views-downloads.months.august": "August",
+
+  "statistics.views-downloads.months.september": "September",
+
+  "statistics.views-downloads.months.october": "October",
+
+  "statistics.views-downloads.months.november": "November",
+
+  "statistics.views-downloads.months.december": "December",
+
   "submission.edit.breadcrumbs": "Edit Submission",
 
   "submission.edit.title": "Edit Submission",
@@ -6164,4 +6220,30 @@
   "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
 
   "home.news.image.banner": "Home news banner image",
+
+  "matomo.subscription.subscribe.button": "Subscribe",
+
+  "matomo.subscription.unsubscribe.button": "Unsubscribe",
+
+  "matomo.subscription.subscribe.success.title": "Subscribed!",
+
+  "matomo.subscription.subscribe.success.message": "Subscribed successfully to item statistics!",
+
+  "matomo.subscription.subscribe.error.title": "Subscription Failed",
+
+  "matomo.subscription.subscribe.error.message": "Unable to subscribe to item statistics. Please try again later.",
+
+  "matomo.subscription.unsubscribe.success.title": "Unsubscribed!",
+
+  "matomo.subscription.unsubscribe.success.message": "Unsubscribed successfully from item statistics!",
+
+  "matomo.subscription.unsubscribe.error.title": "Unsubscribe Failed",
+
+  "matomo.subscription.unsubscribe.error.message": "Unable to unsubscribe from item statistics. Please try again later.",
+
+  "matomo.subscription.subscribe.tooltip": "Subscribe to receive monthly statistics reports for this item",
+
+  "matomo.subscription.unsubscribe.tooltip": "Unsubscribe from monthly statistics reports for this item",
+
+  "statistics.views-downloads.view-button": "Statistics",
 }

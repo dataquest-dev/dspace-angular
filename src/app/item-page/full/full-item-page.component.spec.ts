@@ -24,7 +24,7 @@ import { ServerResponseService } from '../../core/services/server-response.servi
 import { SignpostingDataService } from '../../core/data/signposting-data.service';
 import { LinkHeadService } from '../../core/services/link-head.service';
 import { RegistryService } from 'src/app/core/registry/registry.service';
-import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.service';
 import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-data.service';
@@ -201,7 +201,7 @@ describe('FullItemPageComponent', () => {
         { provide: LinkHeadService, useValue: linkHeadService },
         { provide: PLATFORM_ID, useValue: 'server' },
         { provide: MetadataBitstreamDataService, useValue: mockMetadataBitstreamDataService },
-        { provide: Store, useValue: {} },
+        provideMockStore({ initialState: { core: { auth: { loading: false } } } }),
         { provide: NotificationsService, useValue: {} },
         { provide: MetadataSchemaDataService, useValue: {} },
         { provide: MetadataFieldDataService, useValue: {} },

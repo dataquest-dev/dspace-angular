@@ -23,6 +23,7 @@ import { MarkdownConfig } from './markdown-config.interface';
 import { FilterVocabularyConfig } from './filter-vocabulary-config';
 import { DiscoverySortConfig } from './discovery-sort.config';
 import { MatomoConfig } from './matomo-config';
+import { StatisticsConfig } from './statistics-config';
 
 interface AppConfig extends Config {
   ui: UIServerConfig;
@@ -51,6 +52,7 @@ interface AppConfig extends Config {
   comcolSelectionSort: DiscoverySortConfig;
   signpostingEnabled: boolean;
   matomo: MatomoConfig;
+  statistics?: StatisticsConfig;
 }
 
 /**
