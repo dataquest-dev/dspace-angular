@@ -3927,6 +3927,7 @@
   "item.preview.dc.rights": "Práva",
 
   // "item.preview.dc.identifier.other": "Other Identifier",
+  // TODO Source message changed - Revise the translation
   "item.preview.dc.identifier.other": "Další identifikátor:",
 
   // "item.preview.dc.relation.issn": "ISSN",
@@ -9337,4 +9338,6 @@
 
   // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
   "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
+
+
 }
