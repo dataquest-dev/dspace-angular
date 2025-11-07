@@ -47,5 +47,6 @@ export interface Point {
   type: string;
   values: {
     views: number;
-  }[];
+    [key: string]: number;
+  };
 }

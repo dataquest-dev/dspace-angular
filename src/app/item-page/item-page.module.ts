@@ -57,6 +57,7 @@ import { ItemAlertsComponent } from './alerts/item-alerts.component';
 import { ItemVersionsModule } from './versions/item-versions.module';
 import { BitstreamRequestACopyPageComponent } from './bitstreams/request-a-copy/bitstream-request-a-copy-page.component';
 import { FileSectionComponent } from './simple/field-components/file-section/file-section.component';
+import { TotalDownloadsComponent } from './simple/field-components/file-section/total-downloads.component';
 import { ItemSharedModule } from './item-shared.module';
 import { DsoPageModule } from '../shared/dso-page/dso-page.module';
 import { ThemedItemAlertsComponent } from './alerts/themed-item-alerts.component';
@@ -99,6 +100,7 @@ const ENTRY_COMPONENTS = [
 
 const DECLARATIONS = [
   FileSectionComponent,
+  TotalDownloadsComponent,
   ThemedFileSectionComponent,
   ItemPageComponent,
   ThemedItemPageComponent,
