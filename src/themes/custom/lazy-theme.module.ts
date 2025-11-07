@@ -312,7 +312,7 @@ const DECLARATIONS = [
     NgxGalleryModule,
     FormModule,
     RequestCopyModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
     MyDSpaceActionsModule
   ],
   declarations: DECLARATIONS,

@@ -48,6 +48,10 @@
     "https": false
   },
   "private": true,
+  "resolutions": {
+          "@types/d3-dispatch": "3.0.6",
+          "ngx-mask": "~13.1.7"
+  },
   "dependencies": {
     "@angular/animations": "^15.2.10",
     "@angular/cdk": "^15.2.9",
