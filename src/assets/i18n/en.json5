@@ -2667,6 +2667,12 @@
 
   "item.version.history.head": "Version History",
 
+  "item.version.history.label": "version history",
+
+  "item.version.history.expand": "Expand",
+
+  "item.version.history.collapse": "Collapse",
+
   "item.version.history.return": "Back",
 
   "item.version.history.selected": "Selected version",

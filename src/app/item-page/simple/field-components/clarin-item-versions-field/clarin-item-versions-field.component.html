@@ -1,0 +1,45 @@
+<div class="row clarin-item-page-field justify-content-start" *ngIf="showMetadataValue | async">
+  <div class="col-lg-3 col-2-5 d-flex align-self-start">
+    <div><i [class]="'fas ' + iconName + ' fa-xs'"></i></div>
+    <!-- Toggle Header -->
+    <div
+      class="pl-1 d-flex align-items-center"
+      (click)="toggleVersionHistory()"
+      (keydown.enter)="toggleVersionHistory()"
+      role="button"
+      tabindex="0"
+      [attr.aria-expanded]="showVersionHistory"
+      aria-controls="version-history-content"
+      [attr.aria-label]="getToggleAriaLabel()">
+      <b class="mr-1">{{ "item.version.history.head" | translate }}</b>
+      <i class="fas" [ngClass]="showVersionHistory ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+    </div>
+  </div>
+
+  <!-- Collapsible Content -->
+  <div
+    id="version-history-content"
+    class="col-lg-9 collapse"
+    [ngClass]="{'show': showVersionHistory}"
+    [attr.aria-hidden]="!showVersionHistory">
+    <div *ngIf="enhancedVersions$ | async as enhancedVersions">
+      <ul class="list-unstyled dropdown-versions">
+        <li *ngFor="let enhancedVersion of enhancedVersions; trackBy: trackByVersionId"
+            [id]="'version-row-' + enhancedVersion.version.id">
+          <ng-container *ngIf="(enhancedVersion.versionItem$ | async)?.payload as versionItem">
+            <ng-container *ngIf="(enhancedVersion.workspaceId$ | async) || (enhancedVersion.workflowId$ | async); else itemNameWithLink">
+              {{ getVersionItemDisplayName(versionItem) }}
+            </ng-container>
+            <ng-template #itemNameWithLink>
+              <a [routerLink]="getVersionRoute(enhancedVersion.version.id)">
+                {{ getVersionItemDisplayName(versionItem) }}
+              </a>
+            </ng-template>
+            <span *ngIf="enhancedVersion.isCurrentVersion">*</span>
+          </ng-container>
+        </li>
+      </ul>
+      <div>*&nbsp;{{ "item.version.history.selected" | translate }}</div>
+    </div>
+  </div>
+</div>

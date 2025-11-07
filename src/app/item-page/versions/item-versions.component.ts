@@ -140,6 +140,12 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
   hasDraftVersion$: Observable<boolean>;
 
   /**
+   * Check if the current user is an admin
+   * Used to control component visibility
+   */
+  isAdmin$: Observable<boolean>;
+
+  /**
    * The amount of versions to display per page
    */
   pageSize = 10;
@@ -196,25 +202,25 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
    * Loading of the name from the items handles for the items which are stored in the metadata dc.relation.replaces` and
    * `dc.relation.isreplacedby`
    * Names are stored in this dict to avoid endless calling rest API to get the name of the Item.
-   * @private
+   * @access protected - Accessible to extending components that may need to cache item names from handles
    */
-  private nameCache: { [handle: string]: string } = {};
+  protected nameCache: { [handle: string]: string } = {};
 
-  constructor(private versionHistoryService: VersionHistoryDataService,
-              private versionService: VersionDataService,
-              private itemService: ItemDataService,
-              private paginationService: PaginationService,
-              private formBuilder: UntypedFormBuilder,
-              private modalService: NgbModal,
-              private notificationsService: NotificationsService,
-              private translateService: TranslateService,
-              private router: Router,
-              private itemVersionShared: ItemVersionsSharedService,
-              private authorizationService: AuthorizationDataService,
-              private workspaceItemDataService: WorkspaceitemDataService,
-              private workflowItemDataService: WorkflowItemDataService,
-              private configurationService: ConfigurationDataService,
-              private dsoNameService: DSONameService
+  constructor(protected versionHistoryService: VersionHistoryDataService,
+              protected versionService: VersionDataService,
+              protected itemService: ItemDataService,
+              protected paginationService: PaginationService,
+              protected formBuilder: UntypedFormBuilder,
+              protected modalService: NgbModal,
+              protected notificationsService: NotificationsService,
+              protected translateService: TranslateService,
+              protected router: Router,
+              protected itemVersionShared: ItemVersionsSharedService,
+              protected authorizationService: AuthorizationDataService,
+              protected workspaceItemDataService: WorkspaceitemDataService,
+              protected workflowItemDataService: WorkflowItemDataService,
+              protected configurationService: ConfigurationDataService,
+              protected dsoNameService: DSONameService
   ) {
   }
 
@@ -465,7 +471,7 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
       getRemoteDataPayload(),
       map((versions: PaginatedList<Version>) => ({
         totalElements: versions.totalElements,
-        versionDTOs: (versions?.page ?? []).map((version: Version) => ({
+        versionDTOs: [...(versions?.page ?? [])].reverse().map((version: Version) => ({
           version: version,
           canEditVersion: this.canEditVersion$(version),
           canDeleteVersion: this.canDeleteVersion$(version),
@@ -537,6 +543,9 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
       );
 
       this.canCreateVersion$ = this.authorizationService.isAuthorized(FeatureID.CanCreateVersion, this.item.self);
+
+      // Initialize admin check for component visibility
+      this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
 
       // If there is a draft item in the version history the 'Create version' button is disabled and a different tooltip message is shown
       this.hasDraftVersion$ = this.versionHistoryRD$.pipe(
