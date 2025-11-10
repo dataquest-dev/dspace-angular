@@ -5563,9 +5563,9 @@ ejs@^3.1.10:
     jake "^10.8.5"
 
 electron-to-chromium@^1.4.284, electron-to-chromium@^1.5.238:
-  version "1.5.248"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.248.tgz#e69941494efbc69ebf2803517f4e85d016013d4b"
-  integrity sha512-zsur2yunphlyAO4gIubdJEXCK6KOVvtpiuDfCIqbM9FjcnMYiyn0ICa3hWfPr0nc41zcLWobgy1iL7VvoOyA2Q==
+  version "1.5.249"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.249.tgz#e4fc3a3e60bb347361e4e876bb31903a9132a447"
+  integrity sha512-5vcfL3BBe++qZ5kuFhD/p8WOM1N9m3nwvJPULJx+4xf2usSlZFJ0qoNYO2fOX4hi3ocuDcmDobtA+5SFr4OmBg==
 
 element-resize-detector@^1.2.1:
   version "1.2.4"
@@ -7351,9 +7351,9 @@ invariant@^2.2.4:
     loose-envify "^1.0.0"
 
 ip-address@^10.0.1:
-  version "10.0.1"
-  resolved "https://registry.yarnpkg.com/ip-address/-/ip-address-10.0.1.tgz#a8180b783ce7788777d796286d61bce4276818ed"
-  integrity sha512-NWv9YLW4PoW2B7xtzaS3NCot75m6nK7Icdv0o3lfMceJVRfSoQwqD4wEH5rLwoKJwUiZ/rfpiVBhnaF0FK4HoA==
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/ip-address/-/ip-address-10.1.0.tgz#d8dcffb34d0e02eb241427444a6e23f5b0595aa4"
+  integrity sha512-XXADHxXmvT9+CRxhXg56LJovE+bmWnEWB78LB83VZTprKTmaC5QfruXocxzTZ2Kl0DNwKuBdlIhjL8LeY8Sf8Q==
 
 ipaddr.js@1.9.1:
   version "1.9.1"
@@ -9040,14 +9040,7 @@ ngx-infinite-scroll@^15.0.0:
   dependencies:
     tslib "^2.3.0"
 
-ngx-mask@^13.1.7:
-  version "13.2.2"
-  resolved "https://registry.yarnpkg.com/ngx-mask/-/ngx-mask-13.2.2.tgz#d92e488876f624e1521a06d3e224fb2505dff5b8"
-  integrity sha512-GvTxODtx0Err6z6U7HGdd9t8qCOLwycLYcD5yek/b4FoxbUs3FRyFsiuTyfPxbWeUgFPLbHjLWR2y5qDI/4Tdg==
-  dependencies:
-    tslib "^2.3.0"
-
-ngx-mask@~13.1.7:
+ngx-mask@13.1.15, ngx-mask@~13.1.7:
   version "13.1.15"
   resolved "https://registry.yarnpkg.com/ngx-mask/-/ngx-mask-13.1.15.tgz#1bfd96772f72eabd70ae186335b5e6804789ee23"
   integrity sha512-fplyzkFa6lFTzPo/AHaI3TBQxTMdcqQClR9BLLAWTvCyDZkV28fLqWkpIpy0VvPc9ADogFpJJj7R1356mszjag==
