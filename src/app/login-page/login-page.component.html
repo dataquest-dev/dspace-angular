@@ -2,13 +2,13 @@
   <div class="text-center mt-5 row justify-content-center">
     <div>
       <div class="mb-4 d-flex justify-content-center align-items-center w-100">
-        <img class="login-logo" src="assets/images/dspace-logo.png" alt="{{'repository.image.logo' | translate}}">
+        <img class="login-logo" src="assets/images/dspace-logo.svg" alt="{{'repository.image.logo' | translate}}">
         <a href="https://www.clarin.eu/" target="_blank" rel="noopener noreferrer">
           <img class="ml-5 clarin-logo" src="assets/images/clarin-logo.svg" alt="Clarin logo" >
         </a>
       </div>
       <h1 *ngIf="!authenticatedUser; else alreadyAuthenticated" class="h3 mb-0 font-weight-normal">{{"login.form.header" | translate}}</h1>
-      
+
        <ng-template #alreadyAuthenticated>
           <div class="already-authenticated-message">
             <h1 class="h3 mb-3 font-weight-normal">{{"login.already-authenticated.header" | translate}}</h1>
@@ -28,8 +28,8 @@
             </div>
           </div>
         </ng-template>
-      
-      <ds-themed-log-in *ngIf="!authenticatedUser" 
+
+      <ds-themed-log-in *ngIf="!authenticatedUser"
       [isStandalonePage]="true"></ds-themed-log-in>
     </div>
   </div>
