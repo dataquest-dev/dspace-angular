@@ -1,0 +1,16 @@
+:host {
+  display: inline-block;
+}
+
+button {
+  transition: all 0.2s ease;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  i {
+    margin-right: 0.25rem;
+  }
+}

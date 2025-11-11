@@ -46,6 +46,7 @@ import { HomePageResolver } from './home-page/home-page.resolver';
 import { ViewTrackerResolverService } from './statistics/angulartics/dspace/view-tracker-resolver.service';
 import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
 import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
+import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing-paths';
 
 @NgModule({
   imports: [
@@ -269,6 +270,11 @@ import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
           {
             path: HANDLE_TABLE_MODULE_PATH,
             loadChildren: () => import('./handle-page/handle-page.module').then((m) => m.HandlePageModule),
+            canActivate: [SiteAdministratorGuard],
+          },
+          {
+            path: EPIC_HANDLE_TABLE_MODULE_PATH,
+            loadChildren: () => import('./epic-handle/epic-handle.module').then((m) => m.EpicHandleModule),
             canActivate: [SiteAdministratorGuard],
           },
           {

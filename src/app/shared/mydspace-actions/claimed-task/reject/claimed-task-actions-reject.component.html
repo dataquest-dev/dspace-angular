@@ -22,7 +22,9 @@
       {{'submission.workflow.tasks.claimed.reject.reason.info' | translate}}
     </div>
     <form (ngSubmit)="submitTask();" [formGroup]="rejectForm" >
+      <label for="reason" class="sr-only">{{'submission.workflow.tasks.claimed.reject.reason.placeholder' | translate}}</label>
       <textarea style="width: 100%"
+                id="reason"
                 formControlName="reason"
                 rows="4"
                 placeholder="{{'submission.workflow.tasks.claimed.reject.reason.placeholder' | translate}}"></textarea>

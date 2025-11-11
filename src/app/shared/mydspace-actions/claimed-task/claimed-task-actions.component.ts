@@ -43,6 +43,12 @@ export class ClaimedTaskActionsComponent extends MyDSpaceActionsComponent<Claime
   @Input() workflowitem: WorkflowItem;
 
   /**
+   * Whether to show the view button (default: true)
+   * Set to false when already on the view page
+   */
+  @Input() showViewButton = true;
+
+  /**
    * The workflow action available for this task
    */
   public actionRD$: Observable<RemoteData<WorkflowAction>>;

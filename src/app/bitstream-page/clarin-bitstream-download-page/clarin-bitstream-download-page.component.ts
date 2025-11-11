@@ -12,7 +12,8 @@ import { RequestService } from '../../core/data/request.service';
 import {
   DOWNLOAD_TOKEN_EXPIRED_EXCEPTION,
   HTTP_STATUS_UNAUTHORIZED,
-  MISSING_LICENSE_AGREEMENT_EXCEPTION
+  MISSING_LICENSE_AGREEMENT_EXCEPTION,
+  AUTHORIZATION_DENIED_EXCEPTION
 } from '../../core/shared/clarin/constants';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
 import { hasValue, isEmpty, isNotEmpty, isNotNull, isUndefined } from '../../shared/empty.util';
@@ -166,6 +167,9 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
             this.downloadStatus.next(DOWNLOAD_TOKEN_EXPIRED_EXCEPTION);
             return false;
           default:
+            if (requestEntry?.errorMessage && requestEntry?.errorMessage.startsWith(AUTHORIZATION_DENIED_EXCEPTION)) {
+              this.downloadStatus.next(AUTHORIZATION_DENIED_EXCEPTION);
+            }
             return false;
         }
       }

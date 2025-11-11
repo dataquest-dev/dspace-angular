@@ -3,7 +3,9 @@
       (keydown.arrowdown)="shiftFocusDown($event)"
       (keydown.arrowup)="shiftFocusUp($event)" (keydown.esc)="close()"
       (dsClickOutside)="checkIfValidInput(form);close();">
+  <label for="name + '-input'" class="sr-only">{{placeholder}}</label>
   <input [readonly]="disable" #inputField type="text" formControlName="metadataNameField" attr.aria-labelledby="fieldName" [(ngModel)]="value" id="name" [name]="name"
+         [id]="name + '-input'"
          class="form-control suggestion_input"
          [ngClass]="{'is-invalid': !valid}"
          [dsDebounce]="debounceTime" (onDebounce)="find($event)"

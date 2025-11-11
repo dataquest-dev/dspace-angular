@@ -1,0 +1,19 @@
+<button
+  *ngIf="!isSubscribed"
+  class="btn btn-outline-info btn-sm"
+  (click)="onSubscribe()"
+  [disabled]="isLoading"
+  [title]="'matomo.subscription.subscribe.tooltip' | translate">
+
+  <i class="fa fa-bell" aria-hidden="true"></i>
+  {{ 'matomo.subscription.subscribe.button' | translate }}
+</button>
+<button
+  *ngIf="isSubscribed"
+  class="btn btn-secondary btn-sm"
+  (click)="onUnsubscribe()"
+  [disabled]="isLoading"
+  [title]="'matomo.subscription.unsubscribe.tooltip' | translate">
+  <i class="fa fa-bell-slash" aria-hidden="true"></i>
+  {{ 'matomo.subscription.unsubscribe.button' | translate }}
+</button>

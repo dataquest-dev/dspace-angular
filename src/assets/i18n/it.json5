@@ -2245,8 +2245,7 @@
   "curation-task.task.vscan.label": "Scansione antivirus",
 
   // "curation-task.task.registerdoi.label": "Register DOI",
-  // TODO New key - Add a translation
-  "curation-task.task.registerdoi.label": "Register DOI",
+  "curation-task.task.registerdoi.label": "Registra DOI",
 
   // "curation.form.task-select.label": "Task:",
   "curation.form.task-select.label": "Task:",
@@ -2603,7 +2602,8 @@
   // TODO New key - Add a translation
   "error.validation.metadata.qualifier.max-length": "This field may not contain more than 64 characters",
 
-  // "feed.description": "Syndication feed",
+  // "feed.description": "RSS feed",
+  // TODO Source message changed - Revise the translation
   "feed.description": "Syndication feed",
 
   // "file-download-link.restricted": "Restricted bitstream",
@@ -2971,7 +2971,8 @@
   // "health-page.section.no-issues": "No issues detected",
   "health-page.section.no-issues": "Nessun problema rilevato",
 
-  // "home.description": "",
+  // "home.description": "DSpace is a digital service that collects, preserves, and distributes digital material. Repositories are important tools for preserving an organization's legacy; they facilitate digital preservation and scholarly communication.",
+  // TODO Source message changed - Revise the translation
   "home.description": "",
 
   // "home.breadcrumbs": "Home",
@@ -3942,7 +3943,8 @@
   // "item.page.collections.load-more": "Load more",
   "item.page.collections.load-more": "Carica più risorse",
 
-  // "item.page.date": "Date",
+  // "item.page.date": "Date issued",
+  // TODO Source message changed - Revise the translation
   "item.page.date": "Data",
 
   // "item.page.edit": "Edit this item",
@@ -3969,10 +3971,12 @@
   // "item.page.journal.search.title": "Articles in this journal",
   "item.page.journal.search.title": "Articoli in questo periodico",
 
-  // "item.page.link.full": "Full item page",
+  // "item.page.link.full": "Show full item record",
+  // TODO Source message changed - Revise the translation
   "item.page.link.full": "Mostra tutti i metadati",
 
-  // "item.page.link.simple": "Simple item page",
+  // "item.page.link.simple": "Show simple item record",
+  // TODO Source message changed - Revise the translation
   "item.page.link.simple": "Visualizzazione ridotta",
 
   // "item.page.orcid.title": "ORCID",
@@ -4002,10 +4006,12 @@
   // "item.page.relationships.isOrgUnitOfProject": "Research Projects",
   "item.page.relationships.isOrgUnitOfProject": "Progetti di ricerca",
 
-  // "item.page.subject": "Keywords",
+  // "item.page.subject": "Subject(s)",
+  // TODO Source message changed - Revise the translation
   "item.page.subject": "Keywords",
 
-  // "item.page.uri": "URI",
+  // "item.page.uri": "Item identifier",
+  // TODO Source message changed - Revise the translation
   "item.page.uri": "URI",
 
   // "item.page.bitstreams.view-more": "Show more",
@@ -4638,8 +4644,7 @@
   "menu.section.browse_community_by_title": "Per titolo",
 
   // "menu.section.browse_global": "All of DSpace",
-  // TODO New key - Add a translation
-  "menu.section.browse_global": "All of DSpace",
+  "menu.section.browse_global": "Tutto DSpace",
 
   // "menu.section.browse_global_by_author": "By Author",
   "menu.section.browse_global_by_author": "Per autore",
@@ -5077,7 +5082,8 @@
   // "pagination.results-per-page": "Results Per Page",
   "pagination.results-per-page": "Risultati per pagina",
 
-  // "pagination.showing.detail": "{{ range }} of {{ total }}",
+  // "pagination.showing.detail": "{{ range }} out of {{ total }} results",
+  // TODO Source message changed - Revise the translation
   "pagination.showing.detail": "{{ range }} di {{ total }}",
 
   // "pagination.showing.label": "Now showing ",
@@ -5712,9 +5718,9 @@
   // TODO New key - Add a translation
   "repository.title": "DSpace Repository",
 
-  // "repository.title.prefix": "DSpace Repository :: ",
+  // "repository.title.prefix": "LINDAT/CLARIAH-CZ Repository",
   // TODO New key - Add a translation
-  "repository.title.prefix": "DSpace Repository :: ",
+  "repository.title.prefix": "LINDAT/CLARIAH-CZ Repository",
 
   // "resource-policies.add.button": "Add",
   "resource-policies.add.button": "Aggiungi",
@@ -5948,7 +5954,8 @@
   // "search.filters.applied.f.entityType": "Item Type",
   "search.filters.applied.f.entityType": "Tipo di item",
 
-  // "search.filters.applied.f.has_content_in_original_bundle": "Has files",
+  // "search.filters.applied.f.has_content_in_original_bundle": "Has Files",
+  // TODO Source message changed - Revise the translation
   "search.filters.applied.f.has_content_in_original_bundle": "Ha file",
 
   // "search.filters.applied.f.itemtype": "Type",
@@ -6085,7 +6092,8 @@
   // "search.filters.filter.expand": "Expand filter",
   "search.filters.filter.expand": "Espandi filtro",
 
-  // "search.filters.filter.has_content_in_original_bundle.head": "Has files",
+  // "search.filters.filter.has_content_in_original_bundle.head": "Has Files",
+  // TODO Source message changed - Revise the translation
   "search.filters.filter.has_content_in_original_bundle.head": "Ha file",
 
   // "search.filters.filter.itemtype.head": "Type",
@@ -6252,7 +6260,8 @@
   // "search.filters.withdrawn.false": "No",
   "search.filters.withdrawn.false": "No",
 
-  // "search.filters.head": "Filters",
+  // "search.filters.head": "Limit your search",
+  // TODO Source message changed - Revise the translation
   "search.filters.head": "Filtri",
 
   // "search.filters.reset": "Reset filters",
@@ -8533,6 +8542,1530 @@
   // "metadata-export-search.submit.error.limit-exceeded": "Only the first {{limit}} items will be exported",
   // TODO New key - Add a translation
   "metadata-export-search.submit.error.limit-exceeded": "Only the first {{limit}} items will be exported",
+
+  // "clarin.license.agreement.breadcrumbs": "License Agreement",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.breadcrumbs": "License Agreement",
+
+  // "clarin.license.agreement.title": "License Agreement",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.title": "License Agreement",
+
+  // "clarin.license.agreement.header.info": "The requested content is distributed under one or more licence(s). You have to agree to the licence(s) below before you can obtain the content. Please, view the licence(s) by clicking on the button(s) and read it carefully. The data filled below might be shared with the submitter of the item and/or for creating statistics.",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.header.info": "The requested content is distributed under one or more licence(s). You have to agree to the licence(s) below before you can obtain the content. Please, view the licence(s) by clicking on the button(s) and read it carefully. The data filled below might be shared with the submitter of the item and/or for creating statistics.",
+
+  // "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
+
+  // "clarin.license.agreement.item.handle": "Item handle",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.item.handle": "Item handle",
+
+  // "clarin.license.agreement.bitstream.name": "Bitstream",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.bitstream.name": "Bitstream",
+
+  // "clarin.license.agreement.signer.name": "Signer",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.name": "Signer",
+
+  // "clarin.license.agreement.signer.id": "User ID",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.id": "User ID",
+
+  // "clarin.license.agreement.token.info": "You will receive an email with download instructions.",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.token.info": "You will receive an email with download instructions.",
+
+  // "clarin.license.agreement.signer.ip.address": "IP Address",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.ip.address": "IP Address",
+
+  // "clarin.license.agreement.signer.SEND_TOKEN": "E-mail",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.SEND_TOKEN": "E-mail",
+
+  // "clarin.license.agreement.signer.NAME": "Name (given name and surname)",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.NAME": "Name (given name and surname)",
+
+  // "clarin.license.agreement.signer.DOB": "Date of birth",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.DOB": "Date of birth",
+
+  // "clarin.license.agreement.signer.ADDRESS": "Address",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.ADDRESS": "Address",
+
+  // "clarin.license.agreement.signer.COUNTRY": "Country",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.COUNTRY": "Country",
+
+  // "clarin.license.agreement.signer.EXTRA_EMAIL": "E-mail",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.EXTRA_EMAIL": "E-mail",
+
+  // "clarin.license.agreement.signer.ORGANIZATION": "Organization",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.ORGANIZATION": "Organization",
+
+  // "clarin.license.agreement.signer.REQUIRED_ORGANIZATION": "Organization",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.REQUIRED_ORGANIZATION": "Organization",
+
+  // "clarin.license.agreement.signer.INTENDED_USE": "Intended use",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.INTENDED_USE": "Intended use",
+
+  // "clarin.license.agreement.signer.ACA_ORG_NAME_AND_SEAT": "Name and seat (address) of your academic institution",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.signer.ACA_ORG_NAME_AND_SEAT": "Name and seat (address) of your academic institution",
+
+  // "clarin.license.agreement.button.agree": "I AGREE",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.button.agree": "I AGREE",
+
+  // "clarin.license.agreement.warning": "By clicking on the button below I, SIGNER with the above ID, agree to the LICENCE(s) restricting the usage of requested BITSTREAM(s).",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.warning": "By clicking on the button below I, SIGNER with the above ID, agree to the LICENCE(s) restricting the usage of requested BITSTREAM(s).",
+
+  // "clarin.license.agreement.notification.error.required.info": "You must fill in required info.",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.notification.error.required.info": "You must fill in required info.",
+
+  // "clarin.license.agreement.error.message.cannot.download": ["Something went wrong and you cannot download this bitstream, please contact", " Help Desk."],
+  // TODO New key - Add a translation
+  "clarin.license.agreement.error.message.cannot.download": ["Something went wrong and you cannot download this bitstream, please contact", " Help Desk."],
+
+  // "clarin.license.agreement.notification.check.email": "You will receive email with download link.",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.notification.check.email": "You will receive email with download link.",
+
+  // "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
+  // TODO New key - Add a translation
+  "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
+
+  // "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
+  // TODO New key - Add a translation
+  "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
+
+  // "clarin.license.all-page.title": "Available Licenses",
+  // TODO New key - Add a translation
+  "clarin.license.all-page.title": "Available Licenses",
+
+  // "clarin.license.all-page.source": "Source:",
+  // TODO New key - Add a translation
+  "clarin.license.all-page.source": "Source:",
+
+  // "clarin.license.all-page.labels": "Labels:",
+  // TODO New key - Add a translation
+  "clarin.license.all-page.labels": "Labels:",
+
+  // "clarin.license.all-page.extra-information": "Extra information required:",
+  // TODO New key - Add a translation
+  "clarin.license.all-page.extra-information": "Extra information required:",
+
+  // "clarin.license.all-page.extra-information.default": "NONE",
+  // TODO New key - Add a translation
+  "clarin.license.all-page.extra-information.default": "NONE",
+
+  // "browse.comcol.by.language": "By Language",
+  // TODO New key - Add a translation
+  "browse.comcol.by.language": "By Language",
+
+  // "browse.metadata.language": "Language",
+  // TODO New key - Add a translation
+  "browse.metadata.language": "Language",
+
+  // "browse.metadata.language.breadcrumbs": "Browse by Language",
+  // TODO New key - Add a translation
+  "browse.metadata.language.breadcrumbs": "Browse by Language",
+
+  // "contact-us.breadcrumbs": "Contact Us",
+  // TODO New key - Add a translation
+  "contact-us.breadcrumbs": "Contact Us",
+
+  // "contact-us.title": "Contact Us",
+  // TODO New key - Add a translation
+  "contact-us.title": "Contact Us",
+
+  // "contact-us.description": "DSpace administrators may be contacted at:",
+  // TODO New key - Add a translation
+  "contact-us.description": "DSpace administrators may be contacted at:",
+
+  // "contact-us.form": "On-line form: ",
+  // TODO New key - Add a translation
+  "contact-us.form": "On-line form: ",
+
+  // "contact-us.feedback": "Feedback",
+  // TODO New key - Add a translation
+  "contact-us.feedback": "Feedback",
+
+  // "contact-us.email": "Email: ",
+  // TODO New key - Add a translation
+  "contact-us.email": "Email: ",
+
+  // "error.validation.clarin-license.notgranted": "You must choose one of the resource licenses.",
+  // TODO New key - Add a translation
+  "error.validation.clarin-license.notgranted": "You must choose one of the resource licenses.",
+
+  // "footer.link.contact-us": "Contact us",
+  // TODO New key - Add a translation
+  "footer.link.contact-us": "Contact us",
+
+  // "form.other-information.credit-name": "Credit Name",
+  // TODO New key - Add a translation
+  "form.other-information.credit-name": "Credit Name",
+
+  // "form.other-information.other-names": "Other Names",
+  // TODO New key - Add a translation
+  "form.other-information.other-names": "Other Names",
+
+  // "home-page.carousel.ldata.info": "Linguistic Data and NLP Tools",
+  // TODO New key - Add a translation
+  "home-page.carousel.ldata.info": "Linguistic Data and NLP Tools",
+
+  // "home-page.carousel.ldata.find": "Find",
+  // TODO New key - Add a translation
+  "home-page.carousel.ldata.find": "Find",
+
+  // "home-page.carousel.ldata.citation-support": "Citation Support (with Persistent IDs)",
+  // TODO New key - Add a translation
+  "home-page.carousel.ldata.citation-support": "Citation Support (with Persistent IDs)",
+
+  // "home-page.carousel.deposit.header": "Deposit Free and Safe",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.header": "Deposit Free and Safe",
+
+  // "home-page.carousel.deposit.info": "License of your Choice (Open licenses encouraged)",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.info": "License of your Choice (Open licenses encouraged)",
+
+  // "home-page.carousel.deposit.find": "Easy to Find",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.find": "Easy to Find",
+
+  // "home-page.carousel.deposit.cite": "Easy to Cite",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.cite": "Easy to Cite",
+
+  // "home-page.carousel.deposit.citation": "“There ought to be only one grand dépôt of art in the world, to\n                        which the artist might repair with his works, and on presenting them\n                        receive what he required... ”",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.citation": "“There ought to be only one grand dépôt of art in the world, to\n                        which the artist might repair with his works, and on presenting them\n                        receive what he required... ”",
+
+  // "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
+  // TODO New key - Add a translation
+  "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
+
+  // "home-page.search": "Search",
+  // TODO New key - Add a translation
+  "home-page.search": "Search",
+
+  // "home-page.advanced-search": "Advanced Search",
+  // TODO New key - Add a translation
+  "home-page.advanced-search": "Advanced Search",
+
+  // "home-page.hyperlink.author.message": "Author",
+  // TODO New key - Add a translation
+  "home-page.hyperlink.author.message": "Author",
+
+  // "home-page.hyperlink.subject.message": "Subject",
+  // TODO New key - Add a translation
+  "home-page.hyperlink.subject.message": "Subject",
+
+  // "home-page.hyperlink.language.message": "Language (ISO)",
+  // TODO New key - Add a translation
+  "home-page.hyperlink.language.message": "Language (ISO)",
+
+  // "home-page.hyperlink.view-more.message": "... View More",
+  // TODO New key - Add a translation
+  "home-page.hyperlink.view-more.message": "... View More",
+
+  // "home-page.whats-new.message": "What's New",
+  // TODO New key - Add a translation
+  "home-page.whats-new.message": "What's New",
+
+  // "home-page.new-items.message": "Most Viewed Items - Last Month",
+  // TODO New key - Add a translation
+  "home-page.new-items.message": "Most Viewed Items - Last Month",
+
+  // "handle-table.breadcrumbs": "Handles",
+  // TODO New key - Add a translation
+  "handle-table.breadcrumbs": "Handles",
+
+  // "handle-table.new-handle.breadcrumbs": "New Handle",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.breadcrumbs": "New Handle",
+
+  // "handle-table.edit-handle.breadcrumbs": "Edit Handle",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.breadcrumbs": "Edit Handle",
+
+  // "handle-table.global-actions.breadcrumbs": "Global Actions",
+  // TODO New key - Add a translation
+  "handle-table.global-actions.breadcrumbs": "Global Actions",
+
+  // "handle-table.new-handle.form-handle-input-text": "Handle",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.form-handle-input-text": "Handle",
+
+  // "handle-table.new-handle.form-handle-input-placeholder": "Enter handle",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.form-handle-input-placeholder": "Enter handle",
+
+  // "handle-table.new-handle.form-url-input-text": "URL",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.form-url-input-text": "URL",
+
+  // "handle-table.new-handle.form-url-input-placeholder": "Enter URL",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.form-url-input-placeholder": "Enter URL",
+
+  // "handle-table.new-handle.form-button-submit": "Submit",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.form-button-submit": "Submit",
+
+  // "handle-table.new-handle.notify.error": "Server Error - Cannot create new handle",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.notify.error": "Server Error - Cannot create new handle",
+
+  // "handle-table.new-handle.notify.successful": "The new handle was created!",
+  // TODO New key - Add a translation
+  "handle-table.new-handle.notify.successful": "The new handle was created!",
+
+  // "handle-table.edit-handle.notify.error": "Server Error - Cannot edit this handle",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.notify.error": "Server Error - Cannot edit this handle",
+
+  // "handle-table.edit-handle.notify.successful": "The handle was edited!",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.notify.successful": "The handle was edited!",
+
+  // "handle-table.delete-handle.notify.error": "Server Error - Cannot delete this handle",
+  // TODO New key - Add a translation
+  "handle-table.delete-handle.notify.error": "Server Error - Cannot delete this handle",
+
+  // "handle-table.delete-handle.notify.successful": "The handle was deleted!",
+  // TODO New key - Add a translation
+  "handle-table.delete-handle.notify.successful": "The handle was deleted!",
+
+  // "handle-table.edit-handle.form-handle-input-text": "Handle",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-handle-input-text": "Handle",
+
+  // "handle-table.edit-handle.form-handle-input-placeholder": "Enter new handle",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-handle-input-placeholder": "Enter new handle",
+
+  // "handle-table.edit-handle.form-url-input-text": "URL",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-url-input-text": "URL",
+
+  // "handle-table.edit-handle.form-url-input-placeholder": "Enter new URL",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-url-input-placeholder": "Enter new URL",
+
+  // "handle-table.edit-handle.form-archive-input-check": "Archive old handle?",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-archive-input-check": "Archive old handle?",
+
+  // "handle-table.edit-handle.form-button-submit": "Submit",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-button-submit": "Submit",
+
+  // "handle-table.edit-handle.form-id-input-text": "ID",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-id-input-text": "ID",
+
+  // "handle-table.edit-handle.form-id-input-placeholder": "...",
+  // TODO New key - Add a translation
+  "handle-table.edit-handle.form-id-input-placeholder": "...",
+
+  // "handle-page.title": "Handles",
+  // TODO New key - Add a translation
+  "handle-page.title": "Handles",
+
+  // "handle-table.title": "Handle List",
+  // TODO New key - Add a translation
+  "handle-table.title": "Handle List",
+
+  // "handle-table.table.handle": "Handle",
+  // TODO New key - Add a translation
+  "handle-table.table.handle": "Handle",
+
+  // "handle-table.table.internal": "Is Internal",
+  // TODO New key - Add a translation
+  "handle-table.table.internal": "Is Internal",
+
+  // "handle-table.table.is-internal": "Yes",
+  // TODO New key - Add a translation
+  "handle-table.table.is-internal": "Yes",
+
+  // "handle-table.table.not-internal": "No",
+  // TODO New key - Add a translation
+  "handle-table.table.not-internal": "No",
+
+  // "handle-table.table.url": "URL",
+  // TODO New key - Add a translation
+  "handle-table.table.url": "URL",
+
+  // "handle-table.table.resource-type": "Resource type",
+  // TODO New key - Add a translation
+  "handle-table.table.resource-type": "Resource type",
+
+  // "handle-table.table.resource-id": "Resource id",
+  // TODO New key - Add a translation
+  "handle-table.table.resource-id": "Resource id",
+
+  // "handle-table.button.new-handle": "New external handle",
+  // TODO New key - Add a translation
+  "handle-table.button.new-handle": "New external handle",
+
+  // "handle-table.button.edit-handle": "Edit handle",
+  // TODO New key - Add a translation
+  "handle-table.button.edit-handle": "Edit handle",
+
+  // "handle-table.button.delete-handle": "Delete handle",
+  // TODO New key - Add a translation
+  "handle-table.button.delete-handle": "Delete handle",
+
+  // "handle-table.dropdown.search-option": "Search option",
+  // TODO New key - Add a translation
+  "handle-table.dropdown.search-option": "Search option",
+
+  // "handle-table.dropdown.search-button": "Search",
+  // TODO New key - Add a translation
+  "handle-table.dropdown.search-button": "Search",
+
+  // "handle-table.global-actions.title": "Global Actions",
+  // TODO New key - Add a translation
+  "handle-table.global-actions.title": "Global Actions",
+
+  // "handle-table.global-actions.actions-list-message": "This is the list of available global actions.",
+  // TODO New key - Add a translation
+  "handle-table.global-actions.actions-list-message": "This is the list of available global actions.",
+
+  // "handle-table.global-actions.button.change-prefix": "Change handle prefix",
+  // TODO New key - Add a translation
+  "handle-table.global-actions.button.change-prefix": "Change handle prefix",
+
+  // "handle-table.change-handle-prefix.form-old-prefix-input-text": "Old prefix",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-old-prefix-input-text": "Old prefix",
+
+  // "handle-table.change-handle-prefix.form-old-prefix-input-error": "Valid old prefix is required",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-old-prefix-input-error": "Valid old prefix is required",
+
+  // "handle-table.change-handle-prefix.form-old-prefix-input-placeholder": "Enter old prefix",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-old-prefix-input-placeholder": "Enter old prefix",
+
+  // "handle-table.change-handle-prefix.form-new-prefix-input-text": "New prefix",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-new-prefix-input-text": "New prefix",
+
+  // "handle-table.change-handle-prefix.form-new-prefix-input-placeholder": "Enter new prefix",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-new-prefix-input-placeholder": "Enter new prefix",
+
+  // "handle-table.change-handle-prefix.form-new-prefix-input-error": "Valid new prefix is required",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-new-prefix-input-error": "Valid new prefix is required",
+
+  // "handle-table.change-handle-prefix.form-archive-input-check": "Archive old handles?",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.form-archive-input-check": "Archive old handles?",
+
+  // "handle-table.change-handle-prefix.notify.started": "Changing of the prefix has been started, it will take some time.",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.notify.started": "Changing of the prefix has been started, it will take some time.",
+
+  // "handle-table.change-handle-prefix.notify.successful": "The global prefix was changed!",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.notify.successful": "The global prefix was changed!",
+
+  // "handle-table.change-handle-prefix.notify.error": "Server Error - Cannot change the global prefix",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.notify.error": "Server Error - Cannot change the global prefix",
+
+  // "handle-table.change-handle-prefix.notify.error.empty-table": "Server Error - Cannot change the global prefix because no Handle exist.",
+  // TODO New key - Add a translation
+  "handle-table.change-handle-prefix.notify.error.empty-table": "Server Error - Cannot change the global prefix because no Handle exist.",
+
+  // "licenses.manage-table.breadcrumbs": "License administration",
+  // TODO New key - Add a translation
+  "licenses.manage-table.breadcrumbs": "License administration",
+
+  // "licenses.breadcrumbs": "Licenses",
+  // TODO New key - Add a translation
+  "licenses.breadcrumbs": "Licenses",
+
+  // "item.edit.bitstreams.headers.synchronized": "Sync | Checksum",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.headers.synchronized": "Sync | Checksum",
+
+  // "item.edit.bitstreams.checksum.algorithm": "Algorithm:",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.algorithm": "Algorithm:",
+
+  // "item.edit.bitstreams.checksum.value": "Value: ",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.value": "Value: ",
+
+  // "item.edit.bitstreams.checksum.database": "DB",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.database": "DB",
+
+  // "item.edit.bitstreams.checksum.active-store": "Active store",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.active-store": "Active store",
+
+  // "item.edit.bitstreams.checksum.sync-store": "Sync store",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.sync-store": "Sync store",
+
+  // "item.edit.bitstreams.checksum.popover.warning.header": "Warning:",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.popover.warning.header": "Warning:",
+
+  // "item.edit.bitstreams.checksum.popover.warning.body": "The file must be downloaded for the checksum to be computed.:",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.popover.warning.body": "The file must be downloaded for the checksum to be computed.:",
+
+  // "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.",
+
+  // "item.edit.tabs.license.head": "License",
+  // TODO New key - Add a translation
+  "item.edit.tabs.license.head": "License",
+
+  // "item.edit.license.head": "Current License",
+  // TODO New key - Add a translation
+  "item.edit.license.head": "Current License",
+
+  // "item.edit.license.select.license.initial-value.message": "-Select License-",
+  // TODO New key - Add a translation
+  "item.edit.license.select.license.initial-value.message": "-Select License-",
+
+  // "item.edit.license.select.license.select.message": "Select a license",
+  // TODO New key - Add a translation
+  "item.edit.license.select.license.select.message": "Select a license",
+
+  // "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
+  // TODO New key - Add a translation
+  "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
+
+  // "item.edit.license.define.license.message": "Define a new license",
+  // TODO New key - Add a translation
+  "item.edit.license.define.license.message": "Define a new license",
+
+  // "item.edit.license.button.name.update": "Update",
+  // TODO New key - Add a translation
+  "item.edit.license.button.name.update": "Update",
+
+  // "item.edit.license.button.name.return": "Return",
+  // TODO New key - Add a translation
+  "item.edit.license.button.name.return": "Return",
+
+  // "item.edit.license.remove.license.message": "Remove License",
+  // TODO New key - Add a translation
+  "item.edit.license.remove.license.message": "Remove License",
+
+  // "item.edit.license.update.success": "License updated successfully",
+  // TODO New key - Add a translation
+  "item.edit.license.update.success": "License updated successfully",
+
+  // "item.edit.license.update.error": "Error: cannot update license",
+  // TODO New key - Add a translation
+  "item.edit.license.update.error": "Error: cannot update license",
+
+  // "item.page.project-url": "Project URL",
+  // TODO New key - Add a translation
+  "item.page.project-url": "Project URL",
+
+  // "item.page.demo.uri": "Demo URL",
+  // TODO New key - Add a translation
+  "item.page.demo.uri": "Demo URL",
+
+  // "item.page.referenced-by": "Referenced by",
+  // TODO New key - Add a translation
+  "item.page.referenced-by": "Referenced by",
+
+  // "item.page.type": "Type",
+  // TODO New key - Add a translation
+  "item.page.type": "Type",
+
+  // "item.page.size-info": "Size",
+  // TODO New key - Add a translation
+  "item.page.size-info": "Size",
+
+  // "item.page.language": "Language(s)",
+  // TODO New key - Add a translation
+  "item.page.language": "Language(s)",
+
+  // "item.page.sponsor": "Acknowledgement",
+  // TODO New key - Add a translation
+  "item.page.sponsor": "Acknowledgement",
+
+  // "item.page.statistics": "Show item statistics",
+  // TODO New key - Add a translation
+  "item.page.statistics": "Show item statistics",
+
+  // "item.page.users.note": "User's note:",
+  // TODO New key - Add a translation
+  "item.page.users.note": "User's note:",
+
+  // "item.page.doi": "DOI",
+  // TODO New key - Add a translation
+  "item.page.doi": "DOI",
+
+  // "item.page.license.message": ["This item is", "and licensed under:"],
+  // TODO New key - Add a translation
+  "item.page.license.message": ["This item is", "and licensed under:"],
+
+  // "item.page.matomo-statistics.views.button": "Views",
+  // TODO New key - Add a translation
+  "item.page.matomo-statistics.views.button": "Views",
+
+  // "item.page.matomo-statistics.downloads.button": "Downloads",
+  // TODO New key - Add a translation
+  "item.page.matomo-statistics.downloads.button": "Downloads",
+
+  // "item.page.acknowledgement.project-name": "Project name:",
+  // TODO New key - Add a translation
+  "item.page.acknowledgement.project-name": "Project name:",
+
+  // "item.page.acknowledgement.project-code": "Project code:",
+  // TODO New key - Add a translation
+  "item.page.acknowledgement.project-code": "Project code:",
+
+  // "item.page.date.cca.message": "The exact date is unknown",
+  // TODO New key - Add a translation
+  "item.page.date.cca.message": "The exact date is unknown",
+
+  // "item.page.date.composed.message": "This item is composed of parts issued in",
+  // TODO New key - Add a translation
+  "item.page.date.composed.message": "This item is composed of parts issued in",
+
+  // "item.preview.authors.show.everyone": "Show everyone",
+  // TODO New key - Add a translation
+  "item.preview.authors.show.everyone": "Show everyone",
+
+  // "item.preview.authors.et.al": " ; et al.",
+  // TODO New key - Add a translation
+  "item.preview.authors.et.al": " ; et al.",
+
+  // "item.preview.loading-files": "Loading files... This may take a few seconds as file previews are being generated. If the process takes too long, please contact the system administrator",
+  // TODO New key - Add a translation
+  "item.preview.loading-files": "Loading files... This may take a few seconds as file previews are being generated. If the process takes too long, please contact the system administrator",
+
+  // "item.preview.no-preview": "The file preview has not been generated yet. Please try again later or contact the system administrator",
+  // TODO New key - Add a translation
+  "item.preview.no-preview": "The file preview has not been generated yet. Please try again later or contact the system administrator",
+
+  // "item.refbox.modal.copy.instruction": ["Press", "ctrl + c", "to copy"],
+  // TODO New key - Add a translation
+  "item.refbox.modal.copy.instruction": ["Press", "ctrl + c", "to copy"],
+
+  // "item.refbox.modal.submit": "Ok",
+  // TODO New key - Add a translation
+  "item.refbox.modal.submit": "Ok",
+
+  // "item.refbox.citation.featured-service.message": "Please use the following text to cite this item or export to a predefined format:",
+  // TODO New key - Add a translation
+  "item.refbox.citation.featured-service.message": "Please use the following text to cite this item or export to a predefined format:",
+
+  // "item.refbox.citation.bibtex.button": "bibtex",
+  // TODO New key - Add a translation
+  "item.refbox.citation.bibtex.button": "bibtex",
+
+  // "item.refbox.citation.cmdi.button": "cmdi",
+  // TODO New key - Add a translation
+  "item.refbox.citation.cmdi.button": "cmdi",
+
+  // "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
+  // TODO New key - Add a translation
+  "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
+
+  // "item.refbox.featured-service.share.message": "Share",
+  // TODO New key - Add a translation
+  "item.refbox.featured-service.share.message": "Share",
+
+  // "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
+  // TODO New key - Add a translation
+  "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
+
+  // "item.view.box.author.message": "Author(s):",
+  // TODO New key - Add a translation
+  "item.view.box.author.message": "Author(s):",
+
+  // "item.view.box.publisher.message": "Publisher:",
+  // TODO New key - Add a translation
+  "item.view.box.publisher.message": "Publisher:",
+
+  // "item.view.box.files.message": ["This item contains", "files"],
+  // TODO New key - Add a translation
+  "item.view.box.files.message": ["This item contains", "files"],
+
+  // "item.view.box.one.file.message": "This item contains 1 file",
+  // TODO New key - Add a translation
+  "item.view.box.one.file.message": "This item contains 1 file",
+
+  // "item.view.box.no-files.message": "This item contains no files.",
+  // TODO New key - Add a translation
+  "item.view.box.no-files.message": "This item contains no files.",
+
+  // "item.view.box.description.message": "Description:",
+  // TODO New key - Add a translation
+  "item.view.box.description.message": "Description:",
+
+  // "item.view.box.author.preview.and": "and",
+  // TODO New key - Add a translation
+  "item.view.box.author.preview.and": "and",
+
+  // "item.view.box.author.preview.show-everyone": "show everyone",
+  // TODO New key - Add a translation
+  "item.view.box.author.preview.show-everyone": "show everyone",
+
+  // "item.file.description.not.supported.video": "Your browser does not support the video tag.",
+  // TODO New key - Add a translation
+  "item.file.description.not.supported.video": "Your browser does not support the video tag.",
+
+  // "item.file.description.name": "Name",
+  // TODO New key - Add a translation
+  "item.file.description.name": "Name",
+
+  // "item.file.description.size": "Size",
+  // TODO New key - Add a translation
+  "item.file.description.size": "Size",
+
+  // "item.file.description.format": "Format",
+  // TODO New key - Add a translation
+  "item.file.description.format": "Format",
+
+  // "item.file.description.description": "Description",
+  // TODO New key - Add a translation
+  "item.file.description.description": "Description",
+
+  // "item.file.description.checksum": "MD5",
+  // TODO New key - Add a translation
+  "item.file.description.checksum": "MD5",
+
+  // "item.file.description.download.file": "Download file",
+  // TODO New key - Add a translation
+  "item.file.description.download.file": "Download file",
+
+  // "item.file.description.preview": "Preview",
+  // TODO New key - Add a translation
+  "item.file.description.preview": "Preview",
+
+  // "item.file.description.file.preview": "File Preview",
+  // TODO New key - Add a translation
+  "item.file.description.file.preview": "File Preview",
+
+  // "item.page.files.head": "Files in this item",
+  // TODO New key - Add a translation
+  "item.page.files.head": "Files in this item",
+
+  // "item.page.download.button.command.line": "Download instructions for command line",
+  // TODO New key - Add a translation
+  "item.page.download.button.command.line": "Download instructions for command line",
+
+  // "item.page.download.button.all.files.zip": "Download all files in item",
+  // TODO New key - Add a translation
+  "item.page.download.button.all.files.zip": "Download all files in item",
+
+  // "item.version.history.table.name": "Name",
+  // TODO New key - Add a translation
+  "item.version.history.table.name": "Name",
+
+  // "item.version.history.table.handle": "Handle",
+  // TODO New key - Add a translation
+  "item.version.history.table.handle": "Handle",
+
+  // "item.tombstone.withdrawn.message": "This item is withdrawn",
+  // TODO New key - Add a translation
+  "item.tombstone.withdrawn.message": "This item is withdrawn",
+
+  // "item.tombstone.no.available.message": "The selected item is withdrawn and is no longer available.",
+  // TODO New key - Add a translation
+  "item.tombstone.no.available.message": "The selected item is withdrawn and is no longer available.",
+
+  // "item.tombstone.withdrawal.reason.message": "The reason for withdrawal:",
+  // TODO New key - Add a translation
+  "item.tombstone.withdrawal.reason.message": "The reason for withdrawal:",
+
+  // "item.tombstone.withdrawal.reason.default.value": "The reason wasn't specified.",
+  // TODO New key - Add a translation
+  "item.tombstone.withdrawal.reason.default.value": "The reason wasn't specified.",
+
+  // "item.tombstone.restricted.contact.help": ["Your user account does not have the credentials to view this item. Please contact the", "Help Desk", "if you have any questions."],
+  // TODO New key - Add a translation
+  "item.tombstone.restricted.contact.help": ["Your user account does not have the credentials to view this item. Please contact the", "Help Desk", "if you have any questions."],
+
+  // "item.tombstone.replaced.another-repository.message": "This item is managed by another repository",
+  // TODO New key - Add a translation
+  "item.tombstone.replaced.another-repository.message": "This item is managed by another repository",
+
+  // "item.tombstone.replaced.locations.message": "You will find this item at the following location(s):",
+  // TODO New key - Add a translation
+  "item.tombstone.replaced.locations.message": "You will find this item at the following location(s):",
+
+  // "item.tombstone.replaced.help-desk.message": ["The author(s) asked us to hide this submission.", "We still keep all the data and metadata of the original submission but the submission", "is now located at the above url(s). If you need the contents of the original submission, contact us at our", "Help Desk."],
+  // TODO New key - Add a translation
+  "item.tombstone.replaced.help-desk.message": ["The author(s) asked us to hide this submission.", "We still keep all the data and metadata of the original submission but the submission", "is now located at the above url(s). If you need the contents of the original submission, contact us at our", "Help Desk."],
+
+  // "login.form.or-divider": "or",
+  // TODO New key - Add a translation
+  "login.form.or-divider": "or",
+
+  // "login.auth.failed.shibboleth.title": "Shibboleth authentication failed",
+  // TODO New key - Add a translation
+  "login.auth.failed.shibboleth.title": "Shibboleth authentication failed",
+
+  // "login.auth.failed.shibboleth.message": "Authentication failed because your IDP did not send the required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .",
+  // TODO New key - Add a translation
+  "login.auth.failed.shibboleth.message": "Authentication failed because your IDP did not send the required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .",
+
+  // "clarin.help-desk.name": "Help Desk",
+  // TODO New key - Add a translation
+  "clarin.help-desk.name": "Help Desk",
+
+  // "clarin.auth-failed.error.message": "Authentication Failed",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.error.message": "Authentication Failed",
+
+  // "clarin.auth-failed.warning.reason.message": "Reason!",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.warning.reason.message": "Reason!",
+
+  // "clarin.auth-failed.warning.important.message": "Important!",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.warning.important.message": "Important!",
+
+  // "clarin.auth-failed.warning.no-email.message": ["Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.", "If you have any question contact the ", "Help Desk."],
+  // TODO New key - Add a translation
+  "clarin.auth-failed.warning.no-email.message": ["Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.", "If you have any question contact the ", "Help Desk."],
+
+  // "clarin.auth-failed.warning.email-info": "This address will be verified and remembered until your IDP provides a different one. You will still sign in through your IDP.",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.warning.email-info": "This address will be verified and remembered until your IDP provides a different one. You will still sign in through your IDP.",
+
+  // "clarin.auth-failed.warning.has-email.message": ["Your IDP (home organization) has not provided your email address.", "You are registered by the e-mail: ", ". Try to login with that e-mail.", " If you have any login issues contact the ", "Help Desk."],
+  // TODO New key - Add a translation
+  "clarin.auth-failed.warning.has-email.message": ["Your IDP (home organization) has not provided your email address.", "You are registered by the e-mail: ", ". Try to login with that e-mail.", " If you have any login issues contact the ", "Help Desk."],
+
+  // "clarin.auth-failed.netid": "netid",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.netid": "netid",
+
+  // "clarin.auth-failed.fname": "First Name",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.fname": "First Name",
+
+  // "clarin.auth-failed.lname": "Last Name",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.lname": "Last Name",
+
+  // "clarin.auth-failed.email": "Email",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.email": "Email",
+
+  // "clarin.auth-failed.button.submit": "Submit",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.button.submit": "Submit",
+
+  // "clarin.auth-failed.button.login": "Redirect to login",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.button.login": "Redirect to login",
+
+  // "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
+
+  // "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
+
+  // "clarin.auth-failed.duplicate-user.header.message": "Authentication Failed",
+  // TODO New key - Add a translation
+  "clarin.auth-failed.duplicate-user.header.message": "Authentication Failed",
+
+  // "clarin.auth-failed.duplicate-user.error.message": ["Your email", "is already associated with a different user. It is also possible that you used a different identity provider to before. For more information please contact our", "Help Desk"],
+  // TODO New key - Add a translation
+  "clarin.auth-failed.duplicate-user.error.message": ["Your email", "is already associated with a different user. It is also possible that you used a different identity provider to before. For more information please contact our", "Help Desk"],
+
+  // "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
+  // TODO New key - Add a translation
+  "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
+
+  // "clarin.missing-headers.contact-us.message": "If you have any questions you can contact the ",
+  // TODO New key - Add a translation
+  "clarin.missing-headers.contact-us.message": "If you have any questions you can contact the ",
+
+  // "clarin.autoregistration.successful.message": "You have been successfully registered.",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.successful.message": "You have been successfully registered.",
+
+  // "clarin.autoregistration.error.message": "Error: registration failed.",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.error.message": "Error: registration failed.",
+
+  // "clarin.autoregistration.welcome.message": "Welcome to",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.welcome.message": "Welcome to",
+
+  // "clarin.autoregistration.privacy.statement": "Privacy statement",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.privacy.statement": "Privacy statement",
+
+  // "clarin.autoregistration.information.released.by.idp.message": "The information released by your IdP (home organisation) is shown below.",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.information.released.by.idp.message": "The information released by your IdP (home organisation) is shown below.",
+
+  // "clarin.autoregistration.table.header": "Header",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.table.header": "Header",
+
+  // "clarin.autoregistration.table.value": "Value",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.table.value": "Value",
+
+  // "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in", "However we may log the attributes and keep them for a time period."],
+  // TODO New key - Add a translation
+  "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in", "However we may log the attributes and keep them for a time period."],
+
+  // "clarin.autoregistration.button.continue.to.login": "Continue to login",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.button.continue.to.login": "Continue to login",
+
+  // "clarin.autoregistration.token.not.valid.message": "Verification token is not valid.",
+  // TODO New key - Add a translation
+  "clarin.autoregistration.token.not.valid.message": "Verification token is not valid.",
+
+  // "clarin.autologin.error.message": "Something went wrong, the user cannot be signed in automatically.",
+  // TODO New key - Add a translation
+  "clarin.autologin.error.message": "Something went wrong, the user cannot be signed in automatically.",
+
+  // "menu.section.browse_global_by_language": "By Language",
+  // TODO New key - Add a translation
+  "menu.section.browse_global_by_language": "By Language",
+
+  // "menu.section.icon.statistics": "Show site statistics",
+  // TODO New key - Add a translation
+  "menu.section.icon.statistics": "Show site statistics",
+
+  // "menu.section.icon.submissions": "Show my submissions",
+  // TODO New key - Add a translation
+  "menu.section.icon.submissions": "Show my submissions",
+
+  // "menu.section.handle": "Manage Handles",
+  // TODO New key - Add a translation
+  "menu.section.handle": "Manage Handles",
+
+  // "menu.section.licenses": "License Administration",
+  // TODO New key - Add a translation
+  "menu.section.licenses": "License Administration",
+
+  // "menu.section.submissions": "Submissions",
+  // TODO New key - Add a translation
+  "menu.section.submissions": "Submissions",
+
+  // "autocomplete.suggestion.sponsor.funding-code": "Funding code",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.sponsor.funding-code": "Funding code",
+
+  // "autocomplete.suggestion.sponsor.project-name": "Project name",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.sponsor.project-name": "Project name",
+
+  // "autocomplete.suggestion.language.iso": "ISO",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.language.iso": "ISO",
+
+  // "autocomplete.suggestion.language.title": "Language",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.language.title": "Language",
+
+  // "autocomplete.suggestion.sponsor.empty": "N/A",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.sponsor.empty": "N/A",
+
+  // "autocomplete.suggestion.sponsor.eu": "EU",
+  // TODO New key - Add a translation
+  "autocomplete.suggestion.sponsor.eu": "EU",
+
+  // "profile.head": "Update Profile",
+  // TODO New key - Add a translation
+  "profile.head": "Update Profile",
+
+  // "repository.title.prefixDSpace": "DSpace",
+  // TODO New key - Add a translation
+  "repository.title.prefixDSpace": "DSpace",
+
+  // "clarin-license-table.title": "License Administration",
+  // TODO New key - Add a translation
+  "clarin-license-table.title": "License Administration",
+
+  // "clarin-license.table.name": "License Name",
+  // TODO New key - Add a translation
+  "clarin-license.table.name": "License Name",
+
+  // "clarin-license.table.definition": "Definition (URL)",
+  // TODO New key - Add a translation
+  "clarin-license.table.definition": "Definition (URL)",
+
+  // "clarin-license.table.confirmation": "Confirmation",
+  // TODO New key - Add a translation
+  "clarin-license.table.confirmation": "Confirmation",
+
+  // "clarin-license.table.required-user-info": "Required user info",
+  // TODO New key - Add a translation
+  "clarin-license.table.required-user-info": "Required user info",
+
+  // "clarin-license.table.label": "License Label",
+  // TODO New key - Add a translation
+  "clarin-license.table.label": "License Label",
+
+  // "clarin-license.table.extended-labels": "Extended Labels",
+  // TODO New key - Add a translation
+  "clarin-license.table.extended-labels": "Extended Labels",
+
+  // "clarin-license.table.bitstreams": "Used by Bitstreams",
+  // TODO New key - Add a translation
+  "clarin-license.table.bitstreams": "Used by Bitstreams",
+
+  // "clarin-license.button.define": "Define",
+  // TODO New key - Add a translation
+  "clarin-license.button.define": "Define",
+
+  // "clarin-license.button.define-license": "Define License",
+  // TODO New key - Add a translation
+  "clarin-license.button.define-license": "Define License",
+
+  // "clarin-license.button.define-license-label": "Define License Label",
+  // TODO New key - Add a translation
+  "clarin-license.button.define-license-label": "Define License Label",
+
+  // "clarin-license.button.edit-license": "Edit License",
+  // TODO New key - Add a translation
+  "clarin-license.button.edit-license": "Edit License",
+
+  // "clarin-license.button.delete-license": "Delete License",
+  // TODO New key - Add a translation
+  "clarin-license.button.delete-license": "Delete License",
+
+  // "clarin-license.button.search": "Search",
+  // TODO New key - Add a translation
+  "clarin-license.button.search": "Search",
+
+  // "clarin-license.button.search.placeholder": "Search by the license name ...",
+  // TODO New key - Add a translation
+  "clarin-license.button.search.placeholder": "Search by the license name ...",
+
+  // "clarin-license.define-license-form.form-name": "Define new license",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.form-name": "Define new license",
+
+  // "clarin-license.define-license-form.input-name": "License name",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.input-name": "License name",
+
+  // "clarin-license.define-license-form.input-definition-url": "License Definition URL",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.input-definition-url": "License Definition URL",
+
+  // "clarin-license.define-license-form.input-confirmation": "License requires confirmation",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.input-confirmation": "License requires confirmation",
+
+  // "clarin-license.define-license-form.license-labels": "License Labels",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.license-labels": "License Labels",
+
+  // "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
+
+  // "clarin-license.define-license-form.required-info": "Additional required user info",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.required-info": "Additional required user info",
+
+  // "clarin-license.define-license-form.submit-button": "Save",
+  // TODO New key - Add a translation
+  "clarin-license.define-license-form.submit-button": "Save",
+
+  // "clarin-license.define-license.notification.successful-content": "License was defined successfully",
+  // TODO New key - Add a translation
+  "clarin-license.define-license.notification.successful-content": "License was defined successfully",
+
+  // "clarin-license.define-license.notification.error-content": "Error: cannot define new License",
+  // TODO New key - Add a translation
+  "clarin-license.define-license.notification.error-content": "Error: cannot define new License",
+
+  // "clarin-license.edit-license.notification.successful-content": "License was updated successfully",
+  // TODO New key - Add a translation
+  "clarin-license.edit-license.notification.successful-content": "License was updated successfully",
+
+  // "clarin-license.edit-license.notification.error-content": "Error: cannot edit the License",
+  // TODO New key - Add a translation
+  "clarin-license.edit-license.notification.error-content": "Error: cannot edit the License",
+
+  // "clarin-license.delete-license.notification.successful-content": "License was deleted successfully",
+  // TODO New key - Add a translation
+  "clarin-license.delete-license.notification.successful-content": "License was deleted successfully",
+
+  // "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
+  // TODO New key - Add a translation
+  "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
+
+  // "clarin-license-label.define-license-label.input-label": "Short Label (max 5. chars)",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.input-label": "Short Label (max 5. chars)",
+
+  // "clarin-license-label.define-license-label.input-title": "Label Title",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.input-title": "Label Title",
+
+  // "clarin-license-label.define-license-label.input-is-extended": "Is extended",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.input-is-extended": "Is extended",
+
+  // "clarin-license-label.define-license-label.input-icon": "Icon",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.input-icon": "Icon",
+
+  // "clarin-license-label.define-license-label.notification.successful-content": "License Label was defined successfully",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.notification.successful-content": "License Label was defined successfully",
+
+  // "clarin-license-label.define-license-label.notification.error-content": "Error: cannot define new License Label",
+  // TODO New key - Add a translation
+  "clarin-license-label.define-license-label.notification.error-content": "Error: cannot define new License Label",
+
+  // "search.filters.applied.f.type": "Type",
+  "search.filters.applied.f.type": "Tipo",
+
+  // "search.filters.applied.f.subjectFirstValue": "Subject",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.subjectFirstValue": "Subject",
+
+  // "search.filters.applied.f.rights": "Rights",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.rights": "Rights",
+
+  // "search.filters.applied.f.language": "Language (ISO)",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.language": "Language (ISO)",
+
+  // "search.filters.applied.f.items_owning_community": "Community",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.items_owning_community": "Community",
+
+  // "search.filters.applied.f.publisher": "Publisher",
+  // TODO New key - Add a translation
+  "search.filters.applied.f.publisher": "Publisher",
+
+  // "search.filters.filter.type.head": "Type",
+  "search.filters.filter.type.head": "Tipo",
+
+  // "search.filters.filter.type.placeholder": "Type",
+  "search.filters.filter.type.placeholder": "Tipo",
+
+  // "search.filters.filter.type.label": "Search type",
+  "search.filters.filter.type.label": "Tipo di ricerca",
+
+  // "search.filters.filter.rights.head": "Rights",
+  // TODO New key - Add a translation
+  "search.filters.filter.rights.head": "Rights",
+
+  // "search.filters.filter.language.head": "Language (ISO)",
+  // TODO New key - Add a translation
+  "search.filters.filter.language.head": "Language (ISO)",
+
+  // "search.filters.filter.items_owning_community.head": "Community",
+  // TODO New key - Add a translation
+  "search.filters.filter.items_owning_community.head": "Community",
+
+  // "search.filters.filter.rights.label": "Search rights",
+  // TODO New key - Add a translation
+  "search.filters.filter.rights.label": "Search rights",
+
+  // "search.filters.filter.rights.placeholder": "Rights",
+  // TODO New key - Add a translation
+  "search.filters.filter.rights.placeholder": "Rights",
+
+  // "search.filters.filter.items_owning_community.label": "Search community",
+  // TODO New key - Add a translation
+  "search.filters.filter.items_owning_community.label": "Search community",
+
+  // "search.filters.filter.items_owning_community.placeholder": "Community",
+  // TODO New key - Add a translation
+  "search.filters.filter.items_owning_community.placeholder": "Community",
+
+  // "search.filters.filter.language.label": "Search language",
+  // TODO New key - Add a translation
+  "search.filters.filter.language.label": "Search language",
+
+  // "search.filters.filter.language.placeholder": "Language",
+  // TODO New key - Add a translation
+  "search.filters.filter.language.placeholder": "Language",
+
+  // "submission.sections.submit.progressbar.describe.dataciterequired": "Required Properties",
+  // TODO New key - Add a translation
+  "submission.sections.submit.progressbar.describe.dataciterequired": "Required Properties",
+
+  // "submission.sections.submit.progressbar.describe.dataciterecommended": "Recommended Properties",
+  // TODO New key - Add a translation
+  "submission.sections.submit.progressbar.describe.dataciterecommended": "Recommended Properties",
+
+  // "submission.sections.submit.progressbar.describe.dataciteoptional": "Optional Properties",
+  // TODO New key - Add a translation
+  "submission.sections.submit.progressbar.describe.dataciteoptional": "Optional Properties",
+
+  // "submission.sections.submit.progressbar.clarin-license": "Pick license",
+  // TODO New key - Add a translation
+  "submission.sections.submit.progressbar.clarin-license": "Pick license",
+
+  // "submission.sections.submit.progressbar.clarin-notice": "Notice",
+  // TODO New key - Add a translation
+  "submission.sections.submit.progressbar.clarin-notice": "Notice",
+
+  // "submission.sections.upload.upload-failed.size-limit-exceeded": "File size exceeds the maximum upload size",
+  // TODO New key - Add a translation
+  "submission.sections.upload.upload-failed.size-limit-exceeded": "File size exceeds the maximum upload size",
+
+  // "contract.breadcrumbs": "Distribution License Agreement",
+  // TODO New key - Add a translation
+  "contract.breadcrumbs": "Distribution License Agreement",
+
+  // "contract.message.distribution-license-agreement": "Distribution License Agreement",
+  // TODO New key - Add a translation
+  "contract.message.distribution-license-agreement": "Distribution License Agreement",
+
+  // "submission.sections.clarin-license.head.read-accept": "Read and accept the ",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.read-accept": "Read and accept the ",
+
+  // "submission.sections.clarin-license.head.license-agreement": "Distribution License Agreement",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-agreement": "Distribution License Agreement",
+
+  // "submission.sections.clarin-license.head.license-decision-message": "By checking this box, you agree to the Distribution License Agreement for this repository to reproduce, translate and distribute your submissions worldwide.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-decision-message": "By checking this box, you agree to the Distribution License Agreement for this repository to reproduce, translate and distribute your submissions worldwide.",
+
+  // "submission.sections.clarin-license.head.license-question-help-desk": ["If you have questions regarding this licence please contact the", "Help Desk"],
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-question-help-desk": ["If you have questions regarding this licence please contact the", "Help Desk"],
+
+  // "submission.sections.clarin-license.head.license-select-resource": "Select the resource license",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-select-resource": "Select the resource license",
+
+  // "submission.sections.clarin-license.head.license-select-providing": ["The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ", "License List Page", "."],
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-select-providing": ["The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ", "License List Page", "."],
+
+  // "submission.sections.clarin-license.head.license-open-selector": "OPEN License Selector",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-open-selector": "OPEN License Selector",
+
+  // "submission.sections.clarin-license.head.license-select-or": "- OR -",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-select-or": "- OR -",
+
+  // "submission.sections.clarin-license.head.license-dropdown-info": "If you already know under which license you want to distribute your work, please select from the dropdown below.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-dropdown-info": "If you already know under which license you want to distribute your work, please select from the dropdown below.",
+
+  // "submission.sections.clarin-license.head.license-not-supported-message": "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\".",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-supported-message": "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\".",
+
+  // "submission.sections.clarin-license.head.license-select-default-value": "Select a License ...",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-select-default-value": "Select a License ...",
+
+  // "submission.sections.clarin-license.head.license-more-details": "See more details for the licenses",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-more-details": "See more details for the licenses",
+
+  // "submission.sections.clarin-license.head.license-do-not-suits-needs": "None of these licenses suits your needs",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-do-not-suits-needs": "None of these licenses suits your needs",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceeds": "If you need to use a license we currently do not offer, proceed as follows:",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-offer-proceeds": "If you need to use a license we currently do not offer, proceed as follows:",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-link": "Obtain a link (or a copy) to the license.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-offer-proceed-link": "Obtain a link (or a copy) to the license.",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Send an email to", "Help Desk", "with the license details."],
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Send an email to", "Help Desk", "with the license details."],
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-wait": "Save the unfinished submission and wait. We will add the license to the selection list and contact you.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-offer-proceed-wait": "Save the unfinished submission and wait. We will add the license to the selection list and contact you.",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-continue": "You will be able to continue the submission afterwards.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.head.license-not-offer-proceed-continue": "You will be able to continue the submission afterwards.",
+
+  // "submission.sections.clarin-license.toggle.off-text": "Click to accept",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.toggle.off-text": "Click to accept",
+
+  // "submission.sections.clarin-license.toggle.on-text": "Accepted",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-license.toggle.on-text": "Accepted",
+
+  // "submission.sections.clarin-notice.message": ["The submission process for this collection (\"","\") is still being fine-tuned. If you find yourself unable to continue the submission because you can't provide the required information, because the required format for a field is too strict, because there's no appropriate field for your information, or for any other reason", "let us know"],
+  // TODO New key - Add a translation
+  "submission.sections.clarin-notice.message": ["The submission process for this collection (\"","\") is still being fine-tuned. If you find yourself unable to continue the submission because you can't provide the required information, because the required format for a field is too strict, because there's no appropriate field for your information, or for any other reason", "let us know"],
+
+  // "submission.sections.clarin-notice.toggle.on-text": "Confirmed",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-notice.toggle.on-text": "Confirmed",
+
+  // "submission.sections.clarin-notice.toggle.off-text": "Click to confirm",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-notice.toggle.off-text": "Click to confirm",
+
+  // "submission.sections.clarin-notice.toggle.message": "By checking this box, you confirm that you read the text above and that you understand it.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-notice.toggle.message": "By checking this box, you confirm that you read the text above and that you understand it.",
+
+  // "submission.sections.clarin-notice.error": "Please confirm that you have read the Notice.",
+  // TODO New key - Add a translation
+  "submission.sections.clarin-notice.error": "Please confirm that you have read the Notice.",
+
+  // "submission.workflow.generic.share-submission": "Share submission",
+  // TODO New key - Add a translation
+  "submission.workflow.generic.share-submission": "Share submission",
+
+  // "submission.workflow.generic.share-submission.tooltip": "Share submission",
+  // TODO New key - Add a translation
+  "submission.workflow.generic.share-submission.tooltip": "Share submission",
+
+  // "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
+  // TODO New key - Add a translation
+  "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
+
+  // "submission.workflow.share-submission.email.error": "Cannot send the email with share link",
+  // TODO New key - Add a translation
+  "submission.workflow.share-submission.email.error": "Cannot send the email with share link",
+
+  // "language.english": "English",
+  // TODO New key - Add a translation
+  "language.english": "English",
+
+  // "language.czech": "Czech",
+  // TODO New key - Add a translation
+  "language.czech": "Czech",
+
+  // "repository.policy.page": "Change me: policy page",
+  // TODO New key - Add a translation
+  "repository.policy.page": "Change me: policy page",
+
+  // "navbar.repository": "Repository",
+  // TODO New key - Add a translation
+  "navbar.repository": "Repository",
+
+  // "navbar.community-list": "Catalog",
+  // TODO New key - Add a translation
+  "navbar.community-list": "Catalog",
+
+  // "navbar.education": "Education",
+  // TODO New key - Add a translation
+  "navbar.education": "Education",
+
+  // "navbar.project": "Projects",
+  // TODO New key - Add a translation
+  "navbar.project": "Projects",
+
+  // "navbar.tools": "Tools",
+  // TODO New key - Add a translation
+  "navbar.tools": "Tools",
+
+  // "navbar.services": "Services",
+  // TODO New key - Add a translation
+  "navbar.services": "Services",
+
+  // "navbar.about": "About",
+  // TODO New key - Add a translation
+  "navbar.about": "About",
+
+  // "navbar.about.partners": "Partners",
+  // TODO New key - Add a translation
+  "navbar.about.partners": "Partners",
+
+  // "navbar.about.mission-statement": "Mission Statement",
+  // TODO New key - Add a translation
+  "navbar.about.mission-statement": "Mission Statement",
+
+  // "navbar.about.clarin": "CLARIN",
+  // TODO New key - Add a translation
+  "navbar.about.clarin": "CLARIN",
+
+  // "navbar.about.dariah": "DARIAH",
+  // TODO New key - Add a translation
+  "navbar.about.dariah": "DARIAH",
+
+  // "navbar.about.service-integrations": "Service integrations",
+  // TODO New key - Add a translation
+  "navbar.about.service-integrations": "Service integrations",
+
+  // "navbar.about.project-partnership": "Project partnerships",
+  // TODO New key - Add a translation
+  "navbar.about.project-partnership": "Project partnerships",
+
+  // "share.submission.breadcrumbs": "Share submission",
+  // TODO New key - Add a translation
+  "share.submission.breadcrumbs": "Share submission",
+
+  // "share.submission.page.title": "Share link",
+  // TODO New key - Add a translation
+  "share.submission.page.title": "Share link",
+
+  // "share.submission.page.share-link.message.start": "To pass your submission to another user give them the following link: ",
+  // TODO New key - Add a translation
+  "share.submission.page.share-link.message.start": "To pass your submission to another user give them the following link: ",
+
+  // "share.submission.page.share-link.message.end": ". You will also receive an email with this link.",
+  // TODO New key - Add a translation
+  "share.submission.page.share-link.message.end": ". You will also receive an email with this link.",
+
+  // "change.submitter.breadcrumbs": "Change submitter",
+  // TODO New key - Add a translation
+  "change.submitter.breadcrumbs": "Change submitter",
+
+  // "change.submitter.page.title": "Change submitter",
+  // TODO New key - Add a translation
+  "change.submitter.page.title": "Change submitter",
+
+  // "change.submitter.page.message": "This items currently belongs to: ",
+  // TODO New key - Add a translation
+  "change.submitter.page.message": "This items currently belongs to: ",
+
+  // "change.submitter.page.button.take-it": "Take it",
+  // TODO New key - Add a translation
+  "change.submitter.page.button.take-it": "Take it",
+
+  // "change.submitter.page.changed-successfully": "The submitter has been successfully changed",
+  // TODO New key - Add a translation
+  "change.submitter.page.changed-successfully": "The submitter has been successfully changed",
+
+  // "change.submitter.page.changed-error": "An error occurred while changing the submitter",
+  // TODO New key - Add a translation
+  "change.submitter.page.changed-error": "An error occurred while changing the submitter",
+
+  // "change.submitter.page.cannot.see.submitter.message": "You do not have permission to see submitter information.",
+  // TODO New key - Add a translation
+  "change.submitter.page.cannot.see.submitter.message": "You do not have permission to see submitter information.",
+
+  // "change.submitter.page.items.handle.message": "Item's handle: ",
+  // TODO New key - Add a translation
+  "change.submitter.page.items.handle.message": "Item's handle: ",
+
+  // "change.submitter.page.items.name.message": "Item's name: ",
+  // TODO New key - Add a translation
+  "change.submitter.page.items.name.message": "Item's name: ",
+
+  // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+  // TODO New key - Add a translation
+  "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+
+  // "login.already-authenticated.header": "You're Already Logged In",
+  // TODO New key - Add a translation
+  "login.already-authenticated.header": "You're Already Logged In",
+
+  // "login.already-authenticated.message": "You are currently authenticated. Would you like to go to home page or your profile?",
+  // TODO New key - Add a translation
+  "login.already-authenticated.message": "You are currently authenticated. Would you like to go to home page or your profile?",
+
+  // "login.already-authenticated.go-home": "Home",
+  // TODO New key - Add a translation
+  "login.already-authenticated.go-home": "Home",
+
+  // "login.already-authenticated.go-profile": "Profile",
+  // TODO New key - Add a translation
+  "login.already-authenticated.go-profile": "Profile",
+
+  // "login.already-authenticated.logout": "Logout",
+  // TODO New key - Add a translation
+  "login.already-authenticated.logout": "Logout",
+
+  // "clarin.bitstream.authorization.denied.message": "Access to download \"{{bitstream}}\" file was denied by the bitstream resource policy.",
+  // TODO New key - Add a translation
+  "clarin.bitstream.authorization.denied.message": "Access to download \"{{bitstream}}\" file was denied by the bitstream resource policy.",
+
+  // "home.image.glass": "Home page glass magnifier image",
+  // TODO New key - Add a translation
+  "home.image.glass": "Home page glass magnifier image",
+
+  // "home.image.lindat-color-line": "Lindat color line image",
+  // TODO New key - Add a translation
+  "home.image.lindat-color-line": "Lindat color line image",
+
+  // "static.deposit.image.step-1": "Step 1 Menu Login image",
+  // TODO New key - Add a translation
+  "static.deposit.image.step-1": "Step 1 Menu Login image",
+
+  // "static.deposit.image.step-2": "Step 2 Menu Submissions image",
+  // TODO New key - Add a translation
+  "static.deposit.image.step-2": "Step 2 Menu Submissions image",
+
+  // "static.deposit.image.step-2-1": "Step 2.1 Starting a submission image",
+  // TODO New key - Add a translation
+  "static.deposit.image.step-2-1": "Step 2.1 Starting a submission image",
+
+  // "static.deposit.image.step-3": "Step 3 Submission information image",
+  // TODO New key - Add a translation
+  "static.deposit.image.step-3": "Step 3 Submission information image",
+
+  // "static.deposit.image.step-4": "Step 4 Describing item people and organizations image",
+  // TODO New key - Add a translation
+  "static.deposit.image.step-4": "Step 4 Describing item people and organizations image",
+
+  // "static.deposit.image.step-4-1": "Step 4.1 Describing item source details image",
+  // TODO New key - Add a translation
+  "static.deposit.image.step-4-1": "Step 4.1 Describing item source details image",
+
+  // "static.deposit.image.step-5": "Step 5 Uploading file image",
+  // TODO New key - Add a translation
+  "static.deposit.image.step-5": "Step 5 Uploading file image",
+
+  // "static.deposit.image.step-6-1": "Step 6.1 Distribution license agreement image",
+  // TODO New key - Add a translation
+  "static.deposit.image.step-6-1": "Step 6.1 Distribution license agreement image",
+
+  // "static.deposit.image.step-6-2": "Step 6.2 Selecting license image",
+  // TODO New key - Add a translation
+  "static.deposit.image.step-6-2": "Step 6.2 Selecting license image",
+
+  // "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
+  // TODO New key - Add a translation
+  "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
+
+  // "home.news.image.banner": "Home news banner image",
+  // TODO New key - Add a translation
+  "home.news.image.banner": "Home news banner image",
+
+  // "curation-task.task.checkhandles.label": "Check Item Handles",
+  // TODO New key - Add a translation
+  "curation-task.task.checkhandles.label": "Check Item Handles",
+
+  // "admin.access-control.epeople.table.lastActive": "Last time active",
+  // TODO New key - Add a translation
+  "admin.access-control.epeople.table.lastActive": "Last time active",
 
 
 }

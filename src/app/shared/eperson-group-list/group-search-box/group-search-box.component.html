@@ -3,6 +3,7 @@
       (ngSubmit)="submit(searchForm.value); $event.stopImmediatePropagation();" >
   <div class="flex-grow-1 mr-3">
     <div class="form-group input-group">
+      <label for="query" class="sr-only">Search input</label>
       <input type="text" name="query" id="query" formControlName="query"
              class="form-control" aria-label="Search input">
       <span class="input-group-append">
