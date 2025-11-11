@@ -1,8 +1,4 @@
 import {
-  AsyncPipe,
-  NgClass,
-} from '@angular/common';
-import {
   ChangeDetectorRef,
   Component,
   OnChanges,
@@ -10,13 +6,10 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {
-  FormsModule,
   UntypedFormControl,
   UntypedFormGroup,
 } from '@angular/forms';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import {
-  TranslateModule,
   TranslateService,
 } from '@ngx-translate/core';
 import {
@@ -41,21 +34,17 @@ import {
 import { Vocabulary } from '../../../../core/submission/vocabularies/models/vocabulary.model';
 import { VocabularyOptions } from '../../../../core/submission/vocabularies/models/vocabulary-options.model';
 import { isNotEmpty } from '../../../../shared/empty.util';
-import { DsDynamicOneboxComponent } from '../../../../shared/form/builder/ds-dynamic-form-ui/models/onebox/dynamic-onebox.component';
 import { DsoEditMetadataChangeType } from '../../dso-edit-metadata-form';
 import {
   DsDynamicOneboxModelConfig,
   DynamicOneboxModel,
 } from '../../../../shared/form/builder/ds-dynamic-form-ui/models/onebox/dynamic-onebox.model';
-import { DsDynamicScrollableDropdownComponent } from '../../../../shared/form/builder/ds-dynamic-form-ui/models/scrollable-dropdown/dynamic-scrollable-dropdown.component';
 import {
   DynamicScrollableDropdownModel,
   DynamicScrollableDropdownModelConfig,
 } from '../../../../shared/form/builder/ds-dynamic-form-ui/models/scrollable-dropdown/dynamic-scrollable-dropdown.model';
 import { FormFieldMetadataValueObject } from '../../../../shared/form/builder/models/form-field-metadata-value.model';
-import { AuthorityConfidenceStateDirective } from '../../../../shared/form/directives/authority-confidence-state.directive';
 import { NotificationsService } from '../../../../shared/notifications/notifications.service';
-import { DebounceDirective } from '../../../../shared/utils/debounce.directive';
 import { followLink } from '../../../../shared/utils/follow-link-config.model';
 import { AbstractDsoEditMetadataValueFieldComponent } from '../abstract-dso-edit-metadata-value-field.component';
 import { DsoEditMetadataFieldService } from '../dso-edit-metadata-field.service';
@@ -125,7 +114,7 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
       'dcterms.creator',
       'dcterms.contributor'
     ];
-    
+
     if (this.mdField && knownAuthorityFields.includes(this.mdField)) {
       // Skip validation for known authority fields and directly initialize
       this.initAuthorityProperties();
@@ -247,7 +236,7 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
             'dcterms.creator',
             'dcterms.contributor'
           ];
-          
+
           if (knownAuthorityFields.includes(changes.mdField.currentValue)) {
             // Skip validation for known authority fields and directly initialize
             this.initAuthorityProperties();

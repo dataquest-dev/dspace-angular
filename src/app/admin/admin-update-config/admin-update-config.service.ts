@@ -1,6 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { RESTURLCombiner } from '../../core/url-combiner/rest-url-combiner';
 
@@ -97,6 +97,5 @@ export class AdminUpdateConfigService {
   getConfigFile(filename: string): Observable<ConfigFile> {
     return this.http.get<ConfigFile>(`${this.apiBaseUrl}/${filename}`);
   }
-
 
 }

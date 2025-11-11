@@ -9,6 +9,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class DimensionsBadgeComponent implements OnInit {
   @Input() doi: string;
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() { }
 
   ngOnInit(): void {
@@ -20,8 +21,8 @@ export class DimensionsBadgeComponent implements OnInit {
     // Don't add script if it already exists
     if (document.querySelector('script[src*="badge.dimensions.ai"]')) {
       // If script exists but badges not showing, try to refresh them
-      if (window['__dimensions_embed']) {
-        setTimeout(() => window['__dimensions_embed'].addBadges(), 500);
+      if ((window as any).__dimensions_embed) {
+        setTimeout(() => (window as any).__dimensions_embed.addBadges(), 500);
       }
       return;
     }

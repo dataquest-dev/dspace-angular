@@ -3759,6 +3759,12 @@
   // "item.page.volume-title": "Volume Title",
   "item.page.volume-title": "Název svazku",
 
+  // "item.page.identifier.location": "Location",
+  "item.page.identifier.location": "Lokace",
+
+  // item.page.identifier.signature": "Signature",
+  "item.page.identifier.signature": "Signatura",
+
   // "item.search.results.head": "Item Search Results",
   "item.search.results.head": "Výsleky vyhledávání",
 
@@ -5348,6 +5354,12 @@
 
   // "publication.page.volume-title": "Volume Title",
   "publication.page.volume-title": "Název svazku",
+
+  // "publication.page.identifier.location": "Location",
+  "publication.page.identifier.location": "Lokace",
+
+  // "publication.page.identifier.signature": "Signature",
+  "publication.page.identifier.signature": "Signatura",
 
   // "publication.search.results.head": "Publication Search Results",
   "publication.search.results.head": "Výsledky vyhledávání publikací",
@@ -9295,7 +9307,7 @@
   "item.edit.bitstreams.checksum.popover.warning.header": "Pozor:",
 
   // "item.edit.bitstreams.checksum.popover.warning.body": "The file must be downloaded for the checksum to be computed.",
-    "item.edit.bitstreams.checksum.popover.warning.body": "Soubor musí být stažen, aby bylo možné vypočítat kontrolní součet (checksum).",
+  "item.edit.bitstreams.checksum.popover.warning.body": "Soubor musí být stažen, aby bylo možné vypočítat kontrolní součet (checksum).",
 
   // "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.",
   "item.edit.bitstreams.checksum.popover.info.body": "Stáhněte soubor a vypočítejte kontrolní součet (checksum).",
@@ -11881,5 +11893,5 @@
   "footer.link.university": "Univerzitni Knihovna",
 
   // "footer.theme.by.message": "Theme by",
-  "footer.theme.by.message": "Theme by"
+  "footer.theme.by.message": "Theme by",
 }

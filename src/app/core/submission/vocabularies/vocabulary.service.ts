@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, switchMap, mergeMap, catchError } from 'rxjs/operators';
 import { FollowLinkConfig, followLink } from '../../../shared/utils/follow-link-config.model';
 import { RequestService } from '../../data/request.service';
@@ -142,13 +142,13 @@ export class VocabularyService {
           currentPage: pageInfo.currentPage || 1,
           pageSize: pageInfo.elementsPerPage || 10
         });
-        
+
         const searchOptions = new PaginatedSearchOptions({
           query: value,
           pagination: paginationOptions
         });
-        
-        // Use ORCID external source with proper completion handling  
+
+        // Use ORCID external source with proper completion handling
         return this.externalSourceDataService.getExternalSourceEntries('orcid', searchOptions, false, false).pipe(
           // Use the existing DSpace operator to ensure completion
           getFirstSucceededRemoteDataPayload(),
@@ -159,14 +159,14 @@ export class VocabularyService {
                 const vocabEntry = new VocabularyEntry();
                 // Display shows author name + ORCID for selection
                 vocabEntry.display = `${entry.display} (ORCID: ${entry.id})`;
-                // Value should be just the author name (what goes in the main field)  
+                // Value should be just the author name (what goes in the main field)
                 vocabEntry.value = entry.display;
                 // Authority is the ORCID ID (what goes in the authority field)
                 vocabEntry.authority = entry.id;
                 vocabEntry.otherInformation = { orcid: entry.id };
                 return vocabEntry;
               });
-              
+
               const resultList = buildPaginatedList(pageInfo, vocabularyEntries);
               return createSuccessfulRemoteDataObject$(resultList);
             } else {
@@ -387,4 +387,3 @@ export class VocabularyService {
     this.requestService.removeByHrefSubstring(`search/${this.searchTopMethod}`);
   }
 }
-

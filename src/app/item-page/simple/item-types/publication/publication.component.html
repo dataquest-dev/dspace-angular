@@ -1,13 +1,14 @@
 <ds-themed-results-back-button *ngIf="showBackButton | async" [back]="back"></ds-themed-results-back-button>
 <div class="row" *ngIf="iiifEnabled">
   <div class="col-12">
-    <ds-mirador-viewer  id="iiif-viewer"
-                        [object]="object"
-                        [searchable]="iiifSearchEnabled"
-                        [query]="iiifQuery$ | async">
+    <ds-mirador-viewer id="iiif-viewer"
+                       [object]="object"
+                       [searchable]="iiifSearchEnabled"
+                       [query]="iiifQuery$ | async">
     </ds-mirador-viewer>
   </div>
 </div>
+
 <div class="d-flex flex-row">
   <ds-themed-item-page-title-field [item]="object" class="mr-auto">
   </ds-themed-item-page-title-field>
@@ -27,39 +28,48 @@
     <ds-total-downloads [itemUuid]="object.uuid"></ds-total-downloads>
     <ds-item-page-date-field [item]="object"></ds-item-page-date-field>
     <ds-themed-metadata-representation-list class="ds-item-page-mixed-author-field"
-      [parentItem]="object"
-      [itemType]="'Person'"
-      [metadataFields]="['dc.contributor.author', 'dc.creator']"
-      [label]="'relationships.isAuthorOf' | translate">
+                                            [parentItem]="object"
+                                            [itemType]="'Person'"
+                                            [metadataFields]="['dc.contributor.author', 'dc.creator']"
+                                            [label]="'relationships.isAuthorOf' | translate">
     </ds-themed-metadata-representation-list>
     <ds-generic-item-page-field [item]="object"
-      [fields]="['journal.title']"
-      [label]="'publication.page.journal-title'">
+                                [fields]="['journal.title']"
+                                [label]="'publication.page.journal-title'">
     </ds-generic-item-page-field>
     <ds-generic-item-page-field [item]="object"
-      [fields]="['journal.identifier.issn']"
-      [label]="'publication.page.journal-issn'">
+                                [fields]="['journal.identifier.issn']"
+                                [label]="'publication.page.journal-issn'">
     </ds-generic-item-page-field>
     <ds-generic-item-page-field [item]="object"
-      [fields]="['journalvolume.identifier.name']"
-      [label]="'publication.page.volume-title'">
+                                [fields]="['journalvolume.identifier.name']"
+                                [label]="'publication.page.volume-title'">
     </ds-generic-item-page-field>
     <ds-generic-item-page-field [item]="object"
-      [fields]="['dc.publisher']"
-      [label]="'publication.page.publisher'">
+                                [fields]="['dc.publisher']"
+                                [label]="'publication.page.publisher'">
     </ds-generic-item-page-field>
+    <ds-generic-item-page-field [item]="object"
+                                [fields]="['dc.identifier.location']"
+                                [label]="'publication.page.identifier.location'">
+    </ds-generic-item-page-field>
+    <ds-generic-item-page-field [item]="object"
+                                [fields]="['dc.identifier.signature']"
+                                [label]="'publication.page.identifier.signature'">
+    </ds-generic-item-page-field>
+    <ds-creative-commons-license-field [item]="object"></ds-creative-commons-license-field>
     <div class="row mt-4 mb-4 badges">
       <ds-dimensions-badge
         *ngIf="object?.metadata?.['dc.identifier.doi']?.[0]?.value"
         [doi]="object.metadata['dc.identifier.doi'][0].value">
       </ds-dimensions-badge>
       <ds-altmetric-badge class="ml-4"
-        *ngIf="object?.metadata?.['dc.identifier.doi']?.[0]?.value"
-        [doi]="object.metadata['dc.identifier.doi'][0].value">
+                          *ngIf="object?.metadata?.['dc.identifier.doi']?.[0]?.value"
+                          [doi]="object.metadata['dc.identifier.doi'][0].value">
       </ds-altmetric-badge>
     </div>
   </div>
-  <div class="col-xs-12 col-md-7">
+  <div class="col-xs-12 col-md-6">
     <ds-related-items
       [parentItem]="object"
       [relationType]="'isProjectOfPublication'"
@@ -75,26 +85,26 @@
       [relationType]="'isJournalIssueOfPublication'"
       [label]="'relationships.isJournalIssueOf' | translate">
     </ds-related-items>
+    <ds-item-page-citation-field [handle]="object?.handle"></ds-item-page-citation-field>
     <ds-item-page-abstract-field [item]="object"></ds-item-page-abstract-field>
     <ds-generic-item-page-field [item]="object"
-      [fields]="['dc.description']"
-      [label]="'publication.page.description'">
+                                [fields]="['dc.description']"
+                                [label]="'publication.page.description'">
     </ds-generic-item-page-field>
 
     <ds-generic-item-page-field [item]="object"
-      [fields]="['dc.subject']"
-      [separator]="', '"
-      [label]="'item.page.subject'">
+                                [fields]="['dc.subject']"
+                                [separator]="', '"
+                                [label]="'item.page.subject'">
     </ds-generic-item-page-field>
     <ds-generic-item-page-field [item]="object"
-      [fields]="['dc.identifier.citation']"
-      [label]="'item.page.citation'">
+                                [fields]="['dc.identifier.citation']"
+                                [label]="'item.page.citation'">
     </ds-generic-item-page-field>
     <ds-item-page-uri-field [item]="object"
-      [fields]="['dc.identifier.uri']"
-      [label]="'item.page.uri'">
+                            [fields]="['dc.identifier.uri']"
+                            [label]="'item.page.uri'">
     </ds-item-page-uri-field>
-    <ds-creative-commons-license-field [item]="object"></ds-creative-commons-license-field>
     <ds-item-page-collections [item]="object"></ds-item-page-collections>
     <div>
       <a class="btn btn-outline-primary" role="button" [routerLink]="[itemPageRoute + '/full']">
