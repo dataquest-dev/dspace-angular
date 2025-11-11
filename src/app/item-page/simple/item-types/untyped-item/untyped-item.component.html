@@ -49,6 +49,14 @@
       [fields]="['dc.publisher']"
       [label]="'item.page.publisher'">
     </ds-generic-item-page-field>
+    <ds-generic-item-page-field [item]="object"
+                                [fields]="['dc.identifier.location']"
+                                [label]="'item.page.identifier.location'">
+    </ds-generic-item-page-field>
+    <ds-generic-item-page-field [item]="object"
+                                [fields]="['dc.identifier.signature']"
+                                [label]="'item.page.identifier.signature'">
+    </ds-generic-item-page-field>
     <ds-creative-commons-license-field [item]="object"></ds-creative-commons-license-field>
     <div class="row mt-4 mb-4 badges">
       <ds-dimensions-badge

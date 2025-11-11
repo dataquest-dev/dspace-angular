@@ -2513,6 +2513,10 @@
 
   "item.page.volume-title": "Volume Title",
 
+  "item.page.identifier.location": "Location",
+
+  "item.page.identifier.signature": "Signature",
+
   "item.search.results.head": "Item Search Results",
 
   "item.search.title": "Item Search",
@@ -3574,6 +3578,10 @@
   "publication.page.titleprefix": "Publication: ",
 
   "publication.page.volume-title": "Volume Title",
+
+  "publication.page.identifier.location": "Location",
+
+  "publication.page.identifier.signature": "Signature",
 
   "publication.search.results.head": "Publication Search Results",
 
