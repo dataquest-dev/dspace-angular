@@ -16,8 +16,8 @@ import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/jso
 import { SubmissionCcLicenseUrlDataService } from '../../../core/submission/submission-cc-license-url-data.service';
 import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
 import { createPaginatedList } from '../../../shared/testing/utils.test';
-import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
-import {ConfigurationProperty} from '../../../core/shared/configuration-property.model';
+import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
+import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
 
 describe('SubmissionSectionCcLicensesComponent', () => {
 
@@ -136,11 +136,7 @@ describe('SubmissionSectionCcLicensesComponent', () => {
   });
 
   const submissionCcLicenseUrlDataService = jasmine.createSpyObj('submissionCcLicenseUrlDataService', {
-    getCcLicenseLink: createSuccessfulRemoteDataObject$(
-      {
-        url: 'test cc license link',
-      }
-    ),
+    getCcLicenseLink: observableOf('test cc license link'),
   });
 
   const sectionService = {
@@ -149,7 +145,7 @@ describe('SubmissionSectionCcLicensesComponent', () => {
     },
     setSectionStatus: () => undefined,
     updateSectionData: (submissionId, sectionId, updatedData) => {
-      component.sectionData.data = updatedData;
+      component.sectionData.data = Object.assign({}, component.sectionData.data, updatedData);
     }
   };
 
@@ -235,25 +231,32 @@ describe('SubmissionSectionCcLicensesComponent', () => {
 
     describe('when all options have a value selected', () => {
 
-      beforeEach(() => {
+      beforeEach(waitForAsync(() => {
         component.selectOption(ccLicence, ccLicence.fields[0], ccLicence.fields[0].enums[1]);
         component.selectOption(ccLicence, ccLicence.fields[1], ccLicence.fields[1].enums[0]);
-        fixture.detectChanges();
-      });
+        setTimeout(() => {
+          fixture.detectChanges();
+        }, 400); // Wait for debounce to complete
+      }));
 
-      it('should call the submission cc licenses data service getCcLicenseLink method', () => {
-        expect(submissionCcLicenseUrlDataService.getCcLicenseLink).toHaveBeenCalledWith(
-          ccLicence,
-          new Map([
-            [ccLicence.fields[0], ccLicence.fields[0].enums[1]],
-            [ccLicence.fields[1], ccLicence.fields[1].enums[0]],
-          ])
-        );
-      });
+      it('should call the submission cc licenses data service getCcLicenseLink method', waitForAsync(() => {
+        setTimeout(() => {
+          expect(submissionCcLicenseUrlDataService.getCcLicenseLink).toHaveBeenCalledWith(
+            ccLicence,
+            new Map([
+              [ccLicence.fields[0], ccLicence.fields[0].enums[1]],
+              [ccLicence.fields[1], ccLicence.fields[1].enums[0]],
+            ])
+          );
+        }, 100);
+      }));
 
-      it('should display a cc license link', () => {
-        expect(de.query(By.css('.license-link'))).toBeTruthy();
-      });
+      it('should display a cc license link', waitForAsync(() => {
+        setTimeout(() => {
+          fixture.detectChanges();
+          expect(de.query(By.css('.license-link'))).toBeTruthy();
+        }, 100);
+      }));
 
       it('should not be accepted', () => {
         expect(component.accepted).toBeFalse();
@@ -265,10 +268,12 @@ describe('SubmissionSectionCcLicensesComponent', () => {
 
       describe('when the cc license is accepted', () => {
 
-        beforeEach(() => {
+        beforeEach(waitForAsync(() => {
           component.setAccepted(true);
-          fixture.detectChanges();
-        });
+          setTimeout(() => {
+            fixture.detectChanges();
+          }, 100);
+        }));
 
         it('should have section status complete', () => {
           expect(component.getSectionStatus()).toBeObservable(cold('(a|)', { a: true }));

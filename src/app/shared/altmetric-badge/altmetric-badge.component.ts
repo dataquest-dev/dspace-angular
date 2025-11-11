@@ -25,8 +25,8 @@ export class AltmetricBadgeComponent implements OnInit {
 
   private loadAltmetricScript(): void {
     if (document.querySelector('script[src*="altmetric.com/embed"]')) {
-      if (window._altmetric_embed_init) {
-        setTimeout(() => window._altmetric_embed_init(), 500);
+      if ((window as any)._altmetric_embed_init) {
+        setTimeout(() => (window as any)._altmetric_embed_init(), 500);
       }
       return;
     }
