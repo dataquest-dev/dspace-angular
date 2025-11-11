@@ -3794,6 +3794,9 @@
   // "item.page.files": "Files",
   "item.page.files": "Soubory",
 
+  // "item.page.files.downloads": "Downloads",
+  "item.page.files.downloads": "Stažení",
+
   // "item.page.filesection.description": "Description:",
   "item.page.filesection.description": "Popis:",
 
@@ -3921,7 +3924,6 @@
   "item.preview.dc.rights": "Práva",
 
   // "item.preview.dc.identifier.other": "Other Identifier",
-  // TODO Source message changed - Revise the translation
   "item.preview.dc.identifier.other": "Další identifikátor:",
 
   // "item.preview.dc.relation.issn": "ISSN",
@@ -3998,6 +4000,15 @@
 
   // "item.version.history.head": "Version History",
   "item.version.history.head": "Historie verzí",
+
+  // "item.version.history.label": "version history",
+  "item.version.history.label": "historie verzí",
+
+  // "item.version.history.expand": "Expand",
+  "item.version.history.expand": "Rozbalit",
+
+  // "item.version.history.collapse": "Collapse",
+  "item.version.history.collapse": "Sbalit",
 
   // "item.version.history.return": "Back",
   "item.version.history.return": "Zpět",

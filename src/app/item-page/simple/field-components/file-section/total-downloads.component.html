@@ -1,0 +1,9 @@
+<ds-metadata-field-wrapper
+  *ngIf="totalDownloadsEnabled | async"
+  [label]="downloadsLabel | translate">
+  <div class="total-downloads-section">
+    <div class="total-downloads-count">
+      <span>{{ totalDownloads }}</span>
+    </div>
+  </div>
+</ds-metadata-field-wrapper>

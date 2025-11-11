@@ -1,0 +1,17 @@
+@import '../../item-page.component.scss';
+
+@media (min-width: 992px) {
+  .col-2-5 {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+}
+
+.dropdown-versions {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  padding: 2%;
+
+  max-height: calc(var(--ds-dso-selector-list-max-height) / 2);
+  overflow-y: auto;
+}

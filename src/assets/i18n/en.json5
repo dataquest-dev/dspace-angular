@@ -2529,6 +2529,8 @@
 
   "item.page.files": "Files",
 
+  "item.page.files.downloads": "Downloads",
+
   "item.page.filesection.description": "Description:",
 
   "item.page.filesection.download": "Download",
@@ -2664,6 +2666,12 @@
   "item.version.history.empty": "There are no other versions for this item yet.",
 
   "item.version.history.head": "Version History",
+
+  "item.version.history.label": "version history",
+
+  "item.version.history.expand": "Expand",
+
+  "item.version.history.collapse": "Collapse",
 
   "item.version.history.return": "Back",
 
