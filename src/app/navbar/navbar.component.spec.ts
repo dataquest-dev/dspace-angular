@@ -129,6 +129,7 @@ describe('NavbarComponent', () => {
   { provide: ActivatedRoute, useValue: routeStub },
   { provide: BrowseService, useValue: { getBrowseDefinitions: createSuccessfulRemoteDataObject$(buildPaginatedList(undefined, browseDefinitions)) } },
   { provide: AuthorizationDataService, useValue: authorizationService },
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   { provide: LocaleService, useValue: { getCurrentLanguage: () => 'en', setCurrentLanguage: () => {}, getAvailableLanguages: () => ['en'], languageChange: observableOf('en') } },
   provideMockStore({ initialState }),
       ],

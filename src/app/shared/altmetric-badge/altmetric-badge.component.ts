@@ -16,6 +16,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class AltmetricBadgeComponent implements OnInit {
   @Input() doi: string;
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() { }
 
   ngOnInit(): void {
@@ -24,8 +25,8 @@ export class AltmetricBadgeComponent implements OnInit {
 
   private loadAltmetricScript(): void {
     if (document.querySelector('script[src*="altmetric.com/embed"]')) {
-      if (window['_altmetric_embed_init']) {
-        setTimeout(() => window['_altmetric_embed_init'](), 500);
+      if (window._altmetric_embed_init) {
+        setTimeout(() => window._altmetric_embed_init(), 500);
       }
       return;
     }

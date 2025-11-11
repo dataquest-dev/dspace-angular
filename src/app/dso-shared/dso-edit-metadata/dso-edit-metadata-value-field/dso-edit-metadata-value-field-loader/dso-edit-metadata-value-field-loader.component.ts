@@ -4,15 +4,11 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { NgComponentOutlet, NgIf } from '@angular/common';
 
 import { Context } from '../../../../core/shared/context.model';
 import { DSpaceObject } from '../../../../core/shared/dspace-object.model';
 import { DsoEditMetadataValue } from '../../dso-edit-metadata-form';
 import { EditMetadataValueFieldType } from '../dso-edit-metadata-field-type.enum';
-import { DsoEditMetadataAuthorityFieldComponent } from '../dso-edit-metadata-authority-field/dso-edit-metadata-authority-field.component';
-import { DsoEditMetadataEntityFieldComponent } from '../dso-edit-metadata-entity-field/dso-edit-metadata-entity-field.component';
-import { DsoEditMetadataTextFieldComponent } from '../dso-edit-metadata-text-field/dso-edit-metadata-text-field.component';
 
 /**
  * A component responsible for dynamically loading and rendering the appropriate edit metadata value field components
@@ -23,7 +19,7 @@ import { DsoEditMetadataTextFieldComponent } from '../dso-edit-metadata-text-fie
   selector: 'ds-dso-edit-metadata-value-field-loader',
   template: `
     <ng-container [ngSwitch]="type">
-      <ds-dso-edit-metadata-authority-field 
+      <ds-dso-edit-metadata-authority-field
         *ngSwitchCase="EditMetadataValueFieldType.AUTHORITY"
         [context]="context"
         [dso]="dso"
@@ -32,8 +28,8 @@ import { DsoEditMetadataTextFieldComponent } from '../dso-edit-metadata-text-fie
         [mdValue]="mdValue"
         (confirm)="confirm.emit($event)">
       </ds-dso-edit-metadata-authority-field>
-      
-      <ds-dso-edit-metadata-entity-field 
+
+      <ds-dso-edit-metadata-entity-field
         *ngSwitchCase="EditMetadataValueFieldType.ENTITY_TYPE"
         [context]="context"
         [dso]="dso"
@@ -42,8 +38,8 @@ import { DsoEditMetadataTextFieldComponent } from '../dso-edit-metadata-text-fie
         [mdValue]="mdValue"
         (confirm)="confirm.emit($event)">
       </ds-dso-edit-metadata-entity-field>
-      
-      <ds-dso-edit-metadata-text-field 
+
+      <ds-dso-edit-metadata-text-field
         *ngSwitchDefault
         [context]="context"
         [dso]="dso"

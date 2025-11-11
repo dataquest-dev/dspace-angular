@@ -196,10 +196,10 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     this.pathCombiner = new JsonPatchOperationPathCombiner('sections', this.sectionData.id);
     this.formId = this.formService.getUniqueId(this.sectionData.id);
     this.sectionService.dispatchSetSectionFormId(this.submissionId, this.sectionData.id, this.formId);
-    
+
     // Extract informational messages from server validation errors
     this.extractInfoMessages();
-    
+
     this.formConfigService.findByHref(this.sectionData.config).pipe(
       map((configData: RemoteData<ConfigObject>) => configData.payload),
       tap((config: SubmissionFormsModel) => this.formConfig = config),
@@ -253,7 +253,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
 
     // Only show info messages if there are no errors being displayed
     const hasErrorsToShow = this.sectionData?.errorsToShow && this.sectionData.errorsToShow.length > 0;
-    
+
     if (!hasErrorsToShow && this.sectionData?.serverValidationErrors) {
       this.sectionData.serverValidationErrors.forEach((error: SubmissionSectionError) => {
         // Use the same error message key for informational display

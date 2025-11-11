@@ -4,11 +4,8 @@ import { map, switchMap, catchError } from 'rxjs/operators';
 import { Item } from '../../../../core/shared/item.model';
 import { BundleDataService } from '../../../../core/data/bundle-data.service';
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
-import { getAllSucceededRemoteDataPayload, getFirstSucceededRemoteDataPayload } from '../../../../core/shared/operators';
 import { RemoteData } from '../../../../core/data/remote-data';
 import { Bundle } from '../../../../core/shared/bundle.model';
-import { PaginatedList } from '../../../../core/data/paginated-list.model';
-import { Bitstream } from '../../../../core/shared/bitstream.model';
 import { isNotEmpty } from '../../../../shared/empty.util';
 
 /**

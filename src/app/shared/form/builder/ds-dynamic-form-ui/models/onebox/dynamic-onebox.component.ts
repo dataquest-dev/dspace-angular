@@ -295,27 +295,27 @@ export class DsDynamicOneboxComponent extends DsDynamicVocabularyComponent imple
     // Debug logging to understand what's happening
     console.log('getInitValueFromModel - model.value:', this.model.value);
     console.log('getInitValueFromModel - vocabularyOptions:', this.model.vocabularyOptions);
-    
-    if (isNotEmpty(this.model.value) && 
-        (this.model.value instanceof FormFieldMetadataValueObject) && 
+
+    if (isNotEmpty(this.model.value) &&
+        (this.model.value instanceof FormFieldMetadataValueObject) &&
         !this.model.value.hasAuthorityToGenerate() &&
         this.model.value.hasAuthority()) {
-      
+
       console.log('Has authority, value:', this.model.value.value);
       console.log('Authority:', this.model.value.authority);
       console.log('Vocabulary name:', this.model.vocabularyOptions?.name);
-      
+
       // Check if this is an ORCID field by looking at the authority value (ORCID format: 0000-0000-0000-0000)
       const authority = this.model.value.authority;
       const isORCID = authority && /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(authority);
-      
+
       if (isORCID) {
         console.log('Returning original value for ORCID field');
         // For ORCID fields, return the original value without vocabulary lookup
         return observableOf(this.model.value);
       }
     }
-    
+
     console.log('Using parent implementation');
     // For other fields, use the parent implementation
     return super.getInitValueFromModel();

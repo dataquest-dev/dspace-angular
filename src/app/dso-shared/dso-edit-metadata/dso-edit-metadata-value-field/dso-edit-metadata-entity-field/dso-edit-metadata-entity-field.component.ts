@@ -1,10 +1,7 @@
-import { AsyncPipe, NgFor } from '@angular/common';
 import {
   Component,
   OnInit,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 import { EntityTypeDataService } from '../../../../core/data/entity-type-data.service';

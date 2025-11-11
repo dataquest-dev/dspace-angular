@@ -2,7 +2,7 @@ import { DsoEditMetadataChangeType, DsoEditMetadataForm, DsoEditMetadataValue } 
 import { DSpaceObject } from '../../core/shared/dspace-object.model';
 import { MetadataValue } from '../../core/shared/metadata.models';
 import { ArrayMoveChangeAnalyzer } from '../../core/data/array-move-change-analyzer.service';
-import { Operation, AddOperation, ReplaceOperation, RemoveOperation } from 'fast-json-patch';
+import { Operation } from 'fast-json-patch';
 
 describe('DsoEditMetadataForm', () => {
   let form: DsoEditMetadataForm;
@@ -292,7 +292,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.newValue.value = 'New Author Name';
         metadataValue.newValue.language = null;
         metadataValue.change = DsoEditMetadataChangeType.UPDATE;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });
@@ -317,7 +317,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.newValue.value = 'New Author Name';
         metadataValue.newValue.language = null;
         metadataValue.change = DsoEditMetadataChangeType.UPDATE;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });
@@ -343,7 +343,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.newValue.value = 'Updated Author';
         metadataValue.newValue.language = 'en';
         metadataValue.change = DsoEditMetadataChangeType.UPDATE;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });
@@ -376,7 +376,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.newValue.authority = '0000-0000-0000-0000';
         metadataValue.newValue.confidence = 600;
         metadataValue.change = DsoEditMetadataChangeType.ADD;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });
@@ -401,7 +401,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.newValue.authority = '';
         metadataValue.newValue.confidence = null;
         metadataValue.change = DsoEditMetadataChangeType.ADD;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });
@@ -428,7 +428,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.newValue.authority = '0000-0000-0000-0000';
         metadataValue.newValue.confidence = 600;
         metadataValue.change = DsoEditMetadataChangeType.UPDATE;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });
@@ -463,7 +463,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.newValue.authority = '0000-0000-0000-0000';
         metadataValue.newValue.confidence = -1;
         metadataValue.change = DsoEditMetadataChangeType.ADD;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });
@@ -482,7 +482,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.newValue.authority = '0000-0000-0000-0000';
         metadataValue.newValue.confidence = undefined;
         metadataValue.change = DsoEditMetadataChangeType.ADD;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });
@@ -501,7 +501,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.newValue.authority = '0000-0000-0000-0000';
         metadataValue.newValue.confidence = 600;
         metadataValue.change = DsoEditMetadataChangeType.ADD;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });
@@ -527,7 +527,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.originalValue.place = undefined;
         metadataValue.originalValue.value = 'Some Author';
         metadataValue.change = DsoEditMetadataChangeType.REMOVE;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });
@@ -543,7 +543,7 @@ describe('DsoEditMetadataForm', () => {
         metadataValue.originalValue.place = 1;
         metadataValue.originalValue.value = 'Some Author';
         metadataValue.change = DsoEditMetadataChangeType.REMOVE;
-        
+
         form.fields['dc.contributor.author'] = [metadataValue];
         operations = form.getOperations(moveAnalyzer);
       });

@@ -15,7 +15,7 @@ import { SectionDataObject } from '../models/section-data.model';
 import { SectionsService } from '../sections.service';
 import { WorkspaceitemSectionCcLicenseObject } from '../../../core/submission/models/workspaceitem-section-cc-license.model';
 import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
-import { isNotEmpty, hasValue, hasNoValue } from '../../../shared/empty.util';
+import { isNotEmpty, hasValue } from '../../../shared/empty.util';
 import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
 import { SubmissionCcLicenseUrlDataService } from '../../../core/submission/submission-cc-license-url-data.service';
 import {ConfigurationDataService} from '../../../core/data/configuration-data.service';

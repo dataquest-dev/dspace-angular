@@ -65,7 +65,7 @@ export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
   authorsMV.forEach((authorMV: MetadataValue) => {
     let authorUrl: string;
     const isOrcidAuthority = authorMV.authority && /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(authorMV.authority);
-    
+
     if (isOrcidAuthority) {
       // Create direct ORCID profile link for ORCID authorities
       authorUrl = `https://orcid.org/${authorMV.authority}`;
@@ -81,7 +81,7 @@ export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
       }
       authorUrl = baseUrl + '/search?f.author=' + value + ',' + operator;
     }
-    
+
     const authorNameLink = Object.assign(new AuthorNameLink(), {
       name: authorMV.value,
       url: authorUrl,
