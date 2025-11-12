@@ -11,6 +11,10 @@ import { createSuccessfulRemoteDataObject$ } from '../../remote-data.utils';
 import { HALResource } from '../../../core/shared/hal-resource.model';
 import { ChildHALResource } from '../../../core/shared/child-hal-resource.model';
 import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
+import { RemoteData } from '../../../core/data/remote-data';
+import { RequestEntryState } from '../../../core/data/request-entry-state.model';
+import { of as observableOf } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export function createSidebarSearchListElementTests(
   componentClass: any,
@@ -28,10 +32,28 @@ export function createSidebarSearchListElementTests(
     let linkService;
 
     beforeEach(waitForAsync(() => {
-      linkService = jasmine.createSpyObj('linkService', {
-        resolveLink: Object.assign(new HALResource(), {
-          [object.indexableObject.getParentLinkKey()]: createSuccessfulRemoteDataObject$(parent)
-        })
+      linkService = jasmine.createSpyObj('linkService', ['resolveLink']);
+      linkService.resolveLink.and.callFake((obj: any) => {
+        if (obj === object.indexableObject) {
+          return Object.assign(new HALResource(), {
+            [object.indexableObject.getParentLinkKey()]: createSuccessfulRemoteDataObject$(parent)
+          });
+        } else if (obj === parent) {
+          const parentLinkKey = (parent as any).getParentLinkKey ? (parent as any).getParentLinkKey() : 'parentCommunity';
+          const noContentRemoteData = observableOf(new RemoteData(
+            new Date().getTime(),
+            environment.cache.msToLive.default,
+            new Date().getTime(),
+            RequestEntryState.Success,
+            undefined,
+            undefined,
+            204
+          ));
+          return Object.assign(new HALResource(), {
+            [parentLinkKey]: noContentRemoteData
+          });
+        }
+        return new HALResource();
       });
       TestBed.configureTestingModule({
         declarations: [componentClass, VarDirective],

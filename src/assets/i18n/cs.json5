@@ -8694,6 +8694,11 @@
   // "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
   "static.deposit.image.step-6-3": "Krok 6.3: Open license selector - nástroj pro výběr licence",
 
+  // "sidebar.expand.all": "Expand all",
+  "sidebar.expand.all": "Rozbalit vše",
+
+  // "sidebar.collapse.all": "Collapse all",
+  "sidebar.collapse.all": "Sbalit vše",
   // "matomo.subscription.subscribe.button": "Subscribe",
   "matomo.subscription.subscribe.button": "Přihlásit se k odběru",
 

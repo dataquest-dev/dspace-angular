@@ -6221,6 +6221,9 @@
 
   "home.news.image.banner": "Home news banner image",
 
+  "sidebar.expand.all": "Expand all",
+
+  "sidebar.collapse.all": "Collapse all",
   "matomo.subscription.subscribe.button": "Subscribe",
 
   "matomo.subscription.unsubscribe.button": "Unsubscribe",
