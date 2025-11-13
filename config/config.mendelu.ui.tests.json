@@ -1,5 +1,15 @@
 {
+  "env": {
+    "has_discojuice": false,
+    "has_whats_new": false,
+    "has_profile_and_logout_link": true,
+    "has_static_page": false
+  },
   "locators": {
-    "title": "DSpace Repository :: Home"
+    "title": "DSpace Repository :: Home",
+    "profile_link": "a[href=\"/profile\"]",
+    "logout_link": "button[data-test=\"logout-button\"]",
+    "signon_link": "button[data-test=\"login-menu\"]",
+    "result_card": "li[data-test=\"list-object\"]"
   }
 }
