@@ -31,8 +31,8 @@ COPY --chown=node:node docker/dspace-ui.json /app/dspace-ui.json
 # necessary files exist and node has sufficient access rights
 RUN mkdir -p /app/dist/browser/assets \
  && touch /app/dist/browser/assets/config.json \
- && find /app/dist/browser/assets -type d -exec chmod 755 {} \; \
- && find /app/dist/browser/assets -type f -exec chmod 644 {} \;
+ && find /app/dist/browser/assets -type d -exec chmod 750 {} \; \
+ && find /app/dist/browser/assets -type f -exec chmod 640 {} \;
 
 WORKDIR /app
 USER node
