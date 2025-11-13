@@ -8694,6 +8694,12 @@
   // "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
   "static.deposit.image.step-6-3": "Krok 6.3: Open license selector - nástroj pro výběr licence",
 
+  // "submission.workflow.generic.curate": "Curate",
+  "submission.workflow.generic.curate": "Zkontrolovat",
+
+  // "submission.workflow.generic.curate-help": "Validate the item with the curation framework",
+  "submission.workflow.generic.curate-help": "Ověřit položku pomocí kurátorského frameworku",
+
   // "sidebar.expand.all": "Expand all",
   "sidebar.expand.all": "Rozbalit vše",
 

@@ -6221,6 +6221,9 @@
 
   "home.news.image.banner": "Home news banner image",
 
+  "submission.workflow.generic.curate": "Curate",
+
+  "submission.workflow.generic.curate-help": "Validate the item with the curation framework",
   "sidebar.expand.all": "Expand all",
 
   "sidebar.collapse.all": "Collapse all",

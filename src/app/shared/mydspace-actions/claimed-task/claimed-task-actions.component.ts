@@ -108,4 +108,11 @@ export class ClaimedTaskActionsComponent extends MyDSpaceActionsComponent<Claime
     return getWorkflowItemViewRoute(workflowitem?.id);
   }
 
+
+  /**
+   * Get the workflowitem curate route.
+   */
+  getWorkflowItemCurationRoute(): string {
+    return `/admin/curation-tasks`;
+  }
 }
