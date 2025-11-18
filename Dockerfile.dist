@@ -32,7 +32,7 @@ USER node
 
 # Ensure necessary files exist (possible issue when running as non-root user)
 RUN mkdir -p /app/dist/browser/assets \
- && touch /app/dist/browser/assets/config.json;
+ && touch /app/dist/browser/assets/config.json
 
 ENV NODE_ENV=production
 EXPOSE 4000
