@@ -30,7 +30,7 @@ COPY --chown=node:node docker/dspace-ui.json /app/dspace-ui.json
 WORKDIR /app
 USER node
 
-# Ensure necessary files exist and have proper permissions
+# Ensure necessary files exist (possible issue when running as non-root user)
 RUN mkdir -p /app/dist/browser/assets \
  && touch /app/dist/browser/assets/config.json
 
