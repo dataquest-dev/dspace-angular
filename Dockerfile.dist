@@ -32,9 +32,7 @@ USER node
 
 # Ensure necessary files exist and have proper permissions
 RUN mkdir -p /app/dist/browser/assets \
- && touch /app/dist/browser/assets/config.json \
- && find /app/dist/browser/assets -type d -exec chmod 750 {} \; \
- && find /app/dist/browser/assets -type f -exec chmod 640 {} \;
+ && touch /app/dist/browser/assets/config.json;
 
 ENV NODE_ENV=production
 EXPOSE 4000
