@@ -43,7 +43,7 @@ runs:
         DB7PORT: 543${{ inputs.INSTANCE }}
         BEURL: http://dev-5.pc:8${{ inputs.INSTANCE }}/repository/server/api
         BEUSERNAME: dspace.admin.dev@dataquest.sk
-        BEUSERPASSWORD: admin
+        BEUSERPASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
       run: |
           docker stop $DB5NAME || true
           echo "====="

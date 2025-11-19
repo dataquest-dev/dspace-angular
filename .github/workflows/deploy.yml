@@ -55,6 +55,9 @@ jobs:
 
       - name: deploy to dev-5
         working-directory: build-scripts/run/
+        env:
+          ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+          USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
         run: |
           ./start.sh dspace-$INSTANCE
           cd ../..
@@ -84,6 +87,9 @@ jobs:
 
       - name: deploy dspace-import on dev-5
         working-directory: build-scripts/run/
+        env:
+          ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+          USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
         run: |
           ./start.sh dspace-$INSTANCE
           cd ../..
