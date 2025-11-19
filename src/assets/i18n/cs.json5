@@ -663,8 +663,7 @@
   "admin.access-control.groups.form.delete-group.modal.header": "Odstranit skupinu \"{{ dsoName }}\"",
 
   // "admin.access-control.groups.form.delete-group.modal.info": "Are you sure you want to delete Group \"{{ dsoName }}\" and all its associated policies?",
-  // TODO Source message changed - Revise the translation
-  "admin.access-control.groups.form.delete-group.modal.info": "Určitě chcete odstranit skupinu \"{{ dsoName }}\"",
+  "admin.access-control.groups.form.delete-group.modal.info": "Určitě chcete odstranit skupinu \"{{ dsoName }}\"  a všechny s ní spojené zásady?",
 
   // "admin.access-control.groups.form.delete-group.modal.cancel": "Cancel",
   "admin.access-control.groups.form.delete-group.modal.cancel": "Zrušit",
@@ -2461,7 +2460,6 @@
   "cookies.consent.content-notice.description": "Shromažďujeme a zpracováváme vaše osobní údaje pro tyto účely: {purposes}",
 
   // "cookies.consent.content-notice.learnMore": "Customize",
-  // TODO Source message changed - Revise the translation
   "cookies.consent.content-notice.learnMore": "Přizpůsobit",
 
   // "cookies.consent.content-modal.description": "Here you can see and customize the information that we collect about you.",
@@ -2714,7 +2712,6 @@
   "dso-selector.claim.item.create-from-scratch": "Vytvořit nový",
 
   // "dso-selector.results-could-not-be-retrieved": "Something went wrong, please refresh again ↻",
-  // TODO Source message changed - Revise the translation
   "dso-selector.results-could-not-be-retrieved": "Něco se nepovedlo, zkuste, prosím, načíst znovu ↻",
 
   // "supervision-group-selector.header": "Supervision Group Selector",
@@ -3156,8 +3153,7 @@
   "form.repeatable.sort.tip": "Přetáhněte záznam na novou pozici",
 
   // "grant-deny-request-copy.deny": "Deny access request",
-  // TODO Source message changed - Revise the translation
-  "grant-deny-request-copy.deny": "Neposílat kopii",
+  "grant-deny-request-copy.deny": "Zamítnout žádost o přístup",
 
   // "grant-deny-request-copy.revoke": "Revoke access",
   "grant-deny-request-copy.revoke": "Zrušit přístup",
@@ -3187,8 +3183,7 @@
   "grant-deny-request-copy.email.subject.empty": "Zadejte prosím předmět zprávy",
 
   // "grant-deny-request-copy.grant": "Grant access request",
-  // TODO Source message changed - Revise the translation
-  "grant-deny-request-copy.grant": "Odeslat kopii",
+  "grant-deny-request-copy.grant": "Schválit žádost o přístup",
 
   // "grant-deny-request-copy.header": "Document copy request",
   "grant-deny-request-copy.header": "Žádost o kopii dokumentu",
@@ -3242,7 +3237,6 @@
   "grant-request-copy.access-period.+1MONTH": "1 měsíc",
 
   // "grant-request-copy.access-period.+3MONTHS": "3 months",
-  // TODO Source message changed - Revise the translation
   "grant-request-copy.access-period.+3MONTHS": "3 měsíce",
 
   // "grant-request-copy.access-period.FOREVER": "Forever",
@@ -4524,7 +4518,6 @@
   "item.preview.dc.rights": "Práva",
 
   // "item.preview.dc.identifier.other": "Other Identifier",
-  // TODO Source message changed - Revise the translation
   "item.preview.dc.identifier.other": "Další identifikátor:",
 
   // "item.preview.dc.relation.issn": "ISSN",
@@ -4615,8 +4608,7 @@
   "item.preview.dc.identifier.openalex": "Identifikátor OpenAlex",
 
   // "item.preview.dc.description": "Description",
-  // TODO Source message changed - Revise the translation
-  "item.preview.dc.description": "Popis:",
+  "item.preview.dc.description": "Popis",
 
   // "item.select.confirm": "Confirm selected",
   "item.select.confirm": "Potvrdit vybrané",
@@ -6602,8 +6594,7 @@
   "relationships.Person.isOrgUnitOfPerson.OrgUnit": "Organizační jednotky",
 
   // "relationships.Person.isPublicationOfContributor.Publication": "Publications (contributor to)",
-  // TODO Source message changed - Revise the translation
-  "relationships.Person.isPublicationOfContributor.Publication": "Publikace",
+  "relationships.Person.isPublicationOfContributor.Publication": "Publikace (jako spoluautor)",
 
   // "relationships.Project.isPublicationOfProject.Publication": "Publications",
   "relationships.Project.isPublicationOfProject.Publication": "Publikace",
@@ -6630,12 +6621,10 @@
   "relationships.OrgUnit.isPublicationOfAuthor.Publication": "Autorské publikace",
 
   // "relationships.OrgUnit.isPublicationOfContributor.Publication": "Publications (contributor to)",
-  // TODO Source message changed - Revise the translation
-  "relationships.OrgUnit.isPublicationOfContributor.Publication": "Publikace",
+  "relationships.OrgUnit.isPublicationOfContributor.Publication": "Publikace (jako spoluautor)",
 
   // "relationships.OrgUnit.isProjectOfFundingAgency.Project": "Research Projects (funder of)",
-  // TODO Source message changed - Revise the translation
-  "relationships.OrgUnit.isProjectOfFundingAgency.Project": "Výzkumné projekty",
+  "relationships.OrgUnit.isProjectOfFundingAgency.Project": "Výzkumné projekty (poskytovatel financí)",
 
   // "relationships.JournalIssue.isJournalVolumeOfIssue.JournalVolume": "Journal Volume",
   "relationships.JournalIssue.isJournalVolumeOfIssue.JournalVolume": "Ročník časopisu",
