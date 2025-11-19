@@ -181,7 +181,7 @@ describe('MetadataService', () => {
   }));
 
   it('route titles should overwrite dso titles', fakeAsync(() => {
-    (translateService.get as jasmine.Spy).and.returnValues(of('DSpace :: '), of('Translated Route Title'));
+    (translateService.get as jasmine.Spy).and.returnValues(of('DSpace ::'), of('Translated Route Title'));
     (metadataService as any).processRouteChange({
       data: {
         value: {
@@ -197,7 +197,7 @@ describe('MetadataService', () => {
   }));
 
   it('other navigation should add title and description', fakeAsync(() => {
-    (translateService.get as jasmine.Spy).and.returnValues(of('DSpace :: '), of('Dummy Title'), of('This is a dummy item component for testing!'));
+    (translateService.get as jasmine.Spy).and.returnValues(of('DSpace ::'), of('Dummy Title'), of('This is a dummy item component for testing!'));
     (metadataService as any).processRouteChange({
       data: {
         value: {
