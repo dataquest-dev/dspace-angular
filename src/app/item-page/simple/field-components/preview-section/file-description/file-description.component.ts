@@ -19,6 +19,7 @@ import { AuthService } from '../../../../../core/auth/auth.service';
 const archiveFormats = [
   'application/zip',
   'application/gzip',
+  'application/x-gzip',
   'application/x-tar',
   'application/x-gtar',
   'application/x-xz',
