@@ -72,8 +72,10 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
       if (mv.value.includes('http')) {
         return;
       }
-      // Compose `doiResolver` + `doi identifier` value
-      mv.value = this.doiResolver + '/' + mv.value;
+      // Compose `doiResolver` + `doi identifier` value, only if doiResolver is available
+      if (this.doiResolver) {
+        mv.value = this.doiResolver + '/' + mv.value;
+      }
     });
     return clonedMValues;
   }
