@@ -165,4 +165,89 @@ describe('TruncatablePartComponent', () => {
     });
   });
 
+  describe('noIdExpandable property', () => {
+    it('should have default value of false', () => {
+      expect(comp.externalToggle).toBe(false);
+    });
+
+    it('should accept true value for noIdExpandable', () => {
+      comp.externalToggle = true;
+      expect(comp.externalToggle).toBe(true);
+    });
+  });
+
+  describe('toggleWithoutId method', () => {
+    it('should set expand to true and lines to -1 when expand parameter is true', () => {
+      comp.expand = false;
+      comp.expandable = false;
+      comp.toggleWithoutId(true);
+      expect(comp.expand).toBe(true);
+      expect(comp.lines).toBe('none');
+    });
+
+    it('should set expand to false and lines to 1 when expand parameter is false', () => {
+      comp.expand = true;
+      comp.expandable = true;
+      comp.toggleWithoutId(false);
+      expect(comp.expand).toBe(false);
+      expect(comp.lines).toBe('1');
+    });
+
+    it('should toggle expandable from false to true', () => {
+      comp.expandable = false;
+      comp.toggleWithoutId(true);
+
+      expect(comp.expandable).toBe(true);
+    });
+
+    it('should toggle expandable from true to false', () => {
+      comp.expandable = true;
+      comp.toggleWithoutId(false);
+
+      expect(comp.expandable).toBe(false);
+    });
+  });
+
+  describe('When noIdExpandable is false (default behavior)', () => {
+    beforeEach(() => {
+      comp.externalToggle = false;
+      comp.id = 'test-id-123';
+      comp.minLines = 3;
+      fixture.detectChanges();
+    });
+
+    it('should display the traditional expand button', () => {
+      const expandButton = fixture.debugElement.query(By.css('.expandButton'));
+      expect(expandButton).not.toBeNull();
+    });
+
+    it('should not display the expand icon', () => {
+      const expandIcon = fixture.debugElement.query(By.css('.expandIcon'));
+      expect(expandIcon).toBeNull();
+    });
+
+    it('should not display the collapse icon', () => {
+      const collapseIcon = fixture.debugElement.query(By.css('.collapseIcon'));
+      expect(collapseIcon).toBeNull();
+    });
+  });
+
+  describe('When noIdExpandable is true', () => {
+    beforeEach(() => {
+      comp.externalToggle = true;
+      comp.minLines = 3;
+      comp.expandable = false;
+      fixture.detectChanges();
+    });
+
+    it('should hide the traditional expand button', () => {
+      const expandButton = fixture.debugElement.query(By.css('.expandButton'));
+      expect(expandButton).toBeNull();
+    });
+
+    it('should hide the traditional collapse button', () => {
+      const collapseButton = fixture.debugElement.query(By.css('.collapseButton'));
+      expect(collapseButton).toBeNull();
+    });
+  });
 });

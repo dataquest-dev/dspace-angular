@@ -9614,6 +9614,18 @@
   // "admin.access-control.epeople.table.lastActive": "Last time active",
   "admin.access-control.epeople.table.lastActive": "Naposledy aktivní",
 
+  // "submission.workflow.generic.curate": "Curate",
+  "submission.workflow.generic.curate": "Zkontrolovat",
+
+  // "submission.workflow.generic.curate-help": "Validate the item with the curation framework",
+  "submission.workflow.generic.curate-help": "Ověřit položku pomocí kurátorského frameworku",
+
+  // "sidebar.expand.all": "Expand all",
+  "sidebar.expand.all": "Rozbalit vše",
+
+  // "sidebar.collapse.all": "Collapse all",
+  "sidebar.collapse.all": "Sbalit vše",
+
   // "matomo.subscription.subscribe.button": "Subscribe",
   "matomo.subscription.subscribe.button": "Přihlásit se k odběru",
 

@@ -6466,6 +6466,13 @@
 
   "admin.access-control.epeople.table.lastActive": "Last time active",
 
+  "submission.workflow.generic.curate": "Curate",
+
+  "submission.workflow.generic.curate-help": "Validate the item with the curation framework",
+  "sidebar.expand.all": "Expand all",
+
+  "sidebar.collapse.all": "Collapse all",
+
   "matomo.subscription.subscribe.button": "Subscribe",
 
   "matomo.subscription.unsubscribe.button": "Unsubscribe",

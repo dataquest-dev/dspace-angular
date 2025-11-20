@@ -172,7 +172,18 @@ describe('ClaimedTaskActionsComponent', () => {
       expect(debugElement).toBeTruthy();
       expect(debugElement.nativeElement.innerText.trim()).toBe('submission.workflow.generic.view');
     });
+  }));
 
+  it('should display a curate button', waitForAsync(() => {
+    component.object = null;
+    component.initObjects(mockObject);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      const debugElement = fixture.debugElement.query(By.css('.workflow-curate'));
+      expect(debugElement).toBeTruthy();
+      expect(debugElement.nativeElement.innerText.trim()).toBe('submission.workflow.generic.curate');
+    });
   }));
 
   it('getWorkflowItemViewRoute should return the combined uri to show a workspaceitem', waitForAsync(() => {
