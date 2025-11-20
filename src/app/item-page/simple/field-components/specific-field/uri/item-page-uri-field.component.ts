@@ -1,13 +1,10 @@
-import {
-  Component,
-  Input,
-  OnInit,
-} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { Item } from '../../../../../core/shared/item.model';
-import { MetadataValue } from '../../../../../core/shared/metadata.models';
-import { MetadataUriValuesComponent } from '../../../../field-components/metadata-uri-values/metadata-uri-values.component';
 import { ItemPageFieldComponent } from '../item-page-field.component';
+import { MetadataUriValuesComponent } from '../../../../field-components/metadata-uri-values/metadata-uri-values.component';
+import { MetadataValue } from '../../../../../core/shared/metadata.models';
+// eslint-disable-next-line lodash/import-scope
 import _ from 'lodash';
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-definition-data.service';
@@ -16,7 +13,7 @@ import { BrowseService } from '../../../../../core/browse/browse.service';
 @Component({
   selector: 'ds-item-page-uri-field',
   templateUrl: './item-page-uri-field.component.html',
-    imports: [
+  imports: [
     MetadataUriValuesComponent,
   ],
   standalone: true,
@@ -29,8 +26,8 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
 
   doiResolver: string;
   constructor(protected browseDefinitionDataService: BrowseDefinitionDataService,
-              protected browseService: BrowseService,
-              private configService: ConfigurationDataService) {
+    protected browseService: BrowseService,
+    private configService: ConfigurationDataService) {
     super(browseDefinitionDataService, browseService);
   }
 
@@ -68,7 +65,7 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
     const mvalues: MetadataValue[] = this.item?.allMetadata(this.fields);
 
     // Clone the metadata values because it is readonly however I used `let` instead of `const`.
-    let clonedMValues = _.cloneDeep(mvalues);
+    const clonedMValues = _.cloneDeep(mvalues);
     // Compose DOI URI
     clonedMValues.forEach(mv => {
       // Filter Metadata values which doesn't have full link. DOI doesn't have full links.
