@@ -80,11 +80,11 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
       return [];
     }
 
-    // Clone the metadata values because it is readonly however I used `let` instead of `const`.
-    const clonedMValues = _.cloneDeep(mvalues);
+    // Clone the metadata values (readonly) into a mutable array, since we modify its contents below.
+    const clonedMValues = cloneDeep(mvalues);
     // Compose DOI URI
     clonedMValues.forEach(mv => {
-      // Filter Metadata values which doesn't have full link. DOI doesn't have full links.
+      // Skip metadata values that already have full links (URLs starting with http/https).
       if (mv.value.includes('http')) {
         return;
       }
