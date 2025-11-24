@@ -1,19 +1,20 @@
-import {
-  Component,
-  Input,
-  OnInit,
-} from '@angular/core';
-import { take } from 'rxjs/operators';
-
-import { Item } from '../../../../../core/shared/item.model';
-import { ItemPageFieldComponent } from '../item-page-field.component';
-import { MetadataUriValuesComponent } from '../../../../field-components/metadata-uri-values/metadata-uri-values.component';
-import { MetadataValue } from '../../../../../core/shared/metadata.models';
 // eslint-disable-next-line lodash/import-scope
 import cloneDeep from 'lodash/cloneDeep';
-import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
-import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-definition-data.service';
+import { take } from 'rxjs/operators';
+
+import { Component, Input, OnInit } from '@angular/core';
+
+import {
+    BrowseDefinitionDataService
+} from '../../../../../core/browse/browse-definition-data.service';
 import { BrowseService } from '../../../../../core/browse/browse.service';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { Item } from '../../../../../core/shared/item.model';
+import { MetadataValue } from '../../../../../core/shared/metadata.models';
+import {
+    MetadataUriValuesComponent
+} from '../../../../field-components/metadata-uri-values/metadata-uri-values.component';
+import { ItemPageFieldComponent } from '../item-page-field.component';
 
 @Component({
   selector: 'ds-item-page-uri-field',
