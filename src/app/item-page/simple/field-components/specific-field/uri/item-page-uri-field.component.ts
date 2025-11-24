@@ -73,6 +73,9 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
   }
   getUriMetadataValues() {
     const mvalues: MetadataValue[] = this.item?.allMetadata(this.fields);
+    if (!mvalues) {
+      return [];
+    }
 
     // Clone the metadata values because it is readonly however I used `let` instead of `const`.
     const clonedMValues = _.cloneDeep(mvalues);
