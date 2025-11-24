@@ -37,6 +37,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   expandable = false;
   expanded = false;
   private truncatedStates: Map<number, boolean> = new Map();
+  private initialTruncated = false; // remembers if any child was ever truncated
 
   @ViewChildren(TruncatablePartComponent) truncatableComponents: QueryList<TruncatablePartComponent>;
 
@@ -191,6 +192,9 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
    */
   onTruncatedStateChange(index: number, isTruncated: boolean): void {
     this.truncatedStates.set(index, isTruncated);
+    if (isTruncated) {
+      this.initialTruncated = true;
+    }
     this.updateExpandableState();
   }
 
@@ -199,8 +203,9 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
    */
   private updateExpandableState(): void {
     const anyTruncated = Array.from(this.truncatedStates.values()).some(state => state === true);
-    if (this.expandable !== anyTruncated) {
-      setTimeout(() => this.expandable = anyTruncated, 0);
+    const effectiveTruncated = (this.expanded && this.initialTruncated) ? true : anyTruncated;
+    if (this.expandable !== effectiveTruncated) {
+      setTimeout(() => this.expandable = effectiveTruncated, 0);
     }
   }
 

@@ -118,7 +118,6 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
     }
     if (this.id){
       this.service.toggle(this.id);
-      this.expandable = !this.expandable;
     } else {
       this.toggleWithoutId(expand);
     }
@@ -128,50 +127,30 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    * check for the truncate element
    */
   public truncateElement() {
-    if (this.showToggle || this.externalToggle) {
-      const entry = this.content.nativeElement;
-      if (entry.scrollHeight > entry.offsetHeight) {
-        if (entry.children.length > 0) {
-          if (entry.children[entry.children.length - 1].offsetHeight > entry.offsetHeight) {
-            entry.classList.add('truncated');
-            entry.classList.remove('removeFaded');
-            if (this.externalToggle) {
-              this.truncated.emit(true);
-            }
-          } else {
-            entry.classList.remove('truncated');
-            entry.classList.add('removeFaded');
-            if (this.externalToggle) {
-              this.truncated.emit(false);
-            }
-          }
-        } else {
-          if (entry.innerText.length > 0) {
-            entry.classList.add('truncated');
-            entry.classList.remove('removeFaded');
-            if (this.externalToggle) {
-              this.truncated.emit(true);
-            }
-          } else {
-            entry.classList.remove('truncated');
-            entry.classList.add('removeFaded');
-            if (this.externalToggle) {
-              this.truncated.emit(false);
-            }
-          }
-        }
-      } else {
-        entry.classList.remove('truncated');
-        entry.classList.add('removeFaded');
+  if (this.showToggle || this.externalToggle) {
+    const entry = this.content.nativeElement;
+
+    if (entry.scrollHeight > entry.offsetHeight) {
+      entry.classList.add('truncated');
+      entry.classList.remove('removeFaded');
+      if (this.externalToggle) {
+        this.truncated.emit(true);
+      }
+    } else {
+      entry.classList.remove('truncated');
+      entry.classList.add('removeFaded');
+      if (this.externalToggle) {
+        this.truncated.emit(false);
       }
     }
   }
+}
 
   /**
    * Indicates if the content is expanded, button state is 'Collapse'
    */
   public get isExpanded() {
-    return this.expand && this.expandable;
+    return this.expand;
   }
 
   /**
@@ -181,7 +160,6 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
   toggleWithoutId(expand: boolean) {
     this.expand = expand;
     this.lines = expand ? 'none' : (this.minLines ? this.minLines.toString() : '1');
-    this.expandable = !this.expandable;
   }
 
   /**
