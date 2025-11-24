@@ -1,8 +1,9 @@
 import {
   Component,
   Input,
-  OnInit
+  OnInit,
 } from '@angular/core';
+import { take } from 'rxjs/operators';
 
 import { Item } from '../../../../../core/shared/item.model';
 import { ItemPageFieldComponent } from '../item-page-field.component';
@@ -67,9 +68,11 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
   }
 
   loadDoiResolver() {
-    this.configService.findByPropertyName('identifier.doi.resolver').subscribe(remoteData => {
-      this.doiResolver = remoteData?.payload?.values?.[0];
-    });
+    this.configService.findByPropertyName('identifier.doi.resolver')
+      .pipe(take(1))
+      .subscribe(remoteData => {
+        this.doiResolver = remoteData?.payload?.values?.[0];
+      });
   }
   getUriMetadataValues() {
     const mvalues: MetadataValue[] = this.item?.allMetadata(this.fields);
