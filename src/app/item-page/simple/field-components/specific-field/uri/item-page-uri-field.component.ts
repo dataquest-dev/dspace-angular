@@ -29,6 +29,12 @@ import { BrowseService } from '../../../../../core/browse/browse.service';
 export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements OnInit {
 
   doiResolver: string;
+
+  /**
+   * Note: BrowseDefinitionDataService and BrowseService are required by the parent
+   * ItemPageFieldComponent, but not directly used in this component. They enable
+   * browse link functionality in the parent's browseDefinition getter.
+   */
   constructor(protected browseDefinitionDataService: BrowseDefinitionDataService,
     protected browseService: BrowseService,
     private configService: ConfigurationDataService) {
