@@ -10,7 +10,7 @@ import { ItemPageFieldComponent } from '../item-page-field.component';
 import { MetadataUriValuesComponent } from '../../../../field-components/metadata-uri-values/metadata-uri-values.component';
 import { MetadataValue } from '../../../../../core/shared/metadata.models';
 // eslint-disable-next-line lodash/import-scope
-import _ from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-definition-data.service';
 import { BrowseService } from '../../../../../core/browse/browse.service';
