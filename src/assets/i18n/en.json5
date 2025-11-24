@@ -1045,6 +1045,10 @@
 
   "browse.metadata.srsc": "Subject Category",
 
+  "browse.metadata.horizon": "project Horizon",
+
+  "browse.metadata.affiliation": "Affiliation",
+
   "browse.metadata.author.breadcrumbs": "Browse by Author",
 
   "browse.metadata.dateissued.breadcrumbs": "Browse by Date",
@@ -3468,6 +3472,10 @@
   "menu.section.browse_global_by_nsi": "By Norwegian Science Index",
 
   "menu.section.browse_global_by_title": "By Title",
+
+  "menu.section.browse_global_by_horizon": "By Horizon",
+
+  "menu.section.browse_global_by_affiliation": "By Affiliation",
 
   "menu.section.browse_global_communities_and_collections": "Communities & Collections",
 
