@@ -1047,7 +1047,7 @@
 
   "browse.metadata.horizon": "project Horizon",
 
-  "browse.metadata.affiliation": "Affiliation",
+  "browse.metadata.affiliation": "Faculty",
 
   "browse.metadata.author.breadcrumbs": "Browse by Author",
 
@@ -1056,6 +1056,10 @@
   "browse.metadata.subject.breadcrumbs": "Browse by Subject",
 
   "browse.metadata.srsc.breadcrumbs": "Browse by Subject Category",
+
+  "browse.metadata.horizon.breadcrumbs": "Browse by Horizon",
+
+  "browse.metadata.affiliation.breadcrumbs": "Browse by Faculty",
 
   "browse.metadata.srsc.tree.description": "Select a subject to add as search filter",
 
@@ -3475,7 +3479,7 @@
 
   "menu.section.browse_global_by_horizon": "By Horizon",
 
-  "menu.section.browse_global_by_affiliation": "By Affiliation",
+  "menu.section.browse_global_by_affiliation": "By Faculty",
 
   "menu.section.browse_global_communities_and_collections": "Communities & Collections",
 
