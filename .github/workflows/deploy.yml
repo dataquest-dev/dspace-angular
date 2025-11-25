@@ -64,6 +64,7 @@ jobs:
         working-directory: build-scripts/run/
         env:
           ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+          USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
         run: |
           ./start.sh dspace-$INSTANCE
           cd ../..
