@@ -14,7 +14,7 @@ on:
         default: '8573'
       IMPORT:
         required: false
-        default: true
+        default: false
         type: boolean
       ERASE_DB:
         required: false
@@ -65,8 +65,6 @@ jobs:
         run: |
           ./start.sh dspace-$INSTANCE
           cd ../..
-          # use customized docker-compose file for the `85` port because the server is exposed with the namespace `repository`
-          # `/repository/server`
           docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
 
   playwright-after-deploy3:
@@ -90,6 +88,7 @@ jobs:
       INSTANCE: ${{inputs.INSTANCE}}
       CONFIG_PATH: /opt/dspace-envs/
       FNAME: old_dump.sql
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
     steps:
       - name: vanilla import
         run: |
@@ -143,7 +142,7 @@ jobs:
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
           echo "Creating DSpace administrator..."
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p admin -c en -o dataquest"
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p \"${ADMIN_PASSWORD}\" -c en -o dataquest"
 
       - name: rebuild discovery index and run oai import
         run: |
