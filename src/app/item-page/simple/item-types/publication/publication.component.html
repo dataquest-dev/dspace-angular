@@ -72,7 +72,7 @@
     </ds-related-items>
     <ds-item-page-abstract-field [item]="object"></ds-item-page-abstract-field>
     <ds-generic-item-page-field [item]="object"
-      [fields]="['dc.identifier.uri', 'local.identifier.doi']"
+      [fields]="['dc.description']"
       [label]="'publication.page.description'">
     </ds-generic-item-page-field>
 
@@ -86,7 +86,7 @@
       [label]="'item.page.citation'">
     </ds-generic-item-page-field>
     <ds-item-page-uri-field [item]="object"
-      [fields]="['dc.identifier.uri']"
+      [fields]="['dc.identifier.uri', 'local.identifier.doi']"
       [label]="'item.page.uri'">
     </ds-item-page-uri-field>
     <ds-item-page-collections [item]="object"></ds-item-page-collections>
