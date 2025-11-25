@@ -9093,12 +9093,6 @@
   // "item.page.license.message": ["This item is", "and licensed under:"],
   "item.page.license.message": ["Tento záznam je", "a je licencován pod licencí:"],
 
-  // "item.page.matomo-statistics.views.button": "Views",
-  "item.page.matomo-statistics.views.button": "Zobrazení",
-
-  // "item.page.matomo-statistics.downloads.button": "Downloads",
-  "item.page.matomo-statistics.downloads.button": "Stažené",
-
   // "item.page.acknowledgement.project-name": "Project name:",
   "item.page.acknowledgement.project-name": "Jméno projektu:",
 
@@ -9143,9 +9137,6 @@
 
   // "item.refbox.featured-service.share.message": "Share",
   "item.refbox.featured-service.share.message": "Sdílet",
-
-  // "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
-  "item.matomo-statistics.info.message": "Kliknutím na datový bod provedete shrnutí podle roku/měsíce.",
 
   // "item.view.box.author.message": "Author(s):",
   "item.view.box.author.message": "Autoři:",
