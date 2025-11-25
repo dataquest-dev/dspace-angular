@@ -817,6 +817,8 @@
 
   "browse.metadata.title": "Title",
 
+  "browse.metadata.type": "Type",
+
   "browse.metadata.author.breadcrumbs": "Browse by Author",
 
   "browse.metadata.dateissued.breadcrumbs": "Browse by Date",

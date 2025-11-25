@@ -1226,6 +1226,9 @@
   // "browse.metadata.title": "Title",
   "browse.metadata.title": "Název",
 
+  // "browse.metadata.type": "Type",
+  "browse.metadata.type": "Typ",
+
   // "browse.metadata.author.breadcrumbs": "Browse by Author",
   "browse.metadata.author.breadcrumbs": "Procházet podle autora",
 
