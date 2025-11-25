@@ -7,11 +7,11 @@ import {
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import {
   TranslateLoader,
   TranslateModule,
 } from '@ngx-translate/core';
-import { provideMockStore } from '@ngrx/store/testing';
 
 import { APP_CONFIG } from '../../../../../../config/app-config.interface';
 import { environment } from '../../../../../../environments/environment';
