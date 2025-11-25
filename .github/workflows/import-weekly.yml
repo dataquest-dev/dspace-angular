@@ -7,9 +7,10 @@ on:
 jobs:
   deploy:
     uses: ./.github/workflows/deploy.yml
-    env:
-      ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
     with:
       INSTANCE: '8'
       IMPORT: true
       ERASE_DB: true
+    secrets:
+      ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+      USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
