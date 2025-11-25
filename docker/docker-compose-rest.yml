@@ -131,10 +131,12 @@ services:
       host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
+    command: ["-c", "config_file=/etc/postgresql/log.properties.conf", "-p", "543${INSTANCE}"]
     volumes:
     # Keep Postgres data directory between reboots
     - pgdata:/pgdata
-    command: -p 543${INSTANCE}
+    # Keep Postgres logs between reboots
+    - pg_logs:/var/log/postgresql
   # DSpace Solr container
   dspacesolr:
     environment:
@@ -178,6 +180,7 @@ volumes:
   # Commented out because there are a lot of files in the assetstore
   assetstore:
   pgdata:
+  pg_logs:
   solr_data:
   # Special volume used to share Solr configs from 'dspace' to 'dspacesolr' container (see above)
   dspace_logs:
