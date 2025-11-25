@@ -1,17 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
-
 import {
-    BrowseDefinitionDataService
-} from '../../../../../core/browse/browse-definition-data.service';
-import { BrowseService } from '../../../../../core/browse/browse.service';
-import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
-import { Item } from '../../../../../core/shared/item.model';
-import { MetadataValue } from '../../../../../core/shared/metadata.models';
-import { getFirstCompletedRemoteData } from '../../../../../core/shared/operators';
-import {
-    MetadataUriValuesComponent
-} from '../../../../field-components/metadata-uri-values/metadata-uri-values.component';
-import { ItemPageFieldComponent } from '../item-page-field.component';
+  Component,
+  Input,
+  OnInit,
+} from "@angular/core";
+import { BrowseDefinitionDataService } from "src/app/core/browse/browse-definition-data.service";
+import { BrowseService } from "src/app/core/browse/browse.service";
+import { ConfigurationDataService } from "src/app/core/data/configuration-data.service";
+import { Item } from "src/app/core/shared/item.model";
+import { MetadataValue } from "src/app/core/shared/metadata.models";
+import { getFirstCompletedRemoteData } from "src/app/core/shared/operators";
+import { MetadataUriValuesComponent } from "src/app/item-page/field-components/metadata-uri-values/metadata-uri-values.component";
+import { ItemPageFieldComponent } from "../item-page-field.component";
 
 @Component({
   selector: 'ds-item-page-uri-field',
