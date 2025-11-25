@@ -1862,7 +1862,7 @@
   "browse.title": "Procházet podle {{ field }}{{ startsWith }} {{ value }}",
 
   // "browse.title.page": "Browsing by {{ field }} {{ value }}",
-  "browse.title.page": "Procházet {{ collection }} podle {{ field }}. {{ value }}",
+  "browse.title.page": "Procházet podle {{ field }}. {{ value }}",
 
   // "search.browse.item-back": "Back to Results",
   "search.browse.item-back": "Zpět na seznam výsledků",
