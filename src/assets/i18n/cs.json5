@@ -1707,8 +1707,13 @@
   "browse.metadata.title": "Název",
 
   // "browse.metadata.srsc": "Subject Category",
-  // TODO New key - Add a translation
   "browse.metadata.srsc": "Subject Category",
+
+  // "browse.metadata.horizon": "project Horizon",
+  "browse.metadata.horizon": "projekt Horizon",
+
+  // "browse.metadata.affiliation": "Affiliation",
+  "browse.metadata.affiliation": "Afiliace",
 
   // "browse.metadata.author.breadcrumbs": "Browse by Author",
   "browse.metadata.author.breadcrumbs": "Procházet podle autora",
@@ -5588,6 +5593,12 @@
 
   // "menu.section.browse_global_by_title": "By Title",
   "menu.section.browse_global_by_title": "Podle názvu",
+
+  // "menu.section.browse_global_by_horizon": "By Horizon",
+  "menu.section.browse_global_by_horizon": "Podle Horizon",
+
+  // "menu.section.browse_global_by_affiliation": "By Affiliation",
+  "menu.section.browse_global_by_affiliation": "Podle afiliace",
 
   // "menu.section.browse_global_communities_and_collections": "Communities & Collections",
   "menu.section.browse_global_communities_and_collections": "Komunity & kolekce",
