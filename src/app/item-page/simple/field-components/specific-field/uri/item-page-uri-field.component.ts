@@ -1,16 +1,19 @@
 import {
   Component,
   Input,
+  OnChanges,
   OnInit,
-} from "@angular/core";
-import { BrowseDefinitionDataService } from "src/app/core/browse/browse-definition-data.service";
-import { BrowseService } from "src/app/core/browse/browse.service";
-import { ConfigurationDataService } from "src/app/core/data/configuration-data.service";
-import { Item } from "src/app/core/shared/item.model";
-import { MetadataValue } from "src/app/core/shared/metadata.models";
-import { getFirstCompletedRemoteData } from "src/app/core/shared/operators";
-import { MetadataUriValuesComponent } from "src/app/item-page/field-components/metadata-uri-values/metadata-uri-values.component";
-import { ItemPageFieldComponent } from "../item-page-field.component";
+  SimpleChanges,
+} from '@angular/core';
+
+import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-definition-data.service';
+import { BrowseService } from '../../../../../core/browse/browse.service';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { Item } from '../../../../../core/shared/item.model';
+import { MetadataValue } from '../../../../../core/shared/metadata.models';
+import { getFirstCompletedRemoteData } from '../../../../../core/shared/operators';
+import { MetadataUriValuesComponent } from '../../../../field-components/metadata-uri-values/metadata-uri-values.component';
+import { ItemPageFieldComponent } from '../item-page-field.component';
 
 @Component({
   selector: 'ds-item-page-uri-field',
@@ -24,9 +27,10 @@ import { ItemPageFieldComponent } from "../item-page-field.component";
  * This component can be used to represent any uri on a simple item page.
  * It expects 4 parameters: The item, a separator, the metadata keys and an i18n key
  */
-export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements OnInit {
+export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements OnInit, OnChanges {
 
   doiResolver: string;
+  uriMetadataValues: MetadataValue[] = [];
 
   /**
    * Note: BrowseDefinitionDataService and BrowseService are required by the parent
@@ -64,21 +68,32 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
     this.loadDoiResolver();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // Recompute values when item or fields change
+    if (changes['item'] || changes['fields']) {
+      this.computeUriMetadataValues();
+    }
+  }
+
   loadDoiResolver() {
     this.configService.findByPropertyName('identifier.doi.resolver')
       .pipe(getFirstCompletedRemoteData())
       .subscribe(remoteData => {
         this.doiResolver = remoteData?.payload?.values?.[0];
+        // Compute values after resolver is loaded
+        this.computeUriMetadataValues();
       });
   }
-  getUriMetadataValues(): MetadataValue[] {
+
+  private computeUriMetadataValues(): void {
     const mvalues: MetadataValue[] = this.item?.allMetadata(this.fields);
     if (!mvalues) {
-      return [];
+      this.uriMetadataValues = [];
+      return;
     }
 
     // Transform metadata values to include DOI resolver URL for non-http values
-    return mvalues.map(mv => {
+    this.uriMetadataValues = mvalues.map(mv => {
       // Skip metadata values that already have full links (URLs starting with http/https)
       if (mv.value.includes('http') || !this.doiResolver) {
         return mv;
@@ -89,6 +104,10 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
         value: `${this.doiResolver}/${mv.value}`
       };
     });
+  }
+
+  getUriMetadataValues(): MetadataValue[] {
+    return this.uriMetadataValues;
   }
 
 }
