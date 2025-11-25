@@ -11,6 +11,7 @@ import { BrowseService } from '../../../../../core/browse/browse.service';
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 import { Item } from '../../../../../core/shared/item.model';
 import { MetadataValue } from '../../../../../core/shared/metadata.models';
+import { getFirstCompletedRemoteData } from '../../../../../core/shared/operators';
 import {
     MetadataUriValuesComponent
 } from '../../../../field-components/metadata-uri-values/metadata-uri-values.component';
@@ -70,7 +71,7 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
 
   loadDoiResolver() {
     this.configService.findByPropertyName('identifier.doi.resolver')
-      .pipe(take(1))
+      .pipe(getFirstCompletedRemoteData())
       .subscribe(remoteData => {
         this.doiResolver = remoteData?.payload?.values?.[0];
       });
