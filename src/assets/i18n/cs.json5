@@ -1688,6 +1688,12 @@
   // "browse.comcol.by.title": "By Title",
   "browse.comcol.by.title": "Podle názvu",
 
+  // "browse.comcol.by.horizon": "By Horizon",
+  "browse.comcol.by.horizon": "Podle horizon",
+
+  // "browse.comcol.by.affiliation": "By Faculty",
+  "browse.comcol.by.affiliation": "Podle fakulty",
+
   // "browse.comcol.head": "Browse",
   "browse.comcol.head": "Procházet",
 
