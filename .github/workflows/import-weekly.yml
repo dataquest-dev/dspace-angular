@@ -13,3 +13,4 @@ jobs:
       ERASE_DB: true
     secrets:
       ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+      USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
