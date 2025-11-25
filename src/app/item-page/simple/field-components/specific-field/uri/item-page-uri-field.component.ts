@@ -1,7 +1,3 @@
-// eslint-disable-next-line lodash/import-scope
-import cloneDeep from 'lodash/cloneDeep';
-import { take } from 'rxjs/operators';
-
 import { Component, Input, OnInit } from '@angular/core';
 
 import {
@@ -76,26 +72,24 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
         this.doiResolver = remoteData?.payload?.values?.[0];
       });
   }
-  getUriMetadataValues() {
+  getUriMetadataValues(): MetadataValue[] {
     const mvalues: MetadataValue[] = this.item?.allMetadata(this.fields);
     if (!mvalues) {
       return [];
     }
 
-    // Clone the metadata values (readonly) into a mutable array, since we modify its contents below.
-    const clonedMValues = cloneDeep(mvalues);
-    // Compose DOI URI
-    clonedMValues.forEach(mv => {
-      // Skip metadata values that already have full links (URLs starting with http/https).
-      if (mv.value.includes('http')) {
-        return;
+    // Transform metadata values to include DOI resolver URL for non-http values
+    return mvalues.map(mv => {
+      // Skip metadata values that already have full links (URLs starting with http/https)
+      if (mv.value.includes('http') || !this.doiResolver) {
+        return mv;
       }
-      // Compose `doiResolver` + `doi identifier` value, only if doiResolver is available
-      if (this.doiResolver) {
-        mv.value = this.doiResolver + '/' + mv.value;
-      }
+      // Return new object with DOI resolver prepended to the value
+      return {
+        ...mv,
+        value: `${this.doiResolver}/${mv.value}`
+      };
     });
-    return clonedMValues;
   }
 
 }
