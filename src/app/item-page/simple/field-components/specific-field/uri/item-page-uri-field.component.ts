@@ -70,7 +70,7 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
 
   ngOnChanges(changes: SimpleChanges): void {
     // Recompute values when item or fields change
-    if (changes['item'] || changes['fields']) {
+    if (changes.item || changes.fields) {
       this.computeUriMetadataValues();
     }
   }
@@ -99,9 +99,10 @@ export class ItemPageUriFieldComponent extends ItemPageFieldComponent implements
         return mv;
       }
       // Return new object with DOI resolver prepended to the value
+      // Remove trailing slash from resolver (if present) to avoid double slashes
       return {
         ...mv,
-        value: `${this.doiResolver}/${mv.value}`
+        value: `${this.doiResolver.replace(/\/$/, '')}/${mv.value}`,
       };
     });
   }
