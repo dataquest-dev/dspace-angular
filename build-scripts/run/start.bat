@@ -1,6 +1,6 @@
-REM set DSPACE_REST_HOST=dev-5.pc
-REM set REST_URL=http://dev-5.pc:8080/server
-REM set UI_URL=http://dev-5.pc/
+REM set DSPACE_REST_HOST=dev-6.pc
+REM set REST_URL=http://dev-6.pc:8080/server
+REM set UI_URL=http://dev-6.pc/
 set DSPACE_REST_IMAGE=dataquest/dspace:dspace-7_x
 set DOCKER_OWNER=dataquest
 
