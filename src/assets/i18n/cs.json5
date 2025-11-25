@@ -1842,8 +1842,7 @@
   "browse.taxonomy.button": "Procházet",
 
   // "browse.title": "Browsing by {{ field }}{{ startsWith }} {{ value }}",
-  // TODO Source message changed - Revise the translation
-  "browse.title": "Procházet {{ collection }} podle {{ field }}{{ startsWith }} {{ value }}",
+  "browse.title": "Procházet podle {{ field }}{{ startsWith }} {{ value }}",
 
   // "browse.title.page": "Browsing by {{ field }} {{ value }}",
   "browse.title.page": "Procházet {{ collection }} podle {{ field }}. {{ value }}",
