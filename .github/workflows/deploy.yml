@@ -60,6 +60,9 @@ jobs:
           INSTANCE: ${{ env.INSTANCE }}
           NAME: dspace-${{ env.INSTANCE }}
 
+      - name: Set start.sh as executable
+        run: chmod +x build-scripts/run/start.sh
+
       - name: deploy to ${{inputs.DEV_MACHINE}}
         working-directory: build-scripts/run/
         env:
