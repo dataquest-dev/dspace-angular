@@ -1031,6 +1031,10 @@
 
   "browse.comcol.by.title": "By Title",
 
+  "browse.comcol.by.horizon": "By Horizon",
+
+  "browse.comcol.by.affiliation": "By Faculty",
+
   "browse.comcol.head": "Browse",
 
   "browse.empty": "No items to show.",
@@ -1045,6 +1049,10 @@
 
   "browse.metadata.srsc": "Subject Category",
 
+  "browse.metadata.horizon": "project Horizon",
+
+  "browse.metadata.affiliation": "Faculty",
+
   "browse.metadata.author.breadcrumbs": "Browse by Author",
 
   "browse.metadata.dateissued.breadcrumbs": "Browse by Date",
@@ -1052,6 +1060,10 @@
   "browse.metadata.subject.breadcrumbs": "Browse by Subject",
 
   "browse.metadata.srsc.breadcrumbs": "Browse by Subject Category",
+
+  "browse.metadata.horizon.breadcrumbs": "Browse by Horizon",
+
+  "browse.metadata.affiliation.breadcrumbs": "Browse by Faculty",
 
   "browse.metadata.srsc.tree.description": "Select a subject to add as search filter",
 
@@ -2945,7 +2957,7 @@
 
   "item.page.subject": "Keywords",
 
-  "item.page.uri": "URI",
+  "item.page.uri": "Item identifier",
 
   "item.page.bitstreams.view-more": "Show more",
 
@@ -3468,6 +3480,10 @@
   "menu.section.browse_global_by_nsi": "By Norwegian Science Index",
 
   "menu.section.browse_global_by_title": "By Title",
+
+  "menu.section.browse_global_by_horizon": "By Horizon",
+
+  "menu.section.browse_global_by_affiliation": "By Faculty",
 
   "menu.section.browse_global_communities_and_collections": "Communities & Collections",
 

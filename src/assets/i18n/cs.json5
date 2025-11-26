@@ -1547,6 +1547,12 @@
   // "browse.comcol.by.title": "By Title",
   "browse.comcol.by.title": "Podle názvu",
 
+  // "browse.comcol.by.horizon": "By Horizon",
+  "browse.comcol.by.horizon": "Podle horizon",
+
+  // "browse.comcol.by.affiliation": "By Faculty",
+  "browse.comcol.by.affiliation": "Podle fakulty",
+
   // "browse.comcol.head": "Browse",
   "browse.comcol.head": "Procházet",
 
@@ -1568,6 +1574,12 @@
   // "browse.metadata.srsc": "Subject Category",
   "browse.metadata.srsc": "Předmětová kategorie",
 
+  // "browse.metadata.horizon": "project Horizon",
+  "browse.metadata.horizon": "projekt Horizon",
+
+  // "browse.metadata.affiliation": "Faculty",
+  "browse.metadata.affiliation": "Fakulta",
+
   // "browse.metadata.author.breadcrumbs": "Browse by Author",
   "browse.metadata.author.breadcrumbs": "Procházet podle autora",
 
@@ -1579,6 +1591,12 @@
 
   // "browse.metadata.srsc.breadcrumbs": "Browse by Subject Category",
   "browse.metadata.srsc.breadcrumbs": "Procházet podle předmětu",
+
+  // "browse.metadata.horizon.breadcrumbs": "Browse by Horizon",
+  "browse.metadata.horizon.breadcrumbs": "Procházet podle horizon",
+
+  // "browse.metadata.affiliation.breadcrumbs": "Browse by Faculty",
+  "browse.metadata.affiliation.breadcrumbs": "Procházet podle fakulty",
 
   // "browse.metadata.srsc.tree.description": "Select a subject to add as search filter",
   "browse.metadata.srsc.tree.description": "Vyberte předmět pro přidání jako filtr vyhledávání",
@@ -1689,10 +1707,10 @@
   "browse.taxonomy.button": "Procházet",
 
   // "browse.title": "Browsing by {{ field }}{{ startsWith }} {{ value }}",
-  "browse.title": "Procházet {{ collection }} podle {{ field }}{{ startsWith }} {{ value }}",
+  "browse.title": "Procházet podle {{ field }}{{ startsWith }} {{ value }}",
 
   // "browse.title.page": "Browsing by {{ field }} {{ value }}",
-  "browse.title.page": "Procházet podle {{ field }} {{ value }}",
+  "browse.title.page": "Procházet podle {{ field }}. {{ value }}",
 
   // "search.browse.item-back": "Back to Results",
   "search.browse.item-back": "Zpět na seznam výsledků",
@@ -5204,6 +5222,12 @@
   // "menu.section.browse_global_by_title": "By Title",
   "menu.section.browse_global_by_title": "Podle názvu",
 
+  // "menu.section.browse_global_by_horizon": "By Horizon",
+  "menu.section.browse_global_by_horizon": "Podle horizon",
+
+  // "menu.section.browse_global_by_affiliation": "By Faculty",
+  "menu.section.browse_global_by_affiliation": "Podle fakulty",
+
   // "menu.section.browse_global_communities_and_collections": "Communities & Collections",
   "menu.section.browse_global_communities_and_collections": "Komunity & kolekce",
 
@@ -6648,7 +6672,7 @@
   "repository.title": "Institucionální digitální repozitář",
 
   // "repository.title.prefix": "DSpace Repository :: ",
-  "repository.title.prefix": "IDR :: ",
+  "repository.title.prefix": "DSpace Repository :: ",
 
   // "resource-policies.add.button": "Add",
   "resource-policies.add.button": "Přidat",

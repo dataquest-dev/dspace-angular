@@ -7,6 +7,7 @@ import {
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import {
   TranslateLoader,
   TranslateModule,
@@ -16,8 +17,10 @@ import { APP_CONFIG } from '../../../../../../config/app-config.interface';
 import { environment } from '../../../../../../environments/environment';
 import { BrowseService } from '../../../../../core/browse/browse.service';
 import { BrowseDefinitionDataService } from '../../../../../core/browse/browse-definition-data.service';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 import { BrowseDefinitionDataServiceStub } from '../../../../../shared/testing/browse-definition-data-service.stub';
 import { BrowseServiceStub } from '../../../../../shared/testing/browse-service.stub';
+import { ConfigurationDataServiceStub } from '../../../../../shared/testing/configuration-data.service.stub';
 import { TranslateLoaderMock } from '../../../../../shared/testing/translate-loader.mock';
 import { MetadataUriValuesComponent } from '../../../../field-components/metadata-uri-values/metadata-uri-values.component';
 import { mockItemWithMetadataFieldsAndValue } from '../item-page-field.component.spec';
@@ -43,6 +46,8 @@ describe('ItemPageUriFieldComponent', () => {
         { provide: APP_CONFIG, useValue: environment },
         { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub },
         { provide: BrowseService, useValue: BrowseServiceStub },
+        { provide: ConfigurationDataService, useClass: ConfigurationDataServiceStub },
+        provideMockStore({ initialState: {} }),
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).overrideComponent(ItemPageUriFieldComponent, {

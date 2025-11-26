@@ -1,0 +1,160 @@
+# DSpace Docker deploy on dataquest servers
+name: Deploy DSpace
+
+on:
+  workflow_call:
+    inputs:
+      DEV_MACHINE:
+        required: false
+        type: string
+        default: 'dev-6'
+      INSTANCE:
+        required: false
+        type: string
+        default: '8573'
+      IMPORT:
+        required: false
+        default: false
+        type: boolean
+      ERASE_DB:
+        required: false
+        default: false
+        type: boolean
+
+  workflow_dispatch:
+    inputs:
+      INSTANCE:
+        required: true
+        default: '8573'
+        type: choice
+        options:
+          - '8573'
+      IMPORT:
+        required: true
+        default: true
+        type: boolean
+      ERASE_DB:
+        required: false
+        default: false
+        type: boolean
+      DEV_MACHINE:
+        required: false
+        type: string
+        default: 'dev-6'
+
+jobs:
+  deploy-3:
+    if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8573'
+    runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
+    timeout-minutes: 60
+    env:
+      INSTANCE: '8573'
+      CONFIG_PATH: /opt/dspace-envs/${{inputs.INSTANCE}}
+      ENVFILE: /opt/dspace-envs/${{inputs.INSTANCE}}/.env
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/erase-db
+        if: inputs.ERASE_DB
+        with:
+          INSTANCE: ${{ env.INSTANCE }}
+          NAME: dspace-${{ env.INSTANCE }}
+
+      - name: Set start.sh as executable
+        run: chmod +x build-scripts/run/start.sh
+
+      - name: deploy to ${{inputs.DEV_MACHINE}}
+        working-directory: build-scripts/run/
+        env:
+          ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+          USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
+        run: |
+          ./start.sh dspace-$INSTANCE
+          cd ../..
+          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
+
+  playwright-after-deploy3:
+    needs: deploy-3
+    if: '!inputs.IMPORT'
+    uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
+
+  playwright-after-import3:
+    needs: import-3
+    if: inputs.IMPORT
+    uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
+
+  import-3:
+    runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
+    if: inputs.IMPORT
+    timeout-minutes: 900
+    needs: deploy-3
+    env:
+      INSTANCE: ${{inputs.INSTANCE}}
+      CONFIG_PATH: /opt/dspace-envs/
+      FNAME: old_dump.sql
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+    steps:
+      - name: vanilla import
+        run: |
+          export DATADIR=$CONFIG_PATH/${{inputs.INSTANCE}}/dump/$FNAME
+          export DNAME=dspace${{inputs.INSTANCE}}
+          export DDBNAME=dspacedb${{inputs.INSTANCE}}
+
+          docker stop $DNAME || true
+
+          echo "====="
+          # echo Starting vanilla import DB
+          docker cp $DATADIR $DDBNAME:/tmp/$FNAME
+
+          echo "Copying script for setup db roles to container..."
+
+          # Create database, import dumpand extensions, then cleanup
+          docker exec $DDBNAME /bin/bash -c "
+          dropdb -U dspace -p 10573 dspace || true &&
+          createdb -U dspace -p 10573 --owner=dspace --encoding=UNICODE dspace &&
+          psql -p 10573 -U dspace -d dspace -f /tmp/$FNAME
+          "
+          echo "====="
+          docker start $DNAME
+
+      - name: run database migration
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          export DDBNAME=dspacedb${{inputs.INSTANCE}}
+          export SYNCSEQSETUP=$CONFIG_PATH/${{inputs.INSTANCE}}/$SYNCSEQFNAME
+
+          echo "Starting DSpace container for migration..."
+          docker start $DNAME
+
+          echo "Waiting longer for DSpace to be fully ready and locks to clear..."
+          sleep 20
+
+          echo "Running DSpace database migration..."
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored"
+
+          echo "Waiting for DSpace to be ready..."
+          sleep 10
+
+      - name: restart dspace container
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Restarting DSpace container..."
+          docker restart $DNAME
+          sleep 60
+
+      - name: create administrator
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Creating DSpace administrator..."
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p \"${ADMIN_PASSWORD}\" -c en -o dataquest"
+
+      - name: rebuild discovery index and run oai import
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Rebuilding discovery index..."
+          docker exec $DNAME /bin/bash -c "/dspace/bin/dspace index-discovery -b"
+
+          echo "Running OAI import..."
+          docker exec $DNAME /bin/bash -c "/dspace/bin/dspace oai import -c"
