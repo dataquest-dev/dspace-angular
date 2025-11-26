@@ -36,9 +36,9 @@ if [[ -z "$USER_PASSWORD" ]]; then
     echo "ERROR: USER_PASSWORD is required but not set." >&2
     exit 1
 fi
-docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml run --rm dspace-cli create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p "${ADMIN_PASSWORD}" -c en -o dataquest
-docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml run --rm dspace-cli user --add -m dspace.user.dev@dataquest.sk -g meno -s priezvisko -l en -p "${USER_PASSWORD}" -o dataquest
-docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml run --rm dspace-cli version
+docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml exec dspace-cli create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p "${ADMIN_PASSWORD}" -c en -o dataquest
+docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml exec dspace-cli user --add -m dspace.user.dev@dataquest.sk -g meno -s priezvisko -l en -p "${USER_PASSWORD}" -o dataquest
+docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/cli.yml -f docker/docker-compose-rest.yml exec dspace-cli version
 
 echo "====="
 echo "Logs"
