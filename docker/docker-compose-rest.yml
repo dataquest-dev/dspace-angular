@@ -131,7 +131,7 @@ services:
       host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
-    command: ["-c", "config_file=/etc/postgresql/log.properties.conf", "-p", "543${INSTANCE}"]
+    command: -c "config_file=/etc/postgresql/log.properties.conf" -p 543${INSTANCE}
     volumes:
     # Keep Postgres data directory between reboots
     - pgdata:/pgdata
