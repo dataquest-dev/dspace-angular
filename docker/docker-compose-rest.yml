@@ -16,12 +16,15 @@ networks:
       config:
         # Define a custom subnet for our DSpace network, so that we can easily trust requests from host to container.
         # If you customize this value, be sure to customize the 'proxies.trusted.ipranges' env variable below.
-        - subnet: 172.23.0.0/16
+        - subnet: 172.2.${TRUST_IP_RANGE}.0/24
 services:
   # DSpace (backend) webapp container
   dspace:
-    container_name: dspace
+    restart: unless-stopped
+    container_name: dspace${DSPACE_PORT}
     environment:
+      JAVA_OPTS: ${JAVA_OPTS:--Xmx4g}
+      TZ: ${TIMEZONE:-Europe/Bratislava}
       # Below syntax may look odd, but it is how to override dspace.cfg settings via env variables.
       # See https://github.com/DSpace/DSpace/blob/main/dspace/config/config-definition.xml
       # __P__ => "." (e.g. dspace__P__dir => dspace.dir)
@@ -29,16 +32,16 @@ services:
       # dspace.dir, dspace.server.url, dspace.ui.url and dspace.name
       dspace__P__dir: /dspace
       # Uncomment to set a non-default value for dspace.server.url or dspace.ui.url
-      # dspace__P__server__P__url: http://localhost:8080/server
-      # dspace__P__ui__P__url: http://localhost:4000
+      dspace__P__server__P__url: ${REST_URL:-http://127.0.0.1:8080/server}
+      dspace__P__ui__P__url: ${UI_URL:-http://127.0.0.1:4000}
       dspace__P__name: 'DSpace Started with Docker Compose'
       # db.url: Ensure we are using the 'dspacedb' image for our database
-      db__P__url: 'jdbc:postgresql://dspacedb:5432/dspace'
+      db__P__url: 'jdbc:postgresql://dspacedb:${PG_PORT}/dspace'
       # solr.server: Ensure we are using the 'dspacesolr' image for Solr
-      solr__P__server: http://dspacesolr:8983/solr
+      solr__P__server: http://dspacesolr:${SOLR_PORT}/solr
       # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests
       # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
-      proxies__P__trusted__P__ipranges: '172.23.0'
+      proxies__P__trusted__P__ipranges: '172.2.${TRUST_IP_RANGE}'
       LOGGING_CONFIG: /dspace/config/log4j2-container.xml
     image: "${DOCKER_REGISTRY:-docker.io}/${DOCKER_OWNER:-dspace}/dspace:${DSPACE_VER:-latest-test}"
     depends_on:
@@ -46,8 +49,22 @@ services:
     networks:
       - dspacenet
     ports:
-    - published: 8080
-      target: 8080
+      # BE server port
+      - published: ${DSPACE_DOCKER_REST_PORT}
+        target: 8080
+        host_ip: ${HOST_IP:-127.0.0.1}
+        # original debug port
+      - published: ${DSPACE_DEBUG_PORT}
+        target: 8000
+        host_ip: ${HOST_IP:-127.0.0.1}
+        # handle binary port as per https://www.handle.net/hnr_support.html (5th paragraph)
+      - published: ${DSPACE_HANDLE_PORT}
+        target: 2641
+        host_ip: 127.0.0.1
+        # handle http port as per https://www.handle.net/hnr_support.html (5th paragraph)
+      - published: ${DSPACE_HANDLE_PORT_HTTP}
+        target: 8010
+        host_ip: 127.0.0.1
     stdin_open: true
     tty: true
     volumes:
@@ -66,7 +83,7 @@ services:
       java -jar /dspace/webapps/server-boot.jar --dspace.dir=/dspace
   # DSpace database container
   dspacedb:
-    container_name: dspacedb
+    container_name: dspacedb${PG_PORT}
     # Uses a custom Postgres image with pgcrypto installed
     image: "${DOCKER_REGISTRY:-docker.io}/${DOCKER_OWNER:-dspace}/dspace-postgres-pgcrypto:${DSPACE_VER:-latest}"
     environment:
@@ -75,11 +92,12 @@ services:
     networks:
       - dspacenet
     ports:
-    - published: 5432
-      target: 5432
+    - published: ${PG_PORT}
+      target: ${PG_PORT}
+      host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
-    command: -c "config_file=/etc/postgresql/log.properties.conf" -p 543${INSTANCE}
+    command: -c "config_file=/etc/postgresql/log.properties.conf" -p ${PG_PORT}
     volumes:
     # Keep Postgres data directory between reboots
     - pgdata:/pgdata
@@ -87,13 +105,14 @@ services:
     - pg_logs:/var/log/postgresql
   # DSpace Solr container
   dspacesolr:
-    container_name: dspacesolr
+    container_name: dspacesolr${DSPACE_PORT}
     image: "${DOCKER_REGISTRY:-docker.io}/${DOCKER_OWNER:-dspace}/dspace-solr:${DSPACE_VER:-latest}"
     networks:
       - dspacenet
     ports:
-    - published: 8983
-      target: 8983
+      - published: ${SOLR_PORT}
+        target: ${SOLR_PORT}
+        host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
     working_dir: /var/solr/data
