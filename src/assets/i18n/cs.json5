@@ -1218,7 +1218,7 @@
   "admin.batch-import.page.dropMsg": "Přetáhněte soubor ZIP k importu",
 
   // "admin.metadata-import.page.dropMsgReplace": "Drop to replace the metadata CSV to import",
-  "admin.metadata-import.page.dropMsgReplace": "Přetažením nahraďte importovaný CSV metadat",
+  "admin.metadata-import.page.dropMsgReplace": "CSV k importu",
 
   // "admin.batch-import.page.dropMsgReplace": "Drop to replace the batch ZIP to import",
   "admin.batch-import.page.dropMsgReplace": "Nahraďte přetažením soubor ZIP k importu",
@@ -2577,7 +2577,7 @@
   "curation-task.task.vscan.label": "Antivirová kontrola",
 
   // "curation-task.task.registerdoi.label": "Register DOI",
-  "curation-task.task.registerdoi.label": "Zaregistrovat DOI",
+  "curation-task.task.registerdoi.label": "Zaregistrujte DOI",
 
   // "curation.form.task-select.label": "Task:",
   "curation.form.task-select.label": "Úloha:",
@@ -3234,7 +3234,7 @@
   "grant-request-copy.intro.attachment": "Žadateli bude odeslána zpráva. Požadované dokumenty budou přiloženy.",
 
   // "grant-request-copy.intro.link": "A message will be sent to the applicant of the request. A secure link providing access to the requested document(s) will be attached. The link will provide access for the duration of time selected in the \"Access Period\" menu below.",
-  "grant-request-copy.intro.link": „Žadateli bude odeslána zpráva. Bude přiložen zabezpečený odkaz poskytující přístup k požadovaným dokumentům. Odkaz bude platný po dobu zvolenou v nabídce ‚Doba přístupu‘ níže.“,
+  "grant-request-copy.intro.link": "Žadateli bude odeslána zpráva. Bude přiložen zabezpečený odkaz poskytující přístup k požadovaným dokumentům. Odkaz bude platný po dobu zvolenou v nabídce ‚Doba přístupu‘ níže.",
 
   // "grant-request-copy.intro.link.preview": "Below is a preview of the link that will be sent to the applicant:",
   "grant-request-copy.intro.link.preview": "Níže je náhled odkazu, který bude odeslán žadateli:",
@@ -4401,7 +4401,7 @@
   "item.page.link.full": "Zobrazit celý záznam",
 
   // "item.page.link.simple": "Simple item page",
-  "item.page.link.simple": "Zobrazit jednoduchý záznam",
+  "item.page.link.simple": "Zobrazit minimální záznam",
 
   // "item.page.options": "Options",
   "item.page.options": "Možnosti",
@@ -5202,7 +5202,7 @@
   "menu.section.browse_community_by_title": "Podle názvu",
 
   // "menu.section.browse_global": "All of DSpace",
-  "menu.section.browse_global": "Celý DSpace“",
+  "menu.section.browse_global": "Procházet podle",
 
   // "menu.section.browse_global_by_author": "By Author",
   "menu.section.browse_global_by_author": "Podle autora",
@@ -5223,7 +5223,7 @@
   "menu.section.browse_global_by_title": "Podle názvu",
 
   // "menu.section.browse_global_by_horizon": "By Horizon",
-  "menu.section.browse_global_by_horizon": "Podle Horizon",
+  "menu.section.browse_global_by_horizon": "Podle horizon",
 
   // "menu.section.browse_global_by_affiliation": "By Faculty",
   "menu.section.browse_global_by_affiliation": "Podle fakulty",
