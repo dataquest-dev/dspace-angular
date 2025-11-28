@@ -101,9 +101,6 @@ jobs:
           ## !!!!! please remove this section if you do not want handle server !!!!!!!
           echo "====="
           echo "installing handle server"
-          docker exec dspace${INSTANCE} apt update
-          docker exec dspace${INSTANCE} apt install host -y
-          echo "installed host from apt"
           docker exec dspace${INSTANCE} /dspace/bin/make-handle-config
           echo "made handle config:"
           docker exec dspace${INSTANCE} cat /dspace/handle-server/config.dct
