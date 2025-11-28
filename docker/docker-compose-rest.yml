@@ -36,9 +36,9 @@ services:
       dspace__P__server__P__url: ${REST_URL:-http://127.0.0.1:8080/server}
       dspace__P__ui__P__url: ${UI_URL:-http://127.0.0.1:4000}
       # db.url: Ensure we are using the 'dspacedb' image for our database
-      db__P__url: 'jdbc:postgresql://dspacedb:543${INSTANCE}/dspace'
+      db__P__url: 'jdbc:postgresql://dspacedb:5432/dspace'
       # solr.server: Ensure we are using the 'dspacesolr' image for Solr
-      solr__P__server: http://dspacesolr:898${INSTANCE}/solr
+      solr__P__server: http://dspacesolr:8983/solr
       # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests
       # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
       proxies__P__trusted__P__ipranges: '172.2${INSTANCE}.0'
@@ -68,10 +68,6 @@ services:
       target: 8000
       host_ip: ${HOST_IP:-127.0.0.1}
       # handle binary port as per https://www.handle.net/hnr_support.html (5th paragraph)
-    - published: 264${INSTANCE}
-      target: 2641
-      protocol: tcp
-      host_ip: ${HOST_IP:-127.0.0.1}
     - published: 264${INSTANCE}
       target: 2641
       protocol: udp
@@ -109,7 +105,7 @@ services:
     # This will create a symlink from the webapps directory to the server directory with the custom namespace
     # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
     - |
-      while (!</dev/tcp/dspacedb/543${INSTANCE}) > /dev/null 2>&1; do sleep 1; done;
+      while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
       pushd /usr/local/tomcat/webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ `echo -n "${DSPACE_REST_NAMESPACE}" | sed -e 's#^/##' -e 'sx/x#x'` || true) && popd
       /dspace/bin/dspace database migrate force
       /dspace/bin/start-handle-server
@@ -127,11 +123,10 @@ services:
       - dspacenet
     ports:
     - published: 543${INSTANCE}
-      target: 543${INSTANCE}
+      target: 5432
       host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
-    command: -c "config_file=/etc/postgresql/log.properties.conf" -p 543${INSTANCE}
     volumes:
     # Keep Postgres data directory between reboots
     - pgdata:/pgdata
@@ -148,7 +143,7 @@ services:
       - dspacenet
     ports:
     - published: 898${INSTANCE}
-      target: 898${INSTANCE}
+      target: 8983
       host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
@@ -175,7 +170,7 @@ services:
       cp -r /opt/solr/server/solr/configsets/search/* search
       precreate-core statistics /opt/solr/server/solr/configsets/statistics
       cp -r /opt/solr/server/solr/configsets/statistics/* statistics
-      exec solr -p 898${INSTANCE} -f -m 4g
+      exec solr -p 8983 -f -m 4g
 volumes:
   # Commented out because there are a lot of files in the assetstore
   assetstore:
