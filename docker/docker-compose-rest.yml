@@ -36,9 +36,9 @@ services:
       dspace__P__ui__P__url: ${UI_URL:-http://127.0.0.1:4000}
       dspace__P__name: 'DSpace Started with Docker Compose'
       # db.url: Ensure we are using the 'dspacedb' image for our database
-      db__P__url: 'jdbc:postgresql://dspacedb:${PG_PORT}/dspace'
+      db__P__url: 'jdbc:postgresql://dspacedb:5432/dspace'
       # solr.server: Ensure we are using the 'dspacesolr' image for Solr
-      solr__P__server: http://dspacesolr:${SOLR_PORT}/solr
+      solr__P__server: http://dspacesolr:8983/solr
       # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests
       # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
       proxies__P__trusted__P__ipranges: '172.2.${TRUST_IP_RANGE}'
@@ -93,11 +93,10 @@ services:
       - dspacenet
     ports:
     - published: ${PG_PORT}
-      target: ${PG_PORT}
+      target: 5432
       host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
-    command: -c "config_file=/etc/postgresql/log.properties.conf" -p ${PG_PORT}
     volumes:
     # Keep Postgres data directory between reboots
     - pgdata:/pgdata
@@ -111,7 +110,7 @@ services:
       - dspacenet
     ports:
       - published: ${SOLR_PORT}
-        target: ${SOLR_PORT}
+        target: 8983
         host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
