@@ -24,6 +24,8 @@ services:
   dspace:
     restart: unless-stopped
     container_name: dspace${INSTANCE}
+    # Use user dspace: 1100:1100 - check the Dockerfile on the DSpace backend project
+    user: "1100:1100"
     environment:
       JAVA_OPTS: ${JAVA_OPTS:--Xmx4g}
       TZ: ${TIMEZONE:-Europe/Bratislava}
@@ -68,6 +70,10 @@ services:
       target: 8000
       host_ip: ${HOST_IP:-127.0.0.1}
       # handle binary port as per https://www.handle.net/hnr_support.html (5th paragraph)
+    - published: 264${INSTANCE}
+      target: 2641
+      protocol: tcp
+      host_ip: ${HOST_IP:-127.0.0.1}
     - published: 264${INSTANCE}
       target: 2641
       protocol: udp
