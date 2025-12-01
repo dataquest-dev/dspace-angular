@@ -12,5 +12,5 @@ jobs:
       IMPORT: true
       ERASE_DB: true
     secrets:
-      ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
-      USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
+      DSPACE_ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+      DSPACE_USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}

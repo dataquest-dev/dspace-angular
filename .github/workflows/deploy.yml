@@ -16,6 +16,11 @@ on:
         required: false
         default: false
         type: boolean
+    secrets:
+      DSPACE_ADMIN_PASSWORD:
+        required: true
+      DSPACE_USER_PASSWORD:
+        required: true
 
   workflow_dispatch:
     inputs:
