@@ -25,10 +25,6 @@ jobs:
         run: |
           cp this-repository/config/config.lindat.ui.tests.json dspace-ui-tests/customer-constants/
 
-      - name: Install Playwright Browsers
-        run: npx playwright install
-        working-directory: dspace-ui-tests
-
       - name: test
         working-directory: dspace-ui-tests/scripts
         env:
