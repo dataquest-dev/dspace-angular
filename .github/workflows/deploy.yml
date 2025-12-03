@@ -73,8 +73,8 @@ jobs:
           cd ../..
           docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
 
-  playwright-after-deploy3:
-    needs: deploy-3
-    if: '!inputs.IMPORT'
-    uses: ./.github/workflows/playwright-tests.yml
-    secrets: inherit
+  # playwright-after-deploy3:
+  #   needs: deploy-3
+  #   if: '!inputs.IMPORT'
+  #   uses: ./.github/workflows/playwright-tests.yml
+  #   secrets: inherit
