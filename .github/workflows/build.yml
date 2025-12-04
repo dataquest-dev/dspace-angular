@@ -58,6 +58,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      # Install required OS libraries for Chrome/Electron on Ubuntu runners
       - name: Install Chrome/Electron dependencies
         run: |
           sudo apt-get update
@@ -125,6 +126,8 @@ jobs:
           docker compose -f ./docker/cli.yml -f ./docker/cli.assetstore.yml run --rm dspace-cli
           docker container ls
 
+      # Run integration tests via Cypress
+      # Start app and wait for backend & frontend, then run Cypress with CI-friendly flags
       - name: Start app for e2e tests
         run: |
           yarn run serve:ssr &
@@ -132,7 +135,7 @@ jobs:
 
       - name: Run Cypress (CLI)
         run: |
-          npx cypress run --browser chrome --headless --no-sandbox --disable-dev-shm-usage --disable-gpu
+          npx cypress run --browser chrome --headless
         env:
           CI: true
 
