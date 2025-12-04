@@ -144,7 +144,7 @@ jobs:
 
       - name: Run Cypress (CLI)
         run: |
-          npx cypress run --headless --config defaultCommandTimeout=30000,pageLoadTimeout=120000 --parallel false
+          npx cypress run --headless --config defaultCommandTimeout=30000,pageLoadTimeout=120000
         env:
           CI: true
           DISPLAY: :99
