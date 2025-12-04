@@ -62,9 +62,12 @@ jobs:
       - name: Install Chrome/Electron dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            libgtk-3-0 libgbm-dev libasound2 libxss1 \
-            libnss3 libgconf-2-4 libx11-xcb1 fonts-liberation ca-certificates
+          # Install only required runtime libraries (no dev packages).
+          sudo apt-get install -y --no-install-recommends \
+            libgtk-3-0 libgbm1 libasound2t64 libxss1 \
+            libnss3 libx11-xcb1 fonts-liberation ca-certificates \
+            libxtst6 libxrandr2 libxcomposite1 libxcursor1 libxdamage1 \
+            libatk1.0-0 libcups2 libxfixes3 libxinerama1 libxkbcommon0 libdrm2
 
       # If CHROME_VERSION env variable specified above, then pin to that version.
       # Otherwise, just install latest version of Chrome.
