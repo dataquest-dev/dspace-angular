@@ -121,6 +121,12 @@ jobs:
           path: 'coverage/dspace-angular/lcov.info'
           retention-days: 14
 
+      # Setup virtual display for Chrome
+      - name: Setup Xvfb
+        run: |
+          sudo apt-get install -y xvfb
+          Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
+
       # Using docker compose start backend using CI configuration
       # and load assetstore from a cached copy
       - name: Start DSpace REST Backend via Docker (for e2e tests)
@@ -141,6 +147,10 @@ jobs:
           npx cypress run --browser chrome --headless
         env:
           CI: true
+          ELECTRON_EXTRA_LAUNCH_ARGS: '--disable-gpu --no-sandbox --disable-dev-shm-usage --disable-software-rasterizer'
+          CYPRESS_CRASH_REPORTS: 0
+          DISPLAY: :99
+          TERM: xterm
 
       # Cypress always creates a video of all e2e tests (whether they succeeded or failed)
       # Save those in an Artifact
