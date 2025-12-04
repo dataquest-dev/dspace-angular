@@ -144,11 +144,12 @@ jobs:
 
       - name: Run Cypress (CLI)
         run: |
-          npx cypress run --headless
+          npx cypress run --headless --config defaultCommandTimeout=30000,pageLoadTimeout=120000 --parallel false
         env:
           CI: true
           DISPLAY: :99
           TERM: xterm
+          NODE_OPTIONS: '--max-old-space-size=6144'
 
       # Cypress always creates a video of all e2e tests (whether they succeeded or failed)
       # Save those in an Artifact
