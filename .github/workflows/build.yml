@@ -70,6 +70,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Install Chrome/Electron dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-0 libgbm-dev libasound2 libxss1 \
+            libnss3 libgconf-2-4 libx11-xcb1 fonts-liberation ca-certificates
+
       # If CHROME_VERSION env variable specified above, then pin to that version.
       # Otherwise, just install latest version of Chrome.
       - name: Install Chrome (for e2e tests)
@@ -142,20 +149,17 @@ jobs:
           docker container ls
 
       # Run integration tests via Cypress.io
-      # https://github.com/cypress-io/github-action
       # (NOTE: to run these e2e tests locally, just use 'ng e2e')
-      - name: Run e2e tests (integration tests)
-        uses: cypress-io/github-action@v6
-        with:
-          # Run tests in Chrome, headless mode (default)
-          browser: chrome
-          # Start app before running tests (will be stopped automatically after tests finish)
-          start: yarn run serve:ssr
-          # Wait for backend & frontend to be available
-          # NOTE: We use the 'sites' REST endpoint to also ensure the database is ready
-          wait-on: http://127.0.0.1:8080/server/api/core/sites, http://127.0.0.1:4000
-          # Wait for 2 mins max for everything to respond
-          wait-on-timeout: 120
+      - name: Start app for e2e tests
+        run: |
+          yarn run serve:ssr &
+          npx wait-on http://127.0.0.1:8080/server/api/core/sites http://127.0.0.1:4000 --timeout 120000
+
+      - name: Run Cypress (CLI)
+        run: |
+          npx cypress run --browser chrome --headless --no-sandbox --disable-dev-shm-usage --disable-gpu
+        env:
+          CI: true
 
       # Cypress always creates a video of all e2e tests (whether they succeeded or failed)
       # Save those in an Artifact
