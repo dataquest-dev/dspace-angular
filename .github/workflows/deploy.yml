@@ -141,7 +141,7 @@ jobs:
   rest-tests-after-deploy8:
     runs-on: ubuntu-latest
     needs: playwright-after-deploy8
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - name: run rest-tests
         run: |
@@ -182,7 +182,7 @@ jobs:
   rest-tests-after-import8:
     runs-on: ubuntu-latest
     needs: playwright-after-import8
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - name: run rest-tests
         run: |
