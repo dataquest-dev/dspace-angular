@@ -1746,8 +1746,7 @@
   "browse.metadata.map.breadcrumbs": "Browse by Geolocation",
 
   // "browse.metadata.map.count.items": "items",
-  // TODO New key - Add a translation
-  "browse.metadata.map.count.items": "items",
+  "browse.metadata.map.count.items": "záznamů",
 
   // "pagination.next.button": "Next",
   "pagination.next.button": "Další",
