@@ -1617,7 +1617,7 @@
   "browse.metadata.map.breadcrumbs": "Procházet podle geolokace",
 
   // "browse.metadata.map.count.items": "items",
-  "browse.metadata.map.count.items": "záznamů", "No more pages of results",
+  "browse.metadata.map.count.items": "záznamů",
 
   // "pagination.next.button": "Next",
   "pagination.next.button": "Další",
@@ -2472,7 +2472,7 @@
   "cookies.consent.ok": "V pořádku.",
 
   // "cookies.consent.save": "Save",
-  "cookies.consent.content-notice.learnMore": "Přizpůsobit",
+  "cookies.consent.save": "Uložit",
 
   // "cookies.consent.content-notice.description": "We collect and process your personal information for the following purposes: {purposes}",
   "cookies.consent.content-notice.description": "Shromažďujeme a zpracováváme vaše osobní údaje pro tyto účely: {purposes}",
@@ -2529,7 +2529,7 @@
   "cookies.consent.app.title.google-analytics": "Google Analytics",
 
   // "cookies.consent.app.description.google-analytics": "Allows us to track statistical data",
-  "cookies.consent.app.description.google-analytics": "Umožňuje nám sledovat statistická data",
+  "cookies.consent.app.description.google-analytics": "Umožňuje nám sledovat statistické údaje",
 
   // "cookies.consent.app.title.google-recaptcha": "Google reCaptcha",
   "cookies.consent.app.title.google-recaptcha": "Google reCaptcha",
@@ -2703,7 +2703,7 @@
   "dso-selector.placeholder.type.community": "záznam",
 
   // "dso-selector.select.collection.head": "Select a collection",
-  "dso-selector.results-could-not-be-retrieved": "Něco se nepovedlo, zkuste, prosím, načíst znovu ↻",
+  "dso-selector.select.collection.head": "Vyberte kolekci",
 
   // "dso-selector.set-scope.community.head": "Select a search scope",
   "dso-selector.set-scope.community.head": "Vyberte rozsah vyhledávání",
@@ -2721,10 +2721,10 @@
   "dso-selector.claim.item.head": "Tipy pro profil",
 
   // "dso-selector.claim.item.body": "These are existing profiles that may be related to you. If you recognize yourself in one of these profiles, select it and on the detail page, among the options, choose to claim it. Otherwise you can create a new profile from scratch using the button below.",
-  "dso-selector.claim.item.body": "Níže vidíte existující profily, které s vámi mohou souviset. Pokud se v některém z nich poznáváte, vyberte jej a na stránce detailu mezi možnostmi zvolte převzetí profilu. Jinak můžete pomocí tlačítka níže vytvořit nový profil od začátku.",
+  "dso-selector.claim.item.body": "Toto jsou existující profily, které s vámi mohou souviset. Pokud se v některém z těchto profilů poznáváte, vyberte jej a na stránce s podrobnostmi mezi možnostmi zvolte, zda jej chcete nárokovat. V opačném případě si můžete vytvořit nový profil od začátku pomocí tlačítka níže.",
 
   // "dso-selector.claim.item.not-mine-label": "None of these are mine",
-  "dso-selector.claim.item.not-mine-label": "Žádný z nich není můj",
+  "dso-selector.claim.item.not-mine-label": "Žádný z těchto záznamů není můj",
 
   // "dso-selector.claim.item.create-from-scratch": "Create a new one",
   "dso-selector.claim.item.create-from-scratch": "Vytvořit nový",
@@ -3276,7 +3276,7 @@
   "health-page.error.msg": "Služba kontrolující stav systému je momentálně nedostupná.",
 
   // "health-page.property.status": "Status code",
-  "grant-request-copy.access-period.+3MONTHS": "3 měsíce",
+  "health-page.property.status": "Stavový kód",
 
   // "health-page.section.db.title": "Database",
   "health-page.section.db.title": "Databáze",
@@ -4398,7 +4398,7 @@
   "item.page.journal.search.title": "Články v tomto časopise",
 
   // "item.page.link.full": "Full item page",
-  "item.page.link.full": "Zobrazit celý záznam",
+  "item.page.link.full": "Zobrazit úplný záznam",
 
   // "item.page.link.simple": "Simple item page",
   "item.page.link.simple": "Zobrazit minimální záznam",
@@ -4437,7 +4437,7 @@
   "item.page.subject": "Klíčová slova",
 
   // "item.page.uri": "URI",
-  "item.page.uri": "Trvalý identifikátor",
+  "item.page.uri": "Permanentní identifikátor",
 
   // "item.page.bitstreams.view-more": "Show more",
   "item.page.bitstreams.view-more": "Zobrazit více",
@@ -4674,7 +4674,7 @@
   "item.version.history.table.item": "Záznam",
 
   // "item.version.history.table.editor": "Editor",
-  "item.version.history.table.editor": "Editor",
+  "item.version.history.table.editor": "Upravit",
 
   // "item.version.history.table.date": "Date",
   "item.version.history.table.date": "Datum",
