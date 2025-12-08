@@ -12,6 +12,10 @@ echo "Using envfile: [$ENVFILE] for project: [$PROJECT]"
 SAVED_ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
 SAVED_USER_PASSWORD="${USER_PASSWORD:-}"
 
+# Debug: show what we're preserving
+echo "DEBUG: Preserving ADMIN_PASSWORD: $(if [[ -n "$SAVED_ADMIN_PASSWORD" ]]; then echo 'yes'; else echo 'NO'; fi)"
+echo "DEBUG: Preserving USER_PASSWORD: $(if [[ -n "$SAVED_USER_PASSWORD" ]]; then echo 'yes'; else echo 'NO'; fi)"
+
 # Source env file while preventing password override
 # set -a: automatically export all variables set from now on
 set -a
@@ -21,15 +25,15 @@ set +a
 
 # Restore passwords - they take precedence over env file values
 if [[ -n "$SAVED_ADMIN_PASSWORD" ]]; then
-    ADMIN_PASSWORD="$SAVED_ADMIN_PASSWORD"
+    export ADMIN_PASSWORD="$SAVED_ADMIN_PASSWORD"
 fi
 if [[ -n "$SAVED_USER_PASSWORD" ]]; then
-    USER_PASSWORD="$SAVED_USER_PASSWORD"
+    export USER_PASSWORD="$SAVED_USER_PASSWORD"
 fi
 
-# Debug output to verify passwords are set
-echo "DEBUG: ADMIN_PASSWORD is $(if [[ -n "$ADMIN_PASSWORD" ]]; then echo 'set'; else echo 'NOT set'; fi)"
-echo "DEBUG: USER_PASSWORD is $(if [[ -n "$USER_PASSWORD" ]]; then echo 'set'; else echo 'NOT set'; fi)"
+# Debug output to verify passwords are set after restoration
+echo "DEBUG: After restore - ADMIN_PASSWORD is $(if [[ -n "$ADMIN_PASSWORD" ]]; then echo 'set'; else echo 'NOT set'; fi)"
+echo "DEBUG: After restore - USER_PASSWORD is $(if [[ -n "$USER_PASSWORD" ]]; then echo 'set'; else echo 'NOT set'; fi)"
 
 # docker-compose does not pull those that have `build` section?!
 echo "====="
