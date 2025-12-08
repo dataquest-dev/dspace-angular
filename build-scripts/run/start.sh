@@ -8,18 +8,23 @@ PROJECT=${1:-unnamed_dspace}
 
 echo "Using envfile: [$ENVFILE] for project: [$PROJECT]"
 
-# Preserve passwords if they're already set
+# Preserve passwords if they're already set - they take precedence over env file
 SAVED_ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
 SAVED_USER_PASSWORD="${USER_PASSWORD:-}"
 
+# Source env file while preventing password override
+# set -a: automatically export all variables set from now on
+set -a
 source $ENVFILE
+# set +a: disable automatic export (back to normal behavior)
+set +a
 
-# Restore passwords if they were set (they take precedence over values from envfile)
+# Restore passwords - they take precedence over env file values
 if [[ -n "$SAVED_ADMIN_PASSWORD" ]]; then
-    export ADMIN_PASSWORD="$SAVED_ADMIN_PASSWORD"
+    ADMIN_PASSWORD="$SAVED_ADMIN_PASSWORD"
 fi
 if [[ -n "$SAVED_USER_PASSWORD" ]]; then
-    export USER_PASSWORD="$SAVED_USER_PASSWORD"
+    USER_PASSWORD="$SAVED_USER_PASSWORD"
 fi
 
 # Debug output to verify passwords are set

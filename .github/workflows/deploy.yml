@@ -58,6 +58,7 @@ jobs:
       - name: deploy to dev-5
         working-directory: build-scripts/run/
         run: |
+          export INSTANCE="${INSTANCE}"
           export ADMIN_PASSWORD="${ADMIN_PASSWORD}"
           export USER_PASSWORD="${USER_PASSWORD}"
           ./start.sh dspace-$INSTANCE
@@ -91,6 +92,7 @@ jobs:
       - name: deploy dspace-import on dev-5
         working-directory: build-scripts/run/
         run: |
+          export INSTANCE="${INSTANCE}"
           export ADMIN_PASSWORD="${ADMIN_PASSWORD}"
           export USER_PASSWORD="${USER_PASSWORD}"
           ./start.sh dspace-$INSTANCE
