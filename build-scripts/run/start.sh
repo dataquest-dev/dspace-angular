@@ -8,6 +8,11 @@ PROJECT=${1:-unnamed_dspace}
 
 echo "Using envfile: [$ENVFILE] for project: [$PROJECT]"
 
+# Debug: Check what's in the environment before anything
+echo "DEBUG: Environment check before sourcing:"
+echo "  ADMIN_PASSWORD in env: $(printenv ADMIN_PASSWORD > /dev/null 2>&1 && echo 'yes' || echo 'NO')"
+echo "  USER_PASSWORD in env: $(printenv USER_PASSWORD > /dev/null 2>&1 && echo 'yes' || echo 'NO')"
+
 # Preserve passwords if they're already set - they take precedence over env file
 SAVED_ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
 SAVED_USER_PASSWORD="${USER_PASSWORD:-}"

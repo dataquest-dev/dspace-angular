@@ -58,9 +58,6 @@ jobs:
       - name: deploy to dev-5
         working-directory: build-scripts/run/
         run: |
-          export INSTANCE="${INSTANCE}"
-          export ADMIN_PASSWORD="${ADMIN_PASSWORD}"
-          export USER_PASSWORD="${USER_PASSWORD}"
           ./start.sh dspace-$INSTANCE
           cd ../..
           # use customized docker-compose file for the `85` port because the server is exposed with the namespace `repository`
@@ -92,9 +89,6 @@ jobs:
       - name: deploy dspace-import on dev-5
         working-directory: build-scripts/run/
         run: |
-          export INSTANCE="${INSTANCE}"
-          export ADMIN_PASSWORD="${ADMIN_PASSWORD}"
-          export USER_PASSWORD="${USER_PASSWORD}"
           ./start.sh dspace-$INSTANCE
           cd ../..
           # this is not necessary, since extra.yml doesn't contain any new images that weren't pulled within script above
