@@ -8,39 +8,7 @@ PROJECT=${1:-unnamed_dspace}
 
 echo "Using envfile: [$ENVFILE] for project: [$PROJECT]"
 
-# Debug: Check what's in the environment before anything
-echo "DEBUG: Environment check before sourcing:"
-echo "  ADMIN_PASSWORD in env: $(printenv ADMIN_PASSWORD > /dev/null 2>&1 && echo 'yes' || echo 'NO')"
-echo "  USER_PASSWORD in env: $(printenv USER_PASSWORD > /dev/null 2>&1 && echo 'yes' || echo 'NO')"
-echo "  ADMIN_PASSWORD value length: ${#ADMIN_PASSWORD}"
-echo "  USER_PASSWORD value length: ${#USER_PASSWORD}"
-
-# Preserve passwords if they're already set - they take precedence over env file
-SAVED_ADMIN_PASSWORD="$(printenv ADMIN_PASSWORD || echo '')"
-SAVED_USER_PASSWORD="$(printenv USER_PASSWORD || echo '')"
-
-# Debug: show what we're preserving
-echo "DEBUG: Preserving ADMIN_PASSWORD: $(if [[ -n "$SAVED_ADMIN_PASSWORD" ]]; then echo 'yes'; else echo 'NO'; fi)"
-echo "DEBUG: Preserving USER_PASSWORD: $(if [[ -n "$SAVED_USER_PASSWORD" ]]; then echo 'yes'; else echo 'NO'; fi)"
-
-# Source env file while preventing password override
-# set -a: automatically export all variables set from now on
-set -a
 source $ENVFILE
-# set +a: disable automatic export (back to normal behavior)
-set +a
-
-# Restore passwords - they take precedence over env file values
-if [[ -n "$SAVED_ADMIN_PASSWORD" ]]; then
-    export ADMIN_PASSWORD="$SAVED_ADMIN_PASSWORD"
-fi
-if [[ -n "$SAVED_USER_PASSWORD" ]]; then
-    export USER_PASSWORD="$SAVED_USER_PASSWORD"
-fi
-
-# Debug output to verify passwords are set after restoration
-echo "DEBUG: After restore - ADMIN_PASSWORD is $(if [[ -n "$ADMIN_PASSWORD" ]]; then echo 'set'; else echo 'NOT set'; fi)"
-echo "DEBUG: After restore - USER_PASSWORD is $(if [[ -n "$USER_PASSWORD" ]]; then echo 'set'; else echo 'NOT set'; fi)"
 
 # docker-compose does not pull those that have `build` section?!
 echo "====="
