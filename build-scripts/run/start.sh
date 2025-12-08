@@ -14,13 +14,17 @@ SAVED_USER_PASSWORD="${USER_PASSWORD:-}"
 
 source $ENVFILE
 
-# Restore passwords if they were set
+# Restore passwords if they were set (they take precedence over values from envfile)
 if [[ -n "$SAVED_ADMIN_PASSWORD" ]]; then
     export ADMIN_PASSWORD="$SAVED_ADMIN_PASSWORD"
 fi
 if [[ -n "$SAVED_USER_PASSWORD" ]]; then
     export USER_PASSWORD="$SAVED_USER_PASSWORD"
 fi
+
+# Debug output to verify passwords are set
+echo "DEBUG: ADMIN_PASSWORD is $(if [[ -n "$ADMIN_PASSWORD" ]]; then echo 'set'; else echo 'NOT set'; fi)"
+echo "DEBUG: USER_PASSWORD is $(if [[ -n "$USER_PASSWORD" ]]; then echo 'set'; else echo 'NOT set'; fi)"
 
 # docker-compose does not pull those that have `build` section?!
 echo "====="
