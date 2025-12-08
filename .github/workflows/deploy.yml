@@ -44,6 +44,8 @@ jobs:
     env:
       INSTANCE: '5'
       ENVFILE: /opt/dspace-envs/.env.dspace.dev-5
+      ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+      USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
@@ -55,9 +57,6 @@ jobs:
 
       - name: deploy to dev-5
         working-directory: build-scripts/run/
-        env:
-          ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
-          USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
         run: |
           ./start.sh dspace-$INSTANCE
           cd ../..
@@ -76,6 +75,8 @@ jobs:
       # disable TSL checks = allowing to cooperate with https backend with invalid
       # certificate
       ENVFILE: /opt/dspace-envs/.env.dspace.imported.dev-5
+      ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+      USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
@@ -87,9 +88,6 @@ jobs:
 
       - name: deploy dspace-import on dev-5
         working-directory: build-scripts/run/
-        env:
-          ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
-          USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
         run: |
           ./start.sh dspace-$INSTANCE
           cd ../..
