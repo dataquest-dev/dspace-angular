@@ -12,10 +12,12 @@ echo "Using envfile: [$ENVFILE] for project: [$PROJECT]"
 echo "DEBUG: Environment check before sourcing:"
 echo "  ADMIN_PASSWORD in env: $(printenv ADMIN_PASSWORD > /dev/null 2>&1 && echo 'yes' || echo 'NO')"
 echo "  USER_PASSWORD in env: $(printenv USER_PASSWORD > /dev/null 2>&1 && echo 'yes' || echo 'NO')"
+echo "  ADMIN_PASSWORD value length: ${#ADMIN_PASSWORD}"
+echo "  USER_PASSWORD value length: ${#USER_PASSWORD}"
 
 # Preserve passwords if they're already set - they take precedence over env file
-SAVED_ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
-SAVED_USER_PASSWORD="${USER_PASSWORD:-}"
+SAVED_ADMIN_PASSWORD="$(printenv ADMIN_PASSWORD || echo '')"
+SAVED_USER_PASSWORD="$(printenv USER_PASSWORD || echo '')"
 
 # Debug: show what we're preserving
 echo "DEBUG: Preserving ADMIN_PASSWORD: $(if [[ -n "$SAVED_ADMIN_PASSWORD" ]]; then echo 'yes'; else echo 'NO'; fi)"
