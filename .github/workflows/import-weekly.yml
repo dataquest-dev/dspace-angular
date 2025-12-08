@@ -12,3 +12,4 @@ jobs:
       INSTANCE: '8'
       IMPORT: true
       ERASE_DB: true
+    secrets: inherit
