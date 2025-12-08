@@ -8,7 +8,19 @@ PROJECT=${1:-unnamed_dspace}
 
 echo "Using envfile: [$ENVFILE] for project: [$PROJECT]"
 
+# Preserve passwords if they're already set
+SAVED_ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
+SAVED_USER_PASSWORD="${USER_PASSWORD:-}"
+
 source $ENVFILE
+
+# Restore passwords if they were set
+if [[ -n "$SAVED_ADMIN_PASSWORD" ]]; then
+    export ADMIN_PASSWORD="$SAVED_ADMIN_PASSWORD"
+fi
+if [[ -n "$SAVED_USER_PASSWORD" ]]; then
+    export USER_PASSWORD="$SAVED_USER_PASSWORD"
+fi
 
 # docker-compose does not pull those that have `build` section?!
 echo "====="
