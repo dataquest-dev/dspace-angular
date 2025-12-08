@@ -10021,9 +10021,9 @@
   // TODO New key - Add a translation
   "login.already-authenticated.header": "You're Already Logged In",
 
-  // "login.already-authenticated.message": "You are currently authenticated. Would you like to go to home page or your profile?",
+  // "login.already-authenticated.message": "You are currently authenticated. Would you like to go to the home page or your profile?",
   // TODO New key - Add a translation
-  "login.already-authenticated.message": "You are currently authenticated. Would you like to go to home page or your profile?",
+  "login.already-authenticated.message": "You are currently authenticated. Would you like to go to the home page or your profile?",
 
   // "login.already-authenticated.go-home": "Home",
   // TODO New key - Add a translation
@@ -10037,9 +10037,9 @@
   // TODO New key - Add a translation
   "login.already-authenticated.logout": "Logout",
 
-  // "clarin.bitstream.authorization.denied.message": "Access to download \"{{bitstream}}\" file was denied by the bitstream resource policy.",
+  // "clarin.bitstream.authorization.denied.message": "Access to download the \"{{bitstream}}\" file was denied by the bitstream resource policy.",
   // TODO New key - Add a translation
-  "clarin.bitstream.authorization.denied.message": "Access to download \"{{bitstream}}\" file was denied by the bitstream resource policy.",
+  "clarin.bitstream.authorization.denied.message": "Access to download the \"{{bitstream}}\" file was denied by the bitstream resource policy.",
 
   // "home.image.glass": "Home page glass magnifier image",
   // TODO New key - Add a translation

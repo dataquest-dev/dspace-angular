@@ -21,7 +21,6 @@ import { FileServiceStub } from '../../../../../shared/testing/file-service.stub
 import { AuthorizationDataServiceStub } from '../../../../../shared/testing/authorization-service.stub';
 import { Bitstream } from '../../../../../core/shared/bitstream.model';
 
-
 describe('FileDescriptionComponent', () => {
   let component: FileDescriptionComponent;
   let fixture: ComponentFixture<FileDescriptionComponent>;

@@ -279,6 +279,10 @@
 
   "admin.access-control.epeople.search.head": "Search",
 
+  "admin.access-control.epeople.search.scope": "Search scope",
+
+  "admin.access-control.epeople.search.input": "Search input",
+
   "admin.access-control.epeople.button.see-all": "Browse All",
 
   "admin.access-control.epeople.search.scope.metadata": "Metadata",
@@ -375,6 +379,8 @@
 
   "admin.access-control.groups.search.head": "Search groups",
 
+  "admin.access-control.groups.search.input": "Search input",
+
   "admin.access-control.groups.button.see-all": "Browse all",
 
   "admin.access-control.groups.search.button": "Search",
@@ -449,6 +455,8 @@
 
   "admin.access-control.groups.form.members-list.search.head": "Add EPeople",
 
+  "admin.access-control.groups.form.members-list.search.input": "Search input",
+
   "admin.access-control.groups.form.members-list.button.see-all": "Browse All",
 
   "admin.access-control.groups.form.members-list.headMembers": "Current Members",
@@ -490,6 +498,8 @@
   "admin.access-control.groups.form.subgroups-list.head": "Groups",
 
   "admin.access-control.groups.form.subgroups-list.search.head": "Add Subgroup",
+
+  "admin.access-control.groups.form.subgroups-list.search.input": "Search input",
 
   "admin.access-control.groups.form.subgroups-list.button.see-all": "Browse All",
 
@@ -6426,7 +6436,7 @@
 
   "login.already-authenticated.header": "You're Already Logged In",
 
-  "login.already-authenticated.message": "You are currently authenticated. Would you like to go to home page or your profile?",
+  "login.already-authenticated.message": "You are currently authenticated. Would you like to go to the home page or your profile?",
 
   "login.already-authenticated.go-home": "Home",
 
@@ -6434,7 +6444,7 @@
 
   "login.already-authenticated.logout": "Logout",
 
-  "clarin.bitstream.authorization.denied.message": "Access to download \"{{bitstream}}\" file was denied by the bitstream resource policy.",
+  "clarin.bitstream.authorization.denied.message": "Access to download the \"{{bitstream}}\" file was denied by the bitstream resource policy.",
 
   "home.image.glass": "Home page glass magnifier image",
 
