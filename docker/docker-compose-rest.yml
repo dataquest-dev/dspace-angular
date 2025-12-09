@@ -27,9 +27,9 @@ services:
       dspace__P__ui__P__url: ${UI_URL:-http://127.0.0.1:4000}
       dspace__P__name: 'DSpace Started with Docker Compose'
       # db.url: Ensure we are using the 'dspacedb' image for our database
-      db__P__url: 'jdbc:postgresql://dspacedb:543${INSTANCE}/dspace'
+      db__P__url: 'jdbc:postgresql://dspacedb:5432/dspace'
       # solr.server: Ensure we are using the 'dspacesolr' image for Solr
-      solr__P__server: http://dspacesolr:898${INSTANCE}/solr
+      solr__P__server: http://dspacesolr:8983/solr
       #S3 config
       assetstore__P__index__P__primary: ${S3_STORAGE:-0}
       assetstore__P__s3__P__enabled: ${S3_ENABLED:-false}
@@ -67,7 +67,7 @@ services:
     - /bin/bash
     - '-c'
     - |
-      while (!</dev/tcp/dspacedb/543${INSTANCE}) > /dev/null 2>&1; do sleep 1; done;
+      while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
       /dspace/bin/dspace database migrate force
       custom_run.sh
   # DSpace database container
@@ -83,7 +83,7 @@ services:
       dspacenet:
     ports:
     - published: 543${INSTANCE}
-      target: 543${INSTANCE}
+      target: 5432
       host_ip: 127.0.0.1
     stdin_open: true
     tty: true
@@ -105,7 +105,7 @@ services:
       dspacenet:
     ports:
     - published: 898${INSTANCE}
-      target: 898${INSTANCE}
+      target: 8983
       host_ip: 127.0.0.1
     stdin_open: true
     tty: true
