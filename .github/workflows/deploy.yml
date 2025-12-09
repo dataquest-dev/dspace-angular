@@ -71,7 +71,7 @@ jobs:
         run: |
           ./start.sh dspace-$INSTANCE
           cd ../..
-          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
+          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
 
   playwright-after-deploy3:
     needs: deploy-3
