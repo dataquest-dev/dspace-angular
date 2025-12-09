@@ -89,7 +89,7 @@ services:
     tty: true
     volumes:
     - pgdata:/pgdata
-    command: -p 543${INSTANCE}
+#    command: -p 543${INSTANCE}
   # DSpace Solr container
   dspacesolr:
     environment:
