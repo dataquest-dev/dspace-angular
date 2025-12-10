@@ -4451,7 +4451,7 @@
   // "item.page.subject": "Keywords",
   "item.page.subject": "Klíčová slova",
 
-  // "item.page.uri": "URI",
+  // "item.page.uri": "Item identifier",
   "item.page.uri": "Permanentní identifikátor",
 
   // "item.page.bitstreams.view-more": "Show more",
@@ -4502,14 +4502,8 @@
   // "item.preview.dc.date.issued": "Published date:",
   "item.preview.dc.date.issued": "Datum vydání:",
 
-  // "item.preview.dc.description": "Description:",
-  "item.preview.dc.description": "Popis:",
-
   // "item.preview.dc.description.abstract": "Abstract:",
   "item.preview.dc.description.abstract": "Abstrakt:",
-
-  // "item.preview.dc.identifier.other": "Other identifier:",
-  "item.preview.dc.identifier.other": "Další identifikátor:",
 
   // "item.preview.dc.language.iso": "Language:",
   "item.preview.dc.language.iso": "Jazyk:",
@@ -4551,7 +4545,7 @@
   "item.preview.dc.rights": "Práva",
 
   // "item.preview.dc.identifier.other": "Other Identifier",
-  "item.preview.dc.identifier.other": "Další identifikátor:",
+  "item.preview.dc.identifier.other": "Další identifikátor",
 
   // "item.preview.dc.relation.issn": "ISSN",
   "item.preview.dc.relation.issn": "ISSN",
