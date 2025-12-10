@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { HomeNewsComponent as BaseComponent } from '../../../../../app/home-page/home-news/home-news.component';
 
@@ -9,6 +10,9 @@ import { HomeNewsComponent as BaseComponent } from '../../../../../app/home-page
   // templateUrl: './home-news.component.html'
   templateUrl: '../../../../../app/home-page/home-news/home-news.component.html',
   standalone: true,
+  imports: [
+    TranslateModule,
+  ],
 })
 export class HomeNewsComponent extends BaseComponent {
 }
