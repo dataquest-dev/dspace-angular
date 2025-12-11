@@ -53,7 +53,7 @@
     </div>
     }
   </div>
-  <div *ngVar="(licenses$ | async)?.payload as licenses">
+  <div *ngVar="(licenses$ | async)?.payload as licenses" class="d-none">
     @if (hasValuesInBundle(licenses)) {
     <div>
       <h3 class="h5 simple-view-element-header">
