@@ -5573,8 +5573,8 @@
   // "nav.language": "Language switch",
   "nav.language": "Přepínání jazyků",
 
-  // "nav.login": "Log In",
-  "nav.login": "Přihlásit se",
+  // "nav.login": "Admin Access",
+  "nav.login": "Admin přístup",
 
   // "nav.user-profile-menu-and-logout": "User profile menu and log out",
   "nav.user-profile-menu-and-logout": "Menu uživatelského profilu a odhlášení",
