@@ -4436,8 +4436,8 @@
   // "item.page.subject": "Keywords",
   "item.page.subject": "Klíčová slova",
 
-  // "item.page.uri": "URI",
-  "item.page.uri": "Permanentní identifikátor",
+  // "item.page.uri": "Identifier",
+  "item.page.uri": "Identifikátor",
 
   // "item.page.bitstreams.view-more": "Show more",
   "item.page.bitstreams.view-more": "Zobrazit více",
