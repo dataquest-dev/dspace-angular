@@ -2227,13 +2227,11 @@
 
   "home.news.title": "MENDELU Repository",
 
-  "home.news.welcome": "Welcome to the Open Repository of research and development results of the Mendel University in Brno, which contains Open Access publications of the authors from MENDELU. Publications are automatically sent from the OBD system to the repository in the DSpace system. The repository is divided by the faculties and also by the types of results. In the menu on the right, you can filter the results created within the Horizon program.",
+  "home.news.welcome": "Welcome to the Open Repository of research and development results of the Mendel University in Brno. The repository serves to archive Open Access publications of university authors. Publications are automatically sent from the OBD system to the repository in the DSpace system.",
 
-  "home.news.about-link": "About This Repository",
+  "home.news.about-link": "Information on how the repository works.",
 
-  "home.news.migration-notice": "Since the end of November 2025, it is not possible to upload records to the MENDELU repository due to work on migrating the repository to a new server as part of the OP JAK Výzkumné prostředí. If authors need to upload a publication to the publication repository, please contact us, we will help you upload the publication to the Zenodo repository. Before uploading a publication to Zenodo, your publication must be listed in the OBD system. We will inform you when it is possible to upload to the MENDELU repository again. Thank you for your understanding.",
-
-  "home.news.contact-intro": "In the case of any questions, please, contact us:",
+  "home.news.upload-info": "To upload articles and other publications to the repository, contact the Open Science Centre: repozitar@mendelu.cz. Before uploading publications, the record must be created in the OBD system.",
 
   "info.accessibility-settings.breadcrumbs": "Accessibility settings",
 

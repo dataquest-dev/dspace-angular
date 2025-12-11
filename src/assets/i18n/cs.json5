@@ -3341,17 +3341,14 @@
   // "home.news.title": "MENDELU Repository",
   "home.news.title": "MENDELU Repozitář",
 
-  // "home.news.welcome": "Welcome to the Open Repository of research and development results of the Mendel University in Brno, which contains Open Access publications of the authors from MENDELU. Publications are automatically sent from the OBD system to the repository in the DSpace system. The repository is divided by the faculties and also by the types of results. In the menu on the right, you can filter the results created within the Horizon program.",
-  "home.news.welcome": "Vítejte v otevřeném repozitáři výsledků vědy a výzkumu Mendelovy univerzity v Brně, který obsahuje Open Access publikace autorů z MENDELU. Publikace se automaticky přenáší ze systému OBD do repozitáře v systému DSpace. Repozitář je rozdělen podle jednotlivých fakult a dále podle druhů výsledků vědy a výzkumu. V menu v pravé části webové stránky můžete filtrovat i podle výsledků vzniklých v rámci Horizon.",
+  // "home.news.welcome": "Welcome to the Open Repository of research and development results of the Mendel University in Brno. The repository serves to archive Open Access publications of university authors. Publications are automatically sent from the OBD system to the repository in the DSpace system.",
+  "home.news.welcome": "Vítejte v Otevřeném repozitáři výsledků vědy a výzkumu Mendelovy univerzity v Brně. Repozitář slouží k archivaci Open Access publikací autorů univerzity. Publikace se automaticky přenáší ze systému OBD do repozitáře v systému DSpace.",
 
-  // "home.news.about-link": "About This Repository",
-  "home.news.about-link": "O tomto repozitáři",
+  // "home.news.about-link": "Information on how the repository works.",
+  "home.news.about-link": "Informace, jak funguje repozitář.",
 
-  // "home.news.migration-notice": "Since the end of November 2025, it is not possible to upload records to the MENDELU repository due to work on migrating the repository to a new server as part of the OP JAK Výzkumné prostředí. If authors need to upload a publication to the publication repository, please contact us, we will help you upload the publication to the Zenodo repository. Before uploading a publication to Zenodo, your publication must be listed in the OBD system. We will inform you when it is possible to upload to the MENDELU repository again. Thank you for your understanding.",
-  "home.news.migration-notice": "Od konce listopadu 2025 není možné nahrávat záznamy do repozitáře MENDELU z důvodu prací na migraci repozitáře na nový server v rámci řešení projektu OP JAK Výzkumné prostředí. Pokud autoři univerzity potřebují vložit publikaci do publikačního repozitáře, kontaktujte nás — pomůžeme vám s vložením publikace do repozitáře Zenodo. Před vložením publikace do Zenodo je potřeba, aby vaše publikace byla uvedena v systému OBD. O znovuspuštění vkládání záznamů do repozitáře budeme informovat.",
-
-  // "home.news.contact-intro": "In the case of any questions, please, contact us:",
-  "home.news.contact-intro": "V případě dotazů pište na mail:",
+  // "home.news.upload-info": "To upload articles and other publications to the repository, contact the Open Science Centre: repozitar@mendelu.cz. Before uploading publications, the record must be created in the OBD system.",
+  "home.news.upload-info": "Pro vložení článků a dalších publikací do repozitáře kontaktujte Open Science centrum: repozitar@mendelu.cz. Před vložením publikací je potřeba, aby byl vytvořen záznam v systému OBD.",
 
   // "info.accessibility-settings.breadcrumbs": "Accessibility settings",
   "info.accessibility-settings.breadcrumbs": "Nastavení přístupnosti",
