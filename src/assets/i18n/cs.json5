@@ -10704,8 +10704,8 @@
   // "item.page.cc.license.title": "Creative Commons license",
   "item.page.cc.license.title": "Licence Creative Commons",
 
-  // "item.page.cc.license.disclaimer": "Except where otherwised noted, this item's license is described as",
-  "item.page.cc.license.disclaimer": "Pokud není uvedeno jinak, licence tohoto záznamu je popsána jako",
+  // "item.page.cc.license.disclaimer": "Item is licensed under:",
+  "item.page.cc.license.disclaimer": "Dílo je licencováno:",
 
   // "browse.search-form.placeholder": "Search the repository",
   "browse.search-form.placeholder": "Hledat v repozitáři",
