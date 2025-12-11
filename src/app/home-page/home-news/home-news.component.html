@@ -7,12 +7,8 @@
           <p>
             {{ 'home.news.welcome' | translate }}
           </p>
-          <p>
-            <a href="https://uvis.mendelu.cz/en/repository" role="link" tabindex="0">{{ 'home.news.about-link' | translate }}</a>
-          </p>
-          <p>
-            {{ 'home.news.upload-info' | translate }}
-          </p>
+          <p [innerHTML]="'home.news.about-link' | translate"></p>
+          <p [innerHTML]="'home.news.upload-info' | translate"></p>
         </div>
       </div>
     </div>
