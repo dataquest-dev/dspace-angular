@@ -1035,6 +1035,8 @@
 
   "browse.comcol.by.affiliation": "By Faculty",
 
+  "browse.comcol.by.funder": "By Funder",
+
   "browse.comcol.head": "Browse",
 
   "browse.empty": "No items to show.",
@@ -1053,6 +1055,8 @@
 
   "browse.metadata.affiliation": "Faculty",
 
+  "browse.metadata.funder": "Funder",
+
   "browse.metadata.author.breadcrumbs": "Browse by Author",
 
   "browse.metadata.dateissued.breadcrumbs": "Browse by Date",
@@ -1064,6 +1068,8 @@
   "browse.metadata.horizon.breadcrumbs": "Browse by Horizon",
 
   "browse.metadata.affiliation.breadcrumbs": "Browse by Faculty",
+
+  "browse.metadata.funder.breadcrumbs": "Browse by Funder",
 
   "browse.metadata.srsc.tree.description": "Select a subject to add as search filter",
 
@@ -3488,6 +3494,8 @@
   "menu.section.browse_global_by_horizon": "By Horizon",
 
   "menu.section.browse_global_by_affiliation": "By Faculty",
+
+  "menu.section.browse_global_by_funder": "Funder",
 
   "menu.section.browse_global_communities_and_collections": "Communities & Collections",
 

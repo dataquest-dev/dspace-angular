@@ -1553,6 +1553,9 @@
   // "browse.comcol.by.affiliation": "By Faculty",
   "browse.comcol.by.affiliation": "Podle fakulty",
 
+  // "browse.comcol.by.funder": "By Funder",
+  "browse.comcol.by.funder": "Podle financujíciho subjektu",
+
   // "browse.comcol.head": "Browse",
   "browse.comcol.head": "Procházet",
 
@@ -1560,25 +1563,28 @@
   "browse.empty": "Žádné záznamy k zobrazení",
 
   // "browse.metadata.author": "Author",
-  "browse.metadata.author": "Autor",
+  "browse.metadata.author": "autora",
 
   // "browse.metadata.dateissued": "Issue Date",
-  "browse.metadata.dateissued": "Datum vydání",
+  "browse.metadata.dateissued": "data vydání",
 
   // "browse.metadata.subject": "Subject",
-  "browse.metadata.subject": "Předmět",
+  "browse.metadata.subject": "předmětu",
 
   // "browse.metadata.title": "Title",
-  "browse.metadata.title": "Název",
+  "browse.metadata.title": "názvu",
 
   // "browse.metadata.srsc": "Subject Category",
-  "browse.metadata.srsc": "Předmětová kategorie",
+  "browse.metadata.srsc": "předmětové kategorie",
 
   // "browse.metadata.horizon": "project Horizon",
-  "browse.metadata.horizon": "projekt Horizon",
+  "browse.metadata.horizon": "projektu Horizon",
 
   // "browse.metadata.affiliation": "Faculty",
-  "browse.metadata.affiliation": "Fakulta",
+  "browse.metadata.affiliation": "fakulty",
+
+  // "browse.metadata.funder": "Funder",
+  "browse.metadata.funder": "financujícího subjektu",
 
   // "browse.metadata.author.breadcrumbs": "Browse by Author",
   "browse.metadata.author.breadcrumbs": "Procházet podle autora",
@@ -1597,6 +1603,9 @@
 
   // "browse.metadata.affiliation.breadcrumbs": "Browse by Faculty",
   "browse.metadata.affiliation.breadcrumbs": "Procházet podle fakulty",
+
+  // "browse.metadata.funder.breadcrumbs": "Browse by Funder",
+  "browse.metadata.funder.breadcrumbs": "Procházet podle financujíciho subjektu",
 
   // "browse.metadata.srsc.tree.description": "Select a subject to add as search filter",
   "browse.metadata.srsc.tree.description": "Vyberte předmět pro přidání jako filtr vyhledávání",
@@ -5233,6 +5242,9 @@
 
   // "menu.section.browse_global_by_affiliation": "By Faculty",
   "menu.section.browse_global_by_affiliation": "Podle fakulty",
+
+  // "menu.section.browse_global_by_funder": "Funder",
+  "menu.section.browse_global_by_funder": "Financujícího subjektu",
 
   // "menu.section.browse_global_communities_and_collections": "Communities & Collections",
   "menu.section.browse_global_communities_and_collections": "Komunity & kolekce",
