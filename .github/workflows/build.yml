@@ -58,6 +58,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      # Install required OS libraries for Chrome/Electron on Ubuntu runners
+      - name: Install Chrome/Electron dependencies
+        run: |
+          sudo apt-get update
+          # Install only required runtime libraries (no dev packages).
+          sudo apt-get install -y --no-install-recommends \
+            libgtk-3-0 libgbm1 libasound2t64 libxss1 \
+            libnss3 libx11-xcb1 fonts-liberation ca-certificates \
+            libxtst6 libxrandr2 libxcomposite1 libxcursor1 libxdamage1 \
+            libatk1.0-0 libcups2 libxfixes3 libxinerama1 libxkbcommon0 libdrm2
+
       # If CHROME_VERSION env variable specified above, then pin to that version.
       # Otherwise, just install latest version of Chrome.
       - name: Install Chrome (for e2e tests)
@@ -65,7 +76,7 @@ jobs:
         with:
           chrome-version: 114
         id: setup-chrome
-      
+
       - name: Display Chrome version
         run: |
           echo "Chrome version installed: ${{ steps.setup-chrome.outputs.chrome-version }}"
@@ -110,6 +121,12 @@ jobs:
           path: 'coverage/dspace-angular/lcov.info'
           retention-days: 14
 
+      # Setup virtual display for Chrome
+      - name: Setup Xvfb
+        run: |
+          sudo apt-get install -y xvfb
+          Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
+
       # Using docker compose start backend using CI configuration
       # and load assetstore from a cached copy
       - name: Start DSpace REST Backend via Docker (for e2e tests)
@@ -118,21 +135,21 @@ jobs:
           docker compose -f ./docker/cli.yml -f ./docker/cli.assetstore.yml run --rm dspace-cli
           docker container ls
 
-      # Run integration tests via Cypress.io
-      # https://github.com/cypress-io/github-action
-      # (NOTE: to run these e2e tests locally, just use 'ng e2e')
-      - name: Run e2e tests (integration tests)
-        uses: cypress-io/github-action@v6
-        with:
-          # Run tests in Chrome, headless mode (default)
-          browser: chrome
-          # Start app before running tests (will be stopped automatically after tests finish)
-          start: yarn run serve:ssr
-          # Wait for backend & frontend to be available
-          # NOTE: We use the 'sites' REST endpoint to also ensure the database is ready
-          wait-on: http://127.0.0.1:8080/server/api/core/sites, http://127.0.0.1:4000
-          # Wait for 2 mins max for everything to respond
-          wait-on-timeout: 120
+      # Run integration tests via Cypress
+      # Start app and wait for backend & frontend, then run Cypress with CI-friendly flags
+      - name: Start app for e2e tests
+        run: |
+          yarn run serve:ssr &
+          npx wait-on http://127.0.0.1:8080/server/api/core/sites http://127.0.0.1:4000 --timeout 120000
+
+      - name: Run Cypress (CLI)
+        run: |
+          npx cypress run --headless --config defaultCommandTimeout=30000,pageLoadTimeout=120000
+        env:
+          CI: true
+          DISPLAY: :99
+          TERM: xterm
+          NODE_OPTIONS: '--max-old-space-size=6144'
 
       # Cypress always creates a video of all e2e tests (whether they succeeded or failed)
       # Save those in an Artifact

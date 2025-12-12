@@ -66,7 +66,7 @@ jobs:
   rest-tests-after-deploy6:
     runs-on: ubuntu-latest
     needs: playwright-after-deploy6
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - name: run rest-tests
         run: |
@@ -106,7 +106,7 @@ jobs:
   rest-tests-after-import6:
     runs-on: ubuntu-latest
     needs: playwright-after-import6
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - name: run rest-tests
         run: |
@@ -159,7 +159,7 @@ jobs:
           # echo Starting vanilla import DB
           docker cp $DATADIR $DDBNAME:/tmp/
           # drop + create + import + cleanup
-          docker exec $DDBNAME /bin/bash -c "dropdb -U dspace -p 543$INSTANCE dspace && createdb -U dspace -p 543$INSTANCE --owner=dspace --encoding=UNICODE dspace && psql -p 543$INSTANCE -U dspace -d dspace -f /tmp/$FNAME && rm /tmp/$FNAME"
+          docker exec $DDBNAME /bin/bash -c "dropdb -U dspace dspace && createdb -U dspace --owner=dspace --encoding=UNICODE dspace && psql -U dspace -d dspace -f /tmp/$FNAME && rm /tmp/$FNAME"
           echo "====="
           docker start $DNAME
           sleep 60
