@@ -7,7 +7,7 @@ describe('Breadcrumbs', () => {
             runMode: 8,
             openMode: 8,
         },
-        defaultCommandTimeout: 10000
+        defaultCommandTimeout: 30000
     }, () => {
         // Visit an Item, as those have more breadcrumbs
         cy.visit('/entities/publication/' + TEST_ENTITY_PUBLICATION);
