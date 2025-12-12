@@ -16,14 +16,14 @@ describe('Header', () => {
 
     // Click the language switcher (globe) in header
     cy.get('button[data-test="lang-switch"]').click();
-    // Click on the "Deusch" language in dropdown
-    cy.get('#language-menu-list div[role="option"]').contains('Deutsch').click();
+    // Click on the "Czech" language in dropdown
+    cy.get('#language-menu-list div[role="option"]').contains('Čeština').click();
 
-    // HTML "lang" attribute should switch to "de"
-    cy.get('html').invoke('attr', 'lang').should('eq', 'de');
+    // HTML "lang" attribute should switch to "cs"
+    cy.get('html').invoke('attr', 'lang').should('eq', 'cs');
 
-    // Login menu should now be in German
-    cy.get('[data-test="login-menu"]').contains('Anmelden');
+    // Login menu should now be in Czech
+    cy.get('[data-test="login-menu"]').contains('Přihlásit se');
 
     // Change back to English from language switcher
     cy.get('button[data-test="lang-switch"]').click();
