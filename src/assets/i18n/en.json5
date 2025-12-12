@@ -1989,6 +1989,8 @@
 
   "footer.link.cookies": "Cookie settings",
 
+  "footer.link.contact-us": "Contact us",
+
   "footer.link.privacy-policy": "Privacy policy",
 
   "footer.link.end-user-agreement": "End User Agreement",
@@ -7235,4 +7237,16 @@
   "metadata-export-search.submit.error.limit-exceeded": "Only the first {{limit}} items will be exported",
 
   "file-download-link.request-copy": "Request a copy of ",
+
+  "contact-us.breadcrumbs": "Contact Us",
+
+  "contact-us.title": "Contact Us",
+
+  "contact-us.description": "DSpace administrators may be contacted at:",
+
+  "contact-us.form": "On-line form: ",
+
+  "contact-us.feedback": "Feedback",
+
+  "contact-us.email": "Email: "
 }

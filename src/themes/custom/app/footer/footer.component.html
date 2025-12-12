@@ -59,6 +59,9 @@
            href="https://www.lyrasis.org/" role="link" tabindex="0">{{ 'footer.link.lyrasis' | translate}}</a>
       </p>
       <ul class="footer-info list-unstyled d-flex justify-content-center mb-0">
+        <li>
+          <a class="text-white" routerLink="/contact">{{ 'footer.link.contact-us' | translate}}</a>
+        </li>
         @if (showCookieSettings) {
           <li>
             <button class="btn btn-link text-white" type="button" (click)="openCookieSettings()" role="button" tabindex="0">

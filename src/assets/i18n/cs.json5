@@ -2984,6 +2984,9 @@
   // "footer.link.cookies": "Cookie settings",
   "footer.link.cookies": "Nastavení souborů cookie",
 
+  // "footer.link.contact-us": "Contact us",
+  "footer.link.contact-us": "Kontaktujte nás",
+
   // "footer.link.privacy-policy": "Privacy policy",
   "footer.link.privacy-policy": "Zásady ochrany osobních údajů",
 
@@ -10911,5 +10914,22 @@
   // "file-download-link.request-copy": "Request a copy of ",
   "file-download-link.request-copy": "Požádat o kopii ",
 
+  // "contact-us.breadcrumbs": "Contact Us",
+  "contact-us.breadcrumbs": "Kontaktujte nás",
+
+  // "contact-us.title": "Contact Us",
+  "contact-us.title": "Kontaktujte nás",
+
+  // "contact-us.description": "DSpace administrators may be contacted at:",
+  "contact-us.description": "Správce DSpace můžete kontaktovat na adrese:",
+
+  // "contact-us.form": "On-line form: ",
+  "contact-us.form": "On-line formulář:",
+
+  // "contact-us.feedback": "Feedback",
+  "contact-us.feedback": "Zpětná vazba",
+
+  // "contact-us.email": "Email: ",
+  "contact-us.email": "Email: "
 
 }
