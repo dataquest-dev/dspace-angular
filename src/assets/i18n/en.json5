@@ -1035,6 +1035,8 @@
 
   "browse.comcol.by.affiliation": "By Faculty",
 
+  "browse.comcol.by.funder": "By Funder",
+
   "browse.comcol.head": "Browse",
 
   "browse.empty": "No items to show.",
@@ -1053,6 +1055,8 @@
 
   "browse.metadata.affiliation": "Faculty",
 
+  "browse.metadata.funder": "Funder",
+
   "browse.metadata.author.breadcrumbs": "Browse by Author",
 
   "browse.metadata.dateissued.breadcrumbs": "Browse by Date",
@@ -1064,6 +1068,8 @@
   "browse.metadata.horizon.breadcrumbs": "Browse by Project Horizon",
 
   "browse.metadata.affiliation.breadcrumbs": "Browse by Faculty",
+
+  "browse.metadata.funder.breadcrumbs": "Browse by Funder",
 
   "browse.metadata.srsc.tree.description": "Select a subject to add as search filter",
 
@@ -2225,6 +2231,14 @@
 
   "home.top-level-communities.help": "Select a community to browse its collections.",
 
+  "home.news.title": "MENDELU Repository",
+
+  "home.news.welcome": "Welcome to the Open Repository of research and development results of the Mendel University in Brno. The repository serves to archive Open Access publications of university authors. Publications are automatically sent from the OBD system to the repository in the DSpace system.",
+
+  "home.news.about-link": "Information on how the <a href='https://osc.mendelu.cz/en/36450-repository'>repository</a> works.",
+
+  "home.news.upload-info": "To upload articles and other publications to the repository, contact the <a href='https://osc.mendelu.cz/en/36459-archive-published-open-access-article-in-repository'>Open Science Centre</a>: <a href='mailto:repozitar@mendelu.cz'>repozitar@mendelu.cz</a>. Before uploading publications, the record must be created in the OBD system.",
+
   "info.accessibility-settings.breadcrumbs": "Accessibility settings",
 
   "info.accessibility-settings.cookie-warning": "Saving the accessibility settings is currently not possible. Either log in to save the settings in user data, or accept the 'Accessibility Settings' cookie using the 'Cookie Settings' menu at the bottom of the page. Once the cookie has been accepted, you can reload the page to remove this message.",
@@ -2957,7 +2971,7 @@
 
   "item.page.subject": "Keywords",
 
-  "item.page.uri": "Item identifier",
+  "item.page.uri": "Identifier",
 
   "item.page.bitstreams.view-more": "Show more",
 
@@ -2991,11 +3005,7 @@
 
   "item.preview.dc.date.issued": "Published date:",
 
-  "item.preview.dc.description": "Description:",
-
   "item.preview.dc.description.abstract": "Abstract:",
-
-  "item.preview.dc.identifier.other": "Other identifier:",
 
   "item.preview.dc.language.iso": "Language:",
 
@@ -3485,6 +3495,8 @@
 
   "menu.section.browse_global_by_affiliation": "Faculty",
 
+  "menu.section.browse_global_by_funder": "Funder",
+
   "menu.section.browse_global_communities_and_collections": "Communities & Collections",
 
   "menu.section.browse_global_geospatial_map": "By Geolocation (Map)",
@@ -3715,7 +3727,7 @@
 
   "nav.language": "Language switch",
 
-  "nav.login": "Log In",
+  "nav.login": "Admin Access",
 
   "nav.user-profile-menu-and-logout": "User profile menu and log out",
 
@@ -4894,7 +4906,7 @@
 
   "search.results.no-results": "Your search returned no results. Having trouble finding what you're looking for? Try putting",
 
-  "search.results.no-results-link": "quotes around it",
+  "search.results.no-results-link": "quotes around it.",
 
   "search.results.empty": "Your search returned no results.",
 
@@ -7098,7 +7110,7 @@
 
   "item.page.cc.license.title": "Creative Commons license",
 
-  "item.page.cc.license.disclaimer": "Except where otherwised noted, this item's license is described as",
+  "item.page.cc.license.disclaimer": "Item is licensed under:",
 
   "browse.search-form.placeholder": "Search the repository",
 

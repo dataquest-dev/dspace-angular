@@ -1553,6 +1553,9 @@
   // "browse.comcol.by.affiliation": "By Faculty",
   "browse.comcol.by.affiliation": "Podle fakulty",
 
+  // "browse.comcol.by.funder": "By Funder",
+  "browse.comcol.by.funder": "Podle financujíciho subjektu",
+
   // "browse.comcol.head": "Browse",
   "browse.comcol.head": "Procházet",
 
@@ -1560,25 +1563,28 @@
   "browse.empty": "Žádné záznamy k zobrazení",
 
   // "browse.metadata.author": "Author",
-  "browse.metadata.author": "Autor",
+  "browse.metadata.author": "autora",
 
   // "browse.metadata.dateissued": "Issue Date",
-  "browse.metadata.dateissued": "Datum vydání",
+  "browse.metadata.dateissued": "data vydání",
 
   // "browse.metadata.subject": "Subject",
-  "browse.metadata.subject": "Předmět",
+  "browse.metadata.subject": "předmětu",
 
   // "browse.metadata.title": "Title",
-  "browse.metadata.title": "Název",
+  "browse.metadata.title": "názvu",
 
   // "browse.metadata.srsc": "Subject Category",
-  "browse.metadata.srsc": "Předmětová kategorie",
+  "browse.metadata.srsc": "předmětové kategorie",
 
-  // "browse.metadata.horizon": "Project Horizon",
-  "browse.metadata.horizon": "projekt Horizon",
+  // "browse.metadata.horizon": "project Horizon",
+  "browse.metadata.horizon": "projektu Horizon",
 
   // "browse.metadata.affiliation": "Faculty",
-  "browse.metadata.affiliation": "Fakulta",
+  "browse.metadata.affiliation": "fakulty",
+
+  // "browse.metadata.funder": "Funder",
+  "browse.metadata.funder": "financujícího subjektu",
 
   // "browse.metadata.author.breadcrumbs": "Browse by Author",
   "browse.metadata.author.breadcrumbs": "Procházet podle autora",
@@ -1597,6 +1603,9 @@
 
   // "browse.metadata.affiliation.breadcrumbs": "Browse by Faculty",
   "browse.metadata.affiliation.breadcrumbs": "Procházet podle fakulty",
+
+  // "browse.metadata.funder.breadcrumbs": "Browse by Funder",
+  "browse.metadata.funder.breadcrumbs": "Procházet podle financujíciho subjektu",
 
   // "browse.metadata.srsc.tree.description": "Select a subject to add as search filter",
   "browse.metadata.srsc.tree.description": "Vyberte předmět pro přidání jako filtr vyhledávání",
@@ -3338,6 +3347,18 @@
   // "home.top-level-communities.help": "Select a community to browse its collections.",
   "home.top-level-communities.help": "Vyberte komunitu a procházejte její kolekce.",
 
+  // "home.news.title": "MENDELU Repository",
+  "home.news.title": "MENDELU Repozitář",
+
+  // "home.news.welcome": "Welcome to the Open Repository of research and development results of the Mendel University in Brno. The repository serves to archive Open Access publications of university authors. Publications are automatically sent from the OBD system to the repository in the DSpace system.",
+  "home.news.welcome": "Vítejte v Otevřeném repozitáři výsledků vědy a výzkumu Mendelovy univerzity v Brně. Repozitář slouží k archivaci Open Access publikací autorů univerzity. Publikace se automaticky přenáší ze systému OBD do repozitáře v systému DSpace.",
+
+  // "home.news.about-link": "Information on how the repository works.",
+  "home.news.about-link": "Informace, jak funguje <a href='https://osc.mendelu.cz/36299-repozitar'>repozitář</a>.",
+
+  // "home.news.upload-info": "To upload articles and other publications to the repository, contact the Open Science Centre: repozitar@mendelu.cz. Before uploading publications, the record must be created in the OBD system.",
+  "home.news.upload-info": "Pro vložení článků a dalších publikací do repozitáře kontaktujte <a href='https://osc.mendelu.cz/en/36459-archive-published-open-access-article-in-repository'>Open Science centrum</a>: <a href='mailto:repozitar@mendelu.cz'>repozitar@mendelu.cz</a>. Před vložením publikací je potřeba, aby byl vytvořen záznam v systému OBD.",
+
   // "info.accessibility-settings.breadcrumbs": "Accessibility settings",
   "info.accessibility-settings.breadcrumbs": "Nastavení přístupnosti",
 
@@ -4263,7 +4284,7 @@
   "item.page.journal-title": "Název časopisu",
 
   // "item.page.publisher": "Publisher",
-  "item.page.publisher": "Nakladatel",
+  "item.page.publisher": "Vydavatel",
 
   // "item.page.titleprefix": "Item: ",
   "item.page.titleprefix": "Záznam: ",
@@ -4436,8 +4457,8 @@
   // "item.page.subject": "Keywords",
   "item.page.subject": "Klíčová slova",
 
-  // "item.page.uri": "URI",
-  "item.page.uri": "Permanentní identifikátor",
+  // "item.page.uri": "Item identifier",
+  "item.page.uri": "Identifikátor",
 
   // "item.page.bitstreams.view-more": "Show more",
   "item.page.bitstreams.view-more": "Zobrazit více",
@@ -4487,14 +4508,8 @@
   // "item.preview.dc.date.issued": "Published date:",
   "item.preview.dc.date.issued": "Datum vydání:",
 
-  // "item.preview.dc.description": "Description:",
-  "item.preview.dc.description": "Popis:",
-
   // "item.preview.dc.description.abstract": "Abstract:",
   "item.preview.dc.description.abstract": "Abstrakt:",
-
-  // "item.preview.dc.identifier.other": "Other identifier:",
-  "item.preview.dc.identifier.other": "Další identifikátor:",
 
   // "item.preview.dc.language.iso": "Language:",
   "item.preview.dc.language.iso": "Jazyk:",
@@ -4536,7 +4551,7 @@
   "item.preview.dc.rights": "Práva",
 
   // "item.preview.dc.identifier.other": "Other Identifier",
-  "item.preview.dc.identifier.other": "Další identifikátor:",
+  "item.preview.dc.identifier.other": "Další identifikátor",
 
   // "item.preview.dc.relation.issn": "ISSN",
   "item.preview.dc.relation.issn": "ISSN",
@@ -4944,7 +4959,7 @@
   "journal.page.issn": "ISSN",
 
   // "journal.page.publisher": "Publisher",
-  "journal.page.publisher": "Nakladatel",
+  "journal.page.publisher": "Vydavatel",
 
   // "journal.page.options": "Options",
   "journal.page.options": "Možnosti",
@@ -5227,6 +5242,9 @@
 
   // "menu.section.browse_global_by_affiliation": "Faculty",
   "menu.section.browse_global_by_affiliation": "Fakulty",
+
+  // "menu.section.browse_global_by_funder": "Funder",
+  "menu.section.browse_global_by_funder": "Financujícího subjektu",
 
   // "menu.section.browse_global_communities_and_collections": "Communities & Collections",
   "menu.section.browse_global_communities_and_collections": "Komunity & kolekce",
@@ -5573,8 +5591,8 @@
   // "nav.language": "Language switch",
   "nav.language": "Přepínání jazyků",
 
-  // "nav.login": "Log In",
-  "nav.login": "Přihlásit se",
+  // "nav.login": "Admin Access",
+  "nav.login": "Admin přístup",
 
   // "nav.user-profile-menu-and-logout": "User profile menu and log out",
   "nav.user-profile-menu-and-logout": "Menu uživatelského profilu a odhlášení",
@@ -6324,7 +6342,7 @@
   "publication.page.journal-title": "Název časopisu",
 
   // "publication.page.publisher": "Publisher",
-  "publication.page.publisher": "Nakladatel",
+  "publication.page.publisher": "Vydavatel",
 
   // "publication.page.options": "Options",
   "publication.page.options": "Možnosti",
@@ -7028,10 +7046,10 @@
   "search.filters.filter.creativeWorkKeywords.label": "Hledat předmět",
 
   // "search.filters.filter.creativeWorkPublisher.head": "Publisher",
-  "search.filters.filter.creativeWorkPublisher.head": "Nakladatel",
+  "search.filters.filter.creativeWorkPublisher.head": "Vydavatel",
 
   // "search.filters.filter.creativeWorkPublisher.placeholder": "Publisher",
-  "search.filters.filter.creativeWorkPublisher.placeholder": "Nakladatel",
+  "search.filters.filter.creativeWorkPublisher.placeholder": "Vydavatel",
 
   // "search.filters.filter.creativeWorkPublisher.label": "Search publisher",
   "search.filters.filter.creativeWorkPublisher.label": "Hledat vydavatele",
@@ -7342,8 +7360,8 @@
   // "search.results.no-results": "Your search returned no results. Having trouble finding what you're looking for? Try putting",
   "search.results.no-results": "Vaše vyhledávání nevrátilo žádné výsledky. Máte potíže s nalezením toho, co hledáte? Zkuste vložit",
 
-  // "search.results.no-results-link": "quotes around it",
-  "search.results.no-results-link": "v uvozovkách",
+  // "search.results.no-results-link": "quotes around it.",
+  "search.results.no-results-link": "v uvozovkách.",
 
   // "search.results.empty": "Your search returned no results.",
   "search.results.empty": "Vaše vyhledávání nevrátilo žádné výsledky.",
@@ -8585,7 +8603,7 @@
   "submission.sections.sherpa.publication.information.url": "URL",
 
   // "submission.sections.sherpa.publication.information.publishers": "Publisher",
-  "submission.sections.sherpa.publication.information.publishers": "Nakladatel",
+  "submission.sections.sherpa.publication.information.publishers": "Vydavatel",
 
   // "submission.sections.sherpa.publication.information.romeoPub": "Romeo Pub",
   "submission.sections.sherpa.publication.information.romeoPub": "Romeo Pub",
@@ -10704,8 +10722,8 @@
   // "item.page.cc.license.title": "Creative Commons license",
   "item.page.cc.license.title": "Licence Creative Commons",
 
-  // "item.page.cc.license.disclaimer": "Except where otherwised noted, this item's license is described as",
-  "item.page.cc.license.disclaimer": "Pokud není uvedeno jinak, licence tohoto záznamu je popsána jako",
+  // "item.page.cc.license.disclaimer": "Item is licensed under:",
+  "item.page.cc.license.disclaimer": "Dílo je licencováno:",
 
   // "browse.search-form.placeholder": "Search the repository",
   "browse.search-form.placeholder": "Hledat v repozitáři",
