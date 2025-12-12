@@ -3338,6 +3338,18 @@
   // "home.top-level-communities.help": "Select a community to browse its collections.",
   "home.top-level-communities.help": "Vyberte komunitu a procházejte její kolekce.",
 
+  // "home.news.title": "MENDELU Repository",
+  "home.news.title": "MENDELU Repozitář",
+
+  // "home.news.welcome": "Welcome to the Open Repository of research and development results of the Mendel University in Brno. The repository serves to archive Open Access publications of university authors. Publications are automatically sent from the OBD system to the repository in the DSpace system.",
+  "home.news.welcome": "Vítejte v Otevřeném repozitáři výsledků vědy a výzkumu Mendelovy univerzity v Brně. Repozitář slouží k archivaci Open Access publikací autorů univerzity. Publikace se automaticky přenáší ze systému OBD do repozitáře v systému DSpace.",
+
+  // "home.news.about-link": "Information on how the repository works.",
+  "home.news.about-link": "Informace, jak funguje <a href='https://osc.mendelu.cz/36299-repozitar'>repozitář</a>.",
+
+  // "home.news.upload-info": "To upload articles and other publications to the repository, contact the Open Science Centre: repozitar@mendelu.cz. Before uploading publications, the record must be created in the OBD system.",
+  "home.news.upload-info": "Pro vložení článků a dalších publikací do repozitáře kontaktujte <a href='https://osc.mendelu.cz/en/36459-archive-published-open-access-article-in-repository'>Open Science centrum</a>: <a href='mailto:repozitar@mendelu.cz'>repozitar@mendelu.cz</a>. Před vložením publikací je potřeba, aby byl vytvořen záznam v systému OBD.",
+
   // "info.accessibility-settings.breadcrumbs": "Accessibility settings",
   "info.accessibility-settings.breadcrumbs": "Nastavení přístupnosti",
 
@@ -4436,7 +4448,7 @@
   // "item.page.subject": "Keywords",
   "item.page.subject": "Klíčová slova",
 
-  // "item.page.uri": "Identifier",
+  // "item.page.uri": "Item identifier",
   "item.page.uri": "Identifikátor",
 
   // "item.page.bitstreams.view-more": "Show more",
@@ -4487,14 +4499,8 @@
   // "item.preview.dc.date.issued": "Published date:",
   "item.preview.dc.date.issued": "Datum vydání:",
 
-  // "item.preview.dc.description": "Description:",
-  "item.preview.dc.description": "Popis:",
-
   // "item.preview.dc.description.abstract": "Abstract:",
   "item.preview.dc.description.abstract": "Abstrakt:",
-
-  // "item.preview.dc.identifier.other": "Other identifier:",
-  "item.preview.dc.identifier.other": "Další identifikátor:",
 
   // "item.preview.dc.language.iso": "Language:",
   "item.preview.dc.language.iso": "Jazyk:",
@@ -4536,7 +4542,7 @@
   "item.preview.dc.rights": "Práva",
 
   // "item.preview.dc.identifier.other": "Other Identifier",
-  "item.preview.dc.identifier.other": "Další identifikátor:",
+  "item.preview.dc.identifier.other": "Další identifikátor",
 
   // "item.preview.dc.relation.issn": "ISSN",
   "item.preview.dc.relation.issn": "ISSN",
