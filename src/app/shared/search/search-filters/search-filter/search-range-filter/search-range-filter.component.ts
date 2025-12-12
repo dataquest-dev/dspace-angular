@@ -68,7 +68,7 @@ export class SearchRangeFilterComponent extends SearchFacetFilterComponent imple
   /**
    * Fallback minimum for the range
    */
-  min = 1950;
+  min = 2015;
 
   /**
    * i18n Label to use for minimum field
