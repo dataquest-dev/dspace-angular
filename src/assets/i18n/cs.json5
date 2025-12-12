@@ -4275,7 +4275,7 @@
   "item.page.journal-title": "Název časopisu",
 
   // "item.page.publisher": "Publisher",
-  "item.page.publisher": "Nakladatel",
+  "item.page.publisher": "Vydavatel",
 
   // "item.page.titleprefix": "Item: ",
   "item.page.titleprefix": "Záznam: ",
@@ -4449,7 +4449,7 @@
   "item.page.subject": "Klíčová slova",
 
   // "item.page.uri": "Item identifier",
-  "item.page.uri": "Permanentní identifikátor",
+  "item.page.uri": "Identifikátor",
 
   // "item.page.bitstreams.view-more": "Show more",
   "item.page.bitstreams.view-more": "Zobrazit více",
@@ -4950,7 +4950,7 @@
   "journal.page.issn": "ISSN",
 
   // "journal.page.publisher": "Publisher",
-  "journal.page.publisher": "Nakladatel",
+  "journal.page.publisher": "Vydavatel",
 
   // "journal.page.options": "Options",
   "journal.page.options": "Možnosti",
@@ -5579,8 +5579,8 @@
   // "nav.language": "Language switch",
   "nav.language": "Přepínání jazyků",
 
-  // "nav.login": "Log In",
-  "nav.login": "Přihlásit se",
+  // "nav.login": "Admin Access",
+  "nav.login": "Admin přístup",
 
   // "nav.user-profile-menu-and-logout": "User profile menu and log out",
   "nav.user-profile-menu-and-logout": "Menu uživatelského profilu a odhlášení",
@@ -6330,7 +6330,7 @@
   "publication.page.journal-title": "Název časopisu",
 
   // "publication.page.publisher": "Publisher",
-  "publication.page.publisher": "Nakladatel",
+  "publication.page.publisher": "Vydavatel",
 
   // "publication.page.options": "Options",
   "publication.page.options": "Možnosti",
@@ -7034,10 +7034,10 @@
   "search.filters.filter.creativeWorkKeywords.label": "Hledat předmět",
 
   // "search.filters.filter.creativeWorkPublisher.head": "Publisher",
-  "search.filters.filter.creativeWorkPublisher.head": "Nakladatel",
+  "search.filters.filter.creativeWorkPublisher.head": "Vydavatel",
 
   // "search.filters.filter.creativeWorkPublisher.placeholder": "Publisher",
-  "search.filters.filter.creativeWorkPublisher.placeholder": "Nakladatel",
+  "search.filters.filter.creativeWorkPublisher.placeholder": "Vydavatel",
 
   // "search.filters.filter.creativeWorkPublisher.label": "Search publisher",
   "search.filters.filter.creativeWorkPublisher.label": "Hledat vydavatele",
@@ -8591,7 +8591,7 @@
   "submission.sections.sherpa.publication.information.url": "URL",
 
   // "submission.sections.sherpa.publication.information.publishers": "Publisher",
-  "submission.sections.sherpa.publication.information.publishers": "Nakladatel",
+  "submission.sections.sherpa.publication.information.publishers": "Vydavatel",
 
   // "submission.sections.sherpa.publication.information.romeoPub": "Romeo Pub",
   "submission.sections.sherpa.publication.information.romeoPub": "Romeo Pub",
@@ -10710,8 +10710,8 @@
   // "item.page.cc.license.title": "Creative Commons license",
   "item.page.cc.license.title": "Licence Creative Commons",
 
-  // "item.page.cc.license.disclaimer": "Except where otherwised noted, this item's license is described as",
-  "item.page.cc.license.disclaimer": "Pokud není uvedeno jinak, licence tohoto záznamu je popsána jako",
+  // "item.page.cc.license.disclaimer": "Item is licensed under:",
+  "item.page.cc.license.disclaimer": "Dílo je licencováno:",
 
   // "browse.search-form.placeholder": "Search the repository",
   "browse.search-form.placeholder": "Hledat v repozitáři",
