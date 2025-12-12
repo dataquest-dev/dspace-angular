@@ -1031,7 +1031,7 @@
 
   "browse.comcol.by.title": "By Title",
 
-  "browse.comcol.by.horizon": "By Horizon",
+  "browse.comcol.by.horizon": "By Project Horizon",
 
   "browse.comcol.by.affiliation": "By Faculty",
 
@@ -1051,7 +1051,7 @@
 
   "browse.metadata.srsc": "Subject Category",
 
-  "browse.metadata.horizon": "project Horizon",
+  "browse.metadata.horizon": "Project Horizon",
 
   "browse.metadata.affiliation": "Faculty",
 
@@ -1065,7 +1065,7 @@
 
   "browse.metadata.srsc.breadcrumbs": "Browse by Subject Category",
 
-  "browse.metadata.horizon.breadcrumbs": "Browse by Horizon",
+  "browse.metadata.horizon.breadcrumbs": "Browse by Project Horizon",
 
   "browse.metadata.affiliation.breadcrumbs": "Browse by Faculty",
 
@@ -3479,21 +3479,21 @@
 
   "menu.section.browse_global": "All of DSpace",
 
-  "menu.section.browse_global_by_author": "By Author",
+  "menu.section.browse_global_by_author": "Author",
 
-  "menu.section.browse_global_by_dateissued": "By Issue Date",
+  "menu.section.browse_global_by_dateissued": "Issue Date",
 
-  "menu.section.browse_global_by_subject": "By Subject",
+  "menu.section.browse_global_by_subject": "Subject",
 
-  "menu.section.browse_global_by_srsc": "By Subject Category",
+  "menu.section.browse_global_by_srsc": "Subject Category",
 
   "menu.section.browse_global_by_nsi": "By Norwegian Science Index",
 
-  "menu.section.browse_global_by_title": "By Title",
+  "menu.section.browse_global_by_title": "Title",
 
-  "menu.section.browse_global_by_horizon": "By Horizon",
+  "menu.section.browse_global_by_horizon": "Project Horizon",
 
-  "menu.section.browse_global_by_affiliation": "By Faculty",
+  "menu.section.browse_global_by_affiliation": "Faculty",
 
   "menu.section.browse_global_by_funder": "Funder",
 
