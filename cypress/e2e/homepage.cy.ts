@@ -36,8 +36,8 @@ describe('Homepage', () => {
     // Exclude link-name rule as thumbnail links are handled elsewhere in the component
     testA11y('ds-home-page', {
       rules: {
-        'link-name': { enabled: false }
-      }
+        'link-name': { enabled: false },
+      },
     });
   });
 });
