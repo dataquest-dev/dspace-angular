@@ -3,8 +3,8 @@
 :root {
 
   @include media-breakpoint-up(md) {
-    --ds-header-logo-height: 55px;
-    --ds-header-height: 80px;
+    --ds-header-logo-height: 80px;
+    --ds-header-height: 110px;
   }
   @include media-breakpoint-down(sm) {
     --ds-header-logo-height: 50px;
