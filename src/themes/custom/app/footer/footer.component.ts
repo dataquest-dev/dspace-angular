@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { FooterComponent as BaseComponent } from '../../../../app/footer/footer.component';
+import { VarDirective } from '../../../../app/shared/utils/var.directive';
 
 @Component({
   selector: 'ds-themed-footer',
@@ -20,6 +21,7 @@ import { FooterComponent as BaseComponent } from '../../../../app/footer/footer.
     DatePipe,
     RouterLink,
     TranslateModule,
+    VarDirective,
   ],
 })
 export class FooterComponent extends BaseComponent {
