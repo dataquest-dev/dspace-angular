@@ -59,15 +59,15 @@
         /* desktop submenu */
 
         .dropdown-menu {
-          border: 1px solid var(--ds-navbar-link-color-hover);
+          border: 1px solid var(--ds-expandable-navbar-border-color);
 
           .ds-menu-item {
             // define here the style for second-level navbar menu items
             padding: var(--ds-navbar-dropdown-item-vertical-padding) var(--ds-navbar-dropdown-item-horizontal-padding);
-            color: var(--ds-navbar-link-color-hover);
+            color: var(--ds-expandable-navbar-link-color);
             &:hover, &:focus {
-              color: var(--ds-navbar-link-color);
-              background-color: var(--ds-navbar-link-color-hover);
+              color: var(--ds-expandable-navbar-link-color-hover);
+              background-color: var(--ds-expandable-navbar-link-color);
             }
           }
         }

@@ -13,9 +13,10 @@
         a.ds-menu-item {
           display: block;
           color: var(--ds-expandable-navbar-link-color);
+          transition: background-color .15s ease-out, color .15s ease-out;
           &:hover {
             color: var(--ds-expandable-navbar-link-color-hover);
-            background-color: var(--ds-user-menu-dropdown-link-background-hover);
+            background-color: var(--ds-expandable-navbar-link-color);
           }
         }
       }
