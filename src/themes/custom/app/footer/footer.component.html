@@ -98,15 +98,16 @@
               <a class="btn text-white" href="https://osc.mendelu.cz/36299-repozitar" target="_blank" rel="noopener noreferrer" role="link" tabindex="0">{{ 'footer.link.open-science-centre' | translate}}</a>
             </li>
           </ul>
-          @if (coarLdnEnabled$ | async) {
-            <div class="notify-enabled text-white mt-2">
-              <a class="coar-notify-support-route" routerLink="info/coar-notify-support" role="link" tabindex="0">
-                <img class="n-coar" src="assets/images/n-coar.svg" [attr.alt]="'menu.header.image.logo' | translate" />
-                {{ 'footer.link.coar-notify-support' | translate }}
-              </a>
-            </div>
-          }
         </div>
+
+        @if (coarLdnEnabled$ | async) {
+          <div class="notify-enabled text-white align-self-end">
+            <a class="coar-notify-support-route" routerLink="info/coar-notify-support" role="link" tabindex="0">
+              <img class="n-coar" src="assets/images/n-coar.svg" [attr.alt]="'menu.header.image.logo' | translate" />
+              {{ 'footer.link.coar-notify-support' | translate }}
+            </a>
+          </div>
+        }
 
         <!-- Right Column - Theme Sign -->
         <div class="col-md-2 text-center">
