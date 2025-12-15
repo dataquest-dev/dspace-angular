@@ -1,22 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { ContactPageComponent } from './contact-page.component';
 import { ContactPageRoutingModule } from './contact-page-routing.module';
 import { ThemedContactPageComponent } from './themed-contact-page.component';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        ContactPageRoutingModule,
-        TranslateModule,
-        RouterModule
-    ],
+  imports: [
+    CommonModule,
+    ContactPageRoutingModule,
+    TranslateModule,
+    RouterModule,
+  ],
   declarations: [
     ContactPageComponent,
-    ThemedContactPageComponent
-  ]
+    ThemedContactPageComponent,
+  ],
 })
 export class ContactPageModule {
 

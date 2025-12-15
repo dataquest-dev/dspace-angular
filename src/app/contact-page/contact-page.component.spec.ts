@@ -1,8 +1,12 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ContactPageComponent } from './contact-page.component';
-import { ConfigurationDataService } from '../core/data/configuration-data.service';
-import { of } from 'rxjs';
+import {
+  ComponentFixture,
+  TestBed,
+} from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
+
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { ContactPageComponent } from './contact-page.component';
 
 describe('ContactPageComponent', () => {
   let component: ContactPageComponent;
@@ -17,9 +21,9 @@ describe('ContactPageComponent', () => {
       imports: [ TranslateModule.forRoot() ], // Add this line
       providers: [
         { provide: ConfigurationDataService, useValue: mockConfigService },
-      ]
+      ],
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -27,8 +31,8 @@ describe('ContactPageComponent', () => {
     component = fixture.componentInstance;
     mockConfigService.findByPropertyName.and.returnValue(of({
       payload: {
-        values: ['test.email@example.com']
-      }
+        values: ['test.email@example.com'],
+      },
     }));
     fixture.detectChanges();
   });

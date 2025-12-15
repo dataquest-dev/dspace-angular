@@ -20,13 +20,13 @@ import {
   AppConfig,
 } from '../../config/app-config.interface';
 import { NotifyInfoService } from '../core/coar-notify/notify-info/notify-info.service';
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../core/data/feature-authorization/feature-id';
-import { OrejimeService } from '../shared/cookies/orejime.service';
-import { hasValue } from '../shared/empty.util';
 import { RemoteData } from '../core/data/remote-data';
 import { ConfigurationProperty } from '../core/shared/configuration-property.model';
-import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { OrejimeService } from '../shared/cookies/orejime.service';
+import { hasValue } from '../shared/empty.util';
 
 @Component({
   selector: 'ds-base-footer',
