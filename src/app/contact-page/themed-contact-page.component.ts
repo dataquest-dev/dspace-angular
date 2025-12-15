@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
-import { ContactPageComponent } from './contact-page.component';
 import { ThemedComponent } from '../shared/theme-support/themed.component';
+import { ContactPageComponent } from './contact-page.component';
 
 /**
  * Themed wrapper for CollectionPageComponent
@@ -11,7 +11,9 @@ import { ThemedComponent } from '../shared/theme-support/themed.component';
   styleUrls: [],
   templateUrl: '../shared/theme-support/themed.component.html',
   standalone: true,
-  imports: [ContactPageComponent],
+  imports: [
+    ContactPageComponent,
+  ],
 })
 export class ThemedContactPageComponent extends ThemedComponent<ContactPageComponent> {
   protected getComponentName(): string {
