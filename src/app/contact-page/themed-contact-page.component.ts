@@ -9,11 +9,7 @@ import { ContactPageComponent } from './contact-page.component';
 @Component({
   selector: 'ds-contact-page',
   styleUrls: [],
-  templateUrl: '../shared/theme-support/themed.component.html',
-  standalone: true,
-  imports: [
-    ContactPageComponent,
-  ],
+  templateUrl: '../shared/theme-support/themed.component.html'
 })
 export class ThemedContactPageComponent extends ThemedComponent<ContactPageComponent> {
   protected getComponentName(): string {

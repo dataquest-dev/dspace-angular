@@ -9,8 +9,7 @@ import { ConfigurationDataService } from '../core/data/configuration-data.servic
 @Component({
   selector: 'ds-base-contact-page',
   styleUrls: ['./contact-page.component.scss'],
-  templateUrl: './contact-page.component.html',
-  standalone: true,
+  templateUrl: './contact-page.component.html'
 })
 export class ContactPageComponent implements OnInit {
   emailToContact$: BehaviorSubject<string> = new BehaviorSubject<string>('');
