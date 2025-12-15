@@ -53,7 +53,7 @@
     <div class="container-fluid">
       <div class="row align-items-center text-white">
         <!-- Left Column - Logos -->
-        <div class="col-md-2 mb-3 mb-md-0">
+        <div class="col-12 col-md-2 mb-3 mb-md-0">
           <div class="d-flex flex-wrap justify-content-center align-items-center gap-3">
             <a href="https://explore.openaire.eu/" target="_blank" rel="noopener noreferrer" role="link" tabindex="0">
               <img src="assets/images/openaire-logo.svg" alt="OpenAIRE" class="footer-logo">
@@ -65,7 +65,7 @@
         </div>
 
         <!-- Center Column - Main Content -->
-        <div class="col-md-8 text-center mb-3 mb-md-0">
+        <div class="col-12 col-md-8 text-center mb-3 mb-md-0">
           <p class="m-0">
             <a class="btn text-white"
                href="http://www.dspace.org/" role="link" tabindex="0">{{ 'footer.link.dspace' | translate}}</a>
@@ -110,7 +110,7 @@
         }
 
         <!-- Right Column - Theme Sign -->
-        <div class="col-md-2 text-center">
+        <div class="col-12 col-md-2 text-center">
           <div class="footer-sign">
             <p class="theme-by mb-1">{{ 'footer.theme.by.message' | translate }}</p>
             <a class="dtq-sign text-white" *ngVar="(themedByCompanyName$ | async)?.payload?.values[0] as companyName"
