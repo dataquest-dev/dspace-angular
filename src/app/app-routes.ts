@@ -177,6 +177,11 @@ export const APP_ROUTES: Route[] = [
         canActivate: [authenticatedGuard, endUserAgreementCurrentUserGuard],
       },
       {
+        path: 'contact',
+        loadChildren: () => import('./contact-page/contact-page.module')
+          .then((m) => m.ContactPageModule),
+      },
+      {
         path: 'login',
         loadChildren: () => import('./login-page/login-page-routes')
           .then((m) => m.ROUTES),

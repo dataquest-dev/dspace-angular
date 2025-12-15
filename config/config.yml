@@ -64,6 +64,8 @@ themes:
         attributes:
           rel: manifest
           href: assets/custom/images/favicons/manifest.webmanifest
+    info:
+      enablePrivacyStatement: false
 
 
 #info:

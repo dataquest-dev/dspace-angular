@@ -1,0 +1,22 @@
+<div class="container w-100 h-100">
+    <div class="text-center mt-5 row justify-content-center">
+        <div>
+            <h1>{{'contact-us.title' | translate}}</h1>
+            <div>
+              <p>{{'contact-us.description' | translate}}</p>
+              <div class="row text-left">
+                <span class="col-6">{{'contact-us.form' | translate}} </span>
+                <a [routerLink]="'/info/feedback'" class="col-6">{{'contact-us.feedback' | translate}}</a>
+              </div>
+              <div class="row text-left">
+                <span class="col-6">{{'contact-us.email' | translate}}</span>
+                @if (emailToContact$ | async; as email) {
+                  <a [href]="'mailto:' + email" class="col-6">
+                    {{ email }}
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
