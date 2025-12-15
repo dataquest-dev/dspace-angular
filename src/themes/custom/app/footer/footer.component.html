@@ -54,12 +54,12 @@
       <div class="row align-items-center text-white">
         <!-- Left Column - Logos -->
         <div class="col-md-2 mb-3 mb-md-0">
-          <div class="d-flex flex-wrap justify-content-center justify-content-md-centre align-items-center gap-3">
+          <div class="d-flex flex-wrap justify-content-center align-items-center gap-3">
             <a href="https://explore.openaire.eu/" target="_blank" rel="noopener noreferrer" role="link" tabindex="0">
-              <img src="assets/images/openaire-logo.svg" alt="OpenAIRE" style="height: 50px; max-width: 100%; width: auto;">
+              <img src="assets/images/openaire-logo.svg" alt="OpenAIRE" class="footer-logo">
             </a>
             <a href="https://www.base-search.net/" target="_blank" rel="noopener noreferrer" role="link" tabindex="0">
-              <img src="assets/images/base-logo.svg" alt="BASE" style="height: 50px; max-width: 100%; width: auto;">
+              <img src="assets/images/base-logo.svg" alt="BASE" class="footer-logo">
             </a>
           </div>
         </div>
@@ -67,15 +67,15 @@
         <!-- Center Column - Main Content -->
         <div class="col-md-8 text-center mb-3 mb-md-0">
           <p class="m-0">
-            <a class="text-white"
+            <a class="btn text-white"
                href="http://www.dspace.org/" role="link" tabindex="0">{{ 'footer.link.dspace' | translate}}</a>
             {{ 'footer.copyright' | translate:{year: dateObj | date:'y'} }}
-            <a class="text-white"
+            <a class="btn text-white"
                href="https://www.lyrasis.org/" role="link" tabindex="0">{{ 'footer.link.lyrasis' | translate}}</a>
           </p>
           <ul class="footer-info list-unstyled d-flex justify-content-center flex-wrap mb-0">
             <li>
-              <a class="text-white" routerLink="/contact">{{ 'footer.link.contact-us' | translate}}</a>
+              <a class="btn text-white" routerLink="/contact">{{ 'footer.link.contact-us' | translate}}</a>
             </li>
             @if (showCookieSettings) {
               <li>
@@ -95,7 +95,7 @@
               </li>
             }
             <li>
-              <a class="text-white" href="https://osc.mendelu.cz/36299-repozitar" target="_blank" rel="noopener noreferrer" role="link" tabindex="0">{{ 'footer.link.open-science-centre' | translate}}</a>
+              <a class="btn text-white" href="https://osc.mendelu.cz/36299-repozitar" target="_blank" rel="noopener noreferrer" role="link" tabindex="0">{{ 'footer.link.open-science-centre' | translate}}</a>
             </li>
           </ul>
           @if (coarLdnEnabled$ | async) {
