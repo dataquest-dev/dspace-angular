@@ -3,8 +3,8 @@
 :root {
 
   @include media-breakpoint-up(md) {
-    --ds-header-logo-height: 55px;
-    --ds-header-height: 80px;
+    --ds-header-logo-height: 80px;
+    --ds-header-height: 110px;
   }
   @include media-breakpoint-down(sm) {
     --ds-header-logo-height: 50px;
@@ -15,11 +15,25 @@
   --ds-login-logo-width: auto;
 
   --ds-breadcrumb-link-color: #{$mendelu-green};
-  --ds-header-bg: #{$mendelu-green};
-  --ds-navbar-link-color: #{$white};
-  --ds-navbar-link-color-hover: #{$mendelu-green};
-  --ds-header-icon-color: #{$white};
-  --ds-header-icon-color-hover: #{$mendelu-green};
+
+  // Uncomment to use white color header with customer-color background
+  // --ds-header-bg: #{$mendelu-green};
+  // --ds-header-icon-color: #{$white};
+  // --ds-header-icon-color-hover: #{$mendelu-green};
+  // --ds-navbar-link-color: #{$white};
+  // --ds-navbar-link-color-hover: #{$mendelu-green};
+
+  // Uncomment to use customer-color header with white background
+  --ds-header-bg: #{$white};
+  --ds-header-icon-color: #{$mendelu-green};
+  --ds-header-icon-color-hover: #{$white};
+  --ds-navbar-link-color: #{$mendelu-green};
+  --ds-navbar-link-color-hover: #{$white};
+
+  --ds-expandable-navbar-bg: #{$white};
+  --ds-expandable-navbar-link-color: #{$mendelu-green};
+  --ds-expandable-navbar-link-color-hover: #{$white};
+  --ds-expandable-navbar-border-color: #{$mendelu-green};
 
   --ds-banner-text-background: rgba(0, 0, 0, 0.58);
   --ds-banner-background-gradient-width: 300px;

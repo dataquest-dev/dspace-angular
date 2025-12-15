@@ -57,7 +57,7 @@ export class HeaderComponent extends BaseComponent implements OnInit {
 
   setLogo() {
     this.logoSrc = this.localeService.getCurrentLanguageCode() === 'cs'
-      ? 'assets/images/mendel-uni-logo-w-cs.svg'
-      : 'assets/images/mendel-uni-logo-w-en.svg';
+      ? 'assets/images/mendel-uni-logo-cs.svg'
+      : 'assets/images/mendel-uni-logo-en.svg';
   }
 }
