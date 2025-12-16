@@ -40,17 +40,17 @@ export class ItemPageCitationFieldComponent implements OnInit {
 
   ngOnInit() {
     const citaceProUrl$ = this.configService.findByPropertyName('citace.pro.url').pipe(
-      catchError(() => of(null))
+      catchError(() => of(null)),
     );
     const universityUsingDspace$ = this.configService.findByPropertyName('citace.pro.university').pipe(
-      catchError(() => of(null))
+      catchError(() => of(null)),
     );
     const citaceProAllowed$ = this.configService.findByPropertyName('citace.pro.allowed').pipe(
-      catchError(() => of(null))
+      catchError(() => of(null)),
     );
 
     combineLatest([citaceProUrl$, universityUsingDspace$, citaceProAllowed$]).pipe(
-      take(1)
+      take(1),
     ).subscribe(([citaceProUrlData, universityData, citaceProAllowedData]) => {
       const citaceProBaseUrl = citaceProUrlData?.payload?.values?.[0];
       const universityUsingDspace = universityData?.payload?.values?.[0];

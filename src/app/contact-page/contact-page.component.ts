@@ -1,7 +1,4 @@
-import {
-  AsyncPipe,
-  CommonModule,
-} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   Component,
   OnInit,
@@ -19,7 +16,6 @@ import { ConfigurationDataService } from '../core/data/configuration-data.servic
   standalone: true,
   imports: [
     CommonModule,
-    AsyncPipe,
     RouterModule,
     TranslateModule,
   ],
