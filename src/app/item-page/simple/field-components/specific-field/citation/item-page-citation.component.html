@@ -1,7 +1,8 @@
-<iframe
-  *ngIf ="citaceProStatus"
-  height="200px"
-  width="100%"
-  frameborder="0"
-  [src]="iframeSrc"
-></iframe>
+@if (citaceProStatus) {
+  <iframe
+    height="200px"
+    width="100%"
+    style="border: none;"
+    [src]="iframeSrc"
+  ></iframe>
+}

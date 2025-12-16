@@ -1,6 +1,6 @@
 import {
   ChangeDetectionStrategy,
-  NO_ERRORS_SCHEMA ,
+  NO_ERRORS_SCHEMA,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -9,9 +9,9 @@ import {
 } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { ConfigurationDataService } from '../../../../../../../../dspace-angular-765/src/app/core/data/configuration-data.service';
-import { ConfigurationProperty } from '../../../../../../../../dspace-angular-765/src/app/core/shared/configuration-property.model';
-import { createSuccessfulRemoteDataObject$ } from '../../../../../../../../dspace-angular-765/src/app/shared/remote-data.utils';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
+import { createSuccessfulRemoteDataObject$ } from '../../../../../shared/remote-data.utils';
 import { ItemPageCitationFieldComponent } from './item-page-citation.component';
 
 describe('ItemPageCitationFieldComponent', () => {
@@ -32,7 +32,7 @@ describe('ItemPageCitationFieldComponent', () => {
 
   beforeEach(waitForAsync(() => {
     void TestBed.configureTestingModule({
-      declarations: [ItemPageCitationFieldComponent],
+      imports: [ItemPageCitationFieldComponent],
       providers: [
         { provide: ConfigurationDataService, useValue: mockConfigurationDataService },
       ],

@@ -1,7 +1,13 @@
 import {
+  AsyncPipe,
+  CommonModule,
+} from '@angular/common';
+import {
   Component,
   OnInit,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
@@ -11,6 +17,12 @@ import { ConfigurationDataService } from '../core/data/configuration-data.servic
   styleUrls: ['./contact-page.component.scss'],
   templateUrl: './contact-page.component.html',
   standalone: true,
+  imports: [
+    CommonModule,
+    AsyncPipe,
+    RouterModule,
+    TranslateModule,
+  ],
 })
 export class ContactPageComponent implements OnInit {
   emailToContact$: BehaviorSubject<string> = new BehaviorSubject<string>('');

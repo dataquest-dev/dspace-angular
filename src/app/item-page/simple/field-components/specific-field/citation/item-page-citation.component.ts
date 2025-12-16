@@ -8,7 +8,14 @@ import {
   DomSanitizer,
   SafeResourceUrl,
 } from '@angular/platform-browser';
-import { combineLatest } from 'rxjs';
+import {
+  combineLatest,
+  of,
+} from 'rxjs';
+import {
+  catchError,
+  take,
+} from 'rxjs/operators';
 import { ConfigurationDataService } from 'src/app/core/data/configuration-data.service';
 
 @Component({
@@ -32,11 +39,19 @@ export class ItemPageCitationFieldComponent implements OnInit {
 
 
   ngOnInit() {
-    const citaceProUrl$ = this.configService.findByPropertyName('citace.pro.url');
-    const universityUsingDspace$ = this.configService.findByPropertyName('citace.pro.university');
-    const citaceProAllowed$ = this.configService.findByPropertyName('citace.pro.allowed');
+    const citaceProUrl$ = this.configService.findByPropertyName('citace.pro.url').pipe(
+      catchError(() => of(null))
+    );
+    const universityUsingDspace$ = this.configService.findByPropertyName('citace.pro.university').pipe(
+      catchError(() => of(null))
+    );
+    const citaceProAllowed$ = this.configService.findByPropertyName('citace.pro.allowed').pipe(
+      catchError(() => of(null))
+    );
 
-    combineLatest([citaceProUrl$, universityUsingDspace$, citaceProAllowed$]).subscribe(([citaceProUrlData, universityData, citaceProAllowedData]) => {
+    combineLatest([citaceProUrl$, universityUsingDspace$, citaceProAllowed$]).pipe(
+      take(1)
+    ).subscribe(([citaceProUrlData, universityData, citaceProAllowedData]) => {
       const citaceProBaseUrl = citaceProUrlData?.payload?.values?.[0];
       const universityUsingDspace = universityData?.payload?.values?.[0];
       this.citaceProURL = this.makeCitaceProURL(citaceProBaseUrl, universityUsingDspace);
