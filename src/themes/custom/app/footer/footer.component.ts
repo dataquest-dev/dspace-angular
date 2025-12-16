@@ -11,8 +11,8 @@ import { VarDirective } from '../../../../app/shared/utils/var.directive';
 
 @Component({
   selector: 'ds-themed-footer',
-  // styleUrls: ['./footer.component.scss'],
-  styleUrls: ['../../../../app/footer/footer.component.scss'],
+  styleUrls: ['./footer.component.scss'],
+  // styleUrls: ['../../../../app/footer/footer.component.scss'],
   templateUrl: './footer.component.html',
   // templateUrl: '../../../../app/footer/footer.component.html',
   standalone: true,

@@ -13,8 +13,6 @@ import { ThemedContactPageComponent } from './themed-contact-page.component';
     ContactPageRoutingModule,
     TranslateModule,
     RouterModule,
-  ],
-  declarations: [
     ContactPageComponent,
     ThemedContactPageComponent,
   ],
