@@ -1,9 +1,9 @@
-import { AsyncPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   Component,
   OnInit,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -15,8 +15,8 @@ import { ConfigurationDataService } from '../core/data/configuration-data.servic
   templateUrl: './contact-page.component.html',
   standalone: true,
   imports: [
-    AsyncPipe,
-    RouterLink,
+    CommonModule,
+    RouterModule,
     TranslateModule,
   ],
 })
