@@ -27,12 +27,15 @@
           <th id="actions" scope="col" class="{{ columnSizes.columns[3].buildClasses() }} text-center">
             {{'item.edit.bitstreams.headers.actions' | translate}}
           </th>
+          <th id="sync-status" scope="col" class="{{ columnSizes.columns[4].buildClasses() }} text-center">
+            {{'item.edit.bitstreams.headers.sync-status' | translate}}
+          </th>
         </tr>
         </thead>
 
         <tbody cdkDropList (cdkDropListDropped)="drop($event)">
         <tr class="bundle-row">
-          <th id="{{ bundleName }}" class="span" colspan="3" scope="colgroup">
+          <th id="{{ bundleName }}" class="span" colspan="4" scope="colgroup">
             {{'item.edit.bitstreams.bundle.name' | translate:{ name: bundleName } }}
           </th>
           <td class="text-center">
@@ -126,6 +129,16 @@
                     <i class="fas fa-undo-alt fa-fw"></i>
                   </button>
                 </div>
+              </div>
+            </td>
+            <td class="{{columnSizes.columns[4].buildClasses()}} row-element"
+                headers="{{ entry.nameStripped }} {{ bundleName }} sync-status">
+              <div class="d-flex align-items-center">
+                <span class="text-center">
+                  <i [class]="isBitstreamSynchronized(entry) ? 'fas fa-check' : 'fas fa-times'"></i>
+                </span>
+                <span class="pl-1">|</span>
+                <div class="pl-1" [ngTemplateOutlet]="checksum"></div>
               </div>
             </td>
           </tr>
