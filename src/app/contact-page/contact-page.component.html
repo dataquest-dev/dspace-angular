@@ -1,14 +1,14 @@
-<div class="container w-100 h-100">
-    <div class="text-center mt-5 row justify-content-center">
+<div class="d-flex container mw-75 h-100 justify-content-center">
+    <div class="text-center px-5 mt-5 row">
         <div>
             <h1>{{'contact-us.title' | translate}}</h1>
             <div>
               <p>{{'contact-us.description' | translate}}</p>
-              <div class="row text-left">
+              <div class="row text-start">
                 <span class="col-6">{{'contact-us.form' | translate}} </span>
                 <a [routerLink]="'/info/feedback'" class="col-6">{{'contact-us.feedback' | translate}}</a>
               </div>
-              <div class="row text-left">
+              <div class="row text-start">
                 <span class="col-6">{{'contact-us.email' | translate}}</span>
                 @if (emailToContact$ | async; as email) {
                   <a [href]="'mailto:' + email" class="col-6">

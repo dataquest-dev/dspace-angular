@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   AsyncPipe,
   CommonModule,
