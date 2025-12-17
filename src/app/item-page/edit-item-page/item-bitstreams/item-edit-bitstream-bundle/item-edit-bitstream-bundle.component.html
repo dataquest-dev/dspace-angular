@@ -27,15 +27,15 @@
           <th id="actions" scope="col" class="{{ columnSizes.columns[3].buildClasses() }} text-center">
             {{'item.edit.bitstreams.headers.actions' | translate}}
           </th>
-          <th id="sync-status" scope="col" class="{{ columnSizes.columns[4].buildClasses() }} text-center">
-            {{'item.edit.bitstreams.headers.sync-status' | translate}}
+          <th id="synchronized" scope="col" class="{{ columnSizes.columns[4].buildClasses() }} text-center">
+            {{'item.edit.bitstreams.headers.synchronized' | translate}}
           </th>
         </tr>
         </thead>
 
         <tbody cdkDropList (cdkDropListDropped)="drop($event)">
         <tr class="bundle-row">
-          <th id="{{ bundleName }}" class="span" colspan="4" scope="colgroup">
+          <th id="{{ bundleName }}" class="span" colspan="3" scope="colgroup">
             {{'item.edit.bitstreams.bundle.name' | translate:{ name: bundleName } }}
           </th>
           <td class="text-center">
@@ -77,6 +77,7 @@
             </div>
 
           </td>
+          <td></td>
         </tr>
 
         <ng-container *ngFor="let entry of (tableEntries$ | async)">
@@ -132,7 +133,7 @@
               </div>
             </td>
             <td class="{{columnSizes.columns[4].buildClasses()}} row-element"
-                headers="{{ entry.nameStripped }} {{ bundleName }} sync-status">
+                headers="{{ entry.nameStripped }} {{ bundleName }} synchronized">
               <div class="d-flex align-items-center">
                 <span class="text-center">
                   <i [class]="isBitstreamSynchronized(entry) ? 'fas fa-check' : 'fas fa-times'"></i>
@@ -153,7 +154,7 @@
 </ng-template>
 
 <ng-template #checksum let-entry="entry">
-  <div class="hover-container"
+  <div class="d-flex align-items-center"
        (mouseenter)="showChecksumValues = true"
        (mouseleave)="showChecksumValues = false"
        *ngVar="(checkSum$ | async) as bitstreamChecksum">

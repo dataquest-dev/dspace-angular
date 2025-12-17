@@ -2087,8 +2087,6 @@
 
   "item.edit.bitstreams.headers.name": "Name",
 
-  "item.edit.bitstreams.headers.sync-status": "Sync Status",
-
   "item.edit.bitstreams.notifications.discarded.content": "Your changes were discarded. To reinstate your changes click the 'Undo' button",
 
   "item.edit.bitstreams.notifications.discarded.title": "Changes discarded",
