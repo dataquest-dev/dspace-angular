@@ -19,6 +19,15 @@
   font-weight: normal;
 }
 
+.bitstream-name-text {
+  width: 0;
+  overflow: auto;
+}
+
 .table {
   margin-bottom: 0;
+}
+
+.table thead th {
+  vertical-align: middle;
 }
