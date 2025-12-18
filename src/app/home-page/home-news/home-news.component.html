@@ -8,7 +8,9 @@
             {{ 'home.news.welcome' | translate }}
           </p>
           <p [innerHTML]="'home.news.about-link' | translate"></p>
-          <p [innerHTML]="'home.news.upload-info' | translate"></p>
+          @if (emailToContact$ | async; as email) {
+            <p [innerHTML]="'home.news.upload-info' | translate : { email: email }"></p>
+          }
         </div>
       </div>
     </div>
