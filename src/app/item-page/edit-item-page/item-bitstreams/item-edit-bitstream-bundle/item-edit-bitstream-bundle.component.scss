@@ -19,9 +19,8 @@
   font-weight: normal;
 }
 
-.bitstream-name-text {
-  width: 0;
-  overflow: auto;
+.dont-break-out {
+  word-break: break-word;
 }
 
 .table {
