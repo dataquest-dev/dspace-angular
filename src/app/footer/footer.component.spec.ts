@@ -7,6 +7,7 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
@@ -37,6 +38,7 @@ describe('Footer component', () => {
         { provide: NotifyInfoService, useValue: notifyInfoService },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: APP_CONFIG, useValue: environment },
+        provideMockStore(),
       ],
     });
   }));
