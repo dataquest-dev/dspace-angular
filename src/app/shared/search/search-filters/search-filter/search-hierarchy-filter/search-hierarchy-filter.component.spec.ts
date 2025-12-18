@@ -83,7 +83,7 @@ describe('SearchHierarchyFilterComponent', () => {
       providers: [
         { provide: SearchService, useValue: searchService },
         { provide: SearchFilterService, useValue: searchFilterService },
-        { provide: RemoteDataBuildService, useValue: {} },
+        { provide: RemoteDataBuildService, useValue: { buildSingle: () => of({}) } },
         { provide: Router, useValue: router },
         { provide: NgbModal, useValue: modalService },
         { provide: VocabularyService, useValue: vocabularyService },

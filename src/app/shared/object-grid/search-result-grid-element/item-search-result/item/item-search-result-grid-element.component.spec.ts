@@ -239,9 +239,9 @@ export function getEntityGridElementTestComponent(component, searchResultWithMet
         providers: [
           { provide: TruncatableService, useValue: truncatableServiceStub },
           { provide: ObjectCacheService, useValue: {} },
-          { provide: UUIDService, useValue: {} },
+          { provide: UUIDService, useValue: { generate: () => 'test-uuid' } },
           { provide: Store, useValue: {} },
-          { provide: RemoteDataBuildService, useValue: {} },
+          { provide: RemoteDataBuildService, useValue: { buildSingle: () => of({}) } },
           { provide: CommunityDataService, useValue: {} },
           { provide: HALEndpointService, useValue: {} },
           { provide: HttpClient, useValue: {} },
