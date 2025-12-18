@@ -23,7 +23,7 @@ describe('Header', () => {
     cy.get('html').invoke('attr', 'lang').should('eq', 'cs');
 
     // Login menu should now be in Czech
-    cy.get('[data-test="login-menu"]').contains('Přihlásit se');
+    cy.get('[data-test="login-menu"]').contains('Admin přístup');
 
     // Change back to English from language switcher
     cy.get('button[data-test="lang-switch"]').click();
