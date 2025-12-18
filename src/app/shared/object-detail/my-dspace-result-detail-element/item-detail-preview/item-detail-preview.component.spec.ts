@@ -14,7 +14,10 @@ import {
   TranslateLoader,
   TranslateModule,
 } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  of,
+} from 'rxjs';
 
 import { AuthService } from '../../../../core/auth/auth.service';
 import { RemoteDataBuildService } from '../../../../core/cache/builders/remote-data-build.service';
