@@ -3365,6 +3365,9 @@
   // "home.news.upload-info": "To upload articles and other publications to the repository, contact the <a href='https://osc.mendelu.cz/en/36459-archive-published-open-access-article-in-repository'>Open Science Centre</a>: <a href='mailto:{{ email }}'>{{ email }}</a>. Before uploading publications, the record must be created in the OBD system.",
   "home.news.upload-info": "Pro vložení článků a dalších publikací do repozitáře kontaktujte <a href='https://osc.mendelu.cz/36340-vlozte-publikovany-open-access-clanek-do-repozitare'>Open Science Centre</a>: <a href='mailto:{{ email }}'>{{ email }}</a>. Před vložením publikací je potřeba, aby byl vytvořen záznam v systému OBD.",
 
+  // "home.news.upload-info-no-email": "To upload articles and other publications to the repository, contact the <a href='https://osc.mendelu.cz/en/36459-archive-published-open-access-article-in-repository'>Open Science Centre</a>. Before uploading publications, the record must be created in the OBD system.",
+  "home.news.upload-info-no-email": "Pro vložení článků a dalších publikací do repozitáře kontaktujte <a href='https://osc.mendelu.cz/36340-vlozte-publikovany-open-access-clanek-do-repozitare'>Open Science Centre</a>. Před vložením publikací je potřeba, aby byl vytvořen záznam v systému OBD.",
+
   // "info.accessibility-settings.breadcrumbs": "Accessibility settings",
   "info.accessibility-settings.breadcrumbs": "Nastavení přístupnosti",
 

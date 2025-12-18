@@ -2243,6 +2243,8 @@
 
   "home.news.upload-info": "To upload articles and other publications to the repository, contact the <a href='https://osc.mendelu.cz/en/36459-archive-published-open-access-article-in-repository'>Open Science Centre</a>: <a href='mailto:{{ email }}'>{{ email }}</a>. Before uploading publications, the record must be created in the OBD system.",
 
+  "home.news.upload-info-no-email": "To upload articles and other publications to the repository, contact the <a href='https://osc.mendelu.cz/en/36459-archive-published-open-access-article-in-repository'>Open Science Centre</a>. Before uploading publications, the record must be created in the OBD system.",
+
   "info.accessibility-settings.breadcrumbs": "Accessibility settings",
 
   "info.accessibility-settings.cookie-warning": "Saving the accessibility settings is currently not possible. Either log in to save the settings in user data, or accept the 'Accessibility Settings' cookie using the 'Cookie Settings' menu at the bottom of the page. Once the cookie has been accepted, you can reload the page to remove this message.",
