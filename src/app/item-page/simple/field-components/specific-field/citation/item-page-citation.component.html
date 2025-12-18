@@ -1,8 +1,8 @@
-@if (citaceProStatus) {
+@if (citaceProStatus && citaceProURL) {
   <iframe
     height="200px"
     width="100%"
     style="border: none;"
-    [src]="iframeSrc"
+    [src]="citaceProURL"
   ></iframe>
 }
