@@ -18,7 +18,7 @@ import {
   take,
 } from 'rxjs/operators';
 
-import { ConfigurationDataService } from 'src/app/core/data/configuration-data.service';
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 import { getFirstCompletedRemoteData } from '../../../../../core/shared/operators';
 
 @Component({
