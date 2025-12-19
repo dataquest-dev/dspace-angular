@@ -30,7 +30,7 @@ export class ItemPageCitationFieldComponent implements OnInit {
   @Input() handle: string;
 
   citaceProStatus = true;
-  private citaceProURL: SafeResourceUrl | null;
+  citaceProURL: SafeResourceUrl | null = null;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -66,11 +66,10 @@ export class ItemPageCitationFieldComponent implements OnInit {
     citaceProBaseUrl: string,
     universityUsingDspace: string,
   ): SafeResourceUrl | null {
+    if (!citaceProBaseUrl || !universityUsingDspace || !this.handle) {
+      return null;
+    }
     const url = `${citaceProBaseUrl}:${universityUsingDspace}:${this.handle}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  }
-
-  get iframeSrc(): SafeResourceUrl | null {
-    return this.citaceProURL;
   }
 }
