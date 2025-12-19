@@ -9,6 +9,7 @@ import {
   SafeResourceUrl,
 } from '@angular/platform-browser';
 import {
+  BehaviorSubject,
   combineLatest,
   of,
 } from 'rxjs';
@@ -16,7 +17,9 @@ import {
   catchError,
   take,
 } from 'rxjs/operators';
-import { ConfigurationDataService } from 'src/app/core/data/configuration-data.service';
+
+import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { getFirstCompletedRemoteData } from '../../../../../core/shared/operators';
 
 @Component({
   selector: 'ds-item-page-citation-field',
@@ -29,8 +32,8 @@ import { ConfigurationDataService } from 'src/app/core/data/configuration-data.s
 export class ItemPageCitationFieldComponent implements OnInit {
   @Input() handle: string;
 
-  citaceProStatus = true;
-  citaceProURL: SafeResourceUrl | null = null;
+  citaceProStatus$ = new BehaviorSubject<boolean>(false);
+  citaceProURL$ = new BehaviorSubject<SafeResourceUrl | null>(null);
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -40,12 +43,15 @@ export class ItemPageCitationFieldComponent implements OnInit {
 
   ngOnInit() {
     const citaceProUrl$ = this.configService.findByPropertyName('citace.pro.url').pipe(
+      getFirstCompletedRemoteData(),
       catchError(() => of(null)),
     );
     const universityUsingDspace$ = this.configService.findByPropertyName('citace.pro.university').pipe(
+      getFirstCompletedRemoteData(),
       catchError(() => of(null)),
     );
     const citaceProAllowed$ = this.configService.findByPropertyName('citace.pro.allowed').pipe(
+      getFirstCompletedRemoteData(),
       catchError(() => of(null)),
     );
 
@@ -54,10 +60,10 @@ export class ItemPageCitationFieldComponent implements OnInit {
     ).subscribe(([citaceProUrlData, universityData, citaceProAllowedData]) => {
       const citaceProBaseUrl = citaceProUrlData?.payload?.values?.[0];
       const universityUsingDspace = universityData?.payload?.values?.[0];
-      this.citaceProURL = this.makeCitaceProURL(citaceProBaseUrl, universityUsingDspace);
+      this.citaceProURL$.next(this.makeCitaceProURL(citaceProBaseUrl, universityUsingDspace));
 
       const citaceProAllowed = citaceProAllowedData?.payload?.values?.[0];
-      this.citaceProStatus = citaceProAllowed === 'true';
+      this.citaceProStatus$.next(citaceProAllowed === 'true');
     });
   }
 
