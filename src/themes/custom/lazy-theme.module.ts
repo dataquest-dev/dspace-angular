@@ -42,7 +42,6 @@ import { EndUserAgreementComponent } from './app/info/end-user-agreement/end-use
 import { FeedbackComponent } from './app/info/feedback/feedback.component';
 import { FeedbackFormComponent } from './app/info/feedback/feedback-form/feedback-form.component';
 import { PrivacyComponent } from './app/info/privacy/privacy.component';
-import { ItemAlertsComponent } from './app/item-page/alerts/item-alerts.component';
 import { ItemStatusComponent } from './app/item-page/edit-item-page/item-status/item-status.component';
 import { FullFileSectionComponent } from './app/item-page/full/field-components/file-section/full-file-section.component';
 import { FullItemPageComponent } from './app/item-page/full/full-item-page.component';
@@ -176,7 +175,6 @@ const DECLARATIONS = [
   AccessStatusBadgeComponent,
   ResultsBackButtonComponent,
   DsoEditMetadataComponent,
-  ItemAlertsComponent,
   FullFileSectionComponent,
   MetadataRepresentationListComponent,
   DsDynamicLookupRelationSearchTabComponent,
