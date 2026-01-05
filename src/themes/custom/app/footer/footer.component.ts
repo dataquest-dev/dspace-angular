@@ -1,7 +1,4 @@
-import {
-  AsyncPipe,
-  DatePipe,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,7 +15,6 @@ import { VarDirective } from '../../../../app/shared/utils/var.directive';
   standalone: true,
   imports: [
     AsyncPipe,
-    DatePipe,
     RouterLink,
     TranslateModule,
     VarDirective,
