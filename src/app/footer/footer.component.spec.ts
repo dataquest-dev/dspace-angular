@@ -1,7 +1,6 @@
 import {
   ComponentFixture,
   fakeAsync,
-  inject,
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
@@ -29,7 +28,7 @@ let notifyInfoService = {
 
 const mockConfigurationDataService = {
   findByPropertyName: jasmine.createSpy('findByPropertyName').and.returnValue(
-    createSuccessfulRemoteDataObject$({ values: [] })
+    createSuccessfulRemoteDataObject$({ values: [] }),
   ),
 };
 

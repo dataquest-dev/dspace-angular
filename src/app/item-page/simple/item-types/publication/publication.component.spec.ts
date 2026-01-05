@@ -97,7 +97,7 @@ const mockBitstreamDataService = {
 
 const mockConfigurationDataService = {
   findByPropertyName: jasmine.createSpy('findByPropertyName').and.returnValue(
-    createSuccessfulRemoteDataObject$({ values: [] })
+    createSuccessfulRemoteDataObject$({ values: [] }),
   ),
 };
 
