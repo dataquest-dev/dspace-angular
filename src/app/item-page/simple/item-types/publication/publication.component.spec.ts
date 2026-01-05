@@ -32,6 +32,7 @@ import { RemoteDataBuildService } from '../../../../core/cache/builders/remote-d
 import { ObjectCacheService } from '../../../../core/cache/object-cache.service';
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
 import { CommunityDataService } from '../../../../core/data/community-data.service';
+import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { DefaultChangeAnalyzer } from '../../../../core/data/default-change-analyzer.service';
 import { DSOChangeAnalyzer } from '../../../../core/data/dso-change-analyzer.service';
 import { ItemDataService } from '../../../../core/data/item-data.service';
@@ -88,16 +89,23 @@ function getItem(metadata: MetadataMap) {
   });
 }
 
+const mockBitstreamDataService = {
+  getThumbnailFor(item: Item): Observable<RemoteData<Bitstream>> {
+    return createSuccessfulRemoteDataObject$(new Bitstream());
+  },
+};
+
+const mockConfigurationDataService = {
+  findByPropertyName: jasmine.createSpy('findByPropertyName').and.returnValue(
+    createSuccessfulRemoteDataObject$({ values: [] }),
+  ),
+};
+
 describe('PublicationComponent', () => {
   let comp: PublicationComponent;
   let fixture: ComponentFixture<PublicationComponent>;
 
   beforeEach(waitForAsync(() => {
-    const mockBitstreamDataService = {
-      getThumbnailFor(item: Item): Observable<RemoteData<Bitstream>> {
-        return createSuccessfulRemoteDataObject$(new Bitstream());
-      },
-    };
     TestBed.configureTestingModule({
       imports: [
         TranslateModule.forRoot({
@@ -127,6 +135,7 @@ describe('PublicationComponent', () => {
         { provide: VersionHistoryDataService, useValue: {} },
         { provide: VersionDataService, useValue: {} },
         { provide: BitstreamDataService, useValue: mockBitstreamDataService },
+        { provide: ConfigurationDataService, useValue: mockConfigurationDataService },
         { provide: WorkspaceitemDataService, useValue: {} },
         { provide: SearchService, useValue: {} },
         { provide: RouteService, useValue: mockRouteService },

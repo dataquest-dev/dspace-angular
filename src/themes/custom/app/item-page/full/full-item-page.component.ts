@@ -9,7 +9,6 @@ import {
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ThemedItemAlertsComponent } from '../../../../../app/item-page/alerts/themed-item-alerts.component';
 import { CollectionsComponent } from '../../../../../app/item-page/field-components/collections/collections.component';
 import { ThemedFullFileSectionComponent } from '../../../../../app/item-page/full/field-components/file-section/themed-full-file-section.component';
 import { FullItemPageComponent as BaseComponent } from '../../../../../app/item-page/full/full-item-page.component';
@@ -41,7 +40,6 @@ import { VarDirective } from '../../../../../app/shared/utils/var.directive';
     KeyValuePipe,
     RouterLink,
     ThemedFullFileSectionComponent,
-    ThemedItemAlertsComponent,
     ThemedItemPageTitleFieldComponent,
     ThemedLoadingComponent,
     TranslateModule,

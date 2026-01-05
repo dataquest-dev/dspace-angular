@@ -51,13 +51,10 @@ import { ErrorComponent } from '../../shared/error/error.component';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
 import { ListableObjectComponentLoaderComponent } from '../../shared/object-collection/shared/listable-object/listable-object-component-loader.component';
 import { VarDirective } from '../../shared/utils/var.directive';
-import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
 import { getItemPageRoute } from '../item-page-routing-paths';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
 import { AccessByTokenNotificationComponent } from './access-by-token-notification/access-by-token-notification.component';
-import { NotifyRequestsStatusComponent } from './notify-requests-status/notify-requests-status-component/notify-requests-status.component';
-import { QaEventNotificationComponent } from './qa-event-notification/qa-event-notification.component';
 
 /**
  * This component renders a simple item page.
@@ -78,9 +75,6 @@ import { QaEventNotificationComponent } from './qa-event-notification/qa-event-n
     ItemVersionsComponent,
     ItemVersionsNoticeComponent,
     ListableObjectComponentLoaderComponent,
-    NotifyRequestsStatusComponent,
-    QaEventNotificationComponent,
-    ThemedItemAlertsComponent,
     ThemedLoadingComponent,
     TranslateModule,
     VarDirective,

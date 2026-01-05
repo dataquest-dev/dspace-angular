@@ -1,7 +1,6 @@
 import {
   ComponentFixture,
   fakeAsync,
-  inject,
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
@@ -13,7 +12,9 @@ import { of } from 'rxjs';
 import { APP_CONFIG } from '../../config/app-config.interface';
 import { environment } from '../../environments/environment.test';
 import { NotifyInfoService } from '../core/coar-notify/notify-info/notify-info.service';
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';
+import { createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
 import { ActivatedRouteStub } from '../shared/testing/active-router.stub';
 import { AuthorizationDataServiceStub } from '../shared/testing/authorization-service.stub';
 import { FooterComponent } from './footer.component';
@@ -25,16 +26,23 @@ let notifyInfoService = {
   isCoarConfigEnabled: () => of(true),
 };
 
+const mockConfigurationDataService = {
+  findByPropertyName: jasmine.createSpy('findByPropertyName').and.returnValue(
+    createSuccessfulRemoteDataObject$({ values: [] }),
+  ),
+};
+
 describe('Footer component', () => {
   beforeEach(waitForAsync(() => {
     return TestBed.configureTestingModule({
       imports: [
         TranslateModule.forRoot(),
+        FooterComponent,
       ],
       providers: [
-        FooterComponent,
         { provide: AuthorizationDataService, useClass: AuthorizationDataServiceStub },
         { provide: NotifyInfoService, useValue: notifyInfoService },
+        { provide: ConfigurationDataService, useValue: mockConfigurationDataService },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: APP_CONFIG, useValue: environment },
       ],
@@ -47,10 +55,9 @@ describe('Footer component', () => {
     comp = fixture.componentInstance;
   });
 
-  it('should create footer', inject([FooterComponent], (app: FooterComponent) => {
-    // Perform test using fixture and service
-    expect(app).toBeTruthy();
-  }));
+  it('should create footer', () => {
+    expect(comp).toBeTruthy();
+  });
 
 
   it('should set showPrivacyPolicy to the value of environment.info.enablePrivacyStatement', () => {
