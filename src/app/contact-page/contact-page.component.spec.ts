@@ -2,10 +2,12 @@ import {
   ComponentFixture,
   TestBed,
 } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { ActivatedRouteStub } from '../shared/testing/active-router.stub';
 import { ContactPageComponent } from './contact-page.component';
 
 describe('ContactPageComponent', () => {
@@ -17,10 +19,13 @@ describe('ContactPageComponent', () => {
     mockConfigService = jasmine.createSpyObj(['findByPropertyName']);
 
     await TestBed.configureTestingModule({
-      declarations: [ ContactPageComponent ],
-      imports: [ TranslateModule.forRoot() ], // Add this line
+      imports: [
+        TranslateModule.forRoot(),
+        ContactPageComponent,
+      ],
       providers: [
         { provide: ConfigurationDataService, useValue: mockConfigService },
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
       ],
     })
       .compileComponents();
@@ -42,7 +47,7 @@ describe('ContactPageComponent', () => {
   });
 
   it('should call findByPropertyName on init', () => {
-    expect(mockConfigService.findByPropertyName).toHaveBeenCalledWith('lr.help.mail');
+    expect(mockConfigService.findByPropertyName).toHaveBeenCalledWith('mail.helpdesk');
   });
 
   it('should set emailToContact from service on init', () => {
