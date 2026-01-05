@@ -7,11 +7,16 @@
  */
 import { Injectable } from '@angular/core';
 import {
-  combineLatest,
   Observable,
+  of,
 } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  map,
+  switchMap,
+} from 'rxjs/operators';
 
+import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
+import { FeatureID } from '../../../core/data/feature-authorization/feature-id';
 import { Item } from '../../../core/shared/item.model';
 import {
   getFirstCompletedRemoteData,
@@ -34,6 +39,7 @@ import { DSpaceObjectPageMenuProvider } from './helper-providers/dso.menu';
 @Injectable()
 export class WithdrawnReinstateItemMenuProvider extends DSpaceObjectPageMenuProvider {
   constructor(
+    protected authorizationDataService: AuthorizationDataService,
     protected dsoWithdrawnReinstateModalService: DsoWithdrawnReinstateModalService,
     protected correctionTypeDataService: CorrectionTypeDataService,
   ) {
@@ -41,36 +47,46 @@ export class WithdrawnReinstateItemMenuProvider extends DSpaceObjectPageMenuProv
   }
 
   public getSectionsForContext(item: Item): Observable<PartialMenuSection[]> {
-    return combineLatest([
-      this.correctionTypeDataService.findByItem(item.uuid, true).pipe(
-        getFirstCompletedRemoteData(),
-        getRemoteDataPayload()),
-    ]).pipe(
-      map(([correction]) => {
-        return [
-          {
-            visible: item.isArchived && correction?.page.some((c) => c.topic === REQUEST_WITHDRAWN),
-            model: {
-              type: MenuItemType.ONCLICK,
-              text: 'item.page.withdrawn',
-              function: () => {
-                this.dsoWithdrawnReinstateModalService.openCreateWithdrawnReinstateModal(item, 'request-withdrawn', item.isArchived);
+    return this.authorizationDataService.isAuthorized(FeatureID.AdministratorOf).pipe(
+      switchMap((isAuthorized) => {
+        if (!isAuthorized) {
+          // Return empty/invisible sections without calling the API
+          return of([
+            { visible: false },
+            { visible: false },
+          ] as PartialMenuSection[]);
+        }
+
+        return this.correctionTypeDataService.findByItem(item.uuid, true).pipe(
+          getFirstCompletedRemoteData(),
+          getRemoteDataPayload(),
+          map((correction) => {
+            return [
+              {
+                visible: item.isArchived && correction?.page.some((c) => c.topic === REQUEST_WITHDRAWN),
+                model: {
+                  type: MenuItemType.ONCLICK,
+                  text: 'item.page.withdrawn',
+                  function: () => {
+                    this.dsoWithdrawnReinstateModalService.openCreateWithdrawnReinstateModal(item, 'request-withdrawn', item.isArchived);
+                  },
+                } as OnClickMenuItemModel,
+                icon: 'eye-slash',
               },
-            } as OnClickMenuItemModel,
-            icon: 'eye-slash',
-          },
-          {
-            visible: item.isWithdrawn && correction?.page.some((c) => c.topic === REQUEST_REINSTATE),
-            model: {
-              type: MenuItemType.ONCLICK,
-              text: 'item.page.reinstate',
-              function: () => {
-                this.dsoWithdrawnReinstateModalService.openCreateWithdrawnReinstateModal(item, 'request-reinstate', item.isArchived);
+              {
+                visible: item.isWithdrawn && correction?.page.some((c) => c.topic === REQUEST_REINSTATE),
+                model: {
+                  type: MenuItemType.ONCLICK,
+                  text: 'item.page.reinstate',
+                  function: () => {
+                    this.dsoWithdrawnReinstateModalService.openCreateWithdrawnReinstateModal(item, 'request-reinstate', item.isArchived);
+                  },
+                } as OnClickMenuItemModel,
+                icon: 'eye',
               },
-            } as OnClickMenuItemModel,
-            icon: 'eye',
-          },
-        ] as PartialMenuSection[];
+            ] as PartialMenuSection[];
+          }),
+        );
       }),
     );
   }
