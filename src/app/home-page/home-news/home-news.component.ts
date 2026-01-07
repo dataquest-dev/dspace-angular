@@ -1,11 +1,7 @@
-import {
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AsyncPipe } from '@angular/common';
+import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { map } from 'rxjs/operators';
 
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 
@@ -15,6 +11,7 @@ import { ConfigurationDataService } from '../../core/data/configuration-data.ser
   templateUrl: './home-news.component.html',
   standalone: true,
   imports: [
+    AsyncPipe,
     TranslateModule,
   ],
 })
@@ -22,20 +19,12 @@ import { ConfigurationDataService } from '../../core/data/configuration-data.ser
 /**
  * Component to render the news section on the home page
  */
-export class HomeNewsComponent implements OnInit {
-  private destroyRef = inject(DestroyRef);
-  emailToContact = '';
+export class HomeNewsComponent {
+  emailToContact$ = this.configService.findByPropertyName('mail.helpdesk')
+    .pipe(map(remoteData => remoteData?.payload?.values?.[0] || ''));
 
   constructor(
       private configService: ConfigurationDataService,
   ) {}
-
-  ngOnInit(): void {
-    this.configService.findByPropertyName('mail.helpdesk')
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(remoteData => {
-        this.emailToContact = remoteData?.payload?.values?.[0] || '';
-      });
-  }
 }
 
