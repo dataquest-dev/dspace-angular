@@ -12,6 +12,7 @@ import {
   REQUEST_WITHDRAWN,
 } from '../../dso-page/dso-withdrawn-reinstate-service/dso-withdrawn-reinstate-modal.service';
 import { createSuccessfulRemoteDataObject$ } from '../../remote-data.utils';
+import { AuthorizationDataServiceStub } from '../../testing/authorization-service.stub';
 import { createPaginatedList } from '../../testing/utils.test';
 import { OnClickMenuItemModel } from '../menu-item/models/onclick.model';
 import { MenuItemType } from '../menu-item-type.model';
@@ -58,7 +59,7 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
 
   let correctionTypeDataService;
   let dsoWithdrawnReinstateModalService;
-  let authorizationService;
+  let authorizationServiceStub: AuthorizationDataServiceStub;
 
   beforeEach(() => {
     const correctionType = Object.assign(new CorrectionType(), {
@@ -72,9 +73,8 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
 
     dsoWithdrawnReinstateModalService = jasmine.createSpyObj('dsoWithdrawnReinstateModalService', ['openCreateWithdrawnReinstateModal']);
 
-    authorizationService = jasmine.createSpyObj('authorizationService', {
-      'isAuthorized': of(true),
-    });
+    authorizationServiceStub = new AuthorizationDataServiceStub();
+    spyOn(authorizationServiceStub, 'isAuthorized').and.returnValue(of(true));
 
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot()],
@@ -82,7 +82,7 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
         WithdrawnReinstateItemMenuProvider,
         { provide: CorrectionTypeDataService, useValue: correctionTypeDataService },
         { provide: DsoWithdrawnReinstateModalService, useValue: dsoWithdrawnReinstateModalService },
-        { provide: AuthorizationDataService, useValue: authorizationService },
+        { provide: AuthorizationDataService, useValue: authorizationServiceStub },
       ],
     });
     provider = TestBed.inject(WithdrawnReinstateItemMenuProvider);
