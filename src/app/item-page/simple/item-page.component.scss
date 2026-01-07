@@ -43,3 +43,19 @@ pre {
   border-radius: 4px;
   white-space: pre-wrap;
 }
+
+// WCAG 1.4.1: Links must be distinguishable by more than color alone
+.item-page ::ng-deep a:not(.btn):not(.badge):not(.nav-link):not(.dropdown-item):not(.fab):not(.fas):not(.far) {
+  font-weight: 600;
+  font-style: italic;
+}
+
+.item-page ::ng-deep a:not(.btn):not(.badge):not(.nav-link):not(.dropdown-item):not(.fab):not(.fas):not(.far):hover,
+.item-page ::ng-deep a:not(.btn):not(.badge):not(.nav-link):not(.dropdown-item):not(.fab):not(.fas):not(.far):focus {
+  text-decoration-thickness: 0.08em;
+}
+
+.item-page ::ng-deep a:focus-visible {
+  outline: 2px solid #{$primary};
+  outline-offset: 2px;
+}
