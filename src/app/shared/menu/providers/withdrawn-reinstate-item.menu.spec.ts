@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
+import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
 import { Item } from '../../../core/shared/item.model';
 import { ITEM } from '../../../core/shared/item.resource-type';
 import { CorrectionTypeDataService } from '../../../core/submission/correctiontype-data.service';
@@ -57,6 +58,7 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
 
   let correctionTypeDataService;
   let dsoWithdrawnReinstateModalService;
+  let authorizationService;
 
   beforeEach(() => {
     const correctionType = Object.assign(new CorrectionType(), {
@@ -70,6 +72,9 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
 
     dsoWithdrawnReinstateModalService = jasmine.createSpyObj('dsoWithdrawnReinstateModalService', ['openCreateWithdrawnReinstateModal']);
 
+    authorizationService = jasmine.createSpyObj('authorizationService', {
+      'isAuthorized': of(true),
+    });
 
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot()],
@@ -77,7 +82,7 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
         WithdrawnReinstateItemMenuProvider,
         { provide: CorrectionTypeDataService, useValue: correctionTypeDataService },
         { provide: DsoWithdrawnReinstateModalService, useValue: dsoWithdrawnReinstateModalService },
-        provideMockStore(),
+        { provide: AuthorizationDataService, useValue: authorizationService },
       ],
     });
     provider = TestBed.inject(WithdrawnReinstateItemMenuProvider);
