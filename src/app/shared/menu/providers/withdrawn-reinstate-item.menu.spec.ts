@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { Item } from '../../../core/shared/item.model';
@@ -76,6 +77,7 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
         WithdrawnReinstateItemMenuProvider,
         { provide: CorrectionTypeDataService, useValue: correctionTypeDataService },
         { provide: DsoWithdrawnReinstateModalService, useValue: dsoWithdrawnReinstateModalService },
+        provideMockStore(),
       ],
     });
     provider = TestBed.inject(WithdrawnReinstateItemMenuProvider);
