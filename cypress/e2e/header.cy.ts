@@ -33,6 +33,6 @@ describe('Header', () => {
     cy.get('html').invoke('attr', 'lang').should('eq', 'en');
 
     // Login menu should now be in English
-    cy.get('[data-test="login-menu"]').contains('Log In');
+    cy.get('[data-test="login-menu"]').contains('Admin Access');
   });
 });
