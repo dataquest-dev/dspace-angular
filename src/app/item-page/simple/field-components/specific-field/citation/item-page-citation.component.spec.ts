@@ -57,7 +57,8 @@ describe('ItemPageCitationFieldComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set iframeSrc based on handle', () => {
-    expect(component.iframeSrc).not.toBeNull();
+  it('should initialize citaceProURL$ and citaceProStatus$', () => {
+    expect(component.citaceProURL$).toBeDefined();
+    expect(component.citaceProStatus$).toBeDefined();
   });
 });

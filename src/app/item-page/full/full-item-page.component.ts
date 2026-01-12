@@ -42,7 +42,6 @@ import { hasValue } from '../../shared/empty.util';
 import { ErrorComponent } from '../../shared/error/error.component';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
 import { VarDirective } from '../../shared/utils/var.directive';
-import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
 import { CollectionsComponent } from '../field-components/collections/collections.component';
 import { ThemedItemPageTitleFieldComponent } from '../simple/field-components/specific-field/title/themed-item-page-field.component';
 import { ItemPageComponent } from '../simple/item-page.component';
@@ -71,7 +70,6 @@ import { ThemedFullFileSectionComponent } from './field-components/file-section/
     KeyValuePipe,
     RouterLink,
     ThemedFullFileSectionComponent,
-    ThemedItemAlertsComponent,
     ThemedItemPageTitleFieldComponent,
     ThemedLoadingComponent,
     TranslateModule,

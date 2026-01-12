@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
+import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
 import { Item } from '../../../core/shared/item.model';
 import { ITEM } from '../../../core/shared/item.resource-type';
 import { CorrectionTypeDataService } from '../../../core/submission/correctiontype-data.service';
@@ -10,6 +12,7 @@ import {
   REQUEST_WITHDRAWN,
 } from '../../dso-page/dso-withdrawn-reinstate-service/dso-withdrawn-reinstate-modal.service';
 import { createSuccessfulRemoteDataObject$ } from '../../remote-data.utils';
+import { AuthorizationDataServiceStub } from '../../testing/authorization-service.stub';
 import { createPaginatedList } from '../../testing/utils.test';
 import { OnClickMenuItemModel } from '../menu-item/models/onclick.model';
 import { MenuItemType } from '../menu-item-type.model';
@@ -56,6 +59,7 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
 
   let correctionTypeDataService;
   let dsoWithdrawnReinstateModalService;
+  let authorizationServiceStub: AuthorizationDataServiceStub;
 
   beforeEach(() => {
     const correctionType = Object.assign(new CorrectionType(), {
@@ -69,6 +73,8 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
 
     dsoWithdrawnReinstateModalService = jasmine.createSpyObj('dsoWithdrawnReinstateModalService', ['openCreateWithdrawnReinstateModal']);
 
+    authorizationServiceStub = new AuthorizationDataServiceStub();
+    spyOn(authorizationServiceStub, 'isAuthorized').and.returnValue(of(true));
 
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot()],
@@ -76,6 +82,7 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
         WithdrawnReinstateItemMenuProvider,
         { provide: CorrectionTypeDataService, useValue: correctionTypeDataService },
         { provide: DsoWithdrawnReinstateModalService, useValue: dsoWithdrawnReinstateModalService },
+        { provide: AuthorizationDataService, useValue: authorizationServiceStub },
       ],
     });
     provider = TestBed.inject(WithdrawnReinstateItemMenuProvider);

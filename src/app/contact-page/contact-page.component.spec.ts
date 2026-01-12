@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { ActivatedRouteStub } from '../shared/testing/active-router.stub';
 import { ContactPageComponent } from './contact-page.component';
 
 describe('ContactPageComponent', () => {
@@ -18,13 +19,13 @@ describe('ContactPageComponent', () => {
     mockConfigService = jasmine.createSpyObj(['findByPropertyName']);
 
     await TestBed.configureTestingModule({
-      imports: [ 
-        ContactPageComponent,
+      imports: [
         TranslateModule.forRoot(),
+        ContactPageComponent,
       ],
       providers: [
         { provide: ConfigurationDataService, useValue: mockConfigService },
-        { provide: ActivatedRoute, useValue: {} },
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
       ],
     })
       .compileComponents();

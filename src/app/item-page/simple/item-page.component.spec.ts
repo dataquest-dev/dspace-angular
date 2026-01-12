@@ -44,13 +44,10 @@ import {
 import { ActivatedRouteStub } from '../../shared/testing/active-router.stub';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { VarDirective } from '../../shared/utils/var.directive';
-import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
 import { ItemPageComponent } from './item-page.component';
 import { createRelationshipsObservable } from './item-types/shared/item.component.spec';
-import { NotifyRequestsStatusComponent } from './notify-requests-status/notify-requests-status-component/notify-requests-status.component';
-import { QaEventNotificationComponent } from './qa-event-notification/qa-event-notification.component';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
@@ -139,14 +136,11 @@ describe('ItemPageComponent', () => {
     }).overrideComponent(ItemPageComponent, {
       add: { changeDetection: ChangeDetectionStrategy.Default },
       remove: { imports: [
-        ThemedItemAlertsComponent,
         ItemVersionsNoticeComponent,
         ListableObjectComponentLoaderComponent,
         ItemVersionsComponent,
         ErrorComponent,
         ThemedLoadingComponent,
-        NotifyRequestsStatusComponent,
-        QaEventNotificationComponent,
       ] },
     }).compileComponents();
   }));

@@ -124,7 +124,10 @@ export class BrowserInitService extends InitService {
       this.initCorrelationId();
 
       this.checkEnvironment();
-      logStartupMessage(environment);
+
+      if (!environment.production) {
+        logStartupMessage(environment);
+      }
 
       this.initI18n();
       this.initAngulartics();
