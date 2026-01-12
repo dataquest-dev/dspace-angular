@@ -43,7 +43,7 @@ on:
         default: 'dev-6'
 
 jobs:
-  deploy-3:
+  deploy:
     if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8583'
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
     timeout-minutes: 60
@@ -73,8 +73,55 @@ jobs:
           cd ../..
           docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
 
-  playwright-after-deploy3:
-    needs: deploy-3
+  playwright-after-deploy:
+    needs: deploy
     if: '!inputs.IMPORT'
+    uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
+
+  import:
+    runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
+    if: inputs.IMPORT
+    timeout-minutes: 900
+    needs: deploy
+    env:
+      INSTANCE: ${{inputs.INSTANCE}}
+      CONFIG_PATH: /opt/dspace-envs/
+      FNAME: dspace_sav_dump_2026.01.12.sql
+    steps:
+      - name: import
+        run: |
+          export DATADIR=$CONFIG_PATH/${{inputs.INSTANCE}}/dump/$FNAME
+          export DNAME=dspace${{inputs.INSTANCE}}
+          export DDBNAME=dspacedb${{inputs.INSTANCE}}
+
+          docker stop $DNAME || true
+
+          docker exec $DDBNAME /bin/bash -c "
+          dropdb -U dspace -p 10583 dspace || true &&
+          createdb -U dspace -p 10583 --owner=dspace --encoding=UNICODE dspace &&
+          psql -p 10583 -U dspace -d dspace -f $FNAME
+          "
+          echo "====="
+          docker start $DNAME
+
+      - name: create administrator
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Creating DSpace administrator..."
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p admin -c en -o dataquest"
+
+      - name: rebuild discovery index and run oai import
+        run: |
+          export DNAME=dspace${{inputs.INSTANCE}}
+          echo "Rebuilding discovery index..."
+          docker exec $DNAME /bin/bash -c "/dspace/bin/dspace index-discovery -b"
+
+          echo "Running OAI import..."
+          docker exec $DNAME /bin/bash -c "/dspace/bin/dspace oai import -c"
+
+  playwright-after-import:
+    needs: import
+    if: inputs.IMPORT
     uses: ./.github/workflows/playwright-tests.yml
     secrets: inherit
