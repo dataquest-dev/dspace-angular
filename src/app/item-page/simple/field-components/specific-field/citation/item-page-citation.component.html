@@ -1,8 +1,8 @@
-@if (citaceProStatus) {
-  <iframe
-    height="200px"
-    width="100%"
-    style="border: none;"
-    [src]="iframeSrc"
-  ></iframe>
-}
+ @if ((citaceProStatus$ | async) && (citaceProURL$ | async); as citaceProURL) {
+   <iframe
+     height="200px"
+     width="100%"
+     style="border: none;"
+     [src]="citaceProURL"
+   ></iframe>
+ }

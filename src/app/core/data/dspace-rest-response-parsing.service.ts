@@ -159,7 +159,9 @@ export class DspaceRestResponseParsingService implements ResponseParsingService 
     const urlWithoutEmbedParams = getUrlWithoutEmbedParams(request.href);
     if (request.method === RestRequestMethod.GET && hasValue(response) && hasValue(response.payload) && hasValue(response.payload._links)) {
       if (hasNoValue(response.payload._links.self) || hasNoValue(response.payload._links.self.href)) {
-        console.warn(`The response for '${request.href}' doesn't have a self link. This could mean there's an issue with the REST endpoint`);
+        if (!environment.production) {
+          console.warn(`The response for '${request.href}' doesn't have a self link. This could mean there's an issue with the REST endpoint`);
+        }
         response.payload._links = Object.assign({}, response.payload._links, {
           self: {
             href: urlWithoutEmbedParams,
@@ -170,7 +172,9 @@ export class DspaceRestResponseParsingService implements ResponseParsingService 
         const expected = splitUrlInParts(urlWithoutEmbedParams);
         const actual = splitUrlInParts(response.payload._links.self.href);
         if (expected[0] === actual[0] && (expected.some((e) => !actual.includes(e)) || actual.some((e) => !expected.includes(e)))) {
-          console.warn(`The response for '${urlWithoutEmbedParams}' has the self link '${response.payload._links.self.href}'. These don't match. This could mean there's an issue with the REST endpoint`);
+          if (!environment.production) {
+            console.warn(`The response for '${urlWithoutEmbedParams}' has the self link '${response.payload._links.self.href}'. These don't match. This could mean there's an issue with the REST endpoint`);
+          }
           response.payload._links = Object.assign({}, response.payload._links, {
             self: {
               href: urlWithoutEmbedParams,
