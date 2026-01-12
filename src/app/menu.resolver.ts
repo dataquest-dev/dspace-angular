@@ -669,7 +669,7 @@ export class MenuResolver implements Resolve<boolean> {
           icon: 'exclamation-circle',
           index: 14
         },
-        
+
         /* Update Config */
         {
           id: 'update_config',

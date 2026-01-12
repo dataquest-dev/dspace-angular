@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AdminUpdateConfigService, ConfigFile } from './admin-update-config.service';
-import { Observable } from 'rxjs';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -24,12 +23,12 @@ export class AdminUpdateConfigComponent implements OnInit {
   /**
    * Current file content
    */
-  fileContent: string = '';
+  fileContent = '';
 
   /**
    * Original file content for reset functionality
    */
-  originalContent: string = '';
+  originalContent = '';
 
   /**
    * Whether we're currently loading data
@@ -141,12 +140,12 @@ export class AdminUpdateConfigComponent implements OnInit {
       next: (result) => {
         this.saving = false;
         this.originalContent = this.fileContent;
-        
+
         this.notificationsService.success(
-          this.translateService.instant('admin.update-config.success.save.title'), 
+          this.translateService.instant('admin.update-config.success.save.title'),
           this.translateService.instant('admin.update-config.success.save.message', { fileName: this.selectedFile?.fileName })
         );
-        
+
         this.loadConfigFiles();
         this.cdr.detectChanges(); // Force change detection after save
       },
@@ -178,15 +177,15 @@ export class AdminUpdateConfigComponent implements OnInit {
 
     this.loading = true;
     this.cdr.detectChanges(); // Force change detection to show loading state
-    
+
     this.configService.reloadOriginalContent(this.selectedFile.fileName).subscribe({
       next: (originalContent) => {
         this.fileContent = originalContent;
         this.originalContent = originalContent;
         this.loading = false;
-        
+
         this.notificationsService.success(
-          this.translateService.instant('admin.update-config.success.reload.title'), 
+          this.translateService.instant('admin.update-config.success.reload.title'),
           this.translateService.instant('admin.update-config.success.reload.message', { fileName: this.selectedFile?.fileName })
         );
         this.cdr.detectChanges(); // Force change detection after reload
