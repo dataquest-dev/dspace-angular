@@ -43,7 +43,7 @@ on:
         default: 'dev-6'
 
 jobs:
-  deploy:
+  deploy-3:
     if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8583'
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
     timeout-minutes: 60
@@ -73,17 +73,17 @@ jobs:
           cd ../..
           docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
 
-  playwright-after-deploy:
-    needs: deploy
+  playwright-after-deploy3:
+    needs: deploy-3
     if: '!inputs.IMPORT'
     uses: ./.github/workflows/playwright-tests.yml
     secrets: inherit
 
-  import:
+  import-3:
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
     if: inputs.IMPORT
     timeout-minutes: 900
-    needs: deploy
+    needs: deploy-3
     env:
       INSTANCE: ${{inputs.INSTANCE}}
       CONFIG_PATH: /opt/dspace-envs/
@@ -126,8 +126,8 @@ jobs:
           echo "Running OAI import..."
           docker exec $DNAME /bin/bash -c "/dspace/bin/dspace oai import -c"
 
-  playwright-after-import:
-    needs: import
+  playwright-after-import3:
+    needs: import-3
     if: inputs.IMPORT
     uses: ./.github/workflows/playwright-tests.yml
     secrets: inherit
