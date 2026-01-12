@@ -19,8 +19,8 @@ describe('ContactPageComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [ 
-        ContactPageComponent,
         TranslateModule.forRoot(),
+        ContactPageComponent,
       ],
       providers: [
         { provide: ConfigurationDataService, useValue: mockConfigService },
