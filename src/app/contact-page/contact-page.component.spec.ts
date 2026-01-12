@@ -18,7 +18,7 @@ describe('ContactPageComponent', () => {
     mockConfigService = jasmine.createSpyObj(['findByPropertyName']);
 
     await TestBed.configureTestingModule({
-      imports: [ 
+      imports: [
         TranslateModule.forRoot(),
         ContactPageComponent,
       ],
