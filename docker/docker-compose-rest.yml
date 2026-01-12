@@ -24,8 +24,6 @@ services:
   dspace:
     restart: unless-stopped
     container_name: dspace${INSTANCE}
-    # Use user dspace: 1100:1100 - check the Dockerfile on the DSpace backend project
-    user: "1100:1100"
     environment:
       JAVA_OPTS: ${JAVA_OPTS:--Xmx4g}
       TZ: ${TIMEZONE:-Europe/Bratislava}
