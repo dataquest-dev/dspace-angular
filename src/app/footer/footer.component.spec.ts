@@ -11,8 +11,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
-import { APP_CONFIG } from '../../config/app-config.interface';
-import { APP_DATA_SERVICES_MAP } from '../../config/app-config.interface';
+import { APP_CONFIG, APP_DATA_SERVICES_MAP } from '../../config/app-config.interface';
 import { environment } from '../../environments/environment.test';
 import { NotifyInfoService } from '../core/coar-notify/notify-info/notify-info.service';
 import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';

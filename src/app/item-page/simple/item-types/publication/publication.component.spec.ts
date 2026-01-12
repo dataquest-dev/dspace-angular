@@ -12,7 +12,6 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
   TranslateLoader,
@@ -47,13 +46,13 @@ import { Item } from '../../../../core/shared/item.model';
 import { MetadataMap } from '../../../../core/shared/metadata.models';
 import { SearchService } from '../../../../core/shared/search/search.service';
 import { UUIDService } from '../../../../core/shared/uuid.service';
-import { getMockUUIDService } from '../../../../shared/mocks/uuid.service.mock';
-import { getMockRemoteDataBuildService } from '../../../../shared/mocks/remote-data-build.service.mock';
 import { WorkspaceitemDataService } from '../../../../core/submission/workspaceitem-data.service';
 import { DsoEditMenuComponent } from '../../../../shared/dso-page/dso-edit-menu/dso-edit-menu.component';
 import { MetadataFieldWrapperComponent } from '../../../../shared/metadata-field-wrapper/metadata-field-wrapper.component';
 import { mockTruncatableService } from '../../../../shared/mocks/mock-trucatable.service';
+import { getMockRemoteDataBuildService } from '../../../../shared/mocks/remote-data-build.service.mock';
 import { TranslateLoaderMock } from '../../../../shared/mocks/translate-loader.mock';
+import { getMockUUIDService } from '../../../../shared/mocks/uuid.service.mock';
 import { NotificationsService } from '../../../../shared/notifications/notifications.service';
 import { createSuccessfulRemoteDataObject$ } from '../../../../shared/remote-data.utils';
 import { ThemedResultsBackButtonComponent } from '../../../../shared/results-back-button/themed-results-back-button.component';
