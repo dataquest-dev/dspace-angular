@@ -12,6 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
 import { APP_CONFIG } from '../../config/app-config.interface';
+import { APP_DATA_SERVICES_MAP } from '../../config/app-config.interface';
 import { environment } from '../../environments/environment.test';
 import { NotifyInfoService } from '../core/coar-notify/notify-info/notify-info.service';
 import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';
@@ -38,6 +39,7 @@ describe('Footer component', () => {
         { provide: NotifyInfoService, useValue: notifyInfoService },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: APP_CONFIG, useValue: environment },
+        { provide: APP_DATA_SERVICES_MAP, useValue: {} },
         provideMockStore(),
       ],
     });

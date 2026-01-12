@@ -2,6 +2,7 @@ import {
   ComponentFixture,
   TestBed,
 } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
@@ -17,10 +18,13 @@ describe('ContactPageComponent', () => {
     mockConfigService = jasmine.createSpyObj(['findByPropertyName']);
 
     await TestBed.configureTestingModule({
-      declarations: [ ContactPageComponent ],
-      imports: [ TranslateModule.forRoot() ], // Add this line
+      imports: [ 
+        ContactPageComponent,
+        TranslateModule.forRoot(),
+      ],
       providers: [
         { provide: ConfigurationDataService, useValue: mockConfigService },
+        { provide: ActivatedRoute, useValue: {} },
       ],
     })
       .compileComponents();
@@ -42,7 +46,7 @@ describe('ContactPageComponent', () => {
   });
 
   it('should call findByPropertyName on init', () => {
-    expect(mockConfigService.findByPropertyName).toHaveBeenCalledWith('lr.help.mail');
+    expect(mockConfigService.findByPropertyName).toHaveBeenCalledWith('mail.helpdesk');
   });
 
   it('should set emailToContact from service on init', () => {

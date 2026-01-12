@@ -13,6 +13,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
 import {
   TranslateLoader,
   TranslateModule,
@@ -46,6 +47,8 @@ import { Item } from '../../../../core/shared/item.model';
 import { MetadataMap } from '../../../../core/shared/metadata.models';
 import { SearchService } from '../../../../core/shared/search/search.service';
 import { UUIDService } from '../../../../core/shared/uuid.service';
+import { getMockUUIDService } from '../../../../shared/mocks/uuid.service.mock';
+import { getMockRemoteDataBuildService } from '../../../../shared/mocks/remote-data-build.service.mock';
 import { WorkspaceitemDataService } from '../../../../core/submission/workspaceitem-data.service';
 import { DsoEditMenuComponent } from '../../../../shared/dso-page/dso-edit-menu/dso-edit-menu.component';
 import { MetadataFieldWrapperComponent } from '../../../../shared/metadata-field-wrapper/metadata-field-wrapper.component';
@@ -115,9 +118,9 @@ describe('PublicationComponent', () => {
         { provide: TruncatableService, useValue: mockTruncatableService },
         { provide: RelationshipDataService, useValue: {} },
         { provide: ObjectCacheService, useValue: {} },
-        { provide: UUIDService, useValue: {} },
-        { provide: Store, useValue: {} },
-        { provide: RemoteDataBuildService, useValue: {} },
+        { provide: UUIDService, useValue: getMockUUIDService() },
+        provideMockStore({ initialState: { core: { index: {} } } }),
+        { provide: RemoteDataBuildService, useValue: getMockRemoteDataBuildService() },
         { provide: CommunityDataService, useValue: {} },
         { provide: HALEndpointService, useValue: { getEndpoint: () => of('') } },
         { provide: NotificationsService, useValue: {} },
