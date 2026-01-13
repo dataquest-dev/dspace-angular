@@ -10,7 +10,6 @@
 # This is based heavily on the docker-compose.yml that is available in the DSpace/DSpace
 # (Backend) at:
 # https://github.com/DSpace/DSpace/blob/main/docker-compose.yml
-version: '3.7'
 networks:
   dspacenet:
     # Due to the following specification, THIS FILE (docker-compose-rest.yml) must be last (if using several YMLs),
@@ -19,12 +18,12 @@ networks:
       config:
         # Define a custom subnet for our DSpace network, so that we can easily trust requests from host to container.
         # If you customize this value, be sure to customize the 'proxies.trusted.ipranges' env variable below.
-        - subnet: 172.2${INSTANCE}.0.0/16
+        - subnet: 172.2.${TRUST_IP_RANGE}.0/24
 services:
   # DSpace (backend) webapp container
   dspace:
     restart: unless-stopped
-    container_name: dspace${INSTANCE}
+    container_name: dspace${DSPACE_PORT}
     environment:
       JAVA_OPTS: ${JAVA_OPTS:--Xmx4g}
       TZ: ${TIMEZONE:-Europe/Bratislava}
@@ -38,11 +37,13 @@ services:
       dspace__P__ui__P__url: ${UI_URL:-http://127.0.0.1:4000}
       # db.url: Ensure we are using the 'dspacedb' image for our database
       db__P__url: 'jdbc:postgresql://dspacedb:5432/dspace'
+      db__P__password: ${DB_PASSWORD}
+      db__P__schema: public
       # solr.server: Ensure we are using the 'dspacesolr' image for Solr
       solr__P__server: http://dspacesolr:8983/solr
       # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests
       # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
-      proxies__P__trusted__P__ipranges: '172.2${INSTANCE}.0'
+      proxies__P__trusted__P__ipranges: '172.2.${TRUST_IP_RANGE}'
       #S3 config
       assetstore__P__index__P__primary: ${S3_STORAGE:-0}
       assetstore__P__s3__P__enabled: ${S3_ENABLED:-false}
@@ -54,61 +55,67 @@ services:
       assetstore__P__s3__P__awsRegionName: ${S3_REGION_NAME:-}
       assetstore__P__s3__P__pathStyleAccessEnabled: ${S3_PATH_STYLE_ACCESS:-false}
       assetstore__P__s3__P__endpoint: ${S3_ENDPOINT:-}
+      orcid__P__application__D__client__D__id: ${ORCID_CLIENT_ID}
+      orcid__P__application__D__client__D__secret: ${ORCID_CLIENT_SECRET}
+      # Handle server prefix
+      handle__P__prefix: ${HANDLE_PREFIX}
+      # Google analytics 4
+      google__P__analytics__P__key: ${GOOGLE_ANALYTICS}
+      # Allow impersonating
+      webui__P__user__P__assumelogin: true
     image: ${DSPACE_REST_IMAGE:-dataquest/dspace:dtq-dev-7.5}
     depends_on:
-    - dspacedb
+      - dspacedb
     networks:
-      dspacenet:
+      - dspacenet
     ports:
       # BE server port
-    - published: 808${INSTANCE}
-      target: 8080
-      host_ip: ${HOST_IP:-127.0.0.1}
-      # original debug port
-    - published: 800${INSTANCE}
-      target: 8000
-      host_ip: ${HOST_IP:-127.0.0.1}
-      # handle binary port as per https://www.handle.net/hnr_support.html (5th paragraph)
-    - published: 264${INSTANCE}
-      target: 2641
-      host_ip: 127.0.0.1
-      # handle http port as per https://www.handle.net/hnr_support.html (5th paragraph)
-    - published: 801${INSTANCE}
-      target: 8010
-      host_ip: 127.0.0.1
+      - published: ${DSPACE_DOCKER_REST_PORT}
+        target: 8080
+        host_ip: ${HOST_IP:-127.0.0.1}
+        # original debug port
+      - published: ${DSPACE_DEBUG_PORT}
+        target: 8000
+        host_ip: ${HOST_IP:-127.0.0.1}
+        # handle binary port as per https://www.handle.net/hnr_support.html (5th paragraph)
+      - published: ${DSPACE_HANDLE_PORT}
+        target: 2641
+        host_ip: 127.0.0.1
+        # handle http port as per https://www.handle.net/hnr_support.html (5th paragraph)
+      - published: ${DSPACE_HANDLE_PORT_HTTP}
+        target: 8010
+        host_ip: 127.0.0.1
     stdin_open: true
     tty: true
     volumes:
-    - dspace_logs:/dspace/log
-    - assetstore:/dspace/assetstore
-    # Mount DSpace's solr configs to a volume, so that we can share to 'dspacesolr' container (see below)
-    - solr_configs:/dspace/solr
-    - handle_server:/dspace/handle-server
-    - ./local.cfg:/dspace/config/local.cfg
+      - dspace_logs:/dspace/log
+      - assetstore:/dspace/assetstore
+      - handle_server:/dspace/handle-server
+      - ./local.cfg:/dspace/config/local.cfg
     # Ensure that the database is ready BEFORE starting tomcat
     # 1. While a TCP connection to dspacedb port 5432 is not available, continue to sleep
     # 2. Then, run database migration to init database tables
     # 3. Use custom_run script, to enable debugging under certain conditions
     # 4. Start the Handle server!!!! (please make sure you DO actually want it, otherwise remove last line)
     entrypoint:
-    - /bin/bash
-    - '-c'
-    # When customizing the namespace, add the following command to the entrypoint command below (after `while ...`):
-    # `pushd ../webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ 'repository#server' || true) &&
-    # popd`
-    # The `(... || true)` condition is necessary to ensure the `popd` command runs at the end.
-    # It used to fail when the `server` folder did not exist in `/webapps`.
-    # This will create a symlink from the webapps directory to the server directory with the custom namespace
-    # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
-    - |
-      while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
-      /dspace/bin/dspace database migrate force
-      ./custom_run.sh
-      /dspace/bin/start-handle-server
+      - /bin/bash
+      - '-c'
+      # When customizing the namespace, add the following command to the entrypoint command below (after `while ...`):
+      # `pushd ../webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ 'repository#server' || true) &&
+      # popd`
+      # The `(... || true)` condition is necessary to ensure the `popd` command runs at the end.
+      # It used to fail when the `server` folder did not exist in `/webapps`.
+      # This will create a symlink from the webapps directory to the server directory with the custom namespace
+      # (e.g. /dspace/webapps/server -> /dspace/webapps/repository#server)
+      - |
+        while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
+        /dspace/bin/dspace database migrate force
+        /dspace/bin/start-handle-server
+        ./custom_run.sh
   # DSpace database container
   dspacedb:
     restart: unless-stopped
-    container_name: dspacedb${INSTANCE}
+    container_name: dspacedb${DSPACE_PORT}
     environment:
       TZ: ${TIMEZONE:-Europe/Bratislava}
       PGDATA: /pgdata
@@ -117,65 +124,61 @@ services:
     networks:
       dspacenet:
     ports:
-    - published: 543${INSTANCE}
-      target: 5432
-      host_ip: ${HOST_IP:-127.0.0.1}
+      - published: ${PG_PORT}
+        target: 5432
+        host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
     volumes:
-    - pgdata:/pgdata
+      - pgdata:/pgdata
   # DSpace Solr container
   dspacesolr:
     environment:
       TZ: ${TIMEZONE:-Europe/Bratislava}
     restart: unless-stopped
-    container_name: dspacesolr${INSTANCE}
+    container_name: dspacesolr${DSPACE_PORT}
     image: ${DSPACE_SOLR_IMAGE:-dataquest/dspace-solr:dspace-7_x}
     # Needs main 'dspace' container to start first to guarantee access to solr_configs
     depends_on:
-    - dspace
+      - dspace
     networks:
       dspacenet:
     ports:
-    - published: 898${INSTANCE}
-      target: 8983
-      host_ip: ${HOST_IP:-127.0.0.1}
+      - published: ${SOLR_PORT}
+        target: 8983
+        host_ip: ${HOST_IP:-127.0.0.1}
     stdin_open: true
     tty: true
     working_dir: /var/solr/data
     volumes:
-    # Mount our "solr_configs" volume available under the Solr's configsets folder (in a 'dspace' subfolder)
-    # This copies the Solr configs from main 'dspace' container into 'dspacesolr' via that volume
-    - solr_configs:/opt/solr/server/solr/configsets/dspace
-    # Keep Solr data directory between reboots
-    - solr_data:/var/solr/data
-    - solr_logs:/var/solr/logs
+      # Keep Solr data directory between reboots
+      - solr_data:/var/solr/data
+      - solr_logs:/var/solr/logs
     # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
     # * First, run precreate-core to create the core (if it doesn't yet exist). If exists already, this is a no-op
     # * Second, copy configsets to this core:
     #   Updates to Solr configs require the container to be rebuilt/restarted:
     #   `docker-compose -p d7 -f docker/docker-compose.yml -f docker/docker-compose-rest.yml up -d --build dspacesolr`
     entrypoint:
-    - /bin/bash
-    - '-c'
-    - |
-      init-var-solr
-      precreate-core authority /opt/solr/server/solr/configsets/dspace/authority
-      cp -r -u /opt/solr/server/solr/configsets/dspace/authority/* authority
-      precreate-core oai /opt/solr/server/solr/configsets/dspace/oai
-      cp -r -u /opt/solr/server/solr/configsets/dspace/oai/* oai
-      precreate-core search /opt/solr/server/solr/configsets/dspace/search
-      cp -r -u /opt/solr/server/solr/configsets/dspace/search/* search
-      precreate-core statistics /opt/solr/server/solr/configsets/dspace/statistics
-      cp -r -u /opt/solr/server/solr/configsets/dspace/statistics/* statistics
-      exec solr -p 898${INSTANCE} -f -m 4g
+      - /bin/bash
+      - '-c'
+      - |
+        init-var-solr
+        precreate-core authority /opt/solr/server/solr/configsets/authority
+        cp -r /opt/solr/server/solr/configsets/authority/* authority
+        precreate-core oai /opt/solr/server/solr/configsets/oai
+        cp -r /opt/solr/server/solr/configsets/oai/* oai
+        precreate-core search /opt/solr/server/solr/configsets/search
+        cp -r /opt/solr/server/solr/configsets/search/* search
+        precreate-core statistics /opt/solr/server/solr/configsets/statistics
+        cp -r /opt/solr/server/solr/configsets/statistics/* statistics
+        exec solr -f -m 4g
 volumes:
   # Commented out because there are a lot of files in the assetstore
   assetstore:
   pgdata:
   solr_data:
   # Special volume used to share Solr configs from 'dspace' to 'dspacesolr' container (see above)
-  solr_configs:
   dspace_logs:
   solr_logs:
   handle_server:
