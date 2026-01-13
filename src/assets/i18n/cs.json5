@@ -3815,6 +3815,12 @@
   // "item.page.journal.search.title": "Articles in this journal",
   "item.page.journal.search.title": "Články v tomto časopise",
 
+  // "item.page.cc-license": "License",
+  "item.page.cc-license": "Licence",
+
+  // "item.page.cc-license.description": "This work is licensed under a Creative Commons license.",
+  "item.page.cc-license.description": "Tato práce je licencována podle licence Creative Commons.",
+
   // "item.page.link.full": "Show full item record",
   "item.page.link.full": "Zobrazit celý záznam",
 

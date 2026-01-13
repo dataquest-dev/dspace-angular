@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, Inject, OnChanges, SimpleChanges, OnInit } from '@angular/core';
-import { Observable, of as observableOf, Subscription, tap } from 'rxjs';
+import { Observable, of as observableOf, Subscription, tap, Subject } from 'rxjs';
 import { Field, Option, SubmissionCcLicence } from '../../../core/submission/models/submission-cc-license.model';
 import {
   getFirstCompletedRemoteData, getFirstSucceededRemoteDataPayload,
   getRemoteDataPayload
 } from '../../../core/shared/operators';
-import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, take, debounceTime, switchMap, startWith, shareReplay } from 'rxjs/operators';
 import { SubmissionCcLicenseDataService } from '../../../core/submission/submission-cc-license-data.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { renderSectionFor } from '../sections-decorator';
@@ -90,6 +90,11 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
   private _isLastPage: boolean;
 
   /**
+   * Subject to trigger CC license link updates with debouncing
+   */
+  private ccLicenseLinkTrigger$ = new Subject<void>();
+
+  /**
    * The Creative Commons link saved in the workspace item.
    */
   get storedCcLicenseLink(): string {
@@ -129,14 +134,20 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
 
   ngOnInit(): void {
     super.ngOnInit();
-    if (hasNoValue(this.ccLicenseLink$)) {
-      this.ccLicenseLink$ = this.getCcLicenseLink$();
-    }
+    // Initialize the debounced license link observable
+    this.ccLicenseLink$ = this.ccLicenseLinkTrigger$.pipe(
+      startWith(undefined), // Start with initial trigger
+      debounceTime(300), // Debounce rapid clicks
+      switchMap(() => this.getCcLicenseLink$() || observableOf(null)),
+      shareReplay(1), // Cache the latest result
+      distinctUntilChanged()
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (hasValue(changes.sectionData) || hasValue(changes.submissionCcLicenses)) {
-      this.ccLicenseLink$ = this.getCcLicenseLink$();
+      // Trigger the debounced license link update
+      this.ccLicenseLinkTrigger$.next();
     }
   }
 
@@ -164,7 +175,8 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
       },
       uri: undefined,
     });
-    this.ccLicenseLink$ = this.getCcLicenseLink$();
+    // Trigger the debounced license link update
+    this.ccLicenseLinkTrigger$.next();
   }
 
   /**
@@ -196,7 +208,8 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
       },
       accepted: false,
     });
-    this.ccLicenseLink$ = this.getCcLicenseLink$();
+    // Trigger the debounced license link update
+    this.ccLicenseLinkTrigger$.next();
   }
 
   /**
@@ -272,6 +285,8 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
    */
   onSectionDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    // Complete the subject to prevent memory leaks
+    this.ccLicenseLinkTrigger$.complete();
   }
 
   /**
@@ -284,18 +299,35 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
         filter((sectionState) => {
           return isNotEmpty(sectionState) && (isNotEmpty(sectionState.data) || isNotEmpty(sectionState.errorsToShow));
         }),
-        distinctUntilChanged(),
+        distinctUntilChanged((prev, curr) => {
+          // More precise comparison to prevent unnecessary updates
+          const prevData = prev?.data as WorkspaceitemSectionCcLicenseObject;
+          const currData = curr?.data as WorkspaceitemSectionCcLicenseObject;
+          return prevData?.accepted === currData?.accepted &&
+            prevData?.uri === currData?.uri &&
+            JSON.stringify(prevData?.ccLicense) === JSON.stringify(currData?.ccLicense);
+        }),
         map((sectionState) => sectionState.data as WorkspaceitemSectionCcLicenseObject),
       ).subscribe((data) => {
-        if (this.data.accepted !== data.accepted) {
+        const wasAccepted = this.data.accepted;
+        const wasUri = this.data.uri;
+
+        // Only process if acceptance state actually changed
+        if (wasAccepted !== data.accepted && data.accepted !== undefined) {
           const path = this.pathCombiner.getPath('uri');
-          if (data.accepted) {
-            this.getCcLicenseLink$().pipe(
-              take(1),
-            ).subscribe((link) => {
-              this.operationsBuilder.add(path, link.toString(), false, true);
-            });
-          } else if (!!this.data.uri) {
+          if (data.accepted && !wasAccepted) {
+            // Only add URI if we're switching from not accepted to accepted
+            const licenseLink$ = this.getCcLicenseLink$();
+            if (licenseLink$) {
+              licenseLink$.pipe(
+                take(1),
+                filter(link => !!link && link !== wasUri) // Only proceed if link exists and is different
+              ).subscribe((link) => {
+                this.operationsBuilder.add(path, link.toString(), false, true);
+              });
+            }
+          } else if (!data.accepted && wasAccepted && !!this.data.uri) {
+            // Only remove URI if we're switching from accepted to not accepted
             this.operationsBuilder.remove(path);
           }
         }
@@ -305,12 +337,12 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
         getFirstCompletedRemoteData(),
         getRemoteDataPayload()
       ).subscribe((remoteData) => {
-          if (remoteData === undefined || remoteData.values.length === 0) {
-            // No value configured, use blank value (International jurisdiction)
-            this.defaultJurisdiction = '';
-          } else {
-            this.defaultJurisdiction = remoteData.values[0];
-          }
+        if (remoteData === undefined || remoteData.values.length === 0) {
+          // No value configured, use blank value (International jurisdiction)
+          this.defaultJurisdiction = '';
+        } else {
+          this.defaultJurisdiction = remoteData.values[0];
+        }
       })
     );
     this.loadCcLicences();

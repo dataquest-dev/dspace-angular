@@ -2543,6 +2543,10 @@
 
   "item.page.journal.search.title": "Articles in this journal",
 
+  "item.page.cc-license": "License",
+
+  "item.page.cc-license.description": "This work is licensed under a Creative Commons license.",
+
   "item.page.link.full": "Show full item record",
 
   "item.page.link.simple": "Show simple item record",
