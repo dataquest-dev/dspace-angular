@@ -138,16 +138,16 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
               bitstream.name.includes('license') ||
               bitstream.metadata[CC_CONSTANTS.METADATA_FIELDS[0]]?.[0]?.value
             );
-            const url = licenseBitstream?.metadata[CC_CONSTANTS.METADATA_FIELDS[0]]?.[0]?.value ||
-                       metadataUrl ||
-                       '';
-            return of(url);
+            // Prioritize bitstream license URL over metadata URL
+            if (licenseBitstream?.metadata[CC_CONSTANTS.METADATA_FIELDS[0]]?.[0]?.value) {
+              return of(licenseBitstream.metadata[CC_CONSTANTS.METADATA_FIELDS[0]][0].value);
+            }
           }
         }
-        // Fallback to cached metadata-based detection
-        return of(metadataUrl);
+        // Always fallback to metadata-based detection when bundle/bitstream approach fails
+        return of(metadataUrl || '');
       }),
-      catchError(() => of(''))
+      catchError(() => of(metadataUrl || ''))
     );
 
     // Extract license name from URL or metadata
@@ -164,7 +164,7 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
   /**
    * Extract Creative Commons license URL from item metadata
    */
-  extractUrlFromMetadata(): string {
+  public extractUrlFromMetadata(): string {
     // Check for common CC license metadata fields
     for (const field of CC_CONSTANTS.METADATA_FIELDS) {
       const values = this.item.allMetadata(field);
@@ -182,7 +182,7 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
   /**
    * Extract license name from Creative Commons URL
    */
-  extractLicenseNameFromUrl(url: string): string {
+  public extractLicenseNameFromUrl(url: string): string {
     if (!url || !url.includes(CC_CONSTANTS.DOMAIN)) {
       return '';
     }
@@ -229,9 +229,7 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
    * Get license type for switch case in template
    */
   getLicenseType(licenseName: string): string {
-    if (!licenseName) {
-      return '';
-    }
+    if (!licenseName) {return '';}
 
     const name = licenseName.toLowerCase();
 
