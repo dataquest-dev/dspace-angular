@@ -80,7 +80,7 @@ import { ClarinCollectionsItemFieldComponent } from './simple/field-components/c
 import { ClarinFilesItemFieldComponent } from './simple/field-components/clarin-files-item-field/clarin-files-item-field.component';
 import { ClarinItemVersionsFieldComponent } from './simple/field-components/clarin-item-versions-field/clarin-item-versions-field.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {PreviewSectionComponent} from './simple/field-components/preview-section/preview-section.component';
+import { PreviewSectionComponent } from './simple/field-components/preview-section/preview-section.component';
 import {
   FileDescriptionComponent
 } from './simple/field-components/preview-section/file-description/file-description.component';
@@ -96,6 +96,8 @@ import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/
 import { MatomoSubscriptionButtonComponent } from './matomo-subscription-button/matomo-subscription-button.component';
 import { MyDSpaceActionsModule } from '../shared/mydspace-actions/mydspace-actions.module';
 import { ViewsDownloadsStatisticsButtonComponent } from './views-downloads-statistics-button/views-downloads-statistics-button.component';
+import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
+import { CreativeCommonsLicenseFieldComponent } from './simple/field-components/creative-commons-license-field/creative-commons-license-field.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -166,6 +168,7 @@ const DECLARATIONS = [
   ViewsDownloadsStatisticsComponent,
   ViewsDownloadsStatisticsButtonComponent,
   MatomoSubscriptionButtonComponent
+  CreativeCommonsLicenseFieldComponent
 ];
 
 @NgModule({

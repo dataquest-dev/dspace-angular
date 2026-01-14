@@ -3,6 +3,7 @@ name: Import Weekly
 on:
   schedule:
     - cron: '0 0 * * 0'  # every Sunday at midnight UTC
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -11,3 +12,4 @@ jobs:
       INSTANCE: '8'
       IMPORT: true
       ERASE_DB: true
+    secrets: inherit

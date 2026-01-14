@@ -27,6 +27,9 @@
           <th id="actions" scope="col" class="{{ columnSizes.columns[3].buildClasses() }} text-center">
             {{'item.edit.bitstreams.headers.actions' | translate}}
           </th>
+          <th id="synchronized" scope="col" class="{{ columnSizes.columns[4].buildClasses() }} text-center">
+            {{'item.edit.bitstreams.headers.synchronized' | translate}}
+          </th>
         </tr>
         </thead>
 
@@ -35,7 +38,7 @@
           <th id="{{ bundleName }}" class="span" colspan="3" scope="colgroup">
             {{'item.edit.bitstreams.bundle.name' | translate:{ name: bundleName } }}
           </th>
-          <td class="text-center">
+          <td class="{{ columnSizes.columns[3].buildClasses() }} text-center">
 
             <div class="btn-group">
               <button [routerLink]="[itemPageRoute, 'bitstreams', 'new']"
@@ -74,6 +77,7 @@
             </div>
 
           </td>
+          <td class="{{ columnSizes.columns[4].buildClasses() }}"></td>
         </tr>
 
         <ng-container *ngFor="let entry of (tableEntries$ | async)">
@@ -82,20 +86,20 @@
 
             <th class="bitstream-name row-element {{ columnSizes.columns[0].buildClasses() }}"
                 scope="row" id="{{ entry.nameStripped }}" headers="{{ bundleName }} name">
-              <div class="drag-handle text-muted float-left p-1 mr-2" tabindex="0" cdkDragHandle
-                   (keydown.enter)="select($event, entry)" (keydown.space)="select($event, entry)" (click)="select($event, entry)">
-                <i class="fas fa-grip-vertical fa-fw"
-                   [title]="'item.edit.bitstreams.edit.buttons.drag' | translate"></i>
-              </div>
-              {{ entry.name }}
+                <div class="drag-handle text-muted float-left p-1 mr-2" tabindex="0" cdkDragHandle
+                     (keydown.enter)="select($event, entry)" (keydown.space)="select($event, entry)" (click)="select($event, entry)">
+                  <i class="fas fa-grip-vertical fa-fw"
+                     [title]="'item.edit.bitstreams.edit.buttons.drag' | translate"></i>
+                </div>
+                <span class="dont-break-out">{{ entry.name }}</span>
             </th>
             <td class="row-element {{ columnSizes.columns[1].buildClasses() }}"
                 headers="{{ entry.nameStripped }} {{ bundleName }} description">
-              {{ entry.description }}
+              <span class="dont-break-out">{{ entry.description }}</span>
             </td>
             <td class="row-element {{ columnSizes.columns[2].buildClasses() }}"
                 headers="{{ entry.nameStripped }} {{ bundleName }} format">
-              {{ (entry.format | async)?.shortDescription }}
+              <span class="dont-break-out">{{ (entry.format | async)?.shortDescription }}</span>
             </td>
             <td class="row-element {{ columnSizes.columns[3].buildClasses() }}"
                 headers="{{ entry.nameStripped }} {{ bundleName }} actions">
@@ -128,13 +132,14 @@
                 </div>
               </div>
             </td>
-            <td class="{{columnSizes.columns[4].buildClasses()}} row-element d-flex align-items-center justify-content-center">
-              <div class="float-left d-flex align-items-center overflow-hidden">
-              <span class="text-center">
-                <i [class]="isBitstreamSynchronized(entry) ? 'fas fa-check' : 'fas fa-times'"></i>
-              </span>
-              <span class="pl-1">|</span>
-              <div class="pl-1" [ngTemplateOutlet]="checksum"></div>
+            <td class="{{columnSizes.columns[4].buildClasses()}} row-element"
+                headers="{{ entry.nameStripped }} {{ bundleName }} synchronized">
+              <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center">
+                  <i [class]="isBitstreamSynchronized(entry) ? 'fas fa-check' : 'fas fa-times'"></i>
+                </span>
+                <span class="pl-1">|</span>
+                <div class="pl-1" [ngTemplateOutlet]="checksum"></div>
               </div>
             </td>
           </tr>
@@ -149,7 +154,7 @@
 </ng-template>
 
 <ng-template #checksum let-entry="entry">
-  <div class="hover-container"
+  <div class="d-flex align-items-center"
        (mouseenter)="showChecksumValues = true"
        (mouseleave)="showChecksumValues = false"
        *ngVar="(checkSum$ | async) as bitstreamChecksum">

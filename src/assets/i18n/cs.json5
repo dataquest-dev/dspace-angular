@@ -3830,6 +3830,12 @@
   // "item.page.journal.search.title": "Articles in this journal",
   "item.page.journal.search.title": "Články v tomto časopise",
 
+  // "item.page.cc-license": "License",
+  "item.page.cc-license": "Licence",
+
+  // "item.page.cc-license.description": "This work is licensed under a Creative Commons license.",
+  "item.page.cc-license.description": "Tato práce je licencována podle licence Creative Commons.",
+
   // "item.page.link.full": "Show full item record",
   "item.page.link.full": "Zobrazit celý záznam",
 
@@ -8229,6 +8235,255 @@
   // "admin.system-wide-alert.title": "System-wide Alerts",
   "admin.system-wide-alert.title": "Systémová upozornění",
 
+  // "admin.update-config.title": "Update Configuration",
+  "admin.update-config.title": "Aktualizace konfigurace",
+
+  // "admin.update-config.description": "Edit DSpace configuration files through the web interface.",
+  "admin.update-config.description": "Editace konfiguračních souborů DSpace prostřednictvím webového rozhraní.",
+
+  // "admin.update-config.select.file": "Select Configuration File",
+  "admin.update-config.select.file": "Vyberte konfigurační soubor",
+
+  // "admin.update-config.select.file.placeholder": "Choose a file to edit...",
+  "admin.update-config.select.file.placeholder": "Vyberte soubor k editaci...",
+
+  // "admin.update-config.file.info": "File",
+  "admin.update-config.file.info": "Soubor",
+
+  // "admin.update-config.file.no-name": "[No Name]",
+  "admin.update-config.file.no-name": "[Bez názvu]",
+
+  // "admin.update-config.last.modified": "Last modified",
+  "admin.update-config.last.modified": "Naposledy změněno",
+
+  // "admin.update-config.content": "File Content",
+  "admin.update-config.content": "Obsah souboru",
+
+  // "admin.update-config.valid": "Valid",
+  "admin.update-config.valid": "Platný",
+
+  // "admin.update-config.invalid": "Invalid",
+  "admin.update-config.invalid": "Neplatný",
+
+  // "admin.update-config.validation.errors": "Configuration Validation Errors",
+  "admin.update-config.validation.errors": "Chyby validace konfigurace",
+
+  // "admin.update-config.save": "Save Configuration",
+  "admin.update-config.save": "Uložit konfiguraci",
+
+  // "admin.update-config.reset": "Reset",
+  "admin.update-config.reset": "Obnovit",
+
+  // "admin.update-config.help.title": "Important Notes",
+  "admin.update-config.help.title": "Důležité poznámky",
+
+  // "admin.update-config.help.backup": "Always backup configuration files before making changes.",
+  "admin.update-config.help.backup": "Vždy zálohujte konfigurační soubory před prováděním změn.",
+
+  // "admin.update-config.help.validate": "Ensure your configuration is valid before saving to prevent system errors.",
+  "admin.update-config.help.validate": "Ujistěte se, že je vaše konfigurace platná před uložením pro předejití systémovým chybám.",
+
+  // "admin.update-config.help.restart": "Changes may require application restart to take effect.",
+  "admin.update-config.help.restart": "Změny mohou vyžadovat restart aplikace pro aktivaci.",
+
+  // "admin.update-config.help.directory": "Only files in /config/config-be/ directory can be edited for security reasons.",
+  "admin.update-config.help.directory": "Pouze soubory v adresáři /config/config-be/ mohou být editovány z bezpečnostních důvodů.",
+
+  // "admin.update-config.success.save.title": "Configuration Saved",
+  "admin.update-config.success.save.title": "Konfigurace uložena",
+
+  // "admin.update-config.success.save.message": "{{message}}",
+  "admin.update-config.success.save.message": "{{message}}",
+
+  // "admin.update-config.error.save.title": "Save Failed",
+  "admin.update-config.error.save.title": "Uložení selhalo",
+
+  // "admin.update-config.error.save.message": "Unable to save configuration file. Please check the logs and try again.",
+  "admin.update-config.error.save.message": "Nepodařilo se uložit konfigurační soubor. Zkontrolujte logy a zkuste to znovu.",
+
+  // "admin.update-config.error.load.title": "Load Failed",
+  "admin.update-config.error.load.title": "Načtení selhalo",
+
+  // "admin.update-config.error.load.message": "Unable to load configuration file: {{fileName}}",
+  "admin.update-config.error.load.message": "Nepodařilo se načíst konfigurační soubor: {{fileName}}",
+
+  // Additional translation keys for enhanced UI
+  // "admin.update-config.refresh": "Refresh",
+  "admin.update-config.refresh": "Obnovit",
+
+  // "admin.update-config.refresh.tooltip": "Reload configuration files list",
+  "admin.update-config.refresh.tooltip": "Znovu načíst seznam konfiguračních souborů",
+
+  // "admin.update-config.loading": "Loading...",
+  "admin.update-config.loading": "Načítání...",
+
+  // "admin.update-config.loading-files": "Loading configuration files...",
+  "admin.update-config.loading-files": "Načítání konfiguračních souborů...",
+
+  // "admin.update-config.loading-content": "Loading file content...",
+  "admin.update-config.loading-content": "Načítání obsahu souboru...",
+
+  // "admin.update-config.file-selection.title": "File Selection",
+  "admin.update-config.file-selection.title": "Výběr souboru",
+
+  // "admin.update-config.file-selection.label": "Select Configuration File",
+  "admin.update-config.file-selection.label": "Vyberte konfigurační soubor",
+
+  // "admin.update-config.file-info.path": "Path",
+  "admin.update-config.file-info.path": "Cesta",
+
+  // "admin.update-config.file-info.modified": "Last Modified",
+  "admin.update-config.file-info.modified": "Naposledy změněno",
+
+  // "admin.update-config.select.choose-file": "Choose a configuration file to edit",
+  "admin.update-config.select.choose-file": "Vyberte konfigurační soubor k editaci",
+
+  // "admin.update-config.select.no-files": "No configuration files found",
+  "admin.update-config.select.no-files": "Nenalezeny žádné konfigurační soubory",
+
+  // "admin.update-config.editor.title": "Configuration Editor",
+  "admin.update-config.editor.title": "Editor konfigurace",
+
+  // "admin.update-config.editor.content": "File Content",
+  "admin.update-config.editor.content": "Obsah souboru",
+
+  // "admin.update-config.editor.placeholder": "Select a file to begin editing...",
+  "admin.update-config.editor.placeholder": "Vyberte soubor pro zahájení editace...",
+
+  // "admin.update-config.editor.characters": "characters",
+  "admin.update-config.editor.characters": "znaků",
+
+  // "admin.update-config.editor.save": "Save Changes",
+  "admin.update-config.editor.save": "Uložit změny",
+
+  // "admin.update-config.editor.save.tooltip": "Save changes to the configuration file",
+  "admin.update-config.editor.save.tooltip": "Uložit změny do konfiguračního souboru",
+
+  // "admin.update-config.editor.reset": "Reset",
+  "admin.update-config.editor.reset": "Obnovit",
+
+  // "admin.update-config.editor.reset.tooltip": "Reset content to original version",
+  "admin.update-config.editor.reset.tooltip": "Obnovit obsah na původní verzi",
+
+  // "admin.update-config.validation.valid": "Configuration is valid",
+  "admin.update-config.validation.valid": "Konfigurace je platná",
+
+  // "admin.update-config.validation.invalid": "Configuration contains errors - please fix before saving",
+  "admin.update-config.validation.invalid": "Konfigurace obsahuje chyby - prosím opravte před uložením",
+
+  // "admin.update-config.validation.unsaved-changes": "File has unsaved changes",
+  "admin.update-config.validation.unsaved-changes": "Soubor má neuložené změny",
+
+  // "admin.update-config.help.important.title": "Before You Start",
+  "admin.update-config.help.important.title": "Než začnete",
+
+  // "admin.update-config.help.important.backup": "Always backup configuration files before making changes",
+  "admin.update-config.help.important.backup": "Vždy zálohujte konfigurační soubory před prováděním změn",
+
+  // "admin.update-config.help.important.restart": "DSpace may require restart after configuration changes",
+  "admin.update-config.help.important.restart": "DSpace může vyžadovat restart po změnách konfigurace",
+
+  // "admin.update-config.help.important.validation": "Configuration validation prevents saving invalid files",
+  "admin.update-config.help.important.validation": "Validace konfigurace předchází uložení neplatných souborů",
+
+  // "admin.update-config.help.allowed-files.title": "Editable Files",
+  "admin.update-config.help.allowed-files.title": "Editovatelné soubory",
+
+  // "admin.update-config.help.allowed-files.description": "Only XML files in the config-be directory can be edited for security reasons:",
+  "admin.update-config.help.allowed-files.description": "Pouze XML soubory v adresáři config-be mohou být editovány z bezpečnostních důvodů:",
+
+  // "admin.update-config.error.load-files.title": "Load Error",
+  "admin.update-config.error.load-files.title": "Chyba načtení",
+
+  // "admin.update-config.error.load-files.message": "Failed to load configuration files list",
+  "admin.update-config.error.load-files.message": "Nepodařilo se načíst seznam konfiguračních souborů",
+
+  // Breadcrumb
+  "admin.update-config.breadcrumbs": "Aktualizace konfigurace",
+
+  // File Information
+  // "admin.update-config.file-info.title": "File Information",
+  "admin.update-config.file-info.title": "Informace o souboru",
+
+  // "admin.update-config.file-info.name": "File",
+  "admin.update-config.file-info.name": "Soubor",
+
+  // "admin.update-config.file-info.size": "Size",
+  "admin.update-config.file-info.size": "Velikost",
+
+  // "admin.update-config.file-info.bytes": "bytes",
+  "admin.update-config.file-info.bytes": "bajtů",
+
+  // "admin.update-config.file-info.modified": "Modified",
+  "admin.update-config.file-info.modified": "Změněno",
+
+  // "admin.update-config.file-info.status": "Status",
+  "admin.update-config.file-info.status": "Stav",
+
+  // "admin.update-config.file-info.ready": "Ready for editing",
+  "admin.update-config.file-info.ready": "Připraven k editaci",
+
+  // Action Buttons
+  // "admin.update-config.buttons.undo": "Undo Changes",
+  "admin.update-config.buttons.undo": "Vrátit změny",
+
+  // "admin.update-config.buttons.undo.tooltip": "Reset to last saved version",
+  "admin.update-config.buttons.undo.tooltip": "Obnovit na poslední uloženou verzi",
+
+  // "admin.update-config.buttons.reload": "Reload File",
+  "admin.update-config.buttons.reload": "Znovu načíst soubor",
+
+  // "admin.update-config.buttons.reload.tooltip": "Reload file from server",
+  "admin.update-config.buttons.reload.tooltip": "Znovu načíst soubor ze serveru",
+
+  // "admin.update-config.buttons.save": "Save to File",
+  "admin.update-config.buttons.save": "Uložit do souboru",
+
+  // "admin.update-config.buttons.save.tooltip": "Save changes to configuration file",
+  "admin.update-config.buttons.save.tooltip": "Uložit změny do konfiguračního souboru",
+
+  // "admin.update-config.buttons.saving": "Saving to File...",
+  "admin.update-config.buttons.saving": "Ukládání do souboru...",
+
+  // Editor Notice
+  // "admin.update-config.editor.notice.title": "File Editor",
+  "admin.update-config.editor.notice.title": "Editor souborů",
+
+  // "admin.update-config.editor.notice.description": "Editing configuration file {{fileName}}. Changes are saved immediately to the server.",
+  "admin.update-config.editor.notice.description": "Editace konfiguračního souboru {{fileName}}. Změny jsou ukládány okamžitě na server.",
+
+  // Success Messages
+  // "admin.update-config.success.save.title": "File Saved Successfully",
+  "admin.update-config.success.save.title": "Soubor úspěšně uložen",
+
+  // "admin.update-config.success.save.message": "{{fileName}} has been updated successfully",
+  "admin.update-config.success.save.message": "{{fileName}} byl úspěšně aktualizován",
+
+  // "admin.update-config.success.reload.title": "File Reloaded",
+  "admin.update-config.success.reload.title": "Soubor znovu načten",
+
+  // "admin.update-config.success.reload.message": "Reloaded {{fileName}} from server",
+  "admin.update-config.success.reload.message": "{{fileName}} byl znovu načten ze serveru",
+
+  // Error Messages
+  // "admin.update-config.error.load-content.title": "Load Failed",
+  "admin.update-config.error.load-content.title": "Načtení selhalo",
+
+  // "admin.update-config.error.load-content.message": "Could not load {{fileName}}",
+  "admin.update-config.error.load-content.message": "Nepodařilo se načíst {{fileName}}",
+
+  // "admin.update-config.error.save.title": "Save Failed",
+  "admin.update-config.error.save.title": "Uložení selhalo",
+
+  // "admin.update-config.error.save.message": "Could not save {{fileName}}",
+  "admin.update-config.error.save.message": "Nepodařilo se uložit {{fileName}}",
+
+  // "admin.update-config.error.reload.title": "Reload Failed",
+  "admin.update-config.error.reload.title": "Opětovné načtení selhalo",
+
+  // "admin.update-config.error.reload.message": "Could not reload original file",
+  "admin.update-config.error.reload.message": "Nepodařilo se znovu načíst původní soubor",
+
   // "item-access-control-title": "This form allows you to perform changes to the access conditions of the item's metadata or its bitstreams.",
   "item-access-control-title": "Tento formulář umožňuje provést změny typu přístupu k metadatovému záznamu nebo souborům.",
 
@@ -8625,7 +8880,7 @@
   // "handle-table.table.handle": "Handle",
   "handle-table.table.handle": "Handle",
 
-  // "handle-table.table.internal": "Is Internal",
+  // "handle-table.table.internal": "Is internal",
   "handle-table.table.internal": "Je interní",
 
   // "handle-table.table.is-internal": "Yes",
@@ -8657,6 +8912,42 @@
 
   // "handle-table.dropdown.search-button": "Search",
   "handle-table.dropdown.search-button": "Hledat",
+
+  // "handle-table.search.placeholder.no-option": "Please select a search option first",
+  "handle-table.search.placeholder.no-option": "Nejprve vyberte možnost vyhledávání",
+
+  // "handle-table.search.placeholder.handle": "Enter handle",
+  "handle-table.search.placeholder.handle": "Zadejte Handle",
+
+  // "handle-table.search.internal.select": "Select internal option",
+  "handle-table.search.internal.select": "Vyberte možnost interní",
+
+  // "handle-table.search.internal.yes": "Yes",
+  "handle-table.search.internal.yes": "Ano",
+
+  // "handle-table.search.internal.no": "No",
+  "handle-table.search.internal.no": "Ne",
+
+  // "handle-table.search.resource-type.select": "Select resource type",
+  "handle-table.search.resource-type.select": "Vyberte typ zdroje",
+
+  // "handle-table.search.resource-type.site": "Site",
+  "handle-table.search.resource-type.site": "Stránka",
+
+  // "handle-table.search.resource-type.community": "Community",
+  "handle-table.search.resource-type.community": "Komunita",
+
+  // "handle-table.search.resource-type.collection": "Collection",
+  "handle-table.search.resource-type.collection": "Kolekce",
+
+  // "handle-table.search.resource-type.item": "Item",
+  "handle-table.search.resource-type.item": "Záznam",
+
+  // "handle-table.search.aria.select-internal": "Select internal option",
+  "handle-table.search.aria.select-internal": "Vyberte možnost interní",
+
+  // "handle-table.search.aria.select-resource-type": "Select resource type",
+  "handle-table.search.aria.select-resource-type": "Vyberte typ zdroje",
 
   // "handle-table.global-actions.title": "Global Actions",
   "handle-table.global-actions.title": "Globální akce",
@@ -9056,6 +9347,9 @@
 
   // "menu.section.licenses": "License Administration",
   "menu.section.licenses": "Správa licencí",
+
+  // "menu.section.update-config": "Update Config",
+  "menu.section.update-config": "Úprava konfigurace",
 
   // "menu.section.submissions": "Submissions",
   "menu.section.submissions": "Příspěvky",

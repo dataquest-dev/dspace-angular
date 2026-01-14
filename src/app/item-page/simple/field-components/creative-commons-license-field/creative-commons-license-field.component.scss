@@ -1,0 +1,113 @@
+@import '../../item-page.component';
+
+@media (min-width: 992px) {
+  .col-2-5 {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+}
+
+.clarin-item-page-field {
+  .cc-license-content {
+    .cc-license-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cc-license-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: #0056b3;
+        text-decoration: none;
+      }
+
+      .cc-icons {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+
+        i {
+          font-size: 1.1rem;
+
+          &.fa-creative-commons {
+            color: #f39c12;
+          }
+
+          &.fa-creative-commons-by {
+            color: #3498db;
+          }
+
+          &.fa-creative-commons-sa {
+            color: #27ae60;
+          }
+
+          &.fa-creative-commons-nc {
+            color: #e74c3c;
+          }
+
+          &.fa-creative-commons-nd {
+            color: #9b59b6;
+          }
+
+          &.fa-creative-commons-zero {
+            color: #34495e;
+          }
+        }
+      }
+
+      .cc-license-text {
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+
+      &:hover .cc-icons i {
+        font-size: 1.2rem;
+      }
+    }
+
+    .cc-license-description {
+      font-size: 0.85rem;
+      color: #6c757d;
+      font-style: italic;
+      margin-left: 0;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 991.98px) {
+  .clarin-item-page-field {
+    .cc-license-content {
+      .cc-license-link {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+
+        .cc-icons {
+          gap: 1px;
+
+          i {
+            font-size: 1rem;
+          }
+        }
+
+        .cc-license-text {
+          font-size: 0.9rem;
+        }
+      }
+
+      .cc-license-description {
+        font-size: 0.8rem;
+        margin-top: 2px;
+      }
+    }
+  }
+}

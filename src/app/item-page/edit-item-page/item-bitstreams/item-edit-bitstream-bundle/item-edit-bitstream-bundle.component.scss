@@ -19,6 +19,14 @@
   font-weight: normal;
 }
 
+.dont-break-out {
+  word-break: break-word;
+}
+
 .table {
   margin-bottom: 0;
+}
+
+.table thead th {
+  vertical-align: middle;
 }

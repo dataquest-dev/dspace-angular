@@ -53,6 +53,12 @@ import { ThemedAdminWorkflowPageComponent } from './admin-workflow-page/themed-a
         loadChildren: () => import('../system-wide-alert/system-wide-alert.module').then((m) => m.SystemWideAlertModule),
         data: {title: 'admin.system-wide-alert.title', breadcrumbKey: 'admin.system-wide-alert'}
       },
+      {
+        path: 'update-config',
+        resolve: { breadcrumb: I18nBreadcrumbResolver },
+        loadChildren: () => import('./admin-update-config/admin-update-config.module').then((m) => m.AdminUpdateConfigModule),
+        data: { title: 'admin.update-config.title', breadcrumbKey: 'admin.update-config' }
+      },
     ])
   ],
   providers: [
