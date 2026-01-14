@@ -96,7 +96,6 @@ import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/
 import { MatomoSubscriptionButtonComponent } from './matomo-subscription-button/matomo-subscription-button.component';
 import { MyDSpaceActionsModule } from '../shared/mydspace-actions/mydspace-actions.module';
 import { ViewsDownloadsStatisticsButtonComponent } from './views-downloads-statistics-button/views-downloads-statistics-button.component';
-import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
 import { CreativeCommonsLicenseFieldComponent } from './simple/field-components/creative-commons-license-field/creative-commons-license-field.component';
 
 const ENTRY_COMPONENTS = [
@@ -167,7 +166,7 @@ const DECLARATIONS = [
   ClarinFilesSectionComponent,
   ViewsDownloadsStatisticsComponent,
   ViewsDownloadsStatisticsButtonComponent,
-  MatomoSubscriptionButtonComponent
+  MatomoSubscriptionButtonComponent,
   CreativeCommonsLicenseFieldComponent
 ];
 

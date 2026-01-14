@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
@@ -8,7 +7,6 @@ import { CreativeCommonsLicenseFieldComponent } from './creative-commons-license
 import { BundleDataService } from '../../../../core/data/bundle-data.service';
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
 import { Item } from '../../../../core/shared/item.model';
-import { RemoteData } from '../../../../core/data/remote-data';
 import { Bundle } from '../../../../core/shared/bundle.model';
 import { PaginatedList, buildPaginatedList } from '../../../../core/data/paginated-list.model';
 import { Bitstream } from '../../../../core/shared/bitstream.model';
@@ -272,7 +270,7 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
 
     urlTestCases.forEach(testCase => {
       it(`should extract '${testCase.expected}' from URL '${testCase.url}'`, () => {
-        const result = component['extractLicenseNameFromUrl'](testCase.url);
+        const result = component.extractLicenseNameFromUrl(testCase.url);
         expect(result).toBe(testCase.expected);
       });
     });
@@ -281,13 +279,13 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
   describe('Metadata Extraction', () => {
     it('should extract Creative Commons URL from dc.rights.uri', () => {
       component.item = mockItem;
-      const result = component['extractUrlFromMetadata']();
+      const result = component.extractUrlFromMetadata();
       expect(result).toBe('https://creativecommons.org/licenses/by/4.0/');
     });
 
     it('should return empty string when no Creative Commons URL is found in metadata', () => {
       component.item = mockItemWithoutLicense;
-      const result = component['extractUrlFromMetadata']();
+      const result = component.extractUrlFromMetadata();
       expect(result).toBe('');
     });
 
@@ -303,7 +301,7 @@ describe('CreativeCommonsLicenseFieldComponent', () => {
       } as any as Item;
 
       component.item = itemWithDifferentField;
-      const result = component['extractUrlFromMetadata']();
+      const result = component.extractUrlFromMetadata();
       expect(result).toBe('https://creativecommons.org/licenses/by-sa/3.0/');
     });
   });

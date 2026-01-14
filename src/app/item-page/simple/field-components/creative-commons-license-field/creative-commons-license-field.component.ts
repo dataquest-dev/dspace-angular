@@ -4,11 +4,8 @@ import { map, switchMap, catchError } from 'rxjs/operators';
 import { Item } from '../../../../core/shared/item.model';
 import { BundleDataService } from '../../../../core/data/bundle-data.service';
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
-import { getAllSucceededRemoteDataPayload, getFirstSucceededRemoteDataPayload } from '../../../../core/shared/operators';
 import { RemoteData } from '../../../../core/data/remote-data';
 import { Bundle } from '../../../../core/shared/bundle.model';
-import { PaginatedList } from '../../../../core/data/paginated-list.model';
-import { Bitstream } from '../../../../core/shared/bitstream.model';
 import { isNotEmpty } from '../../../../shared/empty.util';
 
 /**
@@ -110,7 +107,7 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
   private initializeCcLicense(): void {
     // Cache the metadata URL extraction to avoid repeated calls
     const metadataUrl = this.extractUrlFromMetadata();
-    
+
     // Check if item has CC_LICENSE bundle and extract license information
     const ccLicenseBundle$ = this.bundleService.findByItemAndName(this.item, CC_CONSTANTS.BUNDLE_NAME);
 
@@ -167,7 +164,7 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
   /**
    * Extract Creative Commons license URL from item metadata
    */
-  private extractUrlFromMetadata(): string {
+  extractUrlFromMetadata(): string {
     // Check for common CC license metadata fields
     for (const field of CC_CONSTANTS.METADATA_FIELDS) {
       const values = this.item.allMetadata(field);
@@ -185,7 +182,7 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
   /**
    * Extract license name from Creative Commons URL
    */
-  private extractLicenseNameFromUrl(url: string): string {
+  extractLicenseNameFromUrl(url: string): string {
     if (!url || !url.includes(CC_CONSTANTS.DOMAIN)) {
       return '';
     }
@@ -232,7 +229,9 @@ export class CreativeCommonsLicenseFieldComponent implements OnInit {
    * Get license type for switch case in template
    */
   getLicenseType(licenseName: string): string {
-    if (!licenseName) return '';
+    if (!licenseName) {
+      return '';
+    }
 
     const name = licenseName.toLowerCase();
 
