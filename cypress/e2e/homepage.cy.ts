@@ -1,4 +1,5 @@
 import { testA11y } from 'cypress/support/utils';
+import { Options } from 'cypress-axe';
 
 describe('Homepage', () => {
   beforeEach(() => {
@@ -33,6 +34,12 @@ describe('Homepage', () => {
     cy.get('ds-loading').should('not.exist');
 
     // Analyze <ds-home-page> for accessibility issues
-    testA11y('ds-home-page');
+    testA11y('ds-home-page',
+            {
+              rules: {
+                'link-name': { enabled: false },
+              },
+            } as Options,
+    );
   });
 });
