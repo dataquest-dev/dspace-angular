@@ -24,7 +24,7 @@ jobs:
 
           git fetch --prune origin
           BRANCHES=$(git ls-remote --heads origin | awk -F'/' '{print $3"/"$4}' | grep '^customer/')
-          SKIP_BRANCHES=("customer/sav" "customer/uk" "customer/mendelu-v7" "customer/palo-docker" "customer/palo-docker-rebase" "customer/palo-docker-typo-fix")
+          SKIP_BRANCHES=("customer/uk" "customer/mendelu-v7" "customer/palo-docker" "customer/palo-docker-rebase" "customer/palo-docker-typo-fix")
           
           for branch in $(echo "$BRANCHES" | sed -e 's/[\[\]"]//g' -e 's/,/\n/g'); do
             if [[ " ${SKIP_BRANCHES[@]} " =~ " ${branch} " ]]; then
