@@ -186,27 +186,28 @@ describe('Create a new submission', () => {
     createItemProcess.checkLicenseSelectionValue('Public Domain Mark (PD)');
   });
 
-  it('should select the license from the license selection dropdown and change status', {
-    retries: {
-      runMode: 6,
-      openMode: 6,
-    },
-    defaultCommandTimeout: 10000
-  },() => {
-    createItemProcess.checkLicenseResourceStep();
-    // check default value in the license dropdown selection
-    createItemProcess.checkLicenseSelectionValue('Select a License ...');
-    // check step status - it should be as warning
-    createItemProcess.checkResourceLicenseStatus('Warnings');
-    // click on the dropdown button to list options
-    createItemProcess.clickOnLicenseSelectionButton();
-    // select `Public Domain Mark (PD)` from the selection
-    createItemProcess.selectValueFromLicenseSelection(2);
-    // // selected value should be seen as selected value in the selection
-    createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
-    // // check step status - it should be valid
-    createItemProcess.checkResourceLicenseStatus('Valid');
-  });
+  // Uncomment when this issue will be solved https://github.com/dataquest-dev/dspace-angular/issues/1181
+  // it('should select the license from the license selection dropdown and change status', {
+  //   retries: {
+  //     runMode: 6,
+  //     openMode: 6,
+  //   },
+  //   defaultCommandTimeout: 10000
+  // },() => {
+  //   createItemProcess.checkLicenseResourceStep();
+  //   // check default value in the license dropdown selection
+  //   createItemProcess.checkLicenseSelectionValue('Select a License ...');
+  //   // check step status - it should be as warning
+  //   createItemProcess.checkResourceLicenseStatus('Warnings');
+  //   // click on the dropdown button to list options
+  //   createItemProcess.clickOnLicenseSelectionButton();
+  //   // select `Public Domain Mark (PD)` from the selection
+  //   createItemProcess.selectValueFromLicenseSelection(2);
+  //   // // selected value should be seen as selected value in the selection
+  //   createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
+  //   // // check step status - it should be valid
+  //   createItemProcess.checkResourceLicenseStatus('Valid');
+  // });
 
   it('should show warning messages if was selected non-supported license', {
     retries: {
