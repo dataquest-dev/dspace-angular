@@ -8,6 +8,7 @@ import { ResourceType } from '../shared/resource-type';
  */
 
 export const HANDLE = new ResourceType('handle');
+export const EPICHANDLE = new ResourceType('epichandle');
 export const SUCCESSFUL_RESPONSE_START_CHAR = '2';
 export const INVALID_RESOURCE_TYPE_ID = -1;
 export const COMMUNITY = 'Community';

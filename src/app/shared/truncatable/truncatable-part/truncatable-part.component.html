@@ -3,11 +3,12 @@
     <ng-content></ng-content>
   </div>
   <button
+    *ngIf="externalToggle === false"
     class="btn btn-link p-0 {{isExpanded ? 'collapseButton' : 'expandButton'}}"
     dsDragClick
-    (actualClick)="toggle()"
-    (keyup.Enter)="toggle()"
-    (keyup.Space)="toggle()"
+    (actualClick)="toggle($event)"
+    (keyup.Enter)="toggle($event)"
+    (keyup.Space)="toggle($event)"
     role="button"
     [attr.aria-expanded]="isExpanded"
     tabindex="0"

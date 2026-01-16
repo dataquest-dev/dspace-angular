@@ -1,3 +1,9 @@
 :host {
   width: 100%;
 }
+::ng-deep .toggleIcons {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+}

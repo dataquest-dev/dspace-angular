@@ -80,7 +80,7 @@ import { ClarinCollectionsItemFieldComponent } from './simple/field-components/c
 import { ClarinFilesItemFieldComponent } from './simple/field-components/clarin-files-item-field/clarin-files-item-field.component';
 import { ClarinItemVersionsFieldComponent } from './simple/field-components/clarin-item-versions-field/clarin-item-versions-field.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {PreviewSectionComponent} from './simple/field-components/preview-section/preview-section.component';
+import { PreviewSectionComponent } from './simple/field-components/preview-section/preview-section.component';
 import {
   FileDescriptionComponent
 } from './simple/field-components/preview-section/file-description/file-description.component';
@@ -92,7 +92,10 @@ import { ClarinIdentifierItemFieldComponent } from './simple/field-components/cl
 import { ClarinDateItemFieldComponent } from './simple/field-components/clarin-date-item-field/clarin-date-item-field.component';
 import { ClarinDescriptionItemFieldComponent } from './simple/field-components/clarin-description-item-field/clarin-description-item-field.component';
 import { ClarinFilesSectionComponent } from './clarin-files-section/clarin-files-section.component';
-import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
+import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/views-downloads-statistics.component';
+import { MatomoSubscriptionButtonComponent } from './matomo-subscription-button/matomo-subscription-button.component';
+import { MyDSpaceActionsModule } from '../shared/mydspace-actions/mydspace-actions.module';
+import { ViewsDownloadsStatisticsButtonComponent } from './views-downloads-statistics-button/views-downloads-statistics-button.component';
 import { CreativeCommonsLicenseFieldComponent } from './simple/field-components/creative-commons-license-field/creative-commons-license-field.component';
 
 const ENTRY_COMPONENTS = [
@@ -161,6 +164,9 @@ const DECLARATIONS = [
   ClarinDateItemFieldComponent,
   ClarinDescriptionItemFieldComponent,
   ClarinFilesSectionComponent,
+  ViewsDownloadsStatisticsComponent,
+  ViewsDownloadsStatisticsButtonComponent,
+  MatomoSubscriptionButtonComponent,
   CreativeCommonsLicenseFieldComponent
 ];
 
@@ -169,6 +175,7 @@ const DECLARATIONS = [
     CommonModule,
     SharedModule.withEntryComponents(),
     ItemPageRoutingModule,
+    MyDSpaceActionsModule,
     EditItemPageModule,
     ItemVersionsModule,
     ItemSharedModule,

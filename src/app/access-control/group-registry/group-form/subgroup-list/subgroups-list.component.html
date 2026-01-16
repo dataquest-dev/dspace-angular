@@ -64,8 +64,9 @@
   <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" class="d-flex justify-content-between">
     <div class="flex-grow-1 mr-3">
       <div class="form-group input-group mr-3">
+        <label for="query" class="sr-only">{{messagePrefix + '.search.input' | translate}}</label>
         <input type="text" name="query" id="query" formControlName="query"
-               class="form-control" aria-label="Search input">
+               class="form-control" [attr.aria-label]="messagePrefix + '.search.input' | translate">
         <span class="input-group-append">
             <button type="submit" class="search-button btn btn-primary">
               <i class="fas fa-search"></i> {{ messagePrefix + '.search.button' | translate }}

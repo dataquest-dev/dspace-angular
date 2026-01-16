@@ -5,8 +5,8 @@
   </div>
   <div>
     <div>
-      <ng-container *ngIf="(ccLicenseUrl$ | async) as licenseUrl">
-        <ng-container *ngIf="(ccLicenseName$ | async) as licenseName">
+      <ng-container *ngIf="(ccLicenseUrl$ | async) as licenseUrl; else fallbackTemplate">
+        <ng-container *ngIf="(ccLicenseName$ | async) as licenseName; else urlOnlyTemplate">
           <div class="cc-license-content">
             <div class="cc-license-row">
               <a [href]="licenseUrl" 
@@ -60,7 +60,28 @@
             </div>
           </div>
         </ng-container>
+        <ng-template #urlOnlyTemplate>
+          <div class="cc-license-content">
+            <div class="cc-license-row">
+              <a [href]="licenseUrl" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="cc-license-link">
+                <i class="fab fa-creative-commons"></i>
+                <span class="cc-license-text">Creative Commons License</span>
+              </a>
+            </div>
+          </div>
+        </ng-template>
       </ng-container>
+      <ng-template #fallbackTemplate>
+        <div class="cc-license-content">
+          <div class="cc-license-row">
+            <i class="fab fa-creative-commons"></i>
+            <span class="cc-license-text">Creative Commons License</span>
+          </div>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

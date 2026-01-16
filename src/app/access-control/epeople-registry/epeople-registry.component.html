@@ -18,13 +18,15 @@
       </h2>
       <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" class="d-flex justify-content-between">
         <div>
-          <select name="scope" id="scope" formControlName="scope" class="form-control" aria-label="Search scope">
+          <label for="scope" class="sr-only">{{labelPrefix + 'search.scope' | translate}}</label>
+          <select name="scope" id="scope" formControlName="scope" class="form-control" [attr.aria-label]="labelPrefix + 'search.scope' | translate">
             <option value="metadata">{{labelPrefix + 'search.scope.metadata' | translate}}</option>
             <option value="email">{{labelPrefix + 'search.scope.email' | translate}}</option>
           </select>
         </div>
         <div class="flex-grow-1 mr-3 ml-3">
           <div class="form-group input-group">
+            <label id="query" for="query" class="sr-only">{{labelPrefix + 'search.placeholder' | translate}}</label>
             <input type="text" name="query" id="query" formControlName="query"
                    class="form-control" [attr.aria-label]="labelPrefix + 'search.placeholder' | translate"
                    [placeholder]="(labelPrefix + 'search.placeholder' | translate)">
@@ -56,6 +58,7 @@
               <th scope="col">{{labelPrefix + 'table.id' | translate}}</th>
               <th scope="col">{{labelPrefix + 'table.name' | translate}}</th>
               <th scope="col">{{labelPrefix + 'table.email' | translate}}</th>
+              <th scope="col">{{labelPrefix + 'table.lastActive' | translate}}</th>
               <th>{{labelPrefix + 'table.edit' | translate}}</th>
             </tr>
             </thead>
@@ -65,6 +68,7 @@
               <td>{{epersonDto.eperson.id}}</td>
               <td>{{ dsoNameService.getName(epersonDto.eperson) }}</td>
               <td>{{epersonDto.eperson.email}}</td>
+              <td>{{epersonDto.eperson.lastActive | date:dateFormat:'UTC'}}</td>
               <td>
                 <div class="btn-group edit-field">
                   <button [routerLink]="getEditEPeoplePage(epersonDto.eperson.id)"

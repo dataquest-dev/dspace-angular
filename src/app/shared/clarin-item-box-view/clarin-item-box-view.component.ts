@@ -42,7 +42,6 @@ import {RequestParam} from '../../core/cache/models/request-param.model';
   styleUrls: ['./clarin-item-box-view.component.scss']
 })
 export class ClarinItemBoxViewComponent implements OnInit {
-
   protected readonly AUTHOR_METADATA_FIELDS = AUTHOR_METADATA_FIELDS;
 
   ITEM_TYPE_IMAGES_PATH = './assets/images/item-types/';
@@ -264,7 +263,25 @@ export class ClarinItemBoxViewComponent implements OnInit {
 
   handleImageError(event) {
     const imgElement = event.target as HTMLImageElement;
-    imgElement.src = this.ITEM_TYPE_IMAGES_PATH + this.ITEM_TYPE_DEFAULT_IMAGE_NAME;
+    imgElement.src =
+      this.ITEM_TYPE_IMAGES_PATH + this.ITEM_TYPE_DEFAULT_IMAGE_NAME;
+  }
+
+  // formating the alt text according to itemType
+  formateIconsAltText(itemType: string) {
+    if (!itemType) {
+      return 'icon';
+    }
+    return (
+      itemType
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/-/g, ' ')
+        .replace(/_/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase()
+        .replace(/^\w/, (c) => c.toUpperCase()) + ' icon'
+    );
   }
 }
 

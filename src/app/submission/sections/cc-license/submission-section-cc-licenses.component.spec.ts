@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { SubmissionSectionCcLicensesComponent } from './submission-section-cc-licenses.component';
 import { SUBMISSION_CC_LICENSE } from '../../../core/submission/models/submission-cc-licence.resource-type';
 import { of as observableOf } from 'rxjs';
@@ -136,16 +136,16 @@ describe('SubmissionSectionCcLicensesComponent', () => {
   });
 
   const submissionCcLicenseUrlDataService = jasmine.createSpyObj('submissionCcLicenseUrlDataService', {
-    getCcLicenseLink: createSuccessfulRemoteDataObject$(
-      {
-        url: 'test cc license link',
-      }
-    ),
+    getCcLicenseLink: observableOf('test cc license link'),
   });
 
   const sectionService = {
     getSectionState: () => {
-      return observableOf({});
+      return observableOf({
+        data: component.sectionData.data || {},
+        errorsToShow: [],
+        serverValidationErrors: []
+      });
     },
     setSectionStatus: () => undefined,
     updateSectionData: (submissionId, sectionId, updatedData) => {
@@ -189,12 +189,13 @@ describe('SubmissionSectionCcLicensesComponent', () => {
       .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(SubmissionSectionCcLicensesComponent);
     component = fixture.componentInstance;
     de = fixture.debugElement;
     fixture.detectChanges();
-  });
+    tick(300); // Wait for initial debounce
+  }));
 
   it('should display a dropdown with the different cc licenses', () => {
     expect(
@@ -251,8 +252,14 @@ describe('SubmissionSectionCcLicensesComponent', () => {
         );
       });
 
-      it('should display a cc license link', () => {
-        expect(de.query(By.css('.license-link'))).toBeTruthy();
+      it('should display a cc license link', (done) => {
+        // Wait for the debounced observable to emit
+        setTimeout(() => {
+          fixture.detectChanges();
+          const linkElement = de.query(By.css('.license-link'));
+          expect(linkElement).toBeTruthy();
+          done();
+        }, 350); // Wait longer than the 300ms debounce
       });
 
       it('should not be accepted', () => {

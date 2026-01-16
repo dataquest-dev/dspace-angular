@@ -84,6 +84,11 @@ export class EPeopleRegistryComponent implements OnInit, OnDestroy {
    */
   subs: Subscription[] = [];
 
+  /**
+   * Date format used for ePerson lastActive table column
+   */
+  dateFormat = 'yyyy-MM-dd HH:mm:ss';
+
   constructor(private epersonService: EPersonDataService,
               private translateService: TranslateService,
               private notificationsService: NotificationsService,

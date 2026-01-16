@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { TruncatableService } from '../truncatable.service';
 import { hasValue } from '../../empty.util';
 
@@ -17,6 +17,13 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    * Number of lines shown when the part is collapsed
    */
   @Input() minLines: number;
+
+  /**
+   * A boolean value for external control of the icon toggle state
+   * if true, the component will emit truncated state via an EventEmitter
+   * and will not show the toggle button internally if showToggle is true
+   */
+  @Input() externalToggle = false;
 
   /**
    * Number of lines shown when the part is expanded. -1 indicates no limit
@@ -45,6 +52,8 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    * This value must have the same value as the parent TruncatableComponent
    */
   @Input() showToggle = true;
+
+  @Output() truncated: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * The view on the truncatable part
@@ -99,48 +108,58 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
 
   /**
    * Expands the truncatable when it's collapsed, collapses it when it's expanded
+   * if no id is provided, it will use local expand/collapse
+   * @param event - The DOM event that triggered the toggle
+   * @param expand - Whether to expand (true) or collapse (false) the truncatable part
    */
-  public toggle() {
-    this.service.toggle(this.id);
-    this.expandable = !this.expandable;
+  public toggle(event?: Event, expand?: boolean) {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (this.id){
+      this.service.toggle(this.id);
+    } else {
+      this.toggleWithoutId(expand);
+    }
   }
 
   /**
    * check for the truncate element
    */
   public truncateElement() {
-    if (this.showToggle) {
-      const entry = this.content.nativeElement;
-      if (entry.scrollHeight > entry.offsetHeight) {
-        if (entry.children.length > 0) {
-          if (entry.children[entry.children.length - 1].offsetHeight > entry.offsetHeight) {
-            entry.classList.add('truncated');
-            entry.classList.remove('removeFaded');
-          } else {
-            entry.classList.remove('truncated');
-            entry.classList.add('removeFaded');
-          }
-        } else {
-          if (entry.innerText.length > 0) {
-            entry.classList.add('truncated');
-            entry.classList.remove('removeFaded');
-          } else {
-            entry.classList.remove('truncated');
-            entry.classList.add('removeFaded');
-          }
-        }
-      } else {
-        entry.classList.remove('truncated');
-        entry.classList.add('removeFaded');
+  if (this.showToggle || this.externalToggle) {
+    const entry = this.content.nativeElement;
+
+    if (entry.scrollHeight > entry.offsetHeight) {
+      entry.classList.add('truncated');
+      entry.classList.remove('removeFaded');
+      if (this.externalToggle) {
+        this.truncated.emit(true);
+      }
+    } else {
+      entry.classList.remove('truncated');
+      entry.classList.add('removeFaded');
+      if (this.externalToggle) {
+        this.truncated.emit(false);
       }
     }
   }
+}
 
   /**
    * Indicates if the content is expanded, button state is 'Collapse'
    */
   public get isExpanded() {
-    return this.expand && this.expandable;
+    return this.expand;
+  }
+
+  /**
+   * Expand or collapse using the external icons when no id available
+   * @param expand - Whether to expand (true) or collapse (false) the truncatable part
+   */
+  toggleWithoutId(expand: boolean) {
+    this.expand = expand;
+    this.lines = expand ? 'none' : (this.minLines ? this.minLines.toString() : '1');
   }
 
   /**

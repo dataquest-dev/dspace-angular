@@ -1,0 +1,116 @@
+<div class="container">
+  <div class="card">
+    <h5 class="card-header d-flex justify-content-between align-items-center">
+      <span>{{ 'epic-handle-table.title' | translate }} - {{ prefix }}</span>
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="changePrefix()">
+        <i class="fas fa-edit"></i> {{ 'epic-handle-table.button.change-prefix' | translate }}
+      </button>
+    </h5>
+    <div class="card-body">
+
+      <div class="input-group mb-3">
+        <input type="text" id="epic-handle-search-box" class="form-control" [(ngModel)]="searchQuery"
+          [placeholder]="'epic-handle-table.search.placeholder' | translate" (keyup.enter)="searchHandles()">
+        <span class="input-group-append">
+          <button type="button" class="btn btn-primary search-button" (click)="searchHandles()" [disabled]="isLoading">
+            <i class="fas fa-search"></i> {{ 'epic-handle-table.search.button' | translate }}
+          </button>
+        </span>
+      </div>
+
+      <div *ngVar="(handlesRD$ | async) as handleData">
+        <div class="mb-2 table-responsive">
+          <ds-pagination (paginationChange)="onPageChange()" [sortOptions]="sortConfiguration" [hideGear]="true"
+            [hidePagerWhenSinglePage]="true" [paginationOptions]="options"
+            [collectionSize]="handleData?.payload?.pageInfo?.totalElements"
+            [retainScrollPosition]="true">
+
+            <table class="table table-striped table-bordered align-middle my-2">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 50px;"></th>
+                  <th scope="col">{{ 'epic-handle-table.table.handle' | translate }}</th>
+                  <th scope="col">{{ 'epic-handle-table.table.url' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let handle of handleData?.payload?.page" [id]="'handle-row-' + handle.id"
+                  [class.table-active]="selectedHandle === handle.id">
+
+                  <td class="text-center">
+                    <input type="radio" [name]="'handleSelection'" [checked]="selectedHandle === handle.id"
+                      (change)="switchSelectedHandle(handle.id)">
+                  </td>
+
+                  <td class="align-middle">
+                    <strong>{{ handle.id }}</strong>
+                  </td>
+
+                  <td class="align-middle">
+                    <a *ngIf="handle.url" [href]="handle.url" target="_blank" rel="noopener noreferrer"
+                      class="text-break">
+                      {{ handle.url }}
+                      <i class="fas fa-external-link-alt ml-1"></i>
+                    </a>
+                    <span *ngIf="!handle.url" class="text-muted">
+                      {{ 'epic-handle-table.table.no-url' | translate }}
+                    </span>
+                  </td>
+                </tr>
+
+                <tr *ngIf="!isLoading && (!handleData?.payload?.page || handleData?.payload?.page.length === 0)">
+                  <td colspan="4" class="text-center text-muted py-4">
+                    <i class="fas fa-inbox fa-2x mb-2"></i>
+                    <p>{{ 'epic-handle-table.table.no-results' | translate }}</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <ds-loading *ngIf="isLoading" class="text-center"></ds-loading>
+          </ds-pagination>
+
+          <div class="mt-3">
+            <div class="btn-group mr-2">
+              <button type="button" class="btn btn-success mt-md-0 mt-2" (click)="redirectToNewHandle()"
+                [disabled]="isLoading">
+                <i class="fas fa-plus"></i> {{ 'epic-handle-table.button.new-handle' | translate }}
+              </button>
+            </div>
+            <div class="btn-group mr-2">
+              <button type="button" class="btn btn-warning mt-md-0 mt-2" (click)="redirectToEditHandle()"
+                [disabled]="selectedHandle === null || isLoading">
+                <i class="fas fa-edit"></i> {{ 'epic-handle-table.button.edit-handle' | translate }}
+              </button>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-danger mt-md-0 mt-2" (click)="deleteHandle()"
+                [disabled]="selectedHandle === null || isLoading">
+                <i class="fas fa-trash"></i> {{ 'epic-handle-table.button.delete-handle' | translate }}
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-3 text-muted small" *ngIf="handleData?.payload?.pageInfo?.totalElements > 0">
+            {{ 'epic-handle-table.table.showing' | translate: {
+            count: handleData.payload.page.length,
+            total: handleData.payload?.pageInfo?.totalElements
+            } }}
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <input type="text" id="epic-handle-pid-box" class="form-control" [(ngModel)]="pidQuery"
+          [placeholder]="'epic-handle-table.pid.placeholder' | translate" (keyup.enter)="goToPID()">
+        <button type="button" class="btn btn-primary search-button mt-1" (click)="goToPID()"
+          [disabled]="isLoading || !isPidInputValid()">
+          {{ 'epic-handle-table.go-to-pid.button' | translate }} <i class="fas fa-arrow-right"></i>
+        </button>
+        <div *ngIf="pidQuery && !isPidInputValid()" class="text-danger small mt-1">
+          {{ 'epic-handle-table.pid.prefix-suffix-required' | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

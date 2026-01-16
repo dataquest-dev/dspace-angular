@@ -26,7 +26,7 @@ import { SignpostingDataService } from '../../core/data/signposting-data.service
 import { LinkDefinition, LinkHeadService } from '../../core/services/link-head.service';
 import { SignpostingLink } from '../../core/data/signposting-links.model';
 import { RegistryService } from 'src/app/core/registry/registry.service';
-import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-data.service';
 import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.service';
@@ -131,6 +131,10 @@ describe('ItemPageComponent', () => {
       getRootHref: 'root url',
     });
 
+    const initialState = {
+      core: { auth: { loading: false } },
+    };
+
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot({
         loader: {
@@ -149,7 +153,7 @@ describe('ItemPageComponent', () => {
         { provide: SignpostingDataService, useValue: signpostingDataService },
         { provide: LinkHeadService, useValue: linkHeadService },
         { provide: PLATFORM_ID, useValue: 'server' },
-        { provide: Store, useValue: {} },
+        provideMockStore({ initialState }),
         { provide: NotificationsService, useValue: {} },
         { provide: MetadataSchemaDataService, useValue: {} },
         { provide: MetadataFieldDataService, useValue: {} },

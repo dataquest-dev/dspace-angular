@@ -419,6 +419,12 @@
   // "admin.access-control.epeople.search.head": "Search",
   "admin.access-control.epeople.search.head": "Hledat",
 
+  // "admin.access-control.epeople.search.scope": "Search scope",
+  "admin.access-control.epeople.search.scope": "Rozsah vyhledávání",
+
+  // "admin.access-control.epeople.search.input": "Search input",
+  "admin.access-control.epeople.search.input": "Vyhledávací vstup",
+
   // "admin.access-control.epeople.button.see-all": "Browse All",
   "admin.access-control.epeople.button.see-all": "Procházet vše",
 
@@ -563,6 +569,9 @@
   // "admin.access-control.groups.search.head": "Search groups",
   "admin.access-control.groups.search.head": "Hledat skupiny",
 
+  // "admin.access-control.groups.search.input": "Search input",
+  "admin.access-control.groups.search.input": "Vyhledávací vstup",
+
   // "admin.access-control.groups.button.see-all": "Browse all",
   "admin.access-control.groups.button.see-all": "Procházet vše",
 
@@ -674,6 +683,9 @@
   // "admin.access-control.groups.form.members-list.search.head": "Add EPeople",
   "admin.access-control.groups.form.members-list.search.head": "Přidat uživatele",
 
+  // "admin.access-control.groups.form.members-list.search.input": "Search input",
+  "admin.access-control.groups.form.members-list.search.input": "Vyhledávací vstup",
+
   // "admin.access-control.groups.form.members-list.button.see-all": "Browse All",
   "admin.access-control.groups.form.members-list.button.see-all": "Procházet vše",
 
@@ -736,6 +748,9 @@
 
   // "admin.access-control.groups.form.subgroups-list.search.head": "Add Subgroup",
   "admin.access-control.groups.form.subgroups-list.search.head": "Přidat podskupinu",
+
+  // "admin.access-control.groups.form.subgroups-list.search.input": "Search input",
+  "admin.access-control.groups.form.subgroups-list.search.input": "Vyhledávací vstup",
 
   // "admin.access-control.groups.form.subgroups-list.button.see-all": "Browse All",
   "admin.access-control.groups.form.subgroups-list.button.see-all": "Procházet vše",
@@ -3930,6 +3945,7 @@
   "item.preview.dc.rights": "Práva",
 
   // "item.preview.dc.identifier.other": "Other Identifier",
+  // TODO Source message changed - Revise the translation
   "item.preview.dc.identifier.other": "Další identifikátor:",
 
   // "item.preview.dc.relation.issn": "ISSN",
@@ -6226,6 +6242,90 @@
 
   // "statistics.table.no-name": "(object name could not be loaded)",
   "statistics.table.no-name": "(název objektu nelze načíst)",
+
+  // "statistics.views-downloads.back-to-item": "Back to Item",
+  "statistics.views-downloads.back-to-item": "Back to Item",
+
+  // "statistics.views-downloads.drill-down-info": "Click on a data point to drill down by year / month.",
+  "statistics.views-downloads.drill-down-info": "Click on a data point to drill down by year / month.",
+
+  // "statistics.views-downloads.views": "Views",
+  "statistics.views-downloads.views": "Views",
+
+  // "statistics.views-downloads.downloads": "Downloads",
+  "statistics.views-downloads.downloads": "Downloads",
+
+  // "statistics.views-downloads.back-to-months": "Back to Months",
+  "statistics.views-downloads.back-to-months": "Back to Months",
+
+  // "statistics.views-downloads.back-to-years": "Back to Years",
+  "statistics.views-downloads.back-to-years": "Back to Years",
+
+  // "statistics.views-downloads.statistics-for": "Statistics for",
+  "statistics.views-downloads.statistics-for": "Statistics for",
+
+  // "statistics.views-downloads.loading": "Loading statistics...",
+  "statistics.views-downloads.loading": "Loading statistics...",
+
+  // "statistics.views-downloads.file-wise-statistics": "File-wise Download Statistics",
+  "statistics.views-downloads.file-wise-statistics": "File-wise Download Statistics",
+
+  // "statistics.views-downloads.no-data": "No download statistics available",
+  "statistics.views-downloads.no-data": "No download statistics available",
+
+  // "statistics.views-downloads.error": "Failed to load statistics. Please try again later.",
+  "statistics.views-downloads.error": "Failed to load statistics. Please try again later.",
+
+  // "statistics.views-downloads.title.daily": "Daily Statistics for {{month}} {{year}}",
+  "statistics.views-downloads.title.daily": "Daily Statistics for {{month}} {{year}}",
+
+  // "statistics.views-downloads.title.monthly": "Monthly Statistics for {{year}}",
+  "statistics.views-downloads.title.monthly": "Monthly Statistics for {{year}}",
+
+  // "statistics.views-downloads.title.yearly": "Repository Usage Statistics",
+  "statistics.views-downloads.title.yearly": "Repository Usage Statistics",
+
+  // "statistics.views-downloads.all-months": "All Months",
+  "statistics.views-downloads.all-months": "All Months",
+
+  // "statistics.views-downloads.all-years": "All Years",
+  "statistics.views-downloads.all-years": "All Years",
+
+  // "statistics.views-downloads.months.january": "January",
+  "statistics.views-downloads.months.january": "January",
+
+  // "statistics.views-downloads.months.february": "February",
+  "statistics.views-downloads.months.february": "February",
+
+  // "statistics.views-downloads.months.march": "March",
+  "statistics.views-downloads.months.march": "March",
+
+  // "statistics.views-downloads.months.april": "April",
+  "statistics.views-downloads.months.april": "April",
+
+  // "statistics.views-downloads.months.may": "May",
+  "statistics.views-downloads.months.may": "May",
+
+  // "statistics.views-downloads.months.june": "June",
+  "statistics.views-downloads.months.june": "June",
+
+  // "statistics.views-downloads.months.july": "July",
+  "statistics.views-downloads.months.july": "July",
+
+  // "statistics.views-downloads.months.august": "August",
+  "statistics.views-downloads.months.august": "August",
+
+  // "statistics.views-downloads.months.september": "September",
+  "statistics.views-downloads.months.september": "September",
+
+  // "statistics.views-downloads.months.october": "October",
+  "statistics.views-downloads.months.october": "October",
+
+  // "statistics.views-downloads.months.november": "November",
+  "statistics.views-downloads.months.november": "November",
+
+  // "statistics.views-downloads.months.december": "December",
+  "statistics.views-downloads.months.december": "December",
 
   // "submission.edit.breadcrumbs": "Edit Submission",
   "submission.edit.breadcrumbs": "Upravit příspěvek",
@@ -9637,4 +9737,335 @@
 
   // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
   "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
+
+  // "menu.section.epic-handle": "ePIC Handles",
+  "menu.section.epic-handle": "ePIC Handles",
+
+  // "epic-prefix-handle-page": "ePIC Handle Prefix",
+  "epic-prefix-handle-page": "ePIC Handle Prefix",
+  // "epic-prefix-handle-page.title": "Enter ePIC Handle Prefix",
+  "epic-prefix-handle-page.title": "Enter ePIC Handle Prefix",
+  // "epic-prefix-handle-page.description": "Please enter the handle prefix to manage ePIC handles. The prefix is the first part of your handle identifier.",
+  "epic-prefix-handle-page.description": "Please enter the handle prefix to manage ePIC handles. The prefix is the first part of your handle identifier.",
+  // "epic-prefix-handle-page.form.prefix-label": "Handle Prefix",
+  "epic-prefix-handle-page.form.prefix-label": "Handle Prefix",
+  // "epic-prefix-handle-page.form.prefix-placeholder": "Enter prefix (e.g., 11148)",
+  "epic-prefix-handle-page.form.prefix-placeholder": "Enter prefix (e.g., 11148)",
+  // "epic-prefix-handle-page.form.submit-button": "Continue",
+  "epic-prefix-handle-page.form.submit-button": "Continue",
+  // "epic-prefix-handle-page.form.help": "The prefix should contain only alphanumeric characters (letters and numbers).",
+  "epic-prefix-handle-page.form.help": "The prefix should contain only alphanumeric characters (letters and numbers).",
+  // "epic-prefix-handle-page.form.error.required": "Prefix is required.",
+  "epic-prefix-handle-page.form.error.required": "Prefix is required.",
+  // "epic-prefix-handle-page.form.error.pattern": "Prefix must contain only letters and numbers.",
+  "epic-prefix-handle-page.form.error.pattern": "Prefix must contain only letters and numbers.",
+  // "epic-prefix-handle-page.example.title": "Example",
+  "epic-prefix-handle-page.example.title": "Example",
+  // "epic-prefix-handle-page.example.text": "Example prefix:",
+  "epic-prefix-handle-page.example.text": "Example prefix:",
+
+  // "epic-handle-page.title": "ePIC Handles",
+  "epic-handle-page.title": "ePIC Handles",
+
+  // "epic-handle-table": "ePIC Handles",
+  "epic-handle-table": "ePIC Handles",
+
+  // "epic-handle-table.title": "ePIC Handle List",
+  "epic-handle-table.title": "ePIC Handle List",
+
+  // "epic-handle-table.table.handle": "Handle",
+  "epic-handle-table.table.handle": "Handle",
+
+  // "epic-handle-table.table.url": "URL",
+  "epic-handle-table.table.url": "URL",
+
+  // "epic-handle-table.table.actions": "Actions",
+  "epic-handle-table.table.actions": "Actions",
+
+  // "epic-handle-table.table.no-url": "No URL",
+  "epic-handle-table.table.no-url": "No URL",
+
+  // "epic-handle-table.table.no-results": "No handles found.",
+  "epic-handle-table.table.no-results": "No handles found.",
+
+  // "epic-handle-table.table.showing": "Showing {{count}} of {{total}} handles",
+  "epic-handle-table.table.showing": "Showing {{count}} of {{total}} handles",
+
+  // "epic-handle-table.search.placeholder": "Search by URL...",
+  "epic-handle-table.search.placeholder": "Search by URL...",
+
+  // "epic-handle-table.search.button": "Search",
+  "epic-handle-table.search.button": "Search",
+
+  // "epic-handle-table.search.clear": "Clear",
+  "epic-handle-table.search.clear": "Clear",
+
+  // "epic-handle-table.button.new-handle": "Create New Handle",
+  "epic-handle-table.button.new-handle": "Create New Handle",
+
+  // "epic-handle-table.button.edit-handle": "Edit Handle",
+  "epic-handle-table.button.edit-handle": "Edit Handle",
+
+  // "epic-handle-table.button.delete-handle": "Delete Handle",
+  "epic-handle-table.button.delete-handle": "Delete Handle",
+
+  // "epic-handle-table.button.goto-handle": "Go to Handle",
+  "epic-handle-table.button.goto-handle": "Go to Handle",
+
+  // "epic-handle-table.button.change-prefix": "Change Prefix",
+  "epic-handle-table.button.change-prefix": "Change Prefix",
+
+  // "epic-handle-table.delete-handle.confirm": "Are you sure you want to delete this handle? This action cannot be undone.",
+  "epic-handle-table.delete-handle.confirm": "Are you sure you want to delete this handle? This action cannot be undone.",
+
+  // "epic-handle-table.delete-handle.notify.successful": "Handle deleted successfully.",
+  "epic-handle-table.delete-handle.notify.successful": "Handle deleted successfully.",
+
+  // "epic-handle-table.delete-handle.notify.error": "Failed to delete handle. Please try again.",
+  "epic-handle-table.delete-handle.notify.error": "Failed to delete handle. Please try again.",
+
+  // "epic-handle-table.notify.error.load-failed": "Failed to load handles. Please try again.",
+  "epic-handle-table.notify.error.load-failed": "Failed to load handles. Please try again.",
+
+  // "epic-handle-table.new-handle": "New ePIC Handle",
+  "epic-handle-table.new-handle": "New ePIC Handle",
+
+  // "epic-handle-table.new-handle.title": "Create New ePIC Handle",
+  "epic-handle-table.new-handle.title": "Create New ePIC Handle",
+
+  // "epic-handle-table.new-handle.description": "Create a new ePIC handle with prefix: {{prefix}}",
+  "epic-handle-table.new-handle.description": "Create a new ePIC handle with prefix: {{prefix}}",
+
+  // "epic-handle-table.new-handle.form-url-input-text": "Target URL",
+  "epic-handle-table.new-handle.form-url-input-text": "Target URL",
+
+  // "epic-handle-table.new-handle.form-url-input-placeholder": "Enter target URL (e.g., http://example.com)",
+  "epic-handle-table.new-handle.form-url-input-placeholder": "Enter target URL (e.g., http://example.com)",
+
+  // "epic-handle-table.new-handle.form-url-help": "The URL that this handle will resolve to. Must start with http:// or https://",
+  "epic-handle-table.new-handle.form-url-help": "The URL that this handle will resolve to. Must start with http:// or https://",
+
+  // "epic-handle-table.new-handle.form-subprefix-input-text": "Sub-prefix (Optional)",
+  "epic-handle-table.new-handle.form-subprefix-input-text": "Sub-prefix (Optional)",
+
+  // "epic-handle-table.new-handle.form-subprefix-input-placeholder": "Enter sub-prefix (e.g., TEST)",
+  "epic-handle-table.new-handle.form-subprefix-input-placeholder": "Enter sub-prefix (e.g., TEST)",
+
+  // "epic-handle-table.new-handle.form-subprefix-help": "Optional prefix for the generated handle suffix. Will be converted to uppercase.",
+  "epic-handle-table.new-handle.form-subprefix-help": "Optional prefix for the generated handle suffix. Will be converted to uppercase.",
+
+  // "epic-handle-table.new-handle.form-subsuffix-input-text": "Sub-suffix (Optional)",
+  "epic-handle-table.new-handle.form-subsuffix-input-text": "Sub-suffix (Optional)",
+
+  // "epic-handle-table.new-handle.form-subsuffix-input-placeholder": "Enter sub-suffix (e.g., UFAL)",
+  "epic-handle-table.new-handle.form-subsuffix-input-placeholder": "Enter sub-suffix (e.g., UFAL)",
+
+  // "epic-handle-table.new-handle.form-subsuffix-help": "Optional suffix for the generated handle suffix. Will be converted to uppercase.",
+  "epic-handle-table.new-handle.form-subsuffix-help": "Optional suffix for the generated handle suffix. Will be converted to uppercase.",
+
+  // "epic-handle-table.new-handle.form-button-submit": "Create Handle",
+  "epic-handle-table.new-handle.form-button-submit": "Create Handle",
+
+  // "epic-handle-table.new-handle.form-button-cancel": "Cancel",
+  "epic-handle-table.new-handle.form-button-cancel": "Cancel",
+
+  // "epic-handle-table.new-handle.notify.successful": "ePIC handle created successfully.",
+  "epic-handle-table.new-handle.notify.successful": "ePIC handle created successfully.",
+
+  // "epic-handle-table.new-handle.notify.error": "Failed to create ePIC handle.",
+  "epic-handle-table.new-handle.notify.error": "Failed to create ePIC handle.",
+
+  // "epic-handle-table.new-handle.notify.error.url-required": "URL is required.",
+  "epic-handle-table.new-handle.notify.error.url-required": "URL is required.",
+
+
+  // "epic-handle-table.edit-handle": "Edit ePIC Handle",
+  "epic-handle-table.edit-handle": "Edit ePIC Handle",
+
+  // "epic-handle-table.edit-handle.title": "Edit ePIC Handle",
+  "epic-handle-table.edit-handle.title": "Edit ePIC Handle",
+
+  // "epic-handle-table.edit-handle.description": "Update the target URL for this ePIC handle.",
+  "epic-handle-table.edit-handle.description": "Update the target URL for this ePIC handle.",
+
+  // "epic-handle-table.edit-handle.form-handle-input-text": "Handle ID",
+  "epic-handle-table.edit-handle.form-handle-input-text": "Handle ID",
+
+  // "epic-handle-table.edit-handle.form-handle-input-placeholder": "Handle ID",
+  "epic-handle-table.edit-handle.form-handle-input-placeholder": "Handle ID",
+
+  // "epic-handle-table.edit-handle.form-current-url-text": "Current URL",
+  "epic-handle-table.edit-handle.form-current-url-text": "Current URL",
+
+  // "epic-handle-table.edit-handle.form-url-input-text": "New URL",
+  "epic-handle-table.edit-handle.form-url-input-text": "New URL",
+
+  // "epic-handle-table.edit-handle.form-url-input-placeholder": "Enter new target URL",
+  "epic-handle-table.edit-handle.form-url-input-placeholder": "Enter new target URL",
+
+  // "epic-handle-table.edit-handle.form-url-help": "Enter the new URL that this handle should resolve to.",
+  "epic-handle-table.edit-handle.form-url-help": "Enter the new URL that this handle should resolve to.",
+
+  // "epic-handle-table.edit-handle.form-button-submit": "Update Handle",
+  "epic-handle-table.edit-handle.form-button-submit": "Update Handle",
+
+  // "epic-handle-table.edit-handle.form-button-cancel": "Cancel",
+  "epic-handle-table.edit-handle.form-button-cancel": "Cancel",
+
+  // "epic-handle-table.edit-handle.notify.successful": "ePIC handle updated successfully.",
+  "epic-handle-table.edit-handle.notify.successful": "ePIC handle updated successfully.",
+
+  // "epic-handle-table.edit-handle.notify.error": "Failed to update ePIC handle.",
+  "epic-handle-table.edit-handle.notify.error": "Failed to update ePIC handle.",
+
+  // "epic-handle-table.edit-handle.notify.error.url-required": "URL is required.",
+  "epic-handle-table.edit-handle.notify.error.url-required": "URL is required.",
+
+  // "epic-handle-table.edit-handle.notify.error.no-handle": "No handle specified.",
+  "epic-handle-table.edit-handle.notify.error.no-handle": "No handle specified.",
+
+  // "epic-handle-table.edit-handle.notify.error.invalid-handle": "Invalid handle format.",
+  "epic-handle-table.edit-handle.notify.error.invalid-handle": "Invalid handle format.",
+
+  // "epic-handle-table.pid.placeholder": "Enter PID suffix",
+  // TODO Source message changed - Revise the translation
+  "epic-handle-table.pid.placeholder": "Enter PID suffix",
+
+  // "epic-handle-table.go-to-pid.button": "Go to PID",
+  // TODO Source message changed - Revise the translation
+  "epic-handle-table.go-to-pid.button": "Go to PID",
+
+  // "epic-handle-table.pid.prefix-suffix-required": "Suffix is required!",
+  "epic-handle-table.pid.prefix-suffix-required": "Suffix is required!",
+
+  // "epic-handle-table.breadcrumbs": "ePIC Handles",
+  // TODO Source message changed - Revise the translation
+  "epic-handle-table.breadcrumbs": "ePIC Handles",
+
+  // "epic-handle-table.edit-handle.breadcrumbs": "Edit ePIC handle",
+  "epic-handle-table.edit-handle.breadcrumbs": "Edit ePIC handle",
+
+  // "epic-handle-table.new-handle.breadcrumbs": "New ePIC handle",
+  "epic-handle-table.new-handle.breadcrumbs": "New ePIC handle",
+
+  // "epic-handle-table.new-handle.form-suffix-input-text": "Suffix  (Optional)",
+  "epic-handle-table.new-handle.form-suffix-input-text": "Suffix  (Optional)",
+
+  // "epic-handle-table.new-handle.form-suffix-input-placeholder": "Enter suffix (e.g., test)",
+  "epic-handle-table.new-handle.form-suffix-input-placeholder": "Enter suffix (e.g., test)",
+
+  // "login.already-authenticated.header": "You're Already Logged In",
+  "login.already-authenticated.header": "Již jste přihlášeni",
+
+  // "login.already-authenticated.message": "You are currently authenticated. Would you like to go to the home page or your profile?",
+  "login.already-authenticated.message": "Jste aktuálně přihlášeni. Chcete přejít do svého osobního profilu nebo na domovskou stránku?",
+
+  // "login.already-authenticated.go-home": "Home",
+  "login.already-authenticated.go-home": "Domů",
+
+  // "login.already-authenticated.go-profile": "Profile",
+  "login.already-authenticated.go-profile": "Profil",
+
+  // "login.already-authenticated.logout": "Logout",
+  "login.already-authenticated.logout": "Odhlásit se",
+
+  // "clarin.bitstream.authorization.denied.message": "Access to download the \"{{bitstream}}\" file was denied by the bitstream resource policy.",
+  "clarin.bitstream.authorization.denied.message": "Přístup ke stažení souboru \"{{bitstream}}\" byl zamítnut.",
+
+  // "home.image.glass": "Home page glass magnifier image",
+  "home.image.glass": "Lupa",
+
+  // "home.image.lindat-color-line": "Lindat color line image",
+  "home.image.lindat-color-line": "Barevná linka s barvami LINDAT",
+
+  // "static.deposit.image.step-1": "Step 1 Menu Login image",
+  "static.deposit.image.step-1": "Krok 1: menu - přihlášení",
+
+  // "static.deposit.image.step-2": "Step 2 Menu Submissions image",
+  "static.deposit.image.step-2": "Krok 2: menu - příspěvky",
+
+  // "static.deposit.image.step-2-1": "Step 2.1 Starting a submission image",
+  "static.deposit.image.step-2-1": "Krok 2.1: vytvoření nového příspěvku",
+
+  // "static.deposit.image.step-3": "Step 3 Submission information image",
+  "static.deposit.image.step-3": "Krok 3: informace o příspěvku",
+
+  // "static.deposit.image.step-4": "Step 4 Describing item people and organizations image",
+  "static.deposit.image.step-4": "Krok 4: popis osob a organizací u příspěvku",
+
+  // "static.deposit.image.step-4-1": "Step 4.1 Describing item source details image",
+  "static.deposit.image.step-4-1": "Krok 4.1: podrobnosti o původu příspěvku",
+
+  // "static.deposit.image.step-5": "Step 5 Uploading file image",
+  "static.deposit.image.step-5": "Krok 5: nahrání souboru",
+
+  // "static.deposit.image.step-6-1": "Step 6.1 Distribution license agreement image",
+  "static.deposit.image.step-6-1": "Krok 6.1: Odsouhlasení distribuční licence",
+
+  // "static.deposit.image.step-6-2": "Step 6.2 Selecting license image",
+  "static.deposit.image.step-6-2": "Krok 6.2: Výběr licence",
+
+  // "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
+  "static.deposit.image.step-6-3": "Krok 6.3: Open license selector - nástroj pro výběr licence",
+
+  // "home.news.image.banner": "Home news banner image",
+  "home.news.image.banner": "Baner",
+
+  // "curation-task.task.checkhandles.label": "Check Item Handles",
+  "curation-task.task.checkhandles.label": "Zkontrolovat handly v záznamech",
+
+  // "admin.access-control.epeople.table.lastActive": "Last time active",
+  "admin.access-control.epeople.table.lastActive": "Naposledy aktivní",
+
+  // "submission.workflow.generic.curate": "Curate",
+  "submission.workflow.generic.curate": "Zkontrolovat",
+
+  // "submission.workflow.generic.curate-help": "Validate the item with the curation framework",
+  "submission.workflow.generic.curate-help": "Ověřit položku pomocí kurátorského frameworku",
+  // "sidebar.expand.all": "Expand all",
+  "sidebar.expand.all": "Rozbalit vše",
+
+  // "sidebar.collapse.all": "Collapse all",
+  "sidebar.collapse.all": "Sbalit vše",
+
+  // "matomo.subscription.subscribe.button": "Subscribe",
+  "matomo.subscription.subscribe.button": "Přihlásit se k odběru",
+
+  // "matomo.subscription.unsubscribe.button": "Unsubscribe",
+  "matomo.subscription.unsubscribe.button": "Odhlásit odběr",
+
+  // "matomo.subscription.subscribe.success.title": "Subscribed!",
+  "matomo.subscription.subscribe.success.title": "Přihlášeno k odběru",
+
+  // "matomo.subscription.subscribe.success.message": "Subscribed successfully to item statistics!",
+  "matomo.subscription.subscribe.success.message": "Úspěšně jste se přihlásili k odběru statistik položky!",
+
+  // "matomo.subscription.subscribe.error.title": "Subscription Failed",
+  "matomo.subscription.subscribe.error.title": "Přihlášení k odběru se nezdařilo",
+
+  // "matomo.subscription.subscribe.error.message": "Unable to subscribe to item statistics. Please try again later.",
+  "matomo.subscription.subscribe.error.message": "Nepodařilo se přihlásit k odběru statistik položky. Zkuste to prosím později.",
+
+  // "matomo.subscription.unsubscribe.success.title": "Unsubscribed!",
+  "matomo.subscription.unsubscribe.success.title": "Odhlášeno",
+
+  // "matomo.subscription.unsubscribe.success.message": "Unsubscribed successfully from item statistics!",
+  "matomo.subscription.unsubscribe.success.message": "Úspěšně jste se odhlásili z odběru statistik položky!",
+
+  // "matomo.subscription.unsubscribe.error.title": "Unsubscribe Failed",
+  "matomo.subscription.unsubscribe.error.title": "Odhlášení se nezdařilo",
+
+  // "matomo.subscription.unsubscribe.error.message": "Unable to unsubscribe from item statistics. Please try again later.",
+  "matomo.subscription.unsubscribe.error.message": "Nepodařilo se odhlásit z odběru statistik záznamu. Zkuste to prosím později.",
+
+  // "matomo.subscription.subscribe.tooltip": "Subscribe to receive monthly statistics reports for this item",
+  "matomo.subscription.subscribe.tooltip": "Přihlásit se k odběru měsíčních statistik  pro tento záznam",
+
+  // "matomo.subscription.unsubscribe.tooltip": "Unsubscribe from monthly statistics reports for this item",
+  "matomo.subscription.unsubscribe.tooltip": "Odhlásit se z odběru měsíčních statistik pro tento záznam",
+
+  // "statistics.views-downloads.view-button": "Statistics",
+  "statistics.views-downloads.view-button": "Statistiky",
+
+
 }

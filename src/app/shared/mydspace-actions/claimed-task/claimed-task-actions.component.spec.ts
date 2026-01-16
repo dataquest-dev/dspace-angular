@@ -172,7 +172,18 @@ describe('ClaimedTaskActionsComponent', () => {
       expect(debugElement).toBeTruthy();
       expect(debugElement.nativeElement.innerText.trim()).toBe('submission.workflow.generic.view');
     });
+  }));
 
+  it('should display a curate button', waitForAsync(() => {
+    component.object = null;
+    component.initObjects(mockObject);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      const debugElement = fixture.debugElement.query(By.css('.workflow-curate'));
+      expect(debugElement).toBeTruthy();
+      expect(debugElement.nativeElement.innerText.trim()).toBe('submission.workflow.generic.curate');
+    });
   }));
 
   it('getWorkflowItemViewRoute should return the combined uri to show a workspaceitem', waitForAsync(() => {
@@ -180,4 +191,108 @@ describe('ClaimedTaskActionsComponent', () => {
     expect(href).toEqual('/workflowitems/333/view');
   }));
 
+
+  describe('showViewButton input', () => {
+  it('should default showViewButton to true', () => {
+    expect(component.showViewButton).toBe(true);
+  });
+
+  it('should accept showViewButton as false', () => {
+    component.showViewButton = false;
+    fixture.detectChanges();
+
+    expect(component.showViewButton).toBe(false);
+  });
+
+  it('should display view button when showViewButton is true', waitForAsync(() => {
+    component.showViewButton = true;
+    component.object = mockObject;
+    component.initObjects(mockObject);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      const viewButton = fixture.debugElement.query(By.css('.workflow-view'));
+      expect(viewButton).toBeTruthy();
+    });
+  }));
+
+  it('should not display view button when showViewButton is false', waitForAsync(() => {
+    component.showViewButton = false;
+    component.object = mockObject;
+    component.initObjects(mockObject);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      const viewButton = fixture.debugElement.query(By.css('.workflow-view'));
+      expect(viewButton).toBeNull();
+    });
+  }));
+
+  it('should render view button with correct attributes when showViewButton is true', waitForAsync(() => {
+    component.showViewButton = true;
+    component.workflowitem = workflowitem;
+    component.object = mockObject;
+    component.initObjects(mockObject);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      const viewButton = fixture.debugElement.query(By.css('.workflow-view'));
+      expect(viewButton.nativeElement.routerLink)
+        .toContain('/workflowitems/333/view');
+    });
+  }));
+
+  it('should conditionally render view button based on showViewButton changes', waitForAsync(() => {
+    component.showViewButton = true;
+    component.object = mockObject;
+    component.initObjects(mockObject);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      let viewButton = fixture.debugElement.query(By.css('.workflow-view'));
+      expect(viewButton).toBeTruthy();
+      component.showViewButton = false;
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        viewButton = fixture.debugElement.query(By.css('.workflow-view'));
+        expect(viewButton).toBeNull();
+      });
+    });
+  }));
+});
+
+describe('integration with action buttons', () => {
+  it('should render action loaders and view button when showViewButton is true', waitForAsync(() => {
+    component.showViewButton = true;
+    component.object = mockObject;
+    component.actionRD$ = workflowActionService.findById('action-1');
+    component.initObjects(mockObject);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      const loaders = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions-loader'));
+      const viewButton = fixture.debugElement.query(By.css('.workflow-view'));
+
+      expect(loaders.length).toBeGreaterThan(0);
+      expect(viewButton).toBeTruthy();
+    });
+  }));
+
+  it('should render only action loaders when showViewButton is false', waitForAsync(() => {
+    component.showViewButton = false;
+    component.object = mockObject;
+    component.actionRD$ = workflowActionService.findById('action-1');
+    component.initObjects(mockObject);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      const loaders = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions-loader'));
+      const viewButton = fixture.debugElement.query(By.css('.workflow-view'));
+
+      expect(loaders.length).toBeGreaterThan(0);
+      expect(viewButton).toBeNull();
+    });
+  }));
+});
 });
