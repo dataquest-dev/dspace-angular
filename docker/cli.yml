@@ -66,6 +66,3 @@ services:
 volumes:
   assetstore:
   dspace_cli_logs:
-
-networks:
-  dspacenet:
