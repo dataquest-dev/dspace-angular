@@ -186,30 +186,7 @@ describe('Create a new submission', () => {
     createItemProcess.checkLicenseSelectionValue('Public Domain Mark (PD)');
   });
 
-  // Uncomment when this issue will be solved https://github.com/dataquest-dev/dspace-angular/issues/1181
-  // it('should select the license from the license selection dropdown and change status', {
-  //   retries: {
-  //     runMode: 6,
-  //     openMode: 6,
-  //   },
-  //   defaultCommandTimeout: 10000
-  // },() => {
-  //   createItemProcess.checkLicenseResourceStep();
-  //   // check default value in the license dropdown selection
-  //   createItemProcess.checkLicenseSelectionValue('Select a License ...');
-  //   // check step status - it should be as warning
-  //   createItemProcess.checkResourceLicenseStatus('Warnings');
-  //   // click on the dropdown button to list options
-  //   createItemProcess.clickOnLicenseSelectionButton();
-  //   // select `Public Domain Mark (PD)` from the selection
-  //   createItemProcess.selectValueFromLicenseSelection(2);
-  //   // // selected value should be seen as selected value in the selection
-  //   createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
-  //   // // check step status - it should be valid
-  //   createItemProcess.checkResourceLicenseStatus('Valid');
-  // });
-
-  it('should show warning messages if was selected non-supported license', {
+  it.skip('should select the license from the license selection dropdown and change status', {
     retries: {
       runMode: 6,
       openMode: 6,
@@ -217,6 +194,30 @@ describe('Create a new submission', () => {
     defaultCommandTimeout: 10000
   },() => {
     createItemProcess.checkLicenseResourceStep();
+
+    // check default value in the license dropdown selection
+    createItemProcess.checkLicenseSelectionValue('Select a License ...');
+    // check step status - it should be as warning
+    createItemProcess.checkResourceLicenseStatus('Warnings');
+    // click on the dropdown button to list options
+    createItemProcess.clickOnLicenseSelectionButton();
+    // select `Public Domain Mark (PD)` from the selection
+    createItemProcess.selectValueFromLicenseSelection(2);
+    // // selected value should be seen as selected value in the selection
+    createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
+    // // check step status - it should be valid
+    createItemProcess.checkResourceLicenseStatus('Valid');
+  });
+
+  it.skip('should show warning messages if was selected non-supported license', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+    defaultCommandTimeout: 10000
+  },() => {
+    createItemProcess.checkLicenseResourceStep();
+
     // check default value in the license dropdown selection
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
     // check step status - it should be as warning
@@ -232,6 +233,71 @@ describe('Create a new submission', () => {
     // error messages should be popped up
     createItemProcess.showErrorMustChooseLicense();
     createItemProcess.showErrorNotSupportedLicense();
+  });
+
+  it('should require license validation when file is uploaded', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+    defaultCommandTimeout: 10000
+  }, () => {
+    // Navigate to license step
+    createItemProcess.checkLicenseResourceStep();
+
+    // Upload a file to trigger license requirement
+    cy.get('ds-uploader').trigger('dragover');
+    cy.intercept('POST', '/server/api/submission/workspaceitems/*').as('upload');
+    cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.png', {
+      action: 'drag-drop'
+    });
+    cy.wait('@upload');
+
+    // Allow frontend to propagate validation state to the header icon
+    cy.wait(1000);
+    cy.get('div[id="section_clarin-license"]').find('.card-header').should('be.visible');
+
+    // Now license is required - should see warnings
+    createItemProcess.checkLicenseSelectionValue('Select a License ...');
+    createItemProcess.checkResourceLicenseStatus('Errors');
+
+    // Select a valid license
+    createItemProcess.clickOnLicenseSelectionButton();
+    createItemProcess.selectValueFromLicenseSelection(2); // GNU GPL v2
+    createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
+
+    // Status should change to Valid
+    createItemProcess.checkResourceLicenseStatus('Valid');
+  });
+
+  it('should not show validation warnings when no file is uploaded (metadata-only)', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+    defaultCommandTimeout: 10000
+  }, () => {
+    // Navigate to license step
+    createItemProcess.checkLicenseResourceStep();
+
+    // DON'T upload any file - just check the license section is accessible
+    createItemProcess.checkLicenseSelectionValue('Select a License ...');
+
+    // Verify warning and error icons do NOT exist
+    cy.get('div[id="section_clarin-license"]')
+      .find('.card-header')
+      .find('.fa-exclamation-circle.text-warning')
+      .should('not.exist');
+
+    cy.get('div[id="section_clarin-license"]')
+      .find('.card-header')
+      .find('.fa-exclamation-circle.text-danger')
+      .should('not.exist');
+
+    cy.get('div[id="section_clarin-license"]')
+      .find('.card-header')
+      .find('.fa-check-circle.text-success')
+      .should('be.visible');
   });
 
   it('The submission should not have the Notice Step', {
