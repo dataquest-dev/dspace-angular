@@ -300,7 +300,17 @@ export const createItemProcess = {
     cy.get('ds-submission-section-clarin-license input[id = "aspect_submission_StepTransformer_field_license"]').click();
   },
   checkResourceLicenseStatus(statusTitle: string) {
-    cy.get('div[id = "clarin-license-header"] button i[title = "' + statusTitle + '"]').should('be.visible');
+    // cy.get('div[id = "clarin-license-header"] button i[title = "' + statusTitle + '"]').should('be.visible');
+    const iconMap = {
+      'Warnings': '.fa-exclamation-circle.text-warning',
+      'Errors': '.fa-exclamation-circle.text-danger',
+      'Valid': '.fa-check-circle.text-success'
+    };
+    const iconSelector = iconMap[statusTitle];
+    cy.get('div[id="section_clarin-license"]')
+      .find('.card-header')
+      .find(iconSelector)
+      .should('be.visible');
   },
   showErrorMustChooseLicense() {
     cy.get('div[id = "sectionGenericError_clarin-license"] ds-alert').contains('You must choose one of the resource licenses.');
