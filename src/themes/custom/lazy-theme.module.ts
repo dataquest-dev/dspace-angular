@@ -159,6 +159,11 @@ import { RequestCopyModule } from 'src/app/request-copy/request-copy.module';
 import {UserMenuComponent} from './app/shared/auth-nav-menu/user-menu/user-menu.component';
 import { BrowseByComponent } from './app/shared/browse-by/browse-by.component';
 import { RegisterEmailFormComponent } from './app/register-email-form/register-email-form.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
+import { AdminSearchPageComponent } from './app/admin/admin-search-page/admin-search-page.component';
+import { AdminWorkflowPageComponent } from './app/admin/admin-workflow-page/admin-workflow-page.component';
+import { MyDSpaceActionsModule } from 'src/app/shared/mydspace-actions/mydspace-actions.module';
 
 const DECLARATIONS = [
   FileSectionComponent,
@@ -245,6 +250,8 @@ const DECLARATIONS = [
   UserMenuComponent,
   BrowseByComponent,
   RegisterEmailFormComponent,
+  AdminSearchPageComponent,
+  AdminWorkflowPageComponent,
 ];
 
 @NgModule({
@@ -305,6 +312,8 @@ const DECLARATIONS = [
     NgxGalleryModule,
     FormModule,
     RequestCopyModule,
+    NgxSkeletonLoaderModule,
+    MyDSpaceActionsModule
   ],
   declarations: DECLARATIONS,
   exports: [

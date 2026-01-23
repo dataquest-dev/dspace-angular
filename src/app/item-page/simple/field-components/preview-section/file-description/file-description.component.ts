@@ -16,7 +16,18 @@ import { hasValue } from '../../../../../shared/empty.util';
 import { AuthorizationDataService } from '../../../../../core/data/feature-authorization/authorization-data.service';
 import { AuthService } from '../../../../../core/auth/auth.service';
 
-const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip', 'application/x-tar'];
+const archiveFormats = [
+  'application/zip',
+  'application/gzip',
+  'application/x-gzip',
+  'application/x-tar',
+  'application/x-gtar',
+  'application/x-xz',
+  'application/x-7z-compressed'
+];
+
+const allowedPreviewFormats = archiveFormats.concat(['text/plain',  'text/html']);
+
 @Component({
   selector: 'ds-file-description',
   templateUrl: './file-description.component.html',
@@ -39,6 +50,7 @@ export class FileDescriptionComponent implements OnInit, OnDestroy {
   playPromise: Promise<void>;
 
   private subscriptions: Subscription = new Subscription();
+
 
   constructor(protected halService: HALEndpointService,
               private router: Router,
@@ -184,9 +196,6 @@ export class FileDescriptionComponent implements OnInit, OnDestroy {
     return this.fileInput?.format === 'text/html';
   }
 
-  /**
-   * Supported Preview formats are: `text/plain`, `text/html`, `application/zip`
-   */
   public couldPreview() {
     if (this.fileInput.canPreview === false) {
       return false;
@@ -201,7 +210,7 @@ export class FileDescriptionComponent implements OnInit, OnDestroy {
   }
 
   isArchive(format: string): boolean {
-    return format === 'application/zip' || format === 'application/x-tar';
+    return archiveFormats.includes(format);
   }
 
   hasNoPreview() {

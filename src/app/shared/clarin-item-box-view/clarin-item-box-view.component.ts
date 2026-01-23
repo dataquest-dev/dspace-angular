@@ -31,6 +31,7 @@ import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
 import { FindListOptions } from '../../core/data/find-list-options.model';
 import { ClarinDateService } from '../clarin-date.service';
 import { AUTHOR_METADATA_FIELDS } from '../../core/shared/clarin/constants';
+import {RequestParam} from '../../core/cache/models/request-param.model';
 
 /**
  * Show item on the Home/Search page in the customized box with Item's information.
@@ -41,7 +42,6 @@ import { AUTHOR_METADATA_FIELDS } from '../../core/shared/clarin/constants';
   styleUrls: ['./clarin-item-box-view.component.scss']
 })
 export class ClarinItemBoxViewComponent implements OnInit {
-
   protected readonly AUTHOR_METADATA_FIELDS = AUTHOR_METADATA_FIELDS;
 
   ITEM_TYPE_IMAGES_PATH = './assets/images/item-types/';
@@ -167,11 +167,11 @@ export class ClarinItemBoxViewComponent implements OnInit {
       return;
     }
     const configAllElements: FindListOptions = Object.assign(new FindListOptions(), {
-        elementsPerPage: 9999
-      });
+      elementsPerPage: 9999
+    });
 
     this.bundleService.findByItemAndName(this.item, 'ORIGINAL', true, true,
-      followLink('bitstreams', { findListOptions: configAllElements }))
+      configAllElements, followLink('bitstreams', { findListOptions: configAllElements }))
       .pipe(getFirstSucceededRemoteDataPayload())
       .subscribe((bundle: Bundle) => {
         bundle.bitstreams
@@ -232,12 +232,10 @@ export class ClarinItemBoxViewComponent implements OnInit {
     // load license label icons
     const options = {
       searchParams: [
-        {
-          fieldName: 'name',
-          fieldValue: this.license
-        }
+        new RequestParam('name', this.license)
       ]
     };
+
     this.clarinLicenseService.searchBy('byName', options, false)
       .pipe(
         getFirstCompletedRemoteData(),
@@ -265,7 +263,25 @@ export class ClarinItemBoxViewComponent implements OnInit {
 
   handleImageError(event) {
     const imgElement = event.target as HTMLImageElement;
-    imgElement.src = this.ITEM_TYPE_IMAGES_PATH + this.ITEM_TYPE_DEFAULT_IMAGE_NAME;
+    imgElement.src =
+      this.ITEM_TYPE_IMAGES_PATH + this.ITEM_TYPE_DEFAULT_IMAGE_NAME;
+  }
+
+  // formating the alt text according to itemType
+  formateIconsAltText(itemType: string) {
+    if (!itemType) {
+      return 'icon';
+    }
+    return (
+      itemType
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/-/g, ' ')
+        .replace(/_/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase()
+        .replace(/^\w/, (c) => c.toUpperCase()) + ' icon'
+    );
   }
 }
 

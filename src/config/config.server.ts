@@ -227,6 +227,7 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
   appConfig.rest.port = isNotEmpty(ENV('REST_PORT', true)) ? getNumberFromString(ENV('REST_PORT', true)) : appConfig.rest.port;
   appConfig.rest.nameSpace = isNotEmpty(ENV('REST_NAMESPACE', true)) ? ENV('REST_NAMESPACE', true) : appConfig.rest.nameSpace;
   appConfig.rest.ssl = isNotEmpty(ENV('REST_SSL', true)) ? getBooleanFromString(ENV('REST_SSL', true)) : appConfig.rest.ssl;
+  appConfig.rest.ssrBaseUrl = isNotEmpty(ENV('REST_SSRBASEURL', true)) ? ENV('REST_SSRBASEURL', true) : appConfig.rest.ssrBaseUrl;
 
   // apply build defined production
   appConfig.production = env === 'production';
@@ -236,7 +237,68 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
   buildBaseUrl(appConfig.rest);
 
   if (isNotEmpty(destConfigPath)) {
-    writeFileSync(destConfigPath, JSON.stringify(appConfig, null, 2));
+    // Create sanitized public config - only expose what frontend actually needs
+    const publicConfig = {
+      production: appConfig.production,
+      // REST API configuration - only public endpoint
+      ...(appConfig.rest && {
+        rest: {
+          baseUrl: appConfig.rest.baseUrl,
+          nameSpace: appConfig.rest.nameSpace,
+          ssrBaseUrl: appConfig.rest.ssrBaseUrl,
+        },
+      }),
+      // UI namespace for routing
+      ...(appConfig.ui ? { ui: { nameSpace: appConfig.ui.nameSpace } } : {}),
+      // Auth configuration - only expose client-side settings (idle timeout, token refresh)
+      auth: {
+        ui: {
+          timeUntilIdle: appConfig.auth?.ui?.timeUntilIdle,
+          idleGracePeriod: appConfig.auth?.ui?.idleGracePeriod,
+        },
+        rest: {
+          timeLeftBeforeTokenRefresh: appConfig.auth?.rest?.timeLeftBeforeTokenRefresh,
+        },
+      },
+      // Cache configuration - frontend needs msToLive, control, and autoSync settings
+      cache: {
+        msToLive: appConfig.cache?.msToLive,
+        control: appConfig.cache?.control,
+      },
+      // Frontend feature configurations
+      languages: appConfig.languages,
+      defaultLanguage: appConfig.defaultLanguage,
+      themes: appConfig.themes,
+      form: appConfig.form,
+      notifications: appConfig.notifications,
+      submission: appConfig.submission,
+      browseBy: appConfig.browseBy,
+      communityList: appConfig.communityList,
+      homePage: appConfig.homePage,
+      item: appConfig.item,
+      collection: appConfig.collection,
+      mediaViewer: appConfig.mediaViewer,
+      bundle: appConfig.bundle,
+      info: appConfig.info,
+      markdown: appConfig.markdown,
+      vocabularies: appConfig.vocabularies,
+      comcolSelectionSort: appConfig.comcolSelectionSort,
+      liveRegion: appConfig.liveRegion,
+      search: appConfig.search,
+      accessibility: appConfig.accessibility,
+      signpostingEnabled: appConfig.signpostingEnabled,
+      // Matomo analytics - only expose client-side tracking properties
+      ...(appConfig.matomo && {
+        matomo: {
+          hostUrl: appConfig.matomo.hostUrl,
+          siteId: appConfig.matomo.siteId,
+          dimensionId: appConfig.matomo.dimensionId,
+        },
+      }),
+      debug: appConfig.debug,
+    };
+
+    writeFileSync(destConfigPath, JSON.stringify(publicConfig, null, 2));
 
     console.log(`Angular ${bold('config.json')} file generated correctly at ${bold(destConfigPath)} \n`);
   }

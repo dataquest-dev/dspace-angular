@@ -17,6 +17,7 @@ import { ConfigurationProperty } from '../core/shared/configuration-property.mod
 import { getProcessDetailRoute } from '../process-page/process-page-routing.paths';
 import { HandleService } from '../shared/handle.service';
 import { of as observableOf } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 describe('CurationFormComponent', () => {
   let comp: CurationFormComponent;
@@ -71,6 +72,7 @@ describe('CurationFormComponent', () => {
         { provide: HandleService, useValue: handleService },
         { provide: Router, useValue: router},
         { provide: ConfigurationDataService, useValue: configurationDataService },
+        { provide: ActivatedRoute, useValue: { queryParams: observableOf({}) } },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();

@@ -44,6 +44,8 @@ jobs:
     env:
       INSTANCE: '5'
       ENVFILE: /opt/dspace-envs/.env.dspace.dev-5
+      ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+      USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
@@ -73,6 +75,8 @@ jobs:
       # disable TSL checks = allowing to cooperate with https backend with invalid
       # certificate
       ENVFILE: /opt/dspace-envs/.env.dspace.imported.dev-5
+      ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+      USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
@@ -95,9 +99,6 @@ jobs:
           ## !!!!! please remove this section if you do not want handle server !!!!!!!
           echo "====="
           echo "installing handle server"
-          docker exec dspace${INSTANCE} apt update
-          docker exec dspace${INSTANCE} apt install host -y
-          echo "installed host from apt"
           docker exec dspace${INSTANCE} /dspace/bin/make-handle-config
           echo "made handle config:"
           docker exec dspace${INSTANCE} cat /dspace/handle-server/config.dct
@@ -122,6 +123,7 @@ jobs:
           DATADIR: /opt/dspace-data/clarin-dspace/
           ASSETSTORE: /opt/dspace-data/clarin-dspace/assetstore/
           LOGDIR: /log/
+          ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
 
       - name: dspace basic command
         run: |

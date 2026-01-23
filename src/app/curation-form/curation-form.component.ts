@@ -7,7 +7,7 @@ import { NotificationsService } from '../shared/notifications/notifications.serv
 import { TranslateService } from '@ngx-translate/core';
 import { hasValue, isEmpty, isNotEmpty } from '../shared/empty.util';
 import { RemoteData } from '../core/data/remote-data';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Process } from '../process-page/processes/process.model';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { ConfigurationProperty } from '../core/shared/configuration-property.model';
@@ -35,6 +35,7 @@ export class CurationFormComponent implements OnDestroy, OnInit {
 
   subs: Subscription[] = [];
 
+  itemId: string;
   constructor(
     private scriptDataService: ScriptDataService,
     private configurationDataService: ConfigurationDataService,
@@ -42,7 +43,8 @@ export class CurationFormComponent implements OnDestroy, OnInit {
     private translateService: TranslateService,
     private handleService: HandleService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private activateRoute: ActivatedRoute
   ) {
   }
 
@@ -51,9 +53,15 @@ export class CurationFormComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
+    this.subs.push(
+      this.activateRoute.queryParams.subscribe(params => {
+        this.itemId = params.item_id || '';
+      })
+    );
+
     this.form = new UntypedFormGroup({
       task: new UntypedFormControl(''),
-      handle: new UntypedFormControl('')
+      handle: new UntypedFormControl(this.itemId)
     });
 
     this.config = this.configurationDataService.findByPropertyName(CURATION_CFG);

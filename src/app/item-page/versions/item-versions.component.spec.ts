@@ -29,6 +29,7 @@ import { ConfigurationDataService } from '../../core/data/configuration-data.ser
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ItemSharedModule } from '../item-shared.module';
+import {BtnDisabledDirective} from '../../shared/btn-disabled.directive';
 
 describe('ItemVersionsComponent', () => {
   let component: ItemVersionsComponent;
@@ -136,7 +137,7 @@ describe('ItemVersionsComponent', () => {
   beforeEach(waitForAsync(() => {
 
     TestBed.configureTestingModule({
-      declarations: [ItemVersionsComponent, VarDirective],
+      declarations: [ItemVersionsComponent, VarDirective, BtnDisabledDirective],
       imports: [TranslateModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, BrowserModule, ItemSharedModule],
       providers: [
         {provide: PaginationService, useValue: new PaginationServiceStub()},
@@ -181,10 +182,11 @@ describe('ItemVersionsComponent', () => {
   versions.forEach((version: Version, index: number) => {
     const versionItem = items[index];
 
-    it(`should display version ${version.version} in the correct column for version ${version.id}`, () => {
-      const id = fixture.debugElement.query(By.css(`#version-row-${version.id} .version-row-element-version`));
-      expect(id.nativeElement.textContent).toContain(version.version.toString());
-    });
+    // NOTE: CLARIN update removed version number display from the version column, so do not test it
+    // it(`should display version ${version.version} in the correct column for version ${version.id}`, () => {
+    //   const id = fixture.debugElement.query(By.css(`#version-row-${version.id} .version-row-element-version`));
+    //   expect(id.nativeElement.textContent).toContain(version.version.toString());
+    // });
 
     // Check if the current version contains an asterisk
     if (item1.uuid === versionItem.uuid) {
@@ -217,24 +219,31 @@ describe('ItemVersionsComponent', () => {
   });
 
   describe('when the user can only delete a version', () => {
-    beforeAll(waitForAsync(() => {
+    beforeEach(() => {
       const canDelete = (featureID: FeatureID, url: string ) => of(featureID === FeatureID.CanDeleteVersion);
       authorizationServiceSpy.isAuthorized.and.callFake(canDelete);
-    }));
+      fixture.detectChanges();
+    });
+    afterEach(() => {
+      authorizationServiceSpy.isAuthorized.and.returnValue(of(true));
+    });
     it('should not disable the delete button', () => {
       const deleteButtons = fixture.debugElement.queryAll(By.css(`.version-row-element-delete`));
       deleteButtons.forEach((btn) => {
-        expect(btn.nativeElement.disabled).toBe(false);
+        expect(btn.nativeElement.getAttribute('aria-disabled')).toBe('false');
+        expect(btn.nativeElement.classList.contains('disabled')).toBeFalse();
       });
     });
     it('should disable other buttons', () => {
       const createButtons = fixture.debugElement.queryAll(By.css(`.version-row-element-create`));
       createButtons.forEach((btn) => {
-        expect(btn.nativeElement.disabled).toBe(true);
+        expect(btn.nativeElement.getAttribute('aria-disabled')).toBe('true');
+        expect(btn.nativeElement.classList.contains('disabled')).toBeTrue();
       });
       const editButtons = fixture.debugElement.queryAll(By.css(`.version-row-element-create`));
       editButtons.forEach((btn) => {
-        expect(btn.nativeElement.disabled).toBe(true);
+        expect(btn.nativeElement.getAttribute('aria-disabled')).toBe('true');
+        expect(btn.nativeElement.classList.contains('disabled')).toBeTrue();
       });
     });
   });
@@ -305,10 +314,14 @@ describe('ItemVersionsComponent', () => {
 
       fixture.detectChanges();
 
-      // delete the last version in the table (version2 → item2)
-      deleteButton = fixture.debugElement.queryAll(By.css('.version-row-element-delete'))[1].nativeElement;
+      // delete version2 (displayed first in the table because versions are reversed)
+      deleteButton = fixture.debugElement.queryAll(By.css('.version-row-element-delete'))[0].nativeElement;
 
       itemDataServiceSpy.delete.calls.reset();
+    });
+
+    afterEach(() => {
+      authorizationServiceSpy.isAuthorized.and.returnValue(of(true));
     });
 
     describe('if confirmed via modal', () => {

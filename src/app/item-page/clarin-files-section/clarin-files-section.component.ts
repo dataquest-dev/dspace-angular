@@ -107,7 +107,10 @@ export class ClarinFilesSectionComponent implements OnInit {
       return file.name;
     });
 
-    this.command = `curl -o allzip.zip ` + this.halService.getRootHref() + `/core/items/${this.item.id}/allzip?handleId=${this.itemHandle}`;
+    // Generate curl command for individual bitstream downloads
+    const baseUrl = `${this.halService.getRootHref()}/bitstream/${this.itemHandle}`;
+    const fileNamesFormatted = fileNames.map((fileName, index) => `/${index}/${fileName}`).join(',');
+    this.command = `curl -O ${baseUrl}{${fileNamesFormatted}}`;
   }
 
   loadDownloadZipConfigProperties() {

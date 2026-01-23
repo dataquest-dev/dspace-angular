@@ -17,7 +17,7 @@
           <div class="col-2 d-flex justify-content-end">
             <img class="artifact-icon"
                  [src]="ITEM_TYPE_IMAGES_PATH + itemType + '.png'"
-                 (error)="handleImageError($event)">
+                 (error)="handleImageError($event)"  [alt]="formateIconsAltText(itemType)">
           </div>
         </div>
         <div class="row pt-1">

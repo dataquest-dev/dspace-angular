@@ -10,6 +10,7 @@ import { facetLoad, SearchFacetFilterComponent } from '../search-facet-filter/se
 import { SearchFilterConfig } from '../../../models/search-filter-config.model';
 import {
   FILTER_CONFIG,
+  SCOPE,
   IN_PLACE_SEARCH,
   REFRESH_FILTER,
   SearchFilterService
@@ -81,6 +82,11 @@ export class SearchRangeFilterComponent extends SearchFacetFilterComponent imple
   range;
 
   /**
+   * The range currently selected by the slider
+   */
+  sliderRange: [number | undefined, number | undefined];
+
+  /**
    * Subscription to unsubscribe from
    */
   sub: Subscription;
@@ -101,8 +107,9 @@ export class SearchRangeFilterComponent extends SearchFacetFilterComponent imple
               @Inject(FILTER_CONFIG) public filterConfig: SearchFilterConfig,
               @Inject(PLATFORM_ID) private platformId: any,
               @Inject(REFRESH_FILTER) public refreshFilters: BehaviorSubject<boolean>,
+              @Inject(SCOPE) public scope: string,
               private route: RouteService) {
-    super(searchService, filterService, rdbs, router, searchConfigService, inPlaceSearch, filterConfig, refreshFilters);
+    super(searchService, filterService, rdbs, router, searchConfigService, inPlaceSearch, filterConfig, refreshFilters, scope);
 
   }
 
@@ -134,6 +141,15 @@ export class SearchRangeFilterComponent extends SearchFacetFilterComponent imple
         { 'aria-label': this.maxLabel },
       ],
     };
+  }
+
+  /**
+   * Updates the sliderRange property with the current slider range.
+   * This method is called whenever the slider value changes, but it does not immediately apply the changes.
+   * @param range - The current range selected by the slider
+   */
+  onSliderChange(range: [number | undefined, number | undefined]): void {
+    this.sliderRange = range;
   }
 
   /**

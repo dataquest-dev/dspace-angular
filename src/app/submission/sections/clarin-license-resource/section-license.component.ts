@@ -35,6 +35,7 @@ import { MetadataValue } from '../../../core/shared/metadata.models';
 import { TranslateService } from '@ngx-translate/core';
 import { FindListOptions } from 'src/app/core/data/find-list-options.model';
 import { hasFailed } from 'src/app/core/data/request-entry-state.model';
+import {RequestParam} from '../../../core/cache/models/request-param.model';
 
 /**
  * This component render resource license step in the submission workflow.
@@ -406,12 +407,10 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     }
     const options = {
       searchParams: [
-        {
-          fieldName: 'name',
-          fieldValue: licenseName
-        }
+        new RequestParam('name', licenseName)
       ]
     };
+
     return this.clarinLicenseService.searchBy('byName', options, false)
       .pipe(getFirstCompletedRemoteData()).toPromise();
   }

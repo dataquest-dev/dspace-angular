@@ -2,7 +2,7 @@
   <div class="epeople-registry row">
     <div class="col-12">
       <div class="d-flex justify-content-between border-bottom mb-3">
-        <h2 id="header" class="pb-2">{{labelPrefix + 'head' | translate}}</h2>
+        <h1 id="header" class="pb-2">{{labelPrefix + 'head' | translate}}</h1>
 
         <div>
           <button class="mr-auto btn btn-success addEPerson-button"
@@ -13,18 +13,20 @@
         </div>
       </div>
 
-      <h3 id="search" class="border-bottom pb-2">{{labelPrefix + 'search.head' | translate}}
-
-      </h3>
+      <h2 id="search" class="border-bottom pb-2">
+        {{labelPrefix + 'search.head' | translate}}
+      </h2>
       <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" class="d-flex justify-content-between">
         <div>
-          <select name="scope" id="scope" formControlName="scope" class="form-control" aria-label="Search scope">
+          <label for="scope" class="sr-only">{{labelPrefix + 'search.scope' | translate}}</label>
+          <select name="scope" id="scope" formControlName="scope" class="form-control" [attr.aria-label]="labelPrefix + 'search.scope' | translate">
             <option value="metadata">{{labelPrefix + 'search.scope.metadata' | translate}}</option>
             <option value="email">{{labelPrefix + 'search.scope.email' | translate}}</option>
           </select>
         </div>
         <div class="flex-grow-1 mr-3 ml-3">
           <div class="form-group input-group">
+            <label id="query" for="query" class="sr-only">{{labelPrefix + 'search.placeholder' | translate}}</label>
             <input type="text" name="query" id="query" formControlName="query"
                    class="form-control" [attr.aria-label]="labelPrefix + 'search.placeholder' | translate"
                    [placeholder]="(labelPrefix + 'search.placeholder' | translate)">
@@ -45,7 +47,6 @@
       <ds-pagination
         *ngIf="(pageInfoState$ | async)?.totalElements > 0 && !(searching$ | async)"
         [paginationOptions]="config"
-        [pageInfoState]="pageInfoState$"
         [collectionSize]="(pageInfoState$ | async)?.totalElements"
         [hideGear]="true"
         [hidePagerWhenSinglePage]="true">
@@ -57,15 +58,17 @@
               <th scope="col">{{labelPrefix + 'table.id' | translate}}</th>
               <th scope="col">{{labelPrefix + 'table.name' | translate}}</th>
               <th scope="col">{{labelPrefix + 'table.email' | translate}}</th>
+              <th scope="col">{{labelPrefix + 'table.lastActive' | translate}}</th>
               <th>{{labelPrefix + 'table.edit' | translate}}</th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let epersonDto of (ePeopleDto$ | async)?.page"
-                [ngClass]="{'table-primary' : isActive(epersonDto.eperson) | async}">
+                [ngClass]="{'table-primary' : (activeEPerson$ | async) === epersonDto.eperson}">
               <td>{{epersonDto.eperson.id}}</td>
               <td>{{ dsoNameService.getName(epersonDto.eperson) }}</td>
               <td>{{epersonDto.eperson.email}}</td>
+              <td>{{epersonDto.eperson.lastActive | date:dateFormat:'UTC'}}</td>
               <td>
                 <div class="btn-group edit-field">
                   <button [routerLink]="getEditEPeoplePage(epersonDto.eperson.id)"

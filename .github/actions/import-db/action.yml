@@ -14,6 +14,10 @@ inputs:
     description: 'location of assetstore folder'
     required: false
     type: string
+  ADMIN_PASSWORD:
+    description: 'Admin password for DSpace'
+    required: true
+    type: string
 
 runs:
   using: "composite"
@@ -42,6 +46,8 @@ runs:
         DB5NAME: dspace-import-db5
         DB7PORT: 543${{ inputs.INSTANCE }}
         BEURL: http://dev-5.pc:8${{ inputs.INSTANCE }}/repository/server/api
+        BEUSERNAME: dspace.admin.dev@dataquest.sk
+        BEUSERPASSWORD: ${{ inputs.ADMIN_PASSWORD }}
       run: |
           docker stop $DB5NAME || true
           echo "====="
@@ -78,6 +84,8 @@ runs:
           args=(
             --resume=false
             --config=backend.endpoint=$BEURL
+            --config=backend.user=$BEUSERNAME
+            --config=backend.password=$BEUSERPASSWORD
             --config=db_dspace_7.port=$DB7PORT
             --config=db_dspace_5.port=$DB5PORT
             --config=db_utilities_5.port=$DB5PORT

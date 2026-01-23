@@ -19,7 +19,6 @@ import {
   createSuccessfulRemoteDataObject,
   createSuccessfulRemoteDataObject$
 } from '../../shared/remote-data.utils';
-import { AuthService } from '../../core/auth/auth.service';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { ServerResponseService } from '../../core/services/server-response.service';
@@ -27,7 +26,7 @@ import { SignpostingDataService } from '../../core/data/signposting-data.service
 import { LinkDefinition, LinkHeadService } from '../../core/services/link-head.service';
 import { SignpostingLink } from '../../core/data/signposting-links.model';
 import { RegistryService } from 'src/app/core/registry/registry.service';
-import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { MetadataSchemaDataService } from 'src/app/core/data/metadata-schema-data.service';
 import { MetadataFieldDataService } from 'src/app/core/data/metadata-field-data.service';
@@ -72,7 +71,7 @@ const mockSignpostingLinks: SignpostingLink[] = [mocklink, mocklink2];
 describe('ItemPageComponent', () => {
   let comp: ItemPageComponent;
   let fixture: ComponentFixture<ItemPageComponent>;
-  let authService: AuthService;
+  let authorizationDataService: AuthorizationDataService;
   let serverResponseService: jasmine.SpyObj<ServerResponseService>;
   let signpostingDataService: jasmine.SpyObj<SignpostingDataService>;
   let linkHeadService: jasmine.SpyObj<LinkHeadService>;
@@ -82,7 +81,6 @@ describe('ItemPageComponent', () => {
   const authorizationService = jasmine.createSpyObj('authorizationService', [
     'isAuthorized',
   ]);
-  let authorizationDataService: AuthorizationDataService;
 
   const mockMetadataService = {
     /* eslint-disable no-empty,@typescript-eslint/no-empty-function */
@@ -99,10 +97,6 @@ describe('ItemPageComponent', () => {
   };
 
   beforeEach(waitForAsync(() => {
-    authService = jasmine.createSpyObj('authService', {
-      isAuthenticated: observableOf(true),
-      setRedirectUrl: {}
-    });
     authorizationDataService = jasmine.createSpyObj('authorizationDataService', {
       isAuthorized: observableOf(false),
     });
@@ -137,6 +131,10 @@ describe('ItemPageComponent', () => {
       getRootHref: 'root url',
     });
 
+    const initialState = {
+      core: { auth: { loading: false } },
+    };
+
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot({
         loader: {
@@ -150,13 +148,12 @@ describe('ItemPageComponent', () => {
         { provide: ItemDataService, useValue: {} },
         { provide: MetadataService, useValue: mockMetadataService },
         { provide: Router, useValue: {} },
-        { provide: AuthService, useValue: authService },
         { provide: AuthorizationDataService, useValue: authorizationDataService },
         { provide: ServerResponseService, useValue: serverResponseService },
         { provide: SignpostingDataService, useValue: signpostingDataService },
         { provide: LinkHeadService, useValue: linkHeadService },
         { provide: PLATFORM_ID, useValue: 'server' },
-        { provide: Store, useValue: {} },
+        provideMockStore({ initialState }),
         { provide: NotificationsService, useValue: {} },
         { provide: MetadataSchemaDataService, useValue: {} },
         { provide: MetadataFieldDataService, useValue: {} },

@@ -185,6 +185,7 @@ import { FlatBrowseDefinition } from './shared/flat-browse-definition.model';
 import { ValueListBrowseDefinition } from './shared/value-list-browse-definition.model';
 import { NonHierarchicalBrowseDefinition } from './shared/non-hierarchical-browse-definition';
 import { BulkAccessConditionOptions } from './config/models/bulk-access-condition-options.model';
+import { SubmissionParentBreadcrumbsService } from './submission/submission-parent-breadcrumb.service';
 import { ClarinLicenseDataService } from './data/clarin/clarin-license-data.service';
 import { ClarinLicenseLabelDataService } from './data/clarin/clarin-license-label-data.service';
 import { HandleDataService } from './data/handle-data.service';
@@ -196,6 +197,8 @@ import { ClarinVerificationTokenDataService } from './data/clarin/clarin-verific
 import { ClruaDataService } from './data/clarin/clrua-data.service';
 import { BitstreamChecksum } from './shared/bitstream-checksum.model';
 import { BitstreamChecksumDataService } from './bitstream-checksum-data.service';
+import { MatomoReportSubscriptionDataService } from './data/clarin/matomo-report-subscription-data.service';
+import { EpicHandleDataService } from './data/epic-handle-data.service';
 
 /**
  * When not in production, endpoint responses can be mocked for testing purposes
@@ -267,6 +270,7 @@ const PROVIDERS = [
   NotificationsService,
   WorkspaceitemDataService,
   WorkflowItemDataService,
+  SubmissionParentBreadcrumbsService,
   DSpaceObjectDataService,
   ConfigurationDataService,
   DSOChangeAnalyzer,
@@ -329,7 +333,9 @@ const PROVIDERS = [
   OrcidHistoryDataService,
   SupervisionOrderDataService,
   HandleDataService,
-  BitstreamChecksumDataService
+  BitstreamChecksumDataService,
+  MatomoReportSubscriptionDataService,
+  EpicHandleDataService
 ];
 
 /**

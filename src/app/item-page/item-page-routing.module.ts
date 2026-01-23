@@ -11,7 +11,8 @@ import {
   ITEM_EDIT_PATH,
   MATOMO_STATISTICS_PATH, ORCID_PATH,
   TOMBSTONE_ITEM_PATH,
-  UPLOAD_BITSTREAM_PATH
+  UPLOAD_BITSTREAM_PATH,
+  VIEWS_DOWNLOADS_STATISTICS_PATH
 } from './item-page-routing-paths';
 import { ItemPageAdministratorGuard } from './item-page-administrator.guard';
 import { LinkMenuItemModel } from '../shared/menu/menu-item/models/link.model';
@@ -26,9 +27,11 @@ import { REQUEST_COPY_MODULE_PATH } from '../app-routing-paths';
 import { OrcidPageComponent } from './orcid-page/orcid-page.component';
 import { OrcidPageGuard } from './orcid-page/orcid-page.guard';
 import { DSOEditMenuResolver } from '../shared/dso-page/dso-edit-menu.resolver';
+import { ViewTrackerResolverService } from '../statistics/angulartics/dspace/view-tracker-resolver.service';
 import {
   ClarinZipDownloadPageComponent
 } from '../bitstream-page/clarin-zip-download-page/clarin-zip-download-page.component';
+import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/views-downloads-statistics.component';
 
 @NgModule({
   imports: [
@@ -38,7 +41,6 @@ import {
         resolve: {
           dso: ItemPageResolver,
           breadcrumb: ItemBreadcrumbResolver,
-          menu: DSOEditMenuResolver
         },
         runGuardsAndResolvers: 'always',
         children: [
@@ -46,10 +48,18 @@ import {
             path: '',
             component: ThemedItemPageComponent,
             pathMatch: 'full',
+            resolve: {
+              menu: DSOEditMenuResolver,
+              tracking: ViewTrackerResolverService,
+            },
           },
           {
             path: 'full',
             component: ThemedFullItemPageComponent,
+            resolve: {
+              menu: DSOEditMenuResolver,
+              tracking: ViewTrackerResolverService,
+            },
           },
           {
             path: ITEM_EDIT_PATH,
@@ -77,6 +87,14 @@ import {
           {
             path: MATOMO_STATISTICS_PATH,
             component: ClarinMatomoStatisticsComponent,
+            resolve: {
+              dso: ItemPageResolver,
+            }
+          },
+          {
+            path: VIEWS_DOWNLOADS_STATISTICS_PATH,
+            component: ViewsDownloadsStatisticsComponent,
+            canActivate: [AuthenticatedGuard],
             resolve: {
               dso: ItemPageResolver,
             }
@@ -149,7 +167,8 @@ import {
     LinkService,
     ItemPageAdministratorGuard,
     VersionResolver,
-    OrcidPageGuard
+    OrcidPageGuard,
+    ViewTrackerResolverService,
   ]
 
 })

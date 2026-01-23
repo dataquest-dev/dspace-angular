@@ -53,6 +53,17 @@ import {WorkspaceitemDataService} from '../../core/submission/workspaceitem-data
 import {WorkflowItemDataService} from '../../core/submission/workflowitem-data.service';
 import {ConfigurationDataService} from '../../core/data/configuration-data.service';
 
+interface VersionsDTO {
+  totalElements: number;
+  versionDTOs: VersionDTO[];
+}
+
+interface VersionDTO {
+  version: Version;
+  canEditVersion: Observable<boolean>;
+  canDeleteVersion: Observable<boolean>;
+}
+
 @Component({
   selector: 'ds-item-versions',
   templateUrl: './item-versions.component.html',
@@ -113,21 +124,26 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
   versionHistory$: Observable<VersionHistory>;
 
   /**
-   * The version history's list of versions
+   * The version history information that is used to render the HTML
    */
-  versionsRD$: BehaviorSubject<RemoteData<PaginatedList<Version>>> = new BehaviorSubject<RemoteData<PaginatedList<Version>>>(null);
+  versionsDTO$: Observable<VersionsDTO>;
 
   /**
    * Verify if the list of versions has at least one e-person to display
    * Used to hide the "Editor" column when no e-persons are present to display
    */
   hasEpersons$: Observable<boolean>;
-
   /**
    * Verify if there is an inprogress submission in the version history
    * Used to disable the "Create version" button
    */
   hasDraftVersion$: Observable<boolean>;
+
+  /**
+   * Check if the current user is an admin
+   * Used to control component visibility
+   */
+  isAdmin$: Observable<boolean>;
 
   /**
    * The amount of versions to display per page
@@ -186,25 +202,25 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
    * Loading of the name from the items handles for the items which are stored in the metadata dc.relation.replaces` and
    * `dc.relation.isreplacedby`
    * Names are stored in this dict to avoid endless calling rest API to get the name of the Item.
-   * @private
+   * @access protected - Accessible to extending components that may need to cache item names from handles
    */
-  private nameCache: { [handle: string]: string } = {};
+  protected nameCache: { [handle: string]: string } = {};
 
-  constructor(private versionHistoryService: VersionHistoryDataService,
-              private versionService: VersionDataService,
-              private itemService: ItemDataService,
-              private paginationService: PaginationService,
-              private formBuilder: UntypedFormBuilder,
-              private modalService: NgbModal,
-              private notificationsService: NotificationsService,
-              private translateService: TranslateService,
-              private router: Router,
-              private itemVersionShared: ItemVersionsSharedService,
-              private authorizationService: AuthorizationDataService,
-              private workspaceItemDataService: WorkspaceitemDataService,
-              private workflowItemDataService: WorkflowItemDataService,
-              private configurationService: ConfigurationDataService,
-              private dsoNameService: DSONameService
+  constructor(protected versionHistoryService: VersionHistoryDataService,
+              protected versionService: VersionDataService,
+              protected itemService: ItemDataService,
+              protected paginationService: PaginationService,
+              protected formBuilder: UntypedFormBuilder,
+              protected modalService: NgbModal,
+              protected notificationsService: NotificationsService,
+              protected translateService: TranslateService,
+              protected router: Router,
+              protected itemVersionShared: ItemVersionsSharedService,
+              protected authorizationService: AuthorizationDataService,
+              protected workspaceItemDataService: WorkspaceitemDataService,
+              protected workflowItemDataService: WorkflowItemDataService,
+              protected configurationService: ConfigurationDataService,
+              protected dsoNameService: DSONameService
   ) {
   }
 
@@ -423,19 +439,12 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
       take(1),
     );
 
-    const result$ = combineLatest([includeSubmitter$, isAdmin$]).pipe(
+    return combineLatest([includeSubmitter$, isAdmin$]).pipe(
       map(([includeSubmitter, isAdmin]) => {
         return includeSubmitter && isAdmin;
       })
     );
 
-    if (isNotNull(this.showSubmitter$.value)) {
-      return;
-    }
-
-    result$.subscribe(res => {
-      this.showSubmitter$.next(res);
-    });
   }
 
   /**
@@ -452,16 +461,23 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
    */
   getAllVersions(versionHistory$: Observable<VersionHistory>): void {
     const currentPagination = this.paginationService.getCurrentPagination(this.options.id, this.options);
-    combineLatest([versionHistory$, currentPagination]).pipe(
+    this.versionsDTO$ = combineLatest([versionHistory$, currentPagination]).pipe(
       switchMap(([versionHistory, options]: [VersionHistory, PaginationComponentOptions]) => {
         return this.versionHistoryService.getVersions(versionHistory.id,
           new PaginatedSearchOptions({pagination: Object.assign({}, options, {currentPage: options.currentPage})}),
           false, true, followLink('item'), followLink('eperson'));
       }),
       getFirstCompletedRemoteData(),
-    ).subscribe((res: RemoteData<PaginatedList<Version>>) => {
-      this.versionsRD$.next(res);
-    });
+      getRemoteDataPayload(),
+      map((versions: PaginatedList<Version>) => ({
+        totalElements: versions.totalElements,
+        versionDTOs: [...(versions?.page ?? [])].reverse().map((version: Version) => ({
+          version: version,
+          canEditVersion: this.canEditVersion$(version),
+          canDeleteVersion: this.canDeleteVersion$(version),
+        })),
+      })),
+    );
   }
 
   /**
@@ -528,6 +544,9 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
 
       this.canCreateVersion$ = this.authorizationService.isAuthorized(FeatureID.CanCreateVersion, this.item.self);
 
+      // Initialize admin check for component visibility
+      this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
+
       // If there is a draft item in the version history the 'Create version' button is disabled and a different tooltip message is shown
       this.hasDraftVersion$ = this.versionHistoryRD$.pipe(
         getFirstSucceededRemoteDataPayload(),
@@ -540,16 +559,12 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
       );
 
       this.getAllVersions(this.versionHistory$);
-      this.hasEpersons$ = this.versionsRD$.pipe(
-        getAllSucceededRemoteData(),
-        getRemoteDataPayload(),
-        hasValueOperator(),
-        map((versions: PaginatedList<Version>) => versions.page.filter((version: Version) => version.eperson !== undefined).length > 0),
+      this.hasEpersons$ = this.versionsDTO$.pipe(
+        map((versionsDTO: VersionsDTO) => versionsDTO.versionDTOs.filter((versionDTO: VersionDTO) => versionDTO.version.eperson !== undefined).length > 0),
         startWith(false)
       );
-      this.itemPageRoutes$ = this.versionsRD$.pipe(
-        getAllSucceededRemoteDataPayload(),
-        switchMap((versions) => combineLatest(versions.page.map((version) => version.item.pipe(getAllSucceededRemoteDataPayload())))),
+      this.itemPageRoutes$ = this.versionsDTO$.pipe(
+        switchMap((versionsDTO: VersionsDTO) => combineLatest(versionsDTO.versionDTOs.map((versionDTO: VersionDTO) => versionDTO.version.item.pipe(getAllSucceededRemoteDataPayload())))),
         map((versions) => {
           const itemPageRoutes = {};
           versions.forEach((item) => itemPageRoutes[item.uuid] = getItemPageRoute(item));

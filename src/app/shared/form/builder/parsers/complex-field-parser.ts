@@ -35,6 +35,7 @@ import {
   DynamicScrollableDropdownModelConfig
 } from '../ds-dynamic-form-ui/models/scrollable-dropdown/dynamic-scrollable-dropdown.model';
 import { DsDynamicSponsorAutocompleteModel } from '../ds-dynamic-form-ui/models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.model';
+import {TranslateService} from '@ngx-translate/core';
 
 /**
  * The parser which parse DynamicComplexModelConfig configuration to the DynamicComplexModel.
@@ -47,8 +48,9 @@ export class ComplexFieldParser extends FieldParser {
     @Inject(INIT_FORM_VALUES) initFormValues,
     @Inject(PARSER_OPTIONS) parserOptions: ParserOptions,
     protected separator: string,
-    protected placeholders: string[]) {
-    super(submissionId, configData, initFormValues, parserOptions);
+    protected placeholders: string[],
+    protected translate: TranslateService) {
+    super(submissionId, configData, initFormValues, parserOptions, translate);
     this.separator = separator;
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { Item } from '../../../../core/shared/item.model';
 import { getItemPageRoute } from '../../../item-page-routing-paths';
@@ -7,6 +7,10 @@ import { Observable } from 'rxjs';
 import { getDSpaceQuery, isIiifEnabled, isIiifSearchEnabled } from './item-iiif-utils';
 import { filter, map, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.reducer';
+import { isAuthenticated } from 'src/app/core/auth/selectors';
+import { APP_CONFIG, AppConfig } from 'src/config/app-config.interface';
 
 @Component({
   selector: 'ds-item',
@@ -51,8 +55,12 @@ export class ItemComponent implements OnInit {
 
   mediaViewer;
 
+  isAuthenticated$: Observable<boolean>;
+
   constructor(protected routeService: RouteService,
-              protected router: Router) {
+              protected router: Router,
+              private store: Store<AppState>,
+              @Inject(APP_CONFIG) private appConfig: AppConfig) {
     this.mediaViewer = environment.mediaViewer;
   }
 
@@ -84,5 +92,10 @@ export class ItemComponent implements OnInit {
     if (this.iiifSearchEnabled) {
       this.iiifQuery$ = getDSpaceQuery(this.object, this.routeService);
     }
+    this.isAuthenticated$ = this.store.pipe(select(isAuthenticated));
+  }
+
+  get hasConfiguredStatistics(): boolean {
+    return !!this.appConfig.statistics?.baseUrl && !!this.appConfig.statistics?.endpoint;
   }
 }

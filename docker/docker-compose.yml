@@ -6,6 +6,9 @@
 # http://www.dspace.org/license/
 #
 
+# Docker Compose for running the DSpace Angular UI for testing/development
+# Requires also running a REST API backend (either locally or remotely),
+# for example via 'docker-compose-rest.yml'
 networks:
   dspacenet:
 services:
@@ -33,7 +36,7 @@ services:
       dockerfile: Dockerfile
     networks:
       dspacenet:
-    entrypoint: ${FE_CMD:-/bin/sh -c "pm2-runtime start docker/dspace-ui.json > /dev/null 2> /dev/null"}
+    entrypoint: ${FE_CMD:-/bin/sh -c "pm2-runtime start dspace-ui.json > /dev/null 2> /dev/null"}
     ports:
     - published: 400${INSTANCE}
       target: 4000

@@ -22,7 +22,11 @@ import { HomeConfig } from './homepage-config.interface';
 import { MarkdownConfig } from './markdown-config.interface';
 import { FilterVocabularyConfig } from './filter-vocabulary-config';
 import { DiscoverySortConfig } from './discovery-sort.config';
+import { LiveRegionConfig } from '../app/shared/live-region/live-region.config';
+import { SearchConfig } from './search-page-config.interface';
+import { AccessibilitySettingsConfig } from '../app/accessibility/accessibility-settings.config';
 import { MatomoConfig } from './matomo-config';
+import { StatisticsConfig } from './statistics-config';
 
 interface AppConfig extends Config {
   ui: UIServerConfig;
@@ -49,8 +53,12 @@ interface AppConfig extends Config {
   markdown: MarkdownConfig;
   vocabularies: FilterVocabularyConfig[];
   comcolSelectionSort: DiscoverySortConfig;
+  liveRegion: LiveRegionConfig;
+  search: SearchConfig
+  accessibility: AccessibilitySettingsConfig;
   signpostingEnabled: boolean;
   matomo: MatomoConfig;
+  statistics?: StatisticsConfig;
 }
 
 /**

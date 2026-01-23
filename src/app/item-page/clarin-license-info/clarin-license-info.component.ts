@@ -10,6 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { secureImageData } from '../../shared/clarin-shared-util';
 import { BehaviorSubject } from 'rxjs';
 import { LocaleService } from '../../core/locale/locale.service';
+import {RequestParam} from '../../core/cache/models/request-param.model';
 
 /**
  * This component show clarin license info in the item page and item full page.
@@ -75,10 +76,7 @@ export class ClarinLicenseInfoComponent implements OnInit {
     // load license label icons
     const options = {
       searchParams: [
-        {
-          fieldName: 'name',
-          fieldValue: this.license
-        }
+        new RequestParam('name', this.license)
       ]
     };
     this.clarinLicenseService.searchBy('byName', options, false)

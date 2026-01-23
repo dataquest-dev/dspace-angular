@@ -1,15 +1,15 @@
-import { TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD, TEST_SUBMIT_COLLECTION_NAME, TEST_SUBMIT_COLLECTION_UUID } from 'cypress/support/e2e';
+//import { TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD, TEST_SUBMIT_COLLECTION_NAME, TEST_SUBMIT_COLLECTION_UUID, TEST_ADMIN_USER, TEST_ADMIN_PASSWORD } from 'cypress/support/e2e';
 import { createItemProcess } from '../support/commands';
 
 describe('New Submission page', () => {
-    // NOTE: We already test that new submissions can be started from MyDSpace in my-dspace.spec.ts
 
+    // NOTE: We already test that new Item submissions can be started from MyDSpace in my-dspace.spec.ts
     it('should create a new submission when using /submit path & pass accessibility', () => {
         // Test that calling /submit with collection & entityType will create a new submission
-        cy.visit('/submit?collection='.concat(TEST_SUBMIT_COLLECTION_UUID).concat('&entityType=none'));
+        cy.visit('/submit?collection='.concat(Cypress.env('DSPACE_TEST_SUBMIT_COLLECTION_UUID')).concat('&entityType=none'));
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
-        cy.loginViaForm(TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD);
+        cy.loginViaForm(Cypress.env('DSPACE_TEST_ADMIN_USER'), Cypress.env('DSPACE_TEST_ADMIN_PASSWORD'));
 
         // Should redirect to /workspaceitems, as we've started a new submission
         cy.url().should('include', '/workspaceitems');
@@ -18,13 +18,33 @@ describe('New Submission page', () => {
         cy.get('ds-submission-edit').should('be.visible');
 
         // A Collection menu button should exist & it's value should be the selected collection
-        cy.get('#collectionControlsMenuButton span').should('have.text', TEST_SUBMIT_COLLECTION_NAME);
+        cy.get('#collectionControlsMenuButton span').should('have.text', Cypress.env('DSPACE_TEST_SUBMIT_COLLECTION_NAME'));
 
         // 4 sections should be visible by default
         cy.get('div#section_traditionalpageone').should('be.visible');
         cy.get('div#section_traditionalpagetwo').should('be.visible');
         cy.get('div#section_upload').should('be.visible');
         cy.get('div#section_license').should('be.visible');
+
+        // Test entire page for accessibility
+        // CLARIN-DSpace still has some accessibility issues, so we will not fail the test
+        // testA11y('ds-submission-edit',
+        //     {
+        //         rules: {
+        //             // Author & Subject fields have invalid "aria-multiline" attrs.
+        //             // See https://github.com/DSpace/dspace-angular/issues/1272
+        //             'aria-allowed-attr': { enabled: false },
+        //             // All panels are accordians & fail "aria-required-children" and "nested-interactive".
+        //             // Seem to require updating ng-bootstrap and https://github.com/DSpace/dspace-angular/issues/2216
+        //             'aria-required-children': { enabled: false },
+        //             'nested-interactive': { enabled: false },
+        //             // All select boxes fail to have a name / aria-label.
+        //             // This is a bug in ng-dynamic-forms and may require https://github.com/DSpace/dspace-angular/issues/2216
+        //             'select-name': { enabled: false },
+        //         }
+        //
+        //     } as Options
+        // );
 
         // Discard button should work
         // Clicking it will display a confirmation, which we will confirm with another click
@@ -34,10 +54,10 @@ describe('New Submission page', () => {
 
     it('should block submission & show errors if required fields are missing', () => {
         // Create a new submission
-        cy.visit('/submit?collection='.concat(TEST_SUBMIT_COLLECTION_UUID).concat('&entityType=none'));
+        cy.visit('/submit?collection='.concat(Cypress.env('DSPACE_TEST_SUBMIT_COLLECTION_UUID')).concat('&entityType=none'));
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
-        cy.loginViaForm(TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD);
+        cy.loginViaForm(Cypress.env('DSPACE_TEST_ADMIN_USER'), Cypress.env('DSPACE_TEST_ADMIN_PASSWORD'));
 
         // Attempt an immediate deposit without filling out any fields
         cy.get('button#deposit').click();
@@ -95,10 +115,10 @@ describe('New Submission page', () => {
 
     it('should allow for deposit if all required fields completed & file uploaded', () => {
         // Create a new submission
-        cy.visit('/submit?collection='.concat(TEST_SUBMIT_COLLECTION_UUID).concat('&entityType=none'));
+        cy.visit('/submit?collection='.concat(Cypress.env('DSPACE_TEST_SUBMIT_COLLECTION_UUID')).concat('&entityType=none'));
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
-        cy.loginViaForm(TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD);
+        cy.loginViaForm(Cypress.env('DSPACE_TEST_ADMIN_USER'), Cypress.env('DSPACE_TEST_ADMIN_PASSWORD'));
 
         // Fill out all required fields (Title, Date)
         cy.get('input#dc_title').type('DSpace logo uploaded via e2e tests');
@@ -126,7 +146,7 @@ describe('New Submission page', () => {
 
         // Upload our DSpace logo via drag & drop onto submission form
         // cy.get('div#section_upload')
-        cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.png', {
+        cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.svg', {
             action: 'drag-drop'
         });
 

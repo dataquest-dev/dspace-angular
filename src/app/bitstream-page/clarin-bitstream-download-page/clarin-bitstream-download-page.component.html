@@ -10,4 +10,8 @@
     *ngIf="(downloadStatus | async) === 'DownloadTokenExpiredException'"
     [bitstream$]="bitstream$">
   </ds-clarin-bitstream-token-expired>
+  <ds-clarin-bitstream-authorization-denied
+    *ngIf="(downloadStatus | async) === 'Authorization denied'"
+    [bitstream$]="bitstream$">
+  </ds-clarin-bitstream-authorization-denied>
 </div>
