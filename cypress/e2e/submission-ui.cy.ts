@@ -248,7 +248,7 @@ describe('Create a new submission', () => {
     // Upload a file to trigger license requirement
     cy.get('ds-uploader').trigger('dragover');
     cy.intercept('POST', '/server/api/submission/workspaceitems/*').as('upload');
-    cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.png', {
+    cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.svg', {
       action: 'drag-drop'
     });
     cy.wait('@upload');
