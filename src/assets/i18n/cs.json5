@@ -3708,7 +3708,7 @@
   "item.edit.withdraw.cancel": "Zrušit",
 
   // "item.edit.withdraw.confirm": "Withdraw",
-  "item.edit.withdraw.confirm": "Stáhnout",
+  "item.edit.withdraw.confirm": "Potvrdit",
 
   // "item.edit.withdraw.description": "Are you sure this item should be withdrawn from the archive?",
   "item.edit.withdraw.description": "Jste si jisti, že by tento záznam měl být stažen z archivu?",
