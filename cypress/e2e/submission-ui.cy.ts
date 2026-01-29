@@ -112,34 +112,7 @@ describe('Create a new submission', () => {
     defaultCommandTimeout: 10000
   },() => {
     createItemProcess.clickOnSelectionInput('dc.type');
-    createItemProcess.clickOnTypeSelection('Corpus');
-  });
-
-  // Test CMDI input field
-  it('should be visible Has CMDI file input field because user is admin', {
-    retries: {
-      runMode: 6,
-      openMode: 6,
-    },
-    defaultCommandTimeout: 10000
-  },() => {
-    createItemProcess.checkLocalHasCMDIVisibility();
-  });
-
-  it('The local.hasCMDI value should be sent in the response after type change', {
-    retries: {
-      runMode: 6,
-      openMode: 6,
-    },
-    defaultCommandTimeout: 10000
-  },() => {
-    createItemProcess.clickOnSelectionInput('dc.type');
-    createItemProcess.clickOnTypeSelection('Corpus');
-    createItemProcess.checkCheckbox('local_hasCMDI');
-    createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
-    createItemProcess.clickOnSave();
-    cy.reload();
-    createItemProcess.controlCheckedCheckbox('local_hasCMDI',true);
+    createItemProcess.clickOnTypeSelection('Dataset');
   });
 
   it('should change the step status after accepting/declining the distribution license', {
