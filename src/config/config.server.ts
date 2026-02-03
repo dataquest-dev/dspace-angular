@@ -1,7 +1,7 @@
 import { red, blue, green, bold } from 'colors';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { load } from 'js-yaml';
-import { join } from 'path';
+import { join, normalize, sep } from 'path';
 
 import { AppConfig } from './app-config.interface';
 import { Config } from './config.interface';
@@ -298,10 +298,14 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
       debug: appConfig.debug,
     };
 
-    // Security: Don't write config.json to public assets folder to prevent exposure
-    // Check if destConfigPath contains '/assets/' or '\\assets\\' (public assets folder)
-    const isPublicAssets = destConfigPath.includes('/assets/') || destConfigPath.includes('\\assets\\');
-    
+    // Security: Avoid writing config.json into the publicly served assets folder to prevent
+    // exposure of internal configuration (REST API endpoints, feature flags, debugging options,
+    // and other sensitive settings) via direct HTTP access to /assets/config.json.
+    // Check if 'assets' is an actual directory component in the normalized path
+    const normalizedPath = normalize(destConfigPath);
+    const pathComponents = normalizedPath.split(sep);
+    const isPublicAssets = pathComponents.includes('assets');
+
     if (!isPublicAssets) {
       writeFileSync(destConfigPath, JSON.stringify(publicConfig, null, 2));
       console.log(`Angular ${bold('config.json')} file generated correctly at ${bold(destConfigPath)} \n`);
