@@ -66,6 +66,18 @@ export class ProcessFormComponent implements OnInit {
   }
 
   /**
+   * Handle script selection, preserving existing parameters if creating from existing process
+   * @param script The selected script
+   */
+  onScriptSelect(script: Script): void {
+    this.selectedScript = script;
+    // Only clear parameters if we're not creating from an existing process
+    if (!this.parameters || this.parameters.length === 0) {
+      this.parameters = undefined;
+    }
+  }
+
+  /**
    * Validates the form, sets the parameters to correct values and invokes the script with the correct parameters
    * @param form
    */

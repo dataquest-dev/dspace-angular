@@ -41,7 +41,10 @@ export class ProcessParametersComponent implements OnChanges {
 
   ngOnInit() {
     if (hasValue(this.initialParams)) {
-      this.parameterValues = this.initialParams;
+      // Create deep copy to avoid reference issues
+      this.parameterValues = this.initialParams.map(param => 
+        Object.assign(new ProcessParameter(), { name: param.name, value: param.value })
+      );
     }
   }
 
@@ -51,7 +54,16 @@ export class ProcessParametersComponent implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.script) {
-      this.initParameters();
+      // Only reset parameters if we don't have initial parameters to preserve
+      if (!hasValue(this.initialParams)) {
+        this.initParameters();
+      } else {
+        // If we have initial parameters, preserve them with deep copy
+        this.parameterValues = this.initialParams.map(param => 
+          Object.assign(new ProcessParameter(), { name: param.name, value: param.value })
+        );
+        this.addParameter();
+      }
     }
   }
 
@@ -61,7 +73,10 @@ export class ProcessParametersComponent implements OnChanges {
    */
   initParameters() {
     if (hasValue(this.initialParams)) {
-      this.parameterValues = this.initialParams;
+      // Create deep copy to avoid reference issues
+      this.parameterValues = this.initialParams.map(param => 
+        Object.assign(new ProcessParameter(), { name: param.name, value: param.value })
+      );
     } else {
       this.parameterValues = [];
       this.initializeParameter();
