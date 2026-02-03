@@ -298,9 +298,16 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
       debug: appConfig.debug,
     };
 
-    writeFileSync(destConfigPath, JSON.stringify(publicConfig, null, 2));
-
-    console.log(`Angular ${bold('config.json')} file generated correctly at ${bold(destConfigPath)} \n`);
+    // Security: Don't write config.json to public assets folder to prevent exposure
+    // Check if destConfigPath contains '/assets/' or '\\assets\\' (public assets folder)
+    const isPublicAssets = destConfigPath.includes('/assets/') || destConfigPath.includes('\\assets\\');
+    
+    if (!isPublicAssets) {
+      writeFileSync(destConfigPath, JSON.stringify(publicConfig, null, 2));
+      console.log(`Angular ${bold('config.json')} file generated correctly at ${bold(destConfigPath)} \n`);
+    } else {
+      console.log(`Skipping config.json generation at public path ${bold(destConfigPath)} for security reasons \n`);
+    }
   }
 
   return appConfig;
