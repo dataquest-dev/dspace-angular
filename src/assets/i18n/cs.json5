@@ -4819,10 +4819,10 @@
   "item.edit.tabs.status.buttons.unauthorized" : "K provedení této akce nejste oprávněni",
 
   // "item.edit.tabs.status.buttons.withdraw.button" : "Withdraw this item"
-  "item.edit.tabs.status.buttons.withdraw.button" : "Vyřadit...",
+  "item.edit.tabs.status.buttons.withdraw.button" : "Stáhnout...",
 
   // "item.edit.tabs.status.buttons.withdraw.label" : "Withdraw item from the repository"
-  "item.edit.tabs.status.buttons.withdraw.label" : "Vyřadit záznam z repozitáře",
+  "item.edit.tabs.status.buttons.withdraw.label" : "Stáhnout záznam z repozitáře",
 
   // "item.edit.tabs.status.description" : "Welcome to the item management page. From here you can withdraw, reinstate, move or delete the item. You may also update or add new metadata / bitstreams on the other tabs."
   "item.edit.tabs.status.description" : "Vítejte na stránce správy záznamů. Odsud můžete vyřadit, znovu zařadit, přesunout nebo smazat záznam. Na dalších kartách můžete také aktualizovat nebo přidávat nová metadata a bitové toky.",
@@ -4867,16 +4867,16 @@
   "item.edit.withdraw.confirm" : "Vyřadit",
 
   // "item.edit.withdraw.description" : "Are you sure this item should be withdrawn from the archive?"
-  "item.edit.withdraw.description" : "Jste si jisti, že by tenhle záznam měl být vyřazen z archivu?",
+  "item.edit.withdraw.description" : "Jste si jisti, že by tenhle záznam měl být stažen z archivu?",
 
   // "item.edit.withdraw.error" : "An error occurred while withdrawing the item"
-  "item.edit.withdraw.error" : "Při vyřazování záznamu došlo k chybě",
+  "item.edit.withdraw.error" : "Při stahování záznamu došlo k chybě",
 
   // "item.edit.withdraw.header" : "Withdraw item: {{ id }}"
-  "item.edit.withdraw.header" : "Vyřazený záznam: {{ id }}",
+  "item.edit.withdraw.header" : "Stáhnout záznam: {{ id }}",
 
   // "item.edit.withdraw.success" : "The item was withdrawn successfully"
-  "item.edit.withdraw.success" : "Záznam byl úspěšně vyřazen",
+  "item.edit.withdraw.success" : "Záznam byl úspěšně stažen",
 
   // "item.listelement.badge" : "Item"
   "item.listelement.badge" : "Záznam",
