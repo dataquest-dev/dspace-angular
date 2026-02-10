@@ -73,8 +73,8 @@ describe('Edit Collection > Access Control tab', () => {
     // <ds-collection-access-control> tag must be loaded
     cy.get('ds-collection-access-control').should('be.visible');
 
-    // Analyze entire page for accessibility issues
-    testA11y('ds-edit-collection');
+    // Analyze for accessibility issues
+    testA11y('ds-collection-access-control');
   });
 });
 

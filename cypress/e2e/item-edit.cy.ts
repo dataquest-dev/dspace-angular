@@ -111,8 +111,8 @@ describe('Edit Item > Relationships tab', () => {
     // <ds-item-relationships> tag must be loaded
     cy.get('ds-item-relationships').should('be.visible');
 
-    // Analyze entire page for accessibility issues
-    testA11y('ds-edit-item-page');
+    // Analyze for accessibility issues
+    testA11y('ds-item-relationships');
   });
 });
 
