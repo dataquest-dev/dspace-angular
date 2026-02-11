@@ -162,7 +162,7 @@ jobs:
     # needs: playwright-after-deploy8
     needs: deploy-8
     # timeout-minutes: 120
-    uses: dataquest-dev/dspace-rest-test/.github/workflows/run_unittests.yml@master
+    uses: dataquest-dev/dspace-rest-test/.github/workflows/run_unittests.yml@main
     with:
       INSTANCE: '8'
       CUSTOMER: ${{ github.ref_name }}
