@@ -76,7 +76,6 @@ export class ProcessFormComponent implements OnInit {
     if (!this.parameters) {
       this.parameters = [];
     }
-    // Note: If this.parameters has content, we preserve them for existing process recreation
   }
 
   /**
