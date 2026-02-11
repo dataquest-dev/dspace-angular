@@ -59,7 +59,7 @@ export class ProcessParametersComponent implements OnChanges {
         // If we have initial parameters, preserve them with deep copy
         this.parameterValues = this.deepCopyParameters(this.initialParams);
         // Only add an empty parameter if the list is empty or doesn't have a trailing empty parameter
-        if (this.parameterValues.length === 0 || hasValue(this.parameterValues.at(-1)?.name)) {
+        if (this.parameterValues.length === 0 || hasValue(this.parameterValues[this.parameterValues.length - 1].name)) {
           this.addParameter();
         }
       }
