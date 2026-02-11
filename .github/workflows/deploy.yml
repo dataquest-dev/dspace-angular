@@ -156,11 +156,16 @@ jobs:
 
   rest-tests-after-deploy8:
     needs: deploy-8
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
     uses: dataquest-dev/dspace-rest-test/.github/workflows/run_unittests.yml@change-running-tests
     with:
       INSTANCE: '8'
       CUSTOMER: ${{ github.ref_name }}
-    secrets: inherit
+    secrets:
+      GH_TOKEN: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
 
   playwright-after-import8:
