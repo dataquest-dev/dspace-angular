@@ -2183,6 +2183,9 @@
   // "curation-task.task.registerdoi.label": "Register DOI",
   "curation-task.task.registerdoi.label": "Zaregistrujte DOI",
 
+  // "curation-task.task.metadataqa.label": "Metadata QA",
+  "curation-task.task.metadataqa.label": "Metadata QA",
+
   // "curation.form.task-select.label": "Task:",
   "curation.form.task-select.label": "Úloha:",
 
