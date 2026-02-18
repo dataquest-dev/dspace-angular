@@ -30,7 +30,7 @@
      (whenClickOnConfidenceNotAccepted)="whenClickOnConfidenceNotAccepted($event)"></i>
   <input #instance="ngbTypeahead"
          class="form-control"
-         [attr.aria-labelledby]="'label_' + model.id"
+         [attr.aria-labelledby]="'label_' + id"
          [attr.autoComplete]="model.autoComplete"
          [class.is-invalid]="showErrorMessages"
          [id]="model.id"
@@ -56,7 +56,7 @@
   <i class="dropdown-toggle position-absolute tree-toggle" (click)="openTree($event)"
      aria-hidden="true"></i>
   <input class="form-control"
-         [attr.aria-labelledby]="'label_' + model.id"
+         [attr.aria-labelledby]="'label_' + id"
          [attr.autoComplete]="model.autoComplete"
          [class.is-invalid]="showErrorMessages"
          [class.tree-input]="!model.readOnly"

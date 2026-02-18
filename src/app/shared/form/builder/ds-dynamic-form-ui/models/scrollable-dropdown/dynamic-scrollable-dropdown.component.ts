@@ -13,7 +13,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { Observable, of as observableOf } from 'rxjs';
 import { catchError, distinctUntilChanged, map, tap } from 'rxjs/operators';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
-import { DynamicFormLayoutService, DynamicFormValidationService } from '@ng-dynamic-forms/core';
+import { DynamicFormArrayGroupModel, DynamicFormLayoutService, DynamicFormValidationService } from '@ng-dynamic-forms/core';
 
 import { DynamicScrollableDropdownModel } from './dynamic-scrollable-dropdown.model';
 import { PageInfo } from '../../../../../../core/shared/page-info.model';
@@ -44,6 +44,7 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   @Input() bindId = true;
   @Input() group: UntypedFormGroup;
   @Input() model: DynamicScrollableDropdownModel;
+  @Input() context: any | null = null;
 
   @Output() blur: EventEmitter<any> = new EventEmitter<any>();
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
@@ -56,6 +57,7 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   public inputText: string = null;
   public selectedIndex = 0;
   public acceptableKeys = ['Space', 'NumpadMultiply', 'NumpadAdd', 'NumpadSubtract', 'NumpadDecimal', 'Semicolon', 'Equal', 'Comma', 'Minus', 'Period', 'Quote', 'Backquote'];
+  private uniqueSuffix: string;
 
   /**
    * If true the component can rely on the findAll method for data loading.
@@ -78,6 +80,23 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
               protected validationService: DynamicFormValidationService
   ) {
     super(vocabularyService, layoutService, validationService);
+    // Generate a unique suffix for this component instance to avoid ID collisions
+    this.uniqueSuffix = Math.random().toString(36).substr(2, 9);
+  }
+
+  /**
+   * Get unique ID for this form control
+   */
+  get id(): string {
+    const baseId = this.bindId ? this.model.id : this.model.id;
+    
+    // Try to get index from context if available
+    if (this.context && this.context instanceof DynamicFormArrayGroupModel && hasValue(this.context.index)) {
+      return `${baseId}_${this.context.index}`;
+    }
+    
+    // Use the unique suffix to ensure uniqueness
+    return `${baseId}_${this.uniqueSuffix}`;
   }
 
   /**

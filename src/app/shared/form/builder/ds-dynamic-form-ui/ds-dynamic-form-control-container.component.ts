@@ -253,9 +253,34 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    * Determines whether to request embedded thumbnail.
    */
   fetchThumbnail: boolean;
+  
+  /**
+   * Unique suffix for generating unique IDs for this container instance
+   */
+  private uniqueSuffix: string;
 
   get componentType(): Type<DynamicFormControl> | null {
     return dsDynamicFormControlMapFn(this.model);
+  }
+
+  /**
+   * Get unique ID for this form control
+   * Appends unique suffix to avoid ID collisions in repeatable form arrays
+   */
+  get id(): string {
+    if (this.bindId && this.model) {
+      const baseId = this.model.id;
+      // Check if we're in a form array context
+      if (this.context && this.context instanceof DynamicFormArrayGroupModel && hasValue(this.context.index)) {
+        return `${baseId}_${this.context.index}`;
+      }
+      // For components that don't properly receive context, use unique suffix
+      if (!this.uniqueSuffix) {
+        this.uniqueSuffix = Math.random().toString(36).substr(2, 9);
+      }
+      return `${baseId}_${this.uniqueSuffix}`;
+    }
+    return this.model?.id || '';
   }
 
   constructor(
