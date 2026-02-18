@@ -68,10 +68,8 @@ runs:
           pip install -r requirements.txt || true
           echo "====="
           cd ./src
-          # cleanup resume - only if directory exists
-          if [ -d "__temp/resume" ]; then
-            rm __temp/resume/*.json 2>/dev/null || true
-          fi
+          # cleanup resume
+          rm __temp/resume/*.json || true
           # arguments of the script
           # required
           echo "====="
@@ -98,16 +96,7 @@ runs:
           if [ -n "${{ inputs.ASSETSTORE }}" ]; then
             args+=(--assetstore=${{ inputs.ASSETSTORE }})
           fi
-          # Clean up RAM before import to maximize available memory
-          echo "Cleaning up system cache before import..."
-          sudo apt clean || true
-          sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches' || true  # Clear page cache, dentries and inodes
-          docker system prune -f || true  # Clean unused Docker objects
-          sync  # Flush filesystem buffers
-          echo "Memory after cleanup:"
-          free -h || true
-          export PYTHONUNBUFFERED=1
-          python3 repo_import.py "${args[@]}" 2>&1 | tee -a "$log_file_timestamp"
+          python3 repo_import.py "${args[@]}"
     - name: cleanup
       shell: bash
       run: |
