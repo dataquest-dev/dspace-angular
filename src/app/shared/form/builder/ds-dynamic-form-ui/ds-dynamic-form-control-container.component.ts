@@ -250,14 +250,15 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   private showErrorMessagesPreviousStage: boolean;
 
   /**
-   * Determines whether to request embedded thumbnail.
-   */
-  fetchThumbnail: boolean;
-  
-  /**
    * Unique suffix for generating unique IDs for this container instance
    */
   private static idCounter = 0;
+
+  /**
+   * Determines whether to request embedded thumbnail.
+   */
+  fetchThumbnail: boolean;
+
   private uniqueSuffix: number;
 
   get componentType(): Type<DynamicFormControl> | null {

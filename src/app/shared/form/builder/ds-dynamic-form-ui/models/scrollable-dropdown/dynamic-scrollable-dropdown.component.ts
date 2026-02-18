@@ -50,6 +50,8 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
   @Output() focus: EventEmitter<any> = new EventEmitter<any>();
 
+  private static idCounter = 0;
+
   public currentValue: Observable<string>;
   public loading = false;
   public pageInfo: PageInfo;
@@ -57,7 +59,6 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   public inputText: string = null;
   public selectedIndex = 0;
   public acceptableKeys = ['Space', 'NumpadMultiply', 'NumpadAdd', 'NumpadSubtract', 'NumpadDecimal', 'Semicolon', 'Equal', 'Comma', 'Minus', 'Period', 'Quote', 'Backquote'];
-  private static idCounter = 0;
   private uniqueSuffix: number;
 
   /**
@@ -88,12 +89,12 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
    */
   get id(): string {
     const baseId = this.bindId ? this.model.id : this.model.id;
-    
+
     // Try to get index from context if available
     if (this.context && this.context instanceof DynamicFormArrayGroupModel && hasValue(this.context.index)) {
       return `${baseId}_${this.context.index}`;
     }
-    
+
     // Use incremental counter to ensure uniqueness
     if (this.uniqueSuffix === undefined) {
       this.uniqueSuffix = DsDynamicScrollableDropdownComponent.idCounter++;
