@@ -210,6 +210,8 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class DsDynamicFormControlContainerComponent extends DynamicFormControlContainerComponent implements OnInit, OnChanges, OnDestroy {
+  private static idCounter = 0;
+
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('templates') inputTemplateList: QueryList<DynamicTemplateDirective>;
@@ -248,11 +250,6 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   @ViewChild('componentViewContainer', { read: ViewContainerRef, static: true }) componentViewContainerRef: ViewContainerRef;
 
   private showErrorMessagesPreviousStage: boolean;
-
-  /**
-   * Unique suffix for generating unique IDs for this container instance
-   */
-  private static idCounter = 0;
 
   /**
    * Determines whether to request embedded thumbnail.

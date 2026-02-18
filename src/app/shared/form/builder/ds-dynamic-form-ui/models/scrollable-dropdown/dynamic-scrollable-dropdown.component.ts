@@ -39,6 +39,8 @@ import { RemoteData } from '../../../../../../core/data/remote-data';
   templateUrl: './dynamic-scrollable-dropdown.component.html'
 })
 export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyComponent implements OnInit {
+  private static idCounter = 0;
+
   @ViewChild('dropdownMenu', { read: ElementRef }) dropdownMenu: ElementRef;
 
   @Input() bindId = true;
@@ -49,8 +51,6 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   @Output() blur: EventEmitter<any> = new EventEmitter<any>();
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
   @Output() focus: EventEmitter<any> = new EventEmitter<any>();
-
-  private static idCounter = 0;
 
   public currentValue: Observable<string>;
   public loading = false;
