@@ -41,6 +41,11 @@ interface EnhancedVersionDTO extends VersionDTO {
 export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent implements OnInit {
 
   /**
+   * Maximum number of versions to fetch at once for the dropdown display.
+   */
+  private readonly MAX_VERSIONS_TO_DISPLAY = 9999;
+
+  /**
    * Icon name for the clarin field
    */
   @Input() iconName?: string;
@@ -63,7 +68,7 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
 
   ngOnInit(): void {
     // Override the parent's pageSize to fetch all versions at once for the dropdown display
-    this.pageSize = 9999;
+    this.pageSize = this.MAX_VERSIONS_TO_DISPLAY;
     this.options = Object.assign(this.options, {
       pageSize: this.pageSize
     });
