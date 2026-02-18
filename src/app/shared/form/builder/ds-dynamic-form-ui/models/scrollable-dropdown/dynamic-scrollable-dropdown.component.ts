@@ -57,7 +57,8 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   public inputText: string = null;
   public selectedIndex = 0;
   public acceptableKeys = ['Space', 'NumpadMultiply', 'NumpadAdd', 'NumpadSubtract', 'NumpadDecimal', 'Semicolon', 'Equal', 'Comma', 'Minus', 'Period', 'Quote', 'Backquote'];
-  private uniqueSuffix: string;
+  private static idCounter = 0;
+  private uniqueSuffix: number;
 
   /**
    * If true the component can rely on the findAll method for data loading.
@@ -80,8 +81,6 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
               protected validationService: DynamicFormValidationService
   ) {
     super(vocabularyService, layoutService, validationService);
-    // Generate a unique suffix for this component instance to avoid ID collisions
-    this.uniqueSuffix = Math.random().toString(36).substr(2, 9);
   }
 
   /**
@@ -95,7 +94,10 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
       return `${baseId}_${this.context.index}`;
     }
     
-    // Use the unique suffix to ensure uniqueness
+    // Use incremental counter to ensure uniqueness
+    if (this.uniqueSuffix === undefined) {
+      this.uniqueSuffix = DsDynamicScrollableDropdownComponent.idCounter++;
+    }
     return `${baseId}_${this.uniqueSuffix}`;
   }
 

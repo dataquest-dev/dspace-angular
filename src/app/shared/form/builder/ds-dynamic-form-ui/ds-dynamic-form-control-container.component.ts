@@ -257,7 +257,8 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   /**
    * Unique suffix for generating unique IDs for this container instance
    */
-  private uniqueSuffix: string;
+  private static idCounter = 0;
+  private uniqueSuffix: number;
 
   get componentType(): Type<DynamicFormControl> | null {
     return dsDynamicFormControlMapFn(this.model);
@@ -274,9 +275,9 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
       if (this.context && this.context instanceof DynamicFormArrayGroupModel && hasValue(this.context.index)) {
         return `${baseId}_${this.context.index}`;
       }
-      // For components that don't properly receive context, use unique suffix
-      if (!this.uniqueSuffix) {
-        this.uniqueSuffix = Math.random().toString(36).substr(2, 9);
+      // For components that don't properly receive context, use incremental counter
+      if (this.uniqueSuffix === undefined) {
+        this.uniqueSuffix = DsDynamicFormControlContainerComponent.idCounter++;
       }
       return `${baseId}_${this.uniqueSuffix}`;
     }
