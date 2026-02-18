@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable, of, combineLatest } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, shareReplay } from 'rxjs/operators';
 import { ItemVersionsComponent } from '../../../versions/item-versions.component';
 import { Item } from '../../../../core/shared/item.model';
 import { Version } from '../../../../core/shared/version.model';
@@ -62,7 +62,12 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
   enhancedVersions$: Observable<EnhancedVersionDTO[]>;
 
   ngOnInit(): void {
-    // Call parent's ngOnInit first to set up all the observables
+    // Override the parent's pageSize to fetch all versions at once for the dropdown display
+    this.pageSize = 9999;
+    this.options = Object.assign(this.options, {
+      pageSize: this.pageSize
+    });
+
     super.ngOnInit();
 
     // Set up clarin-specific showMetadataValue logic
@@ -98,7 +103,8 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
               isCurrentVersion: versionDTO.version.id === currentVersionId
             } as EnhancedVersionDTO;
           });
-        })
+        }),
+        shareReplay(1) // Cache the result to prevent duplicate requests
       );
     } else {
       // Fallback: check if isAdmin$ is available, otherwise hide the component
