@@ -41,7 +41,8 @@ export class ProcessParametersComponent implements OnChanges {
 
   ngOnInit() {
     if (hasValue(this.initialParams)) {
-      this.parameterValues = this.initialParams;
+      // Create deep copy to avoid reference issues
+      this.parameterValues = this.deepCopyParameters(this.initialParams);
     }
   }
 
@@ -51,7 +52,17 @@ export class ProcessParametersComponent implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.script) {
-      this.initParameters();
+      // Only reset parameters if we don't have initial parameters to preserve
+      if (!hasValue(this.initialParams)) {
+        this.initParameters();
+      } else {
+        // If we have initial parameters, preserve them with deep copy
+        this.parameterValues = this.deepCopyParameters(this.initialParams);
+        // Only add an empty parameter if the list is empty or doesn't have a trailing empty parameter
+        if (this.parameterValues.length === 0 || hasValue(this.parameterValues[this.parameterValues.length - 1].name)) {
+          this.addParameter();
+        }
+      }
     }
   }
 
@@ -61,7 +72,8 @@ export class ProcessParametersComponent implements OnChanges {
    */
   initParameters() {
     if (hasValue(this.initialParams)) {
-      this.parameterValues = this.initialParams;
+      // Create deep copy to avoid reference issues
+      this.parameterValues = this.deepCopyParameters(this.initialParams);
     } else {
       this.parameterValues = [];
       this.initializeParameter();
@@ -110,5 +122,16 @@ export class ProcessParametersComponent implements OnChanges {
    */
   addParameter() {
     this.parameterValues = [...this.parameterValues, new ProcessParameter()];
+  }
+
+  /**
+   * Creates a deep copy of ProcessParameter array to avoid reference issues
+   * @param params The parameters to copy
+   * @returns A new array with copied ProcessParameter instances
+   */
+  private deepCopyParameters(params: ProcessParameter[]): ProcessParameter[] {
+    return params.map(param =>
+      Object.assign(new ProcessParameter(), { name: param.name, value: param.value })
+    );
   }
 }
