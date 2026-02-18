@@ -30,7 +30,7 @@ runs:
 
     - uses: actions/checkout@v4
       with:
-        repository: dataquest-dev/dspace-import
+        repository: dataquest-dev/dspace-import-clarin
         ref: 'main'
         submodules: 'recursive'
         path: 'dspace-import'
@@ -39,7 +39,7 @@ runs:
     - name: stop and remove containers
       id: import
       shell: bash
-      working-directory: dspace-import/scripts
+      working-directory: dspace-import-clarin/scripts
       env:
         DATADIR: ${{ inputs.DATADIR }}
         DB5PORT: 15432
@@ -68,8 +68,10 @@ runs:
           pip install -r requirements.txt || true
           echo "====="
           cd ./src
-          # cleanup resume
-          rm __temp/resume/*.json || true
+          # cleanup resume - only if directory exists
+          if [ -d "__temp/resume" ]; then
+            rm __temp/resume/*.json 2>/dev/null || true
+          fi
           # arguments of the script
           # required
           echo "====="
@@ -96,7 +98,16 @@ runs:
           if [ -n "${{ inputs.ASSETSTORE }}" ]; then
             args+=(--assetstore=${{ inputs.ASSETSTORE }})
           fi
-          python3 repo_import.py "${args[@]}"
+          # Clean up RAM before import to maximize available memory
+          echo "Cleaning up system cache before import..."
+          sudo apt clean || true
+          sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches' || true  # Clear page cache, dentries and inodes
+          docker system prune -f || true  # Clean unused Docker objects
+          sync  # Flush filesystem buffers
+          echo "Memory after cleanup:"
+          free -h || true
+          export PYTHONUNBUFFERED=1
+          python3 repo_import.py "${args[@]}" 2>&1 | tee -a "$log_file_timestamp"
     - name: cleanup
       shell: bash
       run: |
