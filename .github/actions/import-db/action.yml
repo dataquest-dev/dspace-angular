@@ -30,7 +30,7 @@ runs:
 
     - uses: actions/checkout@v4
       with:
-        repository: dataquest-dev/dspace-import
+        repository: dataquest-dev/dspace-import-clarin
         ref: 'main'
         submodules: 'recursive'
         path: 'dspace-import'
@@ -39,7 +39,7 @@ runs:
     - name: stop and remove containers
       id: import
       shell: bash
-      working-directory: dspace-import/scripts
+      working-directory: dspace-import-clarin/scripts
       env:
         DATADIR: ${{ inputs.DATADIR }}
         DB5PORT: 15432
