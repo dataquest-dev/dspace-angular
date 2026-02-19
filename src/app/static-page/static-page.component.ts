@@ -28,8 +28,12 @@ export class StaticPageComponent implements OnInit {
     // Fetch html file name from the url path. `static/some_file.html`
     this.htmlFileName = this.getHtmlFileName();
 
-    const htmlContent = await this.htmlContentService.getHmtlContentByPathAndLocale(this.htmlFileName);
+    let htmlContent = await this.htmlContentService.getHmtlContentByPathAndLocale(this.htmlFileName);
     if (isNotEmpty(htmlContent)) {
+      const restBase = this.appConfig?.rest?.baseUrl;
+      const oaiUrl = restBase ? new URL('/server/oai', restBase).href : '/server/oai';
+      htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
+
       this.htmlContent.next(htmlContent);
       return;
     }
