@@ -115,7 +115,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   /**
    * The path to the Seznam dataset license content.
    */
-  LICENSE_PATH_SEZNAM_CZ = 'szn-dataset-license.html';
+  LICENSE_PATH_SEZNAM_CZ = 'szn-dataset-licence.html';
 
   /**
    * The content of the Seznam dataset license. Fetch from the static file.
