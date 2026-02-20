@@ -111,11 +111,20 @@ export class ClarinFilesSectionComponent implements OnInit {
     // Uses the backend endpoint: /api/core/bitstreams/handle/{prefix}/{suffix}/{filename}
     const baseUrl = `${this.halService.getRootHref()}/core/bitstreams/handle/${this.itemHandle}`;
     if (fileNames.length === 1) {
-      this.command = `curl -o '${fileNames[0]}' '${baseUrl}/${fileNames[0]}'`;
+      const encodedName = this.encodeFilenameForUrl(fileNames[0]);
+      this.command = `curl -o "${fileNames[0]}" "${baseUrl}/${encodedName}"`;
     } else {
-      const fileNamesFormatted = fileNames.map(fileName => `/${fileName}`).join(',');
-      this.command = `curl -O '${baseUrl}{${fileNamesFormatted}}'`;
+      const fileNamesFormatted = fileNames.map(fileName => `/${this.encodeFilenameForUrl(fileName)}`).join(',');
+      this.command = `curl -O "${baseUrl}{${fileNamesFormatted}}"`;
     }
+  }
+
+  /**
+   * Encode a filename for use in a URL path segment.
+   * Encodes special characters (spaces, parentheses, +, etc.) using percent-encoding.
+   */
+  private encodeFilenameForUrl(filename: string): string {
+    return encodeURIComponent(filename).replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
   }
 
   loadDownloadZipConfigProperties() {
