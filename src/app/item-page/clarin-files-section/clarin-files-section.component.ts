@@ -109,14 +109,13 @@ export class ClarinFilesSectionComponent implements OnInit {
 
     // Generate curl command for individual bitstream downloads by handle + filename.
     // Uses the backend endpoint: /api/core/bitstreams/handle/{prefix}/{suffix}/{filename}
+    // Always uses -o with the real filename to avoid percent-encoded filenames from -O.
     const baseUrl = `${this.halService.getRootHref()}/core/bitstreams/handle/${this.itemHandle}`;
-    if (fileNames.length === 1) {
-      const encodedName = this.encodeFilenameForUrl(fileNames[0]);
-      this.command = `curl -o "${fileNames[0]}" "${baseUrl}/${encodedName}"`;
-    } else {
-      const fileNamesFormatted = fileNames.map(fileName => `/${this.encodeFilenameForUrl(fileName)}`).join(',');
-      this.command = `curl -O "${baseUrl}{${fileNamesFormatted}}"`;
-    }
+    const commands = fileNames.map(fileName => {
+      const encodedName = this.encodeFilenameForUrl(fileName);
+      return `curl -o "${fileName}" "${baseUrl}/${encodedName}"`;
+    });
+    this.command = commands.join(' && ');
   }
 
   /**
