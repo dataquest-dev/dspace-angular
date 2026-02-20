@@ -114,7 +114,6 @@ export class ClarinFilesSectionComponent implements OnInit {
     const baseUrl = `${this.halService.getRootHref()}/core/bitstreams/handle/${this.itemHandle}`;
     const fileNamesFormatted = fileNames.map(fileName => `/${this.encodeFilenameForUrl(fileName)}`).join(',');
     this.command = `curl -OJ "${baseUrl}{${fileNamesFormatted}}"`;
-  
   }
 
   /**
