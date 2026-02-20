@@ -107,10 +107,15 @@ export class ClarinFilesSectionComponent implements OnInit {
       return file.name;
     });
 
-    // Generate curl command for individual bitstream downloads
-    const baseUrl = `${this.halService.getRootHref()}/bitstream/${this.itemHandle}`;
-    const fileNamesFormatted = fileNames.map((fileName, index) => `/${index}/${fileName}`).join(',');
-    this.command = `curl -O ${baseUrl}{${fileNamesFormatted}}`;
+    // Generate curl command for individual bitstream downloads by handle + filename.
+    // Uses the backend endpoint: /api/core/bitstreams/handle/{prefix}/{suffix}/{filename}
+    const baseUrl = `${this.halService.getRootHref()}/core/bitstreams/handle/${this.itemHandle}`;
+    if (fileNames.length === 1) {
+      this.command = `curl -o '${fileNames[0]}' '${baseUrl}/${fileNames[0]}'`;
+    } else {
+      const fileNamesFormatted = fileNames.map(fileName => `/${fileName}`).join(',');
+      this.command = `curl -O '${baseUrl}{${fileNamesFormatted}}'`;
+    }
   }
 
   loadDownloadZipConfigProperties() {
