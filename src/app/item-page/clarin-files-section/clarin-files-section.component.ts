@@ -107,21 +107,19 @@ export class ClarinFilesSectionComponent implements OnInit {
       return file.name;
     });
 
-    // Generate curl command with brace expansion in the URL and -o flags for correct filenames.
-    // Brace expansion: curl expands {/a,/b} into two requests to baseUrl/a and baseUrl/b.
-    // -o flags: one per file, giving curl the real filename to save as (handles UTF-8 correctly
-    // because the shell passes it directly, unlike -J which depends on Content-Disposition parsing).
+    // Generate curl command with -o "filename" "url" pairs for each file.
+    // Each file needs its own -o + URL pair because curl URL globbing ({})
+    // does NOT support per-file -o flags (multiple -o with {} results in
+    // "Got more output options than URLs" and only the first file is saved).
+    // Using -o lets the shell pass the real filename (including UTF-8) directly.
     const baseUrl = `${this.halService.getRootHref()}/core/bitstreams/handle/${this.itemHandle}`;
-    const encodedPaths = fileNames.map(name => {
-      return '/' + encodeURIComponent(name)
+    const parts = fileNames.map(name => {
+      const encodedName = encodeURIComponent(name)
         .replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
-    });
-    const outputFlags = fileNames.map(name => {
       const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-      return `-o "${safeName}"`;
-    }).join(' ');
-    const braceList = encodedPaths.join(',');
-    this.command = `curl ${outputFlags} "${baseUrl}{${braceList}}"`;
+      return `-o "${safeName}" "${baseUrl}/${encodedName}"`;
+    });
+    this.command = `curl ${parts.join(' ')}`;
   }
 
   loadDownloadZipConfigProperties() {
