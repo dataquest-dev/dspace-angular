@@ -195,5 +195,14 @@ describe('ClarinFilesSectionComponent', () => {
       component.generateCurlCommand();
       expect(component.canShowCurlDownload).toBeFalse();
     });
+
+    it('should handle filenames containing a literal percent sign', () => {
+      component.itemHandle = '123456789/11';
+      component.listOfFiles.next([createMetadataBitstream('100% done.txt')]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "100% done.txt" "${BASE}/123456789/11/100%25%20done.txt"`
+      );
+    });
   });
 });

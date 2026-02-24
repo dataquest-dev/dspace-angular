@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { encodeRFC3986URIComponent } from '../../shared/clarin-shared-util';
 import { Item } from '../../core/shared/item.model';
 import { getAllSucceededRemoteListPayload, getFirstSucceededRemoteDataPayload } from '../../core/shared/operators';
 import { getItemPageRoute } from '../item-page-routing-paths';
@@ -9,7 +8,6 @@ import { Router } from '@angular/router';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { BehaviorSubject } from 'rxjs';
-import { encodeRFC3986URIComponent } from '../../shared/clarin-shared-util';
 
 @Component({
   selector: 'ds-clarin-files-section',
@@ -114,7 +112,12 @@ export class ClarinFilesSectionComponent implements OnInit {
     // with non-ASCII characters on Windows due to code-page limitations.
     const baseUrl = `${this.halService.getRootHref()}/core/bitstreams/handle/${this.itemHandle}`;
     const parts = fileNames.map(name => {
-      const url = `${baseUrl}/${encodeRFC3986URIComponent(name)}`;
+      // Encode the raw filename for use in a URL path segment.
+      // Do NOT use encodeRFC3986URIComponent here — it calls decodeURIComponent first,
+      // which throws URIError on filenames containing literal '%' followed by non-hex chars.
+      const encodedName = encodeURIComponent(name)
+        .replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
+      const url = `${baseUrl}/${encodedName}`;
       // Escape backslashes and double quotes for safe use inside double-quoted shell strings
       const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
       return `-o "${safeName}" "${url}"`;
