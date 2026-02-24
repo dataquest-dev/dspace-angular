@@ -62,7 +62,7 @@ runs:
             echo Location of assetstore folder is empty. Not copping assetstore
           else
             docker cp ${{ inputs.ASSETSTORE }} dspace${{ inputs.INSTANCE }}:/dspace/
-            docker exec dspace${{ inputs.INSTANCE }} chown -R dspace:dspace /dspace/assetstore
+            docker exec -u root dspace${{ inputs.INSTANCE }} chown -R dspace:dspace /dspace/assetstore
           fi
           echo "====="
           cd ../
