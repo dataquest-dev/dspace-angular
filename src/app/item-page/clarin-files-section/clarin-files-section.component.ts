@@ -107,22 +107,21 @@ export class ClarinFilesSectionComponent implements OnInit {
       return file.name;
     });
 
-    // Generate curl command using -o "filename" "url" pairs.
-    // This avoids curl -J (Content-Disposition), which cannot create files
-    // with non-ASCII characters on Windows due to code-page limitations.
+    // Generate curl command with brace expansion in the URL and -o flags for correct filenames.
+    // Brace expansion: curl expands {/a,/b} into two requests to baseUrl/a and baseUrl/b.
+    // -o flags: one per file, giving curl the real filename to save as (handles UTF-8 correctly
+    // because the shell passes it directly, unlike -J which depends on Content-Disposition parsing).
     const baseUrl = `${this.halService.getRootHref()}/core/bitstreams/handle/${this.itemHandle}`;
-    const parts = fileNames.map(name => {
-      // Encode the raw filename for use in a URL path segment.
-      // Do NOT use encodeRFC3986URIComponent here — it calls decodeURIComponent first,
-      // which throws URIError on filenames containing literal '%' followed by non-hex chars.
-      const encodedName = encodeURIComponent(name)
+    const encodedPaths = fileNames.map(name => {
+      return '/' + encodeURIComponent(name)
         .replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
-      const url = `${baseUrl}/${encodedName}`;
-      // Escape backslashes and double quotes for safe use inside double-quoted shell strings
-      const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-      return `-o "${safeName}" "${url}"`;
     });
-    this.command = `curl ${parts.join(' ')}`;
+    const outputFlags = fileNames.map(name => {
+      const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+      return `-o "${safeName}"`;
+    }).join(' ');
+    const braceList = encodedPaths.join(',');
+    this.command = `curl ${outputFlags} "${baseUrl}{${braceList}}"`;
   }
 
   loadDownloadZipConfigProperties() {

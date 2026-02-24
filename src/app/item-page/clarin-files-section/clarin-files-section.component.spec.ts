@@ -101,16 +101,16 @@ describe('ClarinFilesSectionComponent', () => {
   describe('generateCurlCommand', () => {
     const BASE = `${ROOT_HREF}/core/bitstreams/handle`;
 
-    it('should generate a curl command for a single file', () => {
+    it('should generate a curl command for a single file with brace expansion', () => {
       component.itemHandle = '123456789/1';
       component.listOfFiles.next([createMetadataBitstream('simple.txt')]);
       component.generateCurlCommand();
       expect(component.command).toBe(
-        `curl -o "simple.txt" "${BASE}/123456789/1/simple.txt"`
+        `curl -o "simple.txt" "${BASE}/123456789/1{/simple.txt}"`
       );
     });
 
-    it('should generate a curl command for multiple files', () => {
+    it('should generate a curl command for multiple files with brace expansion', () => {
       component.itemHandle = '123456789/2';
       component.listOfFiles.next([
         createMetadataBitstream('file1.txt'),
@@ -118,7 +118,7 @@ describe('ClarinFilesSectionComponent', () => {
       ]);
       component.generateCurlCommand();
       expect(component.command).toBe(
-        `curl -o "file1.txt" "${BASE}/123456789/2/file1.txt" -o "file2.txt" "${BASE}/123456789/2/file2.txt"`
+        `curl -o "file1.txt" -o "file2.txt" "${BASE}/123456789/2{/file1.txt,/file2.txt}"`
       );
     });
 
@@ -127,7 +127,7 @@ describe('ClarinFilesSectionComponent', () => {
       component.listOfFiles.next([createMetadataBitstream('my file.txt')]);
       component.generateCurlCommand();
       expect(component.command).toBe(
-        `curl -o "my file.txt" "${BASE}/123456789/3/my%20file.txt"`
+        `curl -o "my file.txt" "${BASE}/123456789/3{/my%20file.txt}"`
       );
     });
 
@@ -136,16 +136,16 @@ describe('ClarinFilesSectionComponent', () => {
       component.listOfFiles.next([createMetadataBitstream('logo (2).png')]);
       component.generateCurlCommand();
       expect(component.command).toBe(
-        `curl -o "logo (2).png" "${BASE}/123456789/4/logo%20%282%29.png"`
+        `curl -o "logo (2).png" "${BASE}/123456789/4{/logo%20%282%29.png}"`
       );
     });
 
-    it('should percent-encode plus signs in URL but keep real name in -o', () => {
+    it('should percent-encode plus signs in URL', () => {
       component.itemHandle = '123456789/5';
       component.listOfFiles.next([createMetadataBitstream('dtq+logo.png')]);
       component.generateCurlCommand();
       expect(component.command).toBe(
-        `curl -o "dtq+logo.png" "${BASE}/123456789/5/dtq%2Blogo.png"`
+        `curl -o "dtq+logo.png" "${BASE}/123456789/5{/dtq%2Blogo.png}"`
       );
     });
 
@@ -157,17 +157,17 @@ describe('ClarinFilesSectionComponent', () => {
       ]);
       component.generateCurlCommand();
       expect(component.command).toBe(
-        `curl -o "dtq+logo (2).png" "${BASE}/123456789/6/dtq%2Blogo%20%282%29.png" ` +
-        `-o "Screenshot 1.png" "${BASE}/123456789/6/Screenshot%201.png"`
+        `curl -o "dtq+logo (2).png" -o "Screenshot 1.png" ` +
+        `"${BASE}/123456789/6{/dtq%2Blogo%20%282%29.png,/Screenshot%201.png}"`
       );
     });
 
-    it('should preserve UTF-8 characters in -o filename', () => {
+    it('should preserve UTF-8 characters in -o filename and encode in URL', () => {
       component.itemHandle = '123456789/9';
       component.listOfFiles.next([createMetadataBitstream('M\u00e9di\u00e1 (3).jfif')]);
       component.generateCurlCommand();
       expect(component.command).toBe(
-        `curl -o "M\u00e9di\u00e1 (3).jfif" "${BASE}/123456789/9/M%C3%A9di%C3%A1%20%283%29.jfif"`
+        `curl -o "M\u00e9di\u00e1 (3).jfif" "${BASE}/123456789/9{/M%C3%A9di%C3%A1%20%283%29.jfif}"`
       );
     });
 
@@ -176,7 +176,7 @@ describe('ClarinFilesSectionComponent', () => {
       component.listOfFiles.next([createMetadataBitstream('file "quoted".txt')]);
       component.generateCurlCommand();
       expect(component.command).toBe(
-        `curl -o "file \\"quoted\\".txt" "${BASE}/123456789/10/file%20%22quoted%22.txt"`
+        `curl -o "file \\"quoted\\".txt" "${BASE}/123456789/10{/file%20%22quoted%22.txt}"`
       );
     });
 
@@ -201,7 +201,7 @@ describe('ClarinFilesSectionComponent', () => {
       component.listOfFiles.next([createMetadataBitstream('100% done.txt')]);
       component.generateCurlCommand();
       expect(component.command).toBe(
-        `curl -o "100% done.txt" "${BASE}/123456789/11/100%25%20done.txt"`
+        `curl -o "100% done.txt" "${BASE}/123456789/11{/100%25%20done.txt}"`
       );
     });
   });
