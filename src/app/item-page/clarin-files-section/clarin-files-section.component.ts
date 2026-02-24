@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { encodeRFC3986URIComponent } from '../../shared/clarin-shared-util';
 import { Item } from '../../core/shared/item.model';
 import { getAllSucceededRemoteListPayload, getFirstSucceededRemoteDataPayload } from '../../core/shared/operators';
 import { getItemPageRoute } from '../item-page-routing-paths';
@@ -117,11 +118,10 @@ export class ClarinFilesSectionComponent implements OnInit {
   }
 
   /**
-   * Encode a filename for use in a URL path segment.
-   * Encodes special characters (spaces, parentheses, +, etc.) using percent-encoding.
+   * Encode a filename for use in a URL path segment using the shared RFC3986 utility.
    */
   private encodeFilenameForUrl(filename: string): string {
-    return encodeURIComponent(filename).replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
+    return encodeRFC3986URIComponent(filename);
   }
 
   loadDownloadZipConfigProperties() {
