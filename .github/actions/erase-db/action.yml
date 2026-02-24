@@ -27,13 +27,10 @@ runs:
       shell: bash
       env:
         NAME: ${{ inputs.NAME }}
-        INSTANCE: ${{ inputs.INSTANCE }}
       run: |
           # # condition below was found by accident and appears to be useless. Investigate later.
           # be sure to have INSTANCE set
           # if [[ "x${NAME}" != "dspace-" ]]; then
             docker volume rm $(docker volume ls --filter name="${NAME}_" -q) || true
           # fi;
-          # also remove volumes from the dspace-utilities project (separate compose project for the utilities DB)
-          docker volume rm $(docker volume ls --filter name="dspace-utilities-${INSTANCE}_" -q) || true
 
