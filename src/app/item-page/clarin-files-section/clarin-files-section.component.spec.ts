@@ -14,6 +14,7 @@ import { ConfigurationDataService } from '../../core/data/configuration-data.ser
 import { Item } from '../../core/shared/item.model';
 import { createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
 import { createPaginatedList } from '../../shared/testing/utils.test';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 describe('ClarinFilesSectionComponent', () => {
   let component: ClarinFilesSectionComponent;
@@ -77,7 +78,8 @@ describe('ClarinFilesSectionComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ ClarinFilesSectionComponent ],
       imports: [
-        TranslateModule.forRoot()
+        TranslateModule.forRoot(),
+        NgbModalModule,
       ],
       providers: [
         { provide: RegistryService, useValue: mockRegistryService },

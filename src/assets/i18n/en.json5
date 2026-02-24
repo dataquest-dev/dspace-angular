@@ -6099,6 +6099,9 @@
   "item.page.files.head": "Files in this item",
 
   "item.page.download.button.command.line": "Download instructions for command line",
+  "item.page.download.command.copy": "Copy to clipboard",
+  "item.page.download.command.copied": "Copied!",
+  "item.page.download.command.close": "Close",
 
   "item.page.download.button.all.files.zip": "Download all files in item",
 

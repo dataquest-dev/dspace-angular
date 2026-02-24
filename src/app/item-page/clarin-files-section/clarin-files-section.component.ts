@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { BehaviorSubject } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'ds-clarin-files-section',
@@ -29,9 +30,9 @@ export class ClarinFilesSectionComponent implements OnInit {
   canShowCurlDownload = false;
 
   /**
-   * If download by command button is click, the command line will be shown
+   * Whether the command was recently copied to clipboard
    */
-  isCommandLineVisible = false;
+  commandCopied = false;
 
   /**
    * command for the download command feature
@@ -75,7 +76,8 @@ export class ClarinFilesSectionComponent implements OnInit {
   constructor(protected registryService: RegistryService,
               protected router: Router,
               protected halService: HALEndpointService,
-              protected configurationService: ConfigurationDataService) {
+              protected configurationService: ConfigurationDataService,
+              protected modalService: NgbModal) {
   }
 
   ngOnInit(): void {
@@ -90,8 +92,16 @@ export class ClarinFilesSectionComponent implements OnInit {
     this.loadDownloadZipConfigProperties();
   }
 
-  setCommandline() {
-    this.isCommandLineVisible = !this.isCommandLineVisible;
+  openCommandModal(content: any) {
+    this.commandCopied = false;
+    this.modalService.open(content, { size: 'lg', centered: true });
+  }
+
+  copyCommand() {
+    navigator.clipboard.writeText(this.command).then(() => {
+      this.commandCopied = true;
+      setTimeout(() => this.commandCopied = false, 2000);
+    });
   }
 
   downloadFiles() {
