@@ -8,7 +8,7 @@
       </span>
     </div>
 
-    <button aria-describedby="dsSelectMenuLabel-{{ uniqueId }}"
+    <button [attr.aria-describedby]="'dsSelectMenuLabel-' + uniqueId"
             id="dsSelectMenuButton-{{ uniqueId }}"
             class="btn btn-outline-primary selection"
             (blur)="close.emit($event)"
@@ -21,7 +21,7 @@
     <div ngbDropdownMenu
          class="dropdown-menu"
          id="dsSelectDropdownMenu-{{ uniqueId }}"
-         aria-labelledby="dsSelectMenuButton-{{ uniqueId }}">
+         [attr.aria-labelledby]="'dsSelectMenuButton-' + uniqueId">
       <div>
         <ng-content select=".menu"></ng-content>
       </div>

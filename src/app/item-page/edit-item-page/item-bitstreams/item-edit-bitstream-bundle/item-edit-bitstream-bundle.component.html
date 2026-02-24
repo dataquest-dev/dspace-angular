@@ -57,12 +57,12 @@
                   <i class="fas fa-cog" aria-hidden="true"></i>
                 </button>
 
-                <ul id="paginationControlsDropdownMenu-bundle-{{ bundleName }}" aria-labelledby="paginationControls-bundle-{{ bundleName }}" role="menu"
+                <ul id="paginationControlsDropdownMenu-bundle-{{ bundleName }}" [attr.aria-labelledby]="'paginationControls-bundle-' + bundleName" role="menu"
                     ngbDropdownMenu>
                   <li role="menuitem">
                     <span class="dropdown-header" id="pagination-control_results-per-page-bundle-{{ bundleName }}"
                           role="heading">{{ 'pagination.results-per-page' | translate}}</span>
-                    <ul aria-labelledby="pagination-control_results-per-page-bundle-{{ bundleName }}" class="list-unstyled" role="listbox">
+                    <ul [attr.aria-labelledby]="'pagination-control_results-per-page-bundle-' + bundleName" class="list-unstyled" role="listbox">
                       <li *ngFor="let size of paginationOptions.pageSizeOptions" role="option"
                           [attr.aria-selected]="size === (pageSize$ | async)">
                         <button (click)="doPageSizeChange(size)" class="dropdown-item">

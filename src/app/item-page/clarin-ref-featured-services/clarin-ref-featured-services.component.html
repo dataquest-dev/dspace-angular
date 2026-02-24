@@ -28,7 +28,7 @@
                   aria-haspopup="true"
                   aria-expanded="false">
           </button>
-          <div ngbDropdownMenu aria-labelledby="resultdropdown-{{ i }}" class="lindat-dropdown-menu">
+          <div ngbDropdownMenu [attr.aria-labelledby]="'resultdropdown-' + i" class="lindat-dropdown-menu">
             <a
               class="dropdown-item"
               target="_blank"

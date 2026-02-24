@@ -8,10 +8,10 @@
       <div class="col">
         <div *ngIf="!hideGear" ngbDropdown #paginationControls="ngbDropdown" placement="bottom-right" class="d-inline-block float-right">
           <button class="btn btn-secondary" id="paginationControls-{{ id }}" ngbDropdownToggle [title]="'pagination.options.description' | translate" [attr.aria-label]="'pagination.options.description' | translate" aria-haspopup="true" aria-expanded="false" role="button" tabindex="0"><i class="fas fa-cog" aria-hidden="true"></i></button>
-          <ul id="paginationControlsDropdownMenu-{{ id }}" aria-labelledby="paginationControls-{{ id }}" role="menu" ngbDropdownMenu>
+          <ul id="paginationControlsDropdownMenu-{{ id }}" [attr.aria-labelledby]="'paginationControls-' + id" role="menu" ngbDropdownMenu>
             <li role="menuitem">
               <span class="dropdown-header" id="pagination-control_results-per-page-{{ id }}" role="heading">{{ 'pagination.results-per-page' | translate}}</span>
-              <ul aria-labelledby="pagination-control_results-per-page-{{ id }}" class="list-unstyled" role="listbox">
+              <ul [attr.aria-labelledby]="'pagination-control_results-per-page-' + id" class="list-unstyled" role="listbox">
                 <li *ngFor="let item of pageSizeOptions" role="option" [attr.aria-selected]="item === (pageSize$ | async)">
                   <button (click)="doPageSizeChange(item)" class="dropdown-item" role="button" tabindex="0">
                     <i [ngClass]="{'invisible': item !== (pageSize$ | async) }" class="fas fa-check" aria-hidden="true"></i> {{item}}
@@ -21,7 +21,7 @@
             </li>
             <li role="menuitem">
               <span class="dropdown-header" id="pagination-control_sort-direction-{{ id }}" role="heading">{{ 'pagination.sort-direction' | translate}}</span>
-              <ul aria-labelledby="pagination-control_sort-direction-{{ id }}" class="list-unstyled" role="listbox">
+              <ul [attr.aria-labelledby]="'pagination-control_sort-direction-' + id" class="list-unstyled" role="listbox">
                 <li *ngFor="let direction of (sortDirections | dsKeys)" [attr.aria-selected]="direction.value === (sortDirection$ | async)" role="option">
                   <button class="dropdown-item" (click)="doSortDirectionChange(direction.value)" role="button" tabindex="0">
                     <i [ngClass]="{'invisible': direction.value !== (sortDirection$ |async)}" class="fas fa-check" aria-hidden="true"></i> {{'sorting.' + direction.key | translate}}
