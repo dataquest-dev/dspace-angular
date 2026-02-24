@@ -204,5 +204,14 @@ describe('ClarinFilesSectionComponent', () => {
         `curl -o "100% done.txt" "${BASE}/123456789/11{/100%25%20done.txt}"`
       );
     });
+
+    it('should handle complex filename with diacritics, plus, hash, and unmatched paren', () => {
+      component.itemHandle = '123456789/12';
+      component.listOfFiles.next([createMetadataBitstream('M\u00e9di\u00e1 (+)#9) ano')]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "M\u00e9di\u00e1 (+)#9) ano" "${BASE}/123456789/12{/M%C3%A9di%C3%A1%20%28%2B%29%239%29%20ano}"`
+      );
+    });
   });
 });
