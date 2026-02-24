@@ -20,25 +20,32 @@ describe('ClarinFilesSectionComponent', () => {
   let fixture: ComponentFixture<ClarinFilesSectionComponent>;
 
   let mockRegistryService: any;
-  let halService: HALEndpointService;
-  // Set up the mock service's getMetadataBitstream method to return a simple stream
-  const metadatabitstream = new MetadataBitstream();
-  metadatabitstream.id = '70ccc608-f6a5-4c96-ab2d-53bc56ae8ebe';
-  metadatabitstream.name = 'test';
-  metadatabitstream.description = 'test';
-  metadatabitstream.fileSize = 1024;
-  metadatabitstream.checksum = 'abc';
-  metadatabitstream.type = new ResourceType('item');
-  metadatabitstream.fileInfo = [];
-  metadatabitstream.format = 'text';
-  metadatabitstream.canPreview = false;
-  metadatabitstream._links = {
-    self: new HALLink(),
-    schema: new HALLink(),
-  };
+  let halService: any;
 
-  metadatabitstream._links.self.href = '';
-  metadatabitstream._links.schema.href = '';
+  const ROOT_HREF = 'http://localhost:8080/server/api';
+
+  function createMetadataBitstream(name: string, canPreview: boolean = true): MetadataBitstream {
+    const bs = new MetadataBitstream();
+    bs.id = '70ccc608-f6a5-4c96-ab2d-53bc56ae8ebe';
+    bs.name = name;
+    bs.description = 'test';
+    bs.fileSize = 1024;
+    bs.checksum = 'abc';
+    bs.type = new ResourceType('item');
+    bs.fileInfo = [];
+    bs.format = 'text';
+    bs.canPreview = canPreview;
+    bs._links = {
+      self: new HALLink(),
+      schema: new HALLink(),
+    };
+    bs._links.self.href = '';
+    bs._links.schema.href = '';
+    return bs;
+  }
+
+  // Set up the mock service's getMetadataBitstream method to return a simple stream
+  const metadatabitstream = createMetadataBitstream('test', false);
   const metadataBitstreams: MetadataBitstream[] = [metadatabitstream];
   const bitstreamStream = new BehaviorSubject(metadataBitstreams);
 
@@ -63,7 +70,9 @@ describe('ClarinFilesSectionComponent', () => {
       'getMetadataBitstream': of(bitstreamStream)
     }
     );
-    halService = Object.assign(new HALEndpointServiceStub('some url'));
+    halService = Object.assign(new HALEndpointServiceStub('some url'), {
+      getRootHref: () => ROOT_HREF
+    });
 
     await TestBed.configureTestingModule({
       declarations: [ ClarinFilesSectionComponent ],
@@ -87,5 +96,104 @@ describe('ClarinFilesSectionComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('generateCurlCommand', () => {
+    const BASE = `${ROOT_HREF}/core/bitstreams/handle`;
+
+    it('should generate a curl command for a single file', () => {
+      component.itemHandle = '123456789/1';
+      component.listOfFiles.next([createMetadataBitstream('simple.txt')]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "simple.txt" "${BASE}/123456789/1/simple.txt"`
+      );
+    });
+
+    it('should generate a curl command for multiple files', () => {
+      component.itemHandle = '123456789/2';
+      component.listOfFiles.next([
+        createMetadataBitstream('file1.txt'),
+        createMetadataBitstream('file2.txt'),
+      ]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "file1.txt" "${BASE}/123456789/2/file1.txt" -o "file2.txt" "${BASE}/123456789/2/file2.txt"`
+      );
+    });
+
+    it('should percent-encode spaces in URL but keep real name in -o', () => {
+      component.itemHandle = '123456789/3';
+      component.listOfFiles.next([createMetadataBitstream('my file.txt')]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "my file.txt" "${BASE}/123456789/3/my%20file.txt"`
+      );
+    });
+
+    it('should percent-encode parentheses in URL but keep real name in -o', () => {
+      component.itemHandle = '123456789/4';
+      component.listOfFiles.next([createMetadataBitstream('logo (2).png')]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "logo (2).png" "${BASE}/123456789/4/logo%20%282%29.png"`
+      );
+    });
+
+    it('should percent-encode plus signs in URL but keep real name in -o', () => {
+      component.itemHandle = '123456789/5';
+      component.listOfFiles.next([createMetadataBitstream('dtq+logo.png')]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "dtq+logo.png" "${BASE}/123456789/5/dtq%2Blogo.png"`
+      );
+    });
+
+    it('should handle mixed special characters in multiple files', () => {
+      component.itemHandle = '123456789/6';
+      component.listOfFiles.next([
+        createMetadataBitstream('dtq+logo (2).png'),
+        createMetadataBitstream('Screenshot 1.png'),
+      ]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "dtq+logo (2).png" "${BASE}/123456789/6/dtq%2Blogo%20%282%29.png" ` +
+        `-o "Screenshot 1.png" "${BASE}/123456789/6/Screenshot%201.png"`
+      );
+    });
+
+    it('should preserve UTF-8 characters in -o filename', () => {
+      component.itemHandle = '123456789/9';
+      component.listOfFiles.next([createMetadataBitstream('M\u00e9di\u00e1 (3).jfif')]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "M\u00e9di\u00e1 (3).jfif" "${BASE}/123456789/9/M%C3%A9di%C3%A1%20%283%29.jfif"`
+      );
+    });
+
+    it('should escape double quotes in filenames', () => {
+      component.itemHandle = '123456789/10';
+      component.listOfFiles.next([createMetadataBitstream('file "quoted".txt')]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "file \\"quoted\\".txt" "${BASE}/123456789/10/file%20%22quoted%22.txt"`
+      );
+    });
+
+    it('should set canShowCurlDownload to true when any file canPreview', () => {
+      component.canShowCurlDownload = false;
+      component.itemHandle = '123456789/7';
+      component.listOfFiles.next([createMetadataBitstream('file.txt', true)]);
+      component.generateCurlCommand();
+      expect(component.canShowCurlDownload).toBeTrue();
+    });
+
+    it('should not set canShowCurlDownload for non-previewable files', () => {
+      component.canShowCurlDownload = false;
+      component.itemHandle = '123456789/8';
+      component.listOfFiles.next([createMetadataBitstream('file.txt', false)]);
+      component.generateCurlCommand();
+      expect(component.canShowCurlDownload).toBeFalse();
+    });
   });
 });

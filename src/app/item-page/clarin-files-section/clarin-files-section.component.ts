@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { BehaviorSubject } from 'rxjs';
+import { encodeRFC3986URIComponent } from '../../shared/clarin-shared-util';
 
 @Component({
   selector: 'ds-clarin-files-section',
@@ -108,20 +109,17 @@ export class ClarinFilesSectionComponent implements OnInit {
       return file.name;
     });
 
-    // Generate curl command for individual bitstream downloads by handle + filename.
-    // Uses the backend endpoint: /api/core/bitstreams/handle/{prefix}/{suffix}/{filename}
-    // -J tells curl to use the filename from the Content-Disposition header (the real name)
-    // instead of the percent-encoded URL path.
+    // Generate curl command using -o "filename" "url" pairs.
+    // This avoids curl -J (Content-Disposition), which cannot create files
+    // with non-ASCII characters on Windows due to code-page limitations.
     const baseUrl = `${this.halService.getRootHref()}/core/bitstreams/handle/${this.itemHandle}`;
-    const fileNamesFormatted = fileNames.map(fileName => `/${this.encodeFilenameForUrl(fileName)}`).join(',');
-    this.command = `curl -OJ "${baseUrl}{${fileNamesFormatted}}"`;
-  }
-
-  /**
-   * Encode a filename for use in a URL path segment using the shared RFC3986 utility.
-   */
-  private encodeFilenameForUrl(filename: string): string {
-    return encodeRFC3986URIComponent(filename);
+    const parts = fileNames.map(name => {
+      const url = `${baseUrl}/${encodeRFC3986URIComponent(name)}`;
+      // Escape backslashes and double quotes for safe use inside double-quoted shell strings
+      const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+      return `-o "${safeName}" "${url}"`;
+    });
+    this.command = `curl ${parts.join(' ')}`;
   }
 
   loadDownloadZipConfigProperties() {
