@@ -22,6 +22,7 @@ import { SharedModule } from '../shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SearchModule } from '../search/search.module';
 import { DYNAMIC_FORM_CONTROL_MAP_FN, DynamicFormLayoutService, DynamicFormsCoreModule, DynamicFormService, DynamicFormValidationService } from '@ng-dynamic-forms/core';
+import { DsDynamicFormLayoutService } from './builder/ds-dynamic-form-ui/ds-dynamic-form-layout.service';
 import { ExistingMetadataListElementComponent } from './builder/ds-dynamic-form-ui/existing-metadata-list-element/existing-metadata-list-element.component';
 import { ExistingRelationListElementComponent } from './builder/ds-dynamic-form-ui/existing-relation-list-element/existing-relation-list-element.component';
 import { ExternalSourceEntryImportModalComponent } from './builder/ds-dynamic-form-ui/relation-lookup-modal/external-source-tab/external-source-entry-import-modal/external-source-entry-import-modal.component';
@@ -112,7 +113,10 @@ const DIRECTIVES = [
       provide: DYNAMIC_FORM_CONTROL_MAP_FN,
       useValue: dsDynamicFormControlMapFn
     },
-    DynamicFormLayoutService,
+    {
+      provide: DynamicFormLayoutService,
+      useClass: DsDynamicFormLayoutService
+    },
     DynamicFormService,
     DynamicFormValidationService,
     FormBuilderService,

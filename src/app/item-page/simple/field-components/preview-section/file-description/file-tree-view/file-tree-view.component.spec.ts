@@ -46,7 +46,7 @@ describe('FileTreeViewComponent', () => {
 
   it('should display the node name', () => {
     waitForAsync(() => {
-      const nodeNameElement = fixture.debugElement.query(By.css('#folderName')).nativeElement;
+      const nodeNameElement = fixture.debugElement.query(By.css('[id^="folderName-"]')).nativeElement;
       expect(nodeNameElement.textContent).toContain('TestFolder');
     });
   });

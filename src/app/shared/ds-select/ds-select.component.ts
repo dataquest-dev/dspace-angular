@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+let nextDsSelectId = 0;
+
 /**
  * Component which represent a DSpace dropdown selector.
  */
@@ -9,6 +11,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./ds-select.component.scss']
 })
 export class DsSelectComponent {
+
+  /**
+   * Unique identifier for the component instance.
+   */
+  uniqueId = `ds-select-${nextDsSelectId++}`;
 
   /**
    * An optional label for the dropdown selector.

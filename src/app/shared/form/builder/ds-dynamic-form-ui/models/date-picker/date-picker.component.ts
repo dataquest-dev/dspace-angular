@@ -204,7 +204,7 @@ export class DsDatePickerComponent extends DynamicFormControlComponent implement
   }
 
   private selectedFieldIndex(activeElement: Element): number {
-    return this.fields.findIndex(field => isEqual(activeElement.id, this.model.id.concat(field)));
+    return this.fields.findIndex(field => isEqual(activeElement.id, this.id.concat(field)));
   }
 
   /**
@@ -215,7 +215,7 @@ export class DsDatePickerComponent extends DynamicFormControlComponent implement
    * @param type DatePickerFieldType
    */
   focusInput(type: DatePickerFieldType) {
-    const field = this._document.getElementById(this.model.id.concat(type));
+    const field = this._document.getElementById(this.id.concat(type));
     if (field) {
 
       if (hasValue(this.year) && isEqual(type, '_year')) {

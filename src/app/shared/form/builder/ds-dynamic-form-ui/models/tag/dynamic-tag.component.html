@@ -25,7 +25,7 @@
     <i *ngIf="searching" class="fas fa-circle-notch fa-spin fa-2x fa-fw text-primary position-absolute mt-1 p-0" aria-hidden="true"></i>
     <input class="border-0 form-control-plaintext tag-input flex-grow-1 mt-1 mb-1"
            type="text"
-           [attr.aria-labelledby]="'label_' + model.id"
+           [attr.aria-labelledby]="'label_' + id"
            [(ngModel)]="currentValue"
            [attr.autoComplete]="model.autoComplete"
            [class.is-invalid]="showErrorMessages"
