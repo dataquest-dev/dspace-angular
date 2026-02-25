@@ -63,7 +63,7 @@ describe('ClarinFilesSectionComponent', () => {
   });
 
   const configurationServiceSpy = jasmine.createSpyObj('configurationService', {
-    findByPropertyName: of('123456'),
+    findByPropertyName: createSuccessfulRemoteDataObject$({ values: ['123456'] }),
   });
 
   beforeEach(async () => {
@@ -214,6 +214,26 @@ describe('ClarinFilesSectionComponent', () => {
       component.generateCurlCommand();
       expect(component.command).toBe(
         `curl -o "M\u00e9di\u00e1 (+)#9) ano" "${BASE}/123456789/12/M%C3%A9di%C3%A1%20%28%2B%29%239%29%20ano"`
+      );
+    });
+
+    it('should reset canShowCurlDownload when called again with non-previewable files', () => {
+      component.itemHandle = '123456789/13';
+      component.listOfFiles.next([createMetadataBitstream('file.txt', true)]);
+      component.generateCurlCommand();
+      expect(component.canShowCurlDownload).toBeTrue();
+      // Now call again with non-previewable files
+      component.listOfFiles.next([createMetadataBitstream('file.txt', false)]);
+      component.generateCurlCommand();
+      expect(component.canShowCurlDownload).toBeFalse();
+    });
+
+    it('should escape dollar signs and backticks in filenames for shell safety', () => {
+      component.itemHandle = '123456789/14';
+      component.listOfFiles.next([createMetadataBitstream('price$100.txt')]);
+      component.generateCurlCommand();
+      expect(component.command).toBe(
+        `curl -o "price\\$100.txt" "${BASE}/123456789/14/price%24100.txt"`
       );
     });
   });

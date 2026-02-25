@@ -94,13 +94,16 @@ export class ClarinFilesSectionComponent implements OnInit {
 
   openCommandModal(content: any) {
     this.commandCopied = false;
-    this.modalService.open(content, { size: 'lg', centered: true });
+    this.modalService.open(content, { size: 'lg', centered: true, ariaLabelledBy: 'commandModalTitle' });
   }
 
   copyCommand() {
     navigator.clipboard.writeText(this.command).then(() => {
       this.commandCopied = true;
       setTimeout(() => this.commandCopied = false, 2000);
+    }).catch(() => {
+      // Fallback: clipboard API may be unavailable (non-HTTPS, denied permissions)
+      this.commandCopied = false;
     });
   }
 
@@ -109,6 +112,7 @@ export class ClarinFilesSectionComponent implements OnInit {
   }
 
   generateCurlCommand() {
+    this.canShowCurlDownload = false;
     const fileNames = this.listOfFiles.value.map((file: MetadataBitstream) => {
       if (file.canPreview) {
         this.canShowCurlDownload = true;
@@ -126,7 +130,7 @@ export class ClarinFilesSectionComponent implements OnInit {
     const parts = fileNames.map(name => {
       const encodedName = encodeURIComponent(name)
         .replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
-      const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+      const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\$/g, '\\$').replace(/`/g, '\\`');
       return `-o "${safeName}" "${baseUrl}/${encodedName}"`;
     });
     this.command = `curl ${parts.join(' ')}`;
