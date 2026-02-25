@@ -8,7 +8,7 @@
       </span>
     </div>
 
-    <button [attr.aria-describedby]="'dsSelectMenuLabel-' + uniqueId"
+    <button [attr.aria-describedby]="label ? 'dsSelectMenuLabel-' + uniqueId : null"
             id="dsSelectMenuButton-{{ uniqueId }}"
             class="btn btn-outline-primary selection"
             (blur)="close.emit($event)"

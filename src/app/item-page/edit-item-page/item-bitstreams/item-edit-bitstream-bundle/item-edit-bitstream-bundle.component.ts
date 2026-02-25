@@ -108,6 +108,12 @@ export class ItemEditBitstreamBundleComponent implements OnInit, OnDestroy {
   bundleName: string;
 
   /**
+   * Sanitized bundle name (whitespace removed) for use in HTML element IDs.
+   * HTML IDs cannot contain spaces, so this ensures valid id/headers/aria-labelledby tokens.
+   */
+  sanitizedBundleName: string;
+
+  /**
    * The number of bitstreams in the bundle
    */
   bundleSize: number;
@@ -189,6 +195,7 @@ export class ItemEditBitstreamBundleComponent implements OnInit, OnDestroy {
     this.viewContainerRef.createEmbeddedView(this.bundleView);
     this.itemPageRoute = getItemPageRoute(this.item);
     this.bundleName = this.dsoNameService.getName(this.bundle);
+    this.sanitizedBundleName = this.bundleName.replace(/\s+/g, '');
     this.bundleUrl = this.bundle.self;
 
     this.initializePagination();
