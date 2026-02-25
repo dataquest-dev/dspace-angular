@@ -9203,7 +9203,7 @@
 
   // "item.page.download.button.command.line": "Download instructions for command line",
   "item.page.download.button.command.line": "Instrukce pro stažení z příkazové řádky",
-  "item.page.download.command.copy": "Kopírovat do schránky",
+  "item.page.download.command.copy": "Kopírovat",
   "item.page.download.command.copied": "Zkopírováno!",
   "item.page.download.command.close": "Zavřít",
 
