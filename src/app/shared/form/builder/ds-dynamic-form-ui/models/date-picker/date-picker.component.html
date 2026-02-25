@@ -1,11 +1,11 @@
 <div>
   <fieldset class="d-flex">
-    <legend *ngIf="!model.repeatable" [id]="'legend_' + id" [ngClass]="[getClass('element', 'label'), getClass('grid', 'label')]">
+    <legend *ngIf="!model.repeatable" [id]="'legend_' + model.id" [ngClass]="[getClass('element', 'label'), getClass('grid', 'label')]">
       {{model.placeholder}} <span *ngIf="model.required">*</span>
     </legend>
     <ds-number-picker
       tabindex="0"
-      [id]="id + '_year'"
+      [id]="model.id + '_year'"
       [disabled]="model.disabled"
       [min]="minYear"
       [max]="maxYear"
@@ -22,7 +22,7 @@
 
     <ds-number-picker
       tabindex="0"
-      [id]="id + '_month'"
+      [id]="model.id + '_month'"
       [min]="minMonth"
       [max]="maxMonth"
       [name]="'month'"
@@ -38,7 +38,7 @@
 
     <ds-number-picker
       tabindex="0"
-      [id]="id + '_day'"
+      [id]="model.id + '_day'"
       [min]="minDay"
       [max]="maxDay"
       [name]="'day'"
