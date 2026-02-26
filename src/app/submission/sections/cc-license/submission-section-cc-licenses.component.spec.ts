@@ -210,10 +210,12 @@ describe('SubmissionSectionCcLicensesComponent', () => {
 
     const ccLicence = submissionCcLicenses[1];
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       component.selectCcLicense(ccLicence);
       fixture.detectChanges();
-    });
+      tick(300); // Flush debounce timer so no real timer leaks into subsequent fakeAsync zones
+      fixture.detectChanges();
+    }));
 
     it('should display the selected cc license', () => {
       expect(component.selectedCcLicense.name).toContain('test license name 2');
