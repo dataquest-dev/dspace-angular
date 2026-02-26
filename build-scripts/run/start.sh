@@ -48,6 +48,7 @@ popd
 echo "====="
 echo "Copy assetstore"
 docker cp assetstore dspace${INSTANCE}:/dspace/
+docker exec -u root dspace${INSTANCE} chown -R dspace:dspace /dspace/assetstore
 
 echo "====="
 echo "Finished start.sh"

@@ -210,10 +210,12 @@ describe('SubmissionSectionCcLicensesComponent', () => {
 
     const ccLicence = submissionCcLicenses[1];
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       component.selectCcLicense(ccLicence);
       fixture.detectChanges();
-    });
+      tick(300); // Flush debounce timer so no real timer leaks into subsequent fakeAsync zones
+      fixture.detectChanges();
+    }));
 
     it('should display the selected cc license', () => {
       expect(component.selectedCcLicense.name).toContain('test license name 2');
@@ -236,11 +238,13 @@ describe('SubmissionSectionCcLicensesComponent', () => {
 
     describe('when all options have a value selected', () => {
 
-      beforeEach(() => {
+      beforeEach(fakeAsync(() => {
         component.selectOption(ccLicence, ccLicence.fields[0], ccLicence.fields[0].enums[1]);
         component.selectOption(ccLicence, ccLicence.fields[1], ccLicence.fields[1].enums[0]);
         fixture.detectChanges();
-      });
+        tick(300); // Wait for debounceTime(300) in ccLicenseLink$ pipeline
+        fixture.detectChanges();
+      }));
 
       it('should call the submission cc licenses data service getCcLicenseLink method', () => {
         expect(submissionCcLicenseUrlDataService.getCcLicenseLink).toHaveBeenCalledWith(

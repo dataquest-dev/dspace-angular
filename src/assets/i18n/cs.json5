@@ -2183,6 +2183,9 @@
   // "curation-task.task.registerdoi.label": "Register DOI",
   "curation-task.task.registerdoi.label": "Zaregistrujte DOI",
 
+  // "curation-task.task.metadataqa.label": "Metadata QA",
+  "curation-task.task.metadataqa.label": "Metadata QA",
+
   // "curation.form.task-select.label": "Task:",
   "curation.form.task-select.label": "Úloha:",
 
@@ -9200,6 +9203,9 @@
 
   // "item.page.download.button.command.line": "Download instructions for command line",
   "item.page.download.button.command.line": "Instrukce pro stažení z příkazové řádky",
+  "item.page.download.command.copy": "Kopírovat",
+  "item.page.download.command.copied": "Zkopírováno!",
+  "item.page.download.command.close": "Zavřít",
 
   // "item.page.download.button.all.files.zip": "Download all files in item",
   "item.page.download.button.all.files.zip": "Stáhnout všechny soubory záznamu",
