@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { BehaviorSubject } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'ds-clarin-files-section',
@@ -29,9 +30,9 @@ export class ClarinFilesSectionComponent implements OnInit {
   canShowCurlDownload = false;
 
   /**
-   * If download by command button is click, the command line will be shown
+   * Whether the command was recently copied to clipboard
    */
-  isCommandLineVisible = false;
+  commandCopied = false;
 
   /**
    * command for the download command feature
@@ -75,7 +76,8 @@ export class ClarinFilesSectionComponent implements OnInit {
   constructor(protected registryService: RegistryService,
               protected router: Router,
               protected halService: HALEndpointService,
-              protected configurationService: ConfigurationDataService) {
+              protected configurationService: ConfigurationDataService,
+              protected modalService: NgbModal) {
   }
 
   ngOnInit(): void {
@@ -90,8 +92,19 @@ export class ClarinFilesSectionComponent implements OnInit {
     this.loadDownloadZipConfigProperties();
   }
 
-  setCommandline() {
-    this.isCommandLineVisible = !this.isCommandLineVisible;
+  openCommandModal(content: any) {
+    this.commandCopied = false;
+    this.modalService.open(content, { size: 'lg', centered: true, ariaLabelledBy: 'commandModalTitle' });
+  }
+
+  copyCommand() {
+    navigator.clipboard.writeText(this.command).then(() => {
+      this.commandCopied = true;
+      setTimeout(() => this.commandCopied = false, 2000);
+    }).catch(() => {
+      // Fallback: clipboard API may be unavailable (non-HTTPS, denied permissions)
+      this.commandCopied = false;
+    });
   }
 
   downloadFiles() {
@@ -99,6 +112,7 @@ export class ClarinFilesSectionComponent implements OnInit {
   }
 
   generateCurlCommand() {
+    this.canShowCurlDownload = false;
     const fileNames = this.listOfFiles.value.map((file: MetadataBitstream) => {
       if (file.canPreview) {
         this.canShowCurlDownload = true;
@@ -107,10 +121,19 @@ export class ClarinFilesSectionComponent implements OnInit {
       return file.name;
     });
 
-    // Generate curl command for individual bitstream downloads
-    const baseUrl = `${this.halService.getRootHref()}/bitstream/${this.itemHandle}`;
-    const fileNamesFormatted = fileNames.map((fileName, index) => `/${index}/${fileName}`).join(',');
-    this.command = `curl -O ${baseUrl}{${fileNamesFormatted}}`;
+    // Generate curl command with -o "filename" "url" pairs for each file.
+    // Each file needs its own -o + URL pair because curl URL globbing ({})
+    // does NOT support per-file -o flags (multiple -o with {} results in
+    // "Got more output options than URLs" and only the first file is saved).
+    // Using -o lets the shell pass the real filename (including UTF-8) directly.
+    const baseUrl = `${this.halService.getRootHref()}/core/bitstreams/handle/${this.itemHandle}`;
+    const parts = fileNames.map(name => {
+      const encodedName = encodeURIComponent(name)
+        .replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
+      const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\$/g, '\\$').replace(/`/g, '\\`');
+      return `-o "${safeName}" "${baseUrl}/${encodedName}"`;
+    });
+    this.command = `curl ${parts.join(' ')}`;
   }
 
   loadDownloadZipConfigProperties() {
