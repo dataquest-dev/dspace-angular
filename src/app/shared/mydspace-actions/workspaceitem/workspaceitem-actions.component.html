@@ -39,6 +39,14 @@
       {{'submission.workflow.generic.share-submission' | translate}}
     </span>
   </button>
+
+  <button type="button" id="{{'add_url_bitstream_' + object.id}}" class="btn btn-outline-primary mt-1 mb-3"
+          *ngIf="(canEditItem$ | async) && (canUseFileDownloader$ | async)"
+          [ngbTooltip]="'submission.workflow.generic.add-url-bitstream.tooltip' | translate"
+          [attr.aria-label]="'submission.workflow.generic.add-url-bitstream.tooltip' | translate"
+          (click)="$event.preventDefault();openAddBitstreamFromUrlModal(addBitstreamFromUrlModal)">
+    <i class="fa fa-link"></i> {{'submission.workflow.generic.add-url-bitstream' | translate}}
+  </button>
 </div>
 
 
@@ -57,5 +65,41 @@
       (click)="c('cancel')">{{'submission.general.discard.confirm.cancel' | translate}}</button>
     <button type="button" id="delete_confirm" class="btn btn-danger"
       (click)="c('ok')">{{'submission.general.discard.confirm.submit' | translate}}</button>
+  </div>
+</ng-template>
+
+<ng-template #addBitstreamFromUrlModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <div class="modal-title h4">{{'submission.workflow.generic.add-url-bitstream.modal.title' | translate}}</div>
+    <button type="button" class="close" aria-label="Close" (click)="d('cancel')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="bitstream-url-input">{{'submission.workflow.generic.add-url-bitstream.url.label' | translate}}</label>
+      <input id="bitstream-url-input" name="bitstream-url-input" class="form-control" type="url"
+             [(ngModel)]="bitstreamFromUrl" required>
+      <small class="text-danger" *ngIf="!bitstreamFromUrl?.trim()">
+        {{'submission.workflow.generic.add-url-bitstream.url.required' | translate}}
+      </small>
+    </div>
+    <div class="form-group">
+      <label for="bitstream-name-input">{{'submission.workflow.generic.add-url-bitstream.name.label' | translate}}</label>
+      <input id="bitstream-name-input" name="bitstream-name-input" class="form-control" type="text"
+             [placeholder]="'submission.workflow.generic.add-url-bitstream.name.placeholder' | translate"
+             [(ngModel)]="bitstreamName">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('cancel')">
+      {{'submission.workflow.generic.add-url-bitstream.cancel' | translate}}
+    </button>
+    <button type="button" class="btn btn-primary"
+            [disabled]="!bitstreamFromUrl?.trim() || (processingAddFromUrl$ | async)"
+            (click)="addBitstreamFromUrl(c)">
+      <span *ngIf="(processingAddFromUrl$ | async)" class="spinner-border spinner-border-sm spinner-button" role="status" aria-hidden="true"></span>
+      {{'submission.workflow.generic.add-url-bitstream.submit' | translate}}
+    </button>
   </div>
 </ng-template>

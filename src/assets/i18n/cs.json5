@@ -9648,6 +9648,33 @@
   // "submission.workflow.generic.share-submission.tooltip": "Share submission",
   "submission.workflow.generic.share-submission.tooltip": "Sdílet příspěvek",
 
+  // "submission.workflow.generic.add-url-bitstream": "Add bitstream from URL",
+  "submission.workflow.generic.add-url-bitstream": "Přidat bitstream z URL",
+
+  // "submission.workflow.generic.add-url-bitstream.tooltip": "Add a new bitstream to this workspace item using a URL",
+  "submission.workflow.generic.add-url-bitstream.tooltip": "Přidat nový bitstream do této položky pracovního prostoru pomocí URL",
+
+  // "submission.workflow.generic.add-url-bitstream.modal.title": "Add bitstream from URL",
+  "submission.workflow.generic.add-url-bitstream.modal.title": "Přidat bitstream z URL",
+
+  // "submission.workflow.generic.add-url-bitstream.url.label": "File URL",
+  "submission.workflow.generic.add-url-bitstream.url.label": "URL souboru",
+
+  // "submission.workflow.generic.add-url-bitstream.url.required": "URL is required",
+  "submission.workflow.generic.add-url-bitstream.url.required": "URL je povinná",
+
+  // "submission.workflow.generic.add-url-bitstream.name.label": "Bitstream name (optional)",
+  "submission.workflow.generic.add-url-bitstream.name.label": "Název bitstreamu (volitelné)",
+
+  // "submission.workflow.generic.add-url-bitstream.name.placeholder": "e.g. image.png",
+  "submission.workflow.generic.add-url-bitstream.name.placeholder": "např. image.png",
+
+  // "submission.workflow.generic.add-url-bitstream.cancel": "Cancel",
+  "submission.workflow.generic.add-url-bitstream.cancel": "Zrušit",
+
+  // "submission.workflow.generic.add-url-bitstream.submit": "Add",
+  "submission.workflow.generic.add-url-bitstream.submit": "Přidat",
+
   // "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
   "submission.workflow.share-submission.email.successful": "E-mail s odkazem na sdílení byl úspěšně odeslán",
 

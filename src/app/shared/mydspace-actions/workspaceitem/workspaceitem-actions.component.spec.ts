@@ -31,6 +31,8 @@ import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
 import { HALEndpointServiceStub } from '../../testing/hal-endpoint-service.stub';
 import { getMockRemoteDataBuildService } from '../../mocks/remote-data-build.service.mock';
+import { ScriptDataService } from '../../../core/data/processes/script-data.service';
+import { getProcessDetailRoute } from '../../../process-page/process-page-routing.paths';
 
 let component: WorkspaceitemActionsComponent;
 let fixture: ComponentFixture<WorkspaceitemActionsComponent>;
@@ -41,6 +43,7 @@ let authorizationService;
 let authService;
 let halService: HALEndpointService;
 let rdbService: RemoteDataBuildService;
+let scriptDataService;
 
 const mockDataService = jasmine.createSpyObj('WorkspaceitemDataService', {
   delete: jasmine.createSpy('delete')
@@ -161,6 +164,11 @@ authService = jasmine.createSpyObj('authService', {
   getAuthenticatedUserFromStore: jasmine.createSpy('getAuthenticatedUserFromStore')
 });
 
+scriptDataService = jasmine.createSpyObj('scriptDataService', {
+  scriptWithNameExistsAndCanExecute: jasmine.createSpy('scriptWithNameExistsAndCanExecute'),
+  invoke: jasmine.createSpy('invoke')
+});
+
 halService = Object.assign(new HALEndpointServiceStub('url'));
 rdbService = getMockRemoteDataBuildService();
 
@@ -191,6 +199,7 @@ describe('WorkspaceitemActionsComponent', () => {
         { provide: AuthorizationDataService, useValue: authorizationService},
         { provide: HALEndpointService, useValue: halService },
         { provide: RemoteDataBuildService, useValue: rdbService },
+        { provide: ScriptDataService, useValue: scriptDataService },
         NgbModal
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -205,6 +214,7 @@ describe('WorkspaceitemActionsComponent', () => {
     component.object = mockObject;
     notificationsServiceStub = TestBed.inject(NotificationsService as any);
     (authService.getAuthenticatedUserFromStore as jasmine.Spy).and.returnValue(observableOf(ePersonMock));
+    (scriptDataService.scriptWithNameExistsAndCanExecute as jasmine.Spy).and.returnValue(observableOf(true));
     fixture.detectChanges();
   });
 
@@ -236,6 +246,61 @@ describe('WorkspaceitemActionsComponent', () => {
     const btn = fixture.debugElement.query(By.css('button[data-test="view-btn"]'));
 
     expect(btn).not.toBeNull();
+  });
+
+  it('should display add URL bitstream button when script is executable', () => {
+    const btn = fixture.debugElement.query(By.css('#add_url_bitstream_1234'));
+
+    expect(btn).not.toBeNull();
+  });
+
+  it('should not display add URL bitstream button when script is not executable', () => {
+    component.canUseFileDownloader$ = observableOf(false);
+    fixture.detectChanges();
+
+    const btn = fixture.debugElement.query(By.css('#add_url_bitstream_1234'));
+    expect(btn).toBeNull();
+  });
+
+  it('should invoke file-downloader with -u and -w and optional -n', () => {
+    const closeModal = jasmine.createSpy('closeModal');
+    const process = { processId: 101 } as any;
+    (scriptDataService.invoke as jasmine.Spy).and.returnValue(createSuccessfulRemoteDataObject$(process));
+
+    component.bitstreamFromUrl = ' https://example.org/file.pdf ';
+    component.bitstreamName = ' downloaded.pdf ';
+    component.addBitstreamFromUrl(closeModal);
+
+    expect(scriptDataService.invoke).toHaveBeenCalledWith('file-downloader', [
+      { name: '-u', value: 'https://example.org/file.pdf' },
+      { name: '-w', value: '1234' },
+      { name: '-n', value: 'downloaded.pdf' }
+    ], []);
+  });
+
+  it('should navigate to process detail and close modal on add from URL success', () => {
+    const closeModal = jasmine.createSpy('closeModal');
+    const router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl').and.callThrough();
+    (scriptDataService.invoke as jasmine.Spy).and.returnValue(createSuccessfulRemoteDataObject$({ processId: 202 } as any));
+
+    component.bitstreamFromUrl = 'https://example.org/file.pdf';
+    component.addBitstreamFromUrl(closeModal);
+
+    expect(notificationsServiceStub.success).toHaveBeenCalled();
+    expect(closeModal).toHaveBeenCalledWith('ok');
+    expect(router.navigateByUrl).toHaveBeenCalledWith(getProcessDetailRoute('202'));
+  });
+
+  it('should show error notification on add from URL failure', () => {
+    const closeModal = jasmine.createSpy('closeModal');
+    (scriptDataService.invoke as jasmine.Spy).and.returnValue(createFailedRemoteDataObject$('Error', 500));
+
+    component.bitstreamFromUrl = 'https://example.org/file.pdf';
+    component.addBitstreamFromUrl(closeModal);
+
+    expect(notificationsServiceStub.error).toHaveBeenCalled();
+    expect(closeModal).not.toHaveBeenCalled();
   });
 
   describe('on discard confirmation', () => {
