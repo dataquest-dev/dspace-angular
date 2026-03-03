@@ -80,6 +80,7 @@ export class ClarinZipDownloadPageComponent extends ClarinBitstreamDownloadPageC
           const dtokenParam = this.dtoken ? `&dtoken=${this.dtoken}` : '';
 
           this.zipDownloadLink.next(baseUrl + dtokenParam);
+          super.ngOnInit();
         }
       });
     });
