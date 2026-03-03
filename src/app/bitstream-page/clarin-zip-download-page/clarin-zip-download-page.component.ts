@@ -71,9 +71,15 @@ export class ClarinZipDownloadPageComponent extends ClarinBitstreamDownloadPageC
           this.bitstreams$.next([...current, ...bitstreamsRD.payload.page]);
           this.bitstreamRD$ = createSuccessfulRemoteDataObject$(this.bitstreams$.getValue()[0]);
           this.dtoken = isUndefined(this.route.snapshot.queryParams.dtoken) ? null : this.route.snapshot.queryParams.dtoken;
-          this.zipDownloadLink.next(this.halService.getRootHref() +
-            `/core/items/${itemRD.payload.uuid}/allzip?handleId=${itemRD?.payload?.handle}&dtoken=${this.dtoken}`);
-          super.ngOnInit();
+          const baseUrl = this.halService.getRootHref() +
+
+            `/core/items/${itemRD.payload.uuid}/allzip?handleId=${itemRD?.payload?.handle}`;
+
+          // Do not add `dtoken` into the URL if it is null
+
+          const dtokenParam = this.dtoken ? `&dtoken=${this.dtoken}` : '';
+
+          this.zipDownloadLink.next(baseUrl + dtokenParam);
         }
       });
     });
