@@ -229,9 +229,32 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
   search(query: string, page: number, useCache: boolean = true): Observable<RemoteData<PaginatedList<SearchResult<DSpaceObject>>>> {
     // default sort is only used when there is not query
     let efectiveSort = query ? null : this.sort;
+
+    // Enable partial matching by adding wildcard for any non-empty query
+    let processedQuery = query;
+    if (hasValue(query) && query.trim().length > 0) {
+      const trimmedQuery = query.trim();
+      
+      // For communities and collections, search only at the beginning of titles
+      if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
+        // Use title field with prefix matching to match only at the beginning
+        // This searches specifically in the title field for words that start with the query
+        processedQuery = `dc.title:${trimmedQuery}*`;
+      } else {
+        // For items and other types, use the query as-is but consider wildcards for very short queries
+        if (trimmedQuery.length === 1) {
+          processedQuery = trimmedQuery + '*';
+        } else {
+          processedQuery = trimmedQuery;
+        }
+      }
+      
+      console.log(`DSO Selector: Searching with query "${processedQuery}" for types:`, this.types);
+    }
+
     return this.searchService.search(
       new PaginatedSearchOptions({
-        query: query,
+        query: processedQuery,
         dsoTypes: this.types,
         pagination: Object.assign({}, this.defaultPagination, {
           currentPage: page
