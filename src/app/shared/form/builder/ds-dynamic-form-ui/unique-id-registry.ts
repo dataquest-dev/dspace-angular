@@ -13,10 +13,11 @@
 export class UniqueIdRegistry {
 
   /**
-   * Tracks how many active instances exist for each base element ID.
-   * Key = base element ID, Value = number of active instances.
+   * Monotonic counter per base ID. Always increments, never decrements,
+   * so released suffixes are never reissued to a different instance.
+   * Key = base element ID, Value = next suffix to assign.
    */
-  private static idCounts: Map<string, number> = new Map<string, number>();
+  private static nextSuffix: Map<string, number> = new Map<string, number>();
 
   /**
    * Tracks the assigned suffix for each component instance.
@@ -40,38 +41,26 @@ export class UniqueIdRegistry {
       return suffix === 0 ? baseId : `${baseId}_${suffix}`;
     }
 
-    const count = this.idCounts.get(baseId) || 0;
-    this.idCounts.set(baseId, count + 1);
-    this.instanceSuffixes.set(instanceKey, count);
-    return count === 0 ? baseId : `${baseId}_${count}`;
+    const suffix = this.nextSuffix.get(baseId) || 0;
+    this.nextSuffix.set(baseId, suffix + 1);
+    this.instanceSuffixes.set(instanceKey, suffix);
+    return suffix === 0 ? baseId : `${baseId}_${suffix}`;
   }
 
   /**
    * Release the unique ID when a component is destroyed.
-   * Only decrements the count when the instanceKey is still in the registry
-   * (prevents double-release by container and child component sharing the same key).
    *
-   * @param baseId The base element ID.
    * @param instanceKey The unique key used during registration.
    */
-  static release(baseId: string, instanceKey: string): void {
-    if (!this.instanceSuffixes.has(instanceKey)) {
-      return;
-    }
+  static release(instanceKey: string): void {
     this.instanceSuffixes.delete(instanceKey);
-    const count = this.idCounts.get(baseId) || 0;
-    if (count <= 1) {
-      this.idCounts.delete(baseId);
-    } else {
-      this.idCounts.set(baseId, count - 1);
-    }
   }
 
   /**
-   * Clear the entire registry. Used primarily in tests.
+   * Clear the entire registry. Used in tests to reset state between specs.
    */
   static clear(): void {
-    this.idCounts.clear();
+    this.nextSuffix.clear();
     this.instanceSuffixes.clear();
   }
 }
