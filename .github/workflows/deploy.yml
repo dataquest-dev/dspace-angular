@@ -206,9 +206,8 @@ jobs:
     uses: dataquest-dev/dspace-rest-test/.github/workflows/run_unittests.yml@master
     with:
       CUSTOMER: ${{ github.ref_name }}
-      URL: http://dev-5.pc:8${{ inputs.INSTANCE }}/repository/server/api
+      URL: http://dev-5.pc:88/repository/server/api
     secrets: inherit
-
 
   playwright-after-import8:
     needs: import-8
@@ -221,5 +220,5 @@ jobs:
     uses: dataquest-dev/dspace-rest-test/.github/workflows/run_unittests.yml@master
     with:
       CUSTOMER: ${{ github.ref_name }}
-      URL: http://dev-5.pc:8${{ inputs.INSTANCE }}/repository/server/api
+      URL: http://dev-5.pc:88/repository/server/api
     secrets: inherit
