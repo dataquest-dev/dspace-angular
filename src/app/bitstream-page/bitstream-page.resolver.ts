@@ -33,10 +33,7 @@ export class BitstreamPageResolver implements Resolve<RemoteData<Bitstream>> {
    * or an error if something went wrong
    */
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RemoteData<Bitstream>> {
-    // Use useCachedVersionIfAvailable=false so that the request is always re-sent with the
-    // current user's authentication. This prevents stale 404 responses (e.g. from SSR where
-    // the user may not be authenticated) from being reused on the client side.
-    return this.bitstreamService.findById(route.params.id, false, true, ...this.followLinks)
+    return this.bitstreamService.findById(route.params.id, true, false, ...this.followLinks)
       .pipe(
         getFirstCompletedRemoteData(),
       );
