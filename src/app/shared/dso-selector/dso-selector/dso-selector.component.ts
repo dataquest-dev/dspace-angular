@@ -234,7 +234,6 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
     let processedQuery = query;
     if (hasValue(query) && query.trim().length > 0) {
       const trimmedQuery = query.trim();
-      
       // For communities and collections, search only at the beginning of titles
       if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
         // Use title field with prefix matching to match only at the beginning
@@ -248,7 +247,6 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
           processedQuery = trimmedQuery;
         }
       }
-      
       console.log(`DSO Selector: Searching with query "${processedQuery}" for types:`, this.types);
     }
 
