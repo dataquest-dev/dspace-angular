@@ -1,9 +1,19 @@
 <div class="d-flex flex-row">
   <a *ngIf="linkType != linkTypes.None" [target]="(linkType == linkTypes.ExternalLink) ? '_blank' : '_self'" [attr.rel]="(linkType == linkTypes.ExternalLink) ? 'noopener noreferrer' : null" [routerLink]="['/communities/' + object.id]" class="lead">
-    {{ dsoNameService.getName(object) }}
+    <ng-container *ngIf="hasParents$ | async; else singleName">
+      {{ fullPath$ | async }}
+    </ng-container>
+    <ng-template #singleName>
+      {{ dsoNameService.getName(object) }}
+    </ng-template>
   </a>
   <span *ngIf="linkType == linkTypes.None" class="lead">
-    {{ dsoNameService.getName(object) }}
+    <ng-container *ngIf="hasParents$ | async; else singleNameSpan">
+      {{ fullPath$ | async }}
+    </ng-container>
+    <ng-template #singleNameSpan>
+      {{ dsoNameService.getName(object) }}
+    </ng-template>
   </span>
   <span class="pr-2">&nbsp;</span>
   <span *ngIf="object.archivedItemsCount >= 0" class="badge badge-pill badge-secondary align-self-center archived-items-lead">{{object.archivedItemsCount}}</span>
