@@ -324,7 +324,7 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   ngOnDestroy(): void {
     if (this._uniqueId && this._baseId) {
       const instanceKey = `${this._baseId}_${this.model?.parent?.id || 'root'}`;
-      UniqueIdRegistry.release(this._baseId, instanceKey);
+      UniqueIdRegistry.release(instanceKey);
     }
   }
 

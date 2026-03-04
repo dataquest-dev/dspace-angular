@@ -215,7 +215,7 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   /**
    * The unique element ID assigned to this component instance.
    * For the first occurrence of a base ID, this equals the base ID (preserving backward compatibility).
-   * For subsequent occurrences, a numeric suffix is appended (e.g., `baseId_1`, `baseId_2`).
+   * For subsequent occurrences, a numeric suffix is appended.
    */
   private _uniqueId: string;
 
@@ -270,8 +270,8 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
 
   /**
    * Returns a unique element ID for this component instance.
-   * The first occurrence of a base ID keeps the original value (e.g., `dc_title`).
-   * Subsequent occurrences receive a numeric suffix (e.g., `metashare_..._mediaType_1`).
+   * The first occurrence of a base ID keeps the original value.
+   * Subsequent occurrences receive a numeric suffix.
    */
   get id(): string {
     if (!this._uniqueId) {
@@ -532,7 +532,7 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   ngOnDestroy(): void {
     if (this._uniqueId && this._baseId) {
       const instanceKey = `${this._baseId}_${this.model?.parent?.id || 'root'}`;
-      UniqueIdRegistry.release(this._baseId, instanceKey);
+      UniqueIdRegistry.release(instanceKey);
     }
     this.subs
       .filter((sub) => hasValue(sub))
