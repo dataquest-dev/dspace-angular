@@ -125,6 +125,7 @@ import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/ds
 import { DsDynamicSponsorAutocompleteComponent } from './models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
 import { SPONSOR_METADATA_NAME } from './models/ds-dynamic-complex.model';
 import { DsDynamicSponsorScrollableDropdownComponent } from './models/sponsor-scrollable-dropdown/dynamic-sponsor-scrollable-dropdown.component';
+import { UniqueIdRegistry } from './unique-id-registry';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {
@@ -210,6 +211,19 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class DsDynamicFormControlContainerComponent extends DynamicFormControlContainerComponent implements OnInit, OnChanges, OnDestroy {
+
+  /**
+   * The unique element ID assigned to this component instance.
+   * For the first occurrence of a base ID, this equals the base ID (preserving backward compatibility).
+   * For subsequent occurrences, a numeric suffix is appended (e.g., `baseId_1`, `baseId_2`).
+   */
+  private _uniqueId: string;
+
+  /**
+   * The base element ID (from getElementId) before deduplication.
+   */
+  private _baseId: string;
+
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('templates') inputTemplateList: QueryList<DynamicTemplateDirective>;
@@ -253,6 +267,20 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    * Determines whether to request embedded thumbnail.
    */
   fetchThumbnail: boolean;
+
+  /**
+   * Returns a unique element ID for this component instance.
+   * The first occurrence of a base ID keeps the original value (e.g., `dc_title`).
+   * Subsequent occurrences receive a numeric suffix (e.g., `metashare_..._mediaType_1`).
+   */
+  get id(): string {
+    if (!this._uniqueId) {
+      this._baseId = this.layoutService.getElementId(this.model);
+      const instanceKey = `${this._baseId}_${this.model?.parent?.id || 'root'}`;
+      this._uniqueId = UniqueIdRegistry.register(this._baseId, instanceKey);
+    }
+    return this._uniqueId;
+  }
 
   get componentType(): Type<DynamicFormControl> | null {
     return dsDynamicFormControlMapFn(this.model);
@@ -499,9 +527,13 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   }
 
   /**
-   * Unsubscribe from all subscriptions
+   * Unsubscribe from all subscriptions and release the unique ID from the registry.
    */
   ngOnDestroy(): void {
+    if (this._uniqueId && this._baseId) {
+      const instanceKey = `${this._baseId}_${this.model?.parent?.id || 'root'}`;
+      UniqueIdRegistry.release(this._baseId, instanceKey);
+    }
     this.subs
       .filter((sub) => hasValue(sub))
       .forEach((sub) => sub.unsubscribe());
