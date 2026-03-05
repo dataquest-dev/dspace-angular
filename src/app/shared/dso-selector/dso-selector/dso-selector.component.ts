@@ -227,15 +227,17 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
    * @param useCache Whether or not to use the cache
    */
   search(query: string, page: number, useCache: boolean = true): Observable<RemoteData<PaginatedList<SearchResult<DSpaceObject>>>> {
-    // Normalize query once and use consistently for both sort selection and query processing
-    const trimmedQuery = query?.trim() ?? '';
-    const hasQuery = isNotEmpty(trimmedQuery);
-    // default sort is only used when there is no query
+    // Keep raw query semantics aligned with other component logic (isEmpty/isNotEmpty checks)
+    const rawQuery = query ?? '';
+    const trimmedQuery = rawQuery.trim();
+    const hasQuery = isNotEmpty(rawQuery);
+
+    // default sort is only used when there is no query according to raw input semantics
     let effectiveSort = hasQuery ? null : this.sort;
 
-    // Enable partial matching by adding wildcard for any non-empty query
-    let processedQuery = trimmedQuery;
-    if (hasQuery) {
+    // Enable partial matching by adding wildcard for any trimmed non-empty query
+    let processedQuery = rawQuery;
+    if (isNotEmpty(trimmedQuery)) {
       // For communities and collections, search only at the beginning of titles
       if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
         // Use title field with prefix matching to match only at the beginning
@@ -254,12 +256,8 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
           processedQuery = `dc.title:(${allButLast} AND ${lastTerm}*)`;
         }
       } else {
-        // For items and other types, use the query as-is but consider wildcards for very short queries
-        if (trimmedQuery.length === 1) {
-          processedQuery = trimmedQuery + '*';
-        } else {
-          processedQuery = trimmedQuery;
-        }
+        // For items and other types, use the trimmed query as-is without wildcard modification
+        processedQuery = trimmedQuery;
       }
     }
 

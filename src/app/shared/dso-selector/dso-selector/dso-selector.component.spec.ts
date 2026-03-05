@@ -203,6 +203,19 @@ describe('DSOSelectorComponent', () => {
           true
         );
       });
+
+      it('should pass through internal resource ID queries unchanged', () => {
+        const resourceIdQuery = component.getCurrentDSOQuery();
+        component.search(resourceIdQuery, 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: resourceIdQuery  // Should not be processed through title field logic
+          }),
+          null,
+          true
+        );
+      });
     });
 
     describe('for COLLECTION types', () => {
@@ -233,6 +246,19 @@ describe('DSOSelectorComponent', () => {
           true
         );
       });
+
+      it('should pass through internal resource ID queries unchanged', () => {
+        const resourceIdQuery = component.getCurrentDSOQuery();
+        component.search(resourceIdQuery, 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: resourceIdQuery  // Should not be processed through title field logic
+          }),
+          null,
+          true
+        );
+      });
     });
 
     describe('for ITEM types', () => {
@@ -240,12 +266,12 @@ describe('DSOSelectorComponent', () => {
         component.types = [DSpaceObjectType.ITEM];
       });
 
-      it('should add wildcard for single character queries', () => {
+      it('should pass through single character queries unchanged', () => {
         component.search('a', 1);
 
         expect(searchService.search).toHaveBeenCalledWith(
           jasmine.objectContaining({
-            query: 'a*'
+            query: 'a'
           }),
           null,
           true
@@ -288,17 +314,14 @@ describe('DSOSelectorComponent', () => {
         component.types = [DSpaceObjectType.COMMUNITY];
       });
 
-      it('should handle whitespace-only query as empty query', () => {
+      it('should handle whitespace-only query with raw semantics', () => {
         component.sort = new SortOptions('dc.title', SortDirection.ASC);
         component.search('   ', 1);
 
         expect(searchService.search).toHaveBeenCalledWith(
           jasmine.objectContaining({
-            query: '',
-            sort: jasmine.objectContaining({
-              field: 'dc.title',
-              direction: SortDirection.ASC,
-            })
+            query: '   ',
+            sort: null  // Raw query semantics: whitespace is considered a query, so no default sort
           }),
           null,
           true
