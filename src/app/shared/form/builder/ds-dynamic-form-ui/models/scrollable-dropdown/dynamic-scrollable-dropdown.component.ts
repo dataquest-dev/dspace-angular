@@ -3,7 +3,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -30,7 +29,6 @@ import { FormFieldMetadataValueObject } from '../../../models/form-field-metadat
 import { FindAllData } from '../../../../../../core/data/base/find-all-data';
 import { CacheableObject } from '../../../../../../core/cache/cacheable-object.model';
 import { RemoteData } from '../../../../../../core/data/remote-data';
-import { UniqueIdRegistry } from '../../unique-id-registry';
 
 /**
  * Component representing a dropdown input field
@@ -40,7 +38,7 @@ import { UniqueIdRegistry } from '../../unique-id-registry';
   styleUrls: ['./dynamic-scrollable-dropdown.component.scss'],
   templateUrl: './dynamic-scrollable-dropdown.component.html'
 })
-export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyComponent implements OnInit, OnDestroy {
+export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyComponent implements OnInit {
   @ViewChild('dropdownMenu', { read: ElementRef }) dropdownMenu: ElementRef;
 
   @Input() bindId = true;
@@ -58,29 +56,6 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
   public inputText: string = null;
   public selectedIndex = 0;
   public acceptableKeys = ['Space', 'NumpadMultiply', 'NumpadAdd', 'NumpadSubtract', 'NumpadDecimal', 'Semicolon', 'Equal', 'Comma', 'Minus', 'Period', 'Quote', 'Backquote'];
-
-  /**
-   * The unique element ID assigned to this component instance.
-   */
-  private _uniqueId: string;
-
-  /**
-   * The base element ID before deduplication.
-   */
-  private _baseId: string;
-
-  /**
-   * Returns a unique element ID for this scrollable dropdown instance.
-   * Prevents duplicate HTML IDs when the same model appears in multiple form groups.
-   */
-  get id(): string {
-    if (!this._uniqueId) {
-      this._baseId = this.layoutService.getElementId(this.model);
-      const instanceKey = `${this._baseId}_${this.model?.parent?.id || 'root'}`;
-      this._uniqueId = UniqueIdRegistry.register(this._baseId, instanceKey);
-    }
-    return this._uniqueId;
-  }
 
   /**
    * If true the component can rely on the findAll method for data loading.
@@ -316,16 +291,6 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
     }
 
     this.currentValue = result;
-  }
-
-  /**
-   * Release the unique ID from the registry when the component is destroyed.
-   */
-  ngOnDestroy(): void {
-    if (this._uniqueId && this._baseId) {
-      const instanceKey = `${this._baseId}_${this.model?.parent?.id || 'root'}`;
-      UniqueIdRegistry.release(instanceKey);
-    }
   }
 
 }

@@ -224,6 +224,13 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    */
   private _baseId: string;
 
+  /**
+   * The instance key used when registering with UniqueIdRegistry.
+   * Stored so that ngOnDestroy can release with the exact same key,
+   * even if the model's parent has been reassigned.
+   */
+  private _instanceKey: string;
+
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('templates') inputTemplateList: QueryList<DynamicTemplateDirective>;
@@ -276,8 +283,8 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   get id(): string {
     if (!this._uniqueId) {
       this._baseId = this.layoutService.getElementId(this.model);
-      const instanceKey = `${this._baseId}_${this.model?.parent?.id || 'root'}`;
-      this._uniqueId = UniqueIdRegistry.register(this._baseId, instanceKey);
+      this._instanceKey = `${this._baseId}_${this.model?.parent?.id || 'root'}`;
+      this._uniqueId = UniqueIdRegistry.register(this._baseId, this._instanceKey);
     }
     return this._uniqueId;
   }
@@ -436,6 +443,11 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
       // so that the child's rendered element id matches the container's label[for].
       // Without this, child components use layoutService.getElementId(model) which
       // returns the base ID, while the container may return a suffixed ID from UniqueIdRegistry.
+      //
+      // Object.defineProperty is used because many child components come from the
+      // third-party @ng-dynamic-forms/ui-ng-bootstrap library and cannot be modified
+      // to accept an @Input() override. The instance-level property takes precedence
+      // over the prototype getter in all child components (both third-party and custom).
       if (this.componentRef?.instance) {
         const uniqueId = this.id;
         Object.defineProperty(this.componentRef.instance, 'id', {
@@ -542,9 +554,8 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    * Unsubscribe from all subscriptions and release the unique ID from the registry.
    */
   ngOnDestroy(): void {
-    if (this._uniqueId && this._baseId) {
-      const instanceKey = `${this._baseId}_${this.model?.parent?.id || 'root'}`;
-      UniqueIdRegistry.release(instanceKey);
+    if (this._instanceKey) {
+      UniqueIdRegistry.release(this._instanceKey);
     }
     this.subs
       .filter((sub) => hasValue(sub))

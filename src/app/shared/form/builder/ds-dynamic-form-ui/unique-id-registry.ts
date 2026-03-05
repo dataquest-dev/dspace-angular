@@ -8,7 +8,7 @@
  * - First occurrence: keeps the original base ID (backward compatible).
  * - Subsequent occurrences: appends a numeric suffix (`_1`, `_2`, etc.).
  *
- * Released suffixes are recycled so that a single live instance always receives the base ID.
+ * Released suffixes are recycled and may be assigned to future registrations.
  * Components must call `register()` during initialization and `release()` during destruction.
  */
 export class UniqueIdRegistry {
