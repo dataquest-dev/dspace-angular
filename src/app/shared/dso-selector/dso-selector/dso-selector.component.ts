@@ -231,12 +231,12 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
     const trimmedQuery = rawQuery.trim();
     const hasQuery = isNotEmpty(rawQuery);
 
-    // Enable partial matching by adding wildcard for any non-empty query
-    let processedQuery = query;
-    if (hasValue(query) && query.trim().length > 0) {
-      const trimmedQuery = query.trim();
+    // default sort is only used when there is no query
+    let effectiveSort = hasQuery ? null : this.sort;
+
+    let processedQuery = rawQuery;
+    if (isNotEmpty(trimmedQuery)) {
       // Bypass query rewriting for internal Solr field queries (e.g. search.resourceid:<uuid>)
-      // so that getCurrentDSOQuery() results are passed through unchanged.
       const isInternalSolrQuery = /^\w[\w.]*:/.test(trimmedQuery);
       if (isInternalSolrQuery) {
         processedQuery = trimmedQuery;
