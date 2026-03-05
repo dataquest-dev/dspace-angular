@@ -241,21 +241,7 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
         processedQuery = trimmedQuery;
       // For communities and collections, search only at the beginning of titles
       } else if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
-        // Use title field with prefix matching to match only at the beginning
-        // This searches specifically in the title field for words that start with the query
-        // Properly escape and group multi-term queries to ensure all terms are scoped to dc.title
-        const escapedQuery = this.escapeLuceneSpecialCharacters(trimmedQuery);
-        const terms = escapedQuery.split(/\s+/).filter(term => term.length > 0);
-
-        if (terms.length === 1) {
-          // Single term: apply wildcard directly
-          processedQuery = `dc.title:${terms[0]}*`;
-        } else {
-          // Multiple terms: group all terms and apply wildcard only to the last term
-          const allButLast = terms.slice(0, -1).map(term => `"${term}"`).join(' AND ');
-          const lastTerm = terms[terms.length - 1];
-          processedQuery = `dc.title:(${allButLast} AND ${lastTerm}*)`;
-        }
+        processedQuery = this.buildTitlePrefixQuery(trimmedQuery);
       } else {
         // For items and other types, use the query as-is but consider wildcards for very short queries
         if (trimmedQuery.length === 1) {
@@ -336,6 +322,30 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
         this.updateList(rd);
       });
     }
+  }
+
+  /**
+   * Builds a dc.title partial matching query with wildcard support.
+   * Single term: dc.title:term*
+   * Multiple terms: dc.title:("term1" AND term2*)
+   * @param query The raw user input query
+   * @returns The processed query string with dc.title prefix matching, or the original query if empty
+   */
+  protected buildTitlePrefixQuery(query: string): string {
+    if (hasValue(query) && query.trim().length > 0) {
+      const trimmedQuery = query.trim();
+      const escapedQuery = this.escapeLuceneSpecialCharacters(trimmedQuery);
+      const terms = escapedQuery.split(/\s+/).filter(term => term.length > 0);
+
+      if (terms.length === 1) {
+        return `dc.title:${terms[0]}*`;
+      } else {
+        const allButLast = terms.slice(0, -1).map(term => `"${term}"`).join(' AND ');
+        const lastTerm = terms[terms.length - 1];
+        return `dc.title:(${allButLast} AND ${lastTerm}*)`;
+      }
+    }
+    return query;
   }
 
   /**

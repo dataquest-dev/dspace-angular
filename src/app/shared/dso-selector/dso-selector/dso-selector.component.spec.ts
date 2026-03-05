@@ -235,6 +235,24 @@ describe('DSOSelectorComponent', () => {
       });
     });
 
+    describe('for COMMUNITY/COLLECTION types', () => {
+      beforeEach(() => {
+        component.types = [DSpaceObjectType.COMMUNITY];
+      });
+
+      it('should pass through internal resource ID queries unchanged', () => {
+        component.search('search.resourceid:test-uuid-ford-sose', 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: 'search.resourceid:test-uuid-ford-sose'
+          }),
+          null,
+          true
+        );
+      });
+    });
+
     describe('for ITEM types', () => {
       beforeEach(() => {
         component.types = [DSpaceObjectType.ITEM];
