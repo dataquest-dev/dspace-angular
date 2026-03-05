@@ -8,27 +8,28 @@
  * - First occurrence: keeps the original base ID (backward compatible).
  * - Subsequent occurrences: appends a numeric suffix (`_1`, `_2`, etc.).
  *
+ * Released suffixes are recycled so that a single live instance always receives the base ID.
  * Components must call `register()` during initialization and `release()` during destruction.
  */
 export class UniqueIdRegistry {
 
   /**
-   * Monotonic counter per base ID. Always increments, never decrements,
-   * so released suffixes are never reissued to a different instance.
-   * Key = base element ID, Value = next suffix to assign.
+   * Tracks which suffixes are currently in use for each base ID.
+   * Key = base element ID, Value = set of active suffix numbers.
    */
-  private static nextSuffix: Map<string, number> = new Map<string, number>();
+  private static activeSuffixes: Map<string, Set<number>> = new Map<string, Set<number>>();
 
   /**
-   * Tracks the assigned suffix for each component instance.
-   * Key = a unique instance token (component + model-based), Value = the suffix index assigned.
+   * Tracks the assigned base ID and suffix for each component instance.
+   * Key = a unique instance token (component + model-based),
+   * Value = { baseId, suffix } assigned to that instance.
    */
-  private static instanceSuffixes: Map<string, number> = new Map<string, number>();
+  private static instances: Map<string, { baseId: string; suffix: number }> = new Map<string, { baseId: string; suffix: number }>();
 
   /**
    * Register a base ID and return a unique ID for this instance.
    * The first occurrence returns the base ID unchanged.
-   * Subsequent occurrences return `baseId_N` where N is the occurrence index (1, 2, ...).
+   * Subsequent occurrences return `baseId_N` where N is the lowest available suffix (1, 2, ...).
    *
    * @param baseId The base element ID (from getElementId).
    * @param instanceKey A unique key identifying this specific component instance.
@@ -36,31 +37,49 @@ export class UniqueIdRegistry {
    */
   static register(baseId: string, instanceKey: string): string {
     // If this instance was already registered, return its existing ID
-    if (this.instanceSuffixes.has(instanceKey)) {
-      const suffix = this.instanceSuffixes.get(instanceKey);
-      return suffix === 0 ? baseId : `${baseId}_${suffix}`;
+    const existing = this.instances.get(instanceKey);
+    if (existing) {
+      return existing.suffix === 0 ? baseId : `${baseId}_${existing.suffix}`;
     }
 
-    const suffix = this.nextSuffix.get(baseId) || 0;
-    this.nextSuffix.set(baseId, suffix + 1);
-    this.instanceSuffixes.set(instanceKey, suffix);
+    // Find the lowest available suffix for this base ID
+    const active = this.activeSuffixes.get(baseId) || new Set<number>();
+    let suffix = 0;
+    while (active.has(suffix)) {
+      suffix++;
+    }
+
+    active.add(suffix);
+    this.activeSuffixes.set(baseId, active);
+    this.instances.set(instanceKey, { baseId, suffix });
     return suffix === 0 ? baseId : `${baseId}_${suffix}`;
   }
 
   /**
    * Release the unique ID when a component is destroyed.
+   * The released suffix becomes available for reuse by future registrations.
    *
    * @param instanceKey The unique key used during registration.
    */
   static release(instanceKey: string): void {
-    this.instanceSuffixes.delete(instanceKey);
+    const entry = this.instances.get(instanceKey);
+    if (entry) {
+      const active = this.activeSuffixes.get(entry.baseId);
+      if (active) {
+        active.delete(entry.suffix);
+        if (active.size === 0) {
+          this.activeSuffixes.delete(entry.baseId);
+        }
+      }
+    }
+    this.instances.delete(instanceKey);
   }
 
   /**
    * Clear the entire registry. Used in tests to reset state between specs.
    */
   static clear(): void {
-    this.nextSuffix.clear();
-    this.instanceSuffixes.clear();
+    this.activeSuffixes.clear();
+    this.instances.clear();
   }
 }
