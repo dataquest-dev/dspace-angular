@@ -15,6 +15,9 @@ import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
 import { DSOBreadcrumbsService } from '../../../core/breadcrumbs/dso-breadcrumbs.service';
 import { DSpaceObjectType } from '../../../core/shared/dspace-object-type.model';
 
+/** Separator used when joining hierarchical breadcrumb labels into a single parent-title string. */
+export const BREADCRUMB_SEPARATOR = ' / ';
+
 @Component({
   selector: 'ds-sidebar-search-list-element',
   templateUrl: './sidebar-search-list-element.component.html'
@@ -84,7 +87,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
           // Remove the last breadcrumb (current item) and join the rest with ' / '
           const parentBreadcrumbs = breadcrumbs.slice(0, -1);
           return parentBreadcrumbs.length > 0
-            ? parentBreadcrumbs.map(crumb => crumb.text).join(' / ')
+            ? parentBreadcrumbs.map(crumb => crumb.text).join(BREADCRUMB_SEPARATOR)
             : undefined;
         }),
         shareReplay({ bufferSize: 1, refCount: true }),

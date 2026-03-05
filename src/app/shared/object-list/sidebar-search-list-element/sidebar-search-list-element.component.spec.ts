@@ -14,6 +14,8 @@ import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
 import { DSOBreadcrumbsService } from '../../../core/breadcrumbs/dso-breadcrumbs.service';
 import { Breadcrumb } from '../../../breadcrumbs/breadcrumb/breadcrumb.model';
 import { of as observableOf } from 'rxjs';
+import { BREADCRUMB_SEPARATOR } from './sidebar-search-list-element.component';
+import { ResourceType } from '../../../core/shared/resource-type';
 
 export function createSidebarSearchListElementTests(
   componentClass: any,
@@ -22,15 +24,24 @@ export function createSidebarSearchListElementTests(
   expectedParentTitle: string,
   expectedTitle: string,
   expectedDescription: string,
-  extraProviders: any[] = []
+  extraProviders: any[] = [],
+  assertBreadcrumbsUsed = false
 ) {
   return () => {
     let component;
     let fixture: ComponentFixture<any>;
 
     let linkService;
+    let dsoBreadcrumbsService;
 
     beforeEach(waitForAsync(() => {
+      // Propagate the class-level static ResourceType onto the instance so that
+      // the community/collection branch in getParentTitle() is reached correctly.
+      const staticType: ResourceType | undefined = (object.indexableObject.constructor as any).type;
+      if (staticType) {
+        (object.indexableObject as any).type = staticType;
+      }
+
       linkService = jasmine.createSpyObj('linkService', {
         resolveLink: Object.assign(new HALResource(), {
           [object.indexableObject.getParentLinkKey()]: createSuccessfulRemoteDataObject$(parent)
@@ -41,7 +52,7 @@ export function createSidebarSearchListElementTests(
         breadcrumbs.push(new Breadcrumb(expectedParentTitle, ''));
       }
       breadcrumbs.push(new Breadcrumb(expectedTitle, ''));
-      const dsoBreadcrumbsService = jasmine.createSpyObj('dsoBreadcrumbsService', {
+      dsoBreadcrumbsService = jasmine.createSpyObj('dsoBreadcrumbsService', {
         getBreadcrumbs: observableOf(breadcrumbs)
       });
       TestBed.configureTestingModule({
@@ -73,6 +84,18 @@ export function createSidebarSearchListElementTests(
       });
     });
 
+    if (assertBreadcrumbsUsed) {
+      it('should delegate to DSOBreadcrumbsService.getBreadcrumbs to resolve the parent title', (done) => {
+        component.parentTitle$.subscribe(() => {
+          expect(dsoBreadcrumbsService.getBreadcrumbs).toHaveBeenCalledWith(
+            object.indexableObject,
+            ''
+          );
+          done();
+        });
+      });
+    }
+
     it('should contain the correct title', () => {
       expect(component.dsoTitle).toEqual(expectedTitle);
     });
@@ -86,7 +109,7 @@ export function createSidebarSearchListElementTests(
 /**
  * Shared test suite that verifies the hierarchical parent-path behaviour for community/collection
  * list elements: when the DSO has multiple ancestor breadcrumbs the component must join them with
- * ' / ' and must delegate to {@link DSOBreadcrumbsService#getBreadcrumbs} rather than the simple
+ * {@link BREADCRUMB_SEPARATOR} and must delegate to {@link DSOBreadcrumbsService#getBreadcrumbs} rather than the simple
  * parent link.
  *
  * @param componentClass  The component under test (community or collection sidebar element)
@@ -112,7 +135,22 @@ export function createHierarchicalParentTitleTests(
     const breadcrumbs = [rootBreadcrumb, parentBreadcrumb, currentBreadcrumb];
 
     beforeEach(waitForAsync(() => {
-      const linkService = jasmine.createSpyObj('linkService', { resolveLink: {} });
+      // Propagate the class-level static ResourceType onto the instance so that
+      // the community/collection branch in getParentTitle() is reached correctly.
+      const staticType: ResourceType | undefined = (object.indexableObject.constructor as any).type;
+      if (staticType) {
+        (object.indexableObject as any).type = staticType;
+      }
+
+      // Set up the linkService with a safe observable for the parent link so that
+      // even if the type-check guard ever regresses, the fallback getParent() path
+      // does not crash with "Cannot read properties of undefined (reading 'pipe')".
+      const parentLinkKey = (object.indexableObject as ChildHALResource).getParentLinkKey() as string;
+      const linkService = jasmine.createSpyObj('linkService', {
+        resolveLink: Object.assign(new HALResource(), {
+          [parentLinkKey]: observableOf(undefined)
+        })
+      });
       dsoBreadcrumbsService = jasmine.createSpyObj('dsoBreadcrumbsService', {
         getBreadcrumbs: observableOf(breadcrumbs)
       });
@@ -139,9 +177,9 @@ export function createHierarchicalParentTitleTests(
       fixture.detectChanges();
     });
 
-    it('should join multiple ancestor breadcrumbs with " / " as the parent title', (done) => {
+    it('should join multiple ancestor breadcrumbs with BREADCRUMB_SEPARATOR as the parent title', (done) => {
       component.parentTitle$.subscribe((title) => {
-        expect(title).toEqual('Root / Parent');
+        expect(title).toEqual(['Root', 'Parent'].join(BREADCRUMB_SEPARATOR));
         done();
       });
     });

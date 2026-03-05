@@ -33,7 +33,7 @@ const parent = Object.assign(new Community(), {
 });
 
 describe('CollectionSidebarSearchListElementComponent',
-  createSidebarSearchListElementTests(CollectionSidebarSearchListElementComponent, object, parent, 'parent title', 'title', 'description')
+  createSidebarSearchListElementTests(CollectionSidebarSearchListElementComponent, object, parent, 'parent title', 'title', 'description', [], true)
 );
 
 describe('CollectionSidebarSearchListElementComponent - hierarchical path',
