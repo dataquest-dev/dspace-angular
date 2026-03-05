@@ -11,6 +11,9 @@ import { createSuccessfulRemoteDataObject$ } from '../../remote-data.utils';
 import { HALResource } from '../../../core/shared/hal-resource.model';
 import { ChildHALResource } from '../../../core/shared/child-hal-resource.model';
 import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
+import { DSOBreadcrumbsService } from '../../../core/breadcrumbs/dso-breadcrumbs.service';
+import { Breadcrumb } from '../../../breadcrumbs/breadcrumb/breadcrumb.model';
+import { of as observableOf } from 'rxjs';
 
 export function createSidebarSearchListElementTests(
   componentClass: any,
@@ -33,12 +36,21 @@ export function createSidebarSearchListElementTests(
           [object.indexableObject.getParentLinkKey()]: createSuccessfulRemoteDataObject$(parent)
         })
       });
+      const breadcrumbs: Breadcrumb[] = [];
+      if (expectedParentTitle) {
+        breadcrumbs.push(new Breadcrumb(expectedParentTitle, ''));
+      }
+      breadcrumbs.push(new Breadcrumb(expectedTitle, ''));
+      const dsoBreadcrumbsService = jasmine.createSpyObj('dsoBreadcrumbsService', {
+        getBreadcrumbs: observableOf(breadcrumbs)
+      });
       TestBed.configureTestingModule({
         declarations: [componentClass, VarDirective],
         imports: [TranslateModule.forRoot(), RouterTestingModule.withRoutes([])],
         providers: [
           { provide: TruncatableService, useValue: {} },
           { provide: LinkService, useValue: linkService },
+          { provide: DSOBreadcrumbsService, useValue: dsoBreadcrumbsService },
           DSONameService,
           ...extraProviders
         ],

@@ -10,6 +10,7 @@ import { TruncatableService } from '../../../../../shared/truncatable/truncatabl
 import { LinkService } from '../../../../../core/cache/builders/link.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DSONameService } from '../../../../../core/breadcrumbs/dso-name.service';
+import { DSOBreadcrumbsService } from '../../../../../core/breadcrumbs/dso-breadcrumbs.service';
 
 @listableObjectComponent('PersonSearchResult', ViewMode.ListElement, Context.SideBarSearchModal)
 @listableObjectComponent('PersonSearchResult', ViewMode.ListElement, Context.SideBarSearchModalCurrent)
@@ -26,8 +27,9 @@ export class PersonSidebarSearchListElementComponent extends SidebarSearchListEl
               protected linkService: LinkService,
               protected translateService: TranslateService,
               public dsoNameService: DSONameService,
+              protected dsoBreadcrumbsService: DSOBreadcrumbsService,
   ) {
-    super(truncatableService, linkService, dsoNameService);
+    super(truncatableService, linkService, dsoNameService, dsoBreadcrumbsService);
   }
 
   /**

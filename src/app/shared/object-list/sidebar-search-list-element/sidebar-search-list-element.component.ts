@@ -1,7 +1,7 @@
 import { SearchResult } from '../../search/models/search-result.model';
 import { DSpaceObject } from '../../../core/shared/dspace-object.model';
 import { SearchResultListElementComponent } from '../search-result-list-element/search-result-list-element.component';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { hasValue, isNotEmpty } from '../../empty.util';
 import { Observable, of as observableOf } from 'rxjs';
 import { TruncatableService } from '../../truncatable/truncatable.service';
@@ -12,6 +12,8 @@ import { followLink } from '../../utils/follow-link-config.model';
 import { RemoteData } from '../../../core/data/remote-data';
 import { Context } from '../../../core/shared/context.model';
 import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
+import { DSOBreadcrumbsService } from '../../../core/breadcrumbs/dso-breadcrumbs.service';
+import { DSpaceObjectType } from '../../../core/shared/dspace-object-type.model';
 
 @Component({
   selector: 'ds-sidebar-search-list-element',
@@ -22,7 +24,7 @@ import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
  * It displays the name of the parent, title and description of the object. All of which are customizable in the child
  * component by overriding the relevant methods of this component
  */
-export class SidebarSearchListElementComponent<T extends SearchResult<K>, K extends DSpaceObject> extends SearchResultListElementComponent<T, K> {
+export class SidebarSearchListElementComponent<T extends SearchResult<K>, K extends DSpaceObject> extends SearchResultListElementComponent<T, K> implements OnInit {
   /**
    * Observable for the title of the parent object (displayed above the object's title)
    */
@@ -36,6 +38,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   public constructor(protected truncatableService: TruncatableService,
                      protected linkService: LinkService,
                      public dsoNameService: DSONameService,
+                     protected dsoBreadcrumbsService: DSOBreadcrumbsService,
   ) {
     super(truncatableService, dsoNameService, null);
   }
@@ -59,10 +62,26 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   }
 
   /**
-   * Get the title of the object's parent
-   * Retrieve the parent by using the object's parent link and retrieving its 'dc.title' metadata
+   * Get the title of the object's parent(s)
+   * For communities and collections, show the full hierarchical path excluding the current item
+   * For other objects, show just the immediate parent
    */
   getParentTitle(): Observable<string> {
+    // For communities and collections, build hierarchical path
+    const typeValue = (this.dso as any).type?.value ?? (this.dso as any).type;
+    if (this.dso && (typeValue === DSpaceObjectType.COMMUNITY.toLowerCase() || typeValue === DSpaceObjectType.COLLECTION.toLowerCase())) {
+      return this.dsoBreadcrumbsService.getBreadcrumbs(this.dso as any, '').pipe(
+        map(breadcrumbs => {
+          // Remove the last breadcrumb (current item) and join the rest with ' / '
+          const parentBreadcrumbs = breadcrumbs.slice(0, -1);
+          return parentBreadcrumbs.length > 0
+            ? parentBreadcrumbs.map(crumb => crumb.text).join(' / ')
+            : undefined;
+        })
+      );
+    }
+
+    // For other DSO types, use the simple parent
     return this.getParent().pipe(
       map((parentRD: RemoteData<DSpaceObject>) => {
         return hasValue(parentRD) && hasValue(parentRD.payload) ? this.dsoNameService.getName(parentRD.payload) : undefined;
