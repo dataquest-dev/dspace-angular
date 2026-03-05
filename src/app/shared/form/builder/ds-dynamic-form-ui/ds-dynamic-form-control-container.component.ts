@@ -431,6 +431,18 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
         (instance as any).formModel = this.formModel;
         (instance as any).formGroup = this.formGroup;
       }
+
+      // Propagate the container's unique ID to the child form control component
+      // so that the child's rendered element id matches the container's label[for].
+      // Without this, child components use layoutService.getElementId(model) which
+      // returns the base ID, while the container may return a suffixed ID from UniqueIdRegistry.
+      if (this.componentRef?.instance) {
+        const uniqueId = this.id;
+        Object.defineProperty(this.componentRef.instance, 'id', {
+          get: () => uniqueId,
+          configurable: true,
+        });
+      }
     }
   }
 
