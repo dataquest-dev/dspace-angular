@@ -242,11 +242,9 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
       const isInternalSolrQuery = /^\w[\w.]*:/.test(trimmedQuery);
       if (isInternalSolrQuery) {
         processedQuery = trimmedQuery;
-      // For communities and collections, search only at the beginning of titles
       } else if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
         processedQuery = this.buildTitlePrefixQuery(trimmedQuery);
       } else {
-        // For items and other types, use the trimmed query as-is without wildcard modification
         processedQuery = trimmedQuery;
       }
     }
