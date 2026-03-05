@@ -11,12 +11,15 @@ import { DSpaceObject } from '../../../../core/shared/dspace-object.model';
 import { buildPaginatedList, PaginatedList } from '../../../../core/data/paginated-list.model';
 import { followLink } from '../../../utils/follow-link-config.model';
 import { RemoteData } from '../../../../core/data/remote-data';
-import { hasValue, isNotEmpty } from '../../../empty.util';
+import { hasNoValue, hasValue, isNotEmpty } from '../../../empty.util';
 import { NotificationsService } from '../../../notifications/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Collection } from '../../../../core/shared/collection.model';
 import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
 import { FindListOptions } from '../../../../core/data/find-list-options.model';
+import { NotificationType } from '../../../notifications/models/notification-type';
+import { ListableNotificationObject } from '../../../object-list/listable-notification-object/listable-notification-object.model';
+import { LISTABLE_NOTIFICATION_OBJECT } from '../../../object-list/listable-notification-object/listable-notification-object.resource-type';
 
 @Component({
   selector: 'ds-authorized-collection-selector',
@@ -81,9 +84,6 @@ export class AuthorizedCollectionSelectorComponent extends DSOSelectorComponent 
         let searchResults = rd.payload.page.map((col) =>
           Object.assign(new CollectionSearchResult(), { indexableObject: col })
         );
-        // The findSubmitAuthorized endpoint does full-text search across all fields,
-        // which returns false positives. Apply client-side title prefix filtering
-        // to match the same behavior as community/collection creation selectors.
         if (isNotEmpty(query)) {
           const lowerQuery = query.trim().toLowerCase();
           searchResults = searchResults.filter((result) => {
@@ -96,5 +96,31 @@ export class AuthorizedCollectionSelectorComponent extends DSOSelectorComponent 
         });
       })
     );
+  }
+
+  /**
+   * Override updateList to derive hasNextPage from page-based pagination
+   * (currentPage < totalPages) instead of totalElements, because client-side
+   * filtering makes totalElements unreliable for next-page detection.
+   */
+  updateList(rd: RemoteData<PaginatedList<SearchResult<DSpaceObject>>>) {
+    this.loading = false;
+    const currentEntries = this.listEntries$.getValue();
+    if (rd.hasSucceeded) {
+      if (hasNoValue(currentEntries)) {
+        this.listEntries$.next(rd.payload.page);
+      } else {
+        this.listEntries$.next([...currentEntries, ...rd.payload.page]);
+      }
+      // Use page-based check: currentPage is 0-based, totalPages is 1-based
+      const pageInfo = rd.payload.pageInfo;
+      this.hasNextPage = hasValue(pageInfo) && pageInfo.currentPage < (pageInfo.totalPages - 1);
+    } else {
+      this.listEntries$.next([
+        ...(hasNoValue(currentEntries) ? [] : this.listEntries$.getValue()),
+        new ListableNotificationObject(NotificationType.Error, 'dso-selector.results-could-not-be-retrieved', LISTABLE_NOTIFICATION_OBJECT.value)
+      ]);
+      this.hasNextPage = false;
+    }
   }
 }

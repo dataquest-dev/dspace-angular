@@ -205,8 +205,10 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
       } else {
         this.listEntries$.next([...currentEntries, ...rd.payload.page]);
       }
-      // Check if there are more pages available after the current one
-      this.hasNextPage = rd.payload.totalElements > this.listEntries$.getValue().length;
+      // Check if the server reports a next page, using page-based comparison so that
+      // client-side filtering (which reduces list length without changing totalPages)
+      // does not cause repeated fetching past the server's last page.
+      this.hasNextPage = rd.payload.currentPage < rd.payload.totalPages;
     } else {
       this.listEntries$.next([...(hasNoValue(currentEntries) ? [] : this.listEntries$.getValue()), new ListableNotificationObject(NotificationType.Error, 'dso-selector.results-could-not-be-retrieved', LISTABLE_NOTIFICATION_OBJECT.value)]);
       this.hasNextPage = false;
@@ -229,12 +231,12 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
   search(query: string, page: number, useCache: boolean = true): Observable<RemoteData<PaginatedList<SearchResult<DSpaceObject>>>> {
     const rawQuery = query ?? '';
     const trimmedQuery = rawQuery.trim();
-    const hasQuery = isNotEmpty(rawQuery);
+    const hasQuery = isNotEmpty(trimmedQuery);
 
     // default sort is only used when there is no query
     let effectiveSort = hasQuery ? null : this.sort;
 
-    let processedQuery = rawQuery;
+    let processedQuery = trimmedQuery;
     if (isNotEmpty(trimmedQuery)) {
       // Bypass query rewriting for internal Solr field queries (e.g. search.resourceid:<uuid>)
       const isInternalSolrQuery = /^\w[\w.]*:/.test(trimmedQuery);

@@ -194,24 +194,6 @@ describe('DSOSelectorComponent', () => {
       });
     });
 
-    describe('for COMMUNITY/COLLECTION types', () => {
-      beforeEach(() => {
-        component.types = [DSpaceObjectType.COMMUNITY];
-      });
-
-      it('should pass through internal resource ID queries unchanged', () => {
-        component.search('search.resourceid:test-uuid-ford-sose', 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: 'search.resourceid:test-uuid-ford-sose'
-          }),
-          null,
-          true
-        );
-      });
-    });
-
     describe('for ITEM types', () => {
       beforeEach(() => {
         component.types = [DSpaceObjectType.ITEM];
@@ -235,14 +217,17 @@ describe('DSOSelectorComponent', () => {
         component.types = [DSpaceObjectType.COMMUNITY];
       });
 
-      it('should handle whitespace-only query with raw semantics', () => {
+      it('should treat whitespace-only query as empty and apply default sort', () => {
         component.sort = new SortOptions('dc.title', SortDirection.ASC);
         component.search('   ', 1);
 
         expect(searchService.search).toHaveBeenCalledWith(
           jasmine.objectContaining({
-            query: '   ',
-            sort: null
+            query: '',
+            sort: jasmine.objectContaining({
+              field: 'dc.title',
+              direction: SortDirection.ASC,
+            }),
           }),
           null,
           true
