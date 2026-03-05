@@ -82,3 +82,78 @@ export function createSidebarSearchListElementTests(
     });
   };
 }
+
+/**
+ * Shared test suite that verifies the hierarchical parent-path behaviour for community/collection
+ * list elements: when the DSO has multiple ancestor breadcrumbs the component must join them with
+ * ' / ' and must delegate to {@link DSOBreadcrumbsService#getBreadcrumbs} rather than the simple
+ * parent link.
+ *
+ * @param componentClass  The component under test (community or collection sidebar element)
+ * @param object          A {@link SearchResult} whose `indexableObject` is a Community/Collection
+ * @param expectedTitle   The dc.title of the current item (last breadcrumb)
+ * @param extraProviders  Any additional providers required by the component
+ */
+export function createHierarchicalParentTitleTests(
+  componentClass: any,
+  object: SearchResult<DSpaceObject & ChildHALResource>,
+  expectedTitle: string,
+  extraProviders: any[] = []
+) {
+  return () => {
+    let component;
+    let fixture: ComponentFixture<any>;
+    let dsoBreadcrumbsService;
+
+    // Three-level hierarchy:  Root → Parent → Current
+    const rootBreadcrumb   = new Breadcrumb('Root',    '');
+    const parentBreadcrumb = new Breadcrumb('Parent',  '');
+    const currentBreadcrumb = new Breadcrumb(expectedTitle, '');
+    const breadcrumbs = [rootBreadcrumb, parentBreadcrumb, currentBreadcrumb];
+
+    beforeEach(waitForAsync(() => {
+      const linkService = jasmine.createSpyObj('linkService', { resolveLink: {} });
+      dsoBreadcrumbsService = jasmine.createSpyObj('dsoBreadcrumbsService', {
+        getBreadcrumbs: observableOf(breadcrumbs)
+      });
+
+      TestBed.configureTestingModule({
+        declarations: [componentClass, VarDirective],
+        imports: [TranslateModule.forRoot(), RouterTestingModule.withRoutes([])],
+        providers: [
+          { provide: TruncatableService, useValue: {} },
+          { provide: LinkService, useValue: linkService },
+          { provide: DSOBreadcrumbsService, useValue: dsoBreadcrumbsService },
+          DSONameService,
+          ...extraProviders
+        ],
+        schemas: [NO_ERRORS_SCHEMA]
+      }).compileComponents();
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(componentClass);
+      component = fixture.componentInstance;
+      component.object = object;
+      component.ngOnInit();
+      fixture.detectChanges();
+    });
+
+    it('should join multiple ancestor breadcrumbs with " / " as the parent title', (done) => {
+      component.parentTitle$.subscribe((title) => {
+        expect(title).toEqual('Root / Parent');
+        done();
+      });
+    });
+
+    it('should call DSOBreadcrumbsService.getBreadcrumbs to build the hierarchy path', (done) => {
+      component.parentTitle$.subscribe(() => {
+        expect(dsoBreadcrumbsService.getBreadcrumbs).toHaveBeenCalledWith(
+          object.indexableObject,
+          ''
+        );
+        done();
+      });
+    });
+  };
+}

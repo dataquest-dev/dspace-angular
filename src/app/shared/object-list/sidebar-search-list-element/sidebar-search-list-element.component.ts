@@ -6,7 +6,7 @@ import { hasValue, isNotEmpty } from '../../empty.util';
 import { Observable, of as observableOf } from 'rxjs';
 import { TruncatableService } from '../../truncatable/truncatable.service';
 import { LinkService } from '../../../core/cache/builders/link.service';
-import { find, map } from 'rxjs/operators';
+import { find, map, shareReplay } from 'rxjs/operators';
 import { ChildHALResource } from '../../../core/shared/child-hal-resource.model';
 import { followLink } from '../../utils/follow-link-config.model';
 import { RemoteData } from '../../../core/data/remote-data';
@@ -62,22 +62,32 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   }
 
   /**
+   * Type guard that narrows a {@link DSpaceObject} to {@link ChildHALResource} & {@link DSpaceObject},
+   * which is the signature expected by {@link DSOBreadcrumbsService#getBreadcrumbs}.
+   */
+  private isChildHALResource(dso: DSpaceObject): dso is ChildHALResource & DSpaceObject {
+    return typeof (dso as unknown as ChildHALResource).getParentLinkKey === 'function';
+  }
+
+  /**
    * Get the title of the object's parent(s)
    * For communities and collections, show the full hierarchical path excluding the current item
    * For other objects, show just the immediate parent
    */
   getParentTitle(): Observable<string> {
-    // For communities and collections, build hierarchical path
-    const typeValue = (this.dso as any).type?.value ?? (this.dso as any).type;
+    // Fallback handles cases where type is a raw string rather than a ResourceType instance
+    const typeValue = this.dso.type?.value ?? (this.dso as any).type;
     if (this.dso && (typeValue === DSpaceObjectType.COMMUNITY.toLowerCase() || typeValue === DSpaceObjectType.COLLECTION.toLowerCase())) {
-      return this.dsoBreadcrumbsService.getBreadcrumbs(this.dso as any, '').pipe(
+      // For communities and collections, build hierarchical path via breadcrumbs
+      return this.dsoBreadcrumbsService.getBreadcrumbs(this.dso as unknown as ChildHALResource & DSpaceObject, '').pipe(
         map(breadcrumbs => {
           // Remove the last breadcrumb (current item) and join the rest with ' / '
           const parentBreadcrumbs = breadcrumbs.slice(0, -1);
           return parentBreadcrumbs.length > 0
             ? parentBreadcrumbs.map(crumb => crumb.text).join(' / ')
             : undefined;
-        })
+        }),
+        shareReplay({ bufferSize: 1, refCount: true }),
       );
     }
 
@@ -85,7 +95,8 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
     return this.getParent().pipe(
       map((parentRD: RemoteData<DSpaceObject>) => {
         return hasValue(parentRD) && hasValue(parentRD.payload) ? this.dsoNameService.getName(parentRD.payload) : undefined;
-      })
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
   }
 
@@ -93,8 +104,8 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
    * Get the parent of the object
    */
   getParent(): Observable<RemoteData<DSpaceObject>> {
-    if (typeof (this.dso as any).getParentLinkKey === 'function') {
-      const propertyName = (this.dso as any).getParentLinkKey();
+    if (this.isChildHALResource(this.dso)) {
+      const propertyName = this.dso.getParentLinkKey() as string;
       return this.linkService.resolveLink(this.dso, followLink(propertyName))[propertyName].pipe(
         find((parentRD: RemoteData<ChildHALResource & DSpaceObject>) => parentRD.hasSucceeded || parentRD.statusCode === 204)
       );
