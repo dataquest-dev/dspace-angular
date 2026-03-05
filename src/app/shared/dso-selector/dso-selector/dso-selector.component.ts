@@ -228,7 +228,7 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
    */
   search(query: string, page: number, useCache: boolean = true): Observable<RemoteData<PaginatedList<SearchResult<DSpaceObject>>>> {
     // default sort is only used when there is not query
-    let efectiveSort = query ? null : this.sort;
+    let effectiveSort = query ? null : this.sort;
 
     // Enable partial matching by adding wildcard for any non-empty query
     let processedQuery = query;
@@ -268,7 +268,7 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
         pagination: Object.assign({}, this.defaultPagination, {
           currentPage: page
         }),
-        sort: efectiveSort
+        sort: effectiveSort
       }),
       null,
       useCache,
