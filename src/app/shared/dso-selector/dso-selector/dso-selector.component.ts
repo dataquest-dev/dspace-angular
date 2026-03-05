@@ -238,7 +238,19 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
       if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
         // Use title field with prefix matching to match only at the beginning
         // This searches specifically in the title field for words that start with the query
-        processedQuery = `dc.title:${trimmedQuery}*`;
+        // Properly escape and group multi-term queries to ensure all terms are scoped to dc.title
+        const escapedQuery = this.escapeLuceneSpecialCharacters(trimmedQuery);
+        const terms = escapedQuery.split(/\s+/).filter(term => term.length > 0);
+
+        if (terms.length === 1) {
+          // Single term: apply wildcard directly
+          processedQuery = `dc.title:${terms[0]}*`;
+        } else {
+          // Multiple terms: group all terms and apply wildcard only to the last term
+          const allButLast = terms.slice(0, -1).map(term => `"${term}"`).join(' AND ');
+          const lastTerm = terms[terms.length - 1];
+          processedQuery = `dc.title:(${allButLast} AND ${lastTerm}*)`;
+        }
       } else {
         // For items and other types, use the query as-is but consider wildcards for very short queries
         if (trimmedQuery.length === 1) {
@@ -247,7 +259,6 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
           processedQuery = trimmedQuery;
         }
       }
-      console.log(`DSO Selector: Searching with query "${processedQuery}" for types:`, this.types);
     }
 
     return this.searchService.search(
@@ -320,6 +331,18 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
         this.updateList(rd);
       });
     }
+  }
+
+  /**
+   * Escapes special Lucene/Solr characters in user input to prevent query syntax errors
+   * @param query The user input query to escape
+   * @returns The escaped query string
+   */
+  private escapeLuceneSpecialCharacters(query: string): string {
+    // Escape special Lucene characters: + - && || ! ( ) { } [ ] ^ " ~ * ? : \ /
+    return query.replace(/[+\-!(){}[\]^"~*?:\\]/g, '\\$&')
+                .replace(/&&/g, '\\&&')
+                .replace(/\|\|/g, '\\||');
   }
 
   getName(listableObject: ListableObject): string {
