@@ -227,8 +227,9 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
    * @param useCache Whether or not to use the cache
    */
   search(query: string, page: number, useCache: boolean = true): Observable<RemoteData<PaginatedList<SearchResult<DSpaceObject>>>> {
-    // default sort is only used when there is not query
-    let effectiveSort = query ? null : this.sort;
+    const rawQuery = query ?? '';
+    const trimmedQuery = rawQuery.trim();
+    const hasQuery = isNotEmpty(rawQuery);
 
     // Enable partial matching by adding wildcard for any non-empty query
     let processedQuery = query;
@@ -243,12 +244,8 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
       } else if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
         processedQuery = this.buildTitlePrefixQuery(trimmedQuery);
       } else {
-        // For items and other types, use the query as-is but consider wildcards for very short queries
-        if (trimmedQuery.length === 1) {
-          processedQuery = trimmedQuery + '*';
-        } else {
-          processedQuery = trimmedQuery;
-        }
+        // For items and other types, use the trimmed query as-is without wildcard modification
+        processedQuery = trimmedQuery;
       }
     }
 
@@ -355,7 +352,7 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
    */
   private escapeLuceneSpecialCharacters(query: string): string {
     // Escape special Lucene characters: + - && || ! ( ) { } [ ] ^ " ~ * ? : \ /
-    return query.replace(/[+\-!(){}[\]^"~*?:\\]/g, '\\$&')
+    return query.replace(/[+\-!(){}[\]^"~*?:\\\/]/g, '\\$&')
                 .replace(/&&/g, '\\&&')
                 .replace(/\|\|/g, '\\||');
   }
