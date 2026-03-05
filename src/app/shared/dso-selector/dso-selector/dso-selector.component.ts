@@ -227,20 +227,15 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
    * @param useCache Whether or not to use the cache
    */
   search(query: string, page: number, useCache: boolean = true): Observable<RemoteData<PaginatedList<SearchResult<DSpaceObject>>>> {
-    // Keep raw query semantics aligned with other component logic (isEmpty/isNotEmpty checks)
     const rawQuery = query ?? '';
     const trimmedQuery = rawQuery.trim();
     const hasQuery = isNotEmpty(rawQuery);
 
-    // default sort is only used when there is no query according to raw input semantics
     let effectiveSort = hasQuery ? null : this.sort;
 
-    // Enable partial matching by adding wildcard for any trimmed non-empty query
     let processedQuery = rawQuery;
     if (isNotEmpty(trimmedQuery)) {
-      // For communities and collections, search only at the beginning of titles
       if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
-        // Use title field with prefix matching to match only at the beginning
         // This searches specifically in the title field for words that start with the query
         // Properly escape and group multi-term queries to ensure all terms are scoped to dc.title
         const escapedQuery = this.escapeLuceneSpecialCharacters(trimmedQuery);

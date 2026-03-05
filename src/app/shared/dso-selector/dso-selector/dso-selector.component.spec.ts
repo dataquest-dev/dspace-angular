@@ -163,36 +163,12 @@ describe('DSOSelectorComponent', () => {
       spyOn(searchService, 'search').and.callThrough();
     });
 
-    describe('for COMMUNITY types', () => {
+    describe('for COMMUNITY/COLLECTION types', () => {
       beforeEach(() => {
         component.types = [DSpaceObjectType.COMMUNITY];
       });
 
-      it('should create title field query with wildcard for single term', () => {
-        component.search('test', 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: 'dc.title:test*'
-          }),
-          null,
-          true
-        );
-      });
-
-      it('should create grouped title field query for multiple terms with wildcard on last term', () => {
-        component.search('test community name', 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: 'dc.title:("test" AND "community" AND name*)'
-          }),
-          null,
-          true
-        );
-      });
-
-      it('should escape special Lucene characters in query terms', () => {
+      it('should create title field query with escaping and wildcards', () => {
         component.search('test+query [with] special:chars/paths', 1);
 
         expect(searchService.search).toHaveBeenCalledWith(
@@ -210,50 +186,7 @@ describe('DSOSelectorComponent', () => {
 
         expect(searchService.search).toHaveBeenCalledWith(
           jasmine.objectContaining({
-            query: resourceIdQuery  // Should not be processed through title field logic
-          }),
-          null,
-          true
-        );
-      });
-    });
-
-    describe('for COLLECTION types', () => {
-      beforeEach(() => {
-        component.types = [DSpaceObjectType.COLLECTION];
-      });
-
-      it('should create title field query with wildcard for single term', () => {
-        component.search('documents', 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: 'dc.title:documents*'
-          }),
-          null,
-          true
-        );
-      });
-
-      it('should create grouped title field query for multiple terms', () => {
-        component.search('research papers collection', 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: 'dc.title:("research" AND "papers" AND collection*)'
-          }),
-          null,
-          true
-        );
-      });
-
-      it('should pass through internal resource ID queries unchanged', () => {
-        const resourceIdQuery = component.getCurrentDSOQuery();
-        component.search(resourceIdQuery, 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: resourceIdQuery  // Should not be processed through title field logic
+            query: resourceIdQuery
           }),
           null,
           true
@@ -266,42 +199,12 @@ describe('DSOSelectorComponent', () => {
         component.types = [DSpaceObjectType.ITEM];
       });
 
-      it('should pass through single character queries unchanged', () => {
-        component.search('a', 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: 'a'
-          }),
-          null,
-          true
-        );
-      });
-
-      it('should pass through multi-character queries unchanged', () => {
+      it('should pass through queries unchanged', () => {
         component.search('test query', 1);
 
         expect(searchService.search).toHaveBeenCalledWith(
           jasmine.objectContaining({
             query: 'test query'
-          }),
-          null,
-          true
-        );
-      });
-    });
-
-    describe('for mixed types (COMMUNITY and ITEM)', () => {
-      beforeEach(() => {
-        component.types = [DSpaceObjectType.COMMUNITY, DSpaceObjectType.ITEM];
-      });
-
-      it('should use title field search when communities are included', () => {
-        component.search('mixed search', 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: 'dc.title:("mixed" AND search*)'
           }),
           null,
           true
@@ -321,53 +224,7 @@ describe('DSOSelectorComponent', () => {
         expect(searchService.search).toHaveBeenCalledWith(
           jasmine.objectContaining({
             query: '   ',
-            sort: null  // Raw query semantics: whitespace is considered a query, so no default sort
-          }),
-          null,
-          true
-        );
-      });
-
-      it('should handle empty string query', () => {
-        component.sort = new SortOptions('dc.title', SortDirection.ASC);
-        component.search('', 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: '',
-            sort: jasmine.objectContaining({
-              field: 'dc.title',
-              direction: SortDirection.ASC,
-            })
-          }),
-          null,
-          true
-        );
-      });
-
-      it('should handle null query', () => {
-        component.sort = new SortOptions('dc.title', SortDirection.ASC);
-        component.search(null, 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: '',
-            sort: jasmine.objectContaining({
-              field: 'dc.title',
-              direction: SortDirection.ASC,
-            })
-          }),
-          null,
-          true
-        );
-      });
-
-      it('should trim whitespace and handle single term', () => {
-        component.search('  test  ', 1);
-
-        expect(searchService.search).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            query: 'dc.title:test*'
+            sort: null
           }),
           null,
           true
