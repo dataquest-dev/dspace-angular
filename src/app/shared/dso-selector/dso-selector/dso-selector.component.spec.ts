@@ -132,7 +132,7 @@ describe('DSOSelectorComponent', () => {
 
       expect(searchService.search).toHaveBeenCalledWith(
         jasmine.objectContaining({
-          query: undefined,
+          query: '',
           sort: jasmine.objectContaining({
             field: 'dc.title',
             direction: SortDirection.ASC,
