@@ -234,8 +234,13 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
     let processedQuery = query;
     if (hasValue(query) && query.trim().length > 0) {
       const trimmedQuery = query.trim();
+      // Bypass query rewriting for internal Solr field queries (e.g. search.resourceid:<uuid>)
+      // so that getCurrentDSOQuery() results are passed through unchanged.
+      const isInternalSolrQuery = /^\w[\w.]*:/.test(trimmedQuery);
+      if (isInternalSolrQuery) {
+        processedQuery = trimmedQuery;
       // For communities and collections, search only at the beginning of titles
-      if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
+      } else if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
         // Use title field with prefix matching to match only at the beginning
         // This searches specifically in the title field for words that start with the query
         // Properly escape and group multi-term queries to ensure all terms are scoped to dc.title
