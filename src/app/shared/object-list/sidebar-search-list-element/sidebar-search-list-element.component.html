@@ -1,5 +1,6 @@
 <ds-truncatable-part [maxLines]="1" [background]="isCurrent() ? 'primary' : 'default'" [showToggle]="false">
   <div [ngClass]="isCurrent() ? 'text-light' : 'text-body'"
+       [title]="(parentTitle$ && parentTitle$ | async) ? (parentTitle$ | async) : ('home.breadcrumbs' | translate)"
        [innerHTML]="(parentTitle$ && parentTitle$ | async) ? (parentTitle$ | async) : ('home.breadcrumbs' | translate)"></div>
 </ds-truncatable-part>
 <ds-truncatable-part [maxLines]="1" [background]="isCurrent() ? 'primary' : 'default'" [showToggle]="false">
