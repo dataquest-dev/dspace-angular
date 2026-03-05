@@ -7,7 +7,7 @@ import { SearchResult } from '../../search/models/search-result.model';
 import { DSpaceObject } from '../../../core/shared/dspace-object.model';
 import { TruncatableService } from '../../truncatable/truncatable.service';
 import { LinkService } from '../../../core/cache/builders/link.service';
-import { createSuccessfulRemoteDataObject$ } from '../../remote-data.utils';
+import { createSuccessfulRemoteDataObject$, createNoContentRemoteDataObject$ } from '../../remote-data.utils';
 import { HALResource } from '../../../core/shared/hal-resource.model';
 import { ChildHALResource } from '../../../core/shared/child-hal-resource.model';
 import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
@@ -142,13 +142,13 @@ export function createHierarchicalParentTitleTests(
         (object.indexableObject as any).type = staticType;
       }
 
-      // Set up the linkService with a safe observable for the parent link so that
-      // even if the type-check guard ever regresses, the fallback getParent() path
-      // does not crash with "Cannot read properties of undefined (reading 'pipe')".
+      // Set up the linkService with a safe RemoteData observable for the parent link so that
+      // even if the type-check guard ever regresses, the fallback getParent() path resolves
+      // cleanly via the find() predicate (statusCode === 204) without a TypeError.
       const parentLinkKey = (object.indexableObject as ChildHALResource).getParentLinkKey() as string;
       const linkService = jasmine.createSpyObj('linkService', {
         resolveLink: Object.assign(new HALResource(), {
-          [parentLinkKey]: observableOf(undefined)
+          [parentLinkKey]: createNoContentRemoteDataObject$()
         })
       });
       dsoBreadcrumbsService = jasmine.createSpyObj('dsoBreadcrumbsService', {
