@@ -8,7 +8,6 @@ import {
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UniqueIdRegistry } from './app/shared/form/builder/ds-dynamic-form-ui/unique-id-registry';
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
@@ -22,6 +21,4 @@ jasmine.getEnv().afterEach(() => {
   getTestBed().inject(MockStore, null)?.resetSelectors();
   // Close any leftover modals
   getTestBed().inject(NgbModal, null)?.dismissAll?.();
-  // Reset unique ID registry to prevent static state leaking between tests
-  UniqueIdRegistry.clear();
 });

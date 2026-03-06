@@ -125,7 +125,6 @@ import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/ds
 import { DsDynamicSponsorAutocompleteComponent } from './models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
 import { SPONSOR_METADATA_NAME } from './models/ds-dynamic-complex.model';
 import { DsDynamicSponsorScrollableDropdownComponent } from './models/sponsor-scrollable-dropdown/dynamic-sponsor-scrollable-dropdown.component';
-import { UniqueIdRegistry } from './unique-id-registry';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {
@@ -212,25 +211,6 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
 })
 export class DsDynamicFormControlContainerComponent extends DynamicFormControlContainerComponent implements OnInit, OnChanges, OnDestroy {
 
-  /**
-   * The unique element ID assigned to this component instance.
-   * For the first occurrence of a base ID, this equals the base ID (preserving backward compatibility).
-   * For subsequent occurrences, a numeric suffix is appended.
-   */
-  private _uniqueId: string;
-
-  /**
-   * The base element ID (from getElementId) before deduplication.
-   */
-  private _baseId: string;
-
-  /**
-   * The instance key used when registering with UniqueIdRegistry.
-   * Stored so that ngOnDestroy can release with the exact same key,
-   * even if the model's parent has been reassigned.
-   */
-  private _instanceKey: string;
-
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('templates') inputTemplateList: QueryList<DynamicTemplateDirective>;
@@ -277,16 +257,14 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
 
   /**
    * Returns a unique element ID for this component instance.
-   * The first occurrence of a base ID keeps the original value.
-   * Subsequent occurrences receive a numeric suffix.
+   * When the model has a parent (e.g., it lives inside a form group),
+   * the parent's ID is appended to distinguish duplicate field IDs
+   * that appear in different form sections.
    */
   get id(): string {
-    if (!this._uniqueId) {
-      this._baseId = this.layoutService.getElementId(this.model);
-      this._instanceKey = `${this._baseId}_${this.model?.parent?.id || 'root'}`;
-      this._uniqueId = UniqueIdRegistry.register(this._baseId, this._instanceKey);
-    }
-    return this._uniqueId;
+    const baseId = this.layoutService.getElementId(this.model);
+    const parentId = this.model?.parent?.id;
+    return parentId ? `${baseId}_${parentId}` : baseId;
   }
 
   get componentType(): Type<DynamicFormControl> | null {
@@ -442,13 +420,13 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
       // Propagate the container's unique ID to the child form control component
       // so that the child's rendered element id matches the container's label[for].
       // Without this, child components use layoutService.getElementId(model) which
-      // returns the base ID, while the container may return a suffixed ID from UniqueIdRegistry.
+      // returns the base ID, while the container appends the parent's ID.
       //
       // Object.defineProperty is used because many child components come from the
       // third-party @ng-dynamic-forms/ui-ng-bootstrap library and cannot be modified
       // to accept an @Input() override. The instance-level property takes precedence
       // over the prototype getter in all child components (both third-party and custom).
-      if (this.componentRef?.instance) {
+      if (this.componentRef?.instance && this.model?.parent?.id) {
         const uniqueId = this.id;
         Object.defineProperty(this.componentRef.instance, 'id', {
           get: () => uniqueId,
@@ -551,12 +529,9 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   }
 
   /**
-   * Unsubscribe from all subscriptions and release the unique ID from the registry.
+   * Unsubscribe from all subscriptions.
    */
   ngOnDestroy(): void {
-    if (this._instanceKey) {
-      UniqueIdRegistry.release(this._instanceKey);
-    }
     this.subs
       .filter((sub) => hasValue(sub))
       .forEach((sub) => sub.unsubscribe());
