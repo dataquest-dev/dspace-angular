@@ -378,65 +378,44 @@ describe('DsDynamicFormControlContainerComponent test suite', () => {
   });
 
   describe('unique id generation', () => {
-    it('should return the base element ID when the model has no parent', () => {
-      // testModel (formModel[8]) is a root-level DynamicInputModel with id 'input'
-      // and has no parent, so id should equal the base element ID.
-      expect(component.model.parent).toBeFalsy();
+    afterEach(() => {
+      DsDynamicFormControlContainerComponent.resetIdCounters();
+    });
+
+    it('should return the base element ID for the first instance of a given id', () => {
+      // testModel (formModel[8]) has id 'input' — first instance keeps original
       expect(component.id).toBe(component.model.id);
     });
 
-    it('should append the parent ID when the model has a parent', () => {
-      const parentGroup = new DynamicFormGroupModel({
-        id: 'parentSection',
-        group: [new DynamicInputModel({ id: 'email' })]
-      });
-      const childModel = parentGroup.group[0];
-      // parent is set by DynamicFormService.createFormGroup, not by the constructor
-      childModel.parent = parentGroup;
+    it('should return a suffixed ID for the second instance of the same base id', () => {
+      // Simulate two separate container instances with the same base id.
+      // The first call to the getter registers 'input' → suffix 0 (original).
+      expect(component.id).toBe('input');
 
-      component.model = childModel;
-      expect(component.id).toBe('email_parentSection');
+      // Create a second component-like access: directly exercise the getter
+      // on a fresh component that shares the same model id.
+      const secondComponent = Object.create(component);
+      secondComponent._cachedId = undefined;
+      secondComponent._baseId = undefined;
+      // model with the same id but a new instance
+      secondComponent.model = new DynamicInputModel({ id: 'input' });
+      expect(secondComponent.id).toBe('input_1');
     });
 
-    it('should produce different IDs for the same field in different parent groups', () => {
-      const group1 = new DynamicFormGroupModel({
-        id: 'sectionA',
-        group: [new DynamicInputModel({ id: 'title' })]
-      });
-      const group2 = new DynamicFormGroupModel({
-        id: 'sectionB',
-        group: [new DynamicInputModel({ id: 'title' })]
-      });
-      // parent is set by DynamicFormService.createFormGroup, not by the constructor
-      group1.group[0].parent = group1;
-      group2.group[0].parent = group2;
+    it('should not interfere between different base ids', () => {
+      expect(component.id).toBe('input'); // registers 'input'
 
-      component.model = group1.group[0];
-      const id1 = component.id;
-
-      component.model = group2.group[0];
-      const id2 = component.id;
-
-      expect(id1).toBe('title_sectionA');
-      expect(id2).toBe('title_sectionB');
-      expect(id1).not.toBe(id2);
+      const otherComponent = Object.create(component);
+      otherComponent._cachedId = undefined;
+      otherComponent._baseId = undefined;
+      otherComponent.model = new DynamicInputModel({ id: 'email' });
+      expect(otherComponent.id).toBe('email'); // first 'email' → original
     });
 
     it('should return the same id on repeated access (idempotent)', () => {
-      const parentGroup = new DynamicFormGroupModel({
-        id: 'myGroup',
-        group: [new DynamicInputModel({ id: 'field' })]
-      });
-      const childModel = parentGroup.group[0];
-      // parent is set by DynamicFormService.createFormGroup, not by the constructor
-      childModel.parent = parentGroup;
-
-      component.model = childModel;
-
       const first = component.id;
       const second = component.id;
       expect(first).toBe(second);
-      expect(first).toBe('field_myGroup');
     });
   });
 

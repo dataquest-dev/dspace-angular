@@ -256,15 +256,40 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   fetchThumbnail: boolean;
 
   /**
+   * Tracks per-baseId state for unique ID generation.
+   * nextSuffix: the next numeric suffix to assign (0 means keep original ID).
+   * activeCount: number of live component instances using this baseId
+   *   — when it drops to 0 the entry is removed so that a later page visit
+   *     starts fresh.
+   */
+  private static _idState = new Map<string, { nextSuffix: number; activeCount: number }>();
+  private _cachedId: string;
+  private _baseId: string;
+
+  /**
    * Returns a unique element ID for this component instance.
-   * When the model has a parent (e.g., it lives inside a form group),
-   * the parent's ID is appended to distinguish duplicate field IDs
-   * that appear in different form sections.
+   * The first instance of every base ID keeps the original value;
+   * subsequent instances get a numeric suffix (_1, _2, …).
    */
   get id(): string {
-    const baseId = this.layoutService.getElementId(this.model);
-    const parentId = this.model?.parent?.id;
-    return parentId ? `${baseId}_${parentId}` : baseId;
+    if (!this._cachedId) {
+      this._baseId = this.layoutService.getElementId(this.model);
+      const state = DsDynamicFormControlContainerComponent._idState.get(this._baseId)
+        || { nextSuffix: 0, activeCount: 0 };
+      this._cachedId = state.nextSuffix === 0 ? this._baseId : `${this._baseId}_${state.nextSuffix}`;
+      state.nextSuffix++;
+      state.activeCount++;
+      DsDynamicFormControlContainerComponent._idState.set(this._baseId, state);
+    }
+    return this._cachedId;
+  }
+
+  /**
+   * Clears the global ID counter state.  Used in tests to prevent
+   * state leaking between test cases.
+   */
+  static resetIdCounters(): void {
+    DsDynamicFormControlContainerComponent._idState.clear();
   }
 
   get componentType(): Type<DynamicFormControl> | null {
@@ -417,21 +442,23 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
         (instance as any).formGroup = this.formGroup;
       }
 
-      // Propagate the container's unique ID to the child form control component
-      // so that the child's rendered element id matches the container's label[for].
-      // Without this, child components use layoutService.getElementId(model) which
-      // returns the base ID, while the container appends the parent's ID.
+      // When this container's unique ID differs from the base model ID
+      // (i.e., this is a duplicate instance), propagate the suffixed ID
+      // to the child form control component so that the rendered element
+      // id matches the container's label[for].
       //
-      // Object.defineProperty is used because many child components come from the
-      // third-party @ng-dynamic-forms/ui-ng-bootstrap library and cannot be modified
-      // to accept an @Input() override. The instance-level property takes precedence
-      // over the prototype getter in all child components (both third-party and custom).
-      if (this.componentRef?.instance && this.model?.parent?.id) {
-        const uniqueId = this.id;
-        Object.defineProperty(this.componentRef.instance, 'id', {
-          get: () => uniqueId,
-          configurable: true,
-        });
+      // Object.defineProperty is used because child components from the
+      // third-party @ng-dynamic-forms library expose `id` as a getter
+      // on the prototype; an instance-level property takes precedence.
+      if (this.componentRef?.instance) {
+        const baseId = this.layoutService.getElementId(this.model);
+        if (this.id !== baseId) {
+          const uniqueId = this.id;
+          Object.defineProperty(this.componentRef.instance, 'id', {
+            get: () => uniqueId,
+            configurable: true,
+          });
+        }
       }
     }
   }
@@ -529,9 +556,19 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   }
 
   /**
-   * Unsubscribe from all subscriptions.
+   * Unsubscribe from all subscriptions and clean up the ID counter
+   * for this instance's base ID.
    */
   ngOnDestroy(): void {
+    if (this._baseId) {
+      const state = DsDynamicFormControlContainerComponent._idState.get(this._baseId);
+      if (state) {
+        state.activeCount--;
+        if (state.activeCount <= 0) {
+          DsDynamicFormControlContainerComponent._idState.delete(this._baseId);
+        }
+      }
+    }
     this.subs
       .filter((sub) => hasValue(sub))
       .forEach((sub) => sub.unsubscribe());
