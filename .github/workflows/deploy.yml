@@ -193,15 +193,14 @@ jobs:
           echo "dspace healthcheck:"
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
 
-  # playwright-after-deploy8:
-  #   needs: deploy-8
-  #   if: '!inputs.IMPORT'
-  #   uses: ./.github/workflows/playwright-tests.yml
-  #   secrets: inherit
+  playwright-after-deploy8:
+    needs: deploy-8
+    if: '!inputs.IMPORT'
+    uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
 
   rest-tests-after-deploy8:
-    # needs: playwright-after-deploy8
-    needs: deploy-8
+    needs: playwright-after-deploy8
     if: '!inputs.IMPORT'
     uses: dataquest-dev/dspace-rest-test/.github/workflows/run_unittests.yml@master
     with:
