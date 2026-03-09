@@ -417,6 +417,38 @@ describe('DsDynamicFormControlContainerComponent test suite', () => {
       const second = component.id;
       expect(first).toBe(second);
     });
+
+    it('should remove the id state entry so the next instance reuses the base id', () => {
+      expect(component.id).toBe('input');
+
+      // Destroy the only active instance — state entry should be deleted
+      component.ngOnDestroy();
+      // A new component with the same base id should receive the original base id (no suffix)
+      const newComponent = Object.create(component);
+      newComponent._cachedId = undefined;
+      newComponent._baseId = undefined;
+      newComponent.model = new DynamicInputModel({ id: 'input' });
+      expect(newComponent.id).toBe('input');
+    });
+
+    it('should keep the id state entry when other instances with the same base id are still active', () => {
+      // Register two instances with the same base id
+      expect(component.id).toBe('input');
+
+      const secondComponent = Object.create(component);
+      secondComponent._cachedId = undefined;
+      secondComponent._baseId = undefined;
+      secondComponent.model = new DynamicInputModel({ id: 'input' });
+      expect(secondComponent.id).toBe('input_1');
+
+      component.ngOnDestroy();// destroy only the first instance
+      // A third component with the same base id should still get a suffixed id
+      const thirdComponent = Object.create(component);
+      thirdComponent._cachedId = undefined;
+      thirdComponent._baseId = undefined;
+      thirdComponent.model = new DynamicInputModel({ id: 'input' });
+      expect(thirdComponent.id).toBe('input_2');
+    });
   });
 
 });

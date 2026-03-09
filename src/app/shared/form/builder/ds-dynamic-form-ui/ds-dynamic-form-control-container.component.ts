@@ -452,8 +452,7 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
       // third-party @ng-dynamic-forms library expose `id` as a getter
       // on the prototype; an instance-level property takes precedence.
       if (this.componentRef?.instance) {
-        const baseId = this.layoutService.getElementId(this.model);
-        if (this.id !== baseId) {
+        if (this.id !== this._baseId) {
           const uniqueId = this.id;
           Object.defineProperty(this.componentRef.instance, 'id', {
             get: () => uniqueId,
