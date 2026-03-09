@@ -211,6 +211,15 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
 })
 export class DsDynamicFormControlContainerComponent extends DynamicFormControlContainerComponent implements OnInit, OnChanges, OnDestroy {
 
+  /**
+   * Tracks per-baseId state for unique ID generation.
+   * nextSuffix: the next numeric suffix to assign (0 means keep original ID).
+   * activeCount: number of live component instances using this baseId
+   *   — when it drops to 0 the entry is removed so that a later page visit
+   *     starts fresh.
+   */
+  private static _idState = new Map<string, { nextSuffix: number; activeCount: number }>();
+
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('templates') inputTemplateList: QueryList<DynamicTemplateDirective>;
@@ -255,14 +264,6 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    */
   fetchThumbnail: boolean;
 
-  /**
-   * Tracks per-baseId state for unique ID generation.
-   * nextSuffix: the next numeric suffix to assign (0 means keep original ID).
-   * activeCount: number of live component instances using this baseId
-   *   — when it drops to 0 the entry is removed so that a later page visit
-   *     starts fresh.
-   */
-  private static _idState = new Map<string, { nextSuffix: number; activeCount: number }>();
   private _cachedId: string;
   private _baseId: string;
 
