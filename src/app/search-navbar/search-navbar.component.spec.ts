@@ -72,7 +72,7 @@ describe('SearchNavbarComponent', () => {
       spyOn(component, 'expand').and.callThrough();
       spyOn(component, 'onSubmit').and.callThrough();
       spyOn(router, 'navigate');
-      const searchIcon = fixture.debugElement.query(By.css('#search-navbar-container form .submit-icon'));
+      const searchIcon = fixture.debugElement.query(By.css('.search-navbar-container form .submit-icon'));
       searchIcon.triggerEventHandler('click', {
         preventDefault: () => {/**/
         }
@@ -88,7 +88,7 @@ describe('SearchNavbarComponent', () => {
     describe('empty query', () => {
       describe('press submit button', () => {
         beforeEach(fakeAsync(() => {
-          const searchIcon = fixture.debugElement.query(By.css('#search-navbar-container form .submit-icon'));
+          const searchIcon = fixture.debugElement.query(By.css('.search-navbar-container form .submit-icon'));
           searchIcon.triggerEventHandler('click', {
             preventDefault: () => {/**/
             }
@@ -109,14 +109,14 @@ describe('SearchNavbarComponent', () => {
       beforeEach(async () => {
         await fixture.whenStable();
         fixture.detectChanges();
-        searchInput = fixture.debugElement.query(By.css('#search-navbar-container form input'));
+        searchInput = fixture.debugElement.query(By.css('.search-navbar-container form input'));
         searchInput.nativeElement.value = 'test';
         searchInput.nativeElement.dispatchEvent(new Event('input'));
         fixture.detectChanges();
       });
       describe('press submit button', () => {
         beforeEach(fakeAsync(() => {
-          const searchIcon = fixture.debugElement.query(By.css('#search-navbar-container form .submit-icon'));
+          const searchIcon = fixture.debugElement.query(By.css('.search-navbar-container form .submit-icon'));
           searchIcon.triggerEventHandler('click', null);
           tick();
           fixture.detectChanges();
