@@ -64,11 +64,11 @@
               <li class="dropdown-item clarin-dropdown-item pt-2" value="0" (click)="selectLicense(0)">
                 <b>{{'submission.sections.clarin-license.head.license-select-default-value' | translate}}</b>
               </li>
-              <li class="dropdown-item clarin-dropdown-item pt-2"
+              <li class="dropdown-item clarin-dropdown-item pt-2 license-option"
                   *ngFor="let license of filteredLicenses4Selector"
                   (click)="selectLicense(license.id)"
                   [value]="license.id"
-                  id="license_option">
+                  [id]="'license_option_' + license.id">
                 <span [class]="'label label-default label-' + license.licenseLabel">{{license.licenseLabel}}</span>
                 <b class="pl-1">{{license.name}}</b>
               </li>
