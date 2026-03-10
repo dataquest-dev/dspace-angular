@@ -26,7 +26,7 @@
                           <td>{{mdEntry.key}}</td>
                           <td>
                             @if (isHttpUrl(mdValue.value)) {
-                              <a [href]="mdValue.value" target="_blank" rel="noopener noreferrer" class="dont-break-out">{{mdValue.value}}</a>
+                              <a [href]="mdValue.value.trim()" target="_blank" rel="noopener noreferrer" class="dont-break-out">{{mdValue.value.trim()}}</a>
                             } @else {
                               {{mdValue.value}}
                             }
