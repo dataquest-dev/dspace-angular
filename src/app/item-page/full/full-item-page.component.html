@@ -24,7 +24,13 @@
                       @for (mdValue of mdEntry.value; track mdValue) {
                         <tr>
                           <td>{{mdEntry.key}}</td>
-                          <td>{{mdValue.value}}</td>
+                          <td>
+                            @if (isUrl(mdValue.value)) {
+                              <a [href]="mdValue.value" target="_blank" rel="noopener noreferrer" class="dont-break-out">{{mdValue.value}}</a>
+                            } @else {
+                              {{mdValue.value}}
+                            }
+                          </td>
                           <td>{{mdValue.language}}</td>
                         </tr>
                       }
