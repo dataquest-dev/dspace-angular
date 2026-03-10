@@ -1,7 +1,7 @@
 import { ViewTrackerResolverService } from './view-tracker-resolver.service';
 import { Angulartics2 } from 'angulartics2';
 import { ReferrerService } from '../../../core/services/referrer.service';
-import { ActivatedRouteSnapshot, ResolveEnd, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, ResolveEnd, RouterStateSnapshot } from '@angular/router';
 import { of as observableOf, Subject } from 'rxjs';
 
 describe('ViewTrackerResolverService', () => {
@@ -10,15 +10,15 @@ describe('ViewTrackerResolverService', () => {
   let referrerService: jasmine.SpyObj<ReferrerService>;
   let router: any;
   let routerEvents$: Subject<any>;
-
-  const mockDso = {
-    firstMetadataValue: jasmine.createSpy('firstMetadataValue').and.returnValue('http://hdl.handle.net/123456789/1'),
-  };
+  let mockDso: { firstMetadataValue: jasmine.Spy };
 
   const mockReferrer = 'https://www.referrer.com';
 
   beforeEach(() => {
     routerEvents$ = new Subject();
+    mockDso = {
+      firstMetadataValue: jasmine.createSpy('firstMetadataValue').and.returnValue('http://hdl.handle.net/123456789/1'),
+    };
 
     angulartics2 = {
       eventTrack: new Subject(),
