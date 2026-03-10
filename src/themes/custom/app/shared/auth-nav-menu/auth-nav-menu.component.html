@@ -9,12 +9,11 @@
               role="button"
               tabindex="0"
               aria-haspopup="menu"
-              aria-controls="loginDropdownMenu"
               [attr.aria-expanded]="loginDrop.isOpen()"
               ngbDropdownToggle>
         {{ 'nav.login' | translate }}
       </button>
-      <div id="loginDropdownMenu" [ngClass]="{'pl-3 pr-3': (loading | async)}" ngbDropdownMenu
+      <div class="loginDropdownMenu" [ngClass]="{'pl-3 pr-3': (loading | async)}" ngbDropdownMenu
            role="dialog"
            aria-modal="true"
            [attr.aria-label]="'nav.login' | translate">
@@ -35,7 +34,7 @@
         [attr.data-test]="'user-menu' | dsBrowserOnly"
         ngbDropdownToggle>
         <i class="fas fa-user-circle fa-lg fa-fw"></i></button>
-      <div id="logoutDropdownMenu" ngbDropdownMenu>
+      <div class="logoutDropdownMenu" ngbDropdownMenu>
         <ds-themed-user-menu [inExpandableNavbar]="false"></ds-themed-user-menu>
       </div>
     </div>
