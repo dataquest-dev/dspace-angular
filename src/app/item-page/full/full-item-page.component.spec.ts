@@ -290,25 +290,25 @@ describe('FullItemPageComponent', () => {
     });
   });
 
-  describe('isUrl', () => {
+  describe('isHttpUrl', () => {
     it('should return true for https URLs', () => {
-      expect(comp.isUrl('https://example.com')).toBeTrue();
+      expect(comp.isHttpUrl('https://example.com')).toBeTrue();
     });
 
     it('should return true for http URLs', () => {
-      expect(comp.isUrl('http://example.com')).toBeTrue();
+      expect(comp.isHttpUrl('http://example.com')).toBeTrue();
     });
 
     it('should return false for plain text', () => {
-      expect(comp.isUrl('just some text')).toBeFalse();
+      expect(comp.isHttpUrl('just some text')).toBeFalse();
     });
 
     it('should return false for null', () => {
-      expect(comp.isUrl(null)).toBeFalse();
+      expect(comp.isHttpUrl(null)).toBeFalse();
     });
 
     it('should return false for undefined', () => {
-      expect(comp.isUrl(undefined)).toBeFalse();
+      expect(comp.isHttpUrl(undefined)).toBeFalse();
     });
   });
 

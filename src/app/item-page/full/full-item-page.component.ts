@@ -120,10 +120,11 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
   }
 
   /**
-   * Check if a metadata value is a URL.
+   * Check if a metadata value is an HTTP(S) URL.
    */
-  isUrl(value: string): boolean {
-    return !!value && (value.startsWith('http://') || value.startsWith('https://'));
+  isHttpUrl(value: string | null | undefined): boolean {
+    const v = value?.trim().toLowerCase();
+    return !!v && (v.startsWith('http://') || v.startsWith('https://'));
   }
 
   /**
