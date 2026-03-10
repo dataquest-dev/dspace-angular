@@ -65,6 +65,30 @@ const mockItem: Item = Object.assign(new Item(), {
   },
 });
 
+const mockItemWithUrl: Item = Object.assign(new Item(), {
+  bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
+  metadata: {
+    'dc.title': [
+      {
+        language: 'en_US',
+        value: 'test item',
+      },
+    ],
+    'dc.identifier.uri': [
+      {
+        language: null,
+        value: 'https://hdl.handle.net/123456789/1',
+      },
+    ],
+    'dc.subject': [
+      {
+        language: 'en_US',
+        value: 'plain text value',
+      },
+    ],
+  },
+});
+
 const mockWithdrawnItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
   metadata: [],
@@ -263,6 +287,52 @@ describe('FullItemPageComponent', () => {
     it('should add the signposting links', () => {
       expect(serverResponseService.setHeader).toHaveBeenCalled();
       expect(linkHeadService.addTag).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe('isUrl', () => {
+    it('should return true for https URLs', () => {
+      expect(comp.isUrl('https://example.com')).toBeTrue();
+    });
+
+    it('should return true for http URLs', () => {
+      expect(comp.isUrl('http://example.com')).toBeTrue();
+    });
+
+    it('should return false for plain text', () => {
+      expect(comp.isUrl('just some text')).toBeFalse();
+    });
+
+    it('should return false for null', () => {
+      expect(comp.isUrl(null)).toBeFalse();
+    });
+
+    it('should return false for undefined', () => {
+      expect(comp.isUrl(undefined)).toBeFalse();
+    });
+  });
+
+  describe('metadata URL rendering', () => {
+    beforeEach(() => {
+      comp.metadata$ = of(mockItemWithUrl.metadata);
+      fixture.detectChanges();
+    });
+
+    it('should render URL metadata values as clickable links', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const urlLink = links.find(l => l.nativeElement.textContent.includes('https://hdl.handle.net/123456789/1'));
+      expect(urlLink).toBeTruthy();
+      expect(urlLink.nativeElement.getAttribute('href')).toBe('https://hdl.handle.net/123456789/1');
+      expect(urlLink.nativeElement.getAttribute('target')).toBe('_blank');
+      expect(urlLink.nativeElement.getAttribute('rel')).toBe('noopener noreferrer');
+    });
+
+    it('should render non-URL metadata values as plain text', () => {
+      const table = fixture.debugElement.query(By.css('table'));
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      expect(table.nativeElement.innerHTML).toContain('plain text value');
+      const plainTextLink = links.find(l => l.nativeElement.textContent.includes('plain text value'));
+      expect(plainTextLink).toBeFalsy();
     });
   });
 });
