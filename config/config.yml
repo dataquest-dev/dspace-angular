@@ -4,6 +4,14 @@ rest:
   port: 8080
   nameSpace: /server
 
+# Item Config
+item:
+  # Whether to show the access status badge/label of an item, collection or community.
+  # If true, the access status will be shown in the item page and search results.
+  # If false, the access status will not be shown.
+  showAccessStatuses: true
+  bitstream:
+    showAccessStatuses: true
 
 # Theme Config
 themes:
