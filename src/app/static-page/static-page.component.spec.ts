@@ -11,11 +11,14 @@ import { environment } from '../../environments/environment';
 import { ClarinSafeHtmlPipe } from '../shared/utils/clarin-safehtml.pipe';
 
 describe('StaticPageComponent', () => {
-  async function setupTest(html: string, restBase?: string) {
+  async function setupTest(html: string, restBase?: string, route: string = '/static/test-file.html') {
     const htmlContentService = jasmine.createSpyObj('htmlContentService', {
       fetchHtmlContent: of(html),
       getHmtlContentByPathAndLocale: Promise.resolve(html)
     });
+
+    const router = new RouterMock();
+    router.setRoute(route);
 
     const appConfig = {
       ...environment,
@@ -36,7 +39,7 @@ describe('StaticPageComponent', () => {
       ],
       providers: [
         { provide: HtmlContentService, useValue: htmlContentService },
-        { provide: Router, useValue: new RouterMock() },
+        { provide: Router, useValue: router },
         { provide: APP_CONFIG, useValue: appConfig }
       ]
     }).compileComponents();
@@ -56,6 +59,13 @@ describe('StaticPageComponent', () => {
     const { component } = await setupTest('<div id="idShouldNotBeRemoved">TEST MESSAGE</div>');
     await component.ngOnInit();
     expect(component.htmlContent.value).toBe('<div id="idShouldNotBeRemoved">TEST MESSAGE</div>');
+  });
+
+  it('should call HtmlContentService with the route html file name', async () => {
+    const { component, htmlContentService } = await setupTest('<div>TEST MESSAGE</div>', undefined, '/static/license-ud-1.0.html');
+    await component.ngOnInit();
+
+    expect(htmlContentService.getHmtlContentByPathAndLocale).toHaveBeenCalledWith('license-ud-1.0.html');
   });
 
   it('should rewrite OAI link with rest.baseUrl', async () => {
