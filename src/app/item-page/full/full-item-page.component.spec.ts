@@ -314,7 +314,8 @@ describe('FullItemPageComponent', () => {
 
   describe('metadata URL rendering', () => {
     beforeEach(() => {
-      comp.metadata$ = of(mockItemWithUrl.metadata);
+      routeData.dso = createSuccessfulRemoteDataObject(mockItemWithUrl);
+      comp.ngOnInit();
       fixture.detectChanges();
     });
 
