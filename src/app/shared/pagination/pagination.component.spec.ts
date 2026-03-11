@@ -68,11 +68,11 @@ function expectPages(fixture: ComponentFixture<any>, pagesDef: string[]): void {
 }
 
 function changePageSize(fixture: ComponentFixture<any>, pageSize: string): void {
-  const buttonEl = fixture.nativeElement.querySelector('#paginationControls');
+  const buttonEl = fixture.nativeElement.querySelector('[id^="paginationControls-"]');
 
   buttonEl.click();
 
-  const dropdownMenu = fixture.debugElement.query(By.css('#paginationControlsDropdownMenu'));
+  const dropdownMenu = fixture.debugElement.query(By.css('[id^="paginationControlsDropdownMenu-"]'));
   const buttons = dropdownMenu.nativeElement.querySelectorAll('button');
 
   for (const button of buttons) {
@@ -340,7 +340,7 @@ describe('Pagination component', () => {
       });
 
       it('should call goPrev method', () => {
-        const prev = testFixture.debugElement.query(By.css('#nav-prev'));
+        const prev = testFixture.debugElement.query(By.css('[id^="nav-prev-"]'));
         testFixture.detectChanges();
         prev.triggerEventHandler('click', null);
         expect(testComp.goPrev).toHaveBeenCalled();
@@ -354,7 +354,7 @@ describe('Pagination component', () => {
       });
 
       it('should call goNext method', () => {
-        const next = testFixture.debugElement.query(By.css('#nav-next'));
+        const next = testFixture.debugElement.query(By.css('[id^="nav-next-"]'));
         testFixture.detectChanges();
         next.triggerEventHandler('click', null);
         expect(testComp.goNext).toHaveBeenCalled();
@@ -363,13 +363,13 @@ describe('Pagination component', () => {
 
     describe('check for prev and next button', () => {
       it('shoud have a previous button', () => {
-        const prev = testFixture.debugElement.query(By.css('#nav-prev'));
+        const prev = testFixture.debugElement.query(By.css('[id^="nav-prev-"]'));
         testFixture.detectChanges();
         expect(prev).toBeTruthy();
       });
 
       it('shoud have a next button', () => {
-        const next = testFixture.debugElement.query(By.css('#nav-next'));
+        const next = testFixture.debugElement.query(By.css('[id^="nav-next-"]'));
         testFixture.detectChanges();
         expect(next).toBeTruthy();
       });

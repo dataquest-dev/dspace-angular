@@ -31,7 +31,7 @@ export class StaticPageComponent implements OnInit {
     let htmlContent = await this.htmlContentService.getHmtlContentByPathAndLocale(this.htmlFileName);
     if (isNotEmpty(htmlContent)) {
       const restBase = this.appConfig?.rest?.baseUrl;
-      const oaiUrl = restBase ? new URL('/server/oai', restBase).href : '/server/oai';
+      const oaiUrl = restBase ? restBase.replace(/\/+$/, '') + '/oai' : '/server/oai';
       htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
 
       this.htmlContent.next(htmlContent);

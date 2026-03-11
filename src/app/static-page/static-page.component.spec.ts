@@ -60,7 +60,7 @@ describe('StaticPageComponent', () => {
 
   it('should rewrite OAI link with rest.baseUrl', async () => {
     const oaiHtml = '<a href="/server/oai/request?verb=ListSets">OAI</a>';
-    const { fixture, component } = await setupTest(oaiHtml, 'https://api.example.org/rest');
+    const { fixture, component } = await setupTest(oaiHtml, 'https://api.example.org/server');
 
     await component.ngOnInit();
     fixture.detectChanges();
@@ -83,18 +83,31 @@ describe('StaticPageComponent', () => {
 
   it('should avoid double slashes when rest.baseUrl ends with slash', async () => {
     const oaiHtml = '<a href="/server/oai/request?verb=ListRecords">OAI</a>';
-    const { fixture, component } = await setupTest(oaiHtml, 'https://api.example.org/rest/');
+    const { fixture, component } = await setupTest(oaiHtml, 'https://api.example.org/server/');
 
     await component.ngOnInit();
     fixture.detectChanges();
 
     expect(component.htmlContent.value).toContain('https://api.example.org/server/oai/request?verb=ListRecords');
-    expect(component.htmlContent.value).not.toContain('//server');
+    expect(component.htmlContent.value).not.toContain('//oai');
+  });
+
+  it('should include namespace in OAI link when rest.baseUrl has namespace prefix', async () => {
+    const oaiHtml = '<a href="/server/oai/request?verb=ListMetadataFormats">full list</a>';
+    const { fixture, component } = await setupTest(oaiHtml, 'https://api.example.org/repository/server');
+
+    await component.ngOnInit();
+    fixture.detectChanges();
+
+    const rewritten = 'https://api.example.org/repository/server/oai/request?verb=ListMetadataFormats';
+    expect(component.htmlContent.value).toContain(rewritten);
+    const anchor = fixture.nativeElement.querySelector('a');
+    expect(anchor.getAttribute('href')).toBe(rewritten);
   });
 
   it('should leave content unchanged when no OAI link is present', async () => {
     const otherHtml = '<a href="/server/other">Other</a>';
-    const { fixture, component } = await setupTest(otherHtml, 'https://api.example.org/rest');
+    const { fixture, component } = await setupTest(otherHtml, 'https://api.example.org/server');
 
     await component.ngOnInit();
     fixture.detectChanges();

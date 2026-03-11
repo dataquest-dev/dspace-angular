@@ -68,7 +68,7 @@
                   *ngFor="let license of filteredLicenses4Selector"
                   (click)="selectLicense(license.id)"
                   [value]="license.id"
-                  id="license_option">
+                  [id]="'license_option_' + license.id">
                 <span [class]="'label label-default label-' + license.licenseLabel">{{license.licenseLabel}}</span>
                 <b class="pl-1">{{license.name}}</b>
               </li>
