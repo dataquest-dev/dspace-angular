@@ -25,6 +25,7 @@ import { WayfIdpCardComponent } from '../idp-card/wayf-idp-card.component';
       class="wayf-idp-list"
       role="listbox"
       [attr.aria-label]="i18n.t('wayf.a11y.list-label')"
+      tabindex="0"
       (keydown)="onKeydown($event)">
 
       @for (entry of entries(); track entry.entityID; let i = $index) {
