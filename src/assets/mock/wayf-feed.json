@@ -1,0 +1,133 @@
+[
+  {
+    "entityID": "https://idp.example.org/shibboleth",
+    "DisplayNames": [
+      {"value": "Example University", "lang": "en"},
+      {"value": "Příkladová Univerzita", "lang": "cs"}
+    ],
+    "Logos": [
+      {"value": "https://placehold.co/80x60/0d6efd/white?text=EU", "width": 80, "height": 60}
+    ],
+    "Keywords": [{"value": "example university research", "lang": "en"}],
+    "InformationURLs": [{"value": "https://idp.example.org/info", "lang": "en"}],
+    "PrivacyStatementURLs": [{"value": "https://idp.example.org/privacy", "lang": "en"}],
+    "Tags": ["clarin", "sirtfi"]
+  },
+  {
+    "entityID": "https://shibboleth.muni.cz/idp/shibboleth",
+    "DisplayNames": [
+      {"value": "Masaryk University", "lang": "en"},
+      {"value": "Masarykova univerzita", "lang": "cs"}
+    ],
+    "Logos": [
+      {"value": "https://placehold.co/80x60/dc3545/white?text=MU", "width": 80, "height": 60}
+    ],
+    "Keywords": [{"value": "masaryk brno czech republic muni", "lang": "en"}],
+    "InformationURLs": [{"value": "https://www.muni.cz", "lang": "en"}],
+    "PrivacyStatementURLs": [],
+    "Tags": ["clarin", "sirtfi"]
+  },
+  {
+    "entityID": "https://login.cesnet.cz/idp/",
+    "DisplayNames": [
+      {"value": "CESNET e-Infrastructure", "lang": "en"},
+      {"value": "e-Infrastruktura CESNET", "lang": "cs"}
+    ],
+    "Logos": [
+      {"value": "https://placehold.co/80x60/198754/white?text=CE", "width": 80, "height": 60}
+    ],
+    "Keywords": [{"value": "cesnet czech research network e-infra", "lang": "en"}],
+    "InformationURLs": [{"value": "https://www.cesnet.cz", "lang": "en"}],
+    "PrivacyStatementURLs": [],
+    "Tags": ["clarin"]
+  },
+  {
+    "entityID": "https://login.feld.cvut.cz/idp/shibboleth",
+    "DisplayNames": [
+      {"value": "Czech Technical University in Prague", "lang": "en"},
+      {"value": "České vysoké učení technické v Praze", "lang": "cs"}
+    ],
+    "Logos": [],
+    "Keywords": [{"value": "cvut ctu prague czech technical", "lang": "en"}],
+    "InformationURLs": [],
+    "PrivacyStatementURLs": [],
+    "Tags": ["clarin", "sirtfi"]
+  },
+  {
+    "entityID": "https://idp.cuni.cz/idp/shibboleth",
+    "DisplayNames": [
+      {"value": "Charles University", "lang": "en"},
+      {"value": "Univerzita Karlova", "lang": "cs"}
+    ],
+    "Logos": [
+      {"value": "https://placehold.co/80x60/6f42c1/white?text=UK", "width": 80, "height": 60}
+    ],
+    "Keywords": [{"value": "cuni charles prague czech karlov", "lang": "en"}],
+    "InformationURLs": [],
+    "PrivacyStatementURLs": [],
+    "Tags": ["clarin", "sirtfi"]
+  },
+  {
+    "entityID": "https://idp.ub.uni-muenchen.de/shibboleth",
+    "DisplayNames": [
+      {"value": "Ludwig-Maximilians-Universität München", "lang": "de"},
+      {"value": "LMU Munich", "lang": "en"}
+    ],
+    "Logos": [
+      {"value": "https://placehold.co/80x60/ffc107/black?text=LMU", "width": 80, "height": 60}
+    ],
+    "Keywords": [{"value": "lmu munich münchen bavaria germany", "lang": "en"}],
+    "InformationURLs": [],
+    "PrivacyStatementURLs": [],
+    "Tags": ["clarin"]
+  },
+  {
+    "entityID": "https://login.kuleuven.be/idp/shibboleth",
+    "DisplayNames": [
+      {"value": "KU Leuven", "lang": "en"},
+      {"value": "KU Leuven", "lang": "nl"}
+    ],
+    "Logos": [],
+    "Keywords": [{"value": "ku leuven belgium catholic university", "lang": "en"}],
+    "InformationURLs": [],
+    "PrivacyStatementURLs": [],
+    "Tags": ["clarin"]
+  },
+  {
+    "entityID": "https://aai.perun-aai.org/idp/",
+    "DisplayNames": [
+      {"value": "Perun MyAccessID", "lang": "en"},
+      {"value": "Perun MyAccessID", "lang": "cs"}
+    ],
+    "Logos": [
+      {"value": "https://placehold.co/80x60/20c997/white?text=Perun", "width": 80, "height": 60}
+    ],
+    "Keywords": [{"value": "perun myaccessid proxy hub aai", "lang": "en"}],
+    "InformationURLs": [],
+    "PrivacyStatementURLs": [],
+    "Tags": ["clarin"]
+  },
+  {
+    "entityID": "https://cafe.rnp.br/idp/",
+    "DisplayNames": [
+      {"value": "Café - Federação Brasileira", "lang": "en"}
+    ],
+    "Logos": [],
+    "Keywords": [{"value": "cafe brazil rnp federation brasileiro", "lang": "en"}],
+    "InformationURLs": [],
+    "PrivacyStatementURLs": [],
+    "Tags": ["clarin"]
+  },
+  {
+    "entityID": "https://idp.uw.edu.pl/idp/shibboleth",
+    "DisplayNames": [
+      {"value": "University of Warsaw", "lang": "en"},
+      {"value": "Uniwersytet Warszawski", "lang": "pl"}
+    ],
+    "Logos": [],
+    "Keywords": [{"value": "warsaw poland university uw", "lang": "en"}],
+    "InformationURLs": [],
+    "PrivacyStatementURLs": [],
+    "Tags": ["clarin", "sirtfi"]
+  }
+]

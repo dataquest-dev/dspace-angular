@@ -1,10 +1,27 @@
 #loginDropdownMenu, #logoutDropdownMenu {
-  min-width: 330px;
+  min-width: 400px;
   z-index: 1002;
 }
 
 #loginDropdownMenu {
   min-height: 75px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.wayf-login-tabs {
+  .nav-tabs {
+    border-bottom: none;
+  }
+  .nav-link {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    color: var(--bs-body-color, #212529);
+    &.active {
+      font-weight: 600;
+    }
+  }
 }
 
 .dropdown-item.active, .dropdown-item:active,

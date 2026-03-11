@@ -184,6 +184,11 @@ export const APP_ROUTES: Route[] = [
         canActivate: [notAuthenticatedGuard],
       },
       {
+        path: 'wayf',
+        loadChildren: () => import('./clarin-wayf/clarin-wayf-routes')
+          .then((m) => m.ROUTES),
+      },
+      {
         path: 'logout',
         loadChildren: () => import('./logout-page/logout-page-routes')
           .then((m) => m.ROUTES),

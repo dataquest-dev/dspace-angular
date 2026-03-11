@@ -5,6 +5,37 @@
       <h1 class="h3 mb-0 fw-normal">{{"login.form.header" | translate}}</h1>
       <ds-log-in
       [isStandalonePage]="true"></ds-log-in>
+
+      <!-- WAYF Institution Picker -->
+      <div class="mt-3">
+        <div class="dropdown-divider my-3"></div>
+        @if (!wayfOpen()) {
+          <button
+            class="btn btn-lg btn-outline-primary w-100"
+            (click)="toggleWayf()"
+          >
+            <i class="fas fa-university me-2" aria-hidden="true"></i>
+            {{ 'login.wayf.button' | translate }}
+          </button>
+        }
+        @if (wayfOpen()) {
+          <div class="wayf-panel mt-2">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h3 class="h6 mb-0">{{ 'login.wayf.header' | translate }}</h3>
+              <button
+                class="btn btn-sm btn-outline-secondary"
+                (click)="toggleWayf()"
+                [attr.aria-label]="'login.wayf.close' | translate"
+              >
+                <i class="fas fa-times" aria-hidden="true"></i>
+              </button>
+            </div>
+            <ds-clarin-wayf
+              (idpSelected)="onIdpSelected($event)"
+            />
+          </div>
+        }
+      </div>
     </div>
   </div>
 </div>

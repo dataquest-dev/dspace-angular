@@ -2,6 +2,7 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -29,6 +30,9 @@ import {
   isNotEmpty,
 } from '../shared/empty.util';
 import { ThemedLogInComponent } from '../shared/log-in/themed-log-in.component';
+import { ClarinWayfComponent } from '../clarin-wayf/clarin-wayf.component';
+import { IdpEntry } from '../clarin-wayf/models/idp-entry.model';
+import { HardRedirectService } from '../core/services/hard-redirect.service';
 
 /**
  * This component represents the login page
@@ -40,9 +44,15 @@ import { ThemedLogInComponent } from '../shared/log-in/themed-log-in.component';
   imports: [
     ThemedLogInComponent,
     TranslateModule,
+    ClarinWayfComponent,
   ],
 })
 export class LoginPageComponent implements OnDestroy, OnInit {
+
+  /**
+   * Whether the WAYF institution picker is visible.
+   */
+  readonly wayfOpen = signal(false);
 
   /**
    * Subscription to unsubscribe onDestroy
@@ -55,9 +65,11 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    *
    * @param {ActivatedRoute} route
    * @param {Store<AppState>} store
+   * @param {HardRedirectService} hardRedirectService
    */
   constructor(private route: ActivatedRoute,
-              private store: Store<AppState>) {}
+              private store: Store<AppState>,
+              private hardRedirectService: HardRedirectService) {}
 
   /**
    * Initialize instance variables
@@ -96,5 +108,18 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     }
     // Clear all authentication messages when leaving login page
     this.store.dispatch(new ResetAuthenticationMessagesAction());
+  }
+
+  toggleWayf(): void {
+    this.wayfOpen.update(v => !v);
+  }
+
+  onIdpSelected(entry: IdpEntry): void {
+    // Redirect to /Shibboleth.sso/Login with the chosen IdP entityID.
+    // The SP handles the actual SAML AuthnRequest.
+    const origin = window.location.origin;
+    const returnUrl = encodeURIComponent(`${origin}/login`);
+    const ssoUrl = `${origin}/Shibboleth.sso/Login?entityID=${encodeURIComponent(entry.entityID)}&target=${returnUrl}`;
+    this.hardRedirectService.redirect(ssoUrl);
   }
 }

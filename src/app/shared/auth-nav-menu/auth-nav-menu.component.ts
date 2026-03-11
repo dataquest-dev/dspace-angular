@@ -5,6 +5,7 @@ import {
 import {
   Component,
   OnInit,
+  signal,
 } from '@angular/core';
 import {
   RouterLink,
@@ -41,6 +42,9 @@ import {
   isAuthenticationLoading,
 } from '../../core/auth/selectors';
 import { EPerson } from '../../core/eperson/models/eperson.model';
+import { HardRedirectService } from '../../core/services/hard-redirect.service';
+import { ClarinWayfComponent } from '../../clarin-wayf/clarin-wayf.component';
+import { IdpEntry } from '../../clarin-wayf/models/idp-entry.model';
 import {
   fadeInOut,
   fadeOut,
@@ -59,6 +63,7 @@ import { ThemedUserMenuComponent } from './user-menu/themed-user-menu.component'
   imports: [
     AsyncPipe,
     BrowserOnlyPipe,
+    ClarinWayfComponent,
     NgbDropdownModule,
     NgClass,
     RouterLink,
@@ -89,9 +94,13 @@ export class AuthNavMenuComponent implements OnInit {
 
   public sub: Subscription;
 
+  /** Active login tab: 'local' for password form, 'institution' for WAYF picker. */
+  readonly activeLoginTab = signal<'local' | 'institution'>('local');
+
   constructor(private store: Store<AppState>,
               private windowService: HostWindowService,
               private authService: AuthService,
+              protected hardRedirectService: HardRedirectService,
   ) {
     this.isMobile$ = this.windowService.isMobile();
   }
@@ -112,5 +121,16 @@ export class AuthNavMenuComponent implements OnInit {
         && !router.state.url.startsWith(LOGOUT_ROUTE)),
       ),
     );
+  }
+
+  switchLoginTab(tab: 'local' | 'institution'): void {
+    this.activeLoginTab.set(tab);
+  }
+
+  onIdpSelected(entry: IdpEntry): void {
+    const origin = window.location.origin;
+    const returnUrl = encodeURIComponent(this.hardRedirectService.getCurrentRoute());
+    const ssoUrl = `${origin}/Shibboleth.sso/Login?entityID=${encodeURIComponent(entry.entityID)}&target=${returnUrl}`;
+    this.hardRedirectService.redirect(ssoUrl);
   }
 }
