@@ -6,7 +6,7 @@
                                [workflowItem]="workflowitem$.value"></ds-themed-item-list-preview>
   <div class="row">
     <div [ngClass]="showThumbnails ? 'offset-3 offset-md-2 pl-3' : ''">
-      <ds-pool-task-actions id="actions"
+      <ds-pool-task-actions id="actions-{{ dso?.id }}"
                             [item]="item$.value"
                             [object]="dso"
                             [workflowitem]="workflowitem$.value"

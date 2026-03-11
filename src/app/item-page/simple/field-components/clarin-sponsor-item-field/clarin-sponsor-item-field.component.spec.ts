@@ -41,9 +41,9 @@ describe('ClarinSponsorItemFieldComponent', () => {
     component.item = mockItemWithMetadataFieldsAndValue(['local.sponsor'], EU_FUND);
     fixture.detectChanges();
 
-    expect(fixture.debugElement.query(By.css('#organization-value')).nativeElement.textContent).toContain(ORGANIZATION);
-    expect(fixture.debugElement.query(By.css('#project-code-value')).nativeElement.textContent).toContain(PROJECT_CODE);
-    expect(fixture.debugElement.query(By.css('#project-name-value')).nativeElement.textContent).toContain(PROJECT_NAME);
+    expect(fixture.debugElement.query(By.css('#organization-value-0')).nativeElement.textContent).toContain(ORGANIZATION);
+    expect(fixture.debugElement.query(By.css('#project-code-value-0')).nativeElement.textContent).toContain(PROJECT_CODE);
+    expect(fixture.debugElement.query(By.css('#project-name-value-0')).nativeElement.textContent).toContain(PROJECT_NAME);
   });
 
   it('should render national fund', () => {
@@ -54,8 +54,8 @@ describe('ClarinSponsorItemFieldComponent', () => {
 
     component.item = mockItemWithMetadataFieldsAndValue(['local.sponsor'], NATIONAL_FUND) as any;
     fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('#organization-value')).nativeElement.textContent).toContain(ORGANIZATION);
-    expect(fixture.debugElement.query(By.css('#project-code-value')).nativeElement.textContent).toContain(PROJECT_CODE);
-    expect(fixture.debugElement.query(By.css('#project-name-value')).nativeElement.textContent).toContain(PROJECT_NAME);
+    expect(fixture.debugElement.query(By.css('#organization-value-0')).nativeElement.textContent).toContain(ORGANIZATION);
+    expect(fixture.debugElement.query(By.css('#project-code-value-0')).nativeElement.textContent).toContain(PROJECT_CODE);
+    expect(fixture.debugElement.query(By.css('#project-name-value-0')).nativeElement.textContent).toContain(PROJECT_NAME);
   });
 });
