@@ -214,7 +214,7 @@ describe('AuthNavMenuComponent', () => {
         });
 
         it('should render login dropdown menu', () => {
-          const loginDropdownMenu = deNavMenuItem.query(By.css('div#loginDropdownMenu'));
+          const loginDropdownMenu = deNavMenuItem.query(By.css('div.loginDropdownMenu'));
           expect(loginDropdownMenu.nativeElement).toBeDefined();
         });
       });
