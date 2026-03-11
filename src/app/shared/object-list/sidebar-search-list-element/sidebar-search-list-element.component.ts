@@ -80,9 +80,10 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   getParentTitle(): Observable<string> {
     // Fallback handles cases where type is a raw string rather than a ResourceType instance
     const typeValue = this.dso.type?.value ?? (this.dso as any).type;
-    if (this.dso && (typeValue === DSpaceObjectType.COMMUNITY.toLowerCase() || typeValue === DSpaceObjectType.COLLECTION.toLowerCase())) {
+    const dso: DSpaceObject = this.dso;
+    if (dso && this.isChildHALResource(dso) && (typeValue === DSpaceObjectType.COMMUNITY.toLowerCase() || typeValue === DSpaceObjectType.COLLECTION.toLowerCase())) {
       // For communities and collections, build hierarchical path via breadcrumbs
-      return this.dsoBreadcrumbsService.getBreadcrumbs(this.dso as unknown as ChildHALResource & DSpaceObject, '').pipe(
+      return this.dsoBreadcrumbsService.getBreadcrumbs(dso, '').pipe(
         map(breadcrumbs => {
           // Remove the last breadcrumb (current item) and join the rest with ' / '
           const parentBreadcrumbs = breadcrumbs.slice(0, -1);
