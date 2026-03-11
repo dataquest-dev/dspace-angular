@@ -121,6 +121,11 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
   @ViewChildren('listEntryElement') listElements: QueryList<ElementRef>;
 
   /**
+   * The Solr/Lucene field used for title-based prefix queries
+   */
+  protected readonly TITLE_FIELD = 'dc.title';
+
+  /**
    * Time to wait before sending a search request to the server when a user types something
    */
   debounceTime = 500;
@@ -335,11 +340,11 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
       const terms = escapedQuery.split(/\s+/).filter(term => term.length > 0);
 
       if (terms.length === 1) {
-        return `dc.title:${terms[0]}*`;
+        return `${this.TITLE_FIELD}:${terms[0]}*`;
       } else {
         const allButLast = terms.slice(0, -1).map(term => `"${term}"`).join(' AND ');
         const lastTerm = terms[terms.length - 1];
-        return `dc.title:(${allButLast} AND ${lastTerm}*)`;
+        return `${this.TITLE_FIELD}:(${allButLast} AND ${lastTerm}*)`;
       }
     }
     return query;
