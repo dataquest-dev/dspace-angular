@@ -246,7 +246,9 @@ describe('SubmissionSectionCcLicensesComponent', () => {
         fixture.detectChanges();
       }));
 
-      it('should call the submission cc licenses data service getCcLicenseLink method', () => {
+      it('should call the submission cc licenses data service getCcLicenseLink method', fakeAsync(() => {
+        tick(350);
+        fixture.detectChanges();
         expect(submissionCcLicenseUrlDataService.getCcLicenseLink).toHaveBeenCalledWith(
           ccLicence,
           new Map([
@@ -254,7 +256,7 @@ describe('SubmissionSectionCcLicensesComponent', () => {
             [ccLicence.fields[1], ccLicence.fields[1].enums[0]],
           ])
         );
-      });
+      }));
 
       it('should display a cc license link', (done) => {
         // Wait for the debounced observable to emit

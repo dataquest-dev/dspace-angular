@@ -1,10 +1,10 @@
 import { isPlatformServer } from '@angular/common';
 import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { firstValueFrom, of as observableOf } from 'rxjs';
 import { HTML_SUFFIX, STATIC_FILES_PROJECT_PATH } from '../static-page/static-page-routing-paths';
-import { isEmpty, isNotEmpty } from './empty.util';
+import { isEmpty } from './empty.util';
 import { LocaleService } from '../core/locale/locale.service';
 import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
@@ -66,11 +66,29 @@ export class HtmlContentService {
   }
 
   /**
-   * Load `.html` file content or return empty string if an error.
+   * Load `.html` file content and return the full response.
    * @param url file location
    */
   fetchHtmlContent(url: string) {
-    return this.getHtmlContent(url);
+    const namespacedUrl = this.composeNamespacedUrl(url);
+    const runtimeUrl = this.buildRuntimeUrl(namespacedUrl);
+    return this.http.get(runtimeUrl, { responseType: 'text', observe: 'response' }).pipe(
+      catchError((error) => observableOf(new HttpResponse({ status: error.status || 0, body: '' }))));
+  }
+
+  /**
+   * Load HTML content for a single URL attempt and handle cached 304 responses.
+   * @param url file location
+   */
+  private async loadHtmlContent(url: string): Promise<string | undefined> {
+    const response = await firstValueFrom(this.fetchHtmlContent(url));
+    if (response.status === 200) {
+      return response.body ?? '';
+    }
+    if (response.status === 304) {
+      return response.body ?? '';
+    }
+    return undefined;
   }
 
   /**
@@ -89,15 +107,17 @@ export class HtmlContentService {
     url += isEmpty(language) ? '/' + fileName : '/' + language + '/' + fileName;
     // Add `.html` suffix to get the current html file
     url = url.endsWith(HTML_SUFFIX) ? url : url + HTML_SUFFIX;
-    let potentialContent = await firstValueFrom(this.fetchHtmlContent(url));
-    if (isNotEmpty(potentialContent)) {
+    let potentialContent = await this.loadHtmlContent(url);
+    if (potentialContent !== undefined) {
       return potentialContent;
     }
 
     // If the file wasn't find, get the non-translated file from the default package.
     url = STATIC_FILES_PROJECT_PATH + '/' + fileName;
-    potentialContent = await firstValueFrom(this.fetchHtmlContent(url));
-    if (isNotEmpty(potentialContent)) {
+    // Add `.html` suffix to match localized request behavior
+    url = url.endsWith(HTML_SUFFIX) ? url : url + HTML_SUFFIX;
+    potentialContent = await this.loadHtmlContent(url);
+    if (potentialContent !== undefined) {
       return potentialContent;
     }
   }

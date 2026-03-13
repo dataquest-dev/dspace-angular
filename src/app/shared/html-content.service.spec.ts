@@ -73,7 +73,7 @@ describe('HtmlContentService', () => {
     expect(content).toBe('Localized content');
   });
 
-  it('should fallback from locale-specific to default namespaced URL when localized content is empty', fakeAsync(() => {
+  it('should fallback from locale-specific to default namespaced URL when localized content is missing', fakeAsync(() => {
     setup('/repository/');
     localeService.languageCode = 'cs';
 
@@ -83,14 +83,33 @@ describe('HtmlContentService', () => {
     });
 
     const localizedRequest = httpMock.expectOne('/repository/static-files/cs/license-ud-1.0.html');
-    localizedRequest.flush('');
+    localizedRequest.flush('Not Found', { status: 404, statusText: 'Not Found' });
     tick();
 
-    const fallbackRequest = httpMock.expectOne('/repository/static-files/license-ud-1.0');
+    const fallbackRequest = httpMock.expectOne('/repository/static-files/license-ud-1.0.html');
     fallbackRequest.flush('Fallback content');
     tick();
 
     expect(content).toBe('Fallback content');
+  }));
+
+  it('should fallback from locale-specific to default URL when locale returns 404', fakeAsync(() => {
+    setup('/');
+    localeService.languageCode = 'cs';
+
+    let content: string | undefined;
+    service.getHmtlContentByPathAndLocale('license').then((result) => {
+      content = result;
+    });
+
+    httpMock.expectOne('/static-files/cs/license.html')
+      .flush('Not Found', { status: 404, statusText: 'Not Found' });
+    tick();
+
+    httpMock.expectOne('/static-files/license.html').flush('<div>English Content</div>');
+    tick();
+
+    expect(content).toBe('<div>English Content</div>');
   }));
 
   it('should return empty string from getHtmlContent when request fails', async () => {

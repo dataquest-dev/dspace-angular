@@ -1,10 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { HtmlContentService } from '../shared/html-content.service';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { isEmpty, isNotEmpty } from '../shared/empty.util';
-import { STATIC_FILES_DEFAULT_ERROR_PAGE_PATH, STATIC_PAGE_PATH } from './static-page-routing-paths';
+import { isEmpty } from '../shared/empty.util';
+import { STATIC_PAGE_PATH } from './static-page-routing-paths';
 import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
+import { ServerResponseService } from '../core/services/server-response.service';
 
 /**
  * Component which load and show static files from the `static-files` folder.
@@ -19,27 +20,48 @@ export class StaticPageComponent implements OnInit {
   static readonly no_static: string = 'no_static_';
   htmlContent: BehaviorSubject<string> = new BehaviorSubject<string>('');
   htmlFileName: string;
+  contentState: 'loading' | 'found' | 'not-found' = 'loading';
 
   constructor(private htmlContentService: HtmlContentService,
               private router: Router,
+              private responseService: ServerResponseService,
+              private changeDetector: ChangeDetectorRef,
               @Inject(APP_CONFIG) protected appConfig?: AppConfig) { }
 
   async ngOnInit(): Promise<void> {
-    // Fetch html file name from the url path. `static/some_file.html`
-    this.htmlFileName = this.getHtmlFileName();
+    try {
+      this.contentState = 'loading';
+      this.htmlContent.next('');
 
-    let htmlContent = await this.htmlContentService.getHmtlContentByPathAndLocale(this.htmlFileName);
-    if (isNotEmpty(htmlContent)) {
-      const restBase = this.appConfig?.rest?.baseUrl;
-      const oaiUrl = restBase ? restBase.replace(/\/+$/, '') + '/oai' : '/server/oai';
-      htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
+      // Fetch html file name from the url path. `static/some_file.html`
+      this.htmlFileName = this.getHtmlFileName();
 
-      this.htmlContent.next(htmlContent);
-      return;
+      let htmlContent = await this.htmlContentService.getHmtlContentByPathAndLocale(this.htmlFileName);
+      if (htmlContent !== undefined) {
+        const restBase = this.appConfig?.rest?.baseUrl;
+        const oaiUrl = restBase ? restBase.replace(/\/+$/, '') + '/oai' : '/server/oai';
+        htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
+
+        this.htmlContent.next(htmlContent);
+        this.contentState = 'found';
+        this.changeDetector.detectChanges();
+        return;
+      }
+
+      // Content not found - set 404 status for SSR and show inline error
+      this.responseService.setNotFound();
+      this.contentState = 'not-found';
+      this.changeDetector.detectChanges();
+    } catch (error) {
+      console.error('Static page load error:', {
+        fileName: this.htmlFileName,
+        url: this.router.url,
+        error: error
+      });
+      this.responseService.setNotFound();
+      this.contentState = 'not-found';
+      this.changeDetector.detectChanges();
     }
-
-    // Show error page
-    await this.loadErrorPage();
   }
 
   /**
@@ -123,24 +145,10 @@ export class StaticPageComponent implements OnInit {
     urlInList = urlInList.filter(n => n);
     // if length is 1 - html file name wasn't defined.
     if (isEmpty(urlInList) || urlInList.length === 1) {
-      void this.loadErrorPage();
       return null;
     }
 
     // If the url is too long take just the first string after `/static` prefix.
     return urlInList[1]?.split('#')?.[0];
-  }
-
-  /**
-   * Load `static-files/error.html`
-   * @private
-   */
-  private async loadErrorPage() {
-    let errorPage = await firstValueFrom(this.htmlContentService.fetchHtmlContent(STATIC_FILES_DEFAULT_ERROR_PAGE_PATH));
-    if (isEmpty(errorPage)) {
-      console.error('Cannot load error page from the path: ' + STATIC_FILES_DEFAULT_ERROR_PAGE_PATH);
-      return;
-    }
-    this.htmlContent.next(errorPage);
   }
 }

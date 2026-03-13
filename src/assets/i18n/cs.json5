@@ -35,6 +35,15 @@
   // "404.page-not-found": "Page not found",
   "404.page-not-found": "Stránka nebyla nalezena",
 
+  // "static-page.404.help": "The static page you requested does not exist. It may have been moved or deleted. You can use the button below to get back to the home page.",
+  "static-page.404.help": "Požadovaná statická stránka neexistuje. Mohla být přesunuta nebo smazána. Pomocí níže uvedeného tlačítka se můžete vrátit na domovskou stránku.",
+
+  // "static-page.404.link.home-page": "Take me to the home page",
+  "static-page.404.link.home-page": "Návrat na domovskou stránku",
+
+  // "static-page.404.page-not-found": "page not found",
+  "static-page.404.page-not-found": "stránka nebyla nalezena",
+
   // "error-page.description.401": "Unauthorized",
   "error-page.description.401": "Neautorizovaný přístup",
 
