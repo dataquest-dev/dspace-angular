@@ -4,6 +4,13 @@ rest:
   port: 8080
   nameSpace: /server
 
+# Item Config
+item:
+  # Whether to show the access status badge/label for items.
+  # If true, an access status badge will be shown for each item in result lists (e.g. search, browse).
+  showAccessStatuses: true
+  bitstream:
+    showAccessStatuses: true
 
 # Theme Config
 themes:
