@@ -212,46 +212,22 @@ jobs:
           REPO="dataquest-dev/dspace-rest-test"
           WORKFLOW="run_unittests.yml"
 
-          # Record time before dispatch to find the correct run later
-          TRIGGER_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          echo "Triggering REST tests at $TRIGGER_TIME"
-
-          # Trigger the workflow with inputs
           gh workflow run "$WORKFLOW" \
             --repo "$REPO" \
             --ref master \
             -f CUSTOMER="${{ github.ref_name }}" \
             -f URL="http://dev-5.pc:88/repository/server/api"
 
-          echo "Workflow dispatch triggered, waiting for run to appear..."
           sleep 15
 
-          # Find the run we just triggered
-          RUN_ID=""
-          for i in $(seq 1 12); do
-            RUN_ID=$(gh run list \
-              --repo "$REPO" \
-              --workflow "$WORKFLOW" \
-              --event workflow_dispatch \
-              --created ">=$TRIGGER_TIME" \
-              --limit 1 \
-              --json databaseId,createdAt \
-              --jq 'sort_by(.createdAt) | .[0].databaseId // empty')
+          RUN_ID=$(gh run list \
+            --repo "$REPO" \
+            --workflow "$WORKFLOW" \
+            --event workflow_dispatch \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId')
 
-            if [[ -n "$RUN_ID" ]]; then
-              echo "Found workflow run: $RUN_ID"
-              break
-            fi
-            echo "Attempt $i: Run not found yet, waiting 15s..."
-            sleep 15
-          done
-
-          if [[ -z "$RUN_ID" ]]; then
-            echo "::error::Could not find the triggered workflow run after 3 minutes"
-            exit 1
-          fi
-
-          # Watch the run until it completes (polls every 30s, shows live status)
           echo "Watching run: https://github.com/$REPO/actions/runs/$RUN_ID"
           gh run watch "$RUN_ID" --repo "$REPO" --interval 30 --exit-status
 
@@ -269,50 +245,26 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
     steps:
-      - name: Trigger and watch REST tests
+      - name: run rest-tests
         run: |
           REPO="dataquest-dev/dspace-rest-test"
           WORKFLOW="run_unittests.yml"
 
-          # Record time before dispatch to find the correct run later
-          TRIGGER_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          echo "Triggering REST tests at $TRIGGER_TIME"
-
-          # Trigger the workflow with inputs
           gh workflow run "$WORKFLOW" \
             --repo "$REPO" \
             --ref master \
             -f CUSTOMER="${{ github.ref_name }}" \
             -f URL="http://dev-5.pc:88/repository/server/api"
 
-          echo "Workflow dispatch triggered, waiting for run to appear..."
           sleep 15
 
-          # Find the run we just triggered (oldest after TRIGGER_TIME)
-          RUN_ID=""
-          for i in $(seq 1 12); do
-            RUN_ID=$(gh run list \
-              --repo "$REPO" \
-              --workflow "$WORKFLOW" \
-              --event workflow_dispatch \
-              --created ">=$TRIGGER_TIME" \
-              --limit 1 \
-              --json databaseId,createdAt \
-              --jq 'sort_by(.createdAt) | .[0].databaseId // empty')
+          RUN_ID=$(gh run list \
+            --repo "$REPO" \
+            --workflow "$WORKFLOW" \
+            --event workflow_dispatch \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId')
 
-            if [[ -n "$RUN_ID" ]]; then
-              echo "Found workflow run: $RUN_ID"
-              break
-            fi
-            echo "Attempt $i: Run not found yet, waiting 15s..."
-            sleep 15
-          done
-
-          if [[ -z "$RUN_ID" ]]; then
-            echo "::error::Could not find the triggered workflow run after 3 minutes"
-            exit 1
-          fi
-
-          # Watch the run until it completes
           echo "Watching run: https://github.com/$REPO/actions/runs/$RUN_ID"
           gh run watch "$RUN_ID" --repo "$REPO" --interval 30 --exit-status
