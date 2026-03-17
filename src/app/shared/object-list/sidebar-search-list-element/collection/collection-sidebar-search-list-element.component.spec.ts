@@ -2,7 +2,7 @@ import { CollectionSidebarSearchListElementComponent } from './collection-sideba
 import { CollectionSearchResult } from '../../../object-collection/shared/collection-search-result.model';
 import { Collection } from '../../../../core/shared/collection.model';
 import { Community } from '../../../../core/shared/community.model';
-import { createSidebarSearchListElementTests } from '../sidebar-search-list-element.component.spec';
+import { createHierarchicalParentTitleTests, createSidebarSearchListElementTests } from '../sidebar-search-list-element.component.spec';
 
 const object = Object.assign(new CollectionSearchResult(), {
   indexableObject: Object.assign(new Collection(), {
@@ -33,5 +33,9 @@ const parent = Object.assign(new Community(), {
 });
 
 describe('CollectionSidebarSearchListElementComponent',
-  createSidebarSearchListElementTests(CollectionSidebarSearchListElementComponent, object, parent, 'parent title', 'title', 'description')
+  createSidebarSearchListElementTests(CollectionSidebarSearchListElementComponent, object, parent, 'parent title', 'title', 'description', [], true)
+);
+
+describe('CollectionSidebarSearchListElementComponent - hierarchical path',
+  createHierarchicalParentTitleTests(CollectionSidebarSearchListElementComponent, object, 'title')
 );

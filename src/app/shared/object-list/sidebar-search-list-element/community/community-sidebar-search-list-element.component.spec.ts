@@ -1,5 +1,5 @@
 import { Community } from '../../../../core/shared/community.model';
-import { createSidebarSearchListElementTests } from '../sidebar-search-list-element.component.spec';
+import { createHierarchicalParentTitleTests, createSidebarSearchListElementTests } from '../sidebar-search-list-element.component.spec';
 import { CommunitySidebarSearchListElementComponent } from './community-sidebar-search-list-element.component';
 import { CommunitySearchResult } from '../../../object-collection/shared/community-search-result.model';
 
@@ -32,5 +32,9 @@ const parent = Object.assign(new Community(), {
 });
 
 describe('CommunitySidebarSearchListElementComponent',
-  createSidebarSearchListElementTests(CommunitySidebarSearchListElementComponent, object, parent, 'parent title', 'title', 'description')
+  createSidebarSearchListElementTests(CommunitySidebarSearchListElementComponent, object, parent, 'parent title', 'title', 'description', [], true)
+);
+
+describe('CommunitySidebarSearchListElementComponent - hierarchical path',
+  createHierarchicalParentTitleTests(CommunitySidebarSearchListElementComponent, object, 'title')
 );
