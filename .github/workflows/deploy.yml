@@ -218,21 +218,7 @@ jobs:
             -f CUSTOMER="${{ github.ref_name }}" \
             -f URL="http://dev-5.pc:88/repository/server/api" 2>&1)
 
-          echo "$OUTPUT"
-
           RUN_ID=$(echo "$OUTPUT" | grep -oE '/runs/[0-9]+' | grep -oE '[0-9]+')
-
-          echo "Run ID: $RUN_ID"
-
-          sleep 15
-
-          # RUN_ID=$(gh run list \
-          #   --repo "$REPO" \
-          #   --workflow "$WORKFLOW" \
-          #   --event workflow_dispatch \
-          #   --limit 1 \
-          #   --json databaseId \
-          #   --jq '.[0].databaseId')
 
           echo "Watching run: https://github.com/$REPO/actions/runs/$RUN_ID"
           gh run watch "$RUN_ID" --repo "$REPO" --interval 30 --exit-status
@@ -255,21 +241,13 @@ jobs:
     steps:
       - name: run rest-tests
         run: |
-          gh workflow run "$WORKFLOW" \
+          OUTPUT=$(gh workflow run "$WORKFLOW" \
             --repo "$REPO" \
             --ref master \
             -f CUSTOMER="${{ github.ref_name }}" \
-            -f URL="http://dev-5.pc:88/repository/server/api"
+            -f URL="http://dev-5.pc:88/repository/server/api" 2>&1)
 
-          sleep 15
-
-          RUN_ID=$(gh run list \
-            --repo "$REPO" \
-            --workflow "$WORKFLOW" \
-            --event workflow_dispatch \
-            --limit 1 \
-            --json databaseId \
-            --jq '.[0].databaseId')
+          RUN_ID=$(echo "$OUTPUT" | grep -oE '/runs/[0-9]+' | grep -oE '[0-9]+')
 
           echo "Watching run: https://github.com/$REPO/actions/runs/$RUN_ID"
           gh run watch "$RUN_ID" --repo "$REPO" --interval 30 --exit-status
