@@ -78,6 +78,16 @@
     </ds-generic-item-page-field>
 
     <ds-generic-item-page-field [item]="object"
+      [fields]="['dc.description.embargo']"
+      [label]="'item.page.embargo-statement'">
+    </ds-generic-item-page-field>
+
+    <ds-generic-item-page-field [item]="object"
+      [fields]="['dc.date.embargoend']"
+      [label]="'item.page.embargo-date'">
+    </ds-generic-item-page-field>
+
+    <ds-generic-item-page-field [item]="object"
       [fields]="['dc.subject']"
       [separator]="', '"
       [label]="'item.page.subject'">
