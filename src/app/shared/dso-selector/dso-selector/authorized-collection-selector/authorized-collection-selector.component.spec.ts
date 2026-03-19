@@ -21,6 +21,12 @@ describe('AuthorizedCollectionSelectorComponent', () => {
 
   let notificationsService: NotificationsService;
 
+  function createCollection(id: string, name: string): Collection {
+    return Object.assign(new Collection(), { id, name });
+  }
+
+  const collectionTest = createCollection('col-test', 'test');
+
   beforeEach(waitForAsync(() => {
     collection = Object.assign(new Collection(), {
       id: 'authorized-collection'

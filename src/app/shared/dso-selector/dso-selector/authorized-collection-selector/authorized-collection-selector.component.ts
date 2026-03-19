@@ -75,7 +75,8 @@ export class AuthorizedCollectionSelectorComponent extends DSOSelectorComponent 
     return searchListService$.pipe(
       getFirstCompletedRemoteData(),
       map((rd) => Object.assign(new RemoteData(null, null, null, null), rd, {
-        payload: hasValue(rd.payload) ? buildPaginatedList(rd.payload.pageInfo, rd.payload.page.map((col) => Object.assign(new CollectionSearchResult(), { indexableObject: col }))) : null,
+        payload: hasValue(rd.payload) ? buildPaginatedList(rd.payload.pageInfo,
+          rd.payload.page.map((col) => Object.assign(new CollectionSearchResult(), { indexableObject: col }))) : null,
       }))
     );
   }

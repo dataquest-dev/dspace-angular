@@ -44,6 +44,7 @@ import { NotificationType } from '../../notifications/models/notification-type';
 import {
   LISTABLE_NOTIFICATION_OBJECT
 } from '../../object-list/listable-notification-object/listable-notification-object.resource-type';
+import { SearchFilter } from '../../search/models/search-filter.model';
 
 @Component({
   selector: 'ds-dso-selector',
@@ -227,16 +228,39 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
    * @param useCache Whether or not to use the cache
    */
   search(query: string, page: number, useCache: boolean = true): Observable<RemoteData<PaginatedList<SearchResult<DSpaceObject>>>> {
-    // default sort is only used when there is not query
-    let efectiveSort = query ? null : this.sort;
+    const rawQuery = query ?? '';
+    const trimmedQuery = rawQuery.trim();
+    const hasQuery = isNotEmpty(trimmedQuery);
+
+    // default sort is only used when there is no query
+    let effectiveSort = hasQuery ? null : this.sort;
+
+    // For community/collection searches with a query, use a title startsWith filter
+    // so the backend handles prefix matching — Angular does not need to know about Solr syntax.
+    const filters: SearchFilter[] = [];
+    let processedQuery = trimmedQuery;
+    if (hasQuery) {
+      // Bypass filter-based search for internal field queries (e.g. search.resourceid:<uuid>)
+      const isInternalFieldQuery = /^\w[\w.]*:/.test(trimmedQuery);
+      if (!isInternalFieldQuery
+          && (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION))) {
+        // Use f.dc.title so the backend maps to dc.title_sort via startsWith operator.
+        // Communities and collections explicitly index dc.title_sort, enabling reliable
+        // case-insensitive prefix matching without requiring a separate title_sort alias.
+        filters.push(new SearchFilter('f.dc.title', [trimmedQuery], 'startsWith'));
+        processedQuery = '';
+      }
+    }
+
     return this.searchService.search(
       new PaginatedSearchOptions({
-        query: query,
+        query: processedQuery,
         dsoTypes: this.types,
+        filters: filters.length > 0 ? filters : undefined,
         pagination: Object.assign({}, this.defaultPagination, {
           currentPage: page
         }),
-        sort: efectiveSort
+        sort: effectiveSort
       }),
       null,
       useCache,

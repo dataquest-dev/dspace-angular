@@ -12,6 +12,7 @@ import { hasValue } from '../../empty.util';
 import { createPaginatedList } from '../../testing/utils.test';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { SortDirection, SortOptions } from '../../../core/cache/models/sort-options.model';
+import { SearchFilter } from '../../search/models/search-filter.model';
 
 describe('DSOSelectorComponent', () => {
   let component: DSOSelectorComponent;
@@ -158,6 +159,93 @@ describe('DSOSelectorComponent', () => {
     });
   });
 
+<<<<<<< Updated upstream
+=======
+  describe('query processing', () => {
+    beforeEach(() => {
+      spyOn(searchService, 'search').and.callThrough();
+    });
+
+    describe('for COMMUNITY/COLLECTION types', () => {
+      beforeEach(() => {
+        component.types = [DSpaceObjectType.COMMUNITY];
+      });
+
+      it('should use a title startsWith filter for community/collection searches', () => {
+        component.search('test query', 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: '',
+            filters: [jasmine.objectContaining({
+              key: 'f.dc.title',
+              values: ['test query'],
+              operator: 'startsWith'
+            })]
+          }),
+          null,
+          true
+        );
+      });
+
+      it('should pass through internal resource ID queries unchanged', () => {
+        const resourceIdQuery = component.getCurrentDSOQuery();
+        component.search(resourceIdQuery, 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: resourceIdQuery
+          }),
+          null,
+          true
+        );
+      });
+    });
+
+    describe('for ITEM types', () => {
+      beforeEach(() => {
+        component.types = [DSpaceObjectType.ITEM];
+      });
+
+      it('should pass through queries unchanged', () => {
+        component.search('test query', 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: 'test query'
+          }),
+          null,
+          true
+        );
+      });
+    });
+
+    describe('edge cases', () => {
+      beforeEach(() => {
+        component.types = [DSpaceObjectType.COMMUNITY];
+      });
+
+      it('should treat whitespace-only query as empty and apply default sort', () => {
+        component.sort = new SortOptions('dc.title', SortDirection.ASC);
+        component.search('   ', 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: '',
+            filters: undefined,
+            sort: jasmine.objectContaining({
+              field: 'dc.title',
+              direction: SortDirection.ASC,
+            }),
+          }),
+          null,
+          true
+        );
+      });
+    });
+  });
+
+>>>>>>> Stashed changes
   describe('when search returns an error', () => {
     beforeEach(() => {
       spyOn(searchService, 'search').and.returnValue(createFailedRemoteDataObject$());
