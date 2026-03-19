@@ -3747,6 +3747,12 @@
   // "item.page.description": "Description",
   "item.page.description": "Popis",
 
+  // "item.page.embargo-statement": "Delayed publication",
+  "item.page.embargo-statement": "Odložené zveřejnění",
+
+  // "item.page.embargo-date": "Available after",
+  "item.page.embargo-date": "Zveřejnění",
+
   // "item.page.journal-issn": "Journal ISSN",
   "item.page.journal-issn": "ISSN časopisu",
 
