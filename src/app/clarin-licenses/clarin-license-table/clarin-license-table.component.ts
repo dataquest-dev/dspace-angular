@@ -5,7 +5,7 @@ import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { getFirstCompletedRemoteData, getFirstSucceededRemoteData } from '../../core/shared/operators';
-import { scan, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
 import { defaultPagination, defaultSortConfiguration } from '../clarin-license-table-pagination';
@@ -66,6 +66,11 @@ export class ClarinLicenseTableComponent implements OnInit {
    * License name typed into search input field, it is passed to the BE as searching value.
    */
   searchingLicenseName = '';
+
+  /**
+   * Stores the previous search term to detect when a new search should reset pagination.
+   */
+  private previousSearchTerm = '';
 
   ngOnInit(): void {
     this.initializePaginationOptions();
@@ -316,9 +321,23 @@ export class ClarinLicenseTableComponent implements OnInit {
   }
 
   /**
+   * Run a search and reset the route-backed pagination when the search term changes.
+   */
+  searchLicenses() {
+    const hasSearchTermChanged = this.searchingLicenseName !== this.previousSearchTerm;
+
+    if (hasSearchTermChanged) {
+      this.paginationService.resetPage(this.options.id);
+    }
+
+    this.loadAllLicenses(hasSearchTermChanged ? 1 : undefined);
+    this.previousSearchTerm = this.searchingLicenseName;
+  }
+
+  /**
    * Fetch all licenses from the API.
    */
-  loadAllLicenses() {
+  loadAllLicenses(pageOverride?: number) {
     this.selectedLicense = null;
     this.licensesRD$ = new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
     this.isLoading = true;
@@ -326,22 +345,14 @@ export class ClarinLicenseTableComponent implements OnInit {
     // load the current pagination and sorting options
     const currentPagination$ = this.getCurrentPagination();
     const currentSort$ = this.getCurrentSort();
-    const searchTerm$ = new BehaviorSubject<string>(this.searchingLicenseName);
 
-    observableCombineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
-      scan((prevState, [currentPagination, currentSort, searchTerm]) => {
-        // If search term has changed, reset to page 1; otherwise, keep current page
-        const currentPage = prevState.searchTerm !== searchTerm ? 1 : currentPagination.currentPage;
-        return { currentPage, currentPagination, currentSort, searchTerm };
-      }, { searchTerm: '', currentPage: 1, currentPagination: this.getCurrentPagination(),
-        currentSort: this.getCurrentSort() }),
-
-      switchMap(({ currentPage, currentPagination, currentSort, searchTerm }) => {
+    observableCombineLatest([currentPagination$, currentSort$]).pipe(
+      switchMap(([currentPagination, currentSort]) => {
         return this.clarinLicenseService.searchBy('byNameLike', {
-            currentPage: currentPage, // Properly reset page only when needed
+            currentPage: pageOverride ?? currentPagination.currentPage,
             elementsPerPage: currentPagination.pageSize,
             sort: { field: currentSort.field, direction: currentSort.direction },
-            searchParams: [new RequestParam('name', searchTerm)]
+            searchParams: [new RequestParam('name', this.searchingLicenseName)]
           }, false
         );
       }),
