@@ -98,14 +98,9 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
     // For other DSO types, use the simple parent
     return this.getParent().pipe(
       map((parentRD: RemoteData<DSpaceObject>) => {
-<<<<<<< HEAD
-        return hasValue(parentRD) && hasValue(parentRD.payload) ? this.dsoNameService.getName(parentRD.payload, true) : undefined;
-      })
-=======
         return hasValue(parentRD) && hasValue(parentRD.payload) ? this.dsoNameService.getName(parentRD.payload) : undefined;
       }),
       shareReplay({ bufferSize: 1, refCount: true }),
->>>>>>> 54e3ee9315 (ZCU-PUB/Display full community path in sidebar search results (#1235))
     );
   }
 
