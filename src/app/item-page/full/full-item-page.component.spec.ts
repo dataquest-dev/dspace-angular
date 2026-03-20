@@ -43,6 +43,7 @@ import {
 import { ActivatedRouteStub } from '../../shared/testing/active-router.stub';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { ThemeService } from '../../shared/theme-support/theme.service';
+import { makeLinks } from '../../shared/utils/make-links';
 import { TruncatePipe } from '../../shared/utils/truncate.pipe';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { CollectionsComponent } from '../field-components/collections/collections.component';
@@ -52,7 +53,6 @@ import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
 import { ThemedFullFileSectionComponent } from './field-components/file-section/themed-full-file-section.component';
 import { FullItemPageComponent } from './full-item-page.component';
-import { makeLinks } from '../../shared/utils/make-links';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
@@ -305,8 +305,10 @@ describe('FullItemPageComponent', () => {
       expect(makeLinks('ftp://files.example.com/resource')).toContain('<a href="ftp://files.example.com/resource"');
     });
 
-    it('should convert www. URLs to clickable links', () => {
-      expect(makeLinks('www.example.com')).toContain('<a href="www.example.com"');
+    it('should convert www. URLs to clickable links with https:// prefix in href', () => {
+      const result = makeLinks('www.example.com');
+      expect(result).toContain('<a href="https://www.example.com"');
+      expect(result).toContain('>www.example.com</a>');
     });
 
     it('should return plain text unchanged', () => {
@@ -316,6 +318,10 @@ describe('FullItemPageComponent', () => {
     it('should handle null/undefined gracefully', () => {
       expect(makeLinks(null)).toBeUndefined();
       expect(makeLinks(undefined)).toBeUndefined();
+    });
+
+    it('should handle empty string', () => {
+      expect(makeLinks('')).toBe('');
     });
 
     it('should convert URLs embedded in text', () => {
@@ -331,10 +337,48 @@ describe('FullItemPageComponent', () => {
       expect(result).toContain('rel="noopener noreferrer"');
     });
 
+    it('should handle DOI resolver URLs', () => {
+      const result = makeLinks('https://doi.org/10.1234/test');
+      expect(result).toContain('<a href="https://doi.org/10.1234/test"');
+    });
+
     it('should not create links for javascript: URIs', () => {
       const result = makeLinks('javascript:alert(1)');
       expect(result).not.toContain('<a');
       expect(result).toBe('javascript:alert(1)');
+    });
+
+    it('should not create links for data: URIs', () => {
+      const result = makeLinks('data:text/html,<script>alert(1)</script>');
+      expect(result).not.toContain('<a');
+    });
+
+    it('should handle multiple URLs in one string', () => {
+      const result = makeLinks('See https://a.com and https://b.com');
+      expect(result).toContain('<a href="https://a.com"');
+      expect(result).toContain('<a href="https://b.com"');
+    });
+
+    it('should handle URLs with query parameters', () => {
+      const result = makeLinks('https://example.com/search?q=test&page=1');
+      expect(result).toContain('<a href="https://example.com/search?q=test&page=1"');
+    });
+
+    it('should handle URLs with fragments', () => {
+      const result = makeLinks('https://example.com/page#section');
+      expect(result).toContain('<a href="https://example.com/page#section"');
+    });
+
+    it('should handle URLs with paths', () => {
+      const result = makeLinks('https://example.com/path/to/resource');
+      expect(result).toContain('<a href="https://example.com/path/to/resource"');
+    });
+
+    it('should stop URL at closing parenthesis', () => {
+      const result = makeLinks('(https://example.com)');
+      expect(result).toContain('<a href="https://example.com"');
+      expect(result).toContain('(');
+      expect(result).toMatch(/\)$/);
     });
   });
 

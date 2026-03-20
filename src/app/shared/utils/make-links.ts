@@ -6,5 +6,8 @@
  */
 export function makeLinks(text: string): string {
   const regex = /(?:https?|ftp):\/\/[^\s)]+|www\.[^\s)]+/g;
-  return text?.replace(regex, (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+  return text?.replace(regex, (url) => {
+    const href = url.startsWith('www.') ? `https://${url}` : url;
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+  });
 }
