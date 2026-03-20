@@ -51,4 +51,68 @@ describe('PlainTextMetadataListElementComponent', () => {
     expect(fixture.debugElement.query(By.css('a.ds-browse-link')).nativeElement.innerHTML).toContain(mockMetadataRepresentation.value);
   });
 
+  it('should correctly detect ORCID authority', () => {
+    const orcidRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+      key: 'dc.contributor.author',
+      value: 'John Doe',
+      authority: '0000-0002-1825-0097',
+      confidence: 600,
+    });
+    comp.mdRepresentation = orcidRepresentation;
+    expect(comp.isOrcidAuthority()).toBe(true);
+  });
+
+  it('should return false for non-ORCID authority', () => {
+    const nonOrcidRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+      key: 'dc.contributor.author',
+      value: 'Jane Smith',
+      authority: 'not-an-orcid',
+      confidence: 600,
+    });
+    comp.mdRepresentation = nonOrcidRepresentation;
+    expect(comp.isOrcidAuthority()).toBe(false);
+  });
+
+  it('should generate correct ORCID profile URL', () => {
+    const orcidRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+      key: 'dc.contributor.author',
+      value: 'John Doe',
+      authority: '0000-0002-1825-0097',
+      confidence: 600,
+    });
+    comp.mdRepresentation = orcidRepresentation;
+    expect(comp.getOrcidUrl()).toBe('https://orcid.org/0000-0002-1825-0097');
+  });
+
+  it('should render ORCID link and badge for authority controlled metadata with ORCID', () => {
+    const orcidRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+      key: 'dc.contributor.author',
+      value: 'John Doe',
+      authority: '0000-0002-1825-0097',
+      confidence: 600,
+    });
+    comp.mdRepresentation = orcidRepresentation;
+    fixture.detectChanges();
+    const orcidLink = fixture.debugElement.query(By.css('a.orcid-link'));
+    expect(orcidLink).toBeTruthy();
+    expect(orcidLink.nativeElement.getAttribute('href')).toBe('https://orcid.org/0000-0002-1825-0097');
+    expect(orcidLink.nativeElement.textContent).toContain('John Doe');
+    const orcidBadge = fixture.debugElement.query(By.css('a.orcid-badge'));
+    expect(orcidBadge).toBeTruthy();
+  });
+
+  it('should render plain text for authority controlled metadata without ORCID', () => {
+    const nonOrcidRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+      key: 'dc.contributor.author',
+      value: 'Jane Smith',
+      authority: 'some-other-authority',
+      confidence: 600,
+    });
+    comp.mdRepresentation = nonOrcidRepresentation;
+    fixture.detectChanges();
+    const orcidLink = fixture.debugElement.query(By.css('a.orcid-link'));
+    expect(orcidLink).toBeFalsy();
+    expect(fixture.nativeElement.textContent).toContain('Jane Smith');
+  });
+
 });

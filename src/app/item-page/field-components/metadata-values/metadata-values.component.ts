@@ -141,6 +141,28 @@ export class MetadataValuesComponent implements OnChanges {
   }
 
   /**
+   * Checks if a metadata value has ORCID authority (matches ORCID pattern)
+   * @param mdValue - The metadata value to check
+   * @returns True if the authority field matches ORCID pattern
+   */
+  isOrcidAuthority(mdValue: MetadataValue): boolean {
+    if (!hasValue(mdValue.authority)) {
+      return false;
+    }
+    const orcidPattern = /^\d{4}-\d{4}-\d{4}-\d{4}$/;
+    return orcidPattern.test(mdValue.authority);
+  }
+
+  /**
+   * Generates ORCID profile URL from authority ID
+   * @param authorityId - The ORCID authority ID
+   * @returns The full ORCID profile URL
+   */
+  getOrcidUrl(authorityId: string): string {
+    return `https://orcid.org/${encodeURIComponent(authorityId)}`;
+  }
+
+  /**
    * This method performs a validation and determines the target of the url.
    * @returns - Returns the target url.
    */

@@ -1,10 +1,10 @@
 <ds-metadata-field-wrapper [label]="label | translate">
   @for (mdValue of mdValues; track mdValue; let last = $last) {
     <!--
-    Choose a template. Priority: markdown, link, browse link.
+    Choose a template. Priority: ORCID authority, markdown, link, browse link.
     -->
-      <ng-container *ngTemplateOutlet="(renderMarkdown ? markdown : (hasLink(mdValue) ? (hasValue(img) ? linkImg : link) : (hasBrowseDefinition() ? browselink : simple)));
-        context: {value: mdValue.value, img}">
+      <ng-container *ngTemplateOutlet="(isOrcidAuthority(mdValue) ? orcidTemplate : (renderMarkdown ? markdown : (hasLink(mdValue) ? (hasValue(img) ? linkImg : link) : (hasBrowseDefinition() ? browselink : simple))));
+        context: {value: mdValue.value, mdValue: mdValue, img}">
     </ng-container>
     @if (!last) {
       <span class="separator" [innerHTML]="separator"></span>
@@ -49,4 +49,26 @@
   <a class="dont-break-out preserve-line-breaks ds-browse-link"
     [routerLink]="['/browse', browseDefinition.id]"
   [queryParams]="getQueryParams(value)" role="link" tabindex="0">{{value}}</a>
+</ng-template>
+
+<!-- Render value with ORCID badge and clickable link to ORCID profile -->
+<ng-template #orcidTemplate let-value="value" let-mdValue="mdValue">
+  <span class="orcid-author">
+    <a class="dont-break-out preserve-line-breaks ds-orcid-link"
+       [href]="getOrcidUrl(mdValue.authority)"
+       target="_blank"
+       rel="noopener noreferrer"
+       role="link"
+       tabindex="0">
+      {{value}}
+    </a>
+    <a class="orcid-badge"
+       [href]="getOrcidUrl(mdValue.authority)"
+       target="_blank"
+       rel="noopener noreferrer">
+      <img src="assets/images/orcid.logo.icon.svg"
+           alt="ORCID iD icon"
+           class="orcid-icon">
+    </a>
+  </span>
 </ng-template>
