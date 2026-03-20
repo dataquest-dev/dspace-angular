@@ -25,11 +25,7 @@
                         <tr>
                           <td>{{mdEntry.key}}</td>
                           <td>
-                            @if (isHttpUrl(mdValue.value)) {
-                              <a [href]="mdValue.value.trim()" target="_blank" rel="noopener noreferrer" class="dont-break-out">{{mdValue.value.trim()}}</a>
-                            } @else {
-                              {{mdValue.value}}
-                            }
+                            <span [innerHTML]="makeLinks(mdValue.value)"></span>
                           </td>
                           <td>{{mdValue.language}}</td>
                         </tr>

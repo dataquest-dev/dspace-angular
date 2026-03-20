@@ -39,6 +39,7 @@ import { MetadataMap } from '../../core/shared/metadata.models';
 import { fadeInOut } from '../../shared/animations/fade';
 import { DsoEditMenuComponent } from '../../shared/dso-page/dso-edit-menu/dso-edit-menu.component';
 import { hasValue } from '../../shared/empty.util';
+import { makeLinks } from '../../shared/utils/make-links';
 import { ErrorComponent } from '../../shared/error/error.component';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
 import { VarDirective } from '../../shared/utils/var.directive';
@@ -78,6 +79,7 @@ import { ThemedFullFileSectionComponent } from './field-components/file-section/
   standalone: true,
 })
 export class FullItemPageComponent extends ItemPageComponent implements OnInit, OnDestroy {
+  protected readonly makeLinks = makeLinks;
 
   itemRD$: BehaviorSubject<RemoteData<Item>>;
 
@@ -117,14 +119,6 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
       this.fromSubmissionObject = hasValue(data.wfi) || hasValue(data.wsi);
     }),
     );
-  }
-
-  /**
-   * Check if a metadata value is an HTTP(S) URL.
-   */
-  isHttpUrl(value: string | null | undefined): boolean {
-    const v = value?.trim().toLowerCase();
-    return !!v && (v.startsWith('http://') || v.startsWith('https://'));
   }
 
   /**

@@ -52,6 +52,7 @@ import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
 import { ThemedFullFileSectionComponent } from './field-components/file-section/themed-full-file-section.component';
 import { FullItemPageComponent } from './full-item-page.component';
+import { makeLinks } from '../../shared/utils/make-links';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
@@ -290,25 +291,50 @@ describe('FullItemPageComponent', () => {
     });
   });
 
-  describe('isHttpUrl', () => {
-    it('should return true for https URLs', () => {
-      expect(comp.isHttpUrl('https://example.com')).toBeTrue();
+  describe('makeLinks', () => {
+    it('should convert https URLs to clickable links', () => {
+      expect(makeLinks('https://example.com')).toContain('<a href="https://example.com"');
+      expect(makeLinks('https://example.com')).toContain('target="_blank"');
     });
 
-    it('should return true for http URLs', () => {
-      expect(comp.isHttpUrl('http://example.com')).toBeTrue();
+    it('should convert http URLs to clickable links', () => {
+      expect(makeLinks('http://example.com')).toContain('<a href="http://example.com"');
     });
 
-    it('should return false for plain text', () => {
-      expect(comp.isHttpUrl('just some text')).toBeFalse();
+    it('should convert ftp URLs to clickable links', () => {
+      expect(makeLinks('ftp://files.example.com/resource')).toContain('<a href="ftp://files.example.com/resource"');
     });
 
-    it('should return false for null', () => {
-      expect(comp.isHttpUrl(null)).toBeFalse();
+    it('should convert www. URLs to clickable links', () => {
+      expect(makeLinks('www.example.com')).toContain('<a href="www.example.com"');
     });
 
-    it('should return false for undefined', () => {
-      expect(comp.isHttpUrl(undefined)).toBeFalse();
+    it('should return plain text unchanged', () => {
+      expect(makeLinks('just some text')).toBe('just some text');
+    });
+
+    it('should handle null/undefined gracefully', () => {
+      expect(makeLinks(null)).toBeUndefined();
+      expect(makeLinks(undefined)).toBeUndefined();
+    });
+
+    it('should convert URLs embedded in text', () => {
+      const result = makeLinks('Visit https://example.com for details');
+      expect(result).toContain('<a href="https://example.com"');
+      expect(result).toContain('Visit');
+      expect(result).toContain('for details');
+    });
+
+    it('should handle DOI / handle redirect URLs', () => {
+      const result = makeLinks('https://hdl.handle.net/123456789/1');
+      expect(result).toContain('<a href="https://hdl.handle.net/123456789/1"');
+      expect(result).toContain('rel="noopener noreferrer"');
+    });
+
+    it('should not create links for javascript: URIs', () => {
+      const result = makeLinks('javascript:alert(1)');
+      expect(result).not.toContain('<a');
+      expect(result).toBe('javascript:alert(1)');
     });
   });
 
@@ -328,10 +354,10 @@ describe('FullItemPageComponent', () => {
       expect(urlLink.nativeElement.getAttribute('rel')).toBe('noopener noreferrer');
     });
 
-    it('should render non-URL metadata values as plain text', () => {
+    it('should render non-URL metadata values as plain text without links', () => {
       const table = fixture.debugElement.query(By.css('table'));
-      const links = fixture.debugElement.queryAll(By.css('table a'));
       expect(table.nativeElement.innerHTML).toContain('plain text value');
+      const links = fixture.debugElement.queryAll(By.css('table a'));
       const plainTextLink = links.find(l => l.nativeElement.textContent.includes('plain text value'));
       expect(plainTextLink).toBeFalsy();
     });
