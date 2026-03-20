@@ -235,8 +235,14 @@ export class DsoEditMetadataForm {
     this.addValueToField(this.newValue, mdField);
     // Set the place property to match the new value's position within its field
     const place = this.fields[mdField].length - 1;
-    this.fields[mdField][place].originalValue.place = place;
-    this.fields[mdField][place].newValue.place = place;
+
+    // For new values (ADD operation), don't modify originalValue.place since it represents the original state
+    if (this.fields[mdField][place].change === DsoEditMetadataChangeType.ADD) {
+      this.fields[mdField][place].newValue.place = place;
+    } else {
+      this.fields[mdField][place].originalValue.place = place;
+      this.fields[mdField][place].newValue.place = place;
+    }
     this.newValue = undefined;
   }
 
@@ -412,31 +418,53 @@ export class DsoEditMetadataForm {
       const removeOperations: MetadataPatchRemoveOperation[] = [];
       const addOperations: MetadataPatchAddOperation[] = [];
       [...values]
-        .sort((a: DsoEditMetadataValue, b: DsoEditMetadataValue) => a.originalValue.place - b.originalValue.place)
+        .sort((a: DsoEditMetadataValue, b: DsoEditMetadataValue) => {
+          // Handle ADD operations that might have undefined originalValue.place
+          const aPlace = a.originalValue.place ?? Number.MAX_SAFE_INTEGER;
+          const bPlace = b.originalValue.place ?? Number.MAX_SAFE_INTEGER;
+          return aPlace - bPlace;
+        })
         .forEach((value: DsoEditMetadataValue) => {
           if (hasValue(value.change)) {
             if (value.change === DsoEditMetadataChangeType.UPDATE) {
               // Only changes to value or language are considered "replace" operations. Changes to place are considered "move", which is processed below.
               if (value.originalValue.value !== value.newValue.value || value.originalValue.language !== value.newValue.language
-                || value.originalValue.authority !== value.newValue.authority  || value.originalValue.confidence !== value.newValue.confidence) {
-                replaceOperations.push(new MetadataPatchReplaceOperation(field, value.originalValue.place, {
-                  value: value.newValue.value,
-                  language: value.newValue.language,
-                  authority: value.newValue.authority,
-                  confidence: value.newValue.confidence,
-                }));
+                || value.originalValue.authority !== value.newValue.authority || value.originalValue.confidence !== value.newValue.confidence) {
+                // Validate that this is truly an existing metadata value
+                if (value.originalValue.place === undefined || value.originalValue.place === null) {
+                  value.change = DsoEditMetadataChangeType.ADD;
+                } else if (!value.originalValue.value || value.originalValue.value.trim() === '') {
+                  value.change = DsoEditMetadataChangeType.ADD;
+                }
               }
+            }
+
+            // Process the operation based on the (possibly updated) change type
+            if (value.change === DsoEditMetadataChangeType.UPDATE) {
+              const replaceData: any = {
+                value: value.newValue.value,
+                language: value.newValue.language || null,
+              };
+              if (value.newValue.authority && value.newValue.authority.trim() !== '') {
+                replaceData.authority = value.newValue.authority;
+                replaceData.confidence = (value.newValue.confidence !== undefined && value.newValue.confidence !== -1) ? value.newValue.confidence : null;
+              }
+              replaceOperations.push(new MetadataPatchReplaceOperation(field, value.originalValue.place, replaceData));
             } else if (value.change === DsoEditMetadataChangeType.REMOVE) {
+              if (value.originalValue.place === undefined || value.originalValue.place === null) {
+                return;
+              }
               removeOperations.push(new MetadataPatchRemoveOperation(field, value.originalValue.place));
             } else if (value.change === DsoEditMetadataChangeType.ADD) {
-              addOperations.push(new MetadataPatchAddOperation(field, {
+              const addData: any = {
                 value: value.newValue.value,
-                language: value.newValue.language,
-                authority: value.newValue.authority,
-                confidence: value.newValue.confidence,
-              }));
-            } else {
-              console.warn('Illegal metadata change state detected for', value);
+                language: value.newValue.language || null,
+              };
+              if (value.newValue.authority && value.newValue.authority.trim() !== '') {
+                addData.authority = value.newValue.authority;
+                addData.confidence = (value.newValue.confidence !== undefined && value.newValue.confidence !== -1) ? value.newValue.confidence : null;
+              }
+              addOperations.push(new MetadataPatchAddOperation(field, addData));
             }
           }
         });

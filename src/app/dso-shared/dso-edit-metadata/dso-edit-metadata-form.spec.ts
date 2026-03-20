@@ -81,7 +81,8 @@ describe('DsoEditMetadataForm', () => {
 
       it('should set both its original and new place to match its position in the value array', () => {
         expect(form.fields[mdField][expectedPlace].newValue.place).toEqual(expectedPlace);
-        expect(form.fields[mdField][expectedPlace].originalValue.place).toEqual(expectedPlace);
+        // For ADD operations, originalValue.place should remain undefined
+        expect(form.fields[mdField][expectedPlace].originalValue.place).toBeUndefined();
       });
 
       it('should clear \"newValue\"', () => {

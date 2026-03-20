@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
+  catchError,
   map,
   mergeMap,
   switchMap,
@@ -28,6 +29,12 @@ import { VocabularyFindOptions } from './models/vocabulary-find-options.model';
 import { VocabularyOptions } from './models/vocabulary-options.model';
 import { VocabularyDataService } from './vocabulary.data.service';
 import { VocabularyEntryDetailsDataService } from './vocabulary-entry-details.data.service';
+import { ExternalSourceDataService } from '../../data/external-source-data.service';
+import { ExternalSourceEntry } from '../../shared/external-source-entry.model';
+import { PaginatedSearchOptions } from '../../../shared/search/models/paginated-search-options.model';
+import { PaginationComponentOptions } from '../../../shared/pagination/pagination-component-options.model';
+import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
+import { buildPaginatedList } from '../../data/paginated-list.model';
 
 /**
  * A service responsible for fetching/sending data from/to the REST API on the vocabularies endpoint
@@ -40,6 +47,7 @@ export class VocabularyService {
     protected requestService: RequestService,
     protected vocabularyDataService: VocabularyDataService,
     protected vocabularyEntryDetailDataService: VocabularyEntryDetailsDataService,
+    protected externalSourceDataService: ExternalSourceDataService,
   ) {
   }
 
@@ -149,6 +157,48 @@ export class VocabularyService {
    *    Return an observable that emits object list
    */
   getVocabularyEntriesByValue(value: string, exact: boolean, vocabularyOptions: VocabularyOptions, pageInfo: PageInfo): Observable<RemoteData<PaginatedList<VocabularyEntry>>> {
+    // Handle authority fields specially — use ORCID external source for search
+    const authorityFields = ['dc.contributor.author', 'dc.creator', 'dc.contributor.editor', 'dc.contributor.advisor'];
+    if (authorityFields.includes(vocabularyOptions.name)) {
+      if (value && value.length >= 2) {
+        const paginationOptions = Object.assign(new PaginationComponentOptions(), {
+          id: 'orcid-search',
+          currentPage: pageInfo.currentPage || 1,
+          pageSize: pageInfo.elementsPerPage || 10,
+        });
+        const searchOptions = new PaginatedSearchOptions({
+          query: value,
+          pagination: paginationOptions,
+        });
+        return this.externalSourceDataService.getExternalSourceEntries('orcid', searchOptions).pipe(
+          switchMap((orcidResponse: RemoteData<PaginatedList<ExternalSourceEntry>>) => {
+            if (orcidResponse.hasSucceeded && orcidResponse.payload && orcidResponse.payload.page.length > 0) {
+              const vocabularyEntries: VocabularyEntry[] = orcidResponse.payload.page.map(entry => {
+                const vocabEntry = new VocabularyEntry();
+                vocabEntry.display = `${entry.display} (ORCID: ${entry.id})`;
+                vocabEntry.value = entry.display;
+                vocabEntry.authority = entry.id;
+                vocabEntry.otherInformation = { orcid: entry.id };
+                return vocabEntry;
+              });
+              const resultList = buildPaginatedList(pageInfo, vocabularyEntries);
+              return createSuccessfulRemoteDataObject$(resultList);
+            } else {
+              const emptyList = buildPaginatedList(new PageInfo(), []);
+              return createSuccessfulRemoteDataObject$(emptyList);
+            }
+          }),
+          catchError(() => {
+            const emptyList = buildPaginatedList(new PageInfo(), []);
+            return createSuccessfulRemoteDataObject$(emptyList);
+          }),
+        );
+      } else {
+        const emptyList = buildPaginatedList(new PageInfo(), []);
+        return createSuccessfulRemoteDataObject$(emptyList);
+      }
+    }
+
     const options: VocabularyFindOptions = new VocabularyFindOptions(
       null,
       value,

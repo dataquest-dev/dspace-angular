@@ -30,6 +30,7 @@ import { VocabularyOptions } from './models/vocabulary-options.model';
 import { VocabularyDataService } from './vocabulary.data.service';
 import { VocabularyService } from './vocabulary.service';
 import { VocabularyEntryDetailsDataService } from './vocabulary-entry-details.data.service';
+import { ExternalSourceDataService } from '../../data/external-source-data.service';
 
 describe('VocabularyService', () => {
   let scheduler: TestScheduler;
@@ -39,6 +40,7 @@ describe('VocabularyService', () => {
   let objectCache: ObjectCacheService;
   let halService: HALEndpointService;
   let hrefOnlyDataService: HrefOnlyDataService;
+  let externalSourceDataService: ExternalSourceDataService;
   let responseCacheEntry: RequestEntry;
 
   const vocabulary: any = {
@@ -211,11 +213,13 @@ describe('VocabularyService', () => {
   function initTestService() {
     hrefOnlyDataService = getMockHrefOnlyDataService();
     objectCache = new ObjectCacheServiceStub() as ObjectCacheService;
+    externalSourceDataService = jasmine.createSpyObj('ExternalSourceDataService', ['getExternalSourceEntries']);
 
     return new VocabularyService(
       requestService,
       new VocabularyDataService(requestService, rdbService, objectCache, halService),
       new VocabularyEntryDetailsDataService(requestService, rdbService, objectCache, halService),
+      externalSourceDataService,
     );
   }
 
