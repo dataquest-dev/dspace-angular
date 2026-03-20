@@ -25,7 +25,15 @@
                         <tr>
                           <td>{{mdEntry.key}}</td>
                           <td>
-                            <span [innerHTML]="makeLinks(mdValue.value)"></span>
+                            @if (getMetadataLink(mdEntry.key, mdValue.value); as link) {
+                              @if (link.external) {
+                                <a [href]="link.href" target="_blank" rel="noopener noreferrer">{{mdValue.value}}</a>
+                              } @else {
+                                <a [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{mdValue.value}}</a>
+                              }
+                            } @else {
+                              <span [innerHTML]="makeLinks(mdValue.value)"></span>
+                            }
                           </td>
                           <td>{{mdValue.language}}</td>
                         </tr>

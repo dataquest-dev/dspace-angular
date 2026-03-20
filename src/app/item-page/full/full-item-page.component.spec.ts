@@ -43,7 +43,10 @@ import {
 import { ActivatedRouteStub } from '../../shared/testing/active-router.stub';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { ThemeService } from '../../shared/theme-support/theme.service';
-import { makeLinks } from '../../shared/utils/make-links';
+import {
+  getMetadataLink,
+  makeLinks,
+} from '../../shared/utils/make-links';
 import { TruncatePipe } from '../../shared/utils/truncate.pipe';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { CollectionsComponent } from '../field-components/collections/collections.component';
@@ -81,10 +84,52 @@ const mockItemWithUrl: Item = Object.assign(new Item(), {
         value: 'https://hdl.handle.net/123456789/1',
       },
     ],
-    'dc.subject': [
+    'dc.description': [
       {
         language: 'en_US',
         value: 'plain text value',
+      },
+    ],
+  },
+});
+
+const mockItemWithSpecialFields: Item = Object.assign(new Item(), {
+  bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
+  metadata: {
+    'dc.title': [
+      {
+        language: 'en_US',
+        value: 'test item',
+      },
+    ],
+    'local.identifier.doi': [
+      {
+        language: null,
+        value: '10.1234/test',
+      },
+    ],
+    'local.identifier.scopus': [
+      {
+        language: null,
+        value: '2-s2.0-85012345678',
+      },
+    ],
+    'local.identifier.wos': [
+      {
+        language: null,
+        value: 'WOS:000123456789',
+      },
+    ],
+    'dc.subject': [
+      {
+        language: 'en_US',
+        value: 'Mathematics',
+      },
+    ],
+    'dc.contributor.author': [
+      {
+        language: null,
+        value: 'Novák, Jan',
       },
     ],
   },
@@ -404,6 +449,114 @@ describe('FullItemPageComponent', () => {
       const links = fixture.debugElement.queryAll(By.css('table a'));
       const plainTextLink = links.find(l => l.nativeElement.textContent.includes('plain text value'));
       expect(plainTextLink).toBeFalsy();
+    });
+  });
+
+  describe('getMetadataLink', () => {
+    it('should return DOI resolver link for bare DOI', () => {
+      const link = getMetadataLink('local.identifier.doi', '10.1234/test');
+      expect(link).toBeTruthy();
+      expect(link.external).toBeTrue();
+      expect(link.href).toBe('https://doi.org/10.1234%2Ftest');
+    });
+
+    it('should return null for DOI that is already a full URL', () => {
+      expect(getMetadataLink('local.identifier.doi', 'https://doi.org/10.1234/test')).toBeNull();
+    });
+
+    it('should return Scopus link for Scopus ID', () => {
+      const link = getMetadataLink('local.identifier.scopus', '2-s2.0-85012345678');
+      expect(link).toBeTruthy();
+      expect(link.external).toBeTrue();
+      expect(link.href).toBe('https://www.scopus.com/record/display.uri?eid=2-s2.0-85012345678');
+    });
+
+    it('should return WOS link for WOS ID', () => {
+      const link = getMetadataLink('local.identifier.wos', 'WOS:000123456789');
+      expect(link).toBeTruthy();
+      expect(link.external).toBeTrue();
+      expect(link.href).toBe('https://www.webofscience.com/wos/woscc/full-record/WOS%3A000123456789');
+    });
+
+    it('should return internal search link for dc.subject', () => {
+      const link = getMetadataLink('dc.subject', 'Mathematics');
+      expect(link).toBeTruthy();
+      expect(link.external).toBeFalse();
+      expect(link.routerLink).toBe('/search');
+      expect(link.queryParams).toEqual({ 'f.subject': 'Mathematics,equals' });
+    });
+
+    it('should return internal search link for dc.contributor.author', () => {
+      const link = getMetadataLink('dc.contributor.author', 'Novák, Jan');
+      expect(link).toBeTruthy();
+      expect(link.external).toBeFalse();
+      expect(link.routerLink).toBe('/search');
+      expect(link.queryParams).toEqual({ 'f.author': 'Nov\u00e1k, Jan,equals' });
+    });
+
+    it('should return null for non-special metadata fields', () => {
+      expect(getMetadataLink('dc.title', 'some title')).toBeNull();
+      expect(getMetadataLink('dc.description', 'some description')).toBeNull();
+    });
+
+    it('should return null for empty or null values', () => {
+      expect(getMetadataLink('local.identifier.doi', '')).toBeNull();
+      expect(getMetadataLink('local.identifier.doi', null)).toBeNull();
+      expect(getMetadataLink('local.identifier.doi', undefined)).toBeNull();
+    });
+
+    it('should trim whitespace from values', () => {
+      const link = getMetadataLink('local.identifier.doi', '  10.1234/test  ');
+      expect(link.href).toBe('https://doi.org/10.1234%2Ftest');
+    });
+  });
+
+  describe('field-specific metadata link rendering', () => {
+    beforeEach(() => {
+      routeData.dso = createSuccessfulRemoteDataObject(mockItemWithSpecialFields);
+      comp.ngOnInit();
+      fixture.detectChanges();
+    });
+
+    it('should render bare DOI as external link to doi.org', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const doiLink = links.find(l => l.nativeElement.textContent.includes('10.1234/test'));
+      expect(doiLink).toBeTruthy();
+      expect(doiLink.nativeElement.getAttribute('href')).toContain('https://doi.org/');
+      expect(doiLink.nativeElement.getAttribute('target')).toBe('_blank');
+      expect(doiLink.nativeElement.getAttribute('rel')).toBe('noopener noreferrer');
+    });
+
+    it('should render Scopus ID as external link', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const scopusLink = links.find(l => l.nativeElement.textContent.includes('2-s2.0-85012345678'));
+      expect(scopusLink).toBeTruthy();
+      expect(scopusLink.nativeElement.getAttribute('href')).toContain('scopus.com');
+      expect(scopusLink.nativeElement.getAttribute('target')).toBe('_blank');
+    });
+
+    it('should render WOS ID as external link', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const wosLink = links.find(l => l.nativeElement.textContent.includes('WOS:000123456789'));
+      expect(wosLink).toBeTruthy();
+      expect(wosLink.nativeElement.getAttribute('href')).toContain('webofscience.com');
+      expect(wosLink.nativeElement.getAttribute('target')).toBe('_blank');
+    });
+
+    it('should render dc.subject as internal search link', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const subjectLink = links.find(l => l.nativeElement.textContent.includes('Mathematics'));
+      expect(subjectLink).toBeTruthy();
+      expect(subjectLink.nativeElement.getAttribute('href')).toContain('/search');
+      expect(subjectLink.nativeElement.getAttribute('target')).toBeNull();
+    });
+
+    it('should render dc.contributor.author as internal search link', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const authorLink = links.find(l => l.nativeElement.textContent.trim().includes('Nov'));
+      expect(authorLink).toBeTruthy();
+      expect(authorLink.nativeElement.getAttribute('href')).toContain('/search');
+      expect(authorLink.nativeElement.getAttribute('target')).toBeNull();
     });
   });
 });

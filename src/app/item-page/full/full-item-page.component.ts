@@ -41,7 +41,10 @@ import { DsoEditMenuComponent } from '../../shared/dso-page/dso-edit-menu/dso-ed
 import { hasValue } from '../../shared/empty.util';
 import { ErrorComponent } from '../../shared/error/error.component';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
-import { makeLinks } from '../../shared/utils/make-links';
+import {
+  getMetadataLink,
+  makeLinks,
+} from '../../shared/utils/make-links';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { CollectionsComponent } from '../field-components/collections/collections.component';
 import { ThemedItemPageTitleFieldComponent } from '../simple/field-components/specific-field/title/themed-item-page-field.component';
@@ -80,6 +83,7 @@ import { ThemedFullFileSectionComponent } from './field-components/file-section/
 })
 export class FullItemPageComponent extends ItemPageComponent implements OnInit, OnDestroy {
   protected readonly makeLinks = makeLinks;
+  protected readonly getMetadataLink = getMetadataLink;
 
   itemRD$: BehaviorSubject<RemoteData<Item>>;
 
