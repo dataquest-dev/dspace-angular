@@ -7036,6 +7036,12 @@
   // "search.filters.filter.creativeDatePublished.max.label": "End",
   "search.filters.filter.creativeDatePublished.max.label": "Konec",
 
+  // "search.filters.filter.dateAccessioned.max.label": "End",
+  "search.filters.filter.dateAccessioned.max.label": "Konec",
+
+  // "search.filters.filter.dateAccessioned.min.label": "Start",
+  "search.filters.filter.dateAccessioned.min.label": "Začátek",
+
   // "search.filters.filter.creativeWorkEditor.head": "Editor",
   "search.filters.filter.creativeWorkEditor.head": "Editor",
 
@@ -7266,6 +7272,15 @@
 
   // "search.filters.filter.access_status.label": "Search by access type",
   "search.filters.filter.access_status.label": "Hledat podle typu přístupu",
+
+  // "search.filters.filter.dateAccessioned.head": "Date accessioned",
+  "search.filters.filter.dateAccessioned.head": "Datum vložení záznamu",
+
+  // "search.filters.filter.dateAccessioned.placeholder": "Date accessioned",
+  "search.filters.filter.dateAccessioned.placeholder": "Datum vložení záznamu",
+
+  // "search.filters.filter.dateAccessioned.label": "Search by date accessioned",
+  "search.filters.filter.dateAccessioned.label": "Hledat podle data vložení záznamu",
 
   // "search.filters.entityType.JournalIssue": "Journal Issue",
   "search.filters.entityType.JournalIssue": "Číslo časopisu",
@@ -10376,6 +10391,12 @@
 
   // "search.filters.applied.f.queue_last_start_time.max": "Max range",
   "search.filters.applied.f.queue_last_start_time.max": "Maximální rozsah",
+
+  // "search.filters.applied.f.dateAccessioned.min": "Start date accessioned",
+  "search.filters.applied.f.dateAccessioned.min": "Počáteční datum vložení záznamu",
+
+  // "search.filters.applied.f.dateAccessioned.max": "End date accessioned",
+  "search.filters.applied.f.dateAccessioned.max": "Koncové datum vložení záznamu",
 
   // "admin.notify.dashboard.outbound": "Outbound messages",
   "admin.notify.dashboard.outbound": "Odchozí zprávy",

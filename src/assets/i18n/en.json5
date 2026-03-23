@@ -4690,6 +4690,10 @@
 
   "search.filters.filter.creativeDatePublished.max.label": "End",
 
+  "search.filters.filter.dateAccessioned.max.label": "End",
+
+  "search.filters.filter.dateAccessioned.min.label": "Start",
+
   "search.filters.filter.creativeWorkEditor.head": "Editor",
 
   "search.filters.filter.creativeWorkEditor.placeholder": "Editor",
@@ -4843,6 +4847,12 @@
   "search.filters.filter.access_status.placeholder": "Access type",
 
   "search.filters.filter.access_status.label": "Search by access type",
+
+  "search.filters.filter.dateAccessioned.head": "Date accessioned",
+
+  "search.filters.filter.dateAccessioned.placeholder": "Date accessioned",
+
+  "search.filters.filter.dateAccessioned.label": "Search by date accessioned",
 
   "search.filters.entityType.JournalIssue": "Journal Issue",
 
@@ -6879,6 +6889,10 @@
   "search.filters.applied.f.queue_last_start_time.min": "Min range",
 
   "search.filters.applied.f.queue_last_start_time.max": "Max range",
+
+  "search.filters.applied.f.dateAccessioned.min": "Start date accessioned",
+
+  "search.filters.applied.f.dateAccessioned.max": "End date accessioned",
 
   "admin.notify.dashboard.outbound": "Outbound messages",
 
