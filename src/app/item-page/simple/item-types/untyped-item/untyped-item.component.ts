@@ -21,6 +21,7 @@ import { ItemPageAbstractFieldComponent } from '../../field-components/specific-
 import { ItemPageCcLicenseFieldComponent } from '../../field-components/specific-field/cc-license/item-page-cc-license-field.component';
 import { ItemPageCitationFieldComponent } from '../../field-components/specific-field/citation/item-page-citation.component';
 import { ItemPageDateFieldComponent } from '../../field-components/specific-field/date/item-page-date-field.component';
+import { ItemPageFunderFieldComponent } from '../../field-components/specific-field/funder/item-page-funder-field.component';
 import { GenericItemPageFieldComponent } from '../../field-components/specific-field/generic/generic-item-page-field.component';
 import { GeospatialItemPageFieldComponent } from '../../field-components/specific-field/geospatial/geospatial-item-page-field.component';
 import { ThemedItemPageTitleFieldComponent } from '../../field-components/specific-field/title/themed-item-page-field.component';
@@ -45,6 +46,7 @@ import { ItemComponent } from '../shared/item.component';
     DsoEditMenuComponent,
     GenericItemPageFieldComponent,
     GeospatialItemPageFieldComponent,
+    ItemPageFunderFieldComponent,
     ItemPageAbstractFieldComponent,
     ItemPageCcLicenseFieldComponent,
     ItemPageCitationFieldComponent,
