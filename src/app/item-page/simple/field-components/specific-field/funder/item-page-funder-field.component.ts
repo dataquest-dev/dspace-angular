@@ -6,9 +6,9 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
-import { getFirstCompletedRemoteData } from '../../../../../core/shared/operators';
 import { Item } from '../../../../../core/shared/item.model';
 import { MetadataValue } from '../../../../../core/shared/metadata.models';
+import { getFirstCompletedRemoteData } from '../../../../../core/shared/operators';
 import { MetadataFieldWrapperComponent } from '../../../../../shared/metadata-field-wrapper/metadata-field-wrapper.component';
 
 @Component({
