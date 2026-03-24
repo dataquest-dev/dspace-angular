@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   DomSanitizer,
   SafeResourceUrl,
@@ -27,6 +28,7 @@ import { getFirstCompletedRemoteData } from '../../../../../core/shared/operator
   standalone: true,
   imports: [
     CommonModule,
+    TranslateModule,
   ],
 })
 export class ItemPageCitationFieldComponent implements OnInit {
