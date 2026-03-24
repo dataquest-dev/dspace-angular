@@ -10,7 +10,7 @@ import { MetadataValue } from '../../../../../core/shared/metadata.models';
 import { MetadataFieldWrapperComponent } from '../../../../../shared/metadata-field-wrapper/metadata-field-wrapper.component';
 
 /**
- * Mapping of funder codes (or partial metadata values) to full funder names.
+ * Mapping of codes to full funder names.
  */
 const FUNDER_NAME_MAP: Record<string, string> = {
   'EC': 'European Commission',
@@ -23,28 +23,6 @@ const FUNDER_NAME_MAP: Record<string, string> = {
   'MZE': 'Ministerstvo zemědělství ČR',
   'TA0': 'Technologická agentura ČR',
 };
-
-/**
- * Resolve a funder metadata value to a human-readable funder name.
- */
-function resolveFunderName(value: string): string {
-  if (!value) {
-    return value;
-  }
-
-  if (FUNDER_NAME_MAP[value]) {
-    return FUNDER_NAME_MAP[value];
-  }
-
-  const sortedKeys = Object.keys(FUNDER_NAME_MAP).sort((a, b) => b.length - a.length);
-  for (const key of sortedKeys) {
-    if (value.startsWith(key)) {
-      return FUNDER_NAME_MAP[key];
-    }
-  }
-
-  return value;
-}
 
 @Component({
   selector: 'ds-item-page-funder-field',
@@ -70,7 +48,7 @@ export class ItemPageFunderFieldComponent implements OnInit {
 
   ngOnInit(): void {
     const mdValues: MetadataValue[] = this.item?.allMetadata(['dc.relation.funder']) ?? [];
-    const resolved = mdValues.map(md => resolveFunderName(md.value));
+    const resolved = mdValues.map(md => FUNDER_NAME_MAP[md.value] ?? md.value);
 
     // Removed duplicates
     this.funderNames = [...new Set(resolved)];
