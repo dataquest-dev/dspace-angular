@@ -1,0 +1,8 @@
+<ds-metadata-field-wrapper [label]="label | translate">
+  @for (name of funderNames; track name; let last = $last) {
+    <span class="dont-break-out">{{ name }}</span>
+    @if (!last) {
+      <span class="separator" [innerHTML]="separator"></span>
+    }
+  }
+</ds-metadata-field-wrapper>
