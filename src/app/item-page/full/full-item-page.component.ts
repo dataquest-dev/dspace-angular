@@ -41,6 +41,8 @@ import { DsoEditMenuComponent } from '../../shared/dso-page/dso-edit-menu/dso-ed
 import { hasValue } from '../../shared/empty.util';
 import { ErrorComponent } from '../../shared/error/error.component';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
+import { makeLinks } from '../../shared/utils/make-links';
+import { MetadataLinkService } from '../../shared/utils/metadata-link.service';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { CollectionsComponent } from '../field-components/collections/collections.component';
 import { ThemedItemPageTitleFieldComponent } from '../simple/field-components/specific-field/title/themed-item-page-field.component';
@@ -78,6 +80,7 @@ import { ThemedFullFileSectionComponent } from './field-components/file-section/
   standalone: true,
 })
 export class FullItemPageComponent extends ItemPageComponent implements OnInit, OnDestroy {
+  protected readonly makeLinks = makeLinks;
 
   itemRD$: BehaviorSubject<RemoteData<Item>>;
 
@@ -101,6 +104,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
     protected linkHeadService: LinkHeadService,
     protected notifyInfoService: NotifyInfoService,
     @Inject(PLATFORM_ID) protected platformId: string,
+    protected metadataLinkService: MetadataLinkService,
   ) {
     super(route, router, items, authorizationService, responseService, signpostingDataService, linkHeadService, notifyInfoService, platformId);
   }

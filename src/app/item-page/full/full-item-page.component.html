@@ -24,7 +24,18 @@
                       @for (mdValue of mdEntry.value; track mdValue) {
                         <tr>
                           <td>{{mdEntry.key}}</td>
-                          <td>{{mdValue.value}}</td>
+                          <td>
+                            @if (metadataLinkService.getMetadataLink(mdEntry.key, mdValue.value) | async; as link) {
+                              <a [href]="link.href" target="_blank" rel="noopener noreferrer">{{mdValue.value}}</a>
+                            } @else {
+                              <span [innerHTML]="makeLinks(mdValue.value)"></span>
+                            }
+                            @if (metadataLinkService.getExtraLinks(mdEntry.key, mdValue.value) | async; as extras) {
+                              @for (extra of extras; track extra.label) {
+                                <a class="ms-2 badge text-bg-info" [href]="extra.href" target="_blank" rel="noopener noreferrer">{{extra.label}}</a>
+                              }
+                            }
+                          </td>
                           <td>{{mdValue.language}}</td>
                         </tr>
                       }

@@ -43,6 +43,7 @@ import {
 import { ActivatedRouteStub } from '../../shared/testing/active-router.stub';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { ThemeService } from '../../shared/theme-support/theme.service';
+import { MetadataLinkService } from '../../shared/utils/metadata-link.service';
 import { TruncatePipe } from '../../shared/utils/truncate.pipe';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { CollectionsComponent } from '../field-components/collections/collections.component';
@@ -60,6 +61,72 @@ const mockItem: Item = Object.assign(new Item(), {
       {
         language: 'en_US',
         value: 'test item',
+      },
+    ],
+  },
+});
+
+const mockItemWithUrl: Item = Object.assign(new Item(), {
+  bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
+  metadata: {
+    'dc.title': [
+      {
+        language: 'en_US',
+        value: 'test item',
+      },
+    ],
+    'dc.identifier.uri': [
+      {
+        language: null,
+        value: 'https://hdl.handle.net/123456789/1',
+      },
+    ],
+    'dc.description': [
+      {
+        language: 'en_US',
+        value: 'plain text value',
+      },
+    ],
+  },
+});
+
+const mockItemWithSpecialFields: Item = Object.assign(new Item(), {
+  bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
+  metadata: {
+    'dc.title': [
+      {
+        language: 'en_US',
+        value: 'test item',
+      },
+    ],
+    'local.identifier.doi': [
+      {
+        language: null,
+        value: '10.1234/test',
+      },
+    ],
+    'local.identifier.scopus': [
+      {
+        language: null,
+        value: '2-s2.0-85012345678',
+      },
+    ],
+    'local.identifier.wos': [
+      {
+        language: null,
+        value: 'WOS:000123456789',
+      },
+    ],
+    'dc.rights.uri': [
+      {
+        language: null,
+        value: 'https://creativecommons.org/licenses/by/4.0/',
+      },
+    ],
+    'dc.identifier.issn': [
+      {
+        language: null,
+        value: '1234-5678',
       },
     ],
   },
@@ -84,6 +151,7 @@ describe('FullItemPageComponent', () => {
   let linkHeadService: jasmine.SpyObj<LinkHeadService>;
   let notifyInfoService: jasmine.SpyObj<NotifyInfoService>;
   let headTagService: HeadTagServiceMock;
+  let metadataLinkService: jasmine.SpyObj<MetadataLinkService>;
 
   const mocklink = {
     href: 'http://test.org',
@@ -131,6 +199,10 @@ describe('FullItemPageComponent', () => {
 
     headTagService = new HeadTagServiceMock();
 
+    metadataLinkService = jasmine.createSpyObj('MetadataLinkService', ['getMetadataLink', 'getExtraLinks']);
+    metadataLinkService.getMetadataLink.and.returnValue(of(null));
+    metadataLinkService.getExtraLinks.and.returnValue(of([]));
+
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot({
         loader: {
@@ -149,6 +221,7 @@ describe('FullItemPageComponent', () => {
         { provide: NotifyInfoService, useValue: notifyInfoService },
         { provide: PLATFORM_ID, useValue: 'server' },
         { provide: ThemeService, useValue: getMockThemeService() },
+        { provide: MetadataLinkService, useValue: metadataLinkService },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
@@ -263,6 +336,111 @@ describe('FullItemPageComponent', () => {
     it('should add the signposting links', () => {
       expect(serverResponseService.setHeader).toHaveBeenCalled();
       expect(linkHeadService.addTag).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe('metadata URL rendering', () => {
+    beforeEach(() => {
+      routeData.dso = createSuccessfulRemoteDataObject(mockItemWithUrl);
+      comp.ngOnInit();
+      fixture.detectChanges();
+    });
+
+    it('should render URL metadata values as clickable links', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const urlLink = links.find(l => l.nativeElement.textContent.includes('https://hdl.handle.net/123456789/1'));
+      expect(urlLink).toBeTruthy();
+      expect(urlLink.nativeElement.getAttribute('href')).toBe('https://hdl.handle.net/123456789/1');
+      expect(urlLink.nativeElement.getAttribute('target')).toBe('_blank');
+      expect(urlLink.nativeElement.getAttribute('rel')).toBe('noopener noreferrer');
+    });
+
+    it('should render non-URL metadata values as plain text without links', () => {
+      const table = fixture.debugElement.query(By.css('table'));
+      expect(table.nativeElement.innerHTML).toContain('plain text value');
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const plainTextLink = links.find(l => l.nativeElement.textContent.includes('plain text value'));
+      expect(plainTextLink).toBeFalsy();
+    });
+  });
+
+  describe('field-specific metadata link rendering', () => {
+    beforeEach(() => {
+      metadataLinkService.getMetadataLink.and.callFake((key: string, value: string) => {
+        switch (key) {
+          case 'local.identifier.doi':
+            return of({ external: true, href: `https://doi.org/${encodeURIComponent(value)}` });
+          case 'local.identifier.scopus':
+            return of({ external: true, href: `https://www.scopus.com/record/display.uri?eid=${encodeURIComponent(value)}` });
+          case 'local.identifier.wos':
+            return of({ external: true, href: `https://www.webofscience.com/wos/woscc/full-record/${encodeURIComponent(value)}` });
+          case 'dc.rights.uri':
+            return of({ external: true, href: value });
+          default:
+            return of(null);
+        }
+      });
+      metadataLinkService.getExtraLinks.and.callFake((key: string, value: string) => {
+        if (key === 'dc.identifier.issn') {
+          return of([
+            { label: 'Sherpa/RoMEO', href: `https://openpolicyfinder.jisc.ac.uk/search?search=${encodeURIComponent(value)}` },
+            { label: 'JCR', href: `https://jcr.clarivate.com/jcr/browse-journals?search=${encodeURIComponent(value)}` },
+          ]);
+        }
+        return of([]);
+      });
+
+      routeData.dso = createSuccessfulRemoteDataObject(mockItemWithSpecialFields);
+      comp.ngOnInit();
+      fixture.detectChanges();
+    });
+
+    it('should render bare DOI as external link to doi.org', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const doiLink = links.find(l => l.nativeElement.textContent.includes('10.1234/test'));
+      expect(doiLink).toBeTruthy();
+      expect(doiLink.nativeElement.getAttribute('href')).toContain('https://doi.org/');
+      expect(doiLink.nativeElement.getAttribute('target')).toBe('_blank');
+      expect(doiLink.nativeElement.getAttribute('rel')).toBe('noopener noreferrer');
+    });
+
+    it('should render Scopus ID as external link', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const scopusLink = links.find(l => l.nativeElement.textContent.includes('2-s2.0-85012345678'));
+      expect(scopusLink).toBeTruthy();
+      expect(scopusLink.nativeElement.getAttribute('href')).toContain('scopus.com');
+      expect(scopusLink.nativeElement.getAttribute('target')).toBe('_blank');
+    });
+
+    it('should render WOS ID as external link', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const wosLink = links.find(l => l.nativeElement.textContent.includes('WOS:000123456789'));
+      expect(wosLink).toBeTruthy();
+      expect(wosLink.nativeElement.getAttribute('href')).toContain('webofscience.com');
+      expect(wosLink.nativeElement.getAttribute('target')).toBe('_blank');
+    });
+
+    it('should render dc.rights.uri as external link', () => {
+      const links = fixture.debugElement.queryAll(By.css('table a'));
+      const rightsLink = links.find(l => l.nativeElement.textContent.includes('creativecommons.org'));
+      expect(rightsLink).toBeTruthy();
+      expect(rightsLink.nativeElement.getAttribute('href')).toContain('https://creativecommons.org/licenses/by/4.0/');
+      expect(rightsLink.nativeElement.getAttribute('target')).toBe('_blank');
+    });
+
+    it('should render Sherpa/RoMEO and JCR badges for ISSN', () => {
+      const badges = fixture.debugElement.queryAll(By.css('table .badge'));
+      const sherpaLink = badges.find(l => l.nativeElement.textContent.includes('Sherpa/RoMEO'));
+      const jcrLink = badges.find(l => l.nativeElement.textContent.includes('JCR'));
+      expect(sherpaLink).toBeTruthy();
+      expect(sherpaLink.nativeElement.getAttribute('href')).toContain('openpolicyfinder.jisc.ac.uk');
+      expect(jcrLink).toBeTruthy();
+      expect(jcrLink.nativeElement.getAttribute('href')).toContain('jcr.clarivate.com');
+    });
+
+    it('should not render internal search links for dc.subject or dc.contributor.author', () => {
+      expect(metadataLinkService.getMetadataLink).not.toHaveBeenCalledWith('dc.subject', jasmine.anything());
+      expect(metadataLinkService.getMetadataLink).not.toHaveBeenCalledWith('dc.contributor.author', jasmine.anything());
     });
   });
 });
