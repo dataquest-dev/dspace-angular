@@ -4469,6 +4469,9 @@
   // "item.page.subject": "Keywords",
   "item.page.subject": "Klíčová slova",
 
+  // "item.page.funder": "The result was supported by the project",
+  "item.page.funder": "Výsledek byl podpořen projektem",
+
   // "item.page.uri": "Identifier",
   "item.page.uri": "Identifikátor",
 
