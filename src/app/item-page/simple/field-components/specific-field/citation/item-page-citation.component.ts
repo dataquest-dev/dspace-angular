@@ -4,11 +4,11 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import {
   DomSanitizer,
   SafeResourceUrl,
 } from '@angular/platform-browser';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   BehaviorSubject,
   combineLatest,
