@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
 
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';

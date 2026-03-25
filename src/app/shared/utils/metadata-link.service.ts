@@ -88,7 +88,7 @@ export class MetadataLinkService {
       sherpa: fetch('sherpa'),
       jcr: fetch('jcr'),
     }).pipe(
-      shareReplay(1),
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
   }
 

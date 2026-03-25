@@ -1,6 +1,4 @@
-import {
-  makeLinks,
-} from './make-links';
+import { makeLinks } from './make-links';
 
 describe('makeLinks', () => {
   it('should convert https URLs to clickable links', () => {
