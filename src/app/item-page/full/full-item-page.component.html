@@ -25,14 +25,15 @@
                         <tr>
                           <td>{{mdEntry.key}}</td>
                           <td>
-                            @if (getMetadataLink(mdEntry.key, mdValue.value); as link) {
-                              @if (link.external) {
-                                <a [href]="link.href" target="_blank" rel="noopener noreferrer">{{mdValue.value}}</a>
-                              } @else {
-                                <a [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{mdValue.value}}</a>
-                              }
+                            @if (metadataLinkService.getMetadataLink(mdEntry.key, mdValue.value) | async; as link) {
+                              <a [href]="link.href" target="_blank" rel="noopener noreferrer">{{mdValue.value}}</a>
                             } @else {
                               <span [innerHTML]="makeLinks(mdValue.value)"></span>
+                            }
+                            @if (metadataLinkService.getExtraLinks(mdEntry.key, mdValue.value) | async; as extras) {
+                              @for (extra of extras; track extra.label) {
+                                <a class="ms-2 badge text-bg-info" [href]="extra.href" target="_blank" rel="noopener noreferrer">{{extra.label}}</a>
+                              }
                             }
                           </td>
                           <td>{{mdValue.language}}</td>
