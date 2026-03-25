@@ -8,6 +8,7 @@ import {
   DomSanitizer,
   SafeResourceUrl,
 } from '@angular/platform-browser';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   BehaviorSubject,
   combineLatest,
@@ -27,6 +28,7 @@ import { getFirstCompletedRemoteData } from '../../../../../core/shared/operator
   standalone: true,
   imports: [
     CommonModule,
+    TranslateModule,
   ],
 })
 export class ItemPageCitationFieldComponent implements OnInit {
