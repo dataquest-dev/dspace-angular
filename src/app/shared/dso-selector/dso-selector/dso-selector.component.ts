@@ -121,7 +121,7 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
   @ViewChildren('listEntryElement') listElements: QueryList<ElementRef>;
 
   /**
-   * The Solr/Lucene field used for title-based prefix queries
+   * Field used for title-based prefix queries
    */
   protected readonly TITLE_FIELD = 'dc.title';
 
@@ -243,9 +243,9 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
 
     let processedQuery = trimmedQuery;
     if (isNotEmpty(trimmedQuery)) {
-      // Bypass query rewriting for internal Solr field queries (e.g. search.resourceid:<uuid>)
-      const isInternalSolrQuery = /^\w[\w.]*:/.test(trimmedQuery);
-      if (isInternalSolrQuery) {
+      // Bypass query rewriting for internal field queries (e.g. search.resourceid:<uuid>)
+      const isInternalFieldQuery  = /^\w[\w.]*:/.test(trimmedQuery);
+      if (isInternalFieldQuery ) {
         processedQuery = trimmedQuery;
       } else if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
         processedQuery = this.buildTitlePrefixQuery(trimmedQuery);
@@ -336,7 +336,7 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
   protected buildTitlePrefixQuery(query: string): string {
     if (hasValue(query) && query.trim().length > 0) {
       const trimmedQuery = query.trim();
-      const escapedQuery = this.escapeLuceneSpecialCharacters(trimmedQuery);
+      const escapedQuery = this.escapeQuerySpecialCharacters(trimmedQuery);
       const terms = escapedQuery.split(/\s+/).filter(term => term.length > 0);
 
       if (terms.length === 1) {
@@ -351,12 +351,12 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Escapes special Lucene/Solr characters in user input to prevent query syntax errors
+   * Escapes special query characters in user input to prevent syntax errors
    * @param query The user input query to escape
    * @returns The escaped query string
    */
-  private escapeLuceneSpecialCharacters(query: string): string {
-    // Escape special Lucene characters: + - && || ! ( ) { } [ ] ^ " ~ * ? : \ /
+  private escapeQuerySpecialCharacters(query: string): string {
+    // Escape special characters used in query syntax
     return query.replace(/[+\-!(){}[\]^"~*?:\\\/]/g, '\\$&')
                 .replace(/&&/g, '\\&&')
                 .replace(/\|\|/g, '\\||');
