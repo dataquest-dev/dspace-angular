@@ -356,27 +356,28 @@ function addOperationToList(body: JsonPatchOperationObject[], actionType, target
 
 /**
  * Dedupe operation entries by op and path. This prevents processing unnecessary patches in a single PATCH request.
+ * For any given op+path combination, only the latest operation is retained (earlier duplicates are discarded).
+ *
+ * Note: this function is only called for submission-form patch operations, which always use numeric-indexed or
+ * bare metadata paths (e.g. /sections/step/dc.title or /sections/step/dc.title/0). The JSON Patch append
+ * notation (path ending in "/-") is intentionally never produced by this pipeline, so collapsing duplicates
+ * by op+path is safe here.
  *
  * @param body JSON patch operation object entries
  * @returns deduped JSON patch operation object entries
  */
 function dedupeOperationEntries(body: JsonPatchOperationObject[]): JsonPatchOperationObject[] {
-  const ops = new Map<string, number>();
-  for (let i = body.length - 1; i >= 0; i--) {
-    const patch = body[i].operation;
-    const key = `${patch.op}-${patch.path}`;
-    if (!ops.has(key)) {
-      ops.set(key, i);
-    } else {
-      const entry = ops.get(key);
-      if (entry - 1 === i) {
-        body.splice(i, 1);
-        ops.set(key, i);
-      }
-    }
-  }
+  const lastIndexByOpPath = new Map<string, number>();
 
-  return body;
+  body.forEach((entry, index) => {
+    const patch = entry.operation;
+    lastIndexByOpPath.set(`${patch.op}-${patch.path}`, index);
+  });
+
+  return body.filter((entry, index) => {
+    const patch = entry.operation;
+    return lastIndexByOpPath.get(`${patch.op}-${patch.path}`) === index;
+  });
 }
 
 function makeOperationEntry(operation) {
