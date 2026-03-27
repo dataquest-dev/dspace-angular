@@ -99,4 +99,56 @@ describe('MetadataValuesComponent', () => {
     expect(result.rel).toBe('noopener noreferrer');
   });
 
+  it('should correctly detect ORCID authority pattern', () => {
+    const orcidMdValue = {
+      value: 'John Doe',
+      authority: '0000-0002-1825-0097',
+      confidence: 600,
+    } as MetadataValue;
+    expect(comp.isOrcidAuthority(orcidMdValue)).toBe(true);
+  });
+
+  it('should return false for non-ORCID authority patterns', () => {
+    const nonOrcidMdValue = {
+      value: 'Jane Smith',
+      authority: 'not-an-orcid',
+      confidence: 600,
+    } as MetadataValue;
+    expect(comp.isOrcidAuthority(nonOrcidMdValue)).toBe(false);
+  });
+
+  it('should return false for metadata values without authority', () => {
+    const noAuthorityMdValue = {
+      value: 'Anonymous Author',
+      authority: null,
+      confidence: -1,
+    } as MetadataValue;
+    expect(comp.isOrcidAuthority(noAuthorityMdValue)).toBe(false);
+  });
+
+  it('should generate correct ORCID profile URL', () => {
+    const orcidId = '0000-0002-1825-0097';
+    const expectedUrl = 'https://orcid.org/0000-0002-1825-0097';
+    expect(comp.getOrcidUrl(orcidId)).toBe(expectedUrl);
+  });
+
+  it('should render ORCID link and badge for metadata with ORCID authority', () => {
+    const orcidMetadata = [
+      {
+        language: 'en_US',
+        value: 'John Doe',
+        authority: '0000-0002-1825-0097',
+        confidence: 600,
+      },
+    ] as MetadataValue[];
+    comp.mdValues = orcidMetadata;
+    fixture.detectChanges();
+    const orcidLink = fixture.debugElement.query(By.css('a.ds-orcid-link'));
+    expect(orcidLink).toBeTruthy();
+    expect(orcidLink.nativeElement.getAttribute('href')).toBe('https://orcid.org/0000-0002-1825-0097');
+    expect(orcidLink.nativeElement.textContent).toContain('John Doe');
+    const orcidBadge = fixture.debugElement.query(By.css('a.orcid-badge'));
+    expect(orcidBadge).toBeTruthy();
+  });
+
 });

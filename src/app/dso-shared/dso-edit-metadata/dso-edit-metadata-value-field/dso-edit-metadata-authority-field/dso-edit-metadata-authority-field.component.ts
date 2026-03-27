@@ -57,6 +57,7 @@ import { NotificationsService } from '../../../../shared/notifications/notificat
 import { DebounceDirective } from '../../../../shared/utils/debounce.directive';
 import { followLink } from '../../../../shared/utils/follow-link-config.model';
 import { AbstractDsoEditMetadataValueFieldComponent } from '../abstract-dso-edit-metadata-value-field.component';
+import { DsoEditMetadataChangeType } from '../../dso-edit-metadata-form';
 import { DsoEditMetadataFieldService } from '../dso-edit-metadata-field.service';
 
 /**
@@ -125,6 +126,16 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
     super();
   }
 
+  private static readonly KNOWN_AUTHORITY_FIELDS = [
+    'dc.contributor.author',
+    'dc.creator',
+    'dc.contributor.editor',
+    'dc.contributor.advisor',
+    'dc.contributor.other',
+    'dcterms.creator',
+    'dcterms.contributor',
+  ];
+
   ngOnInit(): void {
     this.initAuthorityProperties();
   }
@@ -163,15 +174,16 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
     if (isNotEmpty(vocabulary)) {
       let formFieldValue: FormFieldMetadataValueObject | string;
       if (isNotEmpty(this.mdValue.newValue.value)) {
-        formFieldValue = new FormFieldMetadataValueObject();
-        formFieldValue.value = this.mdValue.newValue.value;
-        formFieldValue.display = this.mdValue.newValue.value;
-        if (this.mdValue.newValue.authority) {
-          formFieldValue.authority = this.mdValue.newValue.authority;
-          formFieldValue.confidence = this.mdValue.newValue.confidence;
-        }
+        formFieldValue = new FormFieldMetadataValueObject(
+          this.mdValue.newValue.value,
+          this.mdValue.newValue.language,
+          this.mdValue.newValue.authority,
+          this.mdValue.newValue.value,
+          0,
+          this.mdValue.newValue.confidence,
+        );
       } else {
-        formFieldValue = this.mdValue.newValue.value;
+        formFieldValue = this.mdValue.newValue.value || '';
       }
 
       const vocabularyOptions = vocabulary ? {
@@ -224,17 +236,22 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
           changes.mdField.previousValue !== changes.mdField.currentValue) {
           // Clear authority value in case it has been assigned with the previous metadataField used
           this.mdValue.newValue.authority = null;
-          this.mdValue.newValue.confidence = ConfidenceType.CF_UNSET;
+          this.mdValue.newValue.confidence = null;
         }
 
-        // Only ask if the current mdField have a period character to reduce request
+        // Skip validation for known authority fields and directly initialize
         if (changes.mdField.currentValue.includes('.')) {
-          this.validateMetadataField().subscribe((isValid: boolean) => {
-            if (isValid) {
-              this.initAuthorityProperties();
-              this.cdr.detectChanges();
-            }
-          });
+          if (DsoEditMetadataAuthorityFieldComponent.KNOWN_AUTHORITY_FIELDS.includes(changes.mdField.currentValue)) {
+            this.initAuthorityProperties();
+            this.cdr.detectChanges();
+          } else {
+            this.validateMetadataField().subscribe((isValid: boolean) => {
+              if (isValid) {
+                this.initAuthorityProperties();
+                this.cdr.detectChanges();
+              }
+            });
+          }
         }
       }
     }
@@ -272,14 +289,16 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
         this.mdValue.newValue.confidence = ConfidenceType.CF_ACCEPTED;
       } else {
         this.mdValue.newValue.authority = null;
-        this.mdValue.newValue.confidence = ConfidenceType.CF_UNSET;
+        this.mdValue.newValue.confidence = null;
       }
+      this.mdValue.change = DsoEditMetadataChangeType.UPDATE;
       this.confirm.emit(false);
     } else {
       // The event is undefined when the user clears the selection in scrollable dropdown
       this.mdValue.newValue.value = '';
       this.mdValue.newValue.authority = null;
-      this.mdValue.newValue.confidence = ConfidenceType.CF_UNSET;
+      this.mdValue.newValue.confidence = null;
+      this.mdValue.change = DsoEditMetadataChangeType.UPDATE;
       this.confirm.emit(false);
     }
   }
@@ -308,9 +327,11 @@ export class DsoEditMetadataAuthorityFieldComponent extends AbstractDsoEditMetad
   onChangeAuthorityKey() {
     if (this.mdValue.newValue.authority === '') {
       this.mdValue.newValue.confidence = ConfidenceType.CF_NOVALUE;
+      this.mdValue.change = DsoEditMetadataChangeType.UPDATE;
       this.confirm.emit(false);
     } else if (this.mdValue.newValue.authority !== this.mdValue.originalValue.authority) {
       this.mdValue.newValue.confidence = ConfidenceType.CF_ACCEPTED;
+      this.mdValue.change = DsoEditMetadataChangeType.UPDATE;
       this.confirm.emit(false);
     }
   }

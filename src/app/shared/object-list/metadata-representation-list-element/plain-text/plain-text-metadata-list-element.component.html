@@ -11,7 +11,19 @@
       {{mdRepresentation.getValue()}}
     </a>
   }
-  @if ((mdRepresentation.representationType==='authority_controlled')) {
+  @if ((mdRepresentation.representationType==='authority_controlled') && isOrcidAuthority()) {
+    <span class="dont-break-out orcid-author">
+      <a class="orcid-link" [href]="getOrcidUrl()" target="_blank" rel="noopener noreferrer">
+        {{mdRepresentation.getValue()}}
+      </a>
+      <a class="orcid-badge" [href]="getOrcidUrl()" target="_blank" rel="noopener noreferrer">
+        <img src="assets/images/orcid.logo.icon.svg"
+             alt="ORCID iD icon"
+             class="orcid-icon">
+      </a>
+    </span>
+  }
+  @if ((mdRepresentation.representationType==='authority_controlled') && !isOrcidAuthority()) {
     <span class="dont-break-out">{{mdRepresentation.getValue()}}</span>
   }
   @if ((mdRepresentation.representationType==='browse_link')) {

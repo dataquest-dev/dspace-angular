@@ -31,6 +31,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import {
   Observable,
   of,
+  of as observableOf,
   Subject,
   Subscription,
 } from 'rxjs';
@@ -345,6 +346,24 @@ export class DsDynamicOneboxComponent extends DsDynamicVocabularyComponent imple
     this.subs
       .filter((sub) => hasValue(sub))
       .forEach((sub) => sub.unsubscribe());
+  }
+
+  /**
+   * Override getInitValueFromModel to handle ORCID authority fields properly.
+   * For ORCID fields, return the original FormFieldMetadataValueObject without vocabulary lookup.
+   */
+  getInitValueFromModel(preserveConfidence = false): Observable<FormFieldMetadataValueObject> {
+    if (isNotEmpty(this.model.value) &&
+        (this.model.value instanceof FormFieldMetadataValueObject) &&
+        !this.model.value.hasAuthorityToGenerate() &&
+        this.model.value.hasAuthority()) {
+      const authority = this.model.value.authority;
+      const isORCID = authority && /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(authority);
+      if (isORCID) {
+        return observableOf(this.model.value);
+      }
+    }
+    return super.getInitValueFromModel(preserveConfidence);
   }
 
 }
