@@ -535,6 +535,36 @@ describe('FormBuilderService test suite', () => {
     expect(service.getValueFromModel(formModel)).toEqual(value);
   });
 
+  it('should preserve place 0 for object-valued fields in arrays', () => {
+    const arrayModel = new DynamicRowArrayModel({
+      id: 'testObjectArray',
+      initialCount: 1,
+      notRepeatable: false,
+      relationshipConfig: undefined,
+      submissionId,
+      isDraggable: true,
+      groupFactory: () => [
+        new DynamicInputModel({ id: 'dc_title' }),
+      ],
+      required: false,
+      metadataKey: 'dc.title',
+      metadataFields: ['dc.title'],
+      hasSelectableMetadata: true,
+      showButtons: true,
+      typeBindRelations: [],
+    });
+
+    (arrayModel.groups[0].group[0] as any).name = 'dc.title';
+    (arrayModel.groups[0].group[0] as any).value = {
+      value: 'Title with stale place',
+      place: 4,
+    };
+
+    const value = service.getValueFromModel([arrayModel]);
+
+    expect(value['dc.title'][0].place).toBe(0);
+  });
+
   it('should clear all form\'s fields value', () => {
     const formModel = service.modelFromConfiguration(submissionId, testFormConfiguration, 'testScopeUUID');
     const value = {} as any;

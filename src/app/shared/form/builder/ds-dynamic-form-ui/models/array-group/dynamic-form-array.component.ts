@@ -1,6 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, Output, QueryList } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import {
   DynamicFormArrayComponent,
   DynamicFormControlCustomEvent,
@@ -17,6 +17,7 @@ import { hasValue } from '../../../../../empty.util';
 import { DynamicRowArrayModel } from '../ds-dynamic-row-array-model';
 import { LiveRegionService } from '../../../../../live-region/live-region.service';
 import { TranslateService } from '@ngx-translate/core';
+import { FormBuilderService } from '../../../form-builder.service';
 
 @Component({
   selector: 'ds-dynamic-form-array',
@@ -48,6 +49,7 @@ export class DsDynamicFormArrayComponent extends DynamicFormArrayComponent {
               protected validationService: DynamicFormValidationService,
               protected liveRegionService: LiveRegionService,
               protected translateService: TranslateService,
+              protected formBuilderService: FormBuilderService,
   ) {
     super(layoutService, validationService);
   }
@@ -59,7 +61,12 @@ export class DsDynamicFormArrayComponent extends DynamicFormArrayComponent {
       return;
     }
 
-    this.model.moveGroup(event.previousIndex, event.currentIndex - event.previousIndex);
+    this.formBuilderService.moveFormArrayGroup(
+      event.previousIndex,
+      event.currentIndex - event.previousIndex,
+      this.control as UntypedFormArray,
+      this.model,
+    );
     const prevIndex = event.previousIndex;
     const index = event.currentIndex;
 
@@ -90,16 +97,13 @@ export class DsDynamicFormArrayComponent extends DynamicFormArrayComponent {
   }
 
   /**
-   * Gets the control of the specified group model. It adds the startingIndex property to the group model if it does not
-   * already have it. This ensures that the controls are always linked to the correct group model.
+   * Gets the control of the specified group model.
+   * The control index now stays aligned with group index because reorder operations move both model and controls.
    * @param groupModel The group model to get the control for.
    * @returns The form control of the specified group model.
    */
   getControlOfGroup(groupModel: any) {
-    if (!groupModel.hasOwnProperty('startingIndex')) {
-      groupModel.startingIndex = groupModel.index;
-    }
-    return this.control.get([groupModel.startingIndex]);
+    return this.control.get([groupModel.index]);
   }
 
   /**
@@ -163,7 +167,12 @@ export class DsDynamicFormArrayComponent extends DynamicFormArrayComponent {
     }
 
     if (this.elementBeingSorted) {
-      this.model.moveGroup(idx, newIndex - idx);
+      this.formBuilderService.moveFormArrayGroup(
+        idx,
+        newIndex - idx,
+        this.control as UntypedFormArray,
+        this.model,
+      );
       if (hasValue(this.model.groups[newIndex]) && hasValue((this.control as any).controls[newIndex])) {
         this.onCustomEvent({
           previousIndex: idx,
@@ -191,7 +200,12 @@ export class DsDynamicFormArrayComponent extends DynamicFormArrayComponent {
   }
 
   cancelKeyboardDragAndDrop(sortableElement: HTMLDivElement, index: number, length: number) {
-    this.model.moveGroup(index, this.elementBeingSortedStartingIndex - index);
+    this.formBuilderService.moveFormArrayGroup(
+      index,
+      this.elementBeingSortedStartingIndex - index,
+      this.control as UntypedFormArray,
+      this.model,
+    );
     if (hasValue(this.model.groups[this.elementBeingSortedStartingIndex]) && hasValue((this.control as any).controls[this.elementBeingSortedStartingIndex])) {
       this.onCustomEvent({
         previousIndex: index,
