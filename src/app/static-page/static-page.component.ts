@@ -17,7 +17,6 @@ import { ServerResponseService } from '../core/services/server-response.service'
   styleUrls: ['./static-page.component.scss']
 })
 export class StaticPageComponent implements OnInit {
-  static readonly no_static: string = 'no_static_';
   htmlContent: BehaviorSubject<string> = new BehaviorSubject<string>('');
   htmlFileName: string;
   contentState: 'loading' | 'found' | 'not-found' = 'loading';
@@ -69,46 +68,36 @@ export class StaticPageComponent implements OnInit {
    * @param event
    */
   processLinks(event: Event): void {
-    const targetElement = event.target as HTMLElement;
+    const targetElement = event.target as HTMLElement | null;
+    const anchorElement = targetElement?.closest?.('a');
+    if (!anchorElement) {
+      return;
+    }
 
-    if (targetElement.nodeName !== 'A') {
+    const href = anchorElement.getAttribute('href');
+    if (!href || !this.isRelativeLink(href)) {
       return;
     }
 
     event.preventDefault();
-
-    const href = targetElement.getAttribute('href');
-    const { nameSpace } = this.appConfig.ui;
-    const namespacePrefix = nameSpace === '/' ? '' : nameSpace;
-
-    const redirectUrl = this.composeRedirectUrl(href, namespacePrefix);
-
-    if (this.isFragmentLink(href)) {
-      this.redirectToFragment(redirectUrl, href);
-    } else if (this.isRelativeLink(href)) {
-      this.redirectToRelativeLink(redirectUrl, href);
-    } else if (this.isExternalLink(href)) {
-      this.redirectToExternalLink(href);
-    } else {
-      this.redirectToAbsoluteLink(redirectUrl, href, namespacePrefix);
-    }
+    const namespacePrefix = this.getNamespacePrefix();
+    const staticPageBaseUrl = this.composeStaticPageBaseUrl(namespacePrefix);
+    this.redirectToRelativeLink(staticPageBaseUrl, href);
   }
 
-  private composeRedirectUrl(href: string | null, namespacePrefix: string): string {
-    const staticPagePath = STATIC_PAGE_PATH;
+  private getNamespacePrefix(): string {
+    const nameSpace = this.appConfig?.ui?.nameSpace ?? '/';
+    return nameSpace === '/' ? '' : nameSpace.replace(/\/$/, '');
+  }
+
+  private composeUrl(pathname: string): string {
     const baseUrl = new URL(window.location.origin);
-    baseUrl.pathname = href.startsWith(StaticPageComponent.no_static)
-            ? `${namespacePrefix}/`
-            : `${namespacePrefix}/${staticPagePath}/`;
+    baseUrl.pathname = pathname;
     return baseUrl.href;
   }
 
-  private isFragmentLink(href: string | null): boolean {
-    return href?.startsWith('#') ?? false;
-  }
-
-  private redirectToFragment(redirectUrl: string, href: string | null): void {
-    window.location.href = `${redirectUrl}${this.htmlFileName}${href}`;
+  private composeStaticPageBaseUrl(namespacePrefix: string): string {
+    return this.composeUrl(`${namespacePrefix}/${STATIC_PAGE_PATH}/`);
   }
 
   private isRelativeLink(href: string | null): boolean {
@@ -116,23 +105,11 @@ export class StaticPageComponent implements OnInit {
   }
 
   private redirectToRelativeLink(redirectUrl: string, href: string | null): void {
-    window.location.href = new URL(href, redirectUrl).href;
+    this.navigateTo(new URL(href, redirectUrl).href);
   }
 
-  private isExternalLink(href: string | null): boolean {
-    return (href?.startsWith('http') || href?.startsWith('www')) ?? false;
-  }
-
-  private redirectToExternalLink(href: string | null): void {
-    window.location.replace(href);
-  }
-
-  private redirectToAbsoluteLink(redirectUrl: string, href: string | null, namespacePrefix: string): void {
-    if (href.startsWith(StaticPageComponent.no_static)) {
-      href = href.replace(StaticPageComponent.no_static, '');
-    }
-    const absoluteUrl = new URL(href, redirectUrl.replace(namespacePrefix, ''));
-    window.location.href = absoluteUrl.href;
+  private navigateTo(url: string): void {
+    window.location.href = url;
   }
 
   /**
