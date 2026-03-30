@@ -244,7 +244,8 @@ export class FormBuilderService extends DynamicFormService {
         return new FormFieldMetadataValueObject(dateToString(controlValue));
       } else if (isObject(controlValue)) {
         const authority = (controlValue as any).authority || (controlValue as any).id || null;
-        const place = controlModelIndex || (controlValue as any).place;
+        const hasArrayIndex = controlModelIndex !== null;
+        const place = hasArrayIndex ? controlModelIndex : (controlValue as any).place;
         if (isNgbDateStruct(controlValue)) {
           return new FormFieldMetadataValueObject(controlValue, controlLanguage, authority, controlValue as any, place);
         } else {

@@ -5,7 +5,7 @@ import {
   inject,
   TestBed,
 } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
   DynamicFormLayoutService,
@@ -34,6 +34,7 @@ import { UUIDService } from '../../../../../../core/shared/uuid.service';
 import { TranslateLoaderMock } from '../../../../../mocks/translate-loader.mock';
 import { LiveRegionService } from '../../../../../live-region/live-region.service';
 import { getLiveRegionServiceStub } from '../../../../../live-region/live-region.service.stub';
+import { FormBuilderService } from '../../../form-builder.service';
 
 describe('DsDynamicFormArrayComponent', () => {
   const translateServiceStub = {
@@ -46,6 +47,15 @@ describe('DsDynamicFormArrayComponent', () => {
 
   const uuidServiceStub = {
     generate: () => 'fake-id'
+  };
+
+  const formBuilderServiceStub = {
+    moveFormArrayGroup: (index: number, step: number, formArray: UntypedFormArray, model: DynamicRowArrayModel) => {
+      const movedControl = formArray.at(index);
+      formArray.removeAt(index);
+      formArray.insert(index + step, movedControl);
+      model.moveGroup(index, step);
+    }
   };
 
   let component: DsDynamicFormArrayComponent;
@@ -76,6 +86,7 @@ describe('DsDynamicFormArrayComponent', () => {
         { provide: APP_CONFIG, useValue: environment },
         { provide: UUIDService, useValue: uuidServiceStub },
         { provide: LiveRegionService, useValue: getLiveRegionServiceStub() },
+        { provide: FormBuilderService, useValue: formBuilderServiceStub },
       ],
     }).overrideComponent(DsDynamicFormArrayComponent, {
       remove: {
@@ -160,13 +171,30 @@ describe('DsDynamicFormArrayComponent', () => {
 
   it('should cancel keyboard drag and drop', () => {
     const dropList = fixture.debugElement.query(By.css('[cdkDropList]')).nativeElement;
+    const formArray = component.group.get(component.model.id) as UntypedFormArray;
     component.elementBeingSortedStartingIndex = 2;
     component.elementBeingSorted = dropList.querySelectorAll('[cdkDragHandle]')[2];
-    component.model.moveGroup(2, 1);
+    (component as any).formBuilderService.moveFormArrayGroup(2, 1, formArray, component.model);
     fixture.detectChanges();
     component.cancelKeyboardDragAndDrop(dropList, 1, 3);
     fixture.detectChanges();
     expect(component.elementBeingSorted).toBeNull();
     expect(component.elementBeingSortedStartingIndex).toBeNull();
+  });
+
+  it('should move model groups and FormArray controls together on drag and drop reorder', () => {
+    const formArray = component.group.get(component.model.id) as UntypedFormArray;
+    const valueControl = 'testFormRowArrayGroupInput';
+
+    ((formArray.at(0) as UntypedFormGroup).controls[valueControl]).setValue('one');
+    ((formArray.at(4) as UntypedFormGroup).controls[valueControl]).setValue('five');
+    (component.model.groups[0].group[0] as any).value = 'one';
+    (component.model.groups[4].group[0] as any).value = 'five';
+
+    component.moveSelection({ previousIndex: 4, currentIndex: 0 } as any);
+
+    expect((component.model.groups[0].group[0] as any).value).toBe('five');
+    expect(((formArray.at(0) as UntypedFormGroup).controls[valueControl]).value).toBe('five');
+    expect(component.getControlOfGroup(component.model.groups[0] as any)).toBe(formArray.at(0));
   });
 });
