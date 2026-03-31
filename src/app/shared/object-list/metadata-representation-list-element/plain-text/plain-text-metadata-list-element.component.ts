@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -50,7 +49,7 @@ export class PlainTextMetadataListElementComponent extends MetadataRepresentatio
           console.error('PlainTextMetadataListElementComponent: backend config property "orcid.domain-url" returned no values. ORCID author linking will be disabled.');
         }
       },
-      error: err => {
+      error: (err: unknown) => {
         console.error('PlainTextMetadataListElementComponent: failed to fetch backend config property "orcid.domain-url". ORCID author linking will be disabled.', err);
       },
     });
