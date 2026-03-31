@@ -1,0 +1,17 @@
+.orcid-author-link {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.orcid-icon {
+  color: #a6ce39; // Official ORCID green color
+  font-size: 1em;
+  margin-left: 0.25rem;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

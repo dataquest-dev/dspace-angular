@@ -22,6 +22,18 @@ const mockMetadataRepresentation = Object.assign(new MetadatumRepresentation('ty
   value: 'Test Author',
 });
 
+const mockOrcidRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+  key: 'dc.contributor.author',
+  value: 'Orcid Author',
+  authority: '0000-0002-1825-0097',
+});
+
+const mockNonOrcidAuthorityRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+  key: 'dc.contributor.author',
+  value: 'Authority Author',
+  authority: 'some-non-orcid-authority-key',
+});
+
 describe('PlainTextMetadataListElementComponent', () => {
   let comp: PlainTextMetadataListElementComponent;
   let fixture: ComponentFixture<PlainTextMetadataListElementComponent>;
@@ -49,6 +61,55 @@ describe('PlainTextMetadataListElementComponent', () => {
 
   it('should contain the browse link as plain text', () => {
     expect(fixture.debugElement.query(By.css('a.ds-browse-link')).nativeElement.innerHTML).toContain(mockMetadataRepresentation.value);
+  });
+
+  describe('when metadata has ORCID authority', () => {
+    beforeEach(() => {
+      comp.mdRepresentation = mockOrcidRepresentation;
+      fixture.detectChanges();
+    });
+
+    it('should render an ORCID link', () => {
+      const link = fixture.debugElement.query(By.css('a.orcid-author-link'));
+      expect(link).toBeTruthy();
+      expect(link.nativeElement.getAttribute('href')).toBe('https://orcid.org/0000-0002-1825-0097');
+      expect(link.nativeElement.textContent).toContain('Orcid Author');
+    });
+
+    it('should render an ORCID icon', () => {
+      const icon = fixture.debugElement.query(By.css('a.orcid-author-link i.fa-orcid'));
+      expect(icon).toBeTruthy();
+    });
+
+    it('isOrcidAuthority should return true', () => {
+      expect(comp.isOrcidAuthority()).toBeTrue();
+    });
+
+    it('getOrcidUrl should return full ORCID URL', () => {
+      expect(comp.getOrcidUrl()).toBe('https://orcid.org/0000-0002-1825-0097');
+    });
+  });
+
+  describe('when metadata has non-ORCID authority', () => {
+    beforeEach(() => {
+      comp.mdRepresentation = mockNonOrcidAuthorityRepresentation;
+      fixture.detectChanges();
+    });
+
+    it('should render as plain text (no ORCID link)', () => {
+      const link = fixture.debugElement.query(By.css('a.orcid-author-link'));
+      expect(link).toBeFalsy();
+    });
+
+    it('should render the value as a span', () => {
+      const span = fixture.debugElement.query(By.css('span.dont-break-out'));
+      expect(span).toBeTruthy();
+      expect(span.nativeElement.textContent).toContain('Authority Author');
+    });
+
+    it('isOrcidAuthority should return false', () => {
+      expect(comp.isOrcidAuthority()).toBeFalse();
+    });
   });
 
 });
