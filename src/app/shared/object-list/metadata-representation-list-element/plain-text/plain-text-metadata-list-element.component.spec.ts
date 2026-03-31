@@ -12,10 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { MetadatumRepresentation } from '../../../../core/shared/metadata-representation/metadatum/metadatum-representation.model';
-import {
-  createFailedRemoteDataObject$,
-  createSuccessfulRemoteDataObject$,
-} from '../../../remote-data.utils';
+import { createSuccessfulRemoteDataObject$ } from '../../../remote-data.utils';
 import { ActivatedRouteStub } from '../../../testing/active-router.stub';
 import { mockData } from '../../../testing/browse-definition-data-service.stub';
 import { PlainTextMetadataListElementComponent } from './plain-text-metadata-list-element.component';
