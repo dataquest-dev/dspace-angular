@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
