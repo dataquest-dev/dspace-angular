@@ -10,7 +10,10 @@ import {
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
+import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { MetadatumRepresentation } from '../../../../core/shared/metadata-representation/metadatum/metadatum-representation.model';
+import { createSuccessfulRemoteDataObject$ } from '../../../remote-data.utils';
+import { createFailedRemoteDataObject$ } from '../../../remote-data.utils';
 import { ActivatedRouteStub } from '../../../testing/active-router.stub';
 import { mockData } from '../../../testing/browse-definition-data-service.stub';
 import { PlainTextMetadataListElementComponent } from './plain-text-metadata-list-element.component';
@@ -34,6 +37,18 @@ const mockNonOrcidAuthorityRepresentation = Object.assign(new MetadatumRepresent
   authority: 'some-non-orcid-authority-key',
 });
 
+const mockOrcidWithWhitespaceRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+  key: 'dc.contributor.author',
+  value: 'Whitespace Orcid Author',
+  authority: '  0000-0002-1825-0097  ',
+});
+
+const mockConfigurationDataService = {
+  findByPropertyName: jasmine.createSpy('findByPropertyName').and.returnValue(
+    createSuccessfulRemoteDataObject$({ values: ['https://orcid.org'] }),
+  ),
+};
+
 describe('PlainTextMetadataListElementComponent', () => {
   let comp: PlainTextMetadataListElementComponent;
   let fixture: ComponentFixture<PlainTextMetadataListElementComponent>;
@@ -41,7 +56,10 @@ describe('PlainTextMetadataListElementComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [PlainTextMetadataListElementComponent],
-      providers: [{ provide: ActivatedRoute, useValue: new ActivatedRouteStub() }],
+      providers: [
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+        { provide: ConfigurationDataService, useValue: mockConfigurationDataService },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).overrideComponent(PlainTextMetadataListElementComponent, {
       set: { changeDetection: ChangeDetectionStrategy.Default },
@@ -109,6 +127,53 @@ describe('PlainTextMetadataListElementComponent', () => {
 
     it('isOrcidAuthority should return false', () => {
       expect(comp.isOrcidAuthority()).toBeFalse();
+    });
+  });
+
+  describe('getOrcidUrl with trailing slash handling', () => {
+    it('should not double-slash when domain URL ends with /', () => {
+      comp.orcidDomainUrl = 'https://orcid.org/';
+      comp.mdRepresentation = mockOrcidRepresentation;
+      expect(comp.getOrcidUrl()).toBe('https://orcid.org/0000-0002-1825-0097');
+    });
+
+    it('should add slash when domain URL does not end with /', () => {
+      comp.orcidDomainUrl = 'https://sandbox.orcid.org';
+      comp.mdRepresentation = mockOrcidRepresentation;
+      expect(comp.getOrcidUrl()).toBe('https://sandbox.orcid.org/0000-0002-1825-0097');
+    });
+  });
+
+  describe('when backend config is not available', () => {
+    beforeEach(() => {
+      comp.orcidDomainUrl = null;
+      comp.mdRepresentation = mockOrcidRepresentation;
+      fixture.detectChanges();
+    });
+
+    it('should not render ORCID link even if authority is ORCID', () => {
+      const link = fixture.debugElement.query(By.css('a.orcid-author-link'));
+      expect(link).toBeFalsy();
+    });
+
+    it('isOrcidAuthority should return false', () => {
+      expect(comp.isOrcidAuthority()).toBeFalse();
+    });
+  });
+
+  describe('when authority has leading/trailing whitespace', () => {
+    beforeEach(() => {
+      comp.orcidDomainUrl = 'https://orcid.org';
+      comp.mdRepresentation = mockOrcidWithWhitespaceRepresentation;
+      fixture.detectChanges();
+    });
+
+    it('isOrcidAuthority should return true after trimming', () => {
+      expect(comp.isOrcidAuthority()).toBeTrue();
+    });
+
+    it('getOrcidUrl should return trimmed ORCID URL', () => {
+      expect(comp.getOrcidUrl()).toBe('https://orcid.org/0000-0002-1825-0097');
     });
   });
 
