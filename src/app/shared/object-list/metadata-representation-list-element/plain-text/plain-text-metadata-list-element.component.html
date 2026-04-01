@@ -12,10 +12,9 @@
     </a>
   }
   @if ((mdRepresentation.representationType==='authority_controlled')) {
-    @let orcidDomainUrl = orcidDomainUrl$ | async;
-    @let isOrcid = isOrcidAuthority(orcidDomainUrl);
+    @let isOrcid = isOrcidAuthority();
     @if (isOrcid) {
-      <a class="dont-break-out orcid-author-link" [href]="getOrcidUrl(orcidDomainUrl)" target="_blank" rel="noopener noreferrer">
+      <a class="dont-break-out orcid-author-link" [href]="getOrcidUrl()" target="_blank" rel="noopener noreferrer">
         {{mdRepresentation.getValue()}}
         <i class="fa-brands fa-orcid orcid-icon" aria-hidden="true"></i>
       </a>
