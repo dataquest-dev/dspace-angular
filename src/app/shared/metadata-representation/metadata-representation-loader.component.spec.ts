@@ -8,6 +8,7 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { Context } from '../../core/shared/context.model';
 import {
   MetadataRepresentation,
@@ -16,6 +17,7 @@ import {
 import { DynamicComponentLoaderDirective } from '../abstract-component-loader/dynamic-component-loader.directive';
 import { getMockThemeService } from '../mocks/theme-service.mock';
 import { PlainTextMetadataListElementComponent } from '../object-list/metadata-representation-list-element/plain-text/plain-text-metadata-list-element.component';
+import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
 import { ThemeService } from '../theme-support/theme.service';
 import { METADATA_REPRESENTATION_COMPONENT_FACTORY } from './metadata-representation.decorator';
 import { MetadataRepresentationLoaderComponent } from './metadata-representation-loader.component';
@@ -61,6 +63,14 @@ describe('MetadataRepresentationLoaderComponent', () => {
         {
           provide: ThemeService,
           useValue: themeService,
+        },
+        {
+          provide: ConfigurationDataService,
+          useValue: {
+            findByPropertyName: jasmine.createSpy('findByPropertyName').and.returnValue(
+              createSuccessfulRemoteDataObject$({ values: ['https://orcid.org'] }),
+            ),
+          },
         },
       ],
     }).overrideComponent(MetadataRepresentationLoaderComponent, {
