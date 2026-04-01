@@ -26,20 +26,32 @@ const mockMetadataRepresentation = Object.assign(new MetadatumRepresentation('ty
 
 const mockOrcidRepresentation = Object.assign(new MetadatumRepresentation('type'), {
   key: 'dc.contributor.author',
-  value: 'Orcid Author',
-  authority: '0000-0002-1825-0097',
+  value: 'Doe, John',
+  authority: '1234-5678-9012-3456',
 });
 
 const mockNonOrcidAuthorityRepresentation = Object.assign(new MetadatumRepresentation('type'), {
   key: 'dc.contributor.author',
-  value: 'Authority Author',
+  value: 'Smith, Jane',
   authority: 'some-non-orcid-authority-key',
 });
 
 const mockOrcidWithWhitespaceRepresentation = Object.assign(new MetadatumRepresentation('type'), {
   key: 'dc.contributor.author',
-  value: 'Whitespace Orcid Author',
-  authority: '  0000-0002-1825-0097  ',
+  value: 'Doe, Jane',
+  authority: '  1234-5678-9012-3456  ',
+});
+
+const mockOrcidFullUrlRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+  key: 'dc.contributor.author',
+  value: 'Doe, John',
+  authority: 'https://orcid.org/1234-5678-9012-3456',
+});
+
+const mockOrcidFullUrlSandboxRepresentation = Object.assign(new MetadatumRepresentation('type'), {
+  key: 'dc.contributor.author',
+  value: 'Smith, Jane',
+  authority: 'https://sandbox.orcid.org/1234-5678-9012-345X',
 });
 
 const mockConfigurationDataService = {
@@ -89,8 +101,8 @@ describe('PlainTextMetadataListElementComponent', () => {
     it('should render an ORCID link', () => {
       const link = fixture.debugElement.query(By.css('a.orcid-author-link'));
       expect(link).toBeTruthy();
-      expect(link.nativeElement.getAttribute('href')).toBe('https://orcid.org/0000-0002-1825-0097');
-      expect(link.nativeElement.textContent).toContain('Orcid Author');
+      expect(link.nativeElement.getAttribute('href')).toBe('https://orcid.org/1234-5678-9012-3456');
+      expect(link.nativeElement.textContent).toContain('Doe, John');
     });
 
     it('should render an ORCID icon', () => {
@@ -99,11 +111,11 @@ describe('PlainTextMetadataListElementComponent', () => {
     });
 
     it('isOrcidAuthority should return true', () => {
-      expect(comp.isOrcidAuthority()).toBeTrue();
+      expect(comp.isOrcidAuthority(comp.orcidDomainUrl$.value)).toBeTrue();
     });
 
     it('getOrcidUrl should return full ORCID URL', () => {
-      expect(comp.getOrcidUrl()).toBe('https://orcid.org/0000-0002-1825-0097');
+      expect(comp.getOrcidUrl(comp.orcidDomainUrl$.value)).toBe('https://orcid.org/1234-5678-9012-3456');
     });
   });
 
@@ -121,31 +133,31 @@ describe('PlainTextMetadataListElementComponent', () => {
     it('should render the value as a span', () => {
       const span = fixture.debugElement.query(By.css('span.dont-break-out'));
       expect(span).toBeTruthy();
-      expect(span.nativeElement.textContent).toContain('Authority Author');
+      expect(span.nativeElement.textContent).toContain('Smith, Jane');
     });
 
     it('isOrcidAuthority should return false', () => {
-      expect(comp.isOrcidAuthority()).toBeFalse();
+      expect(comp.isOrcidAuthority(comp.orcidDomainUrl$.value)).toBeFalse();
     });
   });
 
   describe('getOrcidUrl with trailing slash handling', () => {
     it('should not double-slash when domain URL ends with /', () => {
-      comp.orcidDomainUrl = 'https://orcid.org/';
+      comp.orcidDomainUrl$.next('https://orcid.org/');
       comp.mdRepresentation = mockOrcidRepresentation;
-      expect(comp.getOrcidUrl()).toBe('https://orcid.org/0000-0002-1825-0097');
+      expect(comp.getOrcidUrl('https://orcid.org/')).toBe('https://orcid.org/1234-5678-9012-3456');
     });
 
     it('should add slash when domain URL does not end with /', () => {
-      comp.orcidDomainUrl = 'https://sandbox.orcid.org';
+      comp.orcidDomainUrl$.next('https://sandbox.orcid.org');
       comp.mdRepresentation = mockOrcidRepresentation;
-      expect(comp.getOrcidUrl()).toBe('https://sandbox.orcid.org/0000-0002-1825-0097');
+      expect(comp.getOrcidUrl('https://sandbox.orcid.org')).toBe('https://sandbox.orcid.org/1234-5678-9012-3456');
     });
   });
 
   describe('when backend config is not available', () => {
     beforeEach(() => {
-      comp.orcidDomainUrl = null;
+      comp.orcidDomainUrl$.next(null);
       comp.mdRepresentation = mockOrcidRepresentation;
       fixture.detectChanges();
     });
@@ -156,41 +168,41 @@ describe('PlainTextMetadataListElementComponent', () => {
     });
 
     it('isOrcidAuthority should return false', () => {
-      expect(comp.isOrcidAuthority()).toBeFalse();
+      expect(comp.isOrcidAuthority(comp.orcidDomainUrl$.value)).toBeFalse();
     });
 
     it('getOrcidUrl should return empty string', () => {
-      expect(comp.getOrcidUrl()).toBe('');
+      expect(comp.getOrcidUrl(comp.orcidDomainUrl$.value)).toBe('');
     });
   });
 
   describe('getOrcidUrl defensive behavior', () => {
     it('should return empty string when orcidDomainUrl is null', () => {
-      comp.orcidDomainUrl = null;
+      comp.orcidDomainUrl$.next(null);
       comp.mdRepresentation = mockOrcidRepresentation;
-      expect(comp.getOrcidUrl()).toBe('');
+      expect(comp.getOrcidUrl(null)).toBe('');
     });
 
     it('should return empty string when mdRepresentation has no authority', () => {
-      comp.orcidDomainUrl = 'https://orcid.org';
+      comp.orcidDomainUrl$.next('https://orcid.org');
       comp.mdRepresentation = mockMetadataRepresentation;
-      expect(comp.getOrcidUrl()).toBe('');
+      expect(comp.getOrcidUrl('https://orcid.org')).toBe('');
     });
   });
 
   describe('when authority has leading/trailing whitespace', () => {
     beforeEach(() => {
-      comp.orcidDomainUrl = 'https://orcid.org';
+      comp.orcidDomainUrl$.next('https://orcid.org');
       comp.mdRepresentation = mockOrcidWithWhitespaceRepresentation;
       fixture.detectChanges();
     });
 
     it('isOrcidAuthority should return true after trimming', () => {
-      expect(comp.isOrcidAuthority()).toBeTrue();
+      expect(comp.isOrcidAuthority(comp.orcidDomainUrl$.value)).toBeTrue();
     });
 
     it('getOrcidUrl should return trimmed ORCID URL', () => {
-      expect(comp.getOrcidUrl()).toBe('https://orcid.org/0000-0002-1825-0097');
+      expect(comp.getOrcidUrl(comp.orcidDomainUrl$.value)).toBe('https://orcid.org/1234-5678-9012-3456');
     });
   });
 
