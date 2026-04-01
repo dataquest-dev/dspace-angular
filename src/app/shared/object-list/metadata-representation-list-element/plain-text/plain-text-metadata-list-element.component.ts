@@ -1,13 +1,13 @@
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
-import { getFirstCompletedRemoteData } from '../../../../core/shared/operators';
 import { MetadataRepresentationType } from '../../../../core/shared/metadata-representation/metadata-representation.model';
 import { MetadatumRepresentation } from '../../../../core/shared/metadata-representation/metadatum/metadatum-representation.model';
-import { Component, OnInit } from '@angular/core';
-import { MetadataRepresentationListElementComponent } from '../metadata-representation-list-element.component';
-import { metadataRepresentationComponent } from '../../../metadata-representation/metadata-representation.decorator';
+import { getFirstCompletedRemoteData } from '../../../../core/shared/operators';
 import { VALUE_LIST_BROWSE_DEFINITION } from '../../../../core/shared/value-list-browse-definition.resource-type';
+import { metadataRepresentationComponent } from '../../../metadata-representation/metadata-representation.decorator';
+import { MetadataRepresentationListElementComponent } from '../metadata-representation-list-element.component';
 
 @metadataRepresentationComponent('Publication', MetadataRepresentationType.PlainText)
 // For now, authority controlled fields are rendered the same way as plain text fields
@@ -87,33 +87,5 @@ export class PlainTextMetadataListElementComponent extends MetadataRepresentatio
 
     const base = orcidDomainUrl.endsWith('/') ? orcidDomainUrl : orcidDomainUrl + '/';
     return `${base}${authority}`;
-  }
-
-  /**
-   * Check if the authority value of this metadata is a full ORCID URL.
-   * The backend OrcidAuthorityAssign script stores authority as full URLs
-   * (e.g. https://orcid.org/0000-0001-2345-6789).
-   */
-  isOrcidAuthority(): boolean {
-    if (this.mdRepresentation instanceof MetadatumRepresentation) {
-      const authority = this.mdRepresentation.authority?.trim();
-      return !!authority && ORCID_URL_PATTERN.test(authority);
-    }
-    return false;
-  }
-
-  /**
-   * Return the full ORCID profile URL from the authority value.
-   * Since the backend stores authority as a full URL, this simply returns it.
-   * Returns an empty string if the authority is not a valid ORCID URL.
-   */
-  getOrcidUrl(): string {
-    if (this.mdRepresentation instanceof MetadatumRepresentation) {
-      const authority = this.mdRepresentation.authority?.trim();
-      if (authority && ORCID_URL_PATTERN.test(authority)) {
-        return authority;
-      }
-    }
-    return '';
   }
 }
