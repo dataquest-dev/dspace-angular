@@ -42,18 +42,6 @@ const mockOrcidWithWhitespaceRepresentation = Object.assign(new MetadatumReprese
   authority: '  1234-5678-9012-3456  ',
 });
 
-const mockOrcidFullUrlRepresentation = Object.assign(new MetadatumRepresentation('type'), {
-  key: 'dc.contributor.author',
-  value: 'Doe, John',
-  authority: 'https://orcid.org/1234-5678-9012-3456',
-});
-
-const mockOrcidFullUrlSandboxRepresentation = Object.assign(new MetadatumRepresentation('type'), {
-  key: 'dc.contributor.author',
-  value: 'Smith, Jane',
-  authority: 'https://sandbox.orcid.org/1234-5678-9012-345X',
-});
-
 const mockConfigurationDataService = {
   findByPropertyName: jasmine.createSpy('findByPropertyName').and.returnValue(
     createSuccessfulRemoteDataObject$({ values: ['https://orcid.org'] }),

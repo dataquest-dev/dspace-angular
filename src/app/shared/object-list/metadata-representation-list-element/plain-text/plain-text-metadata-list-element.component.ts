@@ -1,15 +1,26 @@
-import { Component } from '@angular/core';
+import {
+  AsyncPipe,
+} from '@angular/common';
+import {
+  Component,
+  OnInit,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { BehaviorSubject } from 'rxjs';
+
+import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { MetadatumRepresentation } from '../../../../core/shared/metadata-representation/metadatum/metadatum-representation.model';
+import { getFirstCompletedRemoteData } from '../../../../core/shared/operators';
 import { VALUE_LIST_BROWSE_DEFINITION } from '../../../../core/shared/value-list-browse-definition.resource-type';
 import { MetadataRepresentationListElementComponent } from '../metadata-representation-list-element.component';
 
 /**
- * Regex pattern for full ORCID URL authority values stored by the backend
- * (e.g. https://orcid.org/0000-0001-2345-6789 or https://sandbox.orcid.org/0000-0001-2345-678X).
+ * Regex pattern for ORCID identifiers: four groups of four digits separated by hyphens.
+ * The last group may end with an X (checksum digit).
+ * Example: 0000-0001-2345-6789 or 0000-0001-2345-678X
  */
-const ORCID_URL_PATTERN = /^https?:\/\/[^/]+\/((\d{4}-){3}(\d{3}X|\d{4}))$/i;
+const ORCID_PATTERN = /^\d{4}-\d{4}-\d{4}-(\d{3}X|\d{4})$/;
 
 @Component({
   selector: 'ds-plain-text-metadata-list-element',
@@ -17,6 +28,7 @@ const ORCID_URL_PATTERN = /^https?:\/\/[^/]+\/((\d{4}-){3}(\d{3}X|\d{4}))$/i;
   styleUrls: ['./plain-text-metadata-list-element.component.scss'],
   standalone: true,
   imports: [
+    AsyncPipe,
     RouterLink,
   ],
 })
@@ -24,7 +36,38 @@ const ORCID_URL_PATTERN = /^https?:\/\/[^/]+\/((\d{4}-){3}(\d{3}X|\d{4}))$/i;
  * A component for displaying MetadataRepresentation objects in the form of plain text
  * It will simply use the value retrieved from MetadataRepresentation.getValue() to display as plain text
  */
-export class PlainTextMetadataListElementComponent extends MetadataRepresentationListElementComponent {
+export class PlainTextMetadataListElementComponent extends MetadataRepresentationListElementComponent implements OnInit {
+
+  /**
+   * The base ORCID domain URL fetched from backend configuration.
+   * Remains null until successfully loaded — ORCID linking is disabled when null.
+   */
+  orcidDomainUrl$ = new BehaviorSubject<string | null>(null);
+
+  constructor(private configurationService: ConfigurationDataService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.configurationService.findByPropertyName('orcid.domain-url').pipe(
+      getFirstCompletedRemoteData(),
+    ).subscribe(rd => {
+      if (rd.hasFailed) {
+        console.error('PlainTextMetadataListElementComponent: failed to fetch backend config property "orcid.domain-url". ORCID author linking will be disabled.');
+        return;
+      }
+      if (!rd.hasSucceeded || !rd.payload?.values?.length) {
+        console.error('PlainTextMetadataListElementComponent: backend config property "orcid.domain-url" returned no values. ORCID author linking will be disabled.');
+        return;
+      }
+      const url = rd.payload.values[0].trim();
+      if (!url || !/^https?:\/\//i.test(url)) {
+        console.error(`PlainTextMetadataListElementComponent: backend config property "orcid.domain-url" has invalid value "${url}". ORCID author linking will be disabled.`);
+        return;
+      }
+      this.orcidDomainUrl$.next(url);
+    });
+  }
 
   /**
    * Get the appropriate query parameters for this browse link, depending on whether the browse definition
@@ -41,30 +84,36 @@ export class PlainTextMetadataListElementComponent extends MetadataRepresentatio
   }
 
   /**
-   * Check if the authority value of this metadata is a full ORCID URL.
-   * The backend OrcidAuthorityAssign script stores authority as full URLs
-   * (e.g. https://orcid.org/0000-0001-2345-6789).
+   * Check if the authority value of this metadata is an ORCID identifier.
+   * Authority is expected to be a bare ORCID ID (e.g. 0000-0001-2345-6789).
+   * Requires the orcidDomainUrl to be loaded from backend configuration.
    */
-  isOrcidAuthority(): boolean {
+  isOrcidAuthority(orcidDomainUrl: string | null): boolean {
+    if (orcidDomainUrl === null) {
+      return false;
+    }
     if (this.mdRepresentation instanceof MetadatumRepresentation) {
       const authority = this.mdRepresentation.authority?.trim();
-      return !!authority && ORCID_URL_PATTERN.test(authority);
+      return !!authority && ORCID_PATTERN.test(authority);
     }
     return false;
   }
 
   /**
-   * Return the full ORCID profile URL from the authority value.
-   * Since the backend stores authority as a full URL, this simply returns it.
-   * Returns an empty string if the authority is not a valid ORCID URL.
+   * Build the full ORCID profile URL by combining the configured domain URL with the authority ORCID ID.
+   * Returns an empty string if preconditions are not met (no domain URL or no valid authority).
    */
-  getOrcidUrl(): string {
-    if (this.mdRepresentation instanceof MetadatumRepresentation) {
-      const authority = this.mdRepresentation.authority?.trim();
-      if (authority && ORCID_URL_PATTERN.test(authority)) {
-        return authority;
-      }
+  getOrcidUrl(orcidDomainUrl: string | null): string {
+    if (orcidDomainUrl === null) {
+      return '';
     }
-    return '';
+    const authority = this.mdRepresentation instanceof MetadatumRepresentation
+      ? this.mdRepresentation.authority?.trim()
+      : undefined;
+    if (!authority) {
+      return '';
+    }
+    const base = orcidDomainUrl.endsWith('/') ? orcidDomainUrl : orcidDomainUrl + '/';
+    return `${base}${authority}`;
   }
 }
