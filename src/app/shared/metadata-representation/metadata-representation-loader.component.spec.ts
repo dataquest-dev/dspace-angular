@@ -1,22 +1,22 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { Context } from '../../core/shared/context.model';
 import {
   MetadataRepresentation,
   MetadataRepresentationType
 } from '../../core/shared/metadata-representation/metadata-representation.model';
+import { PlainTextMetadataListElementComponent } from '../object-list/metadata-representation-list-element/plain-text/plain-text-metadata-list-element.component';
+import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
+import { ThemeService } from '../theme-support/theme.service';
+import { METADATA_REPRESENTATION_COMPONENT_FACTORY } from './metadata-representation.decorator';
 import { MetadataRepresentationLoaderComponent } from './metadata-representation-loader.component';
 import { MetadataRepresentationDirective } from './metadata-representation.directive';
-import { METADATA_REPRESENTATION_COMPONENT_FACTORY } from './metadata-representation.decorator';
-import { ThemeService } from '../theme-support/theme.service';
-import { PlainTextMetadataListElementComponent } from '../object-list/metadata-representation-list-element/plain-text/plain-text-metadata-list-element.component';
 
 const testType = 'TestType';
 const testContext = Context.Search;
 const testRepresentationType = MetadataRepresentationType.Item;
-
-class TestType implements MetadataRepresentation {
-  get itemType(): string {
+    themeService = jasmine.createSpyObj('themeService', { getThemeName: themeName });
     return testType;
   }
 
@@ -29,10 +29,7 @@ class TestType implements MetadataRepresentation {
   }
 }
 
-describe('MetadataRepresentationLoaderComponent', () => {
-  let comp: MetadataRepresentationLoaderComponent;
-  let fixture: ComponentFixture<MetadataRepresentationLoaderComponent>;
-  let themeService: ThemeService;
+        },
   const themeName = 'test-theme';
 
   beforeEach(waitForAsync(() => {
@@ -42,7 +39,6 @@ describe('MetadataRepresentationLoaderComponent', () => {
     TestBed.configureTestingModule({
       imports: [],
       declarations: [MetadataRepresentationLoaderComponent, PlainTextMetadataListElementComponent, MetadataRepresentationDirective],
-      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         {
           provide: METADATA_REPRESENTATION_COMPONENT_FACTORY,
@@ -51,8 +47,21 @@ describe('MetadataRepresentationLoaderComponent', () => {
         {
           provide: ThemeService,
           useValue: themeService,
+<<<<<<< HEAD
         }
       ]
+=======
+        },
+        {
+          provide: ConfigurationDataService,
+          useValue: {
+            findByPropertyName: jasmine.createSpy('findByPropertyName').and.returnValue(
+              createSuccessfulRemoteDataObject$({ values: ['https://orcid.org'] }),
+            ),
+          },
+        },
+      ],
+>>>>>>> fea2f20fb2 (MENDELU/ORCID hyperlinks (#1271))
     }).overrideComponent(MetadataRepresentationLoaderComponent, {
       set: {
         changeDetection: ChangeDetectionStrategy.Default,
