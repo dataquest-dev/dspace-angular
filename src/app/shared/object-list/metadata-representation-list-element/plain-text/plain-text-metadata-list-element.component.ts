@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { MetadatumRepresentation } from '../../../../core/shared/metadata-representation/metadatum/metadatum-representation.model';
-import { getFirstSucceededRemoteDataPayload } from '../../../../core/shared/operators';
+import { getFirstCompletedRemoteData } from '../../../../core/shared/operators';
 import { VALUE_LIST_BROWSE_DEFINITION } from '../../../../core/shared/value-list-browse-definition.resource-type';
 import { MetadataRepresentationListElementComponent } from '../metadata-representation-list-element.component';
 
@@ -43,18 +43,22 @@ export class PlainTextMetadataListElementComponent extends MetadataRepresentatio
 
   ngOnInit(): void {
     this.configurationService.findByPropertyName('orcid.domain-url').pipe(
-      getFirstSucceededRemoteDataPayload(),
-    ).subscribe({
-      next: property => {
-        if (property?.values?.length) {
-          this.orcidDomainUrl = property.values[0].trim();
-        } else {
-          console.error('PlainTextMetadataListElementComponent: backend config property "orcid.domain-url" returned no values. ORCID author linking will be disabled.');
-        }
-      },
-      error: (err: unknown) => {
-        console.error('PlainTextMetadataListElementComponent: failed to fetch backend config property "orcid.domain-url". ORCID author linking will be disabled.', err);
-      },
+      getFirstCompletedRemoteData(),
+    ).subscribe(rd => {
+      if (rd.hasFailed) {
+        console.error('PlainTextMetadataListElementComponent: failed to fetch backend config property "orcid.domain-url". ORCID author linking will be disabled.');
+        return;
+      }
+      if (!rd.hasSucceeded || !rd.payload?.values?.length) {
+        console.error('PlainTextMetadataListElementComponent: backend config property "orcid.domain-url" returned no values. ORCID author linking will be disabled.');
+        return;
+      }
+      const url = rd.payload.values[0].trim();
+      if (!url || !/^https?:\/\//i.test(url)) {
+        console.error(`PlainTextMetadataListElementComponent: backend config property "orcid.domain-url" has invalid value "${url}". ORCID author linking will be disabled.`);
+        return;
+      }
+      this.orcidDomainUrl = url;
     });
   }
 
@@ -88,9 +92,19 @@ export class PlainTextMetadataListElementComponent extends MetadataRepresentatio
 
   /**
    * Build the full ORCID profile URL from the authority value.
+   * Returns an empty string if preconditions are not met (no domain URL or no authority).
    */
   getOrcidUrl(): string {
+    if (this.orcidDomainUrl === null) {
+      return '';
+    }
+    const authority = this.mdRepresentation instanceof MetadatumRepresentation
+      ? this.mdRepresentation.authority?.trim()
+      : undefined;
+    if (!authority) {
+      return '';
+    }
     const base = this.orcidDomainUrl.endsWith('/') ? this.orcidDomainUrl : this.orcidDomainUrl + '/';
-    return `${base}${(this.mdRepresentation as MetadatumRepresentation).authority.trim()}`;
+    return `${base}${authority}`;
   }
 }

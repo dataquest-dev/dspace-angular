@@ -11,14 +11,17 @@
       {{mdRepresentation.getValue()}}
     </a>
   }
-  @if ((mdRepresentation.representationType==='authority_controlled') && isOrcidAuthority()) {
-    <a class="dont-break-out orcid-author-link" [href]="getOrcidUrl()" target="_blank" rel="noopener noreferrer">
-      {{mdRepresentation.getValue()}}
-      <i class="fa-brands fa-orcid orcid-icon" aria-hidden="true"></i>
-    </a>
-  }
-  @if ((mdRepresentation.representationType==='authority_controlled') && !isOrcidAuthority()) {
-    <span class="dont-break-out">{{mdRepresentation.getValue()}}</span>
+  @if ((mdRepresentation.representationType==='authority_controlled')) {
+    @let isOrcid = isOrcidAuthority();
+    @if (isOrcid) {
+      <a class="dont-break-out orcid-author-link" [href]="getOrcidUrl()" target="_blank" rel="noopener noreferrer">
+        {{mdRepresentation.getValue()}}
+        <i class="fa-brands fa-orcid orcid-icon" aria-hidden="true"></i>
+      </a>
+    }
+    @if (!isOrcid) {
+      <span class="dont-break-out">{{mdRepresentation.getValue()}}</span>
+    }
   }
   @if ((mdRepresentation.representationType==='browse_link')) {
     <a

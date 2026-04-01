@@ -158,6 +158,24 @@ describe('PlainTextMetadataListElementComponent', () => {
     it('isOrcidAuthority should return false', () => {
       expect(comp.isOrcidAuthority()).toBeFalse();
     });
+
+    it('getOrcidUrl should return empty string', () => {
+      expect(comp.getOrcidUrl()).toBe('');
+    });
+  });
+
+  describe('getOrcidUrl defensive behavior', () => {
+    it('should return empty string when orcidDomainUrl is null', () => {
+      comp.orcidDomainUrl = null;
+      comp.mdRepresentation = mockOrcidRepresentation;
+      expect(comp.getOrcidUrl()).toBe('');
+    });
+
+    it('should return empty string when mdRepresentation has no authority', () => {
+      comp.orcidDomainUrl = 'https://orcid.org';
+      comp.mdRepresentation = mockMetadataRepresentation;
+      expect(comp.getOrcidUrl()).toBe('');
+    });
   });
 
   describe('when authority has leading/trailing whitespace', () => {
