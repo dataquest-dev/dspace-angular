@@ -1,12 +1,9 @@
-import {
-  AsyncPipe,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   Component,
   OnInit,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
 import { BehaviorSubject } from 'rxjs';
 
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
