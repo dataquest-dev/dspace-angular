@@ -8,11 +8,9 @@ import { WayfSearchService } from './search.service';
  */
 function makeEntry(overrides: Partial<IdpEntry> & { entityID: string }): IdpEntry {
   return {
-    DisplayNames: [],
-    Logos: [],
-    Keywords: [],
-    InformationURLs: [],
-    PrivacyStatementURLs: [],
+    title: '',
+    keywords: [],
+    country: '',
     Tags: [],
     ...overrides,
   };
@@ -69,26 +67,14 @@ describe('WayfSearchService', () => {
   // ── resolveDisplayName() ────────────────────────────────────
 
   describe('resolveDisplayName()', () => {
-    const names = [
-      { value: 'Masaryk University', lang: 'en' },
-      { value: 'Masarykova univerzita', lang: 'cs' },
-    ];
-
-    it('should prefer the requested language', () => {
-      expect(service.resolveDisplayName(names, 'cs')).toBe('Masarykova univerzita');
+    it('should return the title of the entry', () => {
+      const entry = makeEntry({ entityID: 'e1', title: 'Masaryk University' });
+      expect(service.resolveDisplayName(entry)).toBe('Masaryk University');
     });
 
-    it('should fallback to English when requested lang not present', () => {
-      expect(service.resolveDisplayName(names, 'de')).toBe('Masaryk University');
-    });
-
-    it('should fallback to first entry if no English', () => {
-      const noEn = [{ value: 'LMU München', lang: 'de' }];
-      expect(service.resolveDisplayName(noEn, 'fr')).toBe('LMU München');
-    });
-
-    it('should return empty string for empty array', () => {
-      expect(service.resolveDisplayName([], 'en')).toBe('');
+    it('should return empty string when title is empty', () => {
+      const entry = makeEntry({ entityID: 'e2', title: '' });
+      expect(service.resolveDisplayName(entry)).toBe('');
     });
   });
 
@@ -129,11 +115,9 @@ describe('WayfSearchService', () => {
   describe('scoreEntry()', () => {
     const masaryk = makeEntry({
       entityID: 'https://shibboleth.muni.cz/idp/shibboleth',
-      DisplayNames: [
-        { value: 'Masaryk University', lang: 'en' },
-        { value: 'Masarykova univerzita', lang: 'cs' },
-      ],
-      Keywords: [{ value: 'masaryk brno czech republic muni', lang: 'en' }],
+      title: 'Masaryk University',
+      keywords: ['Masarykova univerzita', 'masaryk brno czech republic muni'],
+      country: 'CZ',
     });
 
     it('should return 1 for empty query (show all)', () => {
@@ -175,24 +159,21 @@ describe('WayfSearchService', () => {
     const entries: IdpEntry[] = [
       makeEntry({
         entityID: 'https://idp.example.org/shibboleth',
-        DisplayNames: [{ value: 'Example University', lang: 'en' }],
-        Keywords: [{ value: 'example research', lang: 'en' }],
+        title: 'Example University',
+        keywords: ['example research'],
+        country: 'CZ',
       }),
       makeEntry({
         entityID: 'https://shibboleth.muni.cz/idp/shibboleth',
-        DisplayNames: [
-          { value: 'Masaryk University', lang: 'en' },
-          { value: 'Masarykova univerzita', lang: 'cs' },
-        ],
-        Keywords: [{ value: 'masaryk brno czech republic', lang: 'en' }],
+        title: 'Masaryk University',
+        keywords: ['Masarykova univerzita', 'masaryk brno czech republic'],
+        country: 'CZ',
       }),
       makeEntry({
         entityID: 'https://idp.cuni.cz/idp/shibboleth',
-        DisplayNames: [
-          { value: 'Charles University', lang: 'en' },
-          { value: 'Univerzita Karlova', lang: 'cs' },
-        ],
-        Keywords: [{ value: 'charles prague', lang: 'en' }],
+        title: 'Charles University',
+        keywords: ['Univerzita Karlova', 'charles prague'],
+        country: 'CZ',
       }),
     ];
 
@@ -212,8 +193,8 @@ describe('WayfSearchService', () => {
     });
 
     it('should match diacritics-insensitively', () => {
-      // Searching "univerzita" matches both Czech names exactly,
-      // and also fuzzy-matches "University" via Dice coefficient
+      // Searching "univerzita" matches the keyword "Masarykova univerzita" and "Univerzita Karlova"
+      // and also fuzzy-matches "University" in titles via Dice coefficient
       const result = service.filterEntries(entries, 'univerzita', 'en');
       expect(result.length).toBe(3);
     });
@@ -228,9 +209,8 @@ describe('WayfSearchService', () => {
       expect(result[0].entityID).toBe('https://idp.cuni.cz/idp/shibboleth');
     });
 
-    it('should give a language bonus for matching the active language', () => {
-      // "univerzita karlova" in Czech → Charles University should rank first when lang=cs
-      const result = service.filterEntries(entries, 'Karlova', 'cs');
+    it('should match by keywords', () => {
+      const result = service.filterEntries(entries, 'Karlova', 'en');
       expect(result[0].entityID).toBe('https://idp.cuni.cz/idp/shibboleth');
     });
 

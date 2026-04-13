@@ -3,15 +3,12 @@ import {
   signal,
 } from '@angular/core';
 
-import {
-  IdpEntry,
-  LocalizedValue,
-} from '../models/idp-entry.model';
+import { IdpEntry } from '../models/idp-entry.model';
 
 /**
  * Fuzzy search service for filtering IdP entries.
  * Handles diacritics normalization, typo tolerance via bigram similarity,
- * and language-aware name resolution.
+ * and display name resolution from the backend's "shrunk" format.
  */
 @Injectable({ providedIn: 'root' })
 export class WayfSearchService {
@@ -48,29 +45,30 @@ export class WayfSearchService {
   }
 
   /**
-   * Resolve the best display name for an IdP in the given language.
-   * Falls back to English, then to the first available name.
+   * Resolve the display name for an IdP entry.
+   * In the backend's shrunk format, this is simply the `title` field.
+   * The `lang` parameter is accepted for API compatibility but not used
+   * (the backend has already collapsed DisplayNames into a single title).
    */
-  resolveDisplayName(names: LocalizedValue[], lang: string): string {
-    const byLang = names.find(n => n.lang === lang);
-    if (byLang) {
-      return byLang.value;
-    }
-    const byEn = names.find(n => n.lang === 'en');
-    if (byEn) {
-      return byEn.value;
-    }
-    return names[0]?.value ?? '';
+  resolveDisplayName(entry: IdpEntry, _lang?: string): string {
+    return entry.title ?? '';
   }
 
   /**
    * Collect all searchable text for an IdP entry.
+   * Combines the title, keywords[], country, domain and entityID.
    */
   getSearchableText(entry: IdpEntry): string {
-    const names = entry.DisplayNames.map(n => n.value);
-    const keywords = entry.Keywords.map(k => k.value);
-    const domain = this.extractDomain(entry.entityID);
-    return [...names, ...keywords, domain, entry.entityID].join(' ');
+    const parts: string[] = [entry.title];
+    if (entry.keywords?.length) {
+      parts.push(...entry.keywords);
+    }
+    if (entry.country) {
+      parts.push(entry.country);
+    }
+    parts.push(this.extractDomain(entry.entityID));
+    parts.push(entry.entityID);
+    return parts.join(' ');
   }
 
   /**
@@ -154,7 +152,6 @@ export class WayfSearchService {
 
   /**
    * Filter and rank IdP entries by the current query.
-   * Language-aware: prioritizes display name matches in the active language.
    */
   filterEntries(entries: IdpEntry[], query: string, lang: string): IdpEntry[] {
     if (!query || query.trim().length === 0) {
@@ -165,12 +162,12 @@ export class WayfSearchService {
       .map(entry => {
         let score = this.scoreEntry(entry, query);
 
-        // Bonus for matching in the active language display name
-        const localName = this.resolveDisplayName(entry.DisplayNames, lang);
-        if (localName) {
-          const normalizedName = this.normalize(localName);
+        // Bonus for matching the title directly
+        const title = entry.title ?? '';
+        if (title) {
+          const normalizedTitle = this.normalize(title);
           const normalizedQuery = this.normalize(query);
-          if (normalizedName.includes(normalizedQuery)) {
+          if (normalizedTitle.includes(normalizedQuery)) {
             score += 0.5;
           }
         }

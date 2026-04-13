@@ -28,15 +28,9 @@ import { WayfSearchService } from '../../services/search.service';
          (keydown.enter)="selected.emit(entry())"
          (keydown.space)="$event.preventDefault(); selected.emit(entry())">
 
-      @if (logo(); as logoUrl) {
-        <div class="wayf-idp-card__logo me-3">
-          <img [src]="logoUrl" [alt]="displayName()" class="wayf-idp-card__logo-img" loading="lazy">
-        </div>
-      } @else {
-        <div class="wayf-idp-card__logo wayf-idp-card__logo--placeholder me-3">
-          <span class="wayf-idp-card__initials">{{ initials() }}</span>
-        </div>
-      }
+      <div class="wayf-idp-card__logo wayf-idp-card__logo--placeholder me-3">
+        <span class="wayf-idp-card__initials">{{ initials() }}</span>
+      </div>
 
       <div class="wayf-idp-card__info flex-grow-1">
         <div class="wayf-idp-card__name fw-semibold">{{ displayName() }}</div>
@@ -71,11 +65,6 @@ import { WayfSearchService } from '../../services/search.service';
       justify-content: center;
       flex-shrink: 0;
     }
-    .wayf-idp-card__logo-img {
-      max-width: 40px;
-      max-height: 40px;
-      object-fit: contain;
-    }
     .wayf-idp-card__logo--placeholder {
       background-color: var(--bs-secondary-bg, #e9ecef);
       border-radius: 0.25rem;
@@ -104,18 +93,12 @@ export class WayfIdpCardComponent {
   /** Emits when the user selects this IdP. */
   readonly selected = output<IdpEntry>();
 
-  /** Resolved display name in the active language. */
+  /** Resolved display name. */
   readonly displayName = computed(() =>
-    this.searchService.resolveDisplayName(this.entry().DisplayNames, this.i18n.lang()),
+    this.searchService.resolveDisplayName(this.entry()),
   );
 
-  /** First suitable logo URL. */
-  readonly logo = computed(() => {
-    const logos = this.entry().Logos;
-    return logos?.[0]?.value ?? null;
-  });
-
-  /** Initials fallback when no logo is available. */
+  /** Initials fallback (backend shrunk format has no logos). */
   readonly initials = computed(() => {
     const name = this.displayName();
     const parts = name.split(/\s+/).filter(p => p.length > 0);

@@ -9,7 +9,12 @@ import { firstValueFrom } from 'rxjs';
 import { IdpEntry } from '../models/idp-entry.model';
 
 /**
- * Service to fetch and cache the IdP feed from a DiscoFeed JSON endpoint.
+ * Service to fetch and cache the IdP feed from the DSpace backend
+ * endpoint (`/api/discojuice/feeds`).
+ *
+ * The backend returns a JSON array of "shrunk" IdP entries
+ * (title, keywords[], country, Tags[]).
+ * A 204 response means feeds have not loaded yet on the server side.
  */
 @Injectable({ providedIn: 'root' })
 export class WayfFeedService {
@@ -27,17 +32,25 @@ export class WayfFeedService {
 
   /**
    * Fetch the IdP feed from the given URL, optionally filtering by tag.
+   * The URL should point to the backend `/api/discojuice/feeds` endpoint
+   * (or a compatible JSON array).
    */
   async loadFeed(feedUrl: string, categoryFilter: string | null): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
 
     try {
-      const raw = await firstValueFrom(
-        this.http.get<IdpEntry[]>(feedUrl),
+      const response = await firstValueFrom(
+        this.http.get<IdpEntry[]>(feedUrl, { observe: 'response' }),
       );
 
-      let filtered = raw ?? [];
+      // Backend returns 204 when the feeds haven't been cached yet
+      if (response.status === 204 || !response.body) {
+        this.entries.set([]);
+        return;
+      }
+
+      let filtered = response.body;
 
       if (categoryFilter) {
         const tag = categoryFilter.toLowerCase();

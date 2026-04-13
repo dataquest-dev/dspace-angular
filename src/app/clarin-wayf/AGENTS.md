@@ -22,7 +22,7 @@ src/app/clarin-wayf/
 ├── clarin-wayf.component.ts           ← main orchestrator component
 ├── clarin-wayf-routes.ts              ← standalone route at /wayf
 ├── models/
-│   ├── idp-entry.model.ts             ← IdpEntry, LocalizedValue, IdpLogo interfaces
+│   ├── idp-entry.model.ts             ← IdpEntry interface (backend "shrunk" format)
 │   └── wayf-config.model.ts           ← WayfConfig, SamldsParams types
 ├── services/
 │   ├── search.service.ts              ← fuzzy search engine (Sørensen–Dice)
@@ -87,14 +87,17 @@ On IdP selection, the component builds a Shibboleth SP redirect URL:
 ### Feed Loading (`clarin-wayf.component.ts`)
 Feed URL resolved in this priority order:
 1. `feedUrl` input binding (parent passes it)
-2. `?feedUrl=` query parameter (for standalone `/wayf` route)
-3. Falls back to `assets/mock/wayf-feed.json` for local development
+2. `WAYF_CONFIG` token `feedUrl` value
+3. `?feedUrl=` query parameter (for standalone `/wayf` route)
+4. Auto-derived from DSpace REST config: `${APP_CONFIG.rest.baseUrl}/api/discojuice/feeds`
+
+The backend endpoint returns 204 when feeds haven't cached yet (handled gracefully).
 
 ### Fuzzy Search (`search.service.ts`)
 - Diacritics normalized via `NFD` + strip combining marks
 - Sørensen–Dice bigram similarity coefficient (no external deps)
 - Scoring: exact match = 2, word boundary = 1 + ratio, fuzzy ≥ 0.4 threshold
-- Language-aware: preferred `lang` gets small ranking bonus
+- Title-first scoring: bonus applied when query matches the `title` field
 
 ### Persistence (`persistence.service.ts`)
 - `clarin-wayf-last-idp` key — entityID of last selected IdP
@@ -122,7 +125,7 @@ All 33 tests in `search.service.spec.ts` should pass.
 
 ## TODO / Next Steps
 
-- [ ] **Production feed URL**: Replace `assets/mock/wayf-feed.json` default with the actual CLARIN feed (e.g. `https://ds.aai.cesnet.cz/feeds/CLARIN_SP_Feed.json`)
+- [x] **Production feed URL**: Auto-derived from `APP_CONFIG.rest.baseUrl` → `/api/discojuice/feeds`
 - [ ] **Shibboleth SP path**: Verify `/Shibboleth.sso/Login` matches the actual SP endpoint in the target deployment; make it configurable via `environment.ts`
 - [ ] **Proxy/Hub IdPs**: Wire `proxyEntities` input with actual CLARIN hub entityIDs so they pin to the top of the list with a badge
 - [ ] **Visual polish**: The component currently uses minimal Bootstrap 5 CSS variables; full UX design pass needed

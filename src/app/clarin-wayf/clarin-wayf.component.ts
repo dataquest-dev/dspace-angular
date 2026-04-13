@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { IdpEntry } from './models/idp-entry.model';
 import { SamldsParams } from './models/wayf-config.model';
+import { DEFAULT_WAYF_CONFIG, WAYF_CONFIG } from './models/wayf-config.model';
 import { WayfFeedService } from './services/feed.service';
 import { WayfI18nService } from './services/i18n.service';
 import { WayfPersistenceService } from './services/persistence.service';
@@ -21,6 +22,7 @@ import { WayfSearchService } from './services/search.service';
 import { WayfSearchBarComponent } from './components/search-bar/wayf-search-bar.component';
 import { WayfIdpListComponent } from './components/idp-list/wayf-idp-list.component';
 import { WayfRecentIdpsComponent } from './components/recent-idps/wayf-recent-idps.component';
+import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 
 /**
  * Main CLARIN WAYF (Where Are You From) component.
@@ -61,11 +63,11 @@ import { WayfRecentIdpsComponent } from './components/recent-idps/wayf-recent-id
       }
 
       @if (!feedService.loading() && !feedService.error()) {
-        <!-- Recent / Continue-with shortcut -->
+        <!-- Quick-select shortcut (static default or last-used) -->
         <ds-wayf-recent-idps
           [allEntries]="feedService.entries()"
           [lastIdpEntityId]="persistence.lastIdp()"
-          [recentIdpEntityIds]="persistence.recentIdps()"
+          [defaultEntityId]="staticDefaultEntityId()"
           (idpSelected)="onIdpSelected($event)"
         />
 
@@ -113,6 +115,8 @@ export class ClarinWayfComponent implements OnInit {
   protected readonly persistence = inject(WayfPersistenceService);
   private readonly searchService = inject(WayfSearchService);
   private readonly route = inject(ActivatedRoute);
+  private readonly wayfConfig = inject(WAYF_CONFIG);
+  private readonly appConfig: AppConfig = inject(APP_CONFIG);
 
   // --- Inputs (configurable via route data or parent binding) ---
 
@@ -127,6 +131,12 @@ export class ClarinWayfComponent implements OnInit {
 
   /** Language override. */
   readonly lang = input<string>('');
+
+  /**
+   * EntityID to pin at the top as "default institution".
+   * When empty, falls back to the most frequently selected IdP from localStorage.
+   */
+  readonly defaultEntityId = input<string>('');
 
   /** Emits the selected IdP entry (for embedded/overlay usage). */
   readonly idpSelected = output<IdpEntry>();
@@ -177,6 +187,17 @@ export class ClarinWayfComponent implements OnInit {
     const pinnedHub = filtered.filter(e => hubs.has(e.entityID));
     const rest = filtered.filter(e => !hubs.has(e.entityID));
     return [...pinnedHub, ...rest];
+  });
+
+  /**
+   * The statically configured default entityID (input binding or WAYF_CONFIG token).
+   * Null when no static default is set — the shortcut card will then show the last-used IdP.
+   */
+  readonly staticDefaultEntityId = computed<string | null>(() => {
+    const fromInput = this.defaultEntityId();
+    if (fromInput) { return fromInput; }
+    const fromConfig = this.wayfConfig.defaultEntityId ?? DEFAULT_WAYF_CONFIG.defaultEntityId;
+    return fromConfig || null;
   });
 
   private readonly searchBar = viewChild(WayfSearchBarComponent);
@@ -254,10 +275,23 @@ export class ClarinWayfComponent implements OnInit {
   }
 
   private loadFeed(): void {
-    // Prefer input binding, fallback to ?feedUrl= query param, then default mock feed
+    // Priority: input binding → WAYF_CONFIG token → ?feedUrl= query param → DSpace REST endpoint
     const url = this.feedUrl()
+      || this.wayfConfig.feedUrl
       || this.route.snapshot.queryParams['feedUrl']
-      || 'assets/mock/wayf-feed.json';
-    this.feedService.loadFeed(url, this.categoryFilter());
+      || this.buildDiscoFeedUrl();
+    const filter = this.categoryFilter() ?? this.wayfConfig.categoryFilter ?? null;
+    this.feedService.loadFeed(url, filter);
+  }
+
+  /**
+   * Derive the DiscoJuice feeds endpoint from the configured
+   * DSpace REST base URL (e.g. "http://localhost:8080/server").
+   */
+  private buildDiscoFeedUrl(): string {
+    const base = this.appConfig?.rest?.baseUrl ?? '';
+    // Remove trailing slash if present
+    const trimmed = base.replace(/\/+$/, '');
+    return `${trimmed}/api/discojuice/feeds`;
   }
 }
