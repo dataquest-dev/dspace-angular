@@ -19,26 +19,37 @@ The eventual goal is to extract this into a standalone Angular Elements Web Comp
 ```
 src/app/clarin-wayf/
 ├── AGENTS.md                          ← this file
+├── index.ts                           ← barrel file (public API surface)
+├── wayf.config.ts                     ← WayfConfig, WAYF_CONFIG token, WAYF_DEFAULTS, SamldsParams
+├── wayf.module.ts                     ← WayfModule (forRoot() convenience wrapper)
 ├── clarin-wayf.component.ts           ← main orchestrator component
+├── clarin-wayf.component.spec.ts      ← 17 unit tests
 ├── clarin-wayf-routes.ts              ← standalone route at /wayf
 ├── models/
-│   ├── idp-entry.model.ts             ← IdpEntry interface (backend "shrunk" format)
-│   └── wayf-config.model.ts           ← WayfConfig, SamldsParams types
+│   ├── idp-entry.model.ts             ← IdentityProvider, DiscoFeedEntry interfaces + normalize helpers
+│   └── idp-entry.model.spec.ts        ← 11 unit tests
 ├── services/
 │   ├── search.service.ts              ← fuzzy search engine (Sørensen–Dice)
-│   ├── search.service.spec.ts         ← 33 unit tests (all passing)
+│   ├── search.service.spec.ts         ← 33 unit tests
 │   ├── feed.service.ts                ← HTTP fetch + cache of IdP JSON feed
-│   ├── persistence.service.ts         ← localStorage (last IdP, up to 5 recent)
-│   └── i18n.service.ts                ← signal-based translation (en/cs/de)
+│   ├── feed.service.spec.ts           ← 13 unit tests
+│   ├── persistence.service.ts         ← localStorage (last IdP), SSR-safe
+│   ├── persistence.service.spec.ts    ← 8 unit tests
+│   ├── i18n.service.ts                ← signal-based translation (en/cs/de)
+│   └── i18n.service.spec.ts           ← 13 unit tests
 └── components/
     ├── idp-card/
-    │   └── wayf-idp-card.component.ts ← single IdP card (logo, name, tag badge)
+    │   ├── wayf-idp-card.component.ts ← single IdP card (logo, name, tag badge)
+    │   └── wayf-idp-card.component.spec.ts  ← 9 unit tests
     ├── search-bar/
-    │   └── wayf-search-bar.component.ts ← search input with ARIA combobox
+    │   ├── wayf-search-bar.component.ts     ← search input with ARIA combobox
+    │   └── wayf-search-bar.component.spec.ts ← 7 unit tests
     ├── idp-list/
-    │   └── wayf-idp-list.component.ts ← virtualized/filtered list of IdP cards
+    │   ├── wayf-idp-list.component.ts       ← filtered list of IdP cards
+    │   └── wayf-idp-list.component.spec.ts  ← 10 unit tests
     └── recent-idps/
-        └── wayf-recent-idps.component.ts ← strip of recently used IdPs
+        ├── wayf-recent-idps.component.ts    ← strip of recently used IdPs
+        └── wayf-recent-idps.component.spec.ts ← 9 unit tests
 ```
 
 ---
@@ -100,16 +111,30 @@ The backend endpoint returns 204 when feeds haven't cached yet (handled graceful
 - Title-first scoring: bonus applied when query matches the `title` field
 
 ### Persistence (`persistence.service.ts`)
-- `clarin-wayf-last-idp` key — entityID of last selected IdP
-- `clarin-wayf-recent-idps` key — JSON array, max 5 entries, newest first
+- `wayf:last-idp` key — entityID of last selected IdP
+- SSR-safe: all `localStorage` calls guarded with `isPlatformBrowser()`
+- Gracefully handles `QuotaExceededError` and disabled storage
+
+> **Breaking change (April 2026):** localStorage key was renamed from `clarin-wayf-last-idp` to `wayf:last-idp`. Existing users will lose their remembered IdP selection on first visit after upgrade.
+
+### Security (`clarin-wayf.component.ts`)
+- **`sanitizeReturnUrl()`** — validates SAMLDS `return` URL; only `http:` and `https:` schemes allowed (blocks `javascript:`, `data:`, and malformed URLs)
+- **Feed URL validation** — `loadFeed()` rejects non-HTTP(S) feed URLs
+- **SSR guards** — all `window.location.href` assignments wrapped in `isPlatformBrowser()`
+
+### Service Scoping
+- All 4 services use bare `@Injectable()` (no `providedIn: 'root'`)
+- Services are provided at component level via `ClarinWayfComponent.providers`
+- This enables multiple independent WAYF instances on the same page
 
 ### Angular Patterns Used
-- **Standalone components** throughout (no NgModules)
+- **Standalone components** throughout (plus `WayfModule` convenience wrapper)
 - **`inject()`** exclusively (no constructor injection)
 - **Signals** for all reactive state (`signal()`, `computed()`)
 - **`input()`/`output()`** for component I/O (Angular 17+ API)
 - **`@if`/`@for`** control flow (Angular 17+ template syntax)
 - **OnPush** change detection
+- **`InjectionToken`** (`WAYF_CONFIG`) for external configuration
 
 ---
 
@@ -119,17 +144,20 @@ The backend endpoint returns 204 when feeds haven't cached yet (handled graceful
 npm test -- --include='src/app/clarin-wayf/**/*.spec.ts'
 ```
 
-All 33 tests in `search.service.spec.ts` should pass.
+All **136 tests** across 10 spec files should pass (verified April 2026).
 
 ---
 
 ## TODO / Next Steps
 
 - [x] **Production feed URL**: Auto-derived from `APP_CONFIG.rest.baseUrl` → `/api/discojuice/feeds`
+- [x] **Component tests**: 136 tests across all services, components, and models (April 2026)
+- [x] **Security hardening**: URL sanitization, feed URL validation, SSR guards (April 2026)
+- [x] **Type safety**: Zero `as any` casts; fully typed config resolution (April 2026)
+- [x] **Barrel file / public API**: `index.ts` exports all public symbols (April 2026)
 - [ ] **Shibboleth SP path**: Verify `/Shibboleth.sso/Login` matches the actual SP endpoint in the target deployment; make it configurable via `environment.ts`
 - [ ] **Proxy/Hub IdPs**: Wire `proxyEntities` input with actual CLARIN hub entityIDs so they pin to the top of the list with a badge
 - [ ] **Visual polish**: The component currently uses minimal Bootstrap 5 CSS variables; full UX design pass needed
-- [ ] **Component tests**: Only `search.service.spec.ts` exists; add specs for `feed.service.ts`, `persistence.service.ts`, and `clarin-wayf.component.ts`
 - [ ] **Angular Elements extraction**: Once stable, extract into a separate library and package as `<clarin-wayf>` custom element (single `<script>` tag, Shadow DOM)
 
 ---

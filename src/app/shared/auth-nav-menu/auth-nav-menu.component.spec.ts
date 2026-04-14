@@ -33,6 +33,10 @@ import { ActivatedRouteStub } from '../testing/active-router.stub';
 import { BrowserOnlyMockPipe } from '../testing/browser-only-mock.pipe';
 import { EPersonMock } from '../testing/eperson.mock';
 import { HostWindowServiceStub } from '../testing/host-window-service.stub';
+import { HardRedirectService } from '../../core/services/hard-redirect.service';
+import { APP_CONFIG } from '../../../config/app-config.interface';
+import { WAYF_CONFIG, WAYF_DEFAULTS } from '../../clarin-wayf/wayf.config';
+import { environment } from '../../../environments/environment.test';
 import { AuthNavMenuComponent } from './auth-nav-menu.component';
 
 describe('AuthNavMenuComponent', () => {
@@ -104,6 +108,9 @@ describe('AuthNavMenuComponent', () => {
           { provide: AuthService, useValue: authService },
           { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
           { provide: XSRFService, useValue: {} },
+          { provide: HardRedirectService, useValue: { redirect: jasmine.createSpy('redirect'), getCurrentRoute: jasmine.createSpy('getCurrentRoute').and.returnValue('/') } },
+          { provide: APP_CONFIG, useValue: environment },
+          { provide: WAYF_CONFIG, useValue: { ...WAYF_DEFAULTS, feedUrl: '', spEntityId: '', loginEndpoint: '' } },
         ],
         schemas: [
           CUSTOM_ELEMENTS_SCHEMA,
@@ -296,6 +303,9 @@ describe('AuthNavMenuComponent', () => {
           { provide: HostWindowService, useValue: window },
           { provide: AuthService, useValue: authService },
           { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+          { provide: HardRedirectService, useValue: { redirect: jasmine.createSpy('redirect'), getCurrentRoute: jasmine.createSpy('getCurrentRoute').and.returnValue('/') } },
+          { provide: APP_CONFIG, useValue: environment },
+          { provide: WAYF_CONFIG, useValue: { ...WAYF_DEFAULTS, feedUrl: '', spEntityId: '', loginEndpoint: '' } },
         ],
         schemas: [
           CUSTOM_ELEMENTS_SCHEMA,

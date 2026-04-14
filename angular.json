@@ -142,12 +142,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "sourceMap": {
-              "scripts": false,
-              "styles": false,
-              "hidden": false,
-              "vendor": false
-            },
+            "sourceMap": true,
             "assets": [
               "src/assets"
             ],

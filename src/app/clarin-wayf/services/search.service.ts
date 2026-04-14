@@ -10,7 +10,7 @@ import { IdentityProvider } from '../models/idp-entry.model';
  * Handles diacritics normalization, typo tolerance via bigram similarity,
  * and display name resolution.
  */
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class WayfSearchService {
 
   /** Current search query. */

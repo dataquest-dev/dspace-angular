@@ -20,7 +20,7 @@ import { IdentityProvider, normalizeEntry } from '../models/idp-entry.model';
  * format (with `title`, `logoUrl`, etc.). Entries are auto-detected and
  * normalized to `IdentityProvider` on load.
  */
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class WayfFeedService {
 
   private readonly platformId = inject(PLATFORM_ID);
@@ -57,6 +57,12 @@ export class WayfFeedService {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
+      // HTTP 204 No Content — valid but empty
+      if (response.status === 204) {
+        this.entries.set([]);
+        return;
+      }
+
       const data: any[] = await response.json();
 
       if (!Array.isArray(data)) {
@@ -67,6 +73,7 @@ export class WayfFeedService {
       this.entries.set(data.map(raw => normalizeEntry(raw, locale)));
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to load IdP feed';
+      console.warn('[WAYF] Feed load failed:', message);
       this.error.set(message);
       this.entries.set([]);
     } finally {

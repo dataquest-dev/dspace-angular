@@ -23,6 +23,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'wayf.a11y.list-label': 'List of identity providers',
     'wayf.a11y.result-count': '{count} results available',
     'wayf.pinned.label': 'Default institution',
+    'wayf.local-auth': 'Log in with local account',
+    'wayf.show-more': 'Show more',
   },
   cs: {
     'wayf.title': 'Vyberte svou instituci',
@@ -37,6 +39,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'wayf.a11y.list-label': 'Seznam poskytovatelů identity',
     'wayf.a11y.result-count': '{count} výsledků k dispozici',
     'wayf.pinned.label': 'Výchozí instituce',
+    'wayf.local-auth': 'Přihlásit se místním účtem',
+    'wayf.show-more': 'Zobrazit další',
   },
   de: {
     'wayf.title': 'Wählen Sie Ihre Einrichtung',
@@ -51,6 +55,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'wayf.a11y.list-label': 'Liste der Identitätsanbieter',
     'wayf.a11y.result-count': '{count} Ergebnisse verfügbar',
     'wayf.pinned.label': 'Standardeinrichtung',
+    'wayf.local-auth': 'Mit lokalem Konto anmelden',
+    'wayf.show-more': 'Mehr anzeigen',
   },
 };
 
@@ -58,7 +64,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
  * Signal-based translation service for the WAYF component.
  * Self-contained — no dependency on @ngx-translate or Angular i18n compiler.
  */
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class WayfI18nService {
 
   /** Active language code. */

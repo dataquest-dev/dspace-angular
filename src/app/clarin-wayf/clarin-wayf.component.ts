@@ -7,9 +7,11 @@ import {
   input,
   OnInit,
   output,
+  PLATFORM_ID,
   signal,
   viewChild,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 import { IdentityProvider } from './models/idp-entry.model';
@@ -43,6 +45,12 @@ import { WayfRecentIdpsComponent } from './components/recent-idps/wayf-recent-id
     WayfSearchBarComponent,
     WayfIdpListComponent,
     WayfRecentIdpsComponent,
+  ],
+  providers: [
+    WayfFeedService,
+    WayfI18nService,
+    WayfPersistenceService,
+    WayfSearchService,
   ],
   template: `
     <div class="wayf-container">
@@ -101,6 +109,17 @@ import { WayfRecentIdpsComponent } from './components/recent-idps/wayf-recent-id
           (focusSearch)="onFocusSearch()"
         />
 
+        <!-- Show more button -->
+        @if (displayEntries().length < filteredEntries().length) {
+          <div class="wayf-container__show-more text-center mt-2 mb-2">
+            <button
+              class="btn btn-outline-primary btn-sm"
+              (click)="showMore()">
+              {{ i18n.t('wayf.show-more') }}
+            </button>
+          </div>
+        }
+
         <!-- Local auth fallback -->
         @if (resolvedLocalAuthEnabled()) {
           <div class="wayf-container__local-auth mt-3 text-center">
@@ -139,6 +158,7 @@ export class ClarinWayfComponent implements OnInit {
   private readonly searchService = inject(WayfSearchService);
   private readonly route = inject(ActivatedRoute);
   private readonly wayfConfig = inject(WAYF_CONFIG);
+  private readonly platformId = inject(PLATFORM_ID);
 
   // ── Required inputs ──────────────────────────────────────────
 
@@ -196,7 +216,8 @@ export class ClarinWayfComponent implements OnInit {
   // ── Internal state ───────────────────────────────────────────
 
   readonly searchQuery = signal('');
-
+  /** Current display cap — grows by pageSize on each "Show more" click. */
+  readonly displayLimit = signal(0);
   /** SAMLDS params parsed from the URL. */
   readonly samldsParams = signal<SamldsParams>({
     entityID: null,
@@ -207,12 +228,17 @@ export class ClarinWayfComponent implements OnInit {
 
   // ── Resolved config (input → WAYF_CONFIG → default) ─────────
 
+  /**
+   * Resolve a config value with priority: input → injected token → built-in default.
+   * Empty string and undefined are treated as "not set" for inputs.
+   */
   private resolve<K extends keyof WayfConfig>(
-    inputValue: any,
+    inputValue: WayfConfig[K] | '' | undefined,
     key: K,
-  ) {
-    if (inputValue !== '' && inputValue !== undefined) { return inputValue; }
-    return (this.wayfConfig as any)[key] ?? (WAYF_DEFAULTS as any)[key];
+  ): WayfConfig[K] {
+    if (inputValue !== '' && inputValue !== undefined) { return inputValue as WayfConfig[K]; }
+    if (key in this.wayfConfig) { return this.wayfConfig[key]; }
+    return WAYF_DEFAULTS[key as keyof typeof WAYF_DEFAULTS] as WayfConfig[K];
   }
 
   readonly resolvedServiceName = computed(() => this.resolve(this.serviceName(), 'serviceName'));
@@ -220,33 +246,32 @@ export class ClarinWayfComponent implements OnInit {
   readonly resolvedEnableSearch = computed(() => this.resolve(this.enableSearch(), 'enableSearch'));
   readonly resolvedLocalAuthEnabled = computed(() => this.resolve(this.localAuthEnabled(), 'localAuthEnabled'));
   readonly resolvedHelpText = computed(() => this.resolve(this.helpText(), 'helpText'));
-  readonly resolvedMaxResults = computed(() => this.resolve(this.maxResults(), 'maxResults') as number);
-  readonly resolvedLocale = computed(() => this.resolve(this.locale(), 'locale') as string);
+  readonly resolvedMaxResults = computed(() => this.resolve(this.maxResults(), 'maxResults'));
+  readonly resolvedLocale = computed(() => this.resolve(this.locale(), 'locale'));
+
+  /** Resolved pinned IdPs: from input first, then from injected config. */
+  private readonly resolvedPinnedIdps = computed<IdentityProvider[]>(() => {
+    const fromInput = this.pinnedIdps();
+    return fromInput.length > 0 ? fromInput : this.wayfConfig.pinnedIdps ?? [];
+  });
 
   /** Set of pinned IdP entityIDs for badge display. */
-  readonly pinnedEntityIdSet = computed(() => {
-    const pinned = this.pinnedIdps().length > 0
-      ? this.pinnedIdps()
-      : (this.wayfConfig as any).pinnedIdps ?? [];
-    return new Set<string>(pinned.map((p: IdentityProvider) => p.entityID));
-  });
+  readonly pinnedEntityIdSet = computed(() =>
+    new Set<string>(this.resolvedPinnedIdps().map(p => p.entityID)),
+  );
 
   /** EntityID of the first pinned IdP (for the shortcut card). */
   readonly pinnedEntityId = computed<string | null>(() => {
-    const pinned = this.pinnedIdps().length > 0
-      ? this.pinnedIdps()
-      : (this.wayfConfig as any).pinnedIdps ?? [];
+    const pinned = this.resolvedPinnedIdps();
     return pinned.length > 0 ? pinned[0].entityID : null;
   });
 
   /** All entries: feed entries + pinned entries (deduplicated). */
   readonly allDisplayEntries = computed(() => {
     const feed = this.feedService.entries();
-    const pinned = this.pinnedIdps().length > 0
-      ? this.pinnedIdps()
-      : (this.wayfConfig as any).pinnedIdps ?? [];
+    const pinned = this.resolvedPinnedIdps();
     const feedIds = new Set(feed.map(e => e.entityID));
-    const extra = pinned.filter((p: IdentityProvider) => !feedIds.has(p.entityID));
+    const extra = pinned.filter(p => !feedIds.has(p.entityID));
     return [...extra, ...feed];
   });
 
@@ -258,15 +283,20 @@ export class ClarinWayfComponent implements OnInit {
     ),
   );
 
-  /** Final display order with maxResults limit. */
+  /** Visible entries, capped at displayLimit. */
   readonly displayEntries = computed(() => {
     const filtered = this.filteredEntries();
-    const max = this.resolvedMaxResults();
-    return max > 0 ? filtered.slice(0, max) : filtered;
+    const limit = this.displayLimit();
+    return limit > 0 ? filtered.slice(0, limit) : filtered;
   });
 
   private readonly searchBar = viewChild(WayfSearchBarComponent);
   private readonly idpList = viewChild(WayfIdpListComponent);
+
+  private get pageSize(): number {
+    const m = this.resolvedMaxResults();
+    return m > 0 ? m : 25;
+  }
 
   constructor() {
     // Sync locale to i18n service
@@ -279,13 +309,19 @@ export class ClarinWayfComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.displayLimit.set(this.pageSize);
     this.parseSamldsParams();
     this.loadFeed();
   }
 
   onQueryChange(query: string): void {
     this.searchQuery.set(query);
+    this.displayLimit.set(this.pageSize);
     this.idpList()?.resetActive();
+  }
+
+  showMore(): void {
+    this.displayLimit.update(n => n + this.pageSize);
   }
 
   onIdpSelected(entry: IdentityProvider): void {
@@ -297,7 +333,7 @@ export class ClarinWayfComponent implements OnInit {
     this.idpSelected.emit(entry);
 
     const params = this.samldsParams();
-    if (params.return) {
+    if (params.return && isPlatformBrowser(this.platformId)) {
       const separator = params.return.includes('?') ? '&' : '?';
       const redirectUrl = `${params.return}${separator}${encodeURIComponent(params.returnIDParam)}=${encodeURIComponent(entry.entityID)}`;
       window.location.href = redirectUrl;
@@ -318,14 +354,15 @@ export class ClarinWayfComponent implements OnInit {
 
   private parseSamldsParams(): void {
     const queryParams = this.route.snapshot.queryParams;
+    const rawReturn = queryParams['return'] ?? null;
     this.samldsParams.set({
       entityID: queryParams['entityID'] ?? null,
-      return: queryParams['return'] ?? null,
+      return: this.sanitizeReturnUrl(rawReturn),
       returnIDParam: queryParams['returnIDParam'] ?? 'entityID',
       isPassive: queryParams['isPassive'] === 'true',
     });
 
-    if (this.samldsParams().isPassive) {
+    if (this.samldsParams().isPassive && isPlatformBrowser(this.platformId)) {
       const lastIdp = this.persistence.lastIdp();
       if (lastIdp && this.samldsParams().return) {
         const params = this.samldsParams();
@@ -336,9 +373,35 @@ export class ClarinWayfComponent implements OnInit {
     }
   }
 
+  /**
+   * Validate a SAMLDS return URL to prevent open-redirect attacks.
+   * Only allows http: and https: schemes; rejects everything else.
+   */
+  private sanitizeReturnUrl(url: string | null): string | null {
+    if (!url) { return null; }
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
+        return url;
+      }
+    } catch {
+      // Malformed URL — fall through to reject
+    }
+    return null;
+  }
+
   private loadFeed(): void {
     const url = this.resolve(this.feedUrl(), 'feedUrl');
     if (!url) { return; }
+    // Reject non-HTTP(S) feed URLs (e.g. javascript:, data:)
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+        return;
+      }
+    } catch {
+      return;
+    }
     const loc = this.resolvedLocale();
     this.feedService.loadFeed(url, loc);
   }
