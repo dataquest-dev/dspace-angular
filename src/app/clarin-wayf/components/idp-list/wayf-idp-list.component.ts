@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { IdpEntry } from '../../models/idp-entry.model';
+import { IdentityProvider } from '../../models/idp-entry.model';
 import { WayfI18nService } from '../../services/i18n.service';
 import { WayfIdpCardComponent } from '../idp-card/wayf-idp-card.component';
 
@@ -62,7 +62,7 @@ export class WayfIdpListComponent {
   protected readonly i18n = inject(WayfI18nService);
 
   /** Sorted/filtered entries to display. */
-  readonly entries = input.required<IdpEntry[]>();
+  readonly entries = input.required<IdentityProvider[]>();
 
   /** Whether the feed is still loading. */
   readonly loading = input(false);
@@ -71,7 +71,7 @@ export class WayfIdpListComponent {
   readonly hubEntityIds = input<Set<string>>(new Set());
 
   /** Emits when an IdP is selected. */
-  readonly idpSelected = output<IdpEntry>();
+  readonly idpSelected = output<IdentityProvider>();
 
   /** Emits when focus should return to the search bar. */
   readonly focusSearch = output<void>();

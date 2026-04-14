@@ -7,9 +7,8 @@ import {
   output,
 } from '@angular/core';
 
-import { IdpEntry } from '../../models/idp-entry.model';
+import { IdentityProvider } from '../../models/idp-entry.model';
 import { WayfI18nService } from '../../services/i18n.service';
-import { WayfSearchService } from '../../services/search.service';
 
 /**
  * Shows a single shortcut button for quick IdP selection:
@@ -55,10 +54,9 @@ import { WayfSearchService } from '../../services/search.service';
 })
 export class WayfRecentIdpsComponent {
   protected readonly i18n = inject(WayfI18nService);
-  private readonly searchService = inject(WayfSearchService);
 
   /** All entries from the feed (needed to resolve names). */
-  readonly allEntries = input.required<IdpEntry[]>();
+  readonly allEntries = input.required<IdentityProvider[]>();
 
   /** The entityID of the last selected IdP. */
   readonly lastIdpEntityId = input<string | null>(null);
@@ -70,7 +68,7 @@ export class WayfRecentIdpsComponent {
   readonly defaultEntityId = input<string | null>(null);
 
   /** Emits when the shortcut IdP is selected. */
-  readonly idpSelected = output<IdpEntry>();
+  readonly idpSelected = output<IdentityProvider>();
 
   /** Whether we are showing a static default (true) or a last-used entry (false). */
   private readonly isStaticDefault = computed(() => {
@@ -79,7 +77,7 @@ export class WayfRecentIdpsComponent {
   });
 
   /** The single IdP entry to show: static default wins, then last-used. */
-  readonly shortcutEntry = computed<IdpEntry | null>(() => {
+  readonly shortcutEntry = computed<IdentityProvider | null>(() => {
     const all = this.allEntries();
 
     // Priority 1: static default
@@ -109,6 +107,6 @@ export class WayfRecentIdpsComponent {
   readonly shortcutDisplayName = computed(() => {
     const entry = this.shortcutEntry();
     if (!entry) { return ''; }
-    return this.searchService.resolveDisplayName(entry);
+    return entry.title;
   });
 }

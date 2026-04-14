@@ -3,21 +3,18 @@ import {
   signal,
 } from '@angular/core';
 
-import { IdpEntry } from '../models/idp-entry.model';
+import { IdentityProvider } from '../models/idp-entry.model';
 
 /**
  * Fuzzy search service for filtering IdP entries.
  * Handles diacritics normalization, typo tolerance via bigram similarity,
- * and display name resolution from the backend's "shrunk" format.
+ * and display name resolution.
  */
 @Injectable({ providedIn: 'root' })
 export class WayfSearchService {
 
   /** Current search query. */
   readonly query = signal('');
-
-  /** Active language for name resolution. */
-  readonly lang = signal(navigator?.language?.split('-')[0] ?? 'en');
 
   /**
    * Normalize a string for comparison: lowercase, strip diacritics, collapse whitespace.
@@ -46,22 +43,22 @@ export class WayfSearchService {
 
   /**
    * Resolve the display name for an IdP entry.
-   * In the backend's shrunk format, this is simply the `title` field.
-   * The `lang` parameter is accepted for API compatibility but not used
-   * (the backend has already collapsed DisplayNames into a single title).
+   * Returns the `title` field directly (already resolved during normalization).
    */
-  resolveDisplayName(entry: IdpEntry, _lang?: string): string {
-    return entry.title ?? '';
+  resolveDisplayName(entry: IdentityProvider): string {
+    return entry.title;
   }
 
   /**
    * Collect all searchable text for an IdP entry.
-   * Combines the title, keywords[], country, domain and entityID.
    */
-  getSearchableText(entry: IdpEntry): string {
+  getSearchableText(entry: IdentityProvider): string {
     const parts: string[] = [entry.title];
     if (entry.keywords?.length) {
       parts.push(...entry.keywords);
+    }
+    if (entry.description) {
+      parts.push(entry.description);
     }
     if (entry.country) {
       parts.push(entry.country);
@@ -106,7 +103,7 @@ export class WayfSearchService {
    * Returns a score between 0 (no match) and 1+ (strong match).
    * A score of 0 means the entry should be filtered out.
    */
-  scoreEntry(entry: IdpEntry, query: string): number {
+  scoreEntry(entry: IdentityProvider, query: string): number {
     if (!query) {
       return 1; // No query = show all
     }
@@ -153,7 +150,7 @@ export class WayfSearchService {
   /**
    * Filter and rank IdP entries by the current query.
    */
-  filterEntries(entries: IdpEntry[], query: string, lang: string): IdpEntry[] {
+  filterEntries(entries: IdentityProvider[], query: string): IdentityProvider[] {
     if (!query || query.trim().length === 0) {
       return entries;
     }
@@ -163,7 +160,7 @@ export class WayfSearchService {
         let score = this.scoreEntry(entry, query);
 
         // Bonus for matching the title directly
-        const title = entry.title ?? '';
+        const title = entry.title;
         if (title) {
           const normalizedTitle = this.normalize(title);
           const normalizedQuery = this.normalize(query);

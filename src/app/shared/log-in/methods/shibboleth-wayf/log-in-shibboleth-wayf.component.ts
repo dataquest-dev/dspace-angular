@@ -25,7 +25,7 @@ import {
   NativeWindowService,
 } from '../../../../core/services/window.service';
 import { isEmpty } from '../../../empty.util';
-import { IdpEntry } from '../../../../clarin-wayf/models/idp-entry.model';
+import { IdentityProvider } from '../../../../clarin-wayf/models/idp-entry.model';
 import { ClarinWayfComponent } from '../../../../clarin-wayf/clarin-wayf.component';
 
 /**
@@ -135,7 +135,7 @@ export class LogInShibbolethWayfComponent implements OnInit {
    * Constructs the Shibboleth handler redirect URL with the chosen entityID,
    * similar to the original SAMLDS protocol flow.
    */
-  onIdpSelected(entry: IdpEntry): void {
+  onIdpSelected(entry: IdentityProvider): void {
     this.authService.getRedirectUrl().pipe(take(1)).subscribe((redirectRoute) => {
       if (!this.isStandalonePage) {
         redirectRoute = this.hardRedirectService.getCurrentRoute();

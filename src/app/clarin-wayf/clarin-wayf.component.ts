@@ -12,9 +12,8 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { IdpEntry } from './models/idp-entry.model';
-import { SamldsParams } from './models/wayf-config.model';
-import { DEFAULT_WAYF_CONFIG, WAYF_CONFIG } from './models/wayf-config.model';
+import { IdentityProvider } from './models/idp-entry.model';
+import { SamldsParams, WayfConfig, WAYF_CONFIG, WAYF_DEFAULTS } from './wayf.config';
 import { WayfFeedService } from './services/feed.service';
 import { WayfI18nService } from './services/i18n.service';
 import { WayfPersistenceService } from './services/persistence.service';
@@ -22,18 +21,20 @@ import { WayfSearchService } from './services/search.service';
 import { WayfSearchBarComponent } from './components/search-bar/wayf-search-bar.component';
 import { WayfIdpListComponent } from './components/idp-list/wayf-idp-list.component';
 import { WayfRecentIdpsComponent } from './components/recent-idps/wayf-recent-idps.component';
-import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 
 /**
- * Main CLARIN WAYF (Where Are You From) component.
+ * Main WAYF (Where Are You From) component — standalone IdP discovery widget.
  *
- * Implements the SAML Discovery Service protocol:
- * - Reads entityID, return, returnIDParam, isPassive from query params
- * - Lets the user search and select an IdP
- * - Redirects to: {return}?{returnIDParam}={selectedIdP.entityID}
+ * Supports two usage modes:
  *
- * Can also be used standalone (without SAMLDS params) as an IdP picker
- * that emits the selected IdP.
+ * 1. **SAMLDS Discovery Service** — reads entityID, return, returnIDParam,
+ *    isPassive from query params and redirects after IdP selection.
+ *
+ * 2. **Embedded IdP picker** — emits `idpSelected` / `localAuthSelected` /
+ *    `cancelled` events for the host application to handle.
+ *
+ * All IdP data, endpoints, and branding are configurable via inputs
+ * or the WAYF_CONFIG injection token — no hardcoded values.
  */
 @Component({
   selector: 'ds-clarin-wayf',
@@ -45,7 +46,10 @@ import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
   ],
   template: `
     <div class="wayf-container">
-      <h2 class="wayf-container__title h5 mb-3">{{ i18n.t('wayf.title') }}</h2>
+      @if (resolvedServiceName()) {
+        <h2 class="wayf-container__title h5 mb-1">{{ resolvedServiceName() }}</h2>
+      }
+      <p class="wayf-container__subtitle text-muted text-center mb-3">{{ resolvedSubtitle() }}</p>
 
       @if (feedService.loading()) {
         <div class="text-center py-4">
@@ -63,38 +67,57 @@ import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
       }
 
       @if (!feedService.loading() && !feedService.error()) {
-        <!-- Quick-select shortcut (static default or last-used) -->
+        <!-- Quick-select shortcut (pinned or last-used) -->
         <ds-wayf-recent-idps
-          [allEntries]="feedService.entries()"
+          [allEntries]="allDisplayEntries()"
           [lastIdpEntityId]="persistence.lastIdp()"
-          [defaultEntityId]="staticDefaultEntityId()"
+          [defaultEntityId]="pinnedEntityId()"
           (idpSelected)="onIdpSelected($event)"
         />
 
         <!-- Search bar -->
-        <ds-wayf-search-bar
-          [value]="searchQuery()"
-          [hasResults]="filteredEntries().length > 0"
-          (queryChange)="onQueryChange($event)"
-          (arrowDown)="onArrowDown()"
-          (escaped)="onEscaped()"
-        />
+        @if (resolvedEnableSearch()) {
+          <ds-wayf-search-bar
+            [value]="searchQuery()"
+            [hasResults]="filteredEntries().length > 0"
+            (queryChange)="onQueryChange($event)"
+            (arrowDown)="onArrowDown()"
+            (escaped)="onEscaped()"
+          />
 
-        <!-- Result count -->
-        @if (searchQuery().length > 0) {
-          <div class="wayf-container__count small text-muted mb-2">
-            {{ i18n.t('wayf.search.results', { count: filteredEntries().length }) }}
-          </div>
+          @if (searchQuery().length > 0) {
+            <div class="wayf-container__count small text-muted mb-2">
+              {{ i18n.t('wayf.search.results', { count: filteredEntries().length }) }}
+            </div>
+          }
         }
 
         <!-- IdP list -->
         <ds-wayf-idp-list
           [entries]="displayEntries()"
           [loading]="feedService.loading()"
-          [hubEntityIds]="hubEntityIdSet()"
+          [hubEntityIds]="pinnedEntityIdSet()"
           (idpSelected)="onIdpSelected($event)"
           (focusSearch)="onFocusSearch()"
         />
+
+        <!-- Local auth fallback -->
+        @if (resolvedLocalAuthEnabled()) {
+          <div class="wayf-container__local-auth mt-3 text-center">
+            <button
+              class="btn btn-outline-secondary btn-sm"
+              (click)="localAuthSelected.emit()">
+              {{ i18n.t('wayf.local-auth') }}
+            </button>
+          </div>
+        }
+
+        <!-- Help text -->
+        @if (resolvedHelpText()) {
+          <div class="wayf-container__help mt-3 small text-muted text-center">
+            {{ resolvedHelpText() }}
+          </div>
+        }
       }
     </div>
   `,
@@ -116,32 +139,61 @@ export class ClarinWayfComponent implements OnInit {
   private readonly searchService = inject(WayfSearchService);
   private readonly route = inject(ActivatedRoute);
   private readonly wayfConfig = inject(WAYF_CONFIG);
-  private readonly appConfig: AppConfig = inject(APP_CONFIG);
 
-  // --- Inputs (configurable via route data or parent binding) ---
+  // ── Required inputs ──────────────────────────────────────────
 
-  /** URL to the IdP JSON feed. */
+  /** URL to the JSON IdP feed. */
   readonly feedUrl = input<string>('');
 
-  /** Tag to filter IdPs by. */
-  readonly categoryFilter = input<string | null>(null);
+  /** This Service Provider's SAML entityID. */
+  readonly spEntityId = input<string>('');
 
-  /** JSON-stringified array of proxy/hub entityIDs. */
-  readonly proxyEntities = input<string>('[]');
+  /** Shibboleth SP login URL for redirect after IdP selection. */
+  readonly loginEndpoint = input<string>('');
 
-  /** Language override. */
-  readonly lang = input<string>('');
+  // ── Recommended inputs ───────────────────────────────────────
 
-  /**
-   * EntityID to pin at the top as "default institution".
-   * When empty, falls back to the most frequently selected IdP from localStorage.
-   */
-  readonly defaultEntityId = input<string>('');
+  /** Branding title shown in the overlay header. */
+  readonly serviceName = input<string>('');
 
-  /** Emits the selected IdP entry (for embedded/overlay usage). */
-  readonly idpSelected = output<IdpEntry>();
+  /** Always-visible priority IdP entries. */
+  readonly pinnedIdps = input<IdentityProvider[]>([]);
 
-  // --- Internal state ---
+  /** Show a "Local authentication" fallback option. */
+  readonly localAuthEnabled = input<boolean | undefined>(undefined);
+
+  /** Guidance text for "Can't find my provider". */
+  readonly helpText = input<string>('');
+
+  // ── Optional inputs ──────────────────────────────────────────
+
+  /** Enable the search bar. */
+  readonly enableSearch = input<boolean | undefined>(undefined);
+
+  /** Maximum number of results shown in the list. */
+  readonly maxResults = input<number | undefined>(undefined);
+
+  /** Remember the last-used IdP in localStorage. */
+  readonly rememberSelection = input<boolean | undefined>(undefined);
+
+  /** Subtitle text shown below the title. */
+  readonly subtitle = input<string>('');
+
+  /** UI locale / language code. */
+  readonly locale = input<string>('');
+
+  // ── Outputs ──────────────────────────────────────────────────
+
+  /** Emits the selected IdP entry. */
+  readonly idpSelected = output<IdentityProvider>();
+
+  /** Emits when the user picks local authentication. */
+  readonly localAuthSelected = output<void>();
+
+  /** Emits when the user closes without choosing. */
+  readonly cancelled = output<void>();
+
+  // ── Internal state ───────────────────────────────────────────
 
   readonly searchQuery = signal('');
 
@@ -153,62 +205,75 @@ export class ClarinWayfComponent implements OnInit {
     isPassive: false,
   });
 
-  /** Parsed set of proxy entity IDs. */
-  readonly hubEntityIdSet = computed(() => {
-    try {
-      const parsed: unknown = JSON.parse(this.proxyEntities());
-      if (Array.isArray(parsed)) {
-        return new Set(parsed.filter((item): item is string => typeof item === 'string'));
-      }
-    } catch {
-      // Invalid JSON
-    }
-    return new Set<string>();
+  // ── Resolved config (input → WAYF_CONFIG → default) ─────────
+
+  private resolve<K extends keyof WayfConfig>(
+    inputValue: any,
+    key: K,
+  ) {
+    if (inputValue !== '' && inputValue !== undefined) { return inputValue; }
+    return (this.wayfConfig as any)[key] ?? (WAYF_DEFAULTS as any)[key];
+  }
+
+  readonly resolvedServiceName = computed(() => this.resolve(this.serviceName(), 'serviceName'));
+  readonly resolvedSubtitle = computed(() => this.resolve(this.subtitle(), 'subtitle'));
+  readonly resolvedEnableSearch = computed(() => this.resolve(this.enableSearch(), 'enableSearch'));
+  readonly resolvedLocalAuthEnabled = computed(() => this.resolve(this.localAuthEnabled(), 'localAuthEnabled'));
+  readonly resolvedHelpText = computed(() => this.resolve(this.helpText(), 'helpText'));
+  readonly resolvedMaxResults = computed(() => this.resolve(this.maxResults(), 'maxResults') as number);
+  readonly resolvedLocale = computed(() => this.resolve(this.locale(), 'locale') as string);
+
+  /** Set of pinned IdP entityIDs for badge display. */
+  readonly pinnedEntityIdSet = computed(() => {
+    const pinned = this.pinnedIdps().length > 0
+      ? this.pinnedIdps()
+      : (this.wayfConfig as any).pinnedIdps ?? [];
+    return new Set<string>(pinned.map((p: IdentityProvider) => p.entityID));
+  });
+
+  /** EntityID of the first pinned IdP (for the shortcut card). */
+  readonly pinnedEntityId = computed<string | null>(() => {
+    const pinned = this.pinnedIdps().length > 0
+      ? this.pinnedIdps()
+      : (this.wayfConfig as any).pinnedIdps ?? [];
+    return pinned.length > 0 ? pinned[0].entityID : null;
+  });
+
+  /** All entries: feed entries + pinned entries (deduplicated). */
+  readonly allDisplayEntries = computed(() => {
+    const feed = this.feedService.entries();
+    const pinned = this.pinnedIdps().length > 0
+      ? this.pinnedIdps()
+      : (this.wayfConfig as any).pinnedIdps ?? [];
+    const feedIds = new Set(feed.map(e => e.entityID));
+    const extra = pinned.filter((p: IdentityProvider) => !feedIds.has(p.entityID));
+    return [...extra, ...feed];
   });
 
   /** Entries filtered by search query. */
   readonly filteredEntries = computed(() =>
     this.searchService.filterEntries(
-      this.feedService.entries(),
+      this.allDisplayEntries(),
       this.searchQuery(),
-      this.i18n.lang(),
     ),
   );
 
-  /** Final display order: hub entries pinned first, then filtered results. */
+  /** Final display order with maxResults limit. */
   readonly displayEntries = computed(() => {
     const filtered = this.filteredEntries();
-    const hubs = this.hubEntityIdSet();
-
-    if (hubs.size === 0) {
-      return filtered;
-    }
-
-    const pinnedHub = filtered.filter(e => hubs.has(e.entityID));
-    const rest = filtered.filter(e => !hubs.has(e.entityID));
-    return [...pinnedHub, ...rest];
-  });
-
-  /**
-   * The statically configured default entityID (input binding or WAYF_CONFIG token).
-   * Null when no static default is set — the shortcut card will then show the last-used IdP.
-   */
-  readonly staticDefaultEntityId = computed<string | null>(() => {
-    const fromInput = this.defaultEntityId();
-    if (fromInput) { return fromInput; }
-    const fromConfig = this.wayfConfig.defaultEntityId ?? DEFAULT_WAYF_CONFIG.defaultEntityId;
-    return fromConfig || null;
+    const max = this.resolvedMaxResults();
+    return max > 0 ? filtered.slice(0, max) : filtered;
   });
 
   private readonly searchBar = viewChild(WayfSearchBarComponent);
   private readonly idpList = viewChild(WayfIdpListComponent);
 
   constructor() {
-    // Set language when input changes
+    // Sync locale to i18n service
     effect(() => {
-      const langInput = this.lang();
-      if (langInput) {
-        this.i18n.setLang(langInput);
+      const loc = this.resolvedLocale();
+      if (loc) {
+        this.i18n.setLang(loc);
       }
     });
   }
@@ -223,25 +288,23 @@ export class ClarinWayfComponent implements OnInit {
     this.idpList()?.resetActive();
   }
 
-  onIdpSelected(entry: IdpEntry): void {
-    this.persistence.selectIdp(entry.entityID);
+  onIdpSelected(entry: IdentityProvider): void {
+    const remember = this.resolve(this.rememberSelection(), 'rememberSelection');
+    if (remember) {
+      this.persistence.selectIdp(entry.entityID);
+    }
 
-    // Always emit so parent components (e.g. login overlay) can handle redirect
     this.idpSelected.emit(entry);
 
     const params = this.samldsParams();
     if (params.return) {
-      // SAMLDS redirect
       const separator = params.return.includes('?') ? '&' : '?';
       const redirectUrl = `${params.return}${separator}${encodeURIComponent(params.returnIDParam)}=${encodeURIComponent(entry.entityID)}`;
       window.location.href = redirectUrl;
     }
-    // If no SAMLDS return URL, the selection is just persisted.
-    // A parent component or DSpace can read it from localStorage.
   }
 
   onArrowDown(): void {
-    // Move focus from search bar into the list
     this.idpList()?.activeIndex.set(0);
   }
 
@@ -262,7 +325,6 @@ export class ClarinWayfComponent implements OnInit {
       isPassive: queryParams['isPassive'] === 'true',
     });
 
-    // isPassive: if we have a last-used IdP, auto-select without UI
     if (this.samldsParams().isPassive) {
       const lastIdp = this.persistence.lastIdp();
       if (lastIdp && this.samldsParams().return) {
@@ -275,23 +337,9 @@ export class ClarinWayfComponent implements OnInit {
   }
 
   private loadFeed(): void {
-    // Priority: input binding → WAYF_CONFIG token → ?feedUrl= query param → DSpace REST endpoint
-    const url = this.feedUrl()
-      || this.wayfConfig.feedUrl
-      || this.route.snapshot.queryParams['feedUrl']
-      || this.buildDiscoFeedUrl();
-    const filter = this.categoryFilter() ?? this.wayfConfig.categoryFilter ?? null;
-    this.feedService.loadFeed(url, filter);
-  }
-
-  /**
-   * Derive the DiscoJuice feeds endpoint from the configured
-   * DSpace REST base URL (e.g. "http://localhost:8080/server").
-   */
-  private buildDiscoFeedUrl(): string {
-    const base = this.appConfig?.rest?.baseUrl ?? '';
-    // Remove trailing slash if present
-    const trimmed = base.replace(/\/+$/, '');
-    return `${trimmed}/api/discojuice/feeds`;
+    const url = this.resolve(this.feedUrl(), 'feedUrl');
+    if (!url) { return; }
+    const loc = this.resolvedLocale();
+    this.feedService.loadFeed(url, loc);
   }
 }

@@ -63,6 +63,7 @@ import {
 } from './core/provide-core';
 import { ClientCookieService } from './core/services/client-cookie.service';
 import { ListableModule } from './core/shared/listable.module';
+import { WAYF_CONFIG, WAYF_DEFAULTS } from './clarin-wayf/wayf.config';
 import { XsrfInterceptor } from './core/xsrf/xsrf.interceptor';
 import { LOGIN_METHOD_FOR_DECORATOR_MAP } from './external-log-in/decorators/external-log-in.methods-decorator';
 import { RootModule } from './root.module';
@@ -161,6 +162,18 @@ export const commonAppConfig: ApplicationConfig = {
 
     // DI-composable menus
     ...MENUS,
+
+    // WAYF component configuration — deployment-specific values
+    {
+      provide: WAYF_CONFIG,
+      useFactory: (appConfig: AppConfig) => ({
+        ...WAYF_DEFAULTS,
+        feedUrl: 'https://lindat.mff.cuni.cz/Shibboleth.sso/DiscoFeed',
+        spEntityId: '',
+        loginEndpoint: 'https://lindat.mff.cuni.cz/Shibboleth.sso/Login',
+      }),
+      deps: [APP_CONFIG],
+    },
 
     provideCore(),
   ],

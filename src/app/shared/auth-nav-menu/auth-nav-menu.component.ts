@@ -4,6 +4,7 @@ import {
 } from '@angular/common';
 import {
   Component,
+  Inject,
   OnInit,
   signal,
 } from '@angular/core';
@@ -28,6 +29,8 @@ import {
   map,
 } from 'rxjs/operators';
 
+import { APP_CONFIG, AppConfig } from '../../../config/app-config.interface';
+
 import {
   AppState,
   routerStateSelector,
@@ -44,7 +47,8 @@ import {
 import { EPerson } from '../../core/eperson/models/eperson.model';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
 import { ClarinWayfComponent } from '../../clarin-wayf/clarin-wayf.component';
-import { IdpEntry } from '../../clarin-wayf/models/idp-entry.model';
+import { IdentityProvider } from '../../clarin-wayf/models/idp-entry.model';
+import { WayfConfig, WAYF_CONFIG } from '../../clarin-wayf/wayf.config';
 import {
   fadeInOut,
   fadeOut,
@@ -101,6 +105,8 @@ export class AuthNavMenuComponent implements OnInit {
               private windowService: HostWindowService,
               private authService: AuthService,
               protected hardRedirectService: HardRedirectService,
+              @Inject(APP_CONFIG) private appConfig: AppConfig,
+              @Inject(WAYF_CONFIG) private wayfConfig: WayfConfig,
   ) {
     this.isMobile$ = this.windowService.isMobile();
   }
@@ -127,10 +133,15 @@ export class AuthNavMenuComponent implements OnInit {
     this.activeLoginTab.set(tab);
   }
 
-  onIdpSelected(entry: IdpEntry): void {
-    const origin = window.location.origin;
-    const returnUrl = encodeURIComponent(this.hardRedirectService.getCurrentRoute());
-    const ssoUrl = `${origin}/Shibboleth.sso/Login?entityID=${encodeURIComponent(entry.entityID)}&target=${returnUrl}`;
+  onIdpSelected(entry: IdentityProvider): void {
+    // Build the Shibboleth redirect following the LINDAT pattern:
+    // {spUrl}/Shibboleth.sso/Login?SAMLDS=1&target={restBase}/api/authn/shibboleth?redirectUrl={appUrl}&entityID={idp}
+    const loginEndpoint = this.wayfConfig.loginEndpoint;
+    const restBaseUrl = this.appConfig.rest.baseUrl;
+    const currentUrl = this.hardRedirectService.getCurrentRoute();
+    const redirectUrl = encodeURIComponent(window.location.origin + currentUrl);
+    const target = `${restBaseUrl}/api/authn/shibboleth?redirectUrl=${redirectUrl}`;
+    const ssoUrl = `${loginEndpoint}?SAMLDS=1&target=${target}&entityID=${encodeURIComponent(entry.entityID)}`;
     this.hardRedirectService.redirect(ssoUrl);
   }
 }

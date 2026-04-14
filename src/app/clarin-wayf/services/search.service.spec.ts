@@ -1,19 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
-import { IdpEntry } from '../models/idp-entry.model';
+import { IdentityProvider } from '../models/idp-entry.model';
 import { WayfSearchService } from './search.service';
 
 /**
- * Helper: build a minimal IdpEntry for testing.
+ * Helper: build a minimal IdentityProvider for testing.
  */
-function makeEntry(overrides: Partial<IdpEntry> & { entityID: string }): IdpEntry {
+function makeEntry(overrides: Partial<IdentityProvider> & { entityID: string }): IdentityProvider {
   return {
-    title: '',
-    keywords: [],
-    country: '',
-    Tags: [],
+    title: overrides.entityID,
     ...overrides,
-  };
+  } as IdentityProvider;
 }
 
 describe('WayfSearchService', () => {
@@ -67,14 +64,25 @@ describe('WayfSearchService', () => {
   // ── resolveDisplayName() ────────────────────────────────────
 
   describe('resolveDisplayName()', () => {
-    it('should return the title of the entry', () => {
-      const entry = makeEntry({ entityID: 'e1', title: 'Masaryk University' });
+    it('should return the title field directly', () => {
+      const entry = makeEntry({
+        entityID: 'e1',
+        title: 'Masaryk University',
+      });
       expect(service.resolveDisplayName(entry)).toBe('Masaryk University');
     });
 
-    it('should return empty string when title is empty', () => {
-      const entry = makeEntry({ entityID: 'e2', title: '' });
-      expect(service.resolveDisplayName(entry)).toBe('');
+    it('should return the title regardless of locale', () => {
+      const entry = makeEntry({
+        entityID: 'e1',
+        title: 'Masarykova univerzita',
+      });
+      expect(service.resolveDisplayName(entry)).toBe('Masarykova univerzita');
+    });
+
+    it('should return entityID as fallback when title equals entityID', () => {
+      const entry = makeEntry({ entityID: 'https://idp.example.org' });
+      expect(service.resolveDisplayName(entry)).toBe('https://idp.example.org');
     });
   });
 
@@ -100,7 +108,6 @@ describe('WayfSearchService', () => {
     });
 
     it('should handle single character strings (no bigrams)', () => {
-      // Single char → 0 bigrams, so the denominator is 0
       expect(service.diceCoefficient('a', 'a')).toBe(1);
     });
 
@@ -116,8 +123,7 @@ describe('WayfSearchService', () => {
     const masaryk = makeEntry({
       entityID: 'https://shibboleth.muni.cz/idp/shibboleth',
       title: 'Masaryk University',
-      keywords: ['Masarykova univerzita', 'masaryk brno czech republic muni'],
-      country: 'CZ',
+      keywords: ['masaryk', 'brno', 'czech republic', 'muni', 'masarykova univerzita'],
     });
 
     it('should return 1 for empty query (show all)', () => {
@@ -147,7 +153,6 @@ describe('WayfSearchService', () => {
     });
 
     it('should score a fuzzy typo above 0 when close enough', () => {
-      // "masarky" is a plausible typo for "masaryk"
       const score = service.scoreEntry(masaryk, 'masarky');
       expect(score).toBeGreaterThan(0);
     });
@@ -156,66 +161,61 @@ describe('WayfSearchService', () => {
   // ── filterEntries() ────────────────────────────────────────
 
   describe('filterEntries()', () => {
-    const entries: IdpEntry[] = [
+    const entries: IdentityProvider[] = [
       makeEntry({
         entityID: 'https://idp.example.org/shibboleth',
         title: 'Example University',
-        keywords: ['example research'],
-        country: 'CZ',
+        keywords: ['example', 'research'],
       }),
       makeEntry({
         entityID: 'https://shibboleth.muni.cz/idp/shibboleth',
         title: 'Masaryk University',
-        keywords: ['Masarykova univerzita', 'masaryk brno czech republic'],
-        country: 'CZ',
+        keywords: ['masaryk', 'brno', 'czech republic', 'masarykova univerzita'],
       }),
       makeEntry({
         entityID: 'https://idp.cuni.cz/idp/shibboleth',
         title: 'Charles University',
-        keywords: ['Univerzita Karlova', 'charles prague'],
-        country: 'CZ',
+        keywords: ['charles', 'prague', 'univerzita karlova'],
       }),
     ];
 
     it('should return all entries for empty query', () => {
-      expect(service.filterEntries(entries, '', 'en').length).toBe(3);
+      expect(service.filterEntries(entries, '').length).toBe(3);
     });
 
     it('should filter to matching entries only', () => {
-      const result = service.filterEntries(entries, 'Masaryk', 'en');
+      const result = service.filterEntries(entries, 'Masaryk');
       expect(result.length).toBe(1);
       expect(result[0].entityID).toBe('https://shibboleth.muni.cz/idp/shibboleth');
     });
 
     it('should match case-insensitively', () => {
-      const result = service.filterEntries(entries, 'masaryk', 'en');
+      const result = service.filterEntries(entries, 'masaryk');
       expect(result.length).toBe(1);
     });
 
     it('should match diacritics-insensitively', () => {
-      // Searching "univerzita" matches the keyword "Masarykova univerzita" and "Univerzita Karlova"
-      // and also fuzzy-matches "University" in titles via Dice coefficient
-      const result = service.filterEntries(entries, 'univerzita', 'en');
-      expect(result.length).toBe(3);
+      const result = service.filterEntries(entries, 'univerzita');
+      expect(result.length).toBe(2);
     });
 
     it('should return "University" entries for the generic term "University"', () => {
-      const result = service.filterEntries(entries, 'University', 'en');
+      const result = service.filterEntries(entries, 'University');
       expect(result.length).toBe(3);
     });
 
     it('should rank exact matches higher than partial matches', () => {
-      const result = service.filterEntries(entries, 'charles', 'en');
+      const result = service.filterEntries(entries, 'charles');
       expect(result[0].entityID).toBe('https://idp.cuni.cz/idp/shibboleth');
     });
 
     it('should match by keywords', () => {
-      const result = service.filterEntries(entries, 'Karlova', 'en');
+      const result = service.filterEntries(entries, 'Karlova');
       expect(result[0].entityID).toBe('https://idp.cuni.cz/idp/shibboleth');
     });
 
     it('should return empty array when nothing matches', () => {
-      const result = service.filterEntries(entries, 'zzzzxxxx', 'en');
+      const result = service.filterEntries(entries, 'zzzzxxxx');
       expect(result.length).toBe(0);
     });
   });
