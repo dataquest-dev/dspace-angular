@@ -90,29 +90,27 @@ Integration points (outside the module):
 
 ---
 
-# 🚨 Overengineered / Suspicious Code
+# � Architecture Review
 
-| Area | Concern |
-|------|---------|
-| **Custom fuzzy search** | Sørensen–Dice bigram implementation (~25 lines for the core algorithm). Justified for international academic federations where users mistype foreign institution names. Zero external deps, 27 tests. |
-| **Config resolution chain** | 3-level fallback (`input → WAYF_CONFIG → WAYF_DEFAULTS`) via a 7-line `resolve()` helper. Standard Angular pattern for reusable components — enables host apps to configure via inputs, DI token, or rely on defaults. Necessary for portability across different environments. |
-| **SAMLDS protocol handling** | `parseSamldsParams()` + `sanitizeReturnUrl()` + `isPassive` auto-redirect implement a full SAMLDS client. This complexity lives in the UI component rather than a service. |
-| **WayfModule.forRoot()** | The module wrapper exists for ergonomic DI setup, but the component is standalone. The module is a thin shell — could be replaced by direct `provide` calls. |
-| **3 separate services** | Feed, Search, Persistence — each is small (~40-60 lines). Could arguably be 2 services (DataService = feed+persistence, SearchService stays). |
+| Area | Verdict | Rationale |
+|------|---------|-----------|
+| **Custom fuzzy search** | ✅ Keep | Sørensen–Dice bigram (~25 lines). Needed for international institution names with typos. Zero deps, 27 tests. |
+| **Config resolution chain** | ✅ Keep | Standard Angular `resolve()` pattern (7 lines). Enables inputs, DI token, or defaults — required for portability. |
+| **SAMLDS protocol handling** | ✅ Keep in component | This *is* the component's primary job. `parseSamldsParams()` + `sanitizeReturnUrl()` run once in `ngOnInit` — no reuse to justify a service. |
+| **WayfModule.forRoot()** | ✅ Keep | 15-line ergonomic wrapper. Enforces required config at compile time. Standard pattern (NgRx, Angular Material). |
+| **3 separate services** | ✅ Keep | Feed (HTTP), Search (pure logic), Persistence (localStorage) — each has a distinct I/O target. Enables independent mocking in tests. |
 
 ---
 
-# ✂️ Simplification Suggestions
+# ✂️ Potential Simplifications (Not Recommended)
 
-| Suggestion | Risk | Impact |
-|------------|------|--------|
-| **Inline persistence into main component** | Low | Removes a file + 8 tests. The service is just 3 `localStorage` calls. |
-| **Simplify search** to substring-only, drop Dice coefficient | Medium | Removes ~40 lines + some tests. Loses typo tolerance (e.g. "Univerzita" → "Universita"). |
-| **Move SAMLDS logic to a utility function** | Low | Main component becomes cleaner. Pure function is easier to test. |
-| **Drop WayfModule**, just export the component | Low | Consumers use `imports: [ClarinWayfComponent]` + `providers: [...]` directly. |
-| **Merge feed.service into main component** | Medium | It's only called once. But separating it does help testability. |
-
-> **Safe bet:** Inline persistence + drop the module wrapper. Everything else adds real value.
+| Suggestion | Risk | Why not |
+|------------|------|---------|
+| **Inline persistence** into main component | Low | Adds SSR boilerplate noise to orchestrator. Service isolates localStorage side effects. |
+| **Drop Dice coefficient**, substring-only search | Medium | Loses typo tolerance for international names — the component's key differentiator. |
+| **Move SAMLDS to a service** | Low | Would create a class with one method called once. No reuse benefit. |
+| **Drop WayfModule** | Low | Consumers lose compile-time required-field enforcement and ergonomic setup. |
+| **Merge feed + persistence** | Medium | Combines HTTP and localStorage concerns. Breaks independent testability. |
 
 ---
 
