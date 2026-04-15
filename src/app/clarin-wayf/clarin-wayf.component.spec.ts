@@ -233,12 +233,15 @@ describe('ClarinWayfComponent', () => {
       }).compileComponents();
 
       const f = TestBed.createComponent(ClarinWayfComponent);
+      const redirectSpy = spyOn(f.componentInstance as any, 'redirect');
       f.detectChanges();
 
       const params = f.componentInstance.samldsParams();
       expect(params.isPassive).toBeTrue();
       expect(params.return).toBe('https://sp.example.org/return');
-      expect(localStorage.getItem('wayf:last-idp')).toBe('https://idp.example.org/shibboleth');
+      expect(redirectSpy).toHaveBeenCalledWith(
+        'https://sp.example.org/return?entityID=https%3A%2F%2Fidp.example.org%2Fshibboleth',
+      );
     });
   });
 });

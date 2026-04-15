@@ -227,7 +227,7 @@ export class ClarinWayfComponent implements OnInit {
     if (params.return && isPlatformBrowser(this.platformId)) {
       const separator = params.return.includes('?') ? '&' : '?';
       const redirectUrl = `${params.return}${separator}${encodeURIComponent(params.returnIDParam)}=${encodeURIComponent(entry.entityID)}`;
-      window.location.href = redirectUrl;
+      this.redirect(redirectUrl);
     }
   }
 
@@ -259,9 +259,14 @@ export class ClarinWayfComponent implements OnInit {
         const params = this.samldsParams();
         const separator = params.return!.includes('?') ? '&' : '?';
         const redirectUrl = `${params.return}${separator}${encodeURIComponent(params.returnIDParam)}=${encodeURIComponent(lastIdp)}`;
-        window.location.href = redirectUrl;
+        this.redirect(redirectUrl);
       }
     }
+  }
+
+  /** Perform a full-page redirect. Extracted for testability. */
+  protected redirect(url: string): void {
+    window.location.href = url;
   }
 
   /**
