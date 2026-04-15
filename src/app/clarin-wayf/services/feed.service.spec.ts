@@ -146,6 +146,23 @@ describe('WayfFeedService', () => {
         { credentials: 'omit' },
       );
     });
+
+    it('should deduplicate entries with the same entityID', async () => {
+      const mockData = [
+        { entityID: 'https://idp.example.org', DisplayNames: [{ value: 'Uni A', lang: 'en' }] },
+        { entityID: 'https://idp.example.org', DisplayNames: [{ value: 'Uni A', lang: 'en' }] },
+        { entityID: 'https://idp2.example.org', DisplayNames: [{ value: 'Uni B', lang: 'en' }] },
+      ];
+      fetchSpy = spyOn(globalThis, 'fetch').and.resolveTo(
+        new Response(JSON.stringify(mockData), { status: 200 }),
+      );
+
+      await service.loadFeed('https://feed.example.org/DiscoFeed');
+
+      expect(service.entries().length).toBe(2);
+      expect(service.entries()[0].entityID).toBe('https://idp.example.org');
+      expect(service.entries()[1].entityID).toBe('https://idp2.example.org');
+    });
   });
 
   describe('SSR safety', () => {

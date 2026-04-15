@@ -70,7 +70,14 @@ export class WayfFeedService {
         return;
       }
 
-      this.entries.set(data.map(raw => normalizeEntry(raw, locale)));
+      const normalized = data.map(raw => normalizeEntry(raw, locale));
+      const seen = new Set<string>();
+      const unique = normalized.filter(e => {
+        if (seen.has(e.entityID)) { return false; }
+        seen.add(e.entityID);
+        return true;
+      });
+      this.entries.set(unique);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to load IdP feed';
       console.warn('[WAYF] Feed load failed:', message);
