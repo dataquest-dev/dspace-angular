@@ -1,0 +1,86 @@
+<div class="wayf-container">
+  @if (resolvedServiceName()) {
+    <h2 class="wayf-container__title h5 mb-1">{{ resolvedServiceName() }}</h2>
+  }
+  <p class="wayf-container__subtitle text-muted text-center mb-3">{{ resolvedSubtitle() }}</p>
+
+  @if (feedService.loading()) {
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ i18n.t('wayf.loading') }}</span>
+      </div>
+      <div class="mt-2 text-muted">{{ i18n.t('wayf.loading') }}</div>
+    </div>
+  }
+
+  @if (feedService.error()) {
+    <div class="alert alert-danger" role="alert">
+      {{ i18n.t('wayf.error.feed') }}
+    </div>
+  }
+
+  @if (!feedService.loading() && !feedService.error()) {
+    <!-- Quick-select shortcut (pinned or last-used) -->
+    <ds-wayf-recent-idps
+      [allEntries]="allDisplayEntries()"
+      [lastIdpEntityId]="persistence.lastIdp()"
+      [defaultEntityId]="pinnedEntityId()"
+      (idpSelected)="onIdpSelected($event)"
+    />
+
+    <!-- Search bar -->
+    @if (resolvedEnableSearch()) {
+      <ds-wayf-search-bar
+        [value]="searchQuery()"
+        [hasResults]="filteredEntries().length > 0"
+        (queryChange)="onQueryChange($event)"
+        (arrowDown)="onArrowDown()"
+        (escaped)="onEscaped()"
+      />
+
+      @if (searchQuery().length > 0) {
+        <div class="wayf-container__count small text-muted mb-2">
+          {{ i18n.t('wayf.search.results', { count: filteredEntries().length }) }}
+        </div>
+      }
+    }
+
+    <!-- IdP list -->
+    <ds-wayf-idp-list
+      [entries]="displayEntries()"
+      [loading]="feedService.loading()"
+      [hubEntityIds]="pinnedEntityIdSet()"
+      (idpSelected)="onIdpSelected($event)"
+      (focusSearch)="onFocusSearch()"
+    />
+
+    <!-- Show more button -->
+    @if (displayEntries().length < filteredEntries().length) {
+      <div class="wayf-container__show-more text-center mt-2 mb-2">
+        <button
+          class="btn btn-outline-primary btn-sm"
+          (click)="showMore()">
+          {{ i18n.t('wayf.show-more') }}
+        </button>
+      </div>
+    }
+
+    <!-- Local auth fallback -->
+    @if (resolvedLocalAuthEnabled()) {
+      <div class="wayf-container__local-auth mt-3 text-center">
+        <button
+          class="btn btn-outline-secondary btn-sm"
+          (click)="localAuthSelected.emit()">
+          {{ i18n.t('wayf.local-auth') }}
+        </button>
+      </div>
+    }
+
+    <!-- Help text -->
+    @if (resolvedHelpText()) {
+      <div class="wayf-container__help mt-3 small text-muted text-center">
+        {{ resolvedHelpText() }}
+      </div>
+    }
+  }
+</div>

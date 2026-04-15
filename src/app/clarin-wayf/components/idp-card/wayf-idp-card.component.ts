@@ -51,49 +51,7 @@ import { WayfI18nService } from '../../services/i18n.service';
       }
     </div>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
-    .wayf-idp-card {
-      cursor: pointer;
-      border: 1px solid var(--bs-border-color, #dee2e6);
-      border-radius: 0.375rem;
-      transition: background-color 0.15s ease, border-color 0.15s ease;
-    }
-    .wayf-idp-card:hover,
-    .wayf-idp-card--active {
-      background-color: var(--bs-primary-bg-subtle, #e7f1ff);
-      border-color: var(--bs-primary, #0d6efd);
-    }
-    .wayf-idp-card--hub {
-      border-left: 3px solid var(--bs-info, #0dcaf0);
-    }
-    .wayf-idp-card__logo-box {
-      width: 40px;
-      height: 40px;
-      flex-shrink: 0;
-    }
-    .wayf-idp-card__logo {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-      display: block;
-    }
-    .wayf-idp-card__logo--placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--bs-secondary-bg, #e9ecef);
-      border-radius: 0.25rem;
-      font-weight: 600;
-      font-size: 0.875rem;
-      color: var(--bs-secondary-color, #6c757d);
-    }
-    .min-w-0 {
-      min-width: 0;
-    }
-  `],
+  styleUrls: ['./wayf-idp-card.component.scss'],
 })
 export class WayfIdpCardComponent {
   protected readonly i18n = inject(WayfI18nService);
