@@ -97,10 +97,22 @@ Feed URL resolved in this priority order:
 The backend endpoint returns 204 when feeds haven't cached yet (handled gracefully).
 
 ### Fuzzy Search (`search.service.ts`)
-- Diacritics normalized via `NFD` + strip combining marks
-- Sørensen–Dice bigram similarity coefficient (no external deps)
-- Scoring: exact match = 2, word boundary = 1 + ratio, fuzzy ≥ 0.4 threshold
-- Title-first scoring: bonus applied when query matches the `title` field
+A three-tier scoring algorithm designed for international academic federations where institution names appear in local scripts (Czech, German, Portuguese, etc.).
+
+**Tier 1 — Exact substring** (score = 2): the normalized query appears verbatim in the entry's searchable text (title, keywords, description, country, domain). Fastest path.
+
+**Tier 2 — Word-level match** (score = 1 + word-hit ratio): each query word is checked individually against the searchable text. Handles multi-word queries like `"charles university"`.
+
+**Tier 3 — Fuzzy bigram / Sørensen–Dice coefficient** (score = 0.4–1.0): character bigrams of each query word are compared against each text word. Provides typo tolerance — e.g. `"univerzita"` matches `"universita"`, `"masarik"` matches `"masaryk"`. Entries scoring below 0.4 similarity are filtered out.
+
+**Bonus**: +0.5 when the query matches the `title` field directly (promotes title-first results).
+
+**Preprocessing**:
+- Diacritics stripped via Unicode NFD decomposition + combining-mark removal
+- Lowercased, whitespace-collapsed
+- Searchable text includes: title, keywords, description, country, domain extracted from entityID URL
+
+**Why not use a library?** The implementation is ~25 lines for the Dice coefficient, zero external dependencies, and fully covered by 27 unit tests. A library (e.g. Fuse.js) would add ~30 KB for the same result.
 
 ### Persistence (`persistence.service.ts`)
 - `wayf:last-idp` key — entityID of last selected IdP

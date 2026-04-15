@@ -81,6 +81,7 @@ Integration points (outside the module):
 - **Input:** `entries: IdentityProvider[]`, `query: string`
 - **Output:** Filtered + scored `IdentityProvider[]`
 - **Side effects:** None (pure functions)
+- **Algorithm:** Three-tier scoring — (1) exact substring → score 2, (2) word-level match → 1 + ratio, (3) Sørensen–Dice bigram fuzzy match → 0.4–1.0 threshold. Diacritics are stripped via NFD normalization. Title matches get a +0.5 bonus. This enables typo tolerance for international institution names (e.g. "univerzita" → "universita"). Zero external dependencies, 27 unit tests.
 
 ### WayfPersistenceService
 - **Input:** `entityID: string` (on select)
@@ -93,7 +94,7 @@ Integration points (outside the module):
 
 | Area | Concern |
 |------|---------|
-| **Custom fuzzy search** | Sørensen–Dice bigram implementation is solid but complex (~60 lines). A simpler substring+includes filter would cover 95% of use cases. |
+| **Custom fuzzy search** | Sørensen–Dice bigram implementation (~25 lines for the core algorithm). Justified for international academic federations where users mistype foreign institution names. Zero external deps, 27 tests. |
 | **Config resolution chain** | 3-level fallback (`input → WAYF_CONFIG → WAYF_DEFAULTS`) with an `effect()` that merges them. Adds cognitive overhead for a config that rarely changes at runtime. |
 | **SAMLDS protocol handling** | `parseSamldsParams()` + `sanitizeReturnUrl()` + `isPassive` auto-redirect implement a full SAMLDS client. This complexity lives in the UI component rather than a service. |
 | **WayfModule.forRoot()** | The module wrapper exists for ergonomic DI setup, but the component is standalone. The module is a thin shell — could be replaced by direct `provide` calls. |
@@ -106,7 +107,7 @@ Integration points (outside the module):
 | Suggestion | Risk | Impact |
 |------------|------|--------|
 | **Inline persistence into main component** | Low | Removes a file + 8 tests. The service is just 3 `localStorage` calls. |
-| **Simplify search** to substring-only, drop Dice coefficient | Medium | Removes ~40 lines + some tests. Loses typo tolerance (e.g. "Univerzita" → "Universita"). |
+| **Simplify search** to substring-only, drop Dice coefficient | Medium | Removes ~25 lines + some tests. Loses typo tolerance for international names (e.g. "Univerzita" → "Universita"). Not recommended — the algorithm is the component's key differentiator. |
 | **Move SAMLDS logic to a utility function** | Low | Main component becomes cleaner. Pure function is easier to test. |
 | **Drop WayfModule**, just export the component | Low | Consumers use `imports: [ClarinWayfComponent]` + `providers: [...]` directly. |
 | **Merge feed.service into main component** | Medium | It's only called once. But separating it does help testability. |
