@@ -2,14 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  inject,
   input,
   output,
   signal,
 } from '@angular/core';
 
 import { IdentityProvider } from '../../models/idp-entry.model';
-import { WayfI18nService } from '../../services/i18n.service';
 import { WayfIdpCardComponent } from '../idp-card/wayf-idp-card.component';
 
 /**
@@ -24,7 +22,7 @@ import { WayfIdpCardComponent } from '../idp-card/wayf-idp-card.component';
       id="wayf-idp-listbox"
       class="wayf-idp-list"
       role="listbox"
-      [attr.aria-label]="i18n.t('wayf.a11y.list-label')"
+      [attr.aria-label]="'List of identity providers'"
       tabindex="0"
       (keydown)="onKeydown($event)">
 
@@ -39,13 +37,13 @@ import { WayfIdpCardComponent } from '../idp-card/wayf-idp-card.component';
 
       @if (entries().length === 0 && !loading()) {
         <div class="wayf-idp-list__empty text-center text-muted py-4">
-          {{ i18n.t('wayf.search.no-results') }}
+          No institutions match your search
         </div>
       }
     </div>
 
     <div class="visually-hidden" aria-live="polite" aria-atomic="true">
-      {{ i18n.t('wayf.a11y.result-count', { count: entries().length }) }}
+      {{ entries().length }} results available
     </div>
   `,
   styles: [`
@@ -59,7 +57,6 @@ import { WayfIdpCardComponent } from '../idp-card/wayf-idp-card.component';
   `],
 })
 export class WayfIdpListComponent {
-  protected readonly i18n = inject(WayfI18nService);
 
   /** Sorted/filtered entries to display. */
   readonly entries = input.required<IdentityProvider[]>();

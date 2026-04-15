@@ -2,13 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  inject,
   input,
   output,
   viewChild,
 } from '@angular/core';
-
-import { WayfI18nService } from '../../services/i18n.service';
 
 /**
  * Search input bar for filtering IdP entries.
@@ -18,7 +15,7 @@ import { WayfI18nService } from '../../services/i18n.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="wayf-search-bar" role="search">
-      <label [attr.for]="inputId" class="visually-hidden">{{ i18n.t('wayf.a11y.search-label') }}</label>
+      <label [attr.for]="inputId" class="visually-hidden">Search for your institution</label>
       <div class="input-group">
         <span class="input-group-text">
           <i class="fas fa-search" aria-hidden="true"></i>
@@ -28,7 +25,7 @@ import { WayfI18nService } from '../../services/i18n.service';
           [id]="inputId"
           type="search"
           class="form-control form-control-lg"
-          [placeholder]="i18n.t('wayf.search.placeholder')"
+          placeholder="Search for your institution..."
           [value]="value()"
           (input)="onInput($event)"
           (keydown.arrowdown)="arrowDown.emit()"
@@ -52,7 +49,6 @@ import { WayfI18nService } from '../../services/i18n.service';
   `],
 })
 export class WayfSearchBarComponent {
-  protected readonly i18n = inject(WayfI18nService);
 
   readonly inputId = 'wayf-search-input';
 

@@ -1,14 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  inject,
   input,
   output,
   signal,
 } from '@angular/core';
 
 import { IdentityProvider } from '../../models/idp-entry.model';
-import { WayfI18nService } from '../../services/i18n.service';
 
 /**
  * Renders a single IdP entry card with logo, display name, and optional hub badge.
@@ -47,14 +45,13 @@ import { WayfI18nService } from '../../services/i18n.service';
       </div>
 
       @if (isHub()) {
-        <span class="badge bg-info text-dark ms-2 flex-shrink-0">{{ i18n.t('wayf.hub.badge') }}</span>
+        <span class="badge bg-info text-dark ms-2 flex-shrink-0">Hub</span>
       }
     </div>
   `,
   styleUrls: ['./wayf-idp-card.component.scss'],
 })
 export class WayfIdpCardComponent {
-  protected readonly i18n = inject(WayfI18nService);
 
   /** The IdP entry to display. */
   readonly entry = input.required<IdentityProvider>();

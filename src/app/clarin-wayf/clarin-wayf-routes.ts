@@ -7,6 +7,6 @@ export const ROUTES: Route[] = [
     path: '',
     pathMatch: 'full',
     component: ClarinWayfComponent,
-    data: { title: 'wayf.title' },
+    data: { title: 'Select Your Institution' },
   },
 ];

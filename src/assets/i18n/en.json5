@@ -3415,16 +3415,6 @@
 
   "login.breadcrumbs": "Login",
 
-  "login.wayf.button": "Log in via your institution",
-
-  "login.wayf.header": "Select Your Institution",
-
-  "login.wayf.close": "Close institution picker",
-
-  "wayf.title": "Select Your Institution",
-
-  "wayf.breadcrumbs": "Identity Provider Selection",
-
   "logout.form.header": "Log out from DSpace",
 
   "logout.form.submit": "Log out",
@@ -3710,10 +3700,6 @@
   "nav.language": "Language switch",
 
   "nav.login": "Log In",
-
-  "nav.login.tab.local": "Local Login",
-
-  "nav.login.tab.institution": "Institution",
 
   "nav.user-profile-menu-and-logout": "User profile menu and log out",
 

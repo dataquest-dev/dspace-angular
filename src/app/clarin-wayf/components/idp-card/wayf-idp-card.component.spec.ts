@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WayfIdpCardComponent } from './wayf-idp-card.component';
-import { WayfI18nService } from '../../services/i18n.service';
 import { IdentityProvider } from '../../models/idp-entry.model';
 
 describe('WayfIdpCardComponent', () => {
@@ -17,7 +16,6 @@ describe('WayfIdpCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [WayfIdpCardComponent],
-      providers: [WayfI18nService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WayfIdpCardComponent);

@@ -14,7 +14,7 @@
 |------|---------------|
 | **Orchestrator** (`ClarinWayfComponent`) | Loads IdP feed, wires search/pagination/selection, handles SAMLDS redirect protocol |
 | **UI Kit** (4 sub-components) | Card, list, search bar, recent-IdP shortcut — pure presentation, no business logic |
-| **Service Layer** (4 services) | Feed fetching, fuzzy search, localStorage persistence, self-contained i18n |
+| **Service Layer** (3 services) | Feed fetching, fuzzy search, localStorage persistence |
 | **Integration Glue** (3 touch points) | Login page toggle, header dropdown tab, Shibboleth auth method button |
 
 ---
@@ -47,8 +47,7 @@ src/app/clarin-wayf/
 ├── Services (all signal-based, no external deps)
 │   ├── feed.service.ts               ← HTTP fetch + cache
 │   ├── search.service.ts             ← Fuzzy search engine
-│   ├── persistence.service.ts        ← localStorage wrapper
-│   └── i18n.service.ts               ← Built-in translations (en/cs/de)
+│   └── persistence.service.ts        ← localStorage wrapper
 │
 ├── UI Components (pure presentation)
 │   ├── components/search-bar/        ← Text input with ARIA
@@ -56,7 +55,7 @@ src/app/clarin-wayf/
 │   ├── components/idp-card/          ← Single institution card
 │   └── components/recent-idps/       ← "Continue with..." shortcut
 │
-└── Tests (10 spec files, 136 tests total)
+└── Tests (9 spec files, 112 tests total)
 
 Integration points (outside the module):
 ├── login-page.component.ts/html      ← Toggle button + collapsible panel
@@ -69,12 +68,12 @@ Integration points (outside the module):
 # ⚫ Black Box Summary
 
 ### ClarinWayfComponent
-- **Inputs:** `feedUrl`, `spEntityId`, `loginEndpoint`, `maxResults`, `locale`, `pinnedIdps`, ...
+- **Inputs:** `feedUrl`, `spEntityId`, `loginEndpoint`, `serviceName`, `pinnedIdps`, `localAuthEnabled`, `helpText`, `enableSearch`, `maxResults`, `rememberSelection`
 - **Outputs:** `idpSelected`, `localAuthSelected`, `cancelled`
 - **Side effects:** Fetches feed URL on init, writes to `localStorage`, may redirect via `window.location.href`
 
 ### WayfFeedService
-- **Input:** `feedUrl: string`, `locale: string`
+- **Input:** `feedUrl: string`, `locale: string` (defaults to `'en'`)
 - **Output:** `entries` signal with `IdentityProvider[]`
 - **Side effects:** HTTP `fetch()` call (credentials: omit)
 
@@ -88,23 +87,17 @@ Integration points (outside the module):
 - **Output:** `lastIdp` signal with last-used entityID
 - **Side effects:** Reads/writes `localStorage` key `wayf:last-idp`
 
-### WayfI18nService
-- **Input:** Language code (`en`, `cs`, `de`)
-- **Output:** `t(key, params?)` → translated string
-- **Side effects:** None
-
 ---
 
 # 🚨 Overengineered / Suspicious Code
 
 | Area | Concern |
 |------|---------|
-| **Custom i18n service** | DSpace already has `@ngx-translate`. This builds a parallel mini-i18n system (15 keys, 3 languages). Justified only if the component must work outside DSpace. |
 | **Custom fuzzy search** | Sørensen–Dice bigram implementation is solid but complex (~60 lines). A simpler substring+includes filter would cover 95% of use cases. |
 | **Config resolution chain** | 3-level fallback (`input → WAYF_CONFIG → WAYF_DEFAULTS`) with an `effect()` that merges them. Adds cognitive overhead for a config that rarely changes at runtime. |
 | **SAMLDS protocol handling** | `parseSamldsParams()` + `sanitizeReturnUrl()` + `isPassive` auto-redirect implement a full SAMLDS client. This complexity lives in the UI component rather than a service. |
 | **WayfModule.forRoot()** | The module wrapper exists for ergonomic DI setup, but the component is standalone. The module is a thin shell — could be replaced by direct `provide` calls. |
-| **4 separate services** | Feed, Search, Persistence, i18n — each is small (~40-60 lines). Could arguably be 2 services (DataService = feed+persistence, SearchService stays). |
+| **4 separate services** | Feed, Search, Persistence — each is small (~40-60 lines). Could arguably be 2 services (DataService = feed+persistence, SearchService stays). |
 
 ---
 
@@ -112,7 +105,6 @@ Integration points (outside the module):
 
 | Suggestion | Risk | Impact |
 |------------|------|--------|
-| **Replace custom i18n** with `@ngx-translate` keys in DSpace's existing `en.json5` | Low | Removes ~120 lines + 13 tests. Breaks standalone portability. |
 | **Inline persistence into main component** | Low | Removes a file + 8 tests. The service is just 3 `localStorage` calls. |
 | **Simplify search** to substring-only, drop Dice coefficient | Medium | Removes ~40 lines + some tests. Loses typo tolerance (e.g. "Univerzita" → "Universita"). |
 | **Move SAMLDS logic to a utility function** | Low | Main component becomes cleaner. Pure function is easier to test. |
@@ -132,7 +124,6 @@ User clicks "Select institution"
     → List renders in IdpListComponent (cards)
     → User types → SearchService filters (fuzzy match)
     → User clicks a card
-      → PersistenceService saves to localStorage
       → Component builds Shibboleth redirect URL
         → Browser navigates to institution login
 ```

@@ -2,13 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  inject,
   input,
   output,
 } from '@angular/core';
 
 import { IdentityProvider } from '../../models/idp-entry.model';
-import { WayfI18nService } from '../../services/i18n.service';
 
 /**
  * Shows a single shortcut button for quick IdP selection:
@@ -53,7 +51,6 @@ import { WayfI18nService } from '../../services/i18n.service';
   `],
 })
 export class WayfRecentIdpsComponent {
-  protected readonly i18n = inject(WayfI18nService);
 
   /** All entries from the feed (needed to resolve names). */
   readonly allEntries = input.required<IdentityProvider[]>();
@@ -99,8 +96,8 @@ export class WayfRecentIdpsComponent {
   /** Label shown above the institution name. */
   readonly shortcutLabel = computed(() =>
     this.isStaticDefault()
-      ? this.i18n.t('wayf.pinned.label')
-      : this.i18n.t('wayf.recent.continue'),
+      ? 'Default institution'
+      : 'Continue with',
   );
 
   /** Resolved display name for the shortcut entry. */

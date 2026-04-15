@@ -14,6 +14,5 @@ export { IdentityProvider, DiscoFeedEntry, DiscoFeedLocalizedValue, DiscoFeedLog
 
 // Services (for advanced use / testing)
 export { WayfFeedService } from './services/feed.service';
-export { WayfI18nService } from './services/i18n.service';
 export { WayfPersistenceService } from './services/persistence.service';
 export { WayfSearchService } from './services/search.service';

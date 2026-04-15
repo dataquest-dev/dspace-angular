@@ -23,33 +23,31 @@ src/app/clarin-wayf/
 ├── wayf.config.ts                     ← WayfConfig, WAYF_CONFIG token, WAYF_DEFAULTS, SamldsParams
 ├── wayf.module.ts                     ← WayfModule (forRoot() convenience wrapper)
 ├── clarin-wayf.component.ts           ← main orchestrator component
-├── clarin-wayf.component.spec.ts      ← 17 unit tests
+├── clarin-wayf.component.spec.ts      ← 13 unit tests
 ├── clarin-wayf-routes.ts              ← standalone route at /wayf
 ├── models/
 │   ├── idp-entry.model.ts             ← IdentityProvider, DiscoFeedEntry interfaces + normalize helpers
-│   └── idp-entry.model.spec.ts        ← 11 unit tests
+│   └── idp-entry.model.spec.ts        ← 12 unit tests
 ├── services/
 │   ├── search.service.ts              ← fuzzy search engine (Sørensen–Dice)
-│   ├── search.service.spec.ts         ← 33 unit tests
+│   ├── search.service.spec.ts         ← 27 unit tests
 │   ├── feed.service.ts                ← HTTP fetch + cache of IdP JSON feed
-│   ├── feed.service.spec.ts           ← 13 unit tests
+│   ├── feed.service.spec.ts           ← 14 unit tests
 │   ├── persistence.service.ts         ← localStorage (last IdP), SSR-safe
-│   ├── persistence.service.spec.ts    ← 8 unit tests
-│   ├── i18n.service.ts                ← signal-based translation (en/cs/de)
-│   └── i18n.service.spec.ts           ← 13 unit tests
+│   └── persistence.service.spec.ts    ← 8 unit tests
 └── components/
     ├── idp-card/
     │   ├── wayf-idp-card.component.ts ← single IdP card (logo, name, tag badge)
-    │   └── wayf-idp-card.component.spec.ts  ← 9 unit tests
+    │   └── wayf-idp-card.component.spec.ts  ← 10 unit tests
     ├── search-bar/
     │   ├── wayf-search-bar.component.ts     ← search input with ARIA combobox
     │   └── wayf-search-bar.component.spec.ts ← 7 unit tests
     ├── idp-list/
     │   ├── wayf-idp-list.component.ts       ← filtered list of IdP cards
-    │   └── wayf-idp-list.component.spec.ts  ← 10 unit tests
+    │   └── wayf-idp-list.component.spec.ts  ← 11 unit tests
     └── recent-idps/
         ├── wayf-recent-idps.component.ts    ← strip of recently used IdPs
-        └── wayf-recent-idps.component.spec.ts ← 9 unit tests
+        └── wayf-recent-idps.component.spec.ts ← 10 unit tests
 ```
 
 ---
@@ -75,13 +73,7 @@ src/app/clarin-wayf/
 - **`src/app/shared/log-in/methods/log-in.methods-decorator.ts`** — `AuthMethodType.Shibboleth` now maps to `LogInShibbolethWayfComponent`
 - **`src/app/shared/log-in/methods/auth-methods.type.ts`** — added `typeof LogInShibbolethWayfComponent` to union type
 
-### 5. i18n
-- **`src/assets/i18n/en.json5`** — added keys:
-  - `wayf.title`, `wayf.breadcrumbs`
-  - `login.wayf.button`, `login.wayf.header`, `login.wayf.close`
-  - `nav.login.tab.local`, `nav.login.tab.institution`
-
-### 6. Mock Feed
+### 5. Mock Feed
 - **`src/assets/mock/wayf-feed.json`** — 10 sample IdPs (MUNI, CESNET, Charles University, CVUT, LMU, KU Leuven, Perun, Café Brazil, UW, Example University)
 
 ---
@@ -144,14 +136,14 @@ The backend endpoint returns 204 when feeds haven't cached yet (handled graceful
 npm test -- --include='src/app/clarin-wayf/**/*.spec.ts'
 ```
 
-All **136 tests** across 10 spec files should pass (verified April 2026).
+All **112 tests** across 9 spec files should pass (verified April 2026).
 
 ---
 
 ## TODO / Next Steps
 
 - [x] **Production feed URL**: Auto-derived from `APP_CONFIG.rest.baseUrl` → `/api/discojuice/feeds`
-- [x] **Component tests**: 136 tests across all services, components, and models (April 2026)
+- [x] **Component tests**: 112 tests across all services, components, and models (April 2026)
 - [x] **Security hardening**: URL sanitization, feed URL validation, SSR guards (April 2026)
 - [x] **Type safety**: Zero `as any` casts; fully typed config resolution (April 2026)
 - [x] **Barrel file / public API**: `index.ts` exports all public symbols (April 2026)
@@ -166,5 +158,5 @@ All **136 tests** across 10 spec files should pass (verified April 2026).
 
 - **Themed components**: DSpace uses a `src/themes/custom/` shadow that re-exports base components with their own `imports` array. Whenever you add a new component to a base component's template, you **must also add it to the themed wrapper's `imports`**. Forgetting this causes `Unknown element 'ds-...'` errors only in the themed variant.
 - **TypeScript config**: `noImplicitAny: false` and `strictNullChecks: false` — code is permissive but `fullTemplateTypeCheck: true` means template errors are strict.
-- **i18n**: After adding keys to `en.json5`, restart the dev server — the asset hash changes and the old bundle won't pick up new keys.
+- **i18n**: The WAYF component has no i18n dependency — all UI text is hardcoded English. It is fully portable to any Angular host app.
 - **Auth method decorator map**: `AUTH_METHOD_FOR_DECORATOR_MAP` in `log-in.methods-decorator.ts` is the single source of truth for which component renders for each `AuthMethodType`. Update both the map and the `AuthMethodTypeComponent` union type together.

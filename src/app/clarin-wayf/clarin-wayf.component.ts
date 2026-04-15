@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   input,
   OnInit,
@@ -17,7 +16,6 @@ import { ActivatedRoute } from '@angular/router';
 import { IdentityProvider } from './models/idp-entry.model';
 import { SamldsParams, WayfConfig, WAYF_CONFIG, WAYF_DEFAULTS } from './wayf.config';
 import { WayfFeedService } from './services/feed.service';
-import { WayfI18nService } from './services/i18n.service';
 import { WayfPersistenceService } from './services/persistence.service';
 import { WayfSearchService } from './services/search.service';
 import { WayfSearchBarComponent } from './components/search-bar/wayf-search-bar.component';
@@ -48,7 +46,6 @@ import { WayfRecentIdpsComponent } from './components/recent-idps/wayf-recent-id
   ],
   providers: [
     WayfFeedService,
-    WayfI18nService,
     WayfPersistenceService,
     WayfSearchService,
   ],
@@ -65,7 +62,6 @@ import { WayfRecentIdpsComponent } from './components/recent-idps/wayf-recent-id
   `],
 })
 export class ClarinWayfComponent implements OnInit {
-  protected readonly i18n = inject(WayfI18nService);
   protected readonly feedService = inject(WayfFeedService);
   protected readonly persistence = inject(WayfPersistenceService);
   private readonly searchService = inject(WayfSearchService);
@@ -109,12 +105,6 @@ export class ClarinWayfComponent implements OnInit {
   /** Remember the last-used IdP in localStorage. */
   readonly rememberSelection = input<boolean | undefined>(undefined);
 
-  /** Subtitle text shown below the title. */
-  readonly subtitle = input<string>('');
-
-  /** UI locale / language code. */
-  readonly locale = input<string>('');
-
   // ── Outputs ──────────────────────────────────────────────────
 
   /** Emits the selected IdP entry. */
@@ -155,12 +145,10 @@ export class ClarinWayfComponent implements OnInit {
   }
 
   readonly resolvedServiceName = computed(() => this.resolve(this.serviceName(), 'serviceName'));
-  readonly resolvedSubtitle = computed(() => this.resolve(this.subtitle(), 'subtitle'));
   readonly resolvedEnableSearch = computed(() => this.resolve(this.enableSearch(), 'enableSearch'));
   readonly resolvedLocalAuthEnabled = computed(() => this.resolve(this.localAuthEnabled(), 'localAuthEnabled'));
   readonly resolvedHelpText = computed(() => this.resolve(this.helpText(), 'helpText'));
   readonly resolvedMaxResults = computed(() => this.resolve(this.maxResults(), 'maxResults'));
-  readonly resolvedLocale = computed(() => this.resolve(this.locale(), 'locale'));
 
   /** Resolved pinned IdPs: from input first, then from injected config. */
   private readonly resolvedPinnedIdps = computed<IdentityProvider[]>(() => {
@@ -209,16 +197,6 @@ export class ClarinWayfComponent implements OnInit {
   private get pageSize(): number {
     const m = this.resolvedMaxResults();
     return m > 0 ? m : 25;
-  }
-
-  constructor() {
-    // Sync locale to i18n service
-    effect(() => {
-      const loc = this.resolvedLocale();
-      if (loc) {
-        this.i18n.setLang(loc);
-      }
-    });
   }
 
   ngOnInit(): void {
@@ -315,7 +293,7 @@ export class ClarinWayfComponent implements OnInit {
     } catch {
       return;
     }
-    const loc = this.resolvedLocale();
+    const loc = 'en';
     this.feedService.loadFeed(url, loc);
   }
 }

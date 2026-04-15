@@ -2,20 +2,19 @@
   @if (resolvedServiceName()) {
     <h2 class="wayf-container__title h5 mb-1">{{ resolvedServiceName() }}</h2>
   }
-  <p class="wayf-container__subtitle text-muted text-center mb-3">{{ resolvedSubtitle() }}</p>
 
   @if (feedService.loading()) {
     <div class="text-center py-4">
       <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">{{ i18n.t('wayf.loading') }}</span>
+        <span class="visually-hidden">Loading institutions...</span>
       </div>
-      <div class="mt-2 text-muted">{{ i18n.t('wayf.loading') }}</div>
+      <div class="mt-2 text-muted">Loading institutions...</div>
     </div>
   }
 
   @if (feedService.error()) {
     <div class="alert alert-danger" role="alert">
-      {{ i18n.t('wayf.error.feed') }}
+      Failed to load identity providers. Please try again.
     </div>
   }
 
@@ -40,7 +39,7 @@
 
       @if (searchQuery().length > 0) {
         <div class="wayf-container__count small text-muted mb-2">
-          {{ i18n.t('wayf.search.results', { count: filteredEntries().length }) }}
+          {{ filteredEntries().length }} institutions found
         </div>
       }
     }
@@ -60,7 +59,7 @@
         <button
           class="btn btn-outline-primary btn-sm"
           (click)="showMore()">
-          {{ i18n.t('wayf.show-more') }}
+          Show more
         </button>
       </div>
     }
@@ -71,7 +70,7 @@
         <button
           class="btn btn-outline-secondary btn-sm"
           (click)="localAuthSelected.emit()">
-          {{ i18n.t('wayf.local-auth') }}
+          Log in with local account
         </button>
       </div>
     }

@@ -63,14 +63,8 @@ export interface WayfConfig {
   /** Remember the last-used IdP in localStorage. */
   rememberSelection: boolean;
 
-  /** Subtitle text shown below the title. */
-  subtitle: string;
-
   /** URL of a country-detection API.  `null` disables auto-detection. */
   countryApiUrl: string | null;
-
-  /** UI locale / language code for name resolution. */
-  locale: string;
 
   /** Show country flags next to IdP names. */
   showFlags: boolean;
@@ -93,9 +87,7 @@ export const WAYF_DEFAULTS: Omit<WayfConfig, 'feedUrl' | 'spEntityId' | 'loginEn
   enableSearch: true,
   maxResults: 25,
   rememberSelection: true,
-  subtitle: 'Select your provider',
   countryApiUrl: null,
-  locale: 'en',
   showFlags: true,
 };
 

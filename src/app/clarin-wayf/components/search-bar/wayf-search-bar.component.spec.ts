@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WayfSearchBarComponent } from './wayf-search-bar.component';
-import { WayfI18nService } from '../../services/i18n.service';
 
 describe('WayfSearchBarComponent', () => {
   let component: WayfSearchBarComponent;
@@ -10,7 +9,6 @@ describe('WayfSearchBarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [WayfSearchBarComponent],
-      providers: [WayfI18nService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WayfSearchBarComponent);

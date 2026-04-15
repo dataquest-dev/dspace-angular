@@ -147,7 +147,7 @@ export const ROUTES: Route[] = [
     pathMatch: 'full',
     component: ClarinWayfComponent,
     resolve: { breadcrumb: i18nBreadcrumbResolver },
-    data: { breadcrumbKey: 'wayf', title: 'wayf.title' },
+    data: { breadcrumbKey: 'wayf', title: 'Select Your Institution' },
   },
 ];
 ```
@@ -166,7 +166,7 @@ export const ROUTES: Route[] = [
     pathMatch: 'full',
     component: ClarinWayfComponent,
     resolve: { breadcrumb: i18nBreadcrumbResolver },
-    data: { breadcrumbKey: 'wayf', title: 'wayf.title' },
+    data: { breadcrumbKey: 'wayf', title: 'Select Your Institution' },
     providers: [                                              // ← ADD
       {
         provide: WAYF_CONFIG,
