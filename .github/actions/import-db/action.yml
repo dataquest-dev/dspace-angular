@@ -18,6 +18,11 @@ inputs:
     description: 'Admin password for DSpace'
     required: true
     type: string
+  LOGDIR:
+    description: 'Directory for log files'
+    required: false
+    type: string
+    default: ''
 
 runs:
   using: "composite"
