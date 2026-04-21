@@ -1,8 +1,8 @@
 <div class="container w-100 h-100">
   <div class="text-center mt-5 row justify-content-center">
     <div>
-      <img class="mb-4 login-logo" src="assets/images/dspace-logo.svg" [alt]="'repository.image.logo' | translate">
-      <h1 class="h3 mb-0 fw-normal">{{"login.form.header" | translate}}</h1>
+      <img class="mb-4 login-logo" src="assets/images/dspace-logo.svg" alt="Repository logo">
+      <h1 class="h3 mb-0 fw-normal">Log in</h1>
       <ds-log-in
       [isStandalonePage]="true"></ds-log-in>
 
@@ -15,17 +15,17 @@
             (click)="toggleWayf()"
           >
             <i class="fas fa-university me-2" aria-hidden="true"></i>
-            {{ 'login.wayf.button' | translate }}
+            Sign in with your institution
           </button>
         }
         @if (wayfOpen()) {
           <div class="wayf-panel mt-2">
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <h3 class="h6 mb-0">{{ 'login.wayf.header' | translate }}</h3>
+              <h3 class="h6 mb-0">Choose your institution</h3>
               <button
                 class="btn btn-sm btn-outline-secondary"
                 (click)="toggleWayf()"
-                [attr.aria-label]="'login.wayf.close' | translate"
+                aria-label="Close institution picker"
               >
                 <i class="fas fa-times" aria-hidden="true"></i>
               </button>

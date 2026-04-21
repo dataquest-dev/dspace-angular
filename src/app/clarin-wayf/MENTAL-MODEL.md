@@ -90,13 +90,13 @@ Integration points (outside the module):
 
 ---
 
-# � Architecture Review
+# ✅ Architecture Review
 
 | Area | Verdict | Rationale |
 |------|---------|-----------|
 | **Custom fuzzy search** | ✅ Keep | Sørensen–Dice bigram (~25 lines). Needed for international institution names with typos. Zero deps, 27 tests. |
 | **Config resolution chain** | ✅ Keep | Standard Angular `resolve()` pattern (7 lines). Enables inputs, DI token, or defaults — required for portability. |
-| **SAMLDS protocol handling** | ✅ Keep in component | This *is* the component's primary job. `parseSamldsParams()` + `sanitizeReturnUrl()` run once in `ngOnInit` — no reuse to justify a service. |
+| **SAMLDS protocol handling** | ✅ Keep in component | This *is* the component's primary job. `parseSamldsParams()` + `sanitizeReturnUrl()` run once in `ngOnInit` — no reuse justification for a service. |
 | **WayfModule.forRoot()** | ✅ Keep | 15-line ergonomic wrapper. Enforces required config at compile time. Standard pattern (NgRx, Angular Material). |
 | **3 separate services** | ✅ Keep | Feed (HTTP), Search (pure logic), Persistence (localStorage) — each has a distinct I/O target. Enables independent mocking in tests. |
 

@@ -14,10 +14,6 @@ import { APP_DATA_SERVICES_MAP } from '../../config/app-config.interface';
 import { AuthService } from '../core/auth/auth.service';
 import { XSRFService } from '../core/xsrf/xsrf.service';
 import { AuthServiceMock } from '../shared/mocks/auth.service.mock';
-import { HardRedirectService } from '../core/services/hard-redirect.service';
-import { APP_CONFIG } from '../../config/app-config.interface';
-import { WAYF_CONFIG, WAYF_DEFAULTS } from '../clarin-wayf/wayf.config';
-import { environment } from '../../environments/environment.test';
 import { ActivatedRouteStub } from '../shared/testing/active-router.stub';
 import { LoginPageComponent } from './login-page.component';
 
@@ -46,9 +42,6 @@ describe('LoginPageComponent', () => {
         { provide: AuthService, useValue: new AuthServiceMock() },
         { provide: XSRFService, useValue: {} },
         { provide: APP_DATA_SERVICES_MAP, useValue: {} },
-        { provide: HardRedirectService, useValue: { redirect: jasmine.createSpy('redirect'), getCurrentRoute: jasmine.createSpy('getCurrentRoute').and.returnValue('/') } },
-        { provide: APP_CONFIG, useValue: environment },
-        { provide: WAYF_CONFIG, useValue: { ...WAYF_DEFAULTS, feedUrl: '', spEntityId: '', loginEndpoint: '' } },
         provideMockStore({}),
       ],
       schemas: [NO_ERRORS_SCHEMA],
