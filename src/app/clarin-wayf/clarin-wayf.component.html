@@ -38,7 +38,7 @@
       />
 
       @if (searchQuery().length > 0) {
-        <div class="wayf-container__count small text-muted mb-2">
+        <div class="small text-muted mb-2">
           {{ filteredEntries().length }} institutions found
         </div>
       }
@@ -55,7 +55,7 @@
 
     <!-- Show more button -->
     @if (displayEntries().length < filteredEntries().length) {
-      <div class="wayf-container__show-more text-center mt-2 mb-2">
+      <div class="text-center mt-2 mb-2">
         <button
           class="btn btn-outline-primary btn-sm"
           (click)="showMore()">
@@ -66,7 +66,7 @@
 
     <!-- Local auth fallback -->
     @if (resolvedLocalAuthEnabled()) {
-      <div class="wayf-container__local-auth mt-3 text-center">
+      <div class="mt-3 text-center">
         <button
           class="btn btn-outline-secondary btn-sm"
           (click)="localAuthSelected.emit()">
@@ -77,7 +77,7 @@
 
     <!-- Help text -->
     @if (resolvedHelpText()) {
-      <div class="wayf-container__help mt-3 small text-muted text-center">
+      <div class="mt-3 small text-muted text-center">
         {{ resolvedHelpText() }}
       </div>
     }

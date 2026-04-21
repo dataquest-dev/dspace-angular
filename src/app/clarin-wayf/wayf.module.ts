@@ -1,5 +1,6 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 
+import { ClarinWayfComponent } from './clarin-wayf.component';
 import { WayfConfig, WAYF_CONFIG, WAYF_DEFAULTS } from './wayf.config';
 
 /**
@@ -11,24 +12,27 @@ import { WayfConfig, WAYF_CONFIG, WAYF_DEFAULTS } from './wayf.config';
  * imports: [
  *   WayfModule.forRoot({
  *     feedUrl: 'https://sp.example.org/Shibboleth.sso/DiscoFeed',
- *     spEntityId: 'https://sp.example.org/shibboleth',
- *     loginEndpoint: 'https://sp.example.org/Shibboleth.sso/Login',
  *   }),
  * ]
  * ```
  *
- * Only the three required fields must be provided.
- * Optional fields fall back to `WAYF_DEFAULTS`.
+ * Only `feedUrl` is required for the standalone widget.
+ * Optional widget fields fall back to `WAYF_DEFAULTS`.
+ * Host-only integration fields like `loginEndpoint` may still be supplied
+ * through the shared `WAYF_CONFIG` token when needed.
  */
-@NgModule()
+@NgModule({
+  imports: [ClarinWayfComponent],
+  exports: [ClarinWayfComponent],
+})
 export class WayfModule {
-  static forRoot(config: Pick<WayfConfig, 'feedUrl' | 'spEntityId' | 'loginEndpoint'> & Partial<WayfConfig>): ModuleWithProviders<WayfModule> {
+  static forRoot(config: Pick<WayfConfig, 'feedUrl'> & Partial<WayfConfig>): ModuleWithProviders<WayfModule> {
     return {
       ngModule: WayfModule,
       providers: [
         {
           provide: WAYF_CONFIG,
-          useValue: { ...WAYF_DEFAULTS, ...config } as WayfConfig,
+          useValue: { ...WAYF_DEFAULTS, ...config } as Partial<WayfConfig>,
         },
       ],
     };

@@ -276,6 +276,35 @@
           }
         }
       }
+    },
+    "clarin-wayf": {
+      "projectType": "library",
+      "root": "src/app/clarin-wayf",
+      "sourceRoot": "src/app/clarin-wayf",
+      "prefix": "wayf",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "src/app/clarin-wayf/ng-package.json",
+            "tsConfig": "tsconfig.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "tsconfig.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "tsconfig.spec.json",
+            "include": [
+              "src/app/clarin-wayf/**/*.spec.ts"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

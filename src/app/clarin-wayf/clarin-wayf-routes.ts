@@ -2,7 +2,7 @@ import { Route } from '@angular/router';
 
 import { ClarinWayfComponent } from './clarin-wayf.component';
 
-export const ROUTES: Route[] = [
+export const CLARIN_WAYF_ROUTES: Route[] = [
   {
     path: '',
     pathMatch: 'full',
@@ -10,3 +10,5 @@ export const ROUTES: Route[] = [
     data: { title: 'Select Your Institution' },
   },
 ];
+
+export const ROUTES = CLARIN_WAYF_ROUTES;

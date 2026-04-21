@@ -45,7 +45,7 @@ describe('WayfRecentIdpsComponent', () => {
 
     it('should display the correct label for static default', () => {
       const el = fixture.nativeElement as HTMLElement;
-      const label = el.querySelector('.small.text-muted')?.textContent?.trim();
+      const label = el.querySelector('.wayf-shortcut__label')?.textContent?.trim();
       expect(label).toBe('Default institution');
     });
 
@@ -66,7 +66,7 @@ describe('WayfRecentIdpsComponent', () => {
 
     it('should display "Continue with" label', () => {
       const el = fixture.nativeElement as HTMLElement;
-      const label = el.querySelector('.small.text-muted')?.textContent?.trim();
+      const label = el.querySelector('.wayf-shortcut__label')?.textContent?.trim();
       expect(label).toBe('Continue with');
     });
   });

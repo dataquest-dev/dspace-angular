@@ -48,7 +48,7 @@ describe('WayfIdpCardComponent', () => {
     fixture.componentRef.setInput('entry', { entityID: 'e1', title: 'No Logo' });
     fixture.detectChanges();
 
-    const icon = fixture.nativeElement.querySelector('.fas.fa-university');
+    const icon = fixture.nativeElement.querySelector('.wayf-idp-card__logo--placeholder');
     expect(icon).toBeTruthy();
     expect(fixture.nativeElement.querySelector('img')).toBeNull();
   });
@@ -61,7 +61,7 @@ describe('WayfIdpCardComponent', () => {
     img.dispatchEvent(new Event('error'));
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('.fas.fa-university')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.wayf-idp-card__logo--placeholder')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('img')).toBeNull();
   });
 
@@ -79,7 +79,7 @@ describe('WayfIdpCardComponent', () => {
     fixture.componentRef.setInput('isHub', true);
     fixture.detectChanges();
 
-    const badge = fixture.nativeElement.querySelector('.badge');
+    const badge = fixture.nativeElement.querySelector('.wayf-idp-card__badge');
     expect(badge).toBeTruthy();
   });
 
@@ -87,7 +87,7 @@ describe('WayfIdpCardComponent', () => {
     fixture.componentRef.setInput('isHub', false);
     fixture.detectChanges();
 
-    const badge = fixture.nativeElement.querySelector('.badge');
+    const badge = fixture.nativeElement.querySelector('.wayf-idp-card__badge');
     expect(badge).toBeNull();
   });
 

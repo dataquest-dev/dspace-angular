@@ -12,6 +12,7 @@ import {
  */
 @Component({
   selector: 'ds-wayf-search-bar',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="wayf-search-bar" role="search">
@@ -39,18 +40,13 @@ import {
       </div>
     </div>
   `,
-  styles: [`
-    .wayf-search-bar {
-      margin-bottom: 0.75rem;
-    }
-    .input-group-text {
-      background-color: var(--bs-body-bg, #fff);
-    }
-  `],
+  styleUrls: ['./wayf-search-bar.component.scss'],
 })
 export class WayfSearchBarComponent {
 
-  readonly inputId = 'wayf-search-input';
+  private static nextInputId = 0;
+
+  readonly inputId = `wayf-search-input-${WayfSearchBarComponent.nextInputId++}`;
 
   /** Current search value (two-way via parent). */
   readonly value = input('');

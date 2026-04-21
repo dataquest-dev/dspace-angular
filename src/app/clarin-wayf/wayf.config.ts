@@ -6,9 +6,11 @@ import { IdentityProvider } from './models/idp-entry.model';
 /**
  * Configuration for the WAYF (Where Are You From) component.
  *
- * Three fields are **required** — they have no defaults because they are
- * deployment-specific.  All other fields have sensible defaults that can
- * be overridden per-instance via component inputs or via the token.
+ * `feedUrl` is the only field required by the standalone widget itself.
+ * Host applications may also supply integration fields such as
+ * `loginEndpoint` when they build the surrounding sign-in redirect flow.
+ * All other widget fields have sensible defaults that can be overridden
+ * per-instance via component inputs or via the token.
  *
  * Resolution priority for each field:
  *   1. Component `@Input()` binding  (e.g. `[feedUrl]="…"`)
@@ -16,10 +18,12 @@ import { IdentityProvider } from './models/idp-entry.model';
  *   3. Built-in default from `WAYF_DEFAULTS`
  */
 export interface WayfConfig {
-  // ── Required (no defaults — consumer must supply) ────────────
+  // ── Required by the standalone widget ────────────────────────
 
   /** URL of the JSON IdP feed (Shibboleth DiscoFeed or IdentityProvider[]). */
   feedUrl: string;
+
+  // ── Host integration fields (used outside the core widget) ──
 
   /** SAML entityID of the Service Provider. */
   spEntityId: string;
@@ -27,7 +31,7 @@ export interface WayfConfig {
   /** Shibboleth SP login endpoint for redirect after IdP selection. */
   loginEndpoint: string;
 
-  // ── Optional (have defaults in WAYF_DEFAULTS) ────────────────
+  // ── Optional widget fields (have defaults in WAYF_DEFAULTS) ──
 
   /** Branding title shown in the overlay header. */
   serviceName: string;
@@ -101,8 +105,14 @@ export const WAYF_DEFAULTS: Omit<WayfConfig, 'feedUrl' | 'spEntityId' | 'loginEn
  * ```ts
  * providers: [{ provide: WAYF_CONFIG, useValue: myConfig }]
  * ```
+ *
+ * Defaults to an empty object so the standalone component can still be used
+ * with direct inputs only.
  */
-export const WAYF_CONFIG = new InjectionToken<WayfConfig>('WAYF_CONFIG');
+export const WAYF_CONFIG = new InjectionToken<Partial<WayfConfig>>('WAYF_CONFIG', {
+  providedIn: 'root',
+  factory: () => ({}),
+});
 
 // ── SAMLDS params ──────────────────────────────────────────────
 

@@ -28,7 +28,7 @@ describe('WayfSearchBarComponent', () => {
   it('should have a label for accessibility', () => {
     const label = fixture.nativeElement.querySelector('label');
     expect(label).toBeTruthy();
-    expect(label.getAttribute('for')).toBe('wayf-search-input');
+    expect(label.getAttribute('for')).toMatch(/^wayf-search-input-/);
   });
 
   it('should emit queryChange on input', () => {

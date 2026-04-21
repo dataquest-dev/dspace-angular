@@ -1,0 +1,23 @@
+{
+  "name": "@dspace/clarin-wayf",
+  "version": "0.1.0",
+  "description": "Standalone CLARIN WAYF Angular component library",
+  "license": "BSD-3-Clause",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/core": "^20.0.0",
+    "@angular/common": "^20.0.0",
+    "@angular/router": "^20.0.0",
+    "rxjs": "^7.8.0",
+    "bootstrap": "^5.3.0",
+    "@fortawesome/fontawesome-free": "^6.7.0"
+  },
+  "peerDependenciesMeta": {
+    "bootstrap": {
+      "optional": false
+    },
+    "@fortawesome/fontawesome-free": {
+      "optional": false
+    }
+  }
+}

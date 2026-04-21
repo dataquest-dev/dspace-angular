@@ -8,6 +8,7 @@ export { WayfModule } from './wayf.module';
 
 // Main component
 export { ClarinWayfComponent } from './clarin-wayf.component';
+export { CLARIN_WAYF_ROUTES, ROUTES } from './clarin-wayf-routes';
 
 // Models
 export { IdentityProvider, DiscoFeedEntry, DiscoFeedLocalizedValue, DiscoFeedLogoEntry } from './models/idp-entry.model';

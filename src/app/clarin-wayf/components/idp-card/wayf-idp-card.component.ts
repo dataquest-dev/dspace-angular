@@ -13,9 +13,10 @@ import { IdentityProvider } from '../../models/idp-entry.model';
  */
 @Component({
   selector: 'ds-wayf-idp-card',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="wayf-idp-card d-flex align-items-center p-2"
+    <div class="wayf-idp-card d-flex align-items-center p-2 rounded border"
          role="option"
          [attr.aria-selected]="isActive()"
          [class.wayf-idp-card--active]="isActive()"
@@ -33,8 +34,10 @@ import { IdentityProvider } from '../../models/idp-entry.model';
                loading="lazy"
                (error)="logoFailed.set(true)" />
         } @else {
-          <div class="wayf-idp-card__logo wayf-idp-card__logo--placeholder">
-            <i class="fas fa-university" aria-hidden="true"></i>
+          <div class="wayf-idp-card__logo wayf-idp-card__logo--placeholder" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="wayf-idp-card__logo-icon" focusable="false">
+              <path d="M12 3 2 8l10 5 8-4v7h2V8L12 3Zm-6 9v6H4v2h16v-2h-2v-6h-2v6h-2v-6h-2v6h-2v-6H6Z" />
+            </svg>
           </div>
         }
       </div>
@@ -45,7 +48,7 @@ import { IdentityProvider } from '../../models/idp-entry.model';
       </div>
 
       @if (isHub()) {
-        <span class="badge bg-info text-dark ms-2 flex-shrink-0">Hub</span>
+        <span class="wayf-idp-card__badge badge bg-info text-dark ms-2 flex-shrink-0">Hub</span>
       }
     </div>
   `,

@@ -15,6 +15,7 @@ import { WayfIdpCardComponent } from '../idp-card/wayf-idp-card.component';
  */
 @Component({
   selector: 'ds-wayf-idp-list',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [WayfIdpCardComponent],
   template: `
@@ -46,15 +47,7 @@ import { WayfIdpCardComponent } from '../idp-card/wayf-idp-card.component';
       {{ entries().length }} results available
     </div>
   `,
-  styles: [`
-    .wayf-idp-list {
-      max-height: 400px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.375rem;
-    }
-  `],
+  styleUrls: ['./wayf-idp-list.component.scss'],
 })
 export class WayfIdpListComponent {
 

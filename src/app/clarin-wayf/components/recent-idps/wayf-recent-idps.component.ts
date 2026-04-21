@@ -16,6 +16,7 @@ import { IdentityProvider } from '../../models/idp-entry.model';
  */
 @Component({
   selector: 'ds-wayf-recent-idps',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (shortcutEntry(); as entry) {
@@ -31,24 +32,14 @@ import { IdentityProvider } from '../../models/idp-entry.model';
             <i class="fas fa-arrow-right text-primary" aria-hidden="true"></i>
           </div>
           <div>
-            <div class="small text-muted">{{ shortcutLabel() }}</div>
-            <div class="fw-semibold">{{ shortcutDisplayName() }}</div>
+            <div class="wayf-shortcut__label small text-muted">{{ shortcutLabel() }}</div>
+            <div class="wayf-shortcut__name fw-semibold">{{ shortcutDisplayName() }}</div>
           </div>
         </div>
       </div>
     }
   `,
-  styles: [`
-    .wayf-shortcut__card {
-      cursor: pointer;
-      background-color: var(--bs-primary-bg-subtle, #e7f1ff);
-      border-color: var(--bs-primary, #0d6efd) !important;
-      transition: background-color 0.15s ease;
-    }
-    .wayf-shortcut__card:hover {
-      background-color: var(--bs-primary-bg-subtle, #cfe2ff);
-    }
-  `],
+  styleUrls: ['./wayf-recent-idps.component.scss'],
 })
 export class WayfRecentIdpsComponent {
 

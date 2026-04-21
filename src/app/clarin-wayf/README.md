@@ -74,8 +74,38 @@ src/app/clarin-wayf/
 | **LastIdP Memory** | Persists user's last institution to localStorage for quick re-login. |
 | **Keyboard Navigation** | Full keyboard control: Arrow keys, Enter, Escape. Screen reader compatible. |
 | **SSR Safe** | All side effects (fetch, localStorage, navigation) guarded by platform checks. |
-| **Zero External Deps** | Only depends on Angular core (~signals, routing, forms). No i18n, no custom libs. |
+| **Explicit Peer Deps** | Library declares Angular, RxJS, Bootstrap, and Font Awesome peer dependencies for predictable host integration. |
 | **Portable** | Single config token (`WAYF_CONFIG`). Can be used in 3+ ways: routes, config.yml bridge, app config. |
+
+---
+
+## 📦 Package Peer Dependencies
+
+The extractable package manifest is in `src/app/clarin-wayf/package.json`.
+
+Required peer dependencies:
+
+- `@angular/core` `^20.0.0`
+- `@angular/common` `^20.0.0`
+- `@angular/router` `^20.0.0`
+- `rxjs` `^7.8.0`
+- `bootstrap` `^5.3.0`
+- `@fortawesome/fontawesome-free` `^6.7.0`
+
+### Consumer setup (mandatory)
+
+In the consuming app, ensure both CSS files are loaded globally:
+
+```json
+{
+    "styles": [
+        "node_modules/bootstrap/dist/css/bootstrap.min.css",
+        "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+    ]
+}
+```
+
+If these packages are installed but the styles are not imported, visual appearance may degrade.
 
 ---
 

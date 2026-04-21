@@ -38,6 +38,7 @@ import { WayfRecentIdpsComponent } from './components/recent-idps/wayf-recent-id
  */
 @Component({
   selector: 'ds-clarin-wayf',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     WayfSearchBarComponent,
@@ -50,35 +51,20 @@ import { WayfRecentIdpsComponent } from './components/recent-idps/wayf-recent-id
     WayfSearchService,
   ],
   templateUrl: './clarin-wayf.component.html',
-  styles: [`
-    .wayf-container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 1rem;
-    }
-    .wayf-container__title {
-      text-align: center;
-    }
-  `],
+  styleUrls: ['./clarin-wayf.component.scss'],
 })
 export class ClarinWayfComponent implements OnInit {
   protected readonly feedService = inject(WayfFeedService);
   protected readonly persistence = inject(WayfPersistenceService);
   private readonly searchService = inject(WayfSearchService);
-  private readonly route = inject(ActivatedRoute);
+  private readonly route = inject(ActivatedRoute, { optional: true });
   private readonly wayfConfig = inject(WAYF_CONFIG);
   private readonly platformId = inject(PLATFORM_ID);
 
-  // ── Required inputs ──────────────────────────────────────────
+  // ── Required input ───────────────────────────────────────────
 
   /** URL to the JSON IdP feed. */
   readonly feedUrl = input<string>('');
-
-  /** This Service Provider's SAML entityID. */
-  readonly spEntityId = input<string>('');
-
-  /** Shibboleth SP login URL for redirect after IdP selection. */
-  readonly loginEndpoint = input<string>('');
 
   // ── Recommended inputs ───────────────────────────────────────
 
@@ -140,7 +126,8 @@ export class ClarinWayfComponent implements OnInit {
     key: K,
   ): WayfConfig[K] {
     if (inputValue !== '' && inputValue !== undefined) { return inputValue as WayfConfig[K]; }
-    if (key in this.wayfConfig) { return this.wayfConfig[key]; }
+    const configuredValue = this.wayfConfig[key];
+    if (configuredValue !== undefined) { return configuredValue as WayfConfig[K]; }
     return WAYF_DEFAULTS[key as keyof typeof WAYF_DEFAULTS] as WayfConfig[K];
   }
 
@@ -244,7 +231,7 @@ export class ClarinWayfComponent implements OnInit {
   }
 
   private parseSamldsParams(): void {
-    const queryParams = this.route.snapshot.queryParams;
+    const queryParams = this.route?.snapshot.queryParams ?? {};
     const rawReturn = queryParams['return'] ?? null;
     this.samldsParams.set({
       entityID: queryParams['entityID'] ?? null,
