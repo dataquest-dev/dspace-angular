@@ -1,0 +1,55 @@
+:host {
+  display: block;
+}
+
+.wayf-idp-card {
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  &:hover,
+  &--active {
+    background-color: var(--bs-primary-bg-subtle, #e7f1ff);
+    border-color: var(--bs-primary, #0d6efd);
+  }
+
+  &--hub {
+    border-left: 3px solid var(--bs-info, #0dcaf0);
+  }
+
+  &__logo-box {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  &__logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    display: block;
+
+    &--placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bs-secondary-bg, #e9ecef);
+      border-radius: 0.25rem;
+      color: var(--bs-secondary-color, #6c757d);
+    }
+  }
+
+  &__logo-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+
+  &__info {
+    min-width: 0;
+  }
+}
+
+.min-w-0 {
+  min-width: 0;
+}

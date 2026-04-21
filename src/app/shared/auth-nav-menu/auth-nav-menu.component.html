@@ -21,8 +21,48 @@
                role="dialog"
                aria-modal="true"
             [attr.aria-label]="'nav.login' | translate">
-            <ds-log-in
-            [isStandalonePage]="false"></ds-log-in>
+
+            <!-- Login method tabs -->
+            <div class="wayf-login-tabs px-2 pt-2">
+              <ul class="nav nav-tabs nav-fill mb-0" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link"
+                    [class.active]="activeLoginTab() === 'local'"
+                    (click)="switchLoginTab('local'); $event.stopPropagation()"
+                    role="tab"
+                    [attr.aria-selected]="activeLoginTab() === 'local'"
+                    aria-controls="login-tab-local">
+                    <i class="fas fa-key me-1" aria-hidden="true"></i>
+                    Local
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link"
+                    [class.active]="activeLoginTab() === 'institution'"
+                    (click)="switchLoginTab('institution'); $event.stopPropagation()"
+                    role="tab"
+                    [attr.aria-selected]="activeLoginTab() === 'institution'"
+                    aria-controls="login-tab-institution">
+                    <i class="fas fa-university me-1" aria-hidden="true"></i>
+                    Institution
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Tab content -->
+            @if (activeLoginTab() === 'local') {
+              <div id="login-tab-local" role="tabpanel">
+                <ds-log-in [isStandalonePage]="false"></ds-log-in>
+              </div>
+            }
+            @if (activeLoginTab() === 'institution') {
+              <div id="login-tab-institution" role="tabpanel" class="p-2">
+                <ds-clarin-wayf
+                  (idpSelected)="onIdpSelected($event)"
+                />
+              </div>
+            }
           </div>
         </div>
       </div>

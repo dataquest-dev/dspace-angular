@@ -1,7 +1,9 @@
 import {
   Component,
+  Inject,
   OnDestroy,
   OnInit,
+  signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -29,6 +31,11 @@ import {
   isNotEmpty,
 } from '../shared/empty.util';
 import { ThemedLogInComponent } from '../shared/log-in/themed-log-in.component';
+import { ClarinWayfComponent } from '../clarin-wayf/clarin-wayf.component';
+import { IdentityProvider } from '../clarin-wayf/models/idp-entry.model';
+import { WayfConfig, WAYF_CONFIG } from '../clarin-wayf/wayf.config';
+import { HardRedirectService } from '../core/services/hard-redirect.service';
+import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 
 /**
  * This component represents the login page
@@ -40,9 +47,15 @@ import { ThemedLogInComponent } from '../shared/log-in/themed-log-in.component';
   imports: [
     ThemedLogInComponent,
     TranslateModule,
+    ClarinWayfComponent,
   ],
 })
 export class LoginPageComponent implements OnDestroy, OnInit {
+
+  /**
+   * Whether the WAYF institution picker is visible.
+   */
+  readonly wayfOpen = signal(false);
 
   /**
    * Subscription to unsubscribe onDestroy
@@ -55,9 +68,14 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    *
    * @param {ActivatedRoute} route
    * @param {Store<AppState>} store
+   * @param {HardRedirectService} hardRedirectService
    */
   constructor(private route: ActivatedRoute,
-              private store: Store<AppState>) {}
+              private store: Store<AppState>,
+              private hardRedirectService: HardRedirectService,
+              @Inject(APP_CONFIG) private appConfig: AppConfig,
+              @Inject(WAYF_CONFIG) private wayfConfig: WayfConfig) {
+  }
 
   /**
    * Initialize instance variables
@@ -96,5 +114,20 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     }
     // Clear all authentication messages when leaving login page
     this.store.dispatch(new ResetAuthenticationMessagesAction());
+  }
+
+  toggleWayf(): void {
+    this.wayfOpen.update(v => !v);
+  }
+
+  onIdpSelected(entry: IdentityProvider): void {
+    // Build the Shibboleth redirect following the LINDAT pattern:
+    // {spUrl}/Shibboleth.sso/Login?SAMLDS=1&target={restBase}/api/authn/shibboleth?redirectUrl={appUrl}&entityID={idp}
+    const loginEndpoint = this.wayfConfig.loginEndpoint;
+    const restBaseUrl = this.appConfig.rest.baseUrl;
+    const redirectUrl = encodeURIComponent(window.location.origin + '/home');
+    const target = `${restBaseUrl}/api/authn/shibboleth?redirectUrl=${redirectUrl}`;
+    const ssoUrl = `${loginEndpoint}?SAMLDS=1&target=${target}&entityID=${encodeURIComponent(entry.entityID)}`;
+    this.hardRedirectService.redirect(ssoUrl);
   }
 }

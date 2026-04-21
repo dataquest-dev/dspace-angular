@@ -12,6 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ThemedUserMenuComponent } from 'src/app/shared/auth-nav-menu/user-menu/themed-user-menu.component';
 import { ThemedLogInComponent } from 'src/app/shared/log-in/themed-log-in.component';
 
+import { ClarinWayfComponent } from '../../../../../app/clarin-wayf/clarin-wayf.component';
 import {
   fadeInOut,
   fadeOut,
@@ -29,6 +30,7 @@ import { BrowserOnlyPipe } from '../../../../../app/shared/utils/browser-only.pi
   imports: [
     AsyncPipe,
     BrowserOnlyPipe,
+    ClarinWayfComponent,
     NgbDropdownModule,
     NgClass,
     RouterLink,
