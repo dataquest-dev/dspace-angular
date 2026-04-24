@@ -4,6 +4,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { IdpDiscoveryComponent } from '@dspace/idp-discovery';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -40,6 +41,7 @@ import { ThemedLogInComponent } from '../shared/log-in/themed-log-in.component';
   imports: [
     ThemedLogInComponent,
     TranslateModule,
+    IdpDiscoveryComponent,
   ],
 })
 export class LoginPageComponent implements OnDestroy, OnInit {
@@ -96,5 +98,10 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     }
     // Clear all authentication messages when leaving login page
     this.store.dispatch(new ResetAuthenticationMessagesAction());
+  }
+
+  onIdpSelected(idp: { entityID: string }): void {
+    const loginEndpoint = 'https://lindat.mff.cuni.cz/Shibboleth.sso/Login';
+    window.location.href = `${loginEndpoint}?entityID=${encodeURIComponent(idp.entityID)}`;
   }
 }

@@ -14,6 +14,7 @@ import {
   withPreloading,
   withRouterConfig,
 } from '@angular/router';
+import { IDP_DISCOVERY_CONFIG } from '@dspace/idp-discovery';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DYNAMIC_MATCHER_PROVIDERS } from '@ng-dynamic-forms/core';
 import { EffectsModule } from '@ngrx/effects';
@@ -155,6 +156,15 @@ export const commonAppConfig: ApplicationConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: DspaceRestInterceptor,
       multi: true,
+    },
+    {
+      provide: IDP_DISCOVERY_CONFIG,
+      useValue: {
+        feedUrl: "https://lindat.mff.cuni.cz/Shibboleth.sso/DiscoFeed",
+        serviceName: 'Sign in via your institution',
+        helpText: 'If you cannot find your institution, use local login.',
+        maxResults: 25,
+      },
     },
     // register the dynamic matcher used by form. MUST be provided by the app module
     ...DYNAMIC_MATCHER_PROVIDERS,

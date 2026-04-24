@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { IdpDiscoveryComponent } from '@dspace/idp-discovery';
 import { TranslateModule } from '@ngx-translate/core';
 import { ThemedLogInComponent } from 'src/app/shared/log-in/themed-log-in.component';
 
@@ -13,6 +14,7 @@ import { LoginPageComponent as BaseComponent } from '../../../../app/login-page/
   imports: [
     ThemedLogInComponent,
     TranslateModule,
+    IdpDiscoveryComponent,
   ],
 })
 export class LoginPageComponent extends BaseComponent {
