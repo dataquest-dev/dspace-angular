@@ -121,6 +121,11 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
   @ViewChildren('listEntryElement') listElements: QueryList<ElementRef>;
 
   /**
+   * Field used for title-based prefix queries
+   */
+  protected readonly TITLE_FIELD = 'dc.title';
+
+  /**
    * Time to wait before sending a search request to the server when a user types something
    */
   debounceTime = 500;
@@ -205,8 +210,10 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
       } else {
         this.listEntries$.next([...currentEntries, ...rd.payload.page]);
       }
-      // Check if there are more pages available after the current one
-      this.hasNextPage = rd.payload.totalElements > this.listEntries$.getValue().length;
+      // Check if the server reports a next page, using page-based comparison so that
+      // client-side filtering (which reduces list length without changing totalPages)
+      // does not cause repeated fetching past the server's last page.
+      this.hasNextPage = rd.payload.currentPage < rd.payload.totalPages;
     } else {
       this.listEntries$.next([...(hasNoValue(currentEntries) ? [] : this.listEntries$.getValue()), new ListableNotificationObject(NotificationType.Error, 'dso-selector.results-could-not-be-retrieved', LISTABLE_NOTIFICATION_OBJECT.value)]);
       this.hasNextPage = false;
@@ -227,16 +234,34 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
    * @param useCache Whether or not to use the cache
    */
   search(query: string, page: number, useCache: boolean = true): Observable<RemoteData<PaginatedList<SearchResult<DSpaceObject>>>> {
-    // default sort is only used when there is not query
-    let efectiveSort = query ? null : this.sort;
+    const rawQuery = query ?? '';
+    const trimmedQuery = rawQuery.trim();
+    const hasQuery = isNotEmpty(trimmedQuery);
+
+    // default sort is only used when there is no query
+    let effectiveSort = hasQuery ? null : this.sort;
+
+    let processedQuery = trimmedQuery;
+    if (isNotEmpty(trimmedQuery)) {
+      // Bypass query rewriting for internal field queries (e.g. search.resourceid:<uuid>)
+      const isInternalFieldQuery  = /^\w[\w.]*:/.test(trimmedQuery);
+      if (isInternalFieldQuery ) {
+        processedQuery = trimmedQuery;
+      } else if (this.types.includes(DSpaceObjectType.COMMUNITY) || this.types.includes(DSpaceObjectType.COLLECTION)) {
+        processedQuery = this.buildTitlePrefixQuery(trimmedQuery);
+      } else {
+        processedQuery = trimmedQuery;
+      }
+    }
+
     return this.searchService.search(
       new PaginatedSearchOptions({
-        query: query,
+        query: processedQuery,
         dsoTypes: this.types,
         pagination: Object.assign({}, this.defaultPagination, {
           currentPage: page
         }),
-        sort: efectiveSort
+        sort: effectiveSort
       }),
       null,
       useCache,
@@ -299,6 +324,42 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
         this.updateList(rd);
       });
     }
+  }
+
+  /**
+   * Builds a dc.title partial matching query with wildcard support.
+   * Single term: dc.title:term*
+   * Multiple terms: dc.title:("term1" AND term2*)
+   * @param query The raw user input query
+   * @returns The processed query string with dc.title prefix matching, or the original query if empty
+   */
+  protected buildTitlePrefixQuery(query: string): string {
+    if (hasValue(query) && query.trim().length > 0) {
+      const trimmedQuery = query.trim();
+      const escapedQuery = this.escapeQuerySpecialCharacters(trimmedQuery);
+      const terms = escapedQuery.split(/\s+/).filter(term => term.length > 0);
+
+      if (terms.length === 1) {
+        return `${this.TITLE_FIELD}:${terms[0]}*`;
+      } else {
+        const allButLast = terms.slice(0, -1).map(term => `"${term}"`).join(' AND ');
+        const lastTerm = terms[terms.length - 1];
+        return `${this.TITLE_FIELD}:(${allButLast} AND ${lastTerm}*)`;
+      }
+    }
+    return query;
+  }
+
+  /**
+   * Escapes special query characters in user input to prevent syntax errors
+   * @param query The user input query to escape
+   * @returns The escaped query string
+   */
+  private escapeQuerySpecialCharacters(query: string): string {
+    // Escape special characters used in query syntax
+    return query.replace(/[+\-!(){}[\]^"~*?:\\\/]/g, '\\$&')
+                .replace(/&&/g, '\\&&')
+                .replace(/\|\|/g, '\\||');
   }
 
   getName(listableObject: ListableObject): string {

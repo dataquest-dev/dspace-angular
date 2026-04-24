@@ -132,7 +132,7 @@ describe('DSOSelectorComponent', () => {
 
       expect(searchService.search).toHaveBeenCalledWith(
         jasmine.objectContaining({
-          query: undefined,
+          query: '',
           sort: jasmine.objectContaining({
             field: 'dc.title',
             direction: SortDirection.ASC,
@@ -155,6 +155,84 @@ describe('DSOSelectorComponent', () => {
         null,
         true
       );
+    });
+  });
+
+  describe('query processing', () => {
+    beforeEach(() => {
+      spyOn(searchService, 'search').and.callThrough();
+    });
+
+    describe('for COMMUNITY/COLLECTION types', () => {
+      beforeEach(() => {
+        component.types = [DSpaceObjectType.COMMUNITY];
+      });
+
+      it('should create title field query with escaping and wildcards', () => {
+        component.search('test+query [with] special:chars/paths', 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: 'dc.title:("test\\+query" AND "\\[with\\]" AND special\\:chars\\/paths*)'
+          }),
+          null,
+          true
+        );
+      });
+
+      it('should pass through internal resource ID queries unchanged', () => {
+        const resourceIdQuery = component.getCurrentDSOQuery();
+        component.search(resourceIdQuery, 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: resourceIdQuery
+          }),
+          null,
+          true
+        );
+      });
+    });
+
+    describe('for ITEM types', () => {
+      beforeEach(() => {
+        component.types = [DSpaceObjectType.ITEM];
+      });
+
+      it('should pass through queries unchanged', () => {
+        component.search('test query', 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: 'test query'
+          }),
+          null,
+          true
+        );
+      });
+    });
+
+    describe('edge cases', () => {
+      beforeEach(() => {
+        component.types = [DSpaceObjectType.COMMUNITY];
+      });
+
+      it('should treat whitespace-only query as empty and apply default sort', () => {
+        component.sort = new SortOptions('dc.title', SortDirection.ASC);
+        component.search('   ', 1);
+
+        expect(searchService.search).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            query: '',
+            sort: jasmine.objectContaining({
+              field: 'dc.title',
+              direction: SortDirection.ASC,
+            }),
+          }),
+          null,
+          true
+        );
+      });
     });
   });
 
