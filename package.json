@@ -94,6 +94,7 @@
     "@angular/platform-server": "^20.3.14",
     "@angular/router": "^20.3.14",
     "@angular/ssr": "^20.3.10",
+    "@dspace/idp-discovery": "github:dataquest-dev/idp-discovery#release",
     "@kolkov/ngx-gallery": "^2.0.1",
     "@ng-bootstrap/ng-bootstrap": "^12.1.2",
     "@ng-dynamic-forms/core": "^16.0.0",

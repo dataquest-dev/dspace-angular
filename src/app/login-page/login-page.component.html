@@ -6,5 +6,8 @@
       <ds-log-in
       [isStandalonePage]="true"></ds-log-in>
     </div>
+    <ds-idp-discovery
+      (idpSelected)="onIdpSelected($event)">
+    </ds-idp-discovery>
   </div>
 </div>
