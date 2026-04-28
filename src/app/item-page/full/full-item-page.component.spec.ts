@@ -430,10 +430,10 @@ describe('FullItemPageComponent', () => {
 
     it('should render Open policy finder and JCR badges for ISSN', () => {
       const badges = fixture.debugElement.queryAll(By.css('table .badge'));
-      const sherpaLink = badges.find(l => l.nativeElement.textContent.includes('Open policy finder'));
+      const openPolicyFinderLink = badges.find(l => l.nativeElement.textContent.includes('Open policy finder'));
       const jcrLink = badges.find(l => l.nativeElement.textContent.includes('JCR'));
-      expect(sherpaLink).toBeTruthy();
-      expect(sherpaLink.nativeElement.getAttribute('href')).toContain('openpolicyfinder.jisc.ac.uk');
+      expect(openPolicyFinderLink).toBeTruthy();
+      expect(openPolicyFinderLink.nativeElement.getAttribute('href')).toContain('openpolicyfinder.jisc.ac.uk');
       expect(jcrLink).toBeTruthy();
       expect(jcrLink.nativeElement.getAttribute('href')).toContain('jcr.clarivate.com');
     });
