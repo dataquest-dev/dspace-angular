@@ -383,7 +383,7 @@ describe('FullItemPageComponent', () => {
       metadataLinkService.getExtraLinks.and.callFake((key: string, value: string) => {
         if (key === 'dc.identifier.issn') {
           return of([
-            { label: 'Sherpa/RoMEO', href: `https://openpolicyfinder.jisc.ac.uk/search?search=${encodeURIComponent(value)}` },
+            { label: 'Open policy finder', href: `https://openpolicyfinder.jisc.ac.uk/search?search=${encodeURIComponent(value)}` },
             { label: 'JCR', href: `https://jcr.clarivate.com/jcr/browse-journals?search=${encodeURIComponent(value)}` },
           ]);
         }
@@ -428,9 +428,9 @@ describe('FullItemPageComponent', () => {
       expect(rightsLink.nativeElement.getAttribute('target')).toBe('_blank');
     });
 
-    it('should render Sherpa/RoMEO and JCR badges for ISSN', () => {
+    it('should render Open policy finder and JCR badges for ISSN', () => {
       const badges = fixture.debugElement.queryAll(By.css('table .badge'));
-      const sherpaLink = badges.find(l => l.nativeElement.textContent.includes('Sherpa/RoMEO'));
+      const sherpaLink = badges.find(l => l.nativeElement.textContent.includes('Open policy finder'));
       const jcrLink = badges.find(l => l.nativeElement.textContent.includes('JCR'));
       expect(sherpaLink).toBeTruthy();
       expect(sherpaLink.nativeElement.getAttribute('href')).toContain('openpolicyfinder.jisc.ac.uk');

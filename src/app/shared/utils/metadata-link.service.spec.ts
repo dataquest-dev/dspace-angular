@@ -146,10 +146,10 @@ describe('MetadataLinkService', () => {
   });
 
   describe('getExtraLinks', () => {
-    it('should return Sherpa/RoMEO and JCR links for dc.identifier.issn', (done) => {
+    it('should return Open policy finder and JCR links for dc.identifier.issn', (done) => {
       service.getExtraLinks('dc.identifier.issn', '1234-5678').subscribe(extras => {
         expect(extras.length).toBe(2);
-        expect(extras[0].label).toBe('Sherpa/RoMEO');
+        expect(extras[0].label).toBe('Open policy finder');
         expect(extras[0].href).toBe('https://openpolicyfinder.jisc.ac.uk/search?search=1234-5678');
         expect(extras[1].label).toBe('JCR');
         expect(extras[1].href).toBe('https://jcr.clarivate.com/jcr/browse-journals?search=1234-5678');
@@ -157,10 +157,10 @@ describe('MetadataLinkService', () => {
       });
     });
 
-    it('should return Sherpa/RoMEO and JCR links for local.identifier.e-issn', (done) => {
+    it('should return Open policy finder and JCR links for local.identifier.e-issn', (done) => {
       service.getExtraLinks('local.identifier.e-issn', '8765-4321').subscribe(extras => {
         expect(extras.length).toBe(2);
-        expect(extras[0].label).toBe('Sherpa/RoMEO');
+        expect(extras[0].label).toBe('Open policy finder');
         expect(extras[1].label).toBe('JCR');
         done();
       });
