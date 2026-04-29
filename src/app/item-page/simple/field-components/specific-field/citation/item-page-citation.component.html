@@ -1,11 +1,14 @@
  @if ((citaceProStatus$ | async) && (citaceProURL$ | async); as citaceProURL) {
-   <iframe
-     height="200px"
-     width="100%"
-     style="border: none;"
-     [src]="citaceProURL"
-   ></iframe>
-   <p class="text-muted small mt-1 mb-4">
-     <em>{{ 'item.page.citace-pro.disclaimer' | translate }}</em>
-   </p>
+  <div class="mb-5 pb-4">
+     <iframe
+       class="d-block"
+       height="150px"
+       width="100%"
+       style="border: none;"
+       [src]="citaceProURL"
+     ></iframe>
+     <p class="text-muted small mt-1 mb-0">
+       {{ 'item.page.citace-pro.disclaimer' | translate }}
+     </p>
+   </div>
  }

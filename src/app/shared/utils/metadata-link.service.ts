@@ -21,7 +21,7 @@ const RESOLVER_PROPERTIES = {
   doi: 'identifier.doi.resolver',
   scopus: 'identifier.scopus.resolver',
   wos: 'identifier.wos.resolver',
-  sherpa: 'identifier.sherpa.resolver',
+  openPolicyFinder: 'identifier.sherpa.resolver',
   jcr: 'identifier.jcr.resolver',
 };
 
@@ -34,7 +34,7 @@ interface ResolverConfig {
   doi: string | null;
   scopus: string | null;
   wos: string | null;
-  sherpa: string | null;
+  openPolicyFinder: string | null;
   jcr: string | null;
 }
 
@@ -85,7 +85,7 @@ export class MetadataLinkService {
       doi: fetch('doi'),
       scopus: fetch('scopus'),
       wos: fetch('wos'),
-      sherpa: fetch('sherpa'),
+      openPolicyFinder: fetch('openPolicyFinder'),
       jcr: fetch('jcr'),
     }).pipe(
       shareReplay({ bufferSize: 1, refCount: true }),
@@ -138,7 +138,7 @@ export class MetadataLinkService {
 
   /**
    * For ISSN fields (dc.identifier.issn, local.identifier.e-issn), return
-   * extra links to Sherpa/RoMEO and JCR displayed next to the plain ISSN value.
+   * extra links to Open policy finder and JCR displayed next to the plain ISSN value.
    *
    * Returns an empty array for non-ISSN fields.
    */
@@ -151,7 +151,7 @@ export class MetadataLinkService {
     if (key === 'dc.identifier.issn' || key === 'local.identifier.e-issn') {
       return this.resolvers$.pipe(
         map(r => [
-          ...(r.sherpa ? [{ label: 'Sherpa/RoMEO', href: `${r.sherpa}${encodeURIComponent(trimmed)}` }] : []),
+          ...(r.openPolicyFinder ? [{ label: 'Open policy finder', href: `${r.openPolicyFinder}${encodeURIComponent(trimmed)}` }] : []),
           ...(r.jcr ? [{ label: 'JCR', href: `${r.jcr}${encodeURIComponent(trimmed)}` }] : []),
         ]),
       );
