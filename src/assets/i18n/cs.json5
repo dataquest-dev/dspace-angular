@@ -4469,8 +4469,11 @@
   // "item.page.subject": "Keywords",
   "item.page.subject": "Klíčová slova",
 
-  // "item.page.funder": "Funder",
+  // "item.page.funder": "Funding",
   "item.page.funder": "Financování",
+
+  // "item.page.funder.message": "The result was supported by the project",
+  "item.page.funder.message": "Výsledek byl podpořen projektem",
 
   // "item.page.uri": "Identifier",
   "item.page.uri": "Identifikátor",
