@@ -30,6 +30,8 @@ export class ItemPageFunderFieldComponent implements OnInit {
 
   @Input() label = 'item.page.funder';
 
+  @Input() introLabel = 'item.page.funder.message';
+
   @Input() separator = ', ';
 
   funderNames: string[] = [];
