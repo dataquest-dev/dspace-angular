@@ -1,12 +1,14 @@
-<ds-metadata-field-wrapper [label]="label | translate">
-  @if (introLabel) {
-    <span class="dont-break-out">{{ introLabel | translate }}</span>
-    <span class="separator">: </span>
-  }
-  @for (name of funderNames; track name; let last = $last) {
-    <span class="dont-break-out">{{ name }}</span>
-    @if (!last) {
-      <span class="separator" [innerHTML]="separator"></span>
+@if (funderNames.length > 0) {
+  <ds-metadata-field-wrapper [label]="label | translate">
+    @if (introLabel) {
+      <span class="dont-break-out">{{ introLabel | translate }}</span>
+      <span class="separator">: </span>
     }
-  }
-</ds-metadata-field-wrapper>
+    @for (name of funderNames; track name; let last = $last) {
+      <span class="dont-break-out">{{ name }}</span>
+      @if (!last) {
+        <span class="separator" [innerHTML]="separator"></span>
+      }
+    }
+  </ds-metadata-field-wrapper>
+}

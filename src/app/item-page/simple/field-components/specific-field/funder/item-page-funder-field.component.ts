@@ -40,9 +40,32 @@ export class ItemPageFunderFieldComponent implements OnInit {
     private configurationService: ConfigurationDataService,
   ) {}
 
+  private isEuropeanUnionValue(value: string): boolean {
+    const normalized = value?.trim().toLowerCase();
+    return normalized === 'eu' || normalized === 'european union';
+  }
+
+  private uniqueCaseInsensitive(values: string[]): string[] {
+    const seen = new Set<string>();
+    return values.filter((value) => {
+      const key = value.trim().toLowerCase();
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
+  }
+
   ngOnInit(): void {
     const mdValues: MetadataValue[] = this.item?.allMetadata(['dc.relation.funder']) ?? [];
-    if (mdValues.length === 0) {
+    const rawFunders = mdValues
+      .map((md) => md.value?.trim())
+      .filter((value): value is string => Boolean(value));
+    const hasLocalHorizon = (this.item?.allMetadata(['local.horizon']) ?? [])
+      .some((md) => Boolean(md.value?.trim()));
+
+    if (rawFunders.length === 0) {
       return;
     }
 
@@ -58,8 +81,11 @@ export class ItemPageFunderFieldComponent implements OnInit {
           }
         }
       }
-      const resolved = mdValues.map(md => nameMap[md.value] ?? md.value);
-      this.funderNames = [...new Set(resolved)];
+      const resolved = rawFunders.map((value) => nameMap[value] ?? value);
+      if (hasLocalHorizon && !resolved.some((value) => this.isEuropeanUnionValue(value))) {
+        resolved.push('European Union');
+      }
+      this.funderNames = this.uniqueCaseInsensitive(resolved);
     });
   }
 }
