@@ -4472,8 +4472,8 @@
   // "item.page.funder": "Funding",
   "item.page.funder": "Financování",
 
-  // "item.page.funder.message": "The result was supported by the project",
-  "item.page.funder.message": "Výsledek byl podpořen projektem",
+  // "item.page.funder.message": "The result was funded by the provider",
+  "item.page.funder.message": "Výsledek byl financován poskytovatelem",
 
   // "item.page.uri": "Identifier",
   "item.page.uri": "Identifikátor",
