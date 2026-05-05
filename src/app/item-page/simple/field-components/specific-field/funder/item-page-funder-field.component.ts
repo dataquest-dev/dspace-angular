@@ -65,12 +65,7 @@ export class ItemPageFunderFieldComponent implements OnInit {
     const hasLocalHorizon = (this.item?.allMetadata(['local.horizon']) ?? [])
       .some((md) => Boolean(md.value?.trim()));
 
-    if (rawFunders.length === 0 && !hasLocalHorizon) {
-      return;
-    }
-
-    if (rawFunders.length === 0 && hasLocalHorizon) {
-      this.funderNames = ['European Union'];
+    if (rawFunders.length === 0) {
       return;
     }
 
