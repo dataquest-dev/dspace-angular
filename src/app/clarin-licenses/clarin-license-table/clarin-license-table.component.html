@@ -5,7 +5,7 @@
            [(ngModel)]="searchingLicenseName"
            class="form-control ng-pristine ng-valid ng-touched"
            [placeholder]="'clarin-license.button.search.placeholder' | translate"/>
-    <span class="input-group-append" (click)="loadAllLicenses()">
+    <span class="input-group-append" (click)="searchLicenses()">
       <button type="submit" class="btn btn-primary search-button">
         <i class="fas fa-search"></i>{{'clarin-license.button.search' | translate}}</button>
     </span>

@@ -44,6 +44,7 @@ describe('ClarinLicenseTableComponent', () => {
   let groupsDataService: GroupDataService;
   let service: ConfigurationDataService;
   let searchConfigurationServiceStub: SearchConfigurationService;
+  let paginationServiceStub: PaginationServiceStub;
 
   beforeEach(async () => {
     notificationService = new NotificationsServiceStub();
@@ -85,6 +86,7 @@ describe('ClarinLicenseTableComponent', () => {
       updateFixedFilter: jasmine.createSpy('updateFixedFilter'),
       setPaginationId: jasmine.createSpy('setPaginationId')
     });
+    paginationServiceStub = new PaginationServiceStub();
 
     await TestBed.configureTestingModule({
       imports: [
@@ -99,7 +101,7 @@ describe('ClarinLicenseTableComponent', () => {
         { provide: RequestService, useValue: requestService },
         { provide: ClarinLicenseDataService, useValue: clarinLicenseDataService },
         { provide: ClarinLicenseLabelDataService, useValue: clarinLicenseLabelDataService },
-        { provide: PaginationService, useValue: new PaginationServiceStub() },
+        { provide: PaginationService, useValue: paginationServiceStub },
         { provide: NotificationsService, useValue: notificationService },
         { provide: NgbActiveModal, useValue: modalStub },
         { provide: HostWindowService, useValue: new HostWindowServiceStub(0) },
@@ -180,5 +182,51 @@ describe('ClarinLicenseTableComponent', () => {
     // load table data
     expect((component as any).clarinLicenseService.searchBy).toHaveBeenCalled();
     expect((component as ClarinLicenseTableComponent).licensesRD$).not.toBeNull();
+  });
+
+  it('should reset pagination to page 1 when the search term changes', () => {
+    paginationServiceStub.pagination.id = defaultPagination.id;
+    paginationServiceStub.pagination.currentPage = 2;
+    paginationServiceStub.pagination.pageSize = 10;
+    paginationServiceStub.pagination.pageSizeOptions = defaultPagination.pageSizeOptions;
+    (component as any).clarinLicenseService.searchBy.calls.reset();
+    paginationServiceStub.resetPage.calls.reset();
+
+    component.searchingLicenseName = 'Universal';
+
+    component.searchLicenses();
+
+    expect(paginationServiceStub.resetPage).toHaveBeenCalledWith(defaultPagination.id);
+    expect((component as any).clarinLicenseService.searchBy).toHaveBeenCalledWith(
+      'byNameLike',
+      jasmine.objectContaining({
+        currentPage: 1,
+        elementsPerPage: 10,
+      }),
+      false
+    );
+  });
+
+  it('should not reset pagination when searching with the same term', () => {
+    paginationServiceStub.pagination.id = defaultPagination.id;
+    paginationServiceStub.pagination.currentPage = 2;
+    paginationServiceStub.pagination.pageSize = 10;
+    paginationServiceStub.pagination.pageSizeOptions = defaultPagination.pageSizeOptions;
+    (component as any).clarinLicenseService.searchBy.calls.reset();
+    paginationServiceStub.resetPage.calls.reset();
+    (component as any).previousSearchTerm = 'Universal';
+    component.searchingLicenseName = 'Universal';
+
+    component.searchLicenses();
+
+    expect(paginationServiceStub.resetPage).not.toHaveBeenCalled();
+    expect((component as any).clarinLicenseService.searchBy).toHaveBeenCalledWith(
+      'byNameLike',
+      jasmine.objectContaining({
+        currentPage: 2,
+        elementsPerPage: 10,
+      }),
+      false
+    );
   });
 });
