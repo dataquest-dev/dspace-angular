@@ -65,6 +65,13 @@ describe('ClarinNavbarTopComponent', () => {
       });
   });
 
+  it('should set Slovak language when sk flag is clicked', () => {
+    const localeService = TestBed.inject(LocaleService);
+    component.setLanguage('sk');
+    expect(localeService.setCurrentLanguageCode).toHaveBeenCalledWith('sk');
+    expect(localeService.refreshAfterChangeLanguage).toHaveBeenCalled();
+  });
+
   function getMockLocaleService(): LocaleService {
     return jasmine.createSpyObj('LocaleService', {
       setCurrentLanguageCode: jasmine.createSpy('setCurrentLanguageCode'),
