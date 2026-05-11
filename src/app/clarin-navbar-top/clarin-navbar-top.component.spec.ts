@@ -65,6 +65,17 @@ describe('ClarinNavbarTopComponent', () => {
       });
   });
 
+  it('should render slovak language icon and call setLanguage on click', () => {
+    spyOn(component, 'setLanguage');
+    fixture.detectChanges();
+
+    const languageIcons = fixture.nativeElement.querySelectorAll('.language-icon');
+    expect(languageIcons.length).toBe(3);
+
+    languageIcons[2].click();
+    expect(component.setLanguage).toHaveBeenCalledWith('sk');
+  });
+
   function getMockLocaleService(): LocaleService {
     return jasmine.createSpyObj('LocaleService', {
       setCurrentLanguageCode: jasmine.createSpy('setCurrentLanguageCode'),
