@@ -1,7 +1,10 @@
 :root {
 
   --lt-common-navbar-height: 80px;
-  --lt-clarin-purple: #7479b8;
+  --lt-clarin-primary: #11457e;
+  --lt-clarin-primary-hover: #d7141a;
+  --lt-clarin-primary-focus: #8fb0d0;
+  --lt-clarin-purple: var(--lt-clarin-primary);
 
   --lt-clarin-yellow-bg: #fcf8e3;;
   --lt-clarin-yellow-border: #fbeed5;
