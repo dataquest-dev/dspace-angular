@@ -102,7 +102,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    * is also a 15s hard fallback inside the script itself in case isStable never fires.
    */
   private removeSsrOverlayWhenStable(): void {
-    const w = this._window?.nativeWindow as any;
+    const w: Window | undefined = this._window?.nativeWindow;
     if (!w || typeof w.__dspaceRemoveSsrOverlay !== 'function') {
       return;
     }
