@@ -53,10 +53,6 @@
     if (!app || !app.firstElementChild) return;
     if (document.getElementById('__dspace_ssr_overlay')) return;
 
-    // Build overlay and MOVE (not clone) the SSR children into it. Moving keeps every live DOM
-    // detail (Angular's view-encapsulation attributes, computed inline styles, image-load state,
-    // etc.) so the overlay is pixel-identical to what the user already saw before Angular booted.
-    // Cloning via innerHTML loses parent-context-dependent rendering.
     // Critical: Angular's BrowserModule.withServerTransition removes ALL <style ng-transition="...">
     // tags during bootstrap. Those tags hold the component-scoped CSS that styles the SSR DOM
     // via attribute selectors like [_ngcontent-scXXX]. If we don't preserve copies, the overlay
@@ -72,9 +68,17 @@
       keptStyles.push(copy);
     }
 
+    // Build overlay and MOVE (not clone) the SSR children into it. Moving keeps every live DOM
+    // detail (Angular's view-encapsulation attributes, computed inline styles, image-load state)
+    // so the overlay is pixel-identical to what the user already saw before Angular booted.
+    // Cloning via innerHTML loses parent-context-dependent rendering.
+    //
+    // Accessibility note: we deliberately do NOT set aria-hidden on the overlay. The overlay
+    // *is* the visible page during the masking window, so assistive technologies should read
+    // it. The original <ds-app> underneath gets visibility:hidden (via attribute + CSS rule),
+    // which removes both itself and its children from the accessibility tree.
     var overlay = document.createElement('div');
     overlay.id = '__dspace_ssr_overlay';
-    overlay.setAttribute('aria-hidden', 'true');
     while (app.firstChild) {
       overlay.appendChild(app.firstChild);
     }
@@ -85,7 +89,15 @@
     app.setAttribute('data-dspace-ssr-hidden', '');
     document.body.appendChild(overlay);
 
+    var removing = false;
     window.__dspaceRemoveSsrOverlay = function () {
+      // Re-entrancy guard: null the pointer up-front so a racing isStable + 15s safety
+      // fallback cannot start two interleaving fade-out passes (which would re-remove
+      // the kept styles from underneath the first pass).
+      if (removing) return;
+      removing = true;
+      window.__dspaceRemoveSsrOverlay = null;
+
       var el = document.getElementById('__dspace_ssr_overlay');
       if (!el) return;
       app.removeAttribute('data-dspace-ssr-hidden');
@@ -97,7 +109,6 @@
           if (keptStyles[i].parentNode) keptStyles[i].parentNode.removeChild(keptStyles[i]);
         }
         keptStyles = [];
-        window.__dspaceRemoveSsrOverlay = null;
       }, 200);
     };
 
@@ -108,7 +119,11 @@
       }
     }, 15000);
   } catch (e) {
-    // never let this kill the page
+    // Don't let the overlay logic kill the page, but surface the failure so a silently-broken
+    // flicker fix is at least diagnosable in DevTools.
+    if (window.console && typeof console.warn === 'function') {
+      console.warn('[dspace-ssr-overlay] disabled due to error:', e);
+    }
   }
 })();
 </script>
