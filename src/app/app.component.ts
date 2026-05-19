@@ -103,7 +103,9 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   private removeSsrOverlayWhenStable(): void {
     const w = this._window?.nativeWindow as any;
-    if (!w || typeof w.__dspaceRemoveSsrOverlay !== 'function') return;
+    if (!w || typeof w.__dspaceRemoveSsrOverlay !== 'function') {
+      return;
+    }
     // run outside Angular so we don't keep changeDetection ticking on the overlay timer
     this.ngZone.runOutsideAngular(() => {
       this.appRef.isStable.pipe(
