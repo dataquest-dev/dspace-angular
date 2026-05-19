@@ -28,5 +28,13 @@ ENV NODE_ENV=development
 RUN apk add tzdata
 RUN yarn build:prod
 RUN npm install pm2 -g
-CMD /bin/sh -c "pm2-runtime start docker/dspace-ui.json > /dev/null 2> /dev/null"
+
+# Mirror Dockerfile.dist's layout so docker-compose.yml's entrypoint
+# (`pm2-runtime start dspace-ui.json`, no `docker/` prefix) works for both
+# the locally-built dev image and the published dist image. Before this,
+# locally-built containers ENOENT-looped because compose's entrypoint
+# pointed at the dist path while the file sat at /app/docker/dspace-ui.json.
+RUN cp docker/dspace-ui.json /app/dspace-ui.json
+
+CMD /bin/sh -c "pm2-runtime start dspace-ui.json > /dev/null 2> /dev/null"
 
