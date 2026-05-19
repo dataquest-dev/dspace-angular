@@ -47,6 +47,11 @@
 */
 (function () {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  // Skip when Cypress is driving the page. The overlay duplicates SSR DOM (moved into the
+  // overlay) alongside the CSR DOM (rendered into <ds-app>) during the masking window — so
+  // any cy.get('#some-id').click() picks up two elements and fails. The overlay is a pure
+  // UX nicety, and Cypress E2E doesn't measure visual smoothness anyway; bail early.
+  if (typeof window.Cypress !== 'undefined') return;
   try {
     var app = document.querySelector('ds-app');
     // If SSR was skipped for this route (excludePathPatterns), there are no children; nothing to mask.
