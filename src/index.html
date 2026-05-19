@@ -7,12 +7,111 @@
   <title>DSpace</title>
   <meta name="viewport" content="width=device-width,minimum-scale=1">
   <meta http-equiv="cache-control" content="no-store">
+  <style id="__dspace-ssr-overlay-style">
+    /* Overlay used to mask the Angular 15 bootstrap re-render of the SSR DOM.
+       See src/index.html bootstrap script + AppComponent.removeSsrOverlayWhenStable.
+       The overlay element holds the SSR-rendered children moved out of <ds-app>,
+       so it keeps every original Angular view-encapsulation attribute (_ngcontent-scXXX),
+       inline style, and lifecycle context — i.e. it looks pixel-identical to what SSR sent. */
+    #__dspace_ssr_overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 10000;
+      background: #fff;
+      pointer-events: none;
+    }
+    /* Keep <ds-app> taking layout space (height of CSR result) but hidden, so the page
+       does not collapse the moment we drop the overlay. */
+    ds-app[data-dspace-ssr-hidden] { visibility: hidden; }
+  </style>
 </head>
 <body>
 <!-- dependencies -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
   <ds-app></ds-app>
+<script>
+/*
+  Anti-flicker overlay.
+  Why this exists: this codebase is on Angular 15 + ngUniversal. There is no provideClientHydration
+  available before Angular 16, so on every browser load Angular tears down the entire SSR DOM and
+  re-renders the component tree from scratch. The rebuild takes ~600-1500 ms on slow connections,
+  during which the user sees the SSR view -> blank/half-built CSR view -> final CSR view.
+  This script captures the SSR DOM as a non-interactive snapshot the moment it's parsed (before
+  any module/main script runs - those are type=module and therefore deferred). While Angular
+  rebuilds the real <ds-app> invisibly, the snapshot keeps the page looking stable. AppComponent
+  removes the overlay once ApplicationRef.isStable settles.
+*/
+(function () {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  try {
+    var app = document.querySelector('ds-app');
+    // If SSR was skipped for this route (excludePathPatterns), there are no children; nothing to mask.
+    if (!app || !app.firstElementChild) return;
+    if (document.getElementById('__dspace_ssr_overlay')) return;
+
+    // Build overlay and MOVE (not clone) the SSR children into it. Moving keeps every live DOM
+    // detail (Angular's view-encapsulation attributes, computed inline styles, image-load state,
+    // etc.) so the overlay is pixel-identical to what the user already saw before Angular booted.
+    // Cloning via innerHTML loses parent-context-dependent rendering.
+    // Critical: Angular's BrowserModule.withServerTransition removes ALL <style ng-transition="...">
+    // tags during bootstrap. Those tags hold the component-scoped CSS that styles the SSR DOM
+    // via attribute selectors like [_ngcontent-scXXX]. If we don't preserve copies, the overlay
+    // renders unstyled. Clone the SSR styles into <style data-dspace-ssr-keep> tags that Angular
+    // ignores, so the overlay keeps looking like the page the user already saw.
+    var ssrStyles = document.querySelectorAll('style[ng-transition]');
+    var keptStyles = [];
+    for (var i = 0; i < ssrStyles.length; i++) {
+      var copy = document.createElement('style');
+      copy.setAttribute('data-dspace-ssr-keep', '');
+      copy.textContent = ssrStyles[i].textContent;
+      document.head.appendChild(copy);
+      keptStyles.push(copy);
+    }
+
+    var overlay = document.createElement('div');
+    overlay.id = '__dspace_ssr_overlay';
+    overlay.setAttribute('aria-hidden', 'true');
+    while (app.firstChild) {
+      overlay.appendChild(app.firstChild);
+    }
+
+    // Hide the now-empty <ds-app> so Angular can rebuild into it invisibly. We use an attribute
+    // (CSS in <head> targets it) rather than setting .style.visibility directly so Angular's
+    // template doesn't blow it away on first ChangeDetection.
+    app.setAttribute('data-dspace-ssr-hidden', '');
+    document.body.appendChild(overlay);
+
+    window.__dspaceRemoveSsrOverlay = function () {
+      var el = document.getElementById('__dspace_ssr_overlay');
+      if (!el) return;
+      app.removeAttribute('data-dspace-ssr-hidden');
+      el.style.transition = 'opacity 150ms ease-out';
+      el.style.opacity = '0';
+      setTimeout(function () {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+        for (var i = 0; i < keptStyles.length; i++) {
+          if (keptStyles[i].parentNode) keptStyles[i].parentNode.removeChild(keptStyles[i]);
+        }
+        keptStyles = [];
+        window.__dspaceRemoveSsrOverlay = null;
+      }, 200);
+    };
+
+    // Safety net: if the app never reaches isStable (e.g. permanent HTTP poll), remove anyway.
+    setTimeout(function () {
+      if (typeof window.__dspaceRemoveSsrOverlay === 'function') {
+        window.__dspaceRemoveSsrOverlay();
+      }
+    }, 15000);
+  } catch (e) {
+    // never let this kill the page
+  }
+})();
+</script>
 </body>
 
 <!-- do not include client bundle, it is injected with Zone already loaded -->
