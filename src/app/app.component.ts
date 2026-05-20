@@ -1,11 +1,13 @@
-import { distinctUntilChanged, take, withLatestFrom, delay } from 'rxjs/operators';
+import { distinctUntilChanged, filter, first, take, withLatestFrom, delay } from 'rxjs/operators';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
+  ApplicationRef,
   ChangeDetectionStrategy,
   Component,
   HostListener,
   Inject,
+  NgZone,
   OnInit,
   PLATFORM_ID,
 } from '@angular/core';
@@ -74,6 +76,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private cssService: CSSVariableService,
     private modalService: NgbModal,
     private modalConfig: NgbModalConfig,
+    private appRef: ApplicationRef,
+    private ngZone: NgZone,
   ) {
     this.notificationOptions = environment.notifications;
 
@@ -82,11 +86,45 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     if (isPlatformBrowser(this.platformId)) {
       this.trackIdleModal();
+      this.removeSsrOverlayWhenStable();
     }
 
     this.isThemeLoading$ = this.themeService.isThemeLoading$;
 
     this.storeCSSVariables();
+  }
+
+  /**
+   * Drops the SSR mask overlay installed by the inline bootstrap script in src/index.html as soon
+   * as Angular reaches its first stable state. The overlay is the only thing the user sees while
+   * Angular 15 rebuilds the SSR DOM; removing it too early would expose the rebuild flicker, too
+   * late would feel sluggish. We add a short safety pad to let the first paint settle, and there
+   * is also a 15s hard fallback inside the script itself in case isStable never fires.
+   */
+  private removeSsrOverlayWhenStable(): void {
+    const w: Window | undefined = this._window?.nativeWindow;
+    if (!w || typeof w.__dspaceRemoveSsrOverlay !== 'function') {
+      return;
+    }
+    // run outside Angular so we don't keep changeDetection ticking on the overlay timer
+    this.ngZone.runOutsideAngular(() => {
+      this.appRef.isStable.pipe(
+        filter((stable: boolean) => stable),
+        first(),
+      ).subscribe(() => {
+        // one rAF + small pad to let the first stable paint commit before fading the overlay
+        const remove = () => {
+          if (typeof w.__dspaceRemoveSsrOverlay === 'function') {
+            w.__dspaceRemoveSsrOverlay();
+          }
+        };
+        if (typeof w.requestAnimationFrame === 'function') {
+          w.requestAnimationFrame(() => setTimeout(remove, 50));
+        } else {
+          setTimeout(remove, 50);
+        }
+      });
+    });
   }
 
   ngOnInit() {
