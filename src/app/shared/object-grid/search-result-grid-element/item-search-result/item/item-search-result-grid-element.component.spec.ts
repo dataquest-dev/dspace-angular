@@ -205,62 +205,7 @@ mockItemWithoutMetadata.indexableObject = Object.assign(new Item(), {
   }
 });
 
-describe('ItemGridElementComponent', getEntityGridElementTestComponent(ItemSearchResultGridElementComponent, mockItemWithMetadata, mockItemWithoutMetadata, ['authors', 'date', 'abstract']));
-
-describe('ItemGridElementComponent with legacy abstract metadata', () => {
-  let comp;
-  let fixture;
-
-  const truncatableServiceStub: any = {
-    isCollapsed: () => observableOf(true),
-  };
-
-  const mockBitstreamDataService = {
-    getThumbnailFor(): Observable<RemoteData<Bitstream>> {
-      return createSuccessfulRemoteDataObject$(new Bitstream());
-    }
-  };
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        NoopAnimationsModule,
-        TranslateModule.forRoot()
-      ],
-      declarations: [ItemSearchResultGridElementComponent, TruncatePipe],
-      providers: [
-        { provide: TruncatableService, useValue: truncatableServiceStub },
-        { provide: ObjectCacheService, useValue: {} },
-        { provide: UUIDService, useValue: {} },
-        { provide: Store, useValue: {} },
-        { provide: RemoteDataBuildService, useValue: {} },
-        { provide: CommunityDataService, useValue: {} },
-        { provide: HALEndpointService, useValue: {} },
-        { provide: HttpClient, useValue: {} },
-        { provide: DSOChangeAnalyzer, useValue: {} },
-        { provide: NotificationsService, useValue: {} },
-        { provide: DefaultChangeAnalyzer, useValue: {} },
-        { provide: BitstreamDataService, useValue: mockBitstreamDataService },
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
-    }).overrideComponent(ItemSearchResultGridElementComponent, {
-      set: { changeDetection: ChangeDetectionStrategy.Default }
-    }).compileComponents();
-  }));
-
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(ItemSearchResultGridElementComponent);
-    comp = fixture.componentInstance;
-  }));
-
-  it('should not show abstract field when only dc.description.abstract is available', () => {
-    comp.object = mockItemWithAbstractOnly;
-    fixture.detectChanges();
-
-    const abstractField = fixture.debugElement.query(By.css('.item-abstract'));
-    expect(abstractField).toBeNull();
-  });
-});
+describe('ItemGridElementComponent', getEntityGridElementTestComponent(ItemSearchResultGridElementComponent, mockItemWithMetadata, mockItemWithoutMetadata, ['authors', 'date', 'abstract'], mockItemWithAbstractOnly));
 
 /**
  * Create test cases for a grid component of an entity.
@@ -271,7 +216,13 @@ describe('ItemGridElementComponent with legacy abstract metadata', () => {
  *                                      For example: If one of the fields to check is labeled "authors", the html template should contain at least one element with class ".item-authors" that's
  *                                      present when the author metadata is available.
  */
-export function getEntityGridElementTestComponent(component, searchResultWithMetadata: ItemSearchResult, searchResultWithoutMetadata: ItemSearchResult, fieldsToCheck: string[]) {
+export function getEntityGridElementTestComponent(
+  component,
+  searchResultWithMetadata: ItemSearchResult,
+  searchResultWithoutMetadata: ItemSearchResult,
+  fieldsToCheck: string[],
+  searchResultWithAbstractOnly?: ItemSearchResult,
+) {
   return () => {
     let comp;
     let fixture;
@@ -317,6 +268,20 @@ export function getEntityGridElementTestComponent(component, searchResultWithMet
       fixture = TestBed.createComponent(component);
       comp = fixture.componentInstance;
     }));
+
+    if (searchResultWithAbstractOnly) {
+      describe('when the item has only dc.description.abstract metadata', () => {
+        beforeEach(() => {
+          comp.object = searchResultWithAbstractOnly;
+          fixture.detectChanges();
+        });
+
+        it('should not show abstract field', () => {
+          const abstractField = fixture.debugElement.query(By.css('.item-abstract'));
+          expect(abstractField).toBeNull();
+        });
+      });
+    }
 
     fieldsToCheck.forEach((field) => {
       describe(`when the item has "${field}" metadata`, () => {
