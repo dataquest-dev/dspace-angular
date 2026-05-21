@@ -28,6 +28,8 @@ import { ItemSearchResultGridElementComponent } from './item-search-result-grid-
 
 const mockItemWithMetadata: ItemSearchResult = new ItemSearchResult();
 mockItemWithMetadata.hitHighlights = {};
+const mockItemWithAbstractOnly: ItemSearchResult = new ItemSearchResult();
+mockItemWithAbstractOnly.hitHighlights = {};
 const dcTitle = 'This is just another <em>title</em>';
 mockItemWithMetadata.indexableObject = Object.assign(new Item(), {
   hitHighlights: {
@@ -55,10 +57,27 @@ mockItemWithMetadata.indexableObject = Object.assign(new Item(), {
         value: '2015-06-26'
       }
     ],
-    'dc.description.abstract': [
+    'dc.description': [
       {
         language: 'en_US',
         value: 'This is an abstract'
+      }
+    ]
+  }
+});
+mockItemWithAbstractOnly.indexableObject = Object.assign(new Item(), {
+  bundles: createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [])),
+  metadata: {
+    'dc.title': [
+      {
+        language: 'en_US',
+        value: dcTitle
+      }
+    ],
+    'dc.description.abstract': [
+      {
+        language: 'en_US',
+        value: 'Legacy abstract only'
       }
     ]
   }
@@ -98,7 +117,7 @@ const mockPerson: ItemSearchResult = Object.assign(new ItemSearchResult(), {
             value: '2015-06-26'
           }
         ],
-        'dc.description.abstract': [
+        'dc.description': [
           {
             language: 'en_US',
             value: 'This is the abstract'
@@ -152,7 +171,7 @@ const mockOrgUnit: ItemSearchResult = Object.assign(new ItemSearchResult(), {
             value: '2015-06-26'
           }
         ],
-        'dc.description.abstract': [
+        'dc.description': [
           {
             language: 'en_US',
             value: 'This is the abstract'
@@ -187,6 +206,61 @@ mockItemWithoutMetadata.indexableObject = Object.assign(new Item(), {
 });
 
 describe('ItemGridElementComponent', getEntityGridElementTestComponent(ItemSearchResultGridElementComponent, mockItemWithMetadata, mockItemWithoutMetadata, ['authors', 'date', 'abstract']));
+
+describe('ItemGridElementComponent with legacy abstract metadata', () => {
+  let comp;
+  let fixture;
+
+  const truncatableServiceStub: any = {
+    isCollapsed: () => observableOf(true),
+  };
+
+  const mockBitstreamDataService = {
+    getThumbnailFor(): Observable<RemoteData<Bitstream>> {
+      return createSuccessfulRemoteDataObject$(new Bitstream());
+    }
+  };
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        NoopAnimationsModule,
+        TranslateModule.forRoot()
+      ],
+      declarations: [ItemSearchResultGridElementComponent, TruncatePipe],
+      providers: [
+        { provide: TruncatableService, useValue: truncatableServiceStub },
+        { provide: ObjectCacheService, useValue: {} },
+        { provide: UUIDService, useValue: {} },
+        { provide: Store, useValue: {} },
+        { provide: RemoteDataBuildService, useValue: {} },
+        { provide: CommunityDataService, useValue: {} },
+        { provide: HALEndpointService, useValue: {} },
+        { provide: HttpClient, useValue: {} },
+        { provide: DSOChangeAnalyzer, useValue: {} },
+        { provide: NotificationsService, useValue: {} },
+        { provide: DefaultChangeAnalyzer, useValue: {} },
+        { provide: BitstreamDataService, useValue: mockBitstreamDataService },
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).overrideComponent(ItemSearchResultGridElementComponent, {
+      set: { changeDetection: ChangeDetectionStrategy.Default }
+    }).compileComponents();
+  }));
+
+  beforeEach(waitForAsync(() => {
+    fixture = TestBed.createComponent(ItemSearchResultGridElementComponent);
+    comp = fixture.componentInstance;
+  }));
+
+  it('should not show abstract field when only dc.description.abstract is available', () => {
+    comp.object = mockItemWithAbstractOnly;
+    fixture.detectChanges();
+
+    const abstractField = fixture.debugElement.query(By.css('.item-abstract'));
+    expect(abstractField).toBeNull();
+  });
+});
 
 /**
  * Create test cases for a grid component of an entity.
