@@ -27,6 +27,7 @@ import { FormComponent } from '../../../shared/form/form.component';
 import { SubmissionSectionClarinLicenseComponent } from './section-license.component';
 import { CollectionDataService } from '../../../core/data/collection-data.service';
 import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
+import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { SectionFormOperationsService } from '../form/section-form-operations.service';
 import { Collection } from '../../../core/shared/collection.model';
 import { License } from '../../../core/shared/license.model';
@@ -191,11 +192,12 @@ describe('ClarinSubmissionSectionLicenseComponent test suite', () => {
       expect(app).toBeDefined();
     }));
 
-    it('sendRequest should PATCH /sections/<sectionId>/name (Riesenie B)',
+    it('sendRequest should PATCH /sections/<sectionId>/select',
       inject([SubmissionSectionClarinLicenseComponent], (app: SubmissionSectionClarinLicenseComponent) => {
         // Arrange: enable validation flow so sendRequest actually executes
         (app as any).couldShowValidationErrors = true;
         (app as any).sectionData = { id: 'clarin-license' } as any;
+        (app as any).pathCombiner = new JsonPatchOperationPathCombiner('sections', 'clarin-license');
 
         const wsiId = 42;
         const baseHref = 'http://localhost/api/submission/workspaceitems';
@@ -219,7 +221,7 @@ describe('ClarinSubmissionSectionLicenseComponent test suite', () => {
           const body: any[] = (sentRequest as any).body;
           expect(body.length).toBe(1);
           expect(body[0].op).toBe('replace');
-          expect(body[0].path).toBe('/sections/clarin-license/name');
+          expect(body[0].path).toBe('/sections/clarin-license/select');
           expect(body[0].value).toBe('My CLARIN License');
         });
       }));

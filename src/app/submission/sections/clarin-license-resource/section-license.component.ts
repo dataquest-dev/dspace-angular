@@ -278,15 +278,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
         const requestId = this.requestService.generateRequestId();
         const hrefObs = this.halService.getEndpoint(this.workspaceItemService.getLinkPath());
 
-        // Use the section-scoped path so this PATCH is routed through the
-        // `clarin-license` submission step (Riesenie B). The section step
-        // delegates to the same backend logic as the legacy `/license`
-        // top-level path, but it also works for workflow items (which
-        // only accept `/sections/...` patches) and keeps the
-        // `sections.license` (CC) and `sections.clarin-license` payloads
-        // distinct on subsequent GETs.
+        // Route the PATCH through the `clarin-license` submission step so it
+        // works for workflow items too and keeps `sections.license` (CC) and
+        // `sections.clarin-license` payloads separate on subsequent GETs.
         const patchOperation2 = {
-          op: 'replace', path: '/sections/' + this.sectionData.id + '/name', value: licenseNameRest
+          op: 'replace', path: this.pathCombiner.getPath('select').path, value: licenseNameRest
         } as Operation;
 
         hrefObs.pipe(
