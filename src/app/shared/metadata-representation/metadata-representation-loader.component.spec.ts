@@ -1,22 +1,25 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { Context } from '../../core/shared/context.model';
 import {
   MetadataRepresentation,
-  MetadataRepresentationType
+  MetadataRepresentationType,
 } from '../../core/shared/metadata-representation/metadata-representation.model';
 import { PlainTextMetadataListElementComponent } from '../object-list/metadata-representation-list-element/plain-text/plain-text-metadata-list-element.component';
 import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
 import { ThemeService } from '../theme-support/theme.service';
 import { METADATA_REPRESENTATION_COMPONENT_FACTORY } from './metadata-representation.decorator';
-import { MetadataRepresentationLoaderComponent } from './metadata-representation-loader.component';
 import { MetadataRepresentationDirective } from './metadata-representation.directive';
+import { MetadataRepresentationLoaderComponent } from './metadata-representation-loader.component';
 
 const testType = 'TestType';
 const testContext = Context.Search;
 const testRepresentationType = MetadataRepresentationType.Item;
-    themeService = jasmine.createSpyObj('themeService', { getThemeName: themeName });
+
+class TestType implements MetadataRepresentation {
+  get itemType(): string {
     return testType;
   }
 
@@ -29,7 +32,10 @@ const testRepresentationType = MetadataRepresentationType.Item;
   }
 }
 
-        },
+describe('MetadataRepresentationLoaderComponent', () => {
+  let comp: MetadataRepresentationLoaderComponent;
+  let fixture: ComponentFixture<MetadataRepresentationLoaderComponent>;
+  let themeService: ThemeService;
   const themeName = 'test-theme';
 
   beforeEach(waitForAsync(() => {
@@ -38,19 +44,20 @@ const testRepresentationType = MetadataRepresentationType.Item;
     });
     TestBed.configureTestingModule({
       imports: [],
-      declarations: [MetadataRepresentationLoaderComponent, PlainTextMetadataListElementComponent, MetadataRepresentationDirective],
+      declarations: [
+        MetadataRepresentationLoaderComponent,
+        PlainTextMetadataListElementComponent,
+        MetadataRepresentationDirective,
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         {
           provide: METADATA_REPRESENTATION_COMPONENT_FACTORY,
-          useValue: jasmine.createSpy('getMetadataRepresentationComponent').and.returnValue(PlainTextMetadataListElementComponent)
+          useValue: jasmine.createSpy('getMetadataRepresentationComponent').and.returnValue(PlainTextMetadataListElementComponent),
         },
         {
           provide: ThemeService,
           useValue: themeService,
-<<<<<<< HEAD
-        }
-      ]
-=======
         },
         {
           provide: ConfigurationDataService,
@@ -61,12 +68,11 @@ const testRepresentationType = MetadataRepresentationType.Item;
           },
         },
       ],
->>>>>>> fea2f20fb2 (MENDELU/ORCID hyperlinks (#1271))
     }).overrideComponent(MetadataRepresentationLoaderComponent, {
       set: {
         changeDetection: ChangeDetectionStrategy.Default,
-        entryComponents: [PlainTextMetadataListElementComponent]
-      }
+        entryComponents: [PlainTextMetadataListElementComponent],
+      },
     }).compileComponents();
   }));
 
