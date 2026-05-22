@@ -7,7 +7,24 @@
   target="_blank" [href]="mdRepresentation.getValue()">
     {{mdRepresentation.getValue()}}
   </a>
-  <span *ngIf="(mdRepresentation.representationType=='authority_controlled')" class="dont-break-out">{{mdRepresentation.getValue()}}</span>
+  <ng-container *ngIf="(mdRepresentation.representationType=='authority_controlled')">
+    <ng-container *ngIf="orcidDomainUrl$ | async as orcidDomainUrl; else noOrcidDomain">
+      <a *ngIf="isOrcidAuthority(orcidDomainUrl); else plainAuthority"
+         class="dont-break-out orcid-author-link"
+         [href]="getOrcidUrl(orcidDomainUrl)"
+         target="_blank"
+         rel="noopener noreferrer">
+        {{mdRepresentation.getValue()}}
+        <i class="fa-brands fa-orcid orcid-icon" aria-hidden="true"></i>
+      </a>
+      <ng-template #plainAuthority>
+        <span class="dont-break-out">{{mdRepresentation.getValue()}}</span>
+      </ng-template>
+    </ng-container>
+    <ng-template #noOrcidDomain>
+      <span class="dont-break-out">{{mdRepresentation.getValue()}}</span>
+    </ng-template>
+  </ng-container>
   <a *ngIf="(mdRepresentation.representationType=='browse_link')"
      class="dont-break-out ds-browse-link"
      [routerLink]="['/browse/', mdRepresentation.browseDefinition.id]"

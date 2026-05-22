@@ -1,15 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { Context } from '../../core/shared/context.model';
 import {
   MetadataRepresentation,
-  MetadataRepresentationType
+  MetadataRepresentationType,
 } from '../../core/shared/metadata-representation/metadata-representation.model';
-import { MetadataRepresentationLoaderComponent } from './metadata-representation-loader.component';
-import { MetadataRepresentationDirective } from './metadata-representation.directive';
-import { METADATA_REPRESENTATION_COMPONENT_FACTORY } from './metadata-representation.decorator';
-import { ThemeService } from '../theme-support/theme.service';
 import { PlainTextMetadataListElementComponent } from '../object-list/metadata-representation-list-element/plain-text/plain-text-metadata-list-element.component';
+import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
+import { ThemeService } from '../theme-support/theme.service';
+import { METADATA_REPRESENTATION_COMPONENT_FACTORY } from './metadata-representation.decorator';
+import { MetadataRepresentationDirective } from './metadata-representation.directive';
+import { MetadataRepresentationLoaderComponent } from './metadata-representation-loader.component';
 
 const testType = 'TestType';
 const testContext = Context.Search;
@@ -41,23 +44,35 @@ describe('MetadataRepresentationLoaderComponent', () => {
     });
     TestBed.configureTestingModule({
       imports: [],
-      declarations: [MetadataRepresentationLoaderComponent, PlainTextMetadataListElementComponent, MetadataRepresentationDirective],
+      declarations: [
+        MetadataRepresentationLoaderComponent,
+        PlainTextMetadataListElementComponent,
+        MetadataRepresentationDirective,
+      ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         {
           provide: METADATA_REPRESENTATION_COMPONENT_FACTORY,
-          useValue: jasmine.createSpy('getMetadataRepresentationComponent').and.returnValue(PlainTextMetadataListElementComponent)
+          useValue: jasmine.createSpy('getMetadataRepresentationComponent').and.returnValue(PlainTextMetadataListElementComponent),
         },
         {
           provide: ThemeService,
           useValue: themeService,
-        }
-      ]
+        },
+        {
+          provide: ConfigurationDataService,
+          useValue: {
+            findByPropertyName: jasmine.createSpy('findByPropertyName').and.returnValue(
+              createSuccessfulRemoteDataObject$({ values: ['https://orcid.org'] }),
+            ),
+          },
+        },
+      ],
     }).overrideComponent(MetadataRepresentationLoaderComponent, {
       set: {
         changeDetection: ChangeDetectionStrategy.Default,
-        entryComponents: [PlainTextMetadataListElementComponent]
-      }
+        entryComponents: [PlainTextMetadataListElementComponent],
+      },
     }).compileComponents();
   }));
 
