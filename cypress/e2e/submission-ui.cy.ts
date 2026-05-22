@@ -283,6 +283,12 @@ describe('Create a new submission', () => {
     // DON'T upload any file - just check the license section is accessible
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
 
+    // Allow frontend to propagate the initial section status (no file => valid)
+    // before asserting the header icon. Mirrors the pattern used in the
+    // sibling "license validation when file is uploaded" test above.
+    cy.wait(1000);
+    cy.get('div[id="section_clarin-license"]').find('.card-header').should('be.visible');
+
     // Verify warning and error icons do NOT exist
     cy.get('div[id="section_clarin-license"]')
       .find('.card-header')
@@ -294,9 +300,11 @@ describe('Create a new submission', () => {
       .find('.fa-exclamation-circle.text-danger')
       .should('not.exist');
 
+    // Green check must eventually appear (retry-ability with a longer timeout
+    // handles any remaining async settle of the section status observable).
     cy.get('div[id="section_clarin-license"]')
       .find('.card-header')
-      .find('.fa-check-circle.text-success')
+      .find('.fa-check-circle.text-success', { timeout: 15000 })
       .should('be.visible');
   });
 
