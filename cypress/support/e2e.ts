@@ -53,11 +53,23 @@ before(() => {
   });
 });
 
+// Pre-agreed Klaro consent payload. Keep this list in sync with the services
+// declared in src/app/shared/cookies/klaro-configuration.ts — otherwise Klaro
+// detects a configuration change and re-shows the consent banner during tests.
+const KLARO_CONSENT_PAYLOAD = encodeURIComponent(JSON.stringify({
+    authentication: true,
+    preferences: true,
+    acknowledgement: true,
+    'google-analytics': true,
+    'google-recaptcha': true,
+    accessibility: true,
+}));
+
 // Runs once before the first test in each "block"
 beforeEach(() => {
     // Pre-agree to all Klaro cookies by setting the klaro-anonymous cookie
     // This just ensures it doesn't get in the way of matching other objects in the page.
-    cy.setCookie('klaro-anonymous', '{%22authentication%22:true%2C%22preferences%22:true%2C%22acknowledgement%22:true%2C%22google-analytics%22:true%2C%22google-recaptcha%22:true%2C%22accessibility%22:true}');
+    cy.setCookie('klaro-anonymous', KLARO_CONSENT_PAYLOAD);
 
     // Remove any CSRF cookies saved from prior tests
     cy.clearCookie(DSPACE_XSRF_COOKIE);

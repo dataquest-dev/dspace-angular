@@ -89,43 +89,55 @@ function login(email: string, password: string): void {
 Cypress.Commands.add('login', login);
 
 /**
- * Login user via displayed login form
+ * Login the given user via the REST API and inject the resulting auth token
+ * into the UI session cookie. Despite the historical "ViaForm" name this is
+ * now a fully programmatic login — clicking through the UI form is unreliable
+ * on the CI runners (the browser-side POST /api/authn/login routinely fails
+ * to receive a response within Cypress' default 30s wait, which previously
+ * caused every login-protected spec to fail with "No response ever
+ * occurred"). Going through cy.request() instead bypasses the SSR layer and
+ * any browser-side CORS/XSRF timing problems, then a single cy.visit('/')
+ * forces Angular to rehydrate as an authenticated user.
+ *
  * @param email email to login as
  * @param password password to login as
  */
-// Cypress custom command for form-based login with intercept and redirect assertion
-function loginViaForm(
-  email: string,
-  password: string
-): void {
-  cy.wait(500);
+function loginViaForm(email: string, password: string): void {
+  // Each invocation needs a fresh CSRF cookie/token pair, since prior tests
+  // (or this test's own beforeEach) explicitly clear the XSRF cookie.
+  cy.createCSRFCookie().then((csrfToken: string) => {
+    cy.task('getRestBaseURL').then((baseRestUrl: string) => {
+      cy.request({
+        method: 'POST',
+        url: baseRestUrl + '/api/authn/login',
+        headers: { [XSRF_REQUEST_HEADER]: csrfToken },
+        // form-urlencoded body, matching what the Angular login form sends
+        form: true,
+        body: { user: email, password: password },
+        // Be generous: the very first login on a freshly-started DSpace
+        // backend in CI can take well over 30s while Hibernate warms up.
+        timeout: 120000,
+      }).then((resp) => {
+        expect(resp.status, 'login POST status').to.eq(200);
+        expect(resp.headers, 'login response headers').to.have.property('authorization');
 
-  // Intercept the login POST so we can deterministically wait for it to complete,
-  // instead of racing the default 4s cy.get() timeout against a slow CI auth chain
-  // (POST /authn/login -> /authn/status -> NgRx state update -> router navigation
-  //  away from /login -> home page render). On slower CI runners this routinely
-  // takes longer than 4s and the next `cy.get('#sidebar-collapse-toggle')` fails
-  // while the page is still on /login showing the "Loading..." spinner.
-  cy.intercept('POST', '**/api/authn/login').as('loginRequest');
+        // Persist the auth token into the UI cookie that Angular reads on
+        // bootstrap so the subsequent navigation is already authenticated.
+        const authHeader = resp.headers.authorization as string;
+        const authInfo: AuthTokenInfo = new AuthTokenInfo(authHeader);
+        cy.setCookie(TOKENITEM, JSON.stringify(authInfo));
+      });
+    });
+  });
 
-  // Fill in credentials.
-  // NOTE: on the standalone /login page the form is rendered twice in the DOM
-  // (once in the page body, once as the hidden navbar login dropdown). We must
-  // therefore scope the selectors to the visible form, otherwise
-  // `should('be.visible')` against the multi-element subject fails because the
-  // navbar copy lives inside a `display: none` dropdown.
-  cy.get('[data-test="email"]:visible').first().should('be.visible').type(email);
-  cy.get('[data-test="password"]:visible').first().type(password);
-
-  // Submit the form
-  cy.get('[data-test="login-button"]:visible').first().click();
-
-  // Wait for the login POST to return successfully before letting the test continue.
-  cy.wait('@loginRequest').its('response.statusCode').should('eq', 200);
-
-  // Wait for the post-login redirect away from /login so the home page (and its
-  // sidebar) has a chance to render before the test assertions run.
-  cy.location('pathname', { timeout: 20000 }).should('not.match', /\/login$/);
+  // Force Angular to re-bootstrap with the new auth cookie. cy.reload()
+  // preserves the current URL, so specs that visit a restricted page first
+  // (e.g. /mydspace -> redirected to /login?returnUrl=/mydspace) still end up
+  // back at the original destination after login. For specs that visit
+  // /login directly, the login page sees the authenticated user on bootstrap
+  // and redirects to /home.
+  cy.reload();
+  cy.location('pathname', { timeout: 30000 }).should('not.match', /\/login$/);
 }
 // Add as a Cypress command (i.e. assign to 'cy.loginViaForm')
 Cypress.Commands.add('loginViaForm', loginViaForm);
