@@ -1,3 +1,17 @@
 /**
 This is a styling file for the clarin-item-author-preview component.
  */
+
+.orcid-icon-link {
+  margin-left: 0.25rem;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.orcid-icon {
+  color: #a6ce39;
+}
+

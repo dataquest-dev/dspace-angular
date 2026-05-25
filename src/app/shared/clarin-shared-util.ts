@@ -61,21 +61,29 @@ export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
   if (isUndefined(authorsMV)) {
     return null;
   }
+  const ORCID_ID_PATTERN = /^(\d{4}-){3}\d{3}[\dX]$/i;
+  const ORCID_URL_PATTERN = /^https?:\/\/(sandbox\.)?orcid\.org\/(\d{4}-){3}\d{3}[\dX]$/i;
   const itemAuthorsLocal = [];
   authorsMV.forEach((authorMV: MetadataValue) => {
-    let value: string, operator: string;
+    let isOrcid = false;
+    let orcidUrl: string;
     if (authorMV.authority) {
-      value = encodeURIComponent(authorMV.authority);
-      operator = 'authority';
-    } else {
-      value = encodeURIComponent(authorMV.value);
-      operator = 'equals';
+      const authority = String(authorMV.authority).trim();
+      if (ORCID_ID_PATTERN.test(authority)) {
+        orcidUrl = 'https://orcid.org/' + authority;
+        isOrcid = true;
+      } else if (ORCID_URL_PATTERN.test(authority)) {
+        orcidUrl = authority;
+        isOrcid = true;
+      }
     }
-    const authorSearchLink = baseUrl + '/search?f.author=' + value + ',' + operator;
+    const authorSearchLink = baseUrl + '/search?f.author=' + encodeURIComponent(authorMV.value) + ',equals';
     const authorNameLink = Object.assign(new AuthorNameLink(), {
       name: authorMV.value,
       url: authorSearchLink,
-      isAuthority: !!authorMV.authority
+      isAuthority: !!authorMV.authority,
+      isOrcid: isOrcid,
+      orcidUrl: orcidUrl
     });
     itemAuthorsLocal.push(authorNameLink);
   });
