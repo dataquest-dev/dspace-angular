@@ -100,13 +100,32 @@ function loginViaForm(
 ): void {
   cy.wait(500);
 
-  // Fill in credentials
-  cy.get('[data-test="email"]').should('be.visible').type(email);
-  cy.get('[data-test="password"]').type(password);
+  // Intercept the login POST so we can deterministically wait for it to complete,
+  // instead of racing the default 4s cy.get() timeout against a slow CI auth chain
+  // (POST /authn/login -> /authn/status -> NgRx state update -> router navigation
+  //  away from /login -> home page render). On slower CI runners this routinely
+  // takes longer than 4s and the next `cy.get('#sidebar-collapse-toggle')` fails
+  // while the page is still on /login showing the "Loading..." spinner.
+  cy.intercept('POST', '**/api/authn/login').as('loginRequest');
+
+  // Fill in credentials.
+  // NOTE: on the standalone /login page the form is rendered twice in the DOM
+  // (once in the page body, once as the hidden navbar login dropdown). We must
+  // therefore scope the selectors to the visible form, otherwise
+  // `should('be.visible')` against the multi-element subject fails because the
+  // navbar copy lives inside a `display: none` dropdown.
+  cy.get('[data-test="email"]:visible').first().should('be.visible').type(email);
+  cy.get('[data-test="password"]:visible').first().type(password);
 
   // Submit the form
-  cy.get('[data-test="login-button"]').click();
+  cy.get('[data-test="login-button"]:visible').first().click();
 
+  // Wait for the login POST to return successfully before letting the test continue.
+  cy.wait('@loginRequest').its('response.statusCode').should('eq', 200);
+
+  // Wait for the post-login redirect away from /login so the home page (and its
+  // sidebar) has a chance to render before the test assertions run.
+  cy.location('pathname', { timeout: 20000 }).should('not.match', /\/login$/);
 }
 // Add as a Cypress command (i.e. assign to 'cy.loginViaForm')
 Cypress.Commands.add('loginViaForm', loginViaForm);

@@ -57,10 +57,32 @@ before(() => {
 beforeEach(() => {
     // Pre-agree to all Klaro cookies by setting the klaro-anonymous cookie
     // This just ensures it doesn't get in the way of matching other objects in the page.
-    cy.setCookie('klaro-anonymous', '{%22authentication%22:true%2C%22preferences%22:true%2C%22acknowledgement%22:true%2C%22google-analytics%22:true%2C%22google-recaptcha%22:true}');
+    cy.setCookie('klaro-anonymous', '{%22authentication%22:true%2C%22preferences%22:true%2C%22acknowledgement%22:true%2C%22google-analytics%22:true%2C%22google-recaptcha%22:true%2C%22accessibility%22:true}');
 
     // Remove any CSRF cookies saved from prior tests
     cy.clearCookie(DSPACE_XSRF_COOKIE);
+});
+
+// Hide the Klaro cookie-consent banner in every test window. Even with a pre-set
+// klaro-anonymous cookie, Klaro may still render the notice (e.g. when its
+// internal consent version changes after a config update), and that notice
+// overlaps interactive elements such as the admin sidebar toggle. Injecting a
+// `display: none` rule for the `.klaro` container at every page load keeps the
+// banner from intercepting clicks during e2e tests.
+Cypress.on('window:before:load', (win) => {
+    const injectKlaroHider = () => {
+        if (!win.document.getElementById('cypress-hide-klaro')) {
+            const style = win.document.createElement('style');
+            style.id = 'cypress-hide-klaro';
+            style.textContent = '.klaro { display: none !important; }';
+            (win.document.head || win.document.documentElement).appendChild(style);
+        }
+    };
+    if (win.document && win.document.head) {
+        injectKlaroHider();
+    } else {
+        win.addEventListener('DOMContentLoaded', injectKlaroHider, { once: true });
+    }
 });
 
 // NOTE: FALLBACK_TEST_REST_BASE_URL is only used if Cypress cannot read the REST API BaseURL
