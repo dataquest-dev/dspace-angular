@@ -12,7 +12,9 @@
        class="dont-break-out orcid-author-link"
        [href]="getOrcidUrl()"
        target="_blank"
-       rel="noopener noreferrer">
+       rel="noopener noreferrer"
+       title="View ORCID profile"
+       [attr.aria-label]="'View ORCID profile of ' + mdRepresentation.getValue()">
       {{mdRepresentation.getValue()}}
       <i class="fab fa-orcid orcid-icon" aria-hidden="true"></i>
     </a>

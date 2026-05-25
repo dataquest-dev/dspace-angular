@@ -4,6 +4,8 @@ import { PlainTextMetadataListElementComponent } from './plain-text-metadata-lis
 import { MetadatumRepresentation } from '../../../../core/shared/metadata-representation/metadatum/metadatum-representation.model';
 import { By } from '@angular/platform-browser';
 import { mockData } from '../../../testing/browse-definition-data-service.stub';
+import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
+import { ConfigurationDataServiceStub } from '../../../testing/configuration-data.service.stub';
 
 // Render the mock representation with the default mock author browse definition so it is also rendered as a link
 // without affecting other tests
@@ -20,6 +22,9 @@ describe('PlainTextMetadataListElementComponent', () => {
     TestBed.configureTestingModule({
       imports: [],
       declarations: [PlainTextMetadataListElementComponent],
+      providers: [
+        { provide: ConfigurationDataService, useClass: ConfigurationDataServiceStub },
+      ],
       schemas: [NO_ERRORS_SCHEMA]
     }).overrideComponent(PlainTextMetadataListElementComponent, {
       set: { changeDetection: ChangeDetectionStrategy.Default }

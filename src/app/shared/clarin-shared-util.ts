@@ -5,6 +5,8 @@ import { isNull, isUndefined } from './empty.util';
 import { MetadataValue } from '../core/shared/metadata.models';
 import { AuthorNameLink } from './clarin-item-box-view/clarin-author-name-link.model';
 
+const ORCID_ID_PATTERN = /^(\d{4}-){3}\d{3}[\dX]$/i;
+
 /**
  * Convert raw byte array to the image is not secure - this function make it secure
  * @param imageByteArray as secure byte array
@@ -61,7 +63,6 @@ export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
   if (isUndefined(authorsMV)) {
     return null;
   }
-  const ORCID_ID_PATTERN = /^(\d{4}-){3}\d{3}[\dX]$/i;
   const ORCID_URL_PATTERN = /^https?:\/\/(sandbox\.)?orcid\.org\/(\d{4}-){3}\d{3}[\dX]$/i;
   const itemAuthorsLocal = [];
   authorsMV.forEach((authorMV: MetadataValue) => {

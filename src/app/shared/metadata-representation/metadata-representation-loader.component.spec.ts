@@ -10,6 +10,8 @@ import { MetadataRepresentationDirective } from './metadata-representation.direc
 import { METADATA_REPRESENTATION_COMPONENT_FACTORY } from './metadata-representation.decorator';
 import { ThemeService } from '../theme-support/theme.service';
 import { PlainTextMetadataListElementComponent } from '../object-list/metadata-representation-list-element/plain-text/plain-text-metadata-list-element.component';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { ConfigurationDataServiceStub } from '../testing/configuration-data.service.stub';
 
 const testType = 'TestType';
 const testContext = Context.Search;
@@ -51,6 +53,10 @@ describe('MetadataRepresentationLoaderComponent', () => {
         {
           provide: ThemeService,
           useValue: themeService,
+        },
+        {
+          provide: ConfigurationDataService,
+          useClass: ConfigurationDataServiceStub,
         }
       ]
     }).overrideComponent(MetadataRepresentationLoaderComponent, {
