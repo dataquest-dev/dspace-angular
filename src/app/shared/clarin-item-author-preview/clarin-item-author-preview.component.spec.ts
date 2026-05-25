@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ClarinItemAuthorPreviewComponent } from './clarin-item-author-preview.component';
-import {of} from 'rxjs';
-import {ConfigurationDataService} from '../../core/data/configuration-data.service';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
+import { createSuccessfulRemoteDataObject$ } from '../remote-data.utils';
 
 describe('ClarinItemAuthorPreviewComponent', () => {
   let component: ClarinItemAuthorPreviewComponent;
   let fixture: ComponentFixture<ClarinItemAuthorPreviewComponent>;
 
   const configurationServiceSpy = jasmine.createSpyObj('configurationService', {
-    findByPropertyName: of(true),
+    findByPropertyName: createSuccessfulRemoteDataObject$({ values: ['https://orcid.org'] }),
   });
 
   beforeEach(async () => {
@@ -30,5 +30,12 @@ describe('ClarinItemAuthorPreviewComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('assignOrcidDomainUrl should read orcid.domain-url from backend config', async () => {
+    component.orcidDomainUrl = null;
+    await component.assignOrcidDomainUrl();
+    expect(component.orcidDomainUrl).toBe('https://orcid.org');
+    expect(configurationServiceSpy.findByPropertyName).toHaveBeenCalledWith('orcid.domain-url');
   });
 });

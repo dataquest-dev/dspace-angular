@@ -8,18 +8,7 @@ import { VALUE_LIST_BROWSE_DEFINITION } from '../../../../core/shared/value-list
 import { MetadatumRepresentation } from '../../../../core/shared/metadata-representation/metadatum/metadatum-representation.model';
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { getFirstCompletedRemoteData } from '../../../../core/shared/operators';
-
-/**
- * Pattern that matches a bare ORCID iD (16 digits in groups of 4, last char may be X).
- * Example: 0000-0001-2345-6789 or 0000-0001-2345-678X
- */
-const ORCID_ID_PATTERN = /^(\d{4}-){3}\d{3}[\dX]$/i;
-
-/**
- * Pattern that matches a full ORCID URL authority value.
- * Example: https://orcid.org/0000-0001-2345-6789 or https://sandbox.orcid.org/0000-0001-2345-678X
- */
-const ORCID_URL_PATTERN = /^https?:\/\/[^/]+\/((\d{4}-){3}\d{3}[\dX])$/i;
+import { ORCID_ID_PATTERN, ORCID_URL_PATTERN } from '../../../clarin-shared-util';
 
 @metadataRepresentationComponent('Publication', MetadataRepresentationType.PlainText)
 // For now, authority controlled fields are rendered the same way as plain text fields

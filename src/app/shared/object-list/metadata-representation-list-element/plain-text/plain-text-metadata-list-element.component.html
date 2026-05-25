@@ -13,8 +13,8 @@
        [href]="getOrcidUrl()"
        target="_blank"
        rel="noopener noreferrer"
-       title="View ORCID profile"
-       [attr.aria-label]="'View ORCID profile of ' + mdRepresentation.getValue()">
+       [title]="'item.view.box.author.preview.orcid-link.title' | translate"
+       [attr.aria-label]="('item.view.box.author.preview.orcid-link.title' | translate) + ' ' + mdRepresentation.getValue()">
       {{mdRepresentation.getValue()}}
       <i class="fab fa-orcid orcid-icon" aria-hidden="true"></i>
     </a>

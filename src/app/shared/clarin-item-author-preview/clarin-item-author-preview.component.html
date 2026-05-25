@@ -7,7 +7,7 @@
               </span>
               <a [href]="author.url" class="item-author">{{ author.name }}</a><a
                 *ngIf="author.isOrcid" [href]="author.orcidUrl" target="_blank" rel="noopener noreferrer"
-                class="orcid-icon-link" title="View ORCID profile"><i class="fa-brands fa-orcid orcid-icon"></i></a><i
+                class="orcid-icon-link" [title]="'item.view.box.author.preview.orcid-link.title' | translate"><i class="fa-brands fa-orcid orcid-icon"></i></a><i
                 *ngIf="author.isAuthority && !author.isOrcid" class="fa-brands fa-orcid"> &nbsp;</i>
             </span>
   </div>
@@ -15,7 +15,7 @@
     <div *ngFor="let author of (itemAuthors | async); let i = index">
       <span *ngIf="i == 0" ><a [href]="author.url" class="item-author">{{ author.name }}</a><a
         *ngIf="author.isOrcid" [href]="author.orcidUrl" target="_blank" rel="noopener noreferrer"
-        class="orcid-icon-link" title="View ORCID profile"><i class="fa-brands fa-orcid orcid-icon"></i></a><i
+        class="orcid-icon-link" [title]="'item.view.box.author.preview.orcid-link.title' | translate"><i class="fa-brands fa-orcid orcid-icon"></i></a><i
         *ngIf="author.isAuthority && !author.isOrcid" class="fa-brands fa-orcid"> &nbsp;</i>; et al.</span>
     </div>
     <div class="item-author-wrapper">
@@ -33,7 +33,7 @@
                   </span>
                   <a *ngIf="i > 0" [href]="author.url" class="item-author">{{author.name}}</a><a
                     *ngIf="i > 0 && author.isOrcid" [href]="author.orcidUrl" target="_blank" rel="noopener noreferrer"
-                    class="orcid-icon-link" title="View ORCID profile"><i class="fa-brands fa-orcid orcid-icon"></i></a><i
+                    class="orcid-icon-link" [title]="'item.view.box.author.preview.orcid-link.title' | translate"><i class="fa-brands fa-orcid orcid-icon"></i></a><i
                     *ngIf="i > 0 && author.isAuthority && !author.isOrcid" class="fa-brands fa-orcid"> &nbsp;</i>
                 </span>
       </div>
