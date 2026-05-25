@@ -55,6 +55,15 @@ export class MetadataLinkService {
 
   constructor(private configService: ConfigurationDataService) {
     this.resolvers$ = this.loadResolvers();
+    // Eagerly trigger the resolver config fetch as soon as the service is
+    // instantiated (singleton, providedIn: 'root'). Without this, the
+    // resolver$ observable is only subscribed to lazily by template
+    // `async` pipes — and combined with `refCount: true` on shareReplay,
+    // every time the last subscriber unsubscribes (e.g. during view churn
+    // on /full item page) the 5 HTTP calls would be repeated. An eager
+    // subscription keeps the replay buffer warm for the lifetime of the
+    // service.
+    this.resolvers$.subscribe();
   }
 
   /**
@@ -88,7 +97,14 @@ export class MetadataLinkService {
       openPolicyFinder: fetch('openPolicyFinder'),
       jcr: fetch('jcr'),
     }).pipe(
-      shareReplay({ bufferSize: 1, refCount: true }),
+      // refCount: false — once the resolver config is loaded, cache it for
+      // the lifetime of the service (singleton). With refCount: true the
+      // inner subscription would be torn down whenever subscriber count
+      // dropped to zero, causing the 5 HTTP calls to repeat on the next
+      // subscription. The values are immutable per backend deployment, so
+      // a permanent cache is safe and avoids redundant network traffic on
+      // /full item pages with many metadata rows.
+      shareReplay({ bufferSize: 1, refCount: false }),
     );
   }
 
