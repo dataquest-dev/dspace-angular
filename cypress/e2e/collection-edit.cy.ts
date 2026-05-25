@@ -122,6 +122,9 @@ describe('Edit Collection > Delete page', () => {
     // <ds-delete-collection> tag must be loaded
     cy.get('ds-delete-collection').should('be.visible');
 
+    // Wait for inner content to render before running axe
+    cy.get('ds-delete-collection h1#header', { timeout: 30000 }).should('be.visible');
+
     // Analyze for accessibility issues
     testA11y('ds-delete-collection');
   });

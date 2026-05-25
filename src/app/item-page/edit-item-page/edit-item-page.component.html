@@ -21,7 +21,11 @@
                 <span [ngbTooltip]="'item.edit.tabs.disabled.tooltip' | translate">
                   @if ((page.enabled | async) !== true) {
                     <button
-                      class="nav-link disabled">
+                      class="nav-link disabled"
+                      role="tab"
+                      aria-disabled="true"
+                      [attr.aria-selected]="false"
+                      tabindex="-1">
                       {{'item.edit.tabs.' + page.page + '.head' | translate}}
                     </button>
                   }
