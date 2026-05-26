@@ -59,19 +59,20 @@ export class PlainTextMetadataListElementComponent extends MetadataRepresentatio
 
   /**
    * Check whether the authority value of this metadata is an ORCID identifier.
-   * Accepts either a bare ORCID iD or a full ORCID URL.
-   * Requires the backend to expose `orcid.domain-url`; otherwise returns false.
+   * Accepts either a bare ORCID iD or a full ORCID URL. A full ORCID URL is recognised
+   * even when the backend does not expose `orcid.domain-url`, mirroring `loadItemAuthors`.
+   * A bare ORCID iD requires `orcid.domain-url` to canonicalise into a full URL.
    */
   isOrcidAuthority(orcidDomainUrl: string | null = this.orcidDomainUrl$.value): boolean {
-    if (!orcidDomainUrl) {
-      return false;
-    }
     if (this.mdRepresentation instanceof MetadatumRepresentation) {
       const authority = this.mdRepresentation.authority?.trim();
       if (!authority) {
         return false;
       }
-      return ORCID_ID_PATTERN.test(authority) || ORCID_URL_PATTERN.test(authority);
+      if (ORCID_URL_PATTERN.test(authority)) {
+        return true;
+      }
+      return !!orcidDomainUrl && ORCID_ID_PATTERN.test(authority);
     }
     return false;
   }
@@ -79,12 +80,10 @@ export class PlainTextMetadataListElementComponent extends MetadataRepresentatio
   /**
    * Build the full ORCID profile URL for the current author.
    * Returns an empty string when the authority is not an ORCID value
-   * or when the ORCID domain URL is not configured on the backend.
+   * or when the ORCID domain URL is required (bare ORCID iD) but not configured on the backend.
+   * A full ORCID URL authority is returned as-is without requiring `orcid.domain-url`.
    */
   getOrcidUrl(orcidDomainUrl: string | null = this.orcidDomainUrl$.value): string {
-    if (!orcidDomainUrl) {
-      return '';
-    }
     if (!(this.mdRepresentation instanceof MetadatumRepresentation)) {
       return '';
     }
@@ -95,7 +94,7 @@ export class PlainTextMetadataListElementComponent extends MetadataRepresentatio
     if (ORCID_URL_PATTERN.test(authority)) {
       return authority;
     }
-    if (ORCID_ID_PATTERN.test(authority)) {
+    if (orcidDomainUrl && ORCID_ID_PATTERN.test(authority)) {
       const domain = orcidDomainUrl.endsWith('/') ? orcidDomainUrl.slice(0, -1) : orcidDomainUrl;
       return `${domain}/${authority}`;
     }
