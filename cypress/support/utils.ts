@@ -32,6 +32,14 @@ function terminalLog(violations: Result[]) {
 // while also ensuring any violations are logged to the terminal (see terminalLog above)
 // This method MUST be called after cy.visit(), as cy.injectAxe() must be called after page load
 export const testA11y = (context?: any, options?: Options) => {
+  // When the include context is a CSS selector string targeting a single host element
+  // (e.g. 'ds-full-item-page'), the host can satisfy :visible due to layout/padding
+  // before Angular has finished projecting its real content. In that state, axe-core
+  // walks the empty include and fails with "No elements found for include in page Context".
+  // Wait until the host has actually rendered child content before running axe.
+  if (typeof context === 'string') {
+    cy.get(`${context} *`, { timeout: 30000 }).should('exist');
+  }
   cy.injectAxe();
   cy.configureAxe({
     rules: [
