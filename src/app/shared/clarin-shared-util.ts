@@ -84,8 +84,6 @@ export function loadItemAuthors(item, itemAuthors, baseUrl, fields, orcidDomainU
   authorsMV.forEach((authorMV: MetadataValue) => {
     let isOrcid = false;
     let orcidUrl: string;
-    let searchValue: string;
-    let searchOperator: string;
     if (authorMV.authority) {
       const authority = String(authorMV.authority).trim();
       if (ORCID_URL_PATTERN.test(authority)) {
@@ -95,13 +93,10 @@ export function loadItemAuthors(item, itemAuthors, baseUrl, fields, orcidDomainU
         orcidUrl = `${domain}/${authority}`;
         isOrcid = true;
       }
-      searchValue = encodeURIComponent(authorMV.authority);
-      searchOperator = 'authority';
-    } else {
-      searchValue = encodeURIComponent(authorMV.value);
-      searchOperator = 'equals';
     }
-    const authorSearchLink = baseUrl + '/search?f.author=' + searchValue + ',' + searchOperator;
+    // Always redirect search by author name (equals), regardless of authority/ORCID.
+    // The ORCID iD is only used to build the orcidUrl for the ORCID icon link.
+    const authorSearchLink = baseUrl + '/search?f.author=' + encodeURIComponent(authorMV.value) + ',equals';
     const authorNameLink = Object.assign(new AuthorNameLink(), {
       name: authorMV.value,
       url: authorSearchLink,
