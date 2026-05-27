@@ -55,8 +55,12 @@ export const testA11y = (context?: any, options?: Options) => {
     cy.get(context, { timeout: 30000 }).should('exist');
     cy.get(`${context} *`, { timeout: 30000 }).should('exist');
     cy.get(context).then(($el) => {
+      // Pass ALL matched elements (not just the first) so that selectors which
+      // resolve to multiple nodes preserve the original string-context coverage.
+      // axe-core accepts an Array of Elements as Context.
+      const elements = $el.toArray();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      cy.checkA11y($el[0] as any, options, terminalLog);
+      cy.checkA11y(elements as any, options, terminalLog);
     });
     return;
   }
