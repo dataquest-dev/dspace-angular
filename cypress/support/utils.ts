@@ -40,5 +40,29 @@ export const testA11y = (context?: any, options?: Options) => {
       { id: 'color-contrast', enabled: false },
     ],
   });
+  // When the include context is a CSS selector string, axe-core re-resolves
+  // that selector at axe.run time via document.querySelectorAll. Between
+  // Cypress commands (injectAxe + configureAxe take a few ms each) Angular
+  // may re-render and the host element can briefly disappear from the
+  // document, causing axe to throw
+  // "No elements found for include in page Context".
+  //
+  // Fix: wait for the host to exist with rendered content, then resolve the
+  // selector to a live DOM Element here and pass that Element reference (not
+  // the selector string) to cy.checkA11y. axe-core uses the Element directly
+  // and does not re-query the document by selector, eliminating the race.
+  if (typeof context === 'string') {
+    cy.get(context, { timeout: 30000 }).should('exist');
+    cy.get(`${context} *`, { timeout: 30000 }).should('exist');
+    cy.get(context).then(($el) => {
+      // Pass ALL matched elements (not just the first) so that selectors which
+      // resolve to multiple nodes preserve the original string-context coverage.
+      // axe-core accepts an Array of Elements as Context.
+      const elements = $el.toArray();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cy.checkA11y(elements as any, options, terminalLog);
+    });
+    return;
+  }
   cy.checkA11y(context, options, terminalLog);
 };

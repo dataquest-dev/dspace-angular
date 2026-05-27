@@ -26,6 +26,12 @@ describe('Item  Page', () => {
     // <ds-full-item-page> tag must be loaded
     cy.get('ds-full-item-page').should('be.visible');
 
+    // Wait for the inner content (item-page) to actually render — the host
+    // element gets its size from padding/header even before the item details
+    // resolve, so visibility alone isn't enough for axe to find any nodes.
+    cy.get('ds-full-item-page .item-page', { timeout: 30000 }).should('exist');
+    cy.get('ds-full-item-page ds-item-page-title-field', { timeout: 30000 }).should('be.visible');
+
     // Analyze <ds-full-item-page> for accessibility issues
     testA11y('ds-full-item-page');
   });

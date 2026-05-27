@@ -46,6 +46,9 @@ describe('Edit Item > Status tab', () => {
     // <ds-item-status> tag must be loaded
     cy.get('ds-item-status').should('be.visible');
 
+    // Wait for the actual status content to render before running axe
+    cy.get('ds-item-status .status-label', { timeout: 30000 }).should('be.visible');
+
     // Analyze for accessibility issues
     testA11y('ds-item-status');
   });

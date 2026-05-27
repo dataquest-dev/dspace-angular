@@ -80,6 +80,9 @@ describe('Edit Community > Delete page', () => {
     // <ds-delete-community> tag must be loaded
     cy.get('ds-delete-community').should('be.visible');
 
+    // Wait for inner content to render before running axe
+    cy.get('ds-delete-community h1#header', { timeout: 30000 }).should('be.visible');
+
     // Analyze for accessibility issues
     testA11y('ds-delete-community');
   });
