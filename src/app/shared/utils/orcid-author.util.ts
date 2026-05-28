@@ -66,8 +66,23 @@ export function loadAuthorOrcidLinkTarget(
 }
 
 /**
+ * Extract the lowercase host of an absolute http(s) URL. Returns null on invalid input.
+ */
+function getHost(url: string | null | undefined): string | null {
+  if (!url) {
+    return null;
+  }
+  try {
+    return new URL(url).host.toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+/**
  * True when the authority string is a recognised ORCID value (bare iD or full URL).
  * Bare iDs require `orcidDomainUrl` so the link can be built without guessing the domain.
+ * URL authorities are only accepted when their host matches the configured ORCID domain.
  */
 export function isOrcidAuthorityValue(authority: string | undefined | null, orcidDomainUrl: string | null): boolean {
   if (!authority) {
@@ -75,7 +90,8 @@ export function isOrcidAuthorityValue(authority: string | undefined | null, orci
   }
   const trimmed = authority.trim();
   if (ORCID_URL_PATTERN.test(trimmed)) {
-    return true;
+    const expectedHost = getHost(orcidDomainUrl);
+    return !!expectedHost && getHost(trimmed) === expectedHost;
   }
   return !!orcidDomainUrl && ORCID_ID_PATTERN.test(trimmed);
 }
@@ -83,6 +99,7 @@ export function isOrcidAuthorityValue(authority: string | undefined | null, orci
 /**
  * Build the full ORCID profile URL for the given authority. Returns an empty string when
  * the authority is not an ORCID value or when the ORCID domain URL is required but missing.
+ * URL authorities are only accepted when their host matches the configured ORCID domain.
  */
 export function buildOrcidProfileUrl(authority: string | undefined | null, orcidDomainUrl: string | null): string {
   if (!authority) {
@@ -90,7 +107,11 @@ export function buildOrcidProfileUrl(authority: string | undefined | null, orcid
   }
   const trimmed = authority.trim();
   if (ORCID_URL_PATTERN.test(trimmed)) {
-    return trimmed;
+    const expectedHost = getHost(orcidDomainUrl);
+    if (expectedHost && getHost(trimmed) === expectedHost) {
+      return trimmed;
+    }
+    return '';
   }
   if (orcidDomainUrl && ORCID_ID_PATTERN.test(trimmed)) {
     const domain = orcidDomainUrl.endsWith('/') ? orcidDomainUrl.slice(0, -1) : orcidDomainUrl;
