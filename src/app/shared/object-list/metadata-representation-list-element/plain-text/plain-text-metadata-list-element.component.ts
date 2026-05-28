@@ -37,7 +37,7 @@ export class PlainTextMetadataListElementComponent extends MetadataRepresentatio
 
   /**
    * Target of the link rendered on the author name for an ORCID author. Loaded from the
-   * backend property `item.author.orcid.link-target`.
+    * backend property `orcid.author.link-target`.
    */
   authorOrcidLinkTarget$ = new BehaviorSubject<AuthorOrcidLinkTarget>(DEFAULT_AUTHOR_ORCID_LINK_TARGET);
 

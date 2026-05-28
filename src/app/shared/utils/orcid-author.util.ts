@@ -14,7 +14,7 @@ export const ORCID_ID_PATTERN = /^(\d{4}-){3}\d{3}[\dX]$/i;
 export const ORCID_URL_PATTERN = /^https?:\/\/[^/]+\/((\d{4}-){3}\d{3}[\dX])$/i;
 
 /**
- * Type of the backend property `item.author.orcid.link-target`.
+ * Type of the backend property `orcid.author.link-target`.
  * Controls the target of the link rendered on the author name for an ORCID-authority author.
  * Any unknown / unset value falls back to the default (`browse`).
  */
@@ -24,10 +24,10 @@ export type AuthorOrcidLinkTarget = string;
  * Name of the backend configuration property that controls the author-name link target
  * for ORCID-authority authors.
  */
-export const AUTHOR_ORCID_LINK_TARGET_PROPERTY = 'item.author.orcid.link-target';
+export const AUTHOR_ORCID_LINK_TARGET_PROPERTY = 'orcid.author.link-target';
 
 /**
- * Default value used when `item.author.orcid.link-target` is unset, invalid, or unreachable.
+ * Default value used when `orcid.author.link-target` is unset, invalid, or unreachable.
  */
 export const DEFAULT_AUTHOR_ORCID_LINK_TARGET: AuthorOrcidLinkTarget = 'browse';
 
@@ -49,7 +49,7 @@ export function loadOrcidDomainUrl(
 }
 
 /**
- * Load `item.author.orcid.link-target` from the backend configuration.
+ * Load `orcid.author.link-target` from the backend configuration.
  * Returns the default (`browse`) when the property is unset or invalid.
  */
 export function loadAuthorOrcidLinkTarget(
