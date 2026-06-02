@@ -429,9 +429,12 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
     );
 
     const primaryBitstream$ = bundle$.pipe(
-      hasValueOperator(),
-      switchMap((bundle: Bundle) => this.bitstreamService.findByHref(bundle._links.primaryBitstream.href)),
-      getFirstSucceededRemoteDataPayload(),
+      switchMap((bundle: Bundle) => {
+        if (hasValue(bundle) && hasValue(bundle._links) && hasValue(bundle._links.primaryBitstream) && hasValue(bundle._links.primaryBitstream.href)) {
+          return this.bitstreamService.findByHref(bundle._links.primaryBitstream.href).pipe(getFirstSucceededRemoteDataPayload());
+        }
+        return observableOf(undefined);
+      }),
     );
 
     const item$ = bundle$.pipe(
