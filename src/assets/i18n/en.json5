@@ -23,6 +23,12 @@
 
   "404.page-not-found": "Page not found",
 
+  "static-page.404.help": "The static page you requested does not exist. It may have been moved or deleted. You can use the button below to get back to the home page.",
+
+  "static-page.404.link.home-page": "Take me to the home page",
+
+  "static-page.404.page-not-found": "page not found",
+
   "error-page.description.401": "Unauthorized",
 
   "error-page.description.403": "Forbidden",
