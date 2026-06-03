@@ -9453,6 +9453,120 @@
   // "clarin-license.define-license-form.submit-button": "Save",
   "clarin-license.define-license-form.submit-button": "Uložit",
 
+  // "clarin.license.label.section.title": "License Labels",
+  "clarin.license.label.section.title": "Licenční štítky",
+
+  // "clarin.license.label.table.header.label": "Label",
+  "clarin.license.label.table.header.label": "Štítek",
+
+  // "clarin.license.label.table.header.title": "Title",
+  "clarin.license.label.table.header.title": "Název",
+
+  // "clarin.license.label.table.header.extended": "Extended",
+  "clarin.license.label.table.header.extended": "Rozšířený",
+
+  // "clarin.license.label.table.header.icon": "Icon",
+  "clarin.license.label.table.header.icon": "Ikona",
+
+  // "clarin.license.label.table.header.actions": "Actions",
+  "clarin.license.label.table.header.actions": "Akce",
+
+  // "clarin.license.label.table.boolean.yes": "Yes",
+  "clarin.license.label.table.boolean.yes": "Ano",
+
+  // "clarin.license.label.table.boolean.no": "No",
+  "clarin.license.label.table.boolean.no": "Ne",
+
+  // "clarin.license.label.table.icon.available": "Icon available",
+  "clarin.license.label.table.icon.available": "Ikona je k dispozici",
+
+  // "clarin.license.label.table.icon.none": "No icon",
+  "clarin.license.label.table.icon.none": "Bez ikony",
+
+  // "clarin.license.label.table.select.aria": "Select label {{label}}",
+  "clarin.license.label.table.select.aria": "Vybrat štítek {{label}}",
+
+  // "clarin.license.label.table.edit": "Edit",
+  "clarin.license.label.table.edit": "Upravit",
+
+  // "clarin.license.label.table.edit.aria": "Edit label {{label}}",
+  "clarin.license.label.table.edit.aria": "Upravit štítek {{label}}",
+
+  // "clarin.license.label.table.delete": "Delete",
+  "clarin.license.label.table.delete": "Odstranit",
+
+  // "clarin.license.label.table.delete.aria": "Delete label {{label}}",
+  "clarin.license.label.table.delete.aria": "Odstranit štítek {{label}}",
+
+  // "clarin.license.label.table.delete.disabled-tooltip": "Label \"{{label}}\" cannot be deleted because it is assigned to one or more licenses.",
+  "clarin.license.label.table.delete.disabled-tooltip": "Štítek \"{{label}}\" nelze odstranit, protože je přiřazen k jedné nebo více licencím.",
+
+  // "clarin.license.label.table.delete.checking-tooltip": "Checking whether this label is in use…",
+  "clarin.license.label.table.delete.checking-tooltip": "Zjišťuje se, zda se tento štítek používá…",
+
+  // "clarin.license.label.table.empty": "No license labels available.",
+  "clarin.license.label.table.empty": "Nejsou k dispozici žádné licenční štítky.",
+
+  // "clarin.license.label.table.loading": "Loading labels...",
+  "clarin.license.label.table.loading": "Načítají se licenční štítky...",
+
+  // "clarin.license.label.create.title": "Define License Label",
+  "clarin.license.label.create.title": "Definovat licenční štítek",
+
+  // "clarin.license.label.create.submit": "Save",
+  "clarin.license.label.create.submit": "Uložit",
+
+  // "clarin.license.label.create.success": "License label created successfully.",
+  "clarin.license.label.create.success": "Licenční štítek byl úspěšně vytvořen.",
+
+  // "clarin.license.label.create.error": "Failed to create license label.",
+  "clarin.license.label.create.error": "Nepodařilo se vytvořit licenční štítek.",
+
+  // "clarin.license.label.load.error": "Failed to load license labels.",
+  "clarin.license.label.load.error": "Nepodařilo se načíst licenční štítky.",
+
+  // "clarin.license.label.edit.title": "Edit License Label",
+  "clarin.license.label.edit.title": "Upravit licenční štítek",
+
+  // "clarin.license.label.edit.submit": "Save Changes",
+  "clarin.license.label.edit.submit": "Uložit změny",
+
+  // "clarin.license.label.edit.icon.note": "Leave empty to keep current icon.",
+  "clarin.license.label.edit.icon.note": "Ponechte prázdné, chcete-li zachovat stávající ikonu.",
+
+  // "clarin.license.label.edit.icon.preview": "Current icon",
+  "clarin.license.label.edit.icon.preview": "Stávající ikona",
+
+  // "clarin.license.label.edit.icon.clear": "Remove current icon",
+  "clarin.license.label.edit.icon.clear": "Odstranit stávající ikonu",
+
+  // "clarin.license.label.edit.success": "License label updated successfully.",
+  "clarin.license.label.edit.success": "Licenční štítek byl úspěšně aktualizován.",
+
+  // "clarin.license.label.edit.error": "Failed to update license label.",
+  "clarin.license.label.edit.error": "Nepodařilo se aktualizovat licenční štítek.",
+
+  // "clarin.license.label.modal.close": "Close",
+  "clarin.license.label.modal.close": "Zavřít",
+
+  // "clarin.license.label.delete.confirm.title": "Delete License Label \"{{ dsoName }}\"",
+  "clarin.license.label.delete.confirm.title": "Odstranit licenční štítek \"{{ dsoName }}\"",
+
+  // "clarin.license.label.delete.confirm.message": "Are you sure you want to delete the label \"{{ dsoName }}\"? This action cannot be undone.",
+  "clarin.license.label.delete.confirm.message": "Opravdu chcete odstranit štítek \"{{ dsoName }}\"? Tuto akci nelze vrátit zpět.",
+
+  // "clarin.license.label.delete.confirm.button": "Delete",
+  "clarin.license.label.delete.confirm.button": "Odstranit",
+
+  // "clarin.license.label.delete.cancel.button": "Cancel",
+  "clarin.license.label.delete.cancel.button": "Zrušit",
+
+  // "clarin.license.label.delete.success": "License label deleted successfully.",
+  "clarin.license.label.delete.success": "Licenční štítek byl úspěšně odstraněn.",
+
+  // "clarin.license.label.delete.error": "Failed to delete license label.",
+  "clarin.license.label.delete.error": "Nepodařilo se odstranit licenční štítek.",
+
   // "clarin-license.define-license.notification.successful-content": "License was defined successfully",
   "clarin-license.define-license.notification.successful-content": "Licence byla úspěšně definována",
 

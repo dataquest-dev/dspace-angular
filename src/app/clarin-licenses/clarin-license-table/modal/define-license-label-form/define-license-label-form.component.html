@@ -1,42 +1,50 @@
-<div class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{'clarin-license.define-license-form.form-name' | translate}}</h4>
-        <button type="button" class="btn btn-danger" (click)="activeModal.dismiss('Cross click')" aria-label="Left Align">
-          <span class="fas fa-times" aria-hidden="true"></span>
-        </button>
+<div class="modal-header">
+  <h4 class="modal-title" *ngIf="!isEditMode">{{'clarin.license.label.create.title' | translate}}</h4>
+  <h4 class="modal-title" *ngIf="isEditMode">{{'clarin.license.label.edit.title' | translate}}</h4>
+  <button type="button" class="btn btn-danger" (click)="activeModal.dismiss('Cross click')" [attr.aria-label]="'clarin.license.label.modal.close' | translate">
+    <span class="fas fa-times" aria-hidden="true"></span>
+  </button>
+</div>
+<form [formGroup]="clarinLicenseLabelForm" (ngSubmit)="submitForm()">
+  <div class="modal-body">
+    <div class="container">
+      <div class="form-group mt-4">
+        <label for="label">{{'clarin-license-label.define-license-label.input-label' | translate | dsAddChar: '*'}}</label>
+        <input id="label" type="text" class="form-control" formControlName="label"/>
       </div>
-      <form [formGroup]="clarinLicenseLabelForm" (ngSubmit)="submitForm()">
-        <div class="modal-boy">
-          <div class="container">
-            <div class="form-group mt-4">
-              <label id="label" for="label">{{'clarin-license-label.define-license-label.input-label' | translate | dsAddChar: '*'}}</label>
-              <input type="text" class="form-control" formControlName="label"/>
-            </div>
-            <div class="form-group mt-4">
-              <label id="title" for="title">{{'clarin-license-label.define-license-label.input-title' | translate | dsAddChar: '*'}}</label>
-              <input type="text" class="form-control" formControlName="title"/>
-            </div>
-            <div class="form-group mt-4">
-              <label id="extended" for="extended">{{'clarin-license-label.define-license-label.input-is-extended' | translate}}</label>
-              <select formControlName="extended" class="custom-select">
-                <option *ngFor="let isExtendedOption of extendedOptions">{{isExtendedOption}}</option>
-              </select>
-            </div>
-            <div class="form-group mt-4">
-              <label id="icon" for="icon">{{'clarin-license-label.define-license-label.input-icon' | translate}}</label>
-              <input type="file" class="form-control" formControlName="icon"/>
-            </div>
-          </div>
+      <div class="form-group mt-4">
+        <label for="title">{{'clarin-license-label.define-license-label.input-title' | translate | dsAddChar: '*'}}</label>
+        <input id="title" type="text" class="form-control" formControlName="title"/>
+      </div>
+      <div class="form-group mt-4">
+        <label for="extended">{{'clarin-license-label.define-license-label.input-is-extended' | translate}}</label>
+        <select id="extended" formControlName="extended" class="custom-select">
+          <option *ngFor="let isExtendedOption of extendedOptions" [ngValue]="isExtendedOption.value">
+            {{isExtendedOption.translationKey | translate}}
+          </option>
+        </select>
+      </div>
+      <div class="form-group mt-4">
+        <label for="icon">{{'clarin-license-label.define-license-label.input-icon' | translate}}</label>
+        <small *ngIf="isEditMode" class="form-text text-muted mb-1">{{'clarin.license.label.edit.icon.note' | translate}}</small>
+        <div *ngIf="isEditMode && hasIcon" class="mb-2">
+          <span class="d-block text-muted small mb-1">{{'clarin.license.label.edit.icon.preview' | translate}}</span>
+          <img [src]="currentIconUrl" class="border rounded" style="max-height: 48px; max-width: 120px;"
+               [attr.alt]="('clarin.license.label.edit.icon.preview' | translate)"/>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-success"
-                  [disabled]="!clarinLicenseLabelForm.valid">
-            {{'clarin-license.define-license-form.submit-button' | translate}}
-          </button>
+        <input id="icon" type="file" class="form-control" formControlName="icon"/>
+        <div *ngIf="isEditMode && hasIcon" class="form-check mt-2">
+          <input id="clearIcon" type="checkbox" class="form-check-input" formControlName="clearIcon"/>
+          <label class="form-check-label" for="clearIcon">{{'clarin.license.label.edit.icon.clear' | translate}}</label>
         </div>
-      </form>
+      </div>
     </div>
   </div>
-</div>
+  <div class="modal-footer">
+    <button class="btn btn-success"
+            [disabled]="!clarinLicenseLabelForm.valid">
+      <span *ngIf="!isEditMode">{{'clarin.license.label.create.submit' | translate}}</span>
+      <span *ngIf="isEditMode">{{'clarin.license.label.edit.submit' | translate}}</span>
+    </button>
+  </div>
+</form>
