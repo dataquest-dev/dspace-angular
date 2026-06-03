@@ -30,7 +30,7 @@ services:
     volumes:
     - ./config.prod.yml:/app/config/config.prod.yml
 #    - ./aai.js:/app/dist/browser/aai.js
-#    - ./dspace-ui.json:/app/docker/dspace-ui.json:rw
+#    - ./dspace-ui.json:/app/dspace-ui.json:rw
     build:
       context: ..
       dockerfile: Dockerfile

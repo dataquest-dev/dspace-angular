@@ -46,8 +46,13 @@ services:
       # follows DSPACE_SUBNET_PREFIX so an override there propagates here automatically.
       proxies__P__trusted__P__ipranges: '${DSPACE_SUBNET_PREFIX:-172.2${INSTANCE}}.0'
       # rest.cors.allowed-origins: comma-separated origin list the BE will respond to for CORS preflight.
-      # Default matches dspace.ui.url (i.e. UI_URL) — identical to the implicit default in
-      # dspace/config/modules/rest.cfg, so production / pyinfra behaviour is unchanged.
+      # When REST_CORS_ALLOWED_ORIGINS is unset this defaults to ${UI_URL} (same literal as
+      # dspace.ui.url above), which equals the implicit ${dspace.ui.url} default that
+      # dspace/config/modules/rest.cfg already computes — so the effective CORS allow-list is
+      # unchanged for production / pyinfra. NOTE: this now sends rest.cors.allowed-origins as an
+      # explicit env override on every deploy (previously the BE derived it internally from
+      # rest.cfg); the value is the same, but it will shadow rest.cfg if that ever ships a
+      # non-default cors list.
       # Local-dev sets REST_CORS_ALLOWED_ORIGINS to also include host.docker.internal and localhost
       # so the browser preflight succeeds regardless of which name resolves the BE.
       rest__P__cors__P__allowed__D__origins: ${REST_CORS_ALLOWED_ORIGINS:-${UI_URL:-http://127.0.0.1:4000}}
