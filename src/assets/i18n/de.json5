@@ -9161,14 +9161,6 @@
   // TODO New key - Add a translation
   "item.page.license.message": ["This item is", "and licensed under:"],
 
-  // "item.page.matomo-statistics.views.button": "Views",
-  // TODO New key - Add a translation
-  "item.page.matomo-statistics.views.button": "Views",
-
-  // "item.page.matomo-statistics.downloads.button": "Downloads",
-  // TODO New key - Add a translation
-  "item.page.matomo-statistics.downloads.button": "Downloads",
-
   // "item.page.acknowledgement.project-name": "Project name:",
   // TODO New key - Add a translation
   "item.page.acknowledgement.project-name": "Project name:",
@@ -9228,10 +9220,6 @@
   // "item.refbox.featured-service.share.message": "Share",
   // TODO New key - Add a translation
   "item.refbox.featured-service.share.message": "Share",
-
-  // "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
-  // TODO New key - Add a translation
-  "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
 
   // "item.view.box.author.message": "Author(s):",
   // TODO New key - Add a translation
