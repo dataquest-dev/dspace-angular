@@ -76,9 +76,21 @@
           </button>
         </div>
         <div class="btn-group pr-1">
-          <button type="button" class="btn btn-danger" [disabled]="selectedLicense == null" (click)="deleteLicense()">
-            {{'clarin-license.button.delete-license' | translate}}
-          </button>
+          <span
+            [ngbTooltip]="isSelectedLicenseInUse() ? ('clarin-license.button.delete-license.disabled-tooltip' | translate:{name: selectedLicense?.name}) : null"
+            container="body"
+            placement="top"
+            [attr.tabindex]="isSelectedLicenseInUse() ? 0 : null">
+            <button
+              type="button"
+              class="btn btn-danger"
+              [dsBtnDisabled]="selectedLicense == null || isSelectedLicenseInUse()"
+              (click)="selectedLicense != null && !isSelectedLicenseInUse() && deleteLicense()"
+              [attr.aria-label]="'clarin-license.button.delete-license' | translate">
+              <i class="fas fa-trash" aria-hidden="true"></i>
+              {{ 'clarin-license.button.delete-license' | translate }}
+            </button>
+          </span>
         </div>
       </div>
     </div>

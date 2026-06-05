@@ -15,7 +15,7 @@ import { DefineLicenseLabelFormComponent } from './modal/define-license-label-fo
 import { ClarinLicenseConfirmationSerializer } from '../../core/shared/clarin/clarin-license-confirmation-serializer';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
-import { isNull } from '../../shared/empty.util';
+import { hasNoValue, isNull } from '../../shared/empty.util';
 import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
 import { ClarinLicenseLabelDataService } from '../../core/data/clarin/clarin-license-label-data.service';
 import { ClarinLicenseLabelExtendedSerializer } from '../../core/shared/clarin/clarin-license-label-extended-serializer';
@@ -356,7 +356,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    * Delete selected license. If none license is selected do nothing.
    */
   deleteLicense() {
-    if (isNull(this.selectedLicense?.id)) {
+    if (hasNoValue(this.selectedLicense?.id) || this.isSelectedLicenseInUse()) {
       return;
     }
     this.clarinLicenseService.delete(String(this.selectedLicense.id))
@@ -367,6 +367,13 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
         this.notifyOperationStatus(deleteLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
         this.loadAllLicenses({ forceUsageReload: true });
       });
+  }
+
+  /**
+   * Returns whether selected license has attached bitstreams.
+   */
+  isSelectedLicenseInUse(): boolean {
+    return this.selectedLicense?.bitstreams > 0;
   }
 
   /**

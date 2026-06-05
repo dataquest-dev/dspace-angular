@@ -9423,6 +9423,9 @@
   // "clarin-license.button.delete-license": "Delete License",
   "clarin-license.button.delete-license": "Odstranit licenci",
 
+  // "clarin-license.button.delete-license.disabled-tooltip": "License \"{{name}}\" cannot be deleted because it is attached to one or more bitstreams.",
+  "clarin-license.button.delete-license.disabled-tooltip": "Licenci \"{{name}}\" nelze smazat, protože jsou k ní připojeny jeden nebo více bitstreamů.",
+
   // "clarin-license.button.search": "Search",
   "clarin-license.button.search": "Hledat",
 

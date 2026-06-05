@@ -16,8 +16,7 @@ import { PaginationServiceStub } from '../../shared/testing/pagination-service.s
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { defaultPagination } from '../clarin-license-table-pagination';
 import { ClarinLicenseLabelDataService } from '../../core/data/clarin/clarin-license-label-data.service';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { HostWindowService } from '../../shared/host-window.service';
 import { HostWindowServiceStub } from '../../shared/testing/host-window-service.stub';
 import {
@@ -67,6 +66,7 @@ describe('ClarinLicenseTableComponent', () => {
       findAll: mockLicenseRD$,
       create: createdLicenseRD$,
       put: createdLicenseRD$,
+      delete: createNoContentRemoteDataObject$(),
       searchBy: mockLicenseRD$,
       getLinkPath: observableOf('')
     });
@@ -220,6 +220,55 @@ describe('ClarinLicenseTableComponent', () => {
     // load table data
     expect((component as any).clarinLicenseService.searchBy).toHaveBeenCalled();
     expect((component as ClarinLicenseTableComponent).licensesRD$).not.toBeNull();
+  });
+
+  describe('license delete button', () => {
+    const getDeleteControls = () => {
+      const actionsRow = fixture.debugElement.query(By.css('.mt-2'));
+      const deleteWrapper = actionsRow.query(By.css('.btn-group.pr-1:last-child span'));
+      const deleteButton = deleteWrapper.query(By.css('button.btn-danger'));
+      return { deleteWrapper, deleteButton };
+    };
+
+    beforeEach(() => {
+      (clarinLicenseDataService.delete as jasmine.Spy).calls.reset();
+    });
+
+    it('should disable delete button and expose tooltip when selected license has bitstreams', () => {
+      component.selectedLicense = Object.assign({}, mockLicense, { bitstreams: 2 });
+      fixture.detectChanges();
+
+      const { deleteWrapper, deleteButton } = getDeleteControls();
+      const deleteTooltip = deleteWrapper.injector.get(NgbTooltip);
+
+      expect(deleteButton.attributes['aria-disabled']).toBe('true');
+      expect(deleteButton.nativeElement.classList.contains('disabled')).toBeTrue();
+      expect((deleteWrapper.nativeElement as HTMLElement).getAttribute('tabindex')).toBe('0');
+      expect(deleteTooltip.ngbTooltip as string).toContain('clarin-license.button.delete-l');
+    });
+
+    it('should not call delete when clicking disabled delete button', () => {
+      component.selectedLicense = Object.assign({}, mockLicense, { bitstreams: 1 });
+      fixture.detectChanges();
+
+      const { deleteButton } = getDeleteControls();
+      deleteButton.nativeElement.click();
+
+      expect((clarinLicenseDataService.delete as jasmine.Spy)).not.toHaveBeenCalled();
+    });
+
+    it('should enable delete button and call delete when selected license has no bitstreams', () => {
+      component.selectedLicense = Object.assign({}, mockLicense, { bitstreams: 0 });
+      fixture.detectChanges();
+
+      const { deleteWrapper, deleteButton } = getDeleteControls();
+      deleteButton.nativeElement.click();
+
+      expect(deleteButton.attributes['aria-disabled']).toBe('false');
+      expect(deleteButton.nativeElement.classList.contains('disabled')).toBeFalse();
+      expect((deleteWrapper.nativeElement as HTMLElement).getAttribute('tabindex')).toBeNull();
+      expect((clarinLicenseDataService.delete as jasmine.Spy)).toHaveBeenCalledWith(String(mockLicense.id));
+    });
   });
 
   describe('label edit flow', () => {

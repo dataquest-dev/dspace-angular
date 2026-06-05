@@ -6245,6 +6245,8 @@
 
   "clarin-license.button.delete-license": "Delete License",
 
+  "clarin-license.button.delete-license.disabled-tooltip": "License \"{{name}}\" cannot be deleted because it is attached to one or more bitstreams.",
+
   "clarin-license.button.search": "Search",
 
   "clarin-license.button.search.placeholder": "Search by the license name ...",
