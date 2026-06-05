@@ -34,28 +34,27 @@ Builds on PR #1289, which makes `docker/docker-compose-rest.yml` drivable from o
 
 ---
 
-## TL;DR
+## TL;DR — two commands
 
 ```bash
-# 1) BACKEND in Docker, WITH demo content (7.6.5 to match the FE) — ~2-4 min first boot
-cp docker/.env.local.example docker/.env.local                 # then edit per "Backend"
-docker compose --env-file docker/.env.local \
-  -f docker/docker-compose-rest.yml -f docker/db.entities.yml up -d
-#   wait: curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8087/server/api  => 200
-MSYS_NO_PATHCONV=1 docker exec dspace7 /dspace/bin/dspace index-discovery -b   # populate Solr
+# 0) one-time: use Node 18 (see .nvmrc) and install deps
+nvm use            # or: see Prerequisites for a portable Node 18
+yarn install
 
-# 2) FRONTEND natively (Node 18 on PATH, copy-webpack-plugin already ^11 + installed)
-DSPACE_REST_SSL=false DSPACE_REST_HOST=127.0.0.1 DSPACE_REST_PORT=8087 \
-  DSPACE_UI_HOST=localhost DSPACE_UI_PORT=4000 \
-  yarn start:dev                                               # live-reload on http://localhost:4000
+# 1) BACKEND: DSpace 7.6.5 + demo content at http://127.0.0.1:8087/server  (~2-4 min first run)
+build-scripts/run/dev.backend.sh           # add 'fresh' to wipe volumes + reload from scratch
 
-# 3) teardown (-v wipes DB/Solr volumes — see Gotcha #4)
-docker compose --env-file docker/.env.local \
-  -f docker/docker-compose-rest.yml -f docker/db.entities.yml down -v --remove-orphans
+# 2) FRONTEND: live-reload dev server on http://localhost:4000
+yarn start:dev:local
 ```
 
-The FE maps env vars onto `config/config.yml` (`rest.host`→`DSPACE_REST_HOST`, … ; env wins
-last — see `src/config/config.server.ts`), so no file edits are needed to point it at the BE.
+`dev.backend.sh` brings the backend up (correct 7.6.5 images, IPv4 host, CORS, demo dataset)
+and reindexes Solr; `start:dev:local` is `ng serve` with the right `DSPACE_REST_*` env baked in.
+Stop/wipe the backend with `docker compose -f docker/docker-compose-rest.yml -f docker/db.entities.yml down -v`.
+
+Everything below is the manual/explained version of those two commands (for customizing the
+instance, image set, or running the FE in Docker). The FE maps env vars onto `config/config.yml`
+(`rest.host`→`DSPACE_REST_HOST`, … ; env wins last — see `src/config/config.server.ts`).
 
 ---
 
