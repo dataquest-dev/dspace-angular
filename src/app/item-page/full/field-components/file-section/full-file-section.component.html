@@ -28,7 +28,7 @@
 
                           <ng-container *ngIf="file.hasMetadata('dc.description')">
                             <dt class="col-md-4">{{"item.page.filesection.description" | translate}}</dt>
-                            <dd class="col-md-8">{{file.firstMetadataValue("dc.description")}}</dd>
+                            <dd class="col-md-8" [attr.lang]="file.firstMetadata('dc.description')?.language | dsLang">{{file.firstMetadataValue("dc.description")}}</dd>
                           </ng-container>
                         </dl>
                     </div>
@@ -69,7 +69,7 @@
 
 
                             <dt class="col-md-4">{{"item.page.filesection.description" | translate}}</dt>
-                            <dd class="col-md-8">{{file.firstMetadataValue("dc.description")}}</dd>
+                            <dd class="col-md-8" [attr.lang]="file.firstMetadata('dc.description')?.language | dsLang">{{file.firstMetadataValue("dc.description")}}</dd>
                         </dl>
                     </div>
                     <div class="col-2">

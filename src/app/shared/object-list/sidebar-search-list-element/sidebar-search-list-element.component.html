@@ -10,6 +10,7 @@
 <ds-truncatable-part [externalToggle]="true" (truncated)="onTruncatedStateChange(3, $event)" *ngIf="description" [maxLines]="1" [background]="isCurrent() ? 'primary' : 'default'" [showToggle]="false">
   <div class="text-secondary"
        [ngClass]="isCurrent() ? 'text-light' : 'text-secondary'"
+       [attr.lang]="descriptionLang || null"
        [innerHTML]="description"></div>
 </ds-truncatable-part>
 <div *ngIf="expandable" class="toggleIcons">

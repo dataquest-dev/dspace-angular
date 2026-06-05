@@ -5690,6 +5690,14 @@
 
   "access-control-option-end-date-note": "Select the date until which the related access condition is applied",
 
+  "item.delete.virtual-metadata.info": "Show virtual metadata information",
+  "access-control.start-date.calendar-button": "Open start date calendar",
+  "access-control.end-date.calendar-button": "Open end date calendar",
+  "form.remove-related-item": "Remove related item",
+  "form.relation-group.save": "Save relation group",
+  "form.relation-group.delete": "Delete relation group",
+  "form.relation-group.clear": "Clear relation group",
+  "submission.cc-license.field-info": "More information about this license field",
   "vocabulary-treeview.search.form.add": "Add",
 
   "process.overview.unknown.user": "Unknown",

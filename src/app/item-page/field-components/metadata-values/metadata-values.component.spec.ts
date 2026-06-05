@@ -63,6 +63,15 @@ describe('MetadataValuesComponent', () => {
     }
   });
 
+  it('should render the metadata language as a normalized BCP 47 lang attribute', () => {
+    const langEls = fixture.debugElement.queryAll(By.css('[lang]'));
+    expect(langEls.length).toBeGreaterThan(0);
+    langEls.forEach((el) => {
+      expect(el.nativeElement.getAttribute('lang')).toEqual('en-US');
+    });
+    expect(fixture.nativeElement.innerHTML).not.toContain('lang="en_US"');
+  });
+
   it('should contain separators equal to the amount of metadata values minus one', () => {
     const separators = fixture.debugElement.queryAll(By.css('span.separator'));
     expect(separators.length).toBe(mockMetadata.length - 1);

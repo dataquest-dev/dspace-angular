@@ -1,7 +1,7 @@
 <ng-template #descTemplate>
   <span class="text-muted">
       <span class="item-list-job-title">
-        <span [innerHTML]="mdRepresentation.firstMetadataValue(['dc.description'])"></span>
+        <span [innerHTML]="mdRepresentation.firstMetadataValue(['dc.description'])" [attr.lang]="mdRepresentation.firstMetadata(['dc.description'])?.language | dsLang"></span>
       </span>
   </span>
 </ng-template>

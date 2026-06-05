@@ -23,7 +23,7 @@
                     [class.active]="activeMetric === 'views'"
                     (click)="selectMetric('views')">
               <div class="toggle-icon-wrapper">
-                <i class="far fa-eye"></i>
+                <i class="far fa-eye" aria-hidden="true"></i>
               </div>
               <div class="toggle-content">
                 <span>{{ 'statistics.views-downloads.views' | translate }}</span>
@@ -35,7 +35,7 @@
                     [class.active]="activeMetric === 'downloads'"
                     (click)="selectMetric('downloads')">
               <div class="toggle-icon-wrapper">
-                <i class="fas fa-download"></i>
+                <i class="fas fa-download" aria-hidden="true"></i>
               </div>
               <div class="toggle-content">
                 <span>{{ 'statistics.views-downloads.downloads' | translate }}</span>

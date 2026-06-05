@@ -8587,6 +8587,15 @@
   "access-control-option-end-date": "Povolit přístup do",
 
   // "access-control-option-end-date-note": "Select the date until which the related access condition is applied",
+
+  "item.delete.virtual-metadata.info": "Zobrazit informace o virtuálních metadatech",
+  "access-control.start-date.calendar-button": "Otevřít kalendář počátečního data",
+  "access-control.end-date.calendar-button": "Otevřít kalendář koncového data",
+  "form.remove-related-item": "Odebrat související položku",
+  "form.relation-group.save": "Uložit skupinu vztahů",
+  "form.relation-group.delete": "Smazat skupinu vztahů",
+  "form.relation-group.clear": "Vyčistit skupinu vztahů",
+  "submission.cc-license.field-info": "Více informací o tomto licenčním poli",
   "access-control-option-end-date-note": "Vyberte datum, do kterého má být typ přístupu aktivován",
 
   // "vocabulary-treeview.search.form.add": "Add",
