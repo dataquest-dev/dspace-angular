@@ -8,8 +8,9 @@ describe('Admin Workflow Page', () => {
   it('should pass accessibility tests', () => {
     // Page must first be visible
     cy.get('ds-admin-workflow-page').should('be.visible');
-    // At least one search result should be displayed
-    cy.get('[data-test="list-object"]').should('be.visible');
+    // At least one search result should be displayed. The supervision-configured search on a
+    // freshly-started CI backend can take a while to return, so allow extra time.
+    cy.get('[data-test="list-object"]', { timeout: 30000 }).should('be.visible');
     // Click each filter toggle to open *every* filter
     // (As we want to scan filter section for accessibility issues as well)
     cy.get('[data-test="filter-toggle"]').click({ multiple: true });

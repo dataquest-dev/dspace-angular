@@ -89,15 +89,20 @@ function login(email: string, password: string): void {
 Cypress.Commands.add('login', login);
 
 /**
- * Login user via displayed login form
+ * Login the given user via the displayed login form.
+ *
+ * NOTE: this previously used a programmatic cy.request() login as a workaround
+ * for admin logins hanging on CI. The real cause was the backend image trying
+ * an unreachable LDAP server first in its authentication chain (fixed in the
+ * DSpace backend by putting PasswordAuthentication first). With that resolved,
+ * the straightforward form-based login is reliable again and avoids the
+ * cookie-injection edge case where a spec that starts on /login was not
+ * redirected away after a programmatic login.
+ *
  * @param email email to login as
  * @param password password to login as
  */
-// Cypress custom command for form-based login with intercept and redirect assertion
-function loginViaForm(
-  email: string,
-  password: string
-): void {
+function loginViaForm(email: string, password: string): void {
   cy.wait(500);
 
   // Fill in credentials
@@ -106,7 +111,6 @@ function loginViaForm(
 
   // Submit the form
   cy.get('[data-test="login-button"]').click();
-
 }
 // Add as a Cypress command (i.e. assign to 'cy.loginViaForm')
 Cypress.Commands.add('loginViaForm', loginViaForm);
