@@ -3423,6 +3423,8 @@
   "item.view.box.author.preview.and": "a",
   // "item.view.box.author.preview.show-everyone": "show everyone:",
   "item.view.box.author.preview.show-everyone": "zobraz všechny autory",
+  // "item.view.box.author.preview.orcid-link.title": "View ORCID profile",
+  "item.view.box.author.preview.orcid-link.title": "Zobrazit ORCID profil",
   // "item.file.description.not.supported.video": "Your browser does not support the video tag.",
   "item.file.description.not.supported.video": "Váš prohlížeč nepodporuje videa.",
   // "item.file.description.name": "Name",

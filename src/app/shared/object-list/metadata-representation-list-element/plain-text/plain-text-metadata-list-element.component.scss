@@ -6,6 +6,14 @@
   }
 }
 
+.orcid-icon-link {
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
 .orcid-icon {
   color: #a6ce39; // Official ORCID green color
   font-size: 1em;

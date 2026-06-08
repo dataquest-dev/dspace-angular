@@ -8,20 +8,41 @@
     {{mdRepresentation.getValue()}}
   </a>
   <ng-container *ngIf="(mdRepresentation.representationType=='authority_controlled')">
-    <ng-container *ngIf="orcidDomainUrl$ | async as orcidDomainUrl; else noOrcidDomain">
-      <a *ngIf="isOrcidAuthority(orcidDomainUrl); else plainAuthority"
-         class="dont-break-out orcid-author-link"
-         [href]="getOrcidUrl(orcidDomainUrl)"
-         target="_blank"
-         rel="noopener noreferrer">
-        {{mdRepresentation.getValue()}}
-        <i class="fa-brands fa-orcid orcid-icon" aria-hidden="true"></i>
-      </a>
-      <ng-template #plainAuthority>
-        <span class="dont-break-out">{{mdRepresentation.getValue()}}</span>
+    <ng-container *ngIf="isOrcidAuthority(); else plainAuthority">
+      <ng-container *ngIf="(authorOrcidLinkTarget$ | async) === 'orcid'; else searchModeOrcid">
+        <!-- linkTarget === 'orcid': the whole author name + icon link to the ORCID profile. -->
+        <a class="dont-break-out orcid-author-link"
+           [href]="getOrcidUrl()"
+           target="_blank"
+           rel="noopener noreferrer"
+           [title]="'item.view.box.author.preview.orcid-link.title' | translate"
+           [attr.aria-label]="('item.view.box.author.preview.orcid-link.title' | translate) + ' ' + mdRepresentation.getValue()">
+          {{mdRepresentation.getValue()}}
+          <i class="fa-brands fa-orcid orcid-icon" aria-hidden="true"></i>
+        </a>
+      </ng-container>
+      <ng-template #searchModeOrcid>
+        <!-- Default linkTarget === 'browse': author name navigates to the browse-by-author page;
+             the ORCID icon is rendered as a separate link to the ORCID profile. -->
+        <ng-container *ngIf="hasBrowseDefinition(); else searchModeOrcidNoBrowse">
+          <a class="dont-break-out ds-browse-link"
+             [routerLink]="['/browse/', mdRepresentation.browseDefinition.id]"
+             [queryParams]="getAuthorityBrowseQueryParams()">
+            {{mdRepresentation.getValue()}}
+          </a>
+        </ng-container>
+        <ng-template #searchModeOrcidNoBrowse>
+          <span class="dont-break-out">{{mdRepresentation.getValue()}}</span>
+        </ng-template>
+        <a class="orcid-icon-link"
+           [href]="getOrcidUrl()"
+           target="_blank"
+           rel="noopener noreferrer"
+           [title]="'item.view.box.author.preview.orcid-link.title' | translate"><i
+          class="fa-brands fa-orcid orcid-icon" aria-hidden="true"></i></a>
       </ng-template>
     </ng-container>
-    <ng-template #noOrcidDomain>
+    <ng-template #plainAuthority>
       <span class="dont-break-out">{{mdRepresentation.getValue()}}</span>
     </ng-template>
   </ng-container>

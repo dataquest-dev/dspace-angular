@@ -4,9 +4,16 @@ import { BehaviorSubject } from 'rxjs';
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { MetadataRepresentationType } from '../../../../core/shared/metadata-representation/metadata-representation.model';
 import { MetadatumRepresentation } from '../../../../core/shared/metadata-representation/metadatum/metadatum-representation.model';
-import { getFirstCompletedRemoteData } from '../../../../core/shared/operators';
 import { VALUE_LIST_BROWSE_DEFINITION } from '../../../../core/shared/value-list-browse-definition.resource-type';
 import { metadataRepresentationComponent } from '../../../metadata-representation/metadata-representation.decorator';
+import {
+  AuthorOrcidLinkTarget,
+  buildOrcidProfileUrl,
+  DEFAULT_AUTHOR_ORCID_LINK_TARGET,
+  isOrcidAuthorityValue,
+  loadAuthorOrcidLinkTarget,
+  loadOrcidDomainUrl,
+} from '../../../utils/orcid-author.util';
 import { MetadataRepresentationListElementComponent } from '../metadata-representation-list-element.component';
 
 @metadataRepresentationComponent('Publication', MetadataRepresentationType.PlainText)
@@ -24,30 +31,23 @@ import { MetadataRepresentationListElementComponent } from '../metadata-represen
 export class PlainTextMetadataListElementComponent extends MetadataRepresentationListElementComponent implements OnInit {
 
   /**
-   * Regex pattern for ORCID identifiers: four groups of four digits separated by hyphens.
-   * The last group may end with an X (checksum digit).
+   * ORCID domain URL loaded from the backend.
    */
-  private static readonly ORCID_PATTERN = /^\d{4}-\d{4}-\d{4}-(\d{3}X|\d{4})$/;
-
   orcidDomainUrl$ = new BehaviorSubject<string | null>(null);
+
+  /**
+   * Target of the link rendered on the author name for an ORCID author. Loaded from the
+    * backend property `orcid.author.link-target`.
+   */
+  authorOrcidLinkTarget$ = new BehaviorSubject<AuthorOrcidLinkTarget>(DEFAULT_AUTHOR_ORCID_LINK_TARGET);
 
   constructor(private configurationService: ConfigurationDataService) {
     super();
   }
 
   ngOnInit(): void {
-    this.configurationService.findByPropertyName('orcid.domain-url').pipe(
-      getFirstCompletedRemoteData(),
-    ).subscribe((rd) => {
-      if (rd.hasFailed || !rd.hasSucceeded || !rd.payload?.values?.length) {
-        return;
-      }
-
-      const url = rd.payload.values[0]?.trim();
-      if (url && /^https?:\/\//i.test(url)) {
-        this.orcidDomainUrl$.next(url);
-      }
-    });
+    loadOrcidDomainUrl(this.configurationService).then((url) => this.orcidDomainUrl$.next(url));
+    loadAuthorOrcidLinkTarget(this.configurationService).then((t) => this.authorOrcidLinkTarget$.next(t));
   }
 
   /**
@@ -62,30 +62,46 @@ export class PlainTextMetadataListElementComponent extends MetadataRepresentatio
     return queryParams;
   }
 
-  isOrcidAuthority(orcidDomainUrl: string | null): boolean {
-    if (orcidDomainUrl === null) {
-      return false;
-    }
-    if (this.mdRepresentation instanceof MetadatumRepresentation) {
-      const authority = this.mdRepresentation.authority?.trim();
-      return !!authority && PlainTextMetadataListElementComponent.ORCID_PATTERN.test(authority);
-    }
-    return false;
+  /**
+   * Query parameters for the browse link of an authority-controlled value (e.g. ORCID author).
+   * Passes both `value` and `authority` so the browse page can call the REST endpoint with
+   * `filterValue` + `filterAuthority` and resolve items whose metadata is indexed by authority key.
+   */
+  getAuthorityBrowseQueryParams() {
+    return {
+      value: this.mdRepresentation.getValue(),
+      authority: this.getAuthority(),
+    };
   }
 
-  getOrcidUrl(orcidDomainUrl: string | null): string {
-    if (orcidDomainUrl === null) {
-      return '';
-    }
-    const authority = this.mdRepresentation instanceof MetadatumRepresentation
-      ? this.mdRepresentation.authority?.trim()
-      : undefined;
+  /**
+   * True when the current metadatum carries a browse definition (e.g. `dc.contributor.author`),
+   * which means the value can be rendered as a clickable browse link.
+   */
+  hasBrowseDefinition(): boolean {
+    return !!this.mdRepresentation?.browseDefinition;
+  }
 
-    if (!authority || !PlainTextMetadataListElementComponent.ORCID_PATTERN.test(authority)) {
-      return '';
-    }
+  /**
+   * Check whether the authority value of this metadata is an ORCID identifier.
+   * Accepts either a bare ORCID iD or a full ORCID URL.
+   */
+  isOrcidAuthority(): boolean {
+    return isOrcidAuthorityValue(this.getAuthority(), this.orcidDomainUrl$.value);
+  }
 
-    const base = orcidDomainUrl.endsWith('/') ? orcidDomainUrl : orcidDomainUrl + '/';
-    return `${base}${authority}`;
+  /**
+   * Build the full ORCID profile URL for the current author. Returns an empty string when
+   * the authority is not an ORCID value or when the ORCID domain URL is required but missing.
+   */
+  getOrcidUrl(): string {
+    return buildOrcidProfileUrl(this.getAuthority(), this.orcidDomainUrl$.value);
+  }
+
+  private getAuthority(): string | undefined {
+    if (this.mdRepresentation instanceof MetadatumRepresentation) {
+      return this.mdRepresentation.authority?.trim();
+    }
+    return undefined;
   }
 }
