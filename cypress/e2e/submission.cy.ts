@@ -148,12 +148,12 @@ describe('New Submission page', () => {
         // (NOTE: requires "force:true" cause Cypress claims this checkbox is covered by its own <span>)
         // CLARIN
         createItemProcess.clickOnDistributionLicenseToggle();
-        // click on the dropdown button to list options
-        createItemProcess.clickOnLicenseSelectionButton();
-        // select `Public Domain Mark (PD)` from the selection
-        createItemProcess.selectValueFromLicenseSelection(2);
-        // // selected value should be seen as selected value in the selection
-        createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
+        // NOTE: the CLARIN resource-license *selector* (ds-submission-section-clarin-license) is not
+        // part of the "Sample Collection" traditional submission form — that form only has the
+        // distribution-license section toggled above — so the selector steps below are skipped.
+        // createItemProcess.clickOnLicenseSelectionButton();
+        // createItemProcess.selectValueFromLicenseSelection(2);
+        // createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
         // CLARIN
 
         // Before using Cypress drag & drop, we have to manually trigger the "dragover" event.
