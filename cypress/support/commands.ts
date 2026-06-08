@@ -89,55 +89,28 @@ function login(email: string, password: string): void {
 Cypress.Commands.add('login', login);
 
 /**
- * Login the given user via the REST API and inject the resulting auth token
- * into the UI session cookie. Despite the historical "ViaForm" name this is
- * now a fully programmatic login — clicking through the UI form is unreliable
- * on the CI runners (the browser-side POST /api/authn/login routinely fails
- * to receive a response within Cypress' default 30s wait, which previously
- * caused every login-protected spec to fail with "No response ever
- * occurred"). Going through cy.request() instead bypasses the SSR layer and
- * any browser-side CORS/XSRF timing problems, then a single cy.visit('/')
- * forces Angular to rehydrate as an authenticated user.
+ * Login the given user via the displayed login form.
+ *
+ * NOTE: this previously used a programmatic cy.request() login as a workaround
+ * for admin logins hanging on CI. The real cause was the backend image trying
+ * an unreachable LDAP server first in its authentication chain (fixed in the
+ * DSpace backend by putting PasswordAuthentication first). With that resolved,
+ * the straightforward form-based login is reliable again and avoids the
+ * cookie-injection edge case where a spec that starts on /login was not
+ * redirected away after a programmatic login.
  *
  * @param email email to login as
  * @param password password to login as
  */
 function loginViaForm(email: string, password: string): void {
-  // Each invocation needs a fresh CSRF cookie/token pair, since prior tests
-  // (or this test's own beforeEach) explicitly clear the XSRF cookie.
-  cy.createCSRFCookie().then((csrfToken: string) => {
-    cy.task('getRestBaseURL').then((baseRestUrl: string) => {
-      cy.request({
-        method: 'POST',
-        url: baseRestUrl + '/api/authn/login',
-        headers: { [XSRF_REQUEST_HEADER]: csrfToken },
-        // form-urlencoded body, matching what the Angular login form sends
-        form: true,
-        body: { user: email, password: password },
-        // Be generous: the very first login on a freshly-started DSpace
-        // backend in CI can take well over 30s while Hibernate warms up.
-        timeout: 120000,
-      }).then((resp) => {
-        expect(resp.status, 'login POST status').to.eq(200);
-        expect(resp.headers, 'login response headers').to.have.property('authorization');
+  cy.wait(500);
 
-        // Persist the auth token into the UI cookie that Angular reads on
-        // bootstrap so the subsequent navigation is already authenticated.
-        const authHeader = resp.headers.authorization as string;
-        const authInfo: AuthTokenInfo = new AuthTokenInfo(authHeader);
-        cy.setCookie(TOKENITEM, JSON.stringify(authInfo));
-      });
-    });
-  });
+  // Fill in credentials
+  cy.get('[data-test="email"]').should('be.visible').type(email);
+  cy.get('[data-test="password"]').type(password);
 
-  // Force Angular to re-bootstrap with the new auth cookie. cy.reload()
-  // preserves the current URL, so specs that visit a restricted page first
-  // (e.g. /mydspace -> redirected to /login?returnUrl=/mydspace) still end up
-  // back at the original destination after login. For specs that visit
-  // /login directly, the login page sees the authenticated user on bootstrap
-  // and redirects to /home.
-  cy.reload();
-  cy.location('pathname', { timeout: 30000 }).should('not.match', /\/login$/);
+  // Submit the form
+  cy.get('[data-test="login-button"]').click();
 }
 // Add as a Cypress command (i.e. assign to 'cy.loginViaForm')
 Cypress.Commands.add('loginViaForm', loginViaForm);
