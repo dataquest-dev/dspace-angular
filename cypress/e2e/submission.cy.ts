@@ -59,10 +59,11 @@ describe('New Submission page', () => {
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
         cy.loginViaForm(Cypress.env('DSPACE_TEST_ADMIN_USER'), Cypress.env('DSPACE_TEST_ADMIN_PASSWORD'));
 
-        // The CLARIN submission form is heavy (loads several controlled vocabularies),
-        // so wait until it has fully rendered before interacting with it.
+        // NOTE: VSB configures dc.title as a <textarea> (not the upstream <input>), so the title
+        // field is matched by id only (#dc_title). The CLARIN form also loads several controlled
+        // vocabularies, so wait for the form to render before interacting with it.
         cy.get('ds-submission-edit').should('be.visible');
-        cy.get('input#dc_title', { timeout: 30000 }).should('exist');
+        cy.get('#dc_title', { timeout: 30000 }).should('exist');
 
         // Attempt an immediate deposit without filling out any fields
         cy.get('button#deposit').click();
@@ -79,13 +80,13 @@ describe('New Submission page', () => {
         // ngb-accordion) removes its fields from the DOM. Ensure it is expanded before asserting
         // on the title field.
         cy.get('body').then(($body) => {
-            if ($body.find('input#dc_title').length === 0) {
+            if ($body.find('#dc_title').length === 0) {
                 cy.get('div#traditionalpageone-header').click();
             }
         });
 
         // Title field should have class "is-invalid" applied, as it's required
-        cy.get('input#dc_title', { timeout: 15000 }).should('have.class', 'is-invalid');
+        cy.get('#dc_title', { timeout: 15000 }).should('have.class', 'is-invalid');
 
         // Date Year field should also have "is-valid" class
         cy.get('input#dc_date_issued_year').should('have.class', 'is-invalid');
@@ -134,12 +135,13 @@ describe('New Submission page', () => {
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
         cy.loginViaForm(Cypress.env('DSPACE_TEST_ADMIN_USER'), Cypress.env('DSPACE_TEST_ADMIN_PASSWORD'));
 
-        // The CLARIN submission form is heavy (loads several controlled vocabularies),
-        // so wait until it has fully rendered before interacting with it.
+        // NOTE: VSB configures dc.title as a <textarea> (not the upstream <input>), so the title
+        // field is matched by id only (#dc_title). The CLARIN form also loads several controlled
+        // vocabularies, so wait for the form to render before interacting with it.
         cy.get('ds-submission-edit').should('be.visible');
 
         // Fill out all required fields (Title, Date)
-        cy.get('input#dc_title', { timeout: 30000 }).type('DSpace logo uploaded via e2e tests');
+        cy.get('#dc_title', { timeout: 30000 }).type('DSpace logo uploaded via e2e tests');
         cy.get('input#dc_date_issued_year').type('2022');
 
         // Confirm the required license by checking checkbox
