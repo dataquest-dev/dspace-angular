@@ -200,16 +200,18 @@ describe('ClarinSubmissionSectionLicenseComponent test suite', () => {
         (app as any).pathCombiner = new JsonPatchOperationPathCombiner('sections', 'clarin-license');
 
         const wsiId = 42;
-        const baseHref = 'http://localhost/api/submission/workspaceitems';
+        const selfHref = 'http://localhost/api/submission/workspaceitems/' + wsiId;
 
-        spyOn(app as any, 'getActualWorkspaceItem').and.returnValue(
-          Promise.resolve({ payload: { id: wsiId } })
+        // The component now resolves the current submission object and PATCHes its
+        // self link directly, so stub getActualSubmissionItem with a succeeded
+        // RemoteData exposing _links.self.href.
+        spyOn(app as any, 'getActualSubmissionItem').and.returnValue(
+          Promise.resolve({ hasSucceeded: true, payload: { _links: { self: { href: selfHref } } } })
         );
         spyOn(app as any, 'updateSectionStatus').and.callFake(() => undefined);
 
         mockRequestService.generateRequestId.and.returnValue('req-id-1');
         mockRequestService.send.calls.reset();
-        mockHalService.getEndpoint.and.returnValue(of(baseHref));
         mockRdbService.buildFromRequestUUID.and.returnValue(of({ payload: { sections: {}, errors: [] } } as any));
 
         // Act
@@ -217,7 +219,7 @@ describe('ClarinSubmissionSectionLicenseComponent test suite', () => {
           // Assert
           expect(mockRequestService.send).toHaveBeenCalledTimes(1);
           const sentRequest = mockRequestService.send.calls.mostRecent().args[0] as PatchRequest;
-          expect(sentRequest.href).toBe(baseHref + '/' + wsiId);
+          expect(sentRequest.href).toBe(selfHref);
           const body: any[] = (sentRequest as any).body;
           expect(body.length).toBe(1);
           expect(body[0].op).toBe('replace');
