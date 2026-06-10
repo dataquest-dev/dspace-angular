@@ -41,16 +41,22 @@ Builds on PR #1289, which makes `docker/docker-compose-rest.yml` drivable from o
 nvm use            # or: see Prerequisites for a portable Node 18
 yarn install
 
-# 1) BACKEND: DSpace 7.6.5 + demo content at http://127.0.0.1:8087/server  (~2-4 min first run)
-build-scripts/run/dev.backend.sh           # add 'fresh' to wipe volumes + reload from scratch
+# 1) BACKEND: DSpace 7.6.x at http://127.0.0.1:8087/server (~2-4 min first run). The image set is
+#    recognised automatically (read from the compose files) and the script prints + validates the
+#    running version/flavor after boot. Two flavors:
+build-scripts/run/dev.backend.sh                       # upstream public demo (default): right version, public content
+FLAVOR=clarin build-scripts/run/dev.backend.sh fresh   # the CORRECT CLARIN backend (dataquest) + CLARIN content
+#    ('fresh' wipes volumes — required when switching flavor, since -loadsql only loads an empty DB)
 
 # 2) FRONTEND: live-reload dev server on http://localhost:4000
 yarn start:dev:local
 ```
 
-`dev.backend.sh` brings the backend up (correct 7.6.5 images, IPv4 host, CORS, demo dataset)
-and reindexes Solr; `start:dev:local` is `ng serve` with the right `DSPACE_REST_*` env baked in.
-Stop/wipe the backend with `docker compose -f docker/docker-compose-rest.yml -f docker/db.entities.yml down -v`.
+`dev.backend.sh` brings the backend up (IPv4 host, CORS derived from `UI_PORT`, sample dataset),
+reindexes Solr, then **recognises the running backend** and warns if its version/flavor won't match
+this FE; `start:dev:local` is `ng serve` with the right `DSPACE_REST_*` env baked in.
+Stop/wipe with `docker compose -f docker/docker-compose-rest.yml -f docker/db.entities.yml down -v`
+(swap in `-f docker/db.clarin.yml` for the CLARIN flavor).
 
 Everything below is the manual/explained version of those two commands (for customizing the
 instance, image set, or running the FE in Docker). The FE maps env vars onto `config/config.yml`
@@ -62,6 +68,37 @@ instance, image set, or running the FE in Docker). The FE maps env vars onto `co
 
 `docker/docker-compose-rest.yml` fully defines the network, so the BE comes up from that file
 (plus `db.entities.yml` for demo data) — no `docker-compose.yml` (that's the FE container).
+
+### Backend image — recognised automatically (don't hardcode it)
+
+`dev.backend.sh` does **not** hard-code the backend image. It **reads the image tags from the repo's
+own compose files** (the source of truth), selects a set by `FLAVOR`, and after boot recognises the
+running backend — printing its image, version, flavor, and a browse-definitions canary (the DSpace-7.5
+mismatch trap). The image the compose file declares as its *default* is deliberately **not** the one to
+run as-is:
+
+| Source (in the code) | REST image | Flavor | Version |
+|---|---|---|---|
+| `docker/docker-compose-rest.yml:70` (compose default) | `dataquest/dspace:dtq-dev-7.5` | CLARIN | **7.5 — breaks browse-defs vs this 7.6.x FE** |
+| `docker/docker-compose-ci.yml:38` (what CI validates) | `dataquest/dspace:dspace-7_x-test` | CLARIN | 7.6.x ✅ |
+| `dev.backend.sh` `FLAVOR=upstream` (default) | `dspace/dspace:dspace-7_x` | upstream demo | 7.6.x ✅ |
+
+So `FLAVOR=clarin` reads the **CI** default (version-correct CLARIN), *not* the rest.yml default;
+`FLAVOR=upstream` (default) keeps the instant public-demo path. The post-boot recogniser prints:
+
+```
+ Backend recognised:
+   image    : dspace/dspace:dspace-7_x
+   version  : DSpace 7.6.7-SNAPSHOT    (this FE is 7.6.5)
+   flavor   : upstream demo (CLARIN endpoints/content ABSENT)
+   browse-definitions canary : HTTP 200  (OK)
+   note: for the CORRECT CLARIN backend (CLARIN endpoints + content) run:
+           FLAVOR=clarin build-scripts/run/dev.backend.sh fresh
+```
+
+(`FLAVOR=clarin` uses `docker/db.clarin.yml`, the CLARIN counterpart of `db.entities.yml`: a `-loadsql`
+Postgres fed the dataquest CLARIN test dump — same image + dump that CI validates. First run pulls
+~1-2 GB of dataquest images.)
 
 `docker/.env.local` for this recipe:
 
@@ -171,10 +208,12 @@ errors are normal: `favicon.ico` 404, Matomo refused, `google.analytics.key` 404
    **both** `DSPACE_REST_HOST` and `REST_URL` on `127.0.0.1`. (`curl` hides this — it falls back
    to IPv4.)
 
-6. **Match the BE to the FE version.** The FE reports **7.6.5**, so use a **7.6.5** BE
-   (`dspace/dspace:dspace-7_x` or `dataquest/dspace:dspace-7_x`). The `dataquest/dspace:dtq-dev-7.5`
-   image is **DSpace 7.5** and causes `An error occurred while retrieving the browse definitions`
-   in the console.
+6. **Match the BE to the FE version — now auto-checked.** The FE is **7.6.x**, so use a **7.6.x** BE.
+   The `dataquest/dspace:dtq-dev-7.5` image (the compose *default*, see "Backend image — recognised
+   automatically") is **DSpace 7.5** and causes `An error occurred while retrieving the browse
+   definitions` in the console. `dev.backend.sh` now handles this for you: it picks a 7.6.x image by
+   `FLAVOR` and runs a browse-definitions canary after boot, warning loudly if a 7.5-style BE is
+   detected. For CLARIN fidelity use `FLAVOR=clarin` (the version-correct `dataquest/dspace:dspace-7_x-test`).
 
 7. **Demo data ≠ empty repo, and Solr needs reindexing.** A fresh DB shows an empty homepage —
    that's expected, not a bug. Layer `db.entities.yml` (Option A) for sample content, then run

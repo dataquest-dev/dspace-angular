@@ -1,0 +1,34 @@
+#
+# CLARIN/dataquest content layer for LOCAL DEV.
+# Used by build-scripts/run/dev.backend.sh when FLAVOR=clarin.
+#
+# This is the CLARIN counterpart of docker/db.entities.yml: instead of the upstream demo dataset it
+# loads the dataquest CLARIN test database dump, and it skips the upstream Entities-specific
+# item-submission tweaks. The image + dump are the same ones DSpace CI validates
+# (see docker/docker-compose-ci.yml: DSPACE_CI_IMAGE / LOADSQL).
+#
+# Layer it on top of docker-compose-rest.yml:
+#   docker compose -f docker/docker-compose-rest.yml -f docker/db.clarin.yml up -d
+#
+# IMPORTANT: a -loadsql image only imports into an EMPTY pgdata volume, so switch flavors clean:
+#   FLAVOR=clarin build-scripts/run/dev.backend.sh fresh
+#
+services:
+  dspacedb:
+    # Upstream "loadsql" loader image (already pulled for the demo path). The loader flavor is
+    # irrelevant — the CONTENT is CLARIN, fetched from ${LOADSQL} on first boot.
+    image: ${DOCKER_REGISTRY:-docker.io}/dspace/dspace-postgres-pgcrypto:${DSPACE_VER:-dspace-7_x}-loadsql
+    environment:
+      # dataquest CLARIN test DB dump. Keep in sync with docker/docker-compose-ci.yml.
+      - LOADSQL=${LOADSQL:-https://github.com/dataquest-dev/DSpace/releases/download/data/dspace-test-database-dump_29.1.2024.sql}
+  dspace:
+    ### OVERRIDE the default 'entrypoint' from docker-compose-rest.yml ###
+    # 1. wait until Postgres is reachable, 2. migrate (ignored = tolerate out-of-order CLARIN
+    #    migrations), 3. start Tomcat. dev.backend.sh runs `index-discovery -b` once the API is up.
+    entrypoint:
+      - /bin/bash
+      - '-c'
+      - |
+        while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
+        /dspace/bin/dspace database migrate ignored
+        catalina.sh run
