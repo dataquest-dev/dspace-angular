@@ -5,10 +5,12 @@ import {
 } from '@angular/common';
 import {
   AfterViewInit,
+  ApplicationRef,
   ChangeDetectionStrategy,
   Component,
   HostListener,
   Inject,
+  NgZone,
   OnInit,
   PLATFORM_ID,
 } from '@angular/core';
@@ -34,6 +36,8 @@ import {
 import {
   delay,
   distinctUntilChanged,
+  filter,
+  first,
   take,
   withLatestFrom,
 } from 'rxjs/operators';
@@ -100,16 +104,53 @@ export class AppComponent implements OnInit, AfterViewInit {
     private cssService: CSSVariableService,
     private modalService: NgbModal,
     private modalConfig: NgbModalConfig,
+    private appRef: ApplicationRef,
+    private ngZone: NgZone,
   ) {
     this.notificationOptions = environment.notifications;
 
     if (isPlatformBrowser(this.platformId)) {
       this.trackIdleModal();
+      this.removeSsrOverlayWhenStable();
     }
 
     this.isThemeLoading$ = this.themeService.isThemeLoading$;
 
     this.storeCSSVariables();
+  }
+
+  /**
+   * Drops the hydration-safe SSR freeze-frame installed by the inline bootstrap script in
+   * src/index.html once Angular reaches its first stable state. On DSpace 9 (Angular 18) the
+   * page DOES hydrate, but the theme system re-creates every `ds-themed-*` wrapper imperatively
+   * on the client (see ThemedComponent), so the SSR view is briefly rebuilt; the overlay clone
+   * masks that rebuild. We wait for the first stable paint, add a short pad, then fade it out.
+   * A 15s hard fallback lives inside the script itself in case isStable never fires.
+   */
+  private removeSsrOverlayWhenStable(): void {
+    const w: Window | undefined = this._window?.nativeWindow;
+    if (!w || typeof w.__dspaceRemoveSsrOverlay !== 'function') {
+      return;
+    }
+    // run outside Angular so we don't keep changeDetection ticking on the overlay timer
+    this.ngZone.runOutsideAngular(() => {
+      this.appRef.isStable.pipe(
+        filter((stable: boolean) => stable),
+        first(),
+      ).subscribe(() => {
+        // one rAF + small pad to let the first stable paint commit before fading the overlay
+        const remove = () => {
+          if (typeof w.__dspaceRemoveSsrOverlay === 'function') {
+            w.__dspaceRemoveSsrOverlay();
+          }
+        };
+        if (typeof w.requestAnimationFrame === 'function') {
+          w.requestAnimationFrame(() => setTimeout(remove, 50));
+        } else {
+          setTimeout(remove, 50);
+        }
+      });
+    });
   }
 
   ngOnInit() {

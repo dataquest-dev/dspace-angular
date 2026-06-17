@@ -7,10 +7,95 @@
   <title>DSpace</title>
   <meta name="viewport" content="width=device-width,minimum-scale=1">
   <meta http-equiv="cache-control" content="no-store">
+  <style id="__dspace-ssr-overlay-style">
+    /* Hydration-safe anti-flicker overlay (DSpace 9 / Angular 18).
+       Unlike the Angular-15 variant, this NEVER moves or mutates the SSR DOM that Angular
+       hydrates — it only paints a detached *clone* on top. See the bootstrap script below +
+       AppComponent.removeSsrOverlayWhenStable. Root cause this masks: DSpace's ThemedComponent
+       instantiates themed wrappers imperatively (ViewContainerRef.createComponent in
+       ngAfterViewInit), which Angular hydration cannot reuse, so every themed subtree is
+       re-created client-side. Tracked upstream: DSpace/dspace-angular#3867. */
+    #__dspace_ssr_overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: #fff;
+      overflow: hidden;
+      pointer-events: none;
+    }
+  </style>
 </head>
 
 <body>
   <ds-app></ds-app>
+<script>
+/*
+  Hydration-safe anti-flicker overlay (DSpace 9 / Angular 18 + provideClientHydration).
+
+  Why a different approach than the Angular-15 instances: this app DOES hydrate, but DSpace's
+  theme system defeats it. Every visible wrapper is a `ds-themed-*` (ThemedComponent) that builds
+  its real content imperatively via ViewContainerRef.createComponent() in a client-side, async
+  ngAfterViewInit (dynamic import of the theme chunk), and removes the projected SSR content.
+  Angular hydration can't reuse imperatively-created components, and the SSR markup no longer
+  matches the declarative template -> node mismatch (NG0500) -> destructive re-render of the
+  themed subtrees -> the flash. Upstream issue: DSpace/dspace-angular#3867.
+
+  We therefore must NOT touch the DOM Angular hydrates (the 15.x overlay MOVED nodes, which would
+  *worsen* the mismatch here). Instead we paint a detached CLONE of the SSR view on top, let
+  hydration + the themed re-render happen invisibly underneath on the untouched original, and drop
+  the clone once ApplicationRef.isStable (AppComponent.removeSsrOverlayWhenStable), with a 15s
+  hard fallback.
+*/
+(function () {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  // Cypress drives the real app; a duplicated clone would break element-uniqueness selectors.
+  if (typeof window.Cypress !== 'undefined') return;
+  try {
+    var app = document.querySelector('ds-app');
+    // No SSR content (e.g. an SSR-excluded route) -> nothing to mask.
+    if (!app || !app.firstElementChild) return;
+    if (document.getElementById('__dspace_ssr_overlay')) return;
+
+    var overlay = document.createElement('div');
+    overlay.id = '__dspace_ssr_overlay';
+    // It's a visual duplicate of content the real app still exposes; hide it from a11y tree.
+    overlay.setAttribute('aria-hidden', 'true');
+
+    // CLONE (deep), never move: the originals stay exactly where Angular expects to hydrate them.
+    // The clone keeps every _nghost/_ngcontent attribute, so the global component styles in <head>
+    // still apply and the frozen frame looks identical to the SSR paint.
+    overlay.appendChild(app.cloneNode(true));
+    document.body.appendChild(overlay);
+
+    var removing = false;
+    window.__dspaceRemoveSsrOverlay = function () {
+      // Re-entrancy guard so a racing isStable + the 15s fallback can't double-run the fade.
+      if (removing) return;
+      removing = true;
+      window.__dspaceRemoveSsrOverlay = null;
+
+      var el = document.getElementById('__dspace_ssr_overlay');
+      if (!el) return;
+      el.style.transition = 'opacity 150ms ease-out';
+      el.style.opacity = '0';
+      setTimeout(function () {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+      }, 200);
+    };
+
+    // Safety net: if isStable never fires, never trap the user behind the frozen frame.
+    setTimeout(function () {
+      if (typeof window.__dspaceRemoveSsrOverlay === 'function') {
+        window.__dspaceRemoveSsrOverlay();
+      }
+    }, 15000);
+  } catch (e) {
+    if (window.console && typeof console.warn === 'function') {
+      console.warn('[dspace-ssr-overlay] disabled due to error:', e);
+    }
+  }
+})();
+</script>
 </body>
 
 <!-- do not include client bundle, it is injected with Zone already loaded -->
