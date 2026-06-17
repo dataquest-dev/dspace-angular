@@ -1,9 +1,10 @@
 import { Store, StoreModule } from '@ngrx/store';
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ApplicationRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 
 // Load the implementations that should be tested
 import { AppComponent } from './app.component';
@@ -126,5 +127,63 @@ describe('App component', () => {
       expect(store.dispatch).toHaveBeenCalledWith(new HostWindowResizeAction(width, height));
     });
 
+  });
+
+  describe('removeSsrOverlayWhenStable', () => {
+    // The inline bootstrap script in src/index.html injects window.__dspaceRemoveSsrOverlay
+    // and AppComponent must call it exactly once when ApplicationRef.isStable first emits true.
+    let appRef: ApplicationRef;
+    let isStable$: BehaviorSubject<boolean>;
+    let originalRaF: typeof window.requestAnimationFrame;
+
+    beforeEach(() => {
+      appRef = TestBed.inject(ApplicationRef);
+      isStable$ = new BehaviorSubject<boolean>(false);
+      // Patch isStable to our controllable subject for this test only
+      Object.defineProperty(appRef, 'isStable', { value: isStable$.asObservable() });
+
+      // Force rAF to a synchronous shim so we can flush() through the chain deterministically.
+      originalRaF = window.requestAnimationFrame;
+      (window as any).requestAnimationFrame = (cb: FrameRequestCallback) => {
+        cb(0);
+        return 0 as any;
+      };
+    });
+
+    afterEach(() => {
+      (window as any).requestAnimationFrame = originalRaF;
+      delete (window as any).__dspaceRemoveSsrOverlay;
+    });
+
+    it('removes the overlay once isStable emits true', fakeAsync(() => {
+      const spy = jasmine.createSpy('__dspaceRemoveSsrOverlay');
+      window.__dspaceRemoveSsrOverlay = spy;
+
+      // Re-construct so the constructor-time subscription picks up our patched isStable + global.
+      const f = TestBed.createComponent(AppComponent);
+      f.detectChanges();
+
+      expect(spy).not.toHaveBeenCalled();
+
+      isStable$.next(true);
+      tick(50); // matches the 50ms pad after rAF in removeSsrOverlayWhenStable
+      flush();
+
+      expect(spy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('is a no-op when the global is not injected (e.g. CSR-only route, SSR skipped)', fakeAsync(() => {
+      // Global intentionally absent; constructor should not throw and should not break later.
+      delete (window as any).__dspaceRemoveSsrOverlay;
+
+      const f = TestBed.createComponent(AppComponent);
+      expect(() => f.detectChanges()).not.toThrow();
+
+      isStable$.next(true);
+      tick(50);
+      flush();
+
+      expect(window.__dspaceRemoveSsrOverlay).toBeUndefined();
+    }));
   });
 });
