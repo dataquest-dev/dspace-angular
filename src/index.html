@@ -58,8 +58,10 @@
 
     var overlay = document.createElement('div');
     overlay.id = '__dspace_ssr_overlay';
-    // It's a visual duplicate of content the real app still exposes; hide it from a11y tree.
+    // It's a visual duplicate of content the real app still exposes; hide it from a11y tree
+    // and make it inert so keyboard focus can't land on the dead cloned controls.
     overlay.setAttribute('aria-hidden', 'true');
+    overlay.setAttribute('inert', '');
 
     // CLONE (deep), never move: the originals stay exactly where Angular expects to hydrate them.
     // The clone keeps every _nghost/_ngcontent attribute, so the global component styles in <head>
