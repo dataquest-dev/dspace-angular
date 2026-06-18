@@ -103,17 +103,28 @@
       removing = true;
       window.__dspaceRemoveSsrOverlay = null;
 
-      var el = document.getElementById('__dspace_ssr_overlay');
-      if (!el) return;
+      // Always unhide the real <ds-app> and drop the kept SSR styles first, even if the
+      // overlay node has gone missing (e.g. removed by an extension or another script).
+      // A bare early return here would otherwise leave the app permanently hidden.
       app.removeAttribute('data-dspace-ssr-hidden');
-      el.style.transition = 'opacity 150ms ease-out';
-      el.style.opacity = '0';
-      setTimeout(function () {
-        if (el && el.parentNode) el.parentNode.removeChild(el);
+
+      var removeKeptStyles = function () {
         for (var i = 0; i < keptStyles.length; i++) {
           if (keptStyles[i].parentNode) keptStyles[i].parentNode.removeChild(keptStyles[i]);
         }
         keptStyles = [];
+      };
+
+      var el = document.getElementById('__dspace_ssr_overlay');
+      if (!el) {
+        removeKeptStyles();
+        return;
+      }
+      el.style.transition = 'opacity 150ms ease-out';
+      el.style.opacity = '0';
+      setTimeout(function () {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+        removeKeptStyles();
       }, 200);
     };
 
