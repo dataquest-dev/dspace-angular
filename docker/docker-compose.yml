@@ -30,10 +30,19 @@ services:
     volumes:
     - ./config.prod.yml:/app/config/config.prod.yml
 #    - ./aai.js:/app/dist/browser/aai.js
-#    - ./dspace-ui.json:/app/docker/dspace-ui.json:rw
+#    - ./dspace-ui.json:/app/dspace-ui.json:rw
     build:
       context: ..
       dockerfile: Dockerfile
+    # host.docker.internal lets the FE container reach the BE through the host
+    # gateway when both are not on the same docker network (typical local-dev
+    # case where the FE is just the one container started from this file and
+    # the BE is reached at a host port). Docker Desktop on Mac/Windows already
+    # injects this; on Linux Docker (>= 20.10) `host-gateway` makes it resolve
+    # to the host. In production / pyinfra deploys this is a no-op because the
+    # BE is reached via its public DNS name (dev-5.pc etc.), not host.docker.internal.
+    extra_hosts:
+    - host.docker.internal:host-gateway
     networks:
       dspacenet:
     entrypoint: ${FE_CMD:-/bin/sh -c "pm2-runtime start dspace-ui.json > /dev/null 2> /dev/null"}

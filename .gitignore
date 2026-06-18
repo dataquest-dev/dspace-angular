@@ -47,3 +47,7 @@ python_data_import/debug.log.txt
 python_data_import/logs.txt
 python_data_import/date.txt
 */__pycache__/
+
+# Local-dev compose env created by copying docker/.env.local.example. Per-developer,
+# never committed. The .example template IS committed.
+/docker/.env.local
