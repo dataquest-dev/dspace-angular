@@ -135,12 +135,16 @@ describe('App component', () => {
     let appRef: ApplicationRef;
     let isStable$: BehaviorSubject<boolean>;
     let originalRaF: typeof window.requestAnimationFrame;
+    let originalIsStable: PropertyDescriptor | undefined;
 
     beforeEach(() => {
       appRef = TestBed.inject(ApplicationRef);
       isStable$ = new BehaviorSubject<boolean>(false);
-      // Patch isStable to our controllable subject for this test only
-      Object.defineProperty(appRef, 'isStable', { value: isStable$.asObservable() });
+      // Patch isStable to our controllable subject for this test only. Keep it configurable and
+      // remember the previous descriptor so afterEach can restore it - otherwise the override
+      // leaks onto the shared TestBed ApplicationRef instance and into later specs.
+      originalIsStable = Object.getOwnPropertyDescriptor(appRef, 'isStable');
+      Object.defineProperty(appRef, 'isStable', { value: isStable$.asObservable(), configurable: true });
 
       // Force rAF to a synchronous shim so we can flush() through the chain deterministically.
       originalRaF = window.requestAnimationFrame;
@@ -153,6 +157,12 @@ describe('App component', () => {
     afterEach(() => {
       (window as any).requestAnimationFrame = originalRaF;
       delete (window as any).__dspaceRemoveSsrOverlay;
+      // Restore isStable so the patched observable cannot leak into later specs.
+      if (originalIsStable) {
+        Object.defineProperty(appRef, 'isStable', originalIsStable);
+      } else {
+        delete (appRef as any).isStable;
+      }
     });
 
     it('removes the overlay once isStable emits true', fakeAsync(() => {
@@ -184,6 +194,22 @@ describe('App component', () => {
       flush();
 
       expect(window.__dspaceRemoveSsrOverlay).toBeUndefined();
+    }));
+
+    it('still removes the overlay when requestAnimationFrame is unavailable', fakeAsync(() => {
+      // Exercises the fallback scheduler branch in removeSsrOverlayWhenStable.
+      const spy = jasmine.createSpy('__dspaceRemoveSsrOverlay');
+      window.__dspaceRemoveSsrOverlay = spy;
+      (window as any).requestAnimationFrame = undefined;
+
+      const f = TestBed.createComponent(AppComponent);
+      f.detectChanges();
+
+      isStable$.next(true);
+      tick(50);
+      flush();
+
+      expect(spy).toHaveBeenCalledTimes(1);
     }));
   });
 });
