@@ -112,7 +112,9 @@
                      [attr.data-test]="'download-button' | dsBrowserOnly">
                     <i class="fas fa-download fa-fw"></i>
                   </a>
-                  <button [routerLink]="['/bitstreams/', entry.id, 'edit']" class="btn btn-outline-primary btn-sm"
+                  <button [routerLink]="['/bitstreams/', entry.id, 'edit']"
+                          [queryParams]="{ itemId: item.uuid, entityType: item.firstMetadataValue('dspace.entity.type') }"
+                          class="btn btn-outline-primary btn-sm"
                           [attr.aria-label]="'item.edit.bitstreams.edit.buttons.edit' | translate"
                           title="{{'item.edit.bitstreams.edit.buttons.edit' | translate}}">
                     <i class="fas fa-edit fa-fw"></i>
