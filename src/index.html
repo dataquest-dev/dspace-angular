@@ -117,7 +117,9 @@
       }, 200);
     };
 
-    // Safety net: if the app never reaches isStable (e.g. permanent HTTP poll), remove anyway.
+    // Hard safety net: only fires on catastrophic JS errors that prevent AppComponent from
+    // running its overlay-removal logic. Under normal operation the overlay is removed
+    // event-driven (no timeout) the moment the real CSR content becomes visible.
     setTimeout(function () {
       if (typeof window.__dspaceRemoveSsrOverlay === 'function') {
         window.__dspaceRemoveSsrOverlay();
