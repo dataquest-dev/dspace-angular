@@ -4,16 +4,19 @@ import { ThemeConfig } from '../../../config/theme.config';
 import { isNotEmpty } from '../empty.util';
 
 export function getMockThemeService(themeName = 'base', themes?: ThemeConfig[]): ThemeService {
-  const spy = jasmine.createSpyObj('themeService', [
-    'getThemeName',
-    'getThemeConfigFor',
-    'listenForRouteChanges',
-  ], {
+  // getThemeName$ is a real method on ThemeService (called as getThemeName$()),
+  // so it must stay a spy method that returns an Observable.
+  // isThemeLoading$ is a real property getter on ThemeService, so it must be a
+  // property on the mock - not a spy method - or AsyncPipe / combineLatest will
+  // receive a function instead of a stream.
+  const spy = jasmine.createSpyObj('themeService', {
+    getThemeName: themeName,
     getThemeName$: observableOf(themeName),
+    getThemeConfigFor: undefined,
+    listenForRouteChanges: undefined,
+  }, {
     isThemeLoading$: observableOf(false),
   });
-
-  spy.getThemeName.and.returnValue(themeName);
 
   if (isNotEmpty(themes)) {
     spy.getThemeConfigFor.and.callFake((name: string) => themes.find(theme => theme.name === name));
