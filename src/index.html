@@ -9,7 +9,7 @@
   <meta http-equiv="cache-control" content="no-store">
   <style id="__dspace-ssr-overlay-style">
     /* Overlay used to mask the Angular 15 bootstrap re-render of the SSR DOM.
-       See src/index.html bootstrap script + AppComponent.removeSsrOverlayWhenStable.
+       See src/index.html bootstrap script + AppComponent.removeSsrOverlayWhenContentVisible.
        The overlay element holds the SSR-rendered children moved out of <ds-app>,
        so it keeps every original Angular view-encapsulation attribute (_ngcontent-scXXX),
        inline style, and lifecycle context — i.e. it looks pixel-identical to what SSR sent. */
@@ -43,7 +43,7 @@
   This script captures the SSR DOM as a non-interactive snapshot the moment it's parsed (before
   any module/main script runs - those are type=module and therefore deferred). While Angular
   rebuilds the real <ds-app> invisibly, the snapshot keeps the page looking stable. AppComponent
-  removes the overlay once ApplicationRef.isStable settles.
+  removes the overlay once the real CSR content becomes visible.
 */
 (function () {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
@@ -128,7 +128,9 @@
       }, 200);
     };
 
-    // Safety net: if the app never reaches isStable (e.g. permanent HTTP poll), remove anyway.
+    // Hard safety net: only fires on catastrophic JS errors that prevent AppComponent from
+    // running its overlay-removal logic. Under normal operation the overlay is removed
+    // event-driven (no timeout) the moment the real CSR content becomes visible.
     setTimeout(function () {
       if (typeof window.__dspaceRemoveSsrOverlay === 'function') {
         window.__dspaceRemoveSsrOverlay();
