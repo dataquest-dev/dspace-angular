@@ -2,7 +2,6 @@ import { distinctUntilChanged, filter, first, take, withLatestFrom } from 'rxjs/
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
-  ApplicationRef,
   ChangeDetectionStrategy,
   Component,
   HostListener,
@@ -18,7 +17,7 @@ import {
   Router,
 } from '@angular/router';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
@@ -76,7 +75,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     private cssService: CSSVariableService,
     private modalService: NgbModal,
     private modalConfig: NgbModalConfig,
-    private appRef: ApplicationRef,
     private ngZone: NgZone,
   ) {
     this.notificationOptions = environment.notifications;
@@ -86,7 +84,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     if (isPlatformBrowser(this.platformId)) {
       this.trackIdleModal();
-      this.removeSsrOverlayWhenStable();
+      this.removeSsrOverlayWhenContentVisible();
     }
 
     this.isThemeLoading$ = this.themeService.isThemeLoading$;
@@ -95,33 +93,38 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Drops the SSR mask overlay installed by the inline bootstrap script in src/index.html as soon
-   * as Angular reaches its first stable state. The overlay is the only thing the user sees while
-   * Angular 15 rebuilds the SSR DOM; removing it too early would expose the rebuild flicker, too
-   * late would feel sluggish. We add a short safety pad to let the first paint settle, and there
-   * is also a 15s hard fallback inside the script itself in case isStable never fires.
+   * Drops the SSR mask overlay installed by the inline bootstrap script in src/index.html the
+   * moment the real CSR content is actually visible. We do NOT wait for ApplicationRef.isStable
+   * (which can be delayed many seconds by ongoing zone tasks, e.g. admin-only background HTTP
+   * polling, periodic timers, third-party AAI/discojuice scripts). Instead we react to the same
+   * condition root.component.html uses to swap the fullscreen loader for the real content:
+   * `!isAuthenticationBlocking && !isThemeLoading`. At that exact point the routed page is
+   * rendered, so removing the SSR snapshot does not produce flicker. One rAF delay lets the
+   * change-detection result commit to the DOM before the overlay fades.
    */
-  private removeSsrOverlayWhenStable(): void {
+  private removeSsrOverlayWhenContentVisible(): void {
     const w: Window | undefined = this._window?.nativeWindow;
     if (!w || typeof w.__dspaceRemoveSsrOverlay !== 'function') {
       return;
     }
-    // run outside Angular so we don't keep changeDetection ticking on the overlay timer
+    // run outside Angular so the subscription does not keep change detection alive
     this.ngZone.runOutsideAngular(() => {
-      this.appRef.isStable.pipe(
-        filter((stable: boolean) => stable),
+      combineLatest([
+        this.store.pipe(select(isAuthenticationBlocking), distinctUntilChanged()),
+        this.themeService.isThemeLoading$,
+      ]).pipe(
+        filter(([blocking, themeLoading]: [boolean, boolean]) => !blocking && !themeLoading),
         first(),
       ).subscribe(() => {
-        // one rAF + small pad to let the first stable paint commit before fading the overlay
         const remove = () => {
           if (typeof w.__dspaceRemoveSsrOverlay === 'function') {
             w.__dspaceRemoveSsrOverlay();
           }
         };
         if (typeof w.requestAnimationFrame === 'function') {
-          w.requestAnimationFrame(() => setTimeout(remove, 50));
+          w.requestAnimationFrame(remove);
         } else {
-          setTimeout(remove, 50);
+          remove();
         }
       });
     });

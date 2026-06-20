@@ -1,6 +1,6 @@
 import { Store, StoreModule } from '@ngrx/store';
-import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { ApplicationRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -31,7 +31,7 @@ import { Angulartics2DSpace } from './statistics/angulartics/dspace-provider';
 import { storeModuleConfig } from './app.reducer';
 import { LocaleService } from './core/locale/locale.service';
 import { authReducer } from './core/auth/auth.reducer';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ThemeService } from './shared/theme-support/theme.service';
 import { getMockThemeService } from './shared/mocks/theme-service.mock';
 import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
@@ -42,7 +42,7 @@ let comp: AppComponent;
 let fixture: ComponentFixture<AppComponent>;
 const menuService = new MenuServiceStub();
 const initialState = {
-  core: { auth: { loading: false } }
+  core: { auth: { loading: false, blocking: false } }
 };
 
 export function getMockLocaleService(): LocaleService {
@@ -129,24 +129,22 @@ describe('App component', () => {
 
   });
 
-  describe('removeSsrOverlayWhenStable', () => {
-    // The inline bootstrap script in src/index.html injects window.__dspaceRemoveSsrOverlay
-    // and AppComponent must call it exactly once when ApplicationRef.isStable first emits true.
-    let appRef: ApplicationRef;
-    let isStable$: BehaviorSubject<boolean>;
+  describe('removeSsrOverlayWhenContentVisible', () => {
+    // The inline bootstrap script in src/index.html injects window.__dspaceRemoveSsrOverlay.
+    // AppComponent should remove it once both auth blocking and theme loading are false.
+    let mockStore: MockStore;
+    let themeLoading$: BehaviorSubject<boolean>;
+    let themeService: ThemeService;
     let originalRaF: typeof window.requestAnimationFrame;
-    let originalIsStable: PropertyDescriptor | undefined;
 
     beforeEach(() => {
-      appRef = TestBed.inject(ApplicationRef);
-      isStable$ = new BehaviorSubject<boolean>(false);
-      // Patch isStable to our controllable subject for this test only. Keep it configurable and
-      // remember the previous descriptor so afterEach can restore it - otherwise the override
-      // leaks onto the shared TestBed ApplicationRef instance and into later specs.
-      originalIsStable = Object.getOwnPropertyDescriptor(appRef, 'isStable');
-      Object.defineProperty(appRef, 'isStable', { value: isStable$.asObservable(), configurable: true });
+      mockStore = TestBed.inject(MockStore);
+      themeService = TestBed.inject(ThemeService);
+      themeLoading$ = new BehaviorSubject<boolean>(true);
+      (themeService as any).isThemeLoading$ = themeLoading$.asObservable();
+      mockStore.setState({ core: { auth: { loading: false, blocking: true } } });
 
-      // Force rAF to a synchronous shim so we can flush() through the chain deterministically.
+      // Force rAF to a synchronous shim so assertions are deterministic.
       originalRaF = window.requestAnimationFrame;
       (window as any).requestAnimationFrame = (cb: FrameRequestCallback) => {
         cb(0);
@@ -157,29 +155,24 @@ describe('App component', () => {
     afterEach(() => {
       (window as any).requestAnimationFrame = originalRaF;
       delete (window as any).__dspaceRemoveSsrOverlay;
-      // Restore isStable so the patched observable cannot leak into later specs.
-      if (originalIsStable) {
-        Object.defineProperty(appRef, 'isStable', originalIsStable);
-      } else {
-        delete (appRef as any).isStable;
-      }
     });
 
-    it('removes the overlay once isStable emits true', fakeAsync(() => {
+    it('removes the overlay once auth is unblocked and theme loading is finished', fakeAsync(() => {
       const spy = jasmine.createSpy('__dspaceRemoveSsrOverlay');
       window.__dspaceRemoveSsrOverlay = spy;
 
-      // Re-construct so the constructor-time subscription picks up our patched isStable + global.
+      // Re-construct so constructor-time subscription picks up our patched streams + global.
       const f = TestBed.createComponent(AppComponent);
       f.detectChanges();
 
       expect(spy).not.toHaveBeenCalled();
 
-      isStable$.next(true);
-      tick(50); // matches the 50ms pad after rAF in removeSsrOverlayWhenStable
+      mockStore.setState({ core: { auth: { loading: false, blocking: false } } });
+      themeLoading$.next(false);
       flush();
 
       expect(spy).toHaveBeenCalledTimes(1);
+      discardPeriodicTasks();
     }));
 
     it('is a no-op when the global is not injected (e.g. CSR-only route, SSR skipped)', fakeAsync(() => {
@@ -189,27 +182,12 @@ describe('App component', () => {
       const f = TestBed.createComponent(AppComponent);
       expect(() => f.detectChanges()).not.toThrow();
 
-      isStable$.next(true);
-      tick(50);
+      mockStore.setState({ core: { auth: { loading: false, blocking: false } } });
+      themeLoading$.next(false);
       flush();
 
       expect(window.__dspaceRemoveSsrOverlay).toBeUndefined();
-    }));
-
-    it('still removes the overlay when requestAnimationFrame is unavailable', fakeAsync(() => {
-      // Exercises the fallback scheduler branch in removeSsrOverlayWhenStable.
-      const spy = jasmine.createSpy('__dspaceRemoveSsrOverlay');
-      window.__dspaceRemoveSsrOverlay = spy;
-      (window as any).requestAnimationFrame = undefined;
-
-      const f = TestBed.createComponent(AppComponent);
-      f.detectChanges();
-
-      isStable$.next(true);
-      tick(50);
-      flush();
-
-      expect(spy).toHaveBeenCalledTimes(1);
+      discardPeriodicTasks();
     }));
   });
 });
