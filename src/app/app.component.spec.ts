@@ -1,5 +1,5 @@
 import { Store, StoreModule } from '@ngrx/store';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -131,11 +131,13 @@ describe('App component', () => {
 
   describe('removeSsrOverlayWhenContentVisible', () => {
     // The inline bootstrap script in src/index.html injects window.__dspaceRemoveSsrOverlay.
-    // AppComponent should remove it once both auth blocking and theme loading are false.
+    // Once auth blocking and theme loading are both false, AppComponent waits for the <ds-app> DOM
+    // to settle (no element added/removed for the quiet window) and only then removes the overlay.
     let mockStore: MockStore;
     let themeLoading$: BehaviorSubject<boolean>;
     let themeService: ThemeService;
     let originalRaF: typeof window.requestAnimationFrame;
+    let dsAppEl: HTMLElement;
 
     beforeEach(() => {
       mockStore = TestBed.inject(MockStore);
@@ -143,6 +145,12 @@ describe('App component', () => {
       themeLoading$ = new BehaviorSubject<boolean>(true);
       (themeService as any).isThemeLoading$ = themeLoading$.asObservable();
       mockStore.setState({ core: { auth: { loading: false, blocking: true } } });
+
+      // A settled <ds-app> with real content present, so the DOM-settle watcher can resolve.
+      dsAppEl = document.createElement('ds-app');
+      dsAppEl.setAttribute('style', 'display:block;height:800px');
+      dsAppEl.innerHTML = '<main id="main-content" style="display:block;height:800px">home content</main>';
+      document.body.appendChild(dsAppEl);
 
       // Force rAF to a synchronous shim so assertions are deterministic.
       originalRaF = window.requestAnimationFrame;
@@ -155,9 +163,10 @@ describe('App component', () => {
     afterEach(() => {
       (window as any).requestAnimationFrame = originalRaF;
       delete (window as any).__dspaceRemoveSsrOverlay;
+      if (dsAppEl && dsAppEl.parentNode) { dsAppEl.parentNode.removeChild(dsAppEl); }
     });
 
-    it('removes the overlay once auth is unblocked and theme loading is finished', fakeAsync(() => {
+    it('removes the overlay once auth/theme are ready AND the DOM has settled', fakeAsync(() => {
       const spy = jasmine.createSpy('__dspaceRemoveSsrOverlay');
       window.__dspaceRemoveSsrOverlay = spy;
 
@@ -169,9 +178,12 @@ describe('App component', () => {
 
       mockStore.setState({ core: { auth: { loading: false, blocking: false } } });
       themeLoading$.next(false);
-      flush();
 
+      // Not removed at the gate: the DOM-settle quiet window must elapse first.
+      expect(spy).not.toHaveBeenCalled();
+      tick(700); // > SETTLE_QUIET_MS
       expect(spy).toHaveBeenCalledTimes(1);
+
       discardPeriodicTasks();
     }));
 
@@ -184,7 +196,7 @@ describe('App component', () => {
 
       mockStore.setState({ core: { auth: { loading: false, blocking: false } } });
       themeLoading$.next(false);
-      flush();
+      tick(700);
 
       expect(window.__dspaceRemoveSsrOverlay).toBeUndefined();
       discardPeriodicTasks();
