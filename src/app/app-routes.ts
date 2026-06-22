@@ -35,6 +35,7 @@ import { reloadGuard } from './core/reload/reload.guard';
 import { forgotPasswordCheckGuard } from './core/rest-property/forgot-password-check-guard.guard';
 import { ServerCheckGuard } from './core/server-check/server-check.guard';
 import { ThemedForbiddenComponent } from './forbidden/themed-forbidden.component';
+import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
 import { homePageResolver } from './home-page/home-page.resolver';
 import { ITEM_MODULE_PATH } from './item-page/item-page-routing-paths';
 import { provideSuggestionNotificationsState } from './notifications/provide-suggestion-notifications-state';
@@ -271,6 +272,11 @@ export const APP_ROUTES: Route[] = [
       {
         path: LICENSES_MODULE_PATH,
         loadChildren: () => import('./clarin-licenses/clarin-license-routes').then((m) => m.ROUTES),
+      },
+      {
+        path: HANDLE_TABLE_MODULE_PATH,
+        loadChildren: () => import('./handle-page/handle-page-routes').then((m) => m.ROUTES),
+        canActivate: [siteAdministratorGuard, endUserAgreementCurrentUserGuard],
       },
       {
         path: 'subscriptions',
