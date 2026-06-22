@@ -34,6 +34,7 @@ import { endUserAgreementCurrentUserGuard } from './core/end-user-agreement/end-
 import { reloadGuard } from './core/reload/reload.guard';
 import { forgotPasswordCheckGuard } from './core/rest-property/forgot-password-check-guard.guard';
 import { ServerCheckGuard } from './core/server-check/server-check.guard';
+import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing-paths';
 import { ThemedForbiddenComponent } from './forbidden/themed-forbidden.component';
 import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
 import { homePageResolver } from './home-page/home-page.resolver';
@@ -276,6 +277,11 @@ export const APP_ROUTES: Route[] = [
       {
         path: HANDLE_TABLE_MODULE_PATH,
         loadChildren: () => import('./handle-page/handle-page-routes').then((m) => m.ROUTES),
+        canActivate: [siteAdministratorGuard, endUserAgreementCurrentUserGuard],
+      },
+      {
+        path: EPIC_HANDLE_TABLE_MODULE_PATH,
+        loadChildren: () => import('./epic-handle/epic-handle-routes').then((m) => m.ROUTES),
         canActivate: [siteAdministratorGuard, endUserAgreementCurrentUserGuard],
       },
       {
