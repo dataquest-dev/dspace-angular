@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   AfterViewInit,
   Component,
@@ -22,6 +22,7 @@ import {
 } from '../../../../core/shared/clarin/clarin-license.resource-type';
 import { ClarinLicenseLabel } from '../../../../core/shared/clarin/clarin-license-label.model';
 import { getFirstSucceededRemoteListPayload } from '../../../../core/shared/operators';
+import { BtnDisabledDirective } from '../../../../shared/btn-disabled.directive';
 import {
   isNull,
   isUndefined,
@@ -35,13 +36,14 @@ import { validateLicenseLabel } from './define-license-form-validator';
 /**
  * The component for defining and editing the Clarin License
  */
-@Component({
+@Component({
+
   imports: [
+    BtnDisabledDirective,
     CharToEndPipe,
     ClarinLicenseCheckedPipe,
     ClarinLicenseLabelRadioValuePipe,
     ClarinLicenseRequiredInfoCheckedPipe,
-    CommonModule,
     ReactiveFormsModule,
     TranslateModule,
   ],

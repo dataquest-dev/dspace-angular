@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   Input,
@@ -13,16 +13,18 @@ import {
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { BtnDisabledDirective } from '../../../../shared/btn-disabled.directive';
 import { isNotEmpty } from '../../../../shared/empty.util';
 import { CharToEndPipe } from '../../../../shared/utils/char-to-end.pipe';
 
 /**
  * The component for defining the Clarin License Label
  */
-@Component({
+@Component({
+
   imports: [
+    BtnDisabledDirective,
     CharToEndPipe,
-    CommonModule,
     ReactiveFormsModule,
     TranslateModule,
   ],

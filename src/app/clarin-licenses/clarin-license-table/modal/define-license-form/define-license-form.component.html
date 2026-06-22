@@ -21,39 +21,47 @@
             <div class="form-group">
               <label id="confirmation" for="confirmation">{{'clarin-license.define-license-form.input-confirmation' | translate}}</label>
               <select formControlName="confirmation" class="custom-select">
-                <option *ngFor="let confirmationOption of confirmationOptions" [value]="confirmationOption">{{confirmationOption}}</option>
+                @for (confirmationOption of confirmationOptions; track confirmationOption) {
+                  <option [value]="confirmationOption">{{confirmationOption}}</option>
+                }
               </select>
             </div>
             <div class="form-group">
               <label id="clarinLicenseLabel" for="clarinLicenseLabel">{{'clarin-license.define-license-form.license-labels' | translate | dsAddChar: '*'}}</label>
-              <div *ngFor="let cll of clarinLicenseLabelOptions">
-                <input type="radio" formControlName="clarinLicenseLabel" [value]="cll | dsRadioLicenseLabelValue: clarinLicenseLabel"/>
-                {{ cll.label }} ({{cll.title}})
-              </div>
+              @for (cll of clarinLicenseLabelOptions; track cll) {
+                <div>
+                  <input type="radio" formControlName="clarinLicenseLabel" [value]="cll | dsRadioLicenseLabelValue: clarinLicenseLabel"/>
+                  {{ cll.label }} ({{cll.title}})
+                </div>
+              }
             </div>
             <div class="form-group">
               <label id="extendedClarinLicenseLabels" for="extendedClarinLicenseLabels">{{'clarin-license.define-license-form.extended-license-labels' | translate}}</label>
-              <div *ngFor="let extendedClarinLicenseLabel of extendedClarinLicenseLabelOptions">
-                <input type="checkbox" formArrayName="extendedClarinLicenseLabels" [value]="extendedClarinLicenseLabel"
-                       [checked]="extendedClarinLicenseLabel | dsCheckedLicense: extendedClarinLicenseLabels"
-                       (change)="changeCheckboxValue($event,'extendedClarinLicenseLabels', extendedClarinLicenseLabel)"/>
-                {{ extendedClarinLicenseLabel.label }} ({{extendedClarinLicenseLabel.title}})
-              </div>
+              @for (extendedClarinLicenseLabel of extendedClarinLicenseLabelOptions; track extendedClarinLicenseLabel) {
+                <div>
+                  <input type="checkbox" formArrayName="extendedClarinLicenseLabels" [value]="extendedClarinLicenseLabel"
+                    [checked]="extendedClarinLicenseLabel | dsCheckedLicense: extendedClarinLicenseLabels"
+                    (change)="changeCheckboxValue($event,'extendedClarinLicenseLabels', extendedClarinLicenseLabel)"/>
+                  {{ extendedClarinLicenseLabel.label }} ({{extendedClarinLicenseLabel.title}})
+                </div>
+              }
             </div>
             <div class="form-group">
               <label id="requiredInfo" for="requiredInfo">{{'clarin-license.define-license-form.required-info' | translate}}</label>
-              <div *ngFor="let ri of requiredInfoOptions">
-                <input type="checkbox" formArrayName="requiredInfo" [value]="ri"
-                     [checked]="ri | dsCheckedRI: requiredInfo"
-                     (change)="changeCheckboxValue($event,'requiredInfo', ri)"/>
-                {{ ri.value }}
-              </div>
+              @for (ri of requiredInfoOptions; track ri) {
+                <div>
+                  <input type="checkbox" formArrayName="requiredInfo" [value]="ri"
+                    [checked]="ri | dsCheckedRI: requiredInfo"
+                    (change)="changeCheckboxValue($event,'requiredInfo', ri)"/>
+                  {{ ri.value }}
+                </div>
+              }
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-success"
-                  [disabled]="!clarinLicenseForm.valid">
+            [dsBtnDisabled]="!clarinLicenseForm.valid">
             {{'clarin-license.define-license-form.submit-button' | translate}}
           </button>
         </div>

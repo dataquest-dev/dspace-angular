@@ -1,34 +1,44 @@
 <div class="container">
   <div class="card">
     <h5 class="card-header">{{ 'clarin.license.all-page.title' | translate }}</h5>
-    <ds-loading *ngIf="isLoading" class="text-center"></ds-loading>
-    <div class="card-body" *ngFor="let clarinLicense of (licensesRD$ | async)">
-      <h6 class="card-header border-bottom-0 license-card-border"><a [href]="clarinLicense?.definition">{{ clarinLicense?.name }}</a></h6>
-      <div class="card-body rounded-bottom license-card-border">
-        <div>
-          <div><b>{{'clarin.license.all-page.source' | translate}}</b></div>
-          <div><a [href]="clarinLicense?.definition">{{ clarinLicense?.definition }}</a></div>
-        </div>
-        <div>
-          <div><b>{{'clarin.license.all-page.labels' | translate}}</b></div>
-          <span [ngClass]="'px-1 d-inline label label-license' + ' label-' + clarinLicense?.clarinLicenseLabel?.label + ' rounded text-white'">
-            {{clarinLicense?.clarinLicenseLabel?.title}}
-          </span>
-          <span *ngFor="let clarinLicenseLabel of clarinLicense?.extendedClarinLicenseLabels"
+    @if (isLoading) {
+      <ds-loading class="text-center"></ds-loading>
+    }
+    @for (clarinLicense of (licensesRD$ | async); track clarinLicense) {
+      <div class="card-body">
+        <h6 class="card-header border-bottom-0 license-card-border"><a [href]="clarinLicense?.definition">{{ clarinLicense?.name }}</a></h6>
+        <div class="card-body rounded-bottom license-card-border">
+          <div>
+            <div><b>{{'clarin.license.all-page.source' | translate}}</b></div>
+            <div><a [href]="clarinLicense?.definition">{{ clarinLicense?.definition }}</a></div>
+          </div>
+          <div>
+            <div><b>{{'clarin.license.all-page.labels' | translate}}</b></div>
+            <span [ngClass]="'px-1 d-inline label label-license' + ' label-' + clarinLicense?.clarinLicenseLabel?.label + ' rounded text-white'">
+              {{clarinLicense?.clarinLicenseLabel?.title}}
+            </span>
+            @for (clarinLicenseLabel of clarinLicense?.extendedClarinLicenseLabels; track clarinLicenseLabel) {
+              <span
                 class="px-1 label label-default rounded text-white ml-1">
-            {{clarinLicenseLabel?.title}}
-          </span>
-        </div>
-        <div>
-          <div><b>{{'clarin.license.all-page.extra-information' | translate}}</b></div>
-          <span *ngIf="clarinLicense?.requiredInfo == null">{{'clarin.license.all-page.extra-information.default' | translate}}
-          </span>
-          <span *ngFor="let requiredInformation of getRequiredInfo(clarinLicense)"
+                {{clarinLicenseLabel?.title}}
+              </span>
+            }
+          </div>
+          <div>
+            <div><b>{{'clarin.license.all-page.extra-information' | translate}}</b></div>
+            @if (clarinLicense?.requiredInfo === null) {
+              <span>{{'clarin.license.all-page.extra-information.default' | translate}}
+              </span>
+            }
+            @for (requiredInformation of getRequiredInfo(clarinLicense); track requiredInformation) {
+              <span
                 class="px-1 label label-default rounded text-white mr-1">
-              {{requiredInformation?.value}}
-          </span>
+                {{requiredInformation?.value}}
+              </span>
+            }
+          </div>
         </div>
       </div>
-    </div>
+    }
   </div>
 </div>

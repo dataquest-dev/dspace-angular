@@ -35,6 +35,7 @@ import {
   getFirstCompletedRemoteData,
   getFirstSucceededRemoteData,
 } from '../../core/shared/operators';
+import { BtnDisabledDirective } from '../../shared/btn-disabled.directive';
 import { isNull } from '../../shared/empty.util';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
@@ -52,8 +53,10 @@ import { DefineLicenseLabelFormComponent } from './modal/define-license-label-fo
 /**
  * Component for managing clarin licenses and defining clarin license labels.
  */
-@Component({
+@Component({
+
   imports: [
+    BtnDisabledDirective,
     ClarinExtendedLicensePipe,
     ClarinLicenseRequiredInfoPipe,
     CommonModule,

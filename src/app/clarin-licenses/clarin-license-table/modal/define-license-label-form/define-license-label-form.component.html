@@ -21,7 +21,9 @@
             <div class="form-group mt-4">
               <label id="extended" for="extended">{{'clarin-license-label.define-license-label.input-is-extended' | translate}}</label>
               <select formControlName="extended" class="custom-select">
-                <option *ngFor="let isExtendedOption of extendedOptions">{{isExtendedOption}}</option>
+                @for (isExtendedOption of extendedOptions; track isExtendedOption) {
+                  <option>{{isExtendedOption}}</option>
+                }
               </select>
             </div>
             <div class="form-group mt-4">
@@ -32,7 +34,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-success"
-                  [disabled]="!clarinLicenseLabelForm.valid">
+            [dsBtnDisabled]="!clarinLicenseLabelForm.valid">
             {{'clarin-license.define-license-form.submit-button' | translate}}
           </button>
         </div>
