@@ -16,6 +16,7 @@ import {
   INFO_MODULE_PATH,
   INTERNAL_SERVER_ERROR,
   LEGACY_BITSTREAM_MODULE_PATH,
+  LICENSES_MODULE_PATH,
   PROFILE_MODULE_PATH,
   REGISTER_PATH,
   REQUEST_COPY_MODULE_PATH,
@@ -266,6 +267,10 @@ export const APP_ROUTES: Route[] = [
         path: ACCESS_CONTROL_MODULE_PATH,
         loadChildren: () => import('./access-control/access-control-routes').then((m) => m.ROUTES),
         canActivate: [groupAdministratorGuard, endUserAgreementCurrentUserGuard],
+      },
+      {
+        path: LICENSES_MODULE_PATH,
+        loadChildren: () => import('./clarin-licenses/clarin-license-routes').then((m) => m.ROUTES),
       },
       {
         path: 'subscriptions',
