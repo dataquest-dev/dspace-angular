@@ -285,6 +285,11 @@ export const APP_ROUTES: Route[] = [
         canActivate: [siteAdministratorGuard, endUserAgreementCurrentUserGuard],
       },
       {
+        path: 'share-submission',
+        loadChildren: () => import('./share-submission/share-submission-routes').then((m) => m.ROUTES),
+        canActivate: [authenticatedGuard, endUserAgreementCurrentUserGuard],
+      },
+      {
         path: 'subscriptions',
         loadChildren: () => import('./subscriptions-page/subscriptions-page-routes')
           .then((m) => m.ROUTES),
