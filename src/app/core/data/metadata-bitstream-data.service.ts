@@ -29,7 +29,7 @@ import { RequestService } from './request.service';
 /**
  * A service responsible for fetching/sending data from/to the REST API on the metadatafields endpoint
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(METADATA_BITSTREAM)
 export class MetadataBitstreamDataService extends IdentifiableDataService<MetadataBitstream> implements SearchData<MetadataBitstream> {
   protected store: Store<CoreState>;

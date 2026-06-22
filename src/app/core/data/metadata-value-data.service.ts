@@ -40,7 +40,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
 /**
  * A service responsible for fetching/sending data from/to the REST API - vocabularies endpoint
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(MetadataValue.type)
 export class MetadataValueDataService extends BaseDataService<MetadataValue> implements SearchData<MetadataValue> {
   protected linkPath = linkName;

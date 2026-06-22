@@ -29,7 +29,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
 /**
  * A service responsible for fetching/sending user registration data from/to the Clarin User Registration REST API
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(ClarinUserRegistration.type)
 export class ClarinUserRegistrationDataService extends BaseDataService<ClarinUserRegistration> implements SearchData<ClarinUserRegistration> {
   protected linkPath = linkName;

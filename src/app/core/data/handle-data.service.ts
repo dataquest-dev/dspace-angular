@@ -32,7 +32,7 @@ export const linkName = 'handles';
 /**
  * A service responsible for fetching/sending data from/to the REST API on the metadatafields endpoint
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(HANDLE)
 export class HandleDataService extends BaseDataService<Handle> implements CreateData<Handle>, FindAllData<Handle> {
   protected linkPath = linkName;

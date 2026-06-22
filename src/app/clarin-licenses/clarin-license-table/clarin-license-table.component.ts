@@ -43,6 +43,7 @@ import { PaginationComponent } from '../../shared/pagination/pagination.componen
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
 import { ClarinExtendedLicensePipe } from '../../shared/utils/clarin-extended-license.pipe';
 import { ClarinLicenseRequiredInfoPipe } from '../../shared/utils/clarin-license-required-info.pipe';
+import { VarDirective } from '../../shared/utils/var.directive';
 import {
   defaultPagination,
   defaultSortConfiguration,
@@ -55,8 +56,7 @@ import { DefineLicenseLabelFormComponent } from './modal/define-license-label-fo
  */
 @Component({
 
-  imports: [
-    BtnDisabledDirective,
+  imports: [BtnDisabledDirective,
     ClarinExtendedLicensePipe,
     ClarinLicenseRequiredInfoPipe,
     CommonModule,
@@ -64,8 +64,7 @@ import { DefineLicenseLabelFormComponent } from './modal/define-license-label-fo
     NgbDropdownModule,
     PaginationComponent,
     ThemedLoadingComponent,
-    TranslateModule,
-  ],
+    TranslateModule, VarDirective],
   selector: 'ds-clarin-license-table',
   templateUrl: './clarin-license-table.component.html',
   styleUrls: ['./clarin-license-table.component.scss'],

@@ -34,7 +34,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
 /**
  * A service responsible for fetching/sending data from/to the REST API - vocabularies endpoint
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(ClarinLicenseLabel.type)
 export class ClarinLicenseLabelDataService extends BaseDataService<ClarinLicenseLabel> implements CreateData<ClarinLicenseLabel>, FindAllData<ClarinLicenseLabel> {
   protected linkPath = linkName;

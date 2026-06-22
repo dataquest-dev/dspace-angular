@@ -31,7 +31,7 @@ export const linkName = 'clarinverificationtokens';
 /**
  * A service responsible for fetching/sending license data from/to the ClarinVerificationToken REST API
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(ClarinVerificationToken.type)
 export class ClarinVerificationTokenDataService extends IdentifiableDataService<ClarinVerificationToken> implements SearchData<ClarinVerificationToken>, DeleteData<ClarinVerificationToken> {
   protected linkPath = linkName;

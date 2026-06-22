@@ -35,12 +35,11 @@ import { WorkspaceitemDataService } from '../core/submission/workspaceitem-data.
 import { hasNoValue } from '../shared/empty.util';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { followLink } from '../shared/utils/follow-link-config.model';
+import { VarDirective } from '../shared/utils/var.directive';
 
 @Component({
-  imports: [
-    CommonModule,
-    TranslateModule,
-  ],
+  imports: [CommonModule,
+    TranslateModule, VarDirective],
   selector: 'ds-change-submitter-page',
   templateUrl: './change-submitter-page.component.html',
   styleUrls: ['./change-submitter-page.component.scss'],

@@ -47,7 +47,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
 /**
  * A service responsible for fetching/sending license data from/to the Clarin License REST API
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(ClarinLicense.type)
 export class ClarinLicenseDataService extends IdentifiableDataService<ClarinLicense> implements CreateData<ClarinLicense>, PutData<ClarinLicense>, DeleteData<ClarinLicense>, SearchData<ClarinLicense>, FindAllData<ClarinLicense> {
   protected linkPath = linkName;

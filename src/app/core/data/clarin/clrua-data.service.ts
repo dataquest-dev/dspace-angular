@@ -20,7 +20,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
 /**
  * A service responsible for fetching/sending CLRUA data from/to the Clarin License Resource User Allowance REST API
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(ClruaModel.type)
 export class ClruaDataService extends BaseDataService<ClruaModel> {
   protected linkPath = linkName;

@@ -17,7 +17,7 @@ import { HALEndpointService } from './shared/hal-endpoint.service';
 /**
  * A service responsible for fetching BitstreamChecksum objects from the REST API
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(BitstreamChecksum.type)
 export class BitstreamChecksumDataService extends BaseDataService<BitstreamChecksum> {
   protected linkPath = 'checksum';

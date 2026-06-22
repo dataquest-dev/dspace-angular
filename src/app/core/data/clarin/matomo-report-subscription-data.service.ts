@@ -19,7 +19,7 @@ import { RequestService } from '../request.service';
 
 export const MATOMO_SUBSCRIPTION_ENDPOINT = 'matomoreportsubscriptions';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(MatomoReportSubscription.type)
 export class MatomoReportSubscriptionDataService extends IdentifiableDataService<MatomoReportSubscription> {
 

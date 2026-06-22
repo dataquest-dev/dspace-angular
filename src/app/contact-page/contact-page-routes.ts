@@ -11,6 +11,7 @@ export const ROUTES: Route[] = [
   {
     path: '',
     component: ThemedContactPageComponent,
+    pathMatch: 'full',
     resolve: { breadcrumb: i18nBreadcrumbResolver },
     data: { breadcrumbKey: 'contact-us', title: 'contact-us.title' },
   },

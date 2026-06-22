@@ -29,7 +29,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
 /**
  * A service responsible for fetching/sending user metadata from/to the Clarin User Metadata
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(ClarinUserMetadata.type)
 export class ClarinUserMetadataDataService extends BaseDataService<ClarinUserMetadata> {
   protected linkPath = linkName;

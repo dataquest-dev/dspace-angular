@@ -30,7 +30,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  * A service responsible for fetching/sending clarin license resource mapping from/to the Clarin License
  * Resource Mapping REST API
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @dataService(ClarinLicenseResourceMapping.type)
 export class ClarinLicenseResourceMappingService extends BaseDataService<ClarinLicenseResourceMapping> implements SearchData<ClarinLicenseResourceMapping> {
   protected linkPath = linkName;

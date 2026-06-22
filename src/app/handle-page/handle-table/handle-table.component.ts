@@ -54,6 +54,7 @@ import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.comp
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
+import { VarDirective } from '../../shared/utils/var.directive';
 import {
   getHandleTableModulePath,
   HANDLE_TABLE_EDIT_HANDLE_PATH,
@@ -76,15 +77,13 @@ export const RESOURCE_TYPE_SEARCH_OPTION = 'resourceTypeId';
  */
 @Component({
 
-  imports: [
-    BtnDisabledDirective,
+  imports: [BtnDisabledDirective,
     CommonModule,
     FormsModule,
     NgbDropdownModule,
     PaginationComponent,
     ThemedLoadingComponent,
-    TranslateModule,
-  ],
+    TranslateModule, VarDirective],
   selector: 'ds-handle-table',
   templateUrl: './handle-table.component.html',
   styleUrls: ['./handle-table.component.scss'],
