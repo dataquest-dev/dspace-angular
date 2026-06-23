@@ -745,7 +745,33 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
    * otherwise retrieve the item ID based on the owning bundle's link
    */
   navigateToItemEditBitstreams() {
-    this.router.navigate([getEntityEditRoute(this.entityType, this.itemId), 'bitstreams']);
+    const navigate = () => this.router.navigate([getEntityEditRoute(this.entityType, this.itemId), 'bitstreams']);
+
+    if (hasValue(this.itemId)) {
+      navigate();
+      return;
+    }
+
+    if (hasValue(this.bundle) && hasValue(this.bundle.item)) {
+      this.subs.push(
+        this.bundle.item.pipe(
+          getFirstCompletedRemoteData(),
+        ).subscribe((itemRd: RemoteData<Item>) => {
+          if (itemRd.hasSucceeded && hasValue(itemRd.payload)) {
+            this.itemId = itemRd.payload.uuid;
+            if (!hasValue(this.entityType)) {
+              this.entityType = itemRd.payload.firstMetadataValue('dspace.entity.type');
+            }
+            navigate();
+          } else {
+            this.location.back();
+          }
+        }),
+      );
+      return;
+    }
+
+    this.location.back();
   }
 
   /**
