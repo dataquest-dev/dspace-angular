@@ -1,8 +1,59 @@
 // Override or add CSS variables for your theme here
 
 :root {
-  //--ds-header-logo-height: 80px;
-  //--ds-header-logo-height-xs: 50px;
-  //--ds-header-icon-color: #{$link-color};
-  //--ds-header-icon-color-hover: #{darken($link-color, 15%)};
+
+  @include media-breakpoint-up(md) {
+    --ds-header-logo-height: 72px; // tightly-cropped 4-line JU logotype, readable like www.jcu.cz
+    --ds-header-height: 104px;
+  }
+  @include media-breakpoint-down(sm) {
+    --ds-header-logo-height: 52px;
+    --ds-header-height: 82px;
+  }
+
+  --ds-login-logo-height: auto;
+  --ds-login-logo-width: 300px;
+
+  // ===================== JCU BRAND (white header + red letters — matches www.jcu.cz) =====================
+  // White header with the colour logotype and red navigation/icons, plus a red bottom accent.
+  --ds-header-bg: #ffffff;
+  --ds-header-icon-color: #{$jcu-red};
+  --ds-header-icon-color-hover: #{darken($jcu-red, 12%)};
+
+  // Top navigation: red links on the white header
+  --ds-navbar-bg: transparent;
+  --ds-navbar-link-color: #{$jcu-red};
+  --ds-navbar-link-color-hover: #{darken($jcu-red, 12%)};
+  // Dropdown panels: white surface, red items (item colour set in _global-styles.scss)
+  --ds-navbar-dropdown-bg: #{$white};
+
+  // Breadcrumb bar links use JCU red (active = black)
+  --ds-breadcrumb-link-color: #{$jcu-red};
+
+  // Cookie consent (Orejime) — brand the primary "accept" button JCU red
+  --green1: #{$jcu-red};
+
+  // Footer in univerzitní černá with a red top accent (accent set in footer scss)
+  --ds-footer-bg: #{$jcu-black};
+  --ds-top-footer-bg: #{$jcu-black};
+
+  // Admin sidebar in near-black with red active state
+  --ds-admin-sidebar-bg: #292b2f;
+  --ds-admin-sidebar-active-bg: #{$jcu-black};
+  --ds-admin-sidebar-header-bg: #{$jcu-black};
+
+  --ds-banner-text-background: rgba(0, 0, 0, 0.58);
+  --ds-banner-background-gradient-width: 300px;
+
+  --ds-header-navbar-border-bottom-height: 3px;
+
+  /* set the next two properties as `--ds-header-navbar-border-bottom-*`
+  in order to keep the bottom border of the header when navbar is expanded */
+
+  --ds-expandable-navbar-border-top-color: #{$white};
+  --ds-expandable-navbar-border-top-height: 0;
+  --ds-expandable-navbar-padding-top: 0;
+
+  --ds-item-page-img-field-default-inline-height: 24px;
+  --ds-item-page-img-field-ror-inline-height: var(--ds-item-page-img-field-default-inline-height);
 }

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 163" role="img" aria-label="Jihočeská univerzita">
+  <!-- JCU favicon: five-petal rose in University Red (Pantone 185 / #E00034) -->
+  <g fill="#E00034">
+    <circle cx="84" cy="31.5" r="31.5"/>
+    <circle cx="136.3" cy="69.5" r="31.5"/>
+    <circle cx="116.3" cy="131" r="31.5"/>
+    <circle cx="51.7" cy="131" r="31.5"/>
+    <circle cx="31.7" cy="69.5" r="31.5"/>
+  </g>
+</svg>

@@ -1,0 +1,38 @@
+// ============================================================================
+// JCU official typeface — Clara Sans
+// Converted to woff2 from the official TrueType files in Font_Clara/ and
+// self-hosted under src/assets/fonts/clara/. Clara Sans is the university's
+// primary typeface per the brand manual ("univerzitní písmo – Clara Sans").
+// ============================================================================
+
+@font-face {
+  font-family: "Clara Sans";
+  src: url("/assets/fonts/clara/ClaraSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Clara Sans";
+  src: url("/assets/fonts/clara/ClaraSans-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Clara Sans";
+  src: url("/assets/fonts/clara/ClaraSans-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Clara Sans";
+  src: url("/assets/fonts/clara/ClaraSans-BoldItalic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}

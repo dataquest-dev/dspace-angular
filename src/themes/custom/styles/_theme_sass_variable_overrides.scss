@@ -1,33 +1,90 @@
 // DSpace works with CSS variables for its own components, and has a mapping of all bootstrap Sass
 // variables to CSS equivalents (see src/styles/_bootstrap_variables_mapping.scss). However Bootstrap
-// still uses Sass variables internally. So if you want to override bootstrap (or other sass
-// variables) you can do so here. Their CSS counterparts will include the changes you make here
+// still uses Sass variables internally. So if you want to override Bootstrap (or other sass
+// variables) you can do so here. Their CSS counterparts will include the changes you make here.
 
-// $font-family-sans-serif:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
-//
-// $gray-700: #495057 !default;  // Bootstrap $gray-700
-// $gray-100: #f8f9fa !default;  //           $gray-100
-//
-// $blue:   #2B4E72 !default;
-// $green:  #94BA65 !default;
-// $cyan:   #006666 !default;
-// $yellow: #ec9433 !default;
-// $red:    #CF4444 !default;
-// $dark:   darken($blue, 17%) !default;
-//
-// $primary: $blue !default;
-// $secondary: $gray-700 !default;
-// $success: $green !default;
-// $info: $cyan !default;
-// $warning: $yellow !default;
-// $danger: $red !default;
-// $light: $gray-100 !default;
-// $dark: $dark !default;
-//
-// $link-color: $info !default;
+// When this file is going to be compiled, internal Bootstrap variables won't have been declared yet,
+// therefore if you want to use any Bootstrap variable you also need to declare it here.
+
+// All SASS variables from the base theme are also included here. Do not use the '!default' flag
+// here if you want to override them.
+
+
+/*** FONT FAMILIES ***/
+
+// JCU official typeface: Clara Sans (self-hosted @font-face declarations).
+@import '../assets/fonts/clara.scss';
+// Calibri is the manual's "doplňkové písmo" (supplementary font); then system fallbacks.
+$font-family-sans-serif: 'Clara Sans', Calibri, 'Helvetica Neue', Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+
+/*** JCU BRAND COLORS (Brand manual p.73 "Barevnost logotypů JU a fakult") ***/
+// Single source of truth — defined once as SASS variables.
+$jcu-red:     #E00034;  // Univerzitní červená — Pantone 185  / RAL 3020  (PRIMARY)
+$jcu-black:   #1E1E1E;  // Univerzitní černá   — Process Black / RAL 9011
+$jcu-grey:    #939598;  // Univerzitní šedá    — 50% black     / RAL 7040
+// Faculty accent colours (secondary palette, available for accents/entities)
+$jcu-magenta: #D10074;  // Ekonomická fakulta
+$jcu-blue:    #6F9AD3;  // Filozofická fakulta
+$jcu-orange:  #E98300;  // Pedagogická fakulta
+$jcu-green:   #007D57;  // Přírodovědecká fakulta
+$jcu-teal:    #5BBBB7;  // Fakulta rybářství a ochrany vod
+$jcu-purple:  #9C5FB5;  // Teologická fakulta
+$jcu-cyan:    #009FDA;  // Zdravotně sociální fakulta
+$jcu-green2:  #34B233;  // Fakulta zemědělská a technologická
+
+
+/*** SEMANTIC COLOR SCHEME ***/
+
+// Gray scale (uncomment the variables that you want to override or that you need to use in this file)
+//$white:    #fff;
+//$gray-100: #f8f9fa;
+//$gray-200: #e9ecef;
+//$gray-300: #dee2e6;
+//$gray-400: #ced4da;
+//$gray-500: #adb5bd;
+//$gray-600: #6c757d;
+//$gray-700: #495057;
+//$gray-800: #343a40;
+//$gray-900: #212529;
+//$black:    #000;
+
+// Override semantic colors here — all mapped to the JCU manual palette (no vanilla
+// Bootstrap colours): primary = university red, accents = official faculty colours.
+$primary:   $jcu-red;               // Univerzitní červená #E00034
+$secondary: #6e6f72;                // Univerzitní šedá, darkened for AA (white text 4.7:1)
+$success:   $jcu-green;             // Přírodovědecká fakulta green #007D57
+$info:      $jcu-cyan;              // Zdravotně sociální fakulta cyan #009FDA
+$warning:   $jcu-orange;            // Pedagogická fakulta orange #E98300
+$danger:    darken($jcu-red, 15%);  // Deep brand red for destructive actions (#ad0028)
+$light:     #f8f9fa;                // As Bootstrap $gray-100
+$dark:      $jcu-black;             // Univerzitní černá #1E1E1E
 
 // Add new semantic colors here (you don't need to add existing semantic colors)
-@import '../../../styles/_variables.scss';
 $theme-custom-semantic-colors: (
 );
-$theme-colors: map-merge($theme-colors, $theme-custom-semantic-colors);
+
+/*** OTHER BOOTSTRAP VARIABLES ***/
+
+$min-contrast-ratio: 2.06 !default;
+
+$body-color: $jcu-black;    // Univerzitní černá #1E1E1E
+
+$link-color: $jcu-red;      // JCU red links (4.97:1 on white — WCAG AA)
+$link-decoration: none;
+$link-hover-color: darken($link-color, 12%);
+$link-hover-decoration: underline;
+
+$table-accent-bg: #f8f9fa;  // As Bootstrap $gray-100
+$table-hover-bg: #ced4da;   // As Bootstrap $gray-400
+
+$navbar-dark-color: #fff;
+
+
+/*** CUSTOM DSPACE VARIABLES ***/
+
+$ds-home-news-link-color: $jcu-red;                 // links on the light home banner
+$ds-header-navbar-border-bottom-color: $jcu-red;    // red accent line under the white header
+
+$ds-breadcrumb-link-color: $jcu-red !default;
+$ds-breadcrumb-link-active-color: $jcu-black !default;
