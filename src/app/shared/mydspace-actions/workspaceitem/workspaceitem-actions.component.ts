@@ -22,6 +22,12 @@ import { getWorkspaceItemViewRoute } from '../../../workspaceitems-edit-page/wor
 import { GetRequest } from '../../../core/data/request.models';
 import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
+import { ScriptDataService } from '../../../core/data/processes/script-data.service';
+import { ProcessParameter } from '../../../process-page/processes/process-parameter.model';
+import { Process } from '../../../process-page/processes/process.model';
+import { getProcessDetailRoute } from '../../../process-page/process-page-routing.paths';
+
+const FILE_DOWNLOADER_SCRIPT_NAME = 'file-downloader';
 
 /**
  * This component represents actions related to WorkspaceItem object.
@@ -57,6 +63,14 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
    */
   canEditItem$: Observable<boolean>;
 
+  canUseFileDownloader$: Observable<boolean>;
+
+  public processingAddFromUrl$ = new BehaviorSubject<boolean>(false);
+
+  public bitstreamFromUrl = '';
+
+  public bitstreamName = '';
+
   /**
    * Initialize instance variables
    *
@@ -79,6 +93,7 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
     public authorizationService: AuthorizationDataService,
     protected halService: HALEndpointService,
     protected rdbService: RemoteDataBuildService,
+    protected scriptDataService: ScriptDataService,
     ) {
     super(WorkspaceItem.type, injector, router, notificationsService, translate, searchService, requestService);
 
@@ -107,6 +122,8 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
   ngOnInit(): void {
     const activeEPerson$ = this.authService.getAuthenticatedUserFromStore();
 
+    this.canUseFileDownloader$ = this.scriptDataService.scriptWithNameExistsAndCanExecute(FILE_DOWNLOADER_SCRIPT_NAME);
+
     this.canEditItem$ = activeEPerson$.pipe(
       switchMap((eperson) => {
         return this.object?.item.pipe(
@@ -117,6 +134,55 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
           })
         ) as Observable<boolean>;
       }));
+  }
+
+  openAddBitstreamFromUrlModal(content): void {
+    this.bitstreamFromUrl = '';
+    this.bitstreamName = '';
+    this.processingAddFromUrl$.next(false);
+    this.modalService.open(content);
+  }
+
+  addBitstreamFromUrl(closeModal?: (value?: any) => void): void {
+    const normalizedUrl = this.bitstreamFromUrl?.trim();
+    const normalizedName = this.bitstreamName?.trim();
+
+    if (!normalizedUrl) {
+      return;
+    }
+
+    const parameters: ProcessParameter[] = [
+      { name: '-u', value: normalizedUrl },
+      { name: '-w', value: this.object.id }
+    ];
+
+    if (normalizedName) {
+      parameters.push({ name: '-n', value: normalizedName });
+    }
+
+    this.processingAddFromUrl$.next(true);
+    this.scriptDataService.invoke(FILE_DOWNLOADER_SCRIPT_NAME, parameters, [])
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe((rd: RemoteData<Process>) => {
+        this.processingAddFromUrl$.next(false);
+        if (rd.hasSucceeded) {
+          this.notificationsService.success(
+            this.translate.get('process.new.notification.success.title'),
+            this.translate.get('process.new.notification.success.content')
+          );
+          if (closeModal) {
+            closeModal('ok');
+          }
+          if (rd.payload?.processId) {
+            this.router.navigateByUrl(getProcessDetailRoute(rd.payload.processId));
+          }
+        } else {
+          this.notificationsService.error(
+            this.translate.get('process.new.notification.error.title'),
+            this.translate.get('process.new.notification.error.content')
+          );
+        }
+      });
   }
 
   /**
