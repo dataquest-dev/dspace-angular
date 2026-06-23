@@ -1,4 +1,4 @@
-import { distinctUntilChanged, filter, first, take, withLatestFrom, delay } from 'rxjs/operators';
+import { distinctUntilChanged, filter, first, take, takeUntil, withLatestFrom, delay } from 'rxjs/operators';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
@@ -7,6 +7,7 @@ import {
   HostListener,
   Inject,
   NgZone,
+  OnDestroy,
   OnInit,
   PLATFORM_ID,
 } from '@angular/core';
@@ -17,7 +18,7 @@ import {
   Router,
 } from '@angular/router';
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,9 +40,19 @@ import { distinctNext } from './core/shared/distinct-next';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   notificationOptions;
   models;
+
+  /**
+   * Emits on destroy to tear down the overlay-removal gate subscription / DOM-settle watcher.
+   * AppComponent is the root component (lives for the app's lifetime) so this is mostly defensive
+   * + test hygiene, but it guarantees no MutationObserver/timer outlives the component.
+   */
+  private destroyed$ = new Subject<void>();
+
+  /** Set while the DOM-settle watcher is pending; disconnects the observer + clears its timers. */
+  private cancelOverlaySettle: (() => void) | null = null;
 
   /**
    * Whether or not the authentication is currently blocking the UI
@@ -127,6 +138,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.themeService.isThemeLoading$,
       ]).pipe(
         filter(([blocking, themeLoading]: [boolean, boolean]) => !blocking && !themeLoading),
+        takeUntil(this.destroyed$),
         first(),
       ).subscribe(() => {
         this.removeSsrOverlayWhenDomSettles(w);
@@ -177,6 +189,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         return;
       }
       done = true;
+      this.cancelOverlaySettle = null;
       if (quietTimer !== null) { clearTimeout(quietTimer); }
       if (capTimer !== null) { clearTimeout(capTimer); }
       try { observer.disconnect(); } catch (e) { /* noop */ }
@@ -203,9 +216,22 @@ export class AppComponent implements OnInit, AfterViewInit {
       }, SETTLE_QUIET_MS);
     };
 
+    // The admin sidebar (left chrome) runs long :enter/:leave height animations that add/remove DOM
+    // well after the routed page has rendered; counting those would keep re-arming the quiet window
+    // (and can push admin logins toward the cap). The sidebar is not part of the above-the-fold
+    // content whose late pop-in users perceive as flicker, so exclude its subtree from the signal.
+    const inAdminSidebar = (target: Node | null): boolean => {
+      const el: Element | null = target && target.nodeType === 1
+        ? (target as Element)
+        : (target ? target.parentElement : null);
+      return !!(el && typeof el.closest === 'function' && el.closest('ds-themed-admin-sidebar, ds-admin-sidebar'));
+    };
     const observer = new MutationObserver((mutations: MutationRecord[]) => {
       for (const m of mutations) {
         if (m.type === 'childList' && (m.addedNodes.length > 0 || m.removedNodes.length > 0)) {
+          if (inAdminSidebar(m.target)) {
+            continue;
+          }
           let elementChanged = false;
           m.addedNodes.forEach((n: Node) => { if (n.nodeType === 1) { elementChanged = true; } });
           m.removedNodes.forEach((n: Node) => { if (n.nodeType === 1) { elementChanged = true; } });
@@ -221,7 +247,22 @@ export class AppComponent implements OnInit, AfterViewInit {
       observer.observe(app, { childList: true, subtree: true });
     }
     capTimer = setTimeout(finish, SETTLE_MAX_MS);
+    // expose teardown so ngOnDestroy can cancel a still-pending settle (and for test hygiene)
+    this.cancelOverlaySettle = () => {
+      if (quietTimer !== null) { clearTimeout(quietTimer); }
+      if (capTimer !== null) { clearTimeout(capTimer); }
+      try { observer.disconnect(); } catch (e) { /* noop */ }
+    };
     armQuietTimer();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+    if (this.cancelOverlaySettle) {
+      this.cancelOverlaySettle();
+      this.cancelOverlaySettle = null;
+    }
   }
 
   ngOnInit() {
