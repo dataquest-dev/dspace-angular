@@ -20,7 +20,6 @@ import { ThemedLangSwitchComponent } from '../../../../app/shared/lang-switch/th
   selector: 'ds-themed-header',
   styleUrls: ['header.component.scss'],
   templateUrl: 'header.component.html',
-  standalone: true,
   imports: [
     AsyncPipe,
     ContextHelpToggleComponent,
