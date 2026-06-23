@@ -1,4 +1,4 @@
-import { distinctUntilChanged, filter, first, take, withLatestFrom, delay } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, startWith, switchMap, take, takeUntil, withLatestFrom, delay } from 'rxjs/operators';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
@@ -7,6 +7,7 @@ import {
   HostListener,
   Inject,
   NgZone,
+  OnDestroy,
   OnInit,
   PLATFORM_ID,
 } from '@angular/core';
@@ -17,7 +18,7 @@ import {
   Router,
 } from '@angular/router';
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, race, Subject, timer } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,9 +40,21 @@ import { distinctNext } from './core/shared/distinct-next';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   notificationOptions;
   models;
+
+  /**
+   * Emits on destroy to tear down the SSR-overlay-removal pipeline (gate subscription, the
+   * MutationObserver and its debounce/cap timers all unsubscribe via `takeUntil(destroyed$)`).
+   * AppComponent is the root component so this is mostly defensive + test hygiene.
+   */
+  private destroyed$ = new Subject<void>();
+
+  /** SSR anti-flicker overlay (see src/index.html) removal tuning. */
+  private readonly ssrOverlaySettleQuietMs = 600;      // routed page is "done" after this long with no DOM change
+  private readonly ssrOverlaySettleMaxMs = 10000;      // backstop reveal (below index.html's 15s catastrophic net)
+  private readonly ssrOverlayMinContentHeightPx = 200; // proves <ds-app> is no longer the empty shell
 
   /**
    * Whether or not the authentication is currently blocking the UI
@@ -94,97 +107,117 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * Drops the SSR mask overlay installed by the inline bootstrap script in src/index.html once the
-   * real CSR content has actually been painted. This trigger has to thread a needle between the two
-   * earlier approaches, each of which fixed one symptom and reintroduced the other:
+   * routed CSR page has actually finished rendering. Picking the right moment is the whole problem,
+   * and the two earlier attempts each fixed one symptom and reintroduced the other:
    *
-   *  - PR #1288 waited for `ApplicationRef.isStable`. That guaranteed the content was painted (no
-   *    flicker) but isStable is held hostage by ANY ongoing zone async — after an admin login the
-   *    app keeps the zone busy (authz/widgets, periodic polling, AAI/discojuice scripts) so isStable
-   *    fires many seconds late (or never, hitting the 15s fallback). The inert snapshot then masks
-   *    the live, already-rendered page -> "looks rendered but not interactive" (issue #725).
-   *  - PR #1317 switched to the loader-swap gate `!isAuthenticationBlocking && !isThemeLoading` plus
-   *    a single requestAnimationFrame. That fires promptly (fixing #725) but the gate only un-hides
-   *    `<router-outlet>`; Angular has NOT yet rendered the routed page at that instant and one rAF
-   *    runs before the browser paints, so the snapshot is dropped over an empty <ds-app> for a frame
-   *    or two -> the flicker came back.
+   *  - PR #1288 waited for `ApplicationRef.isStable`. No flicker, but isStable is held hostage by ANY
+   *    ongoing zone async — after an admin login the app keeps the zone busy (authz/widgets, periodic
+   *    polling, AAI/discojuice scripts) so isStable fires many seconds late (or hits the 15s
+   *    fallback). The inert snapshot then masks the live page -> "looks rendered but not interactive"
+   *    (issue #725).
+   *  - PR #1317 switched to the loader-swap gate `!isAuthenticationBlocking && !isThemeLoading` plus a
+   *    single requestAnimationFrame. Prompt, but that gate only un-hides `<router-outlet>`; the home
+   *    page then renders piecewise (navbar, search box, community list, recent submissions) as each
+   *    section's data arrives. Dropping the snapshot at the gate — or, as an earlier revision of this
+   *    method did, as soon as *some* content exists — exposes a half-built page that visibly pops
+   *    into place on a hard reload -> the flicker.
    *
-   * We keep #1317's decoupling from isStable (so background async can never delay us) but, after the
-   * gate opens, we wait across animation frames until the real <ds-app> is actually laid out before
-   * removing the snapshot. See {@link removeSsrOverlayAfterContentPainted}.
+   * The signal we actually need is "the routed page has stopped changing". So, after the gate opens,
+   * we keep the snapshot until the live <ds-app> DOM has SETTLED (no element added/removed for a
+   * short quiet window, with real content present). This stays decoupled from isStable (DOM-settle
+   * ignores non-rendering background async, so admin reveals in a few seconds rather than ~15s).
+   * See {@link routedPageReadyToReveal$}.
    */
   private removeSsrOverlayWhenContentVisible(): void {
-    const w: Window | undefined = this._window?.nativeWindow;
-    if (!w || typeof w.__dspaceRemoveSsrOverlay !== 'function') {
-      return;
+    const win: Window | undefined = this._window?.nativeWindow;
+    if (!win || typeof win.__dspaceRemoveSsrOverlay !== 'function') {
+      return; // SSR was skipped for this route, so no overlay was installed — nothing to remove
     }
-    // run outside Angular so the subscription does not keep change detection alive
+    // Run outside Angular: a MutationObserver watching the whole app must not trigger change
+    // detection (it would also keep ApplicationRef.isStable permanently false).
     this.ngZone.runOutsideAngular(() => {
-      combineLatest([
-        this.store.pipe(select(isAuthenticationBlocking), distinctUntilChanged()),
-        this.themeService.isThemeLoading$,
-      ]).pipe(
-        filter(([blocking, themeLoading]: [boolean, boolean]) => !blocking && !themeLoading),
-        first(),
+      this.routedPageReadyToReveal$().pipe(
+        takeUntil(this.destroyed$),
       ).subscribe(() => {
-        this.removeSsrOverlayAfterContentPainted(w);
+        // one frame so the freshly rendered content is painted before the snapshot fades out
+        this.runAfterNextFrame(win, () => win.__dspaceRemoveSsrOverlay?.());
       });
     });
   }
 
   /**
-   * Waits until the routed CSR view has been committed to the DOM and painted, then removes the SSR
-   * snapshot overlay. "Painted" is approximated by the real <ds-app> reaching a non-trivial height
-   * AND containing its `#main-content` host (i.e. it is no longer the empty shell the overlay script
-   * left behind). We poll this cheap layout signal once per animation frame, capped at MAX_FRAMES so
-   * that — unlike isStable in #1288 — nothing can hold the overlay open indefinitely; the 15s hard
-   * fallback in index.html stays as the catastrophic-error safety net.
+   * Emits once when it is safe to drop the SSR snapshot: the auth/theme loader gate has opened
+   * (same condition root.component.html uses to swap its fullscreen loader for the routed content)
+   * AND the routed page's DOM has settled. See {@link dsAppDomSettled$}.
    */
-  private removeSsrOverlayAfterContentPainted(w: Window): void {
-    const doc: Document = this.document;
-    const raf: ((cb: FrameRequestCallback) => number) | null =
-      typeof w.requestAnimationFrame === 'function' ? w.requestAnimationFrame.bind(w) : null;
-    const remove = () => {
-      if (typeof w.__dspaceRemoveSsrOverlay === 'function') {
-        w.__dspaceRemoveSsrOverlay();
-      }
-    };
-    const MAX_FRAMES = 180; // ~3s @60fps safety cap; the routed shell normally paints within a few frames
-    const MIN_CONTENT_HEIGHT = 200; // px: enough to prove the real <ds-app> is no longer the empty shell
-    let frames = 0;
-    const contentPainted = (): boolean => {
-      const app: Element | null = doc.querySelector('ds-app');
-      if (!app) {
-        return false;
-      }
-      let height = 0;
-      try {
-        height = app.getBoundingClientRect().height;
-      } catch (e) {
-        height = 0;
-      }
-      return height >= MIN_CONTENT_HEIGHT && app.querySelector('#main-content') !== null;
-    };
-    const tick = () => {
-      if (contentPainted() || ++frames >= MAX_FRAMES) {
-        // one more frame so the painted content is committed to screen before the snapshot fades
-        if (raf) {
-          raf(remove);
-        } else {
-          remove();
-        }
-        return;
-      }
-      if (raf) {
-        raf(tick);
-      } else {
-        setTimeout(tick, 16);
-      }
-    };
-    if (raf) {
-      raf(tick);
-    } else {
-      setTimeout(tick, 16);
+  private routedPageReadyToReveal$(): Observable<unknown> {
+    const loaderGateOpen$ = combineLatest([
+      this.store.pipe(select(isAuthenticationBlocking), distinctUntilChanged()),
+      this.themeService.isThemeLoading$,
+    ]).pipe(
+      filter(([authBlocking, themeLoading]: [boolean, boolean]) => !authBlocking && !themeLoading),
+      take(1),
+    );
+    return loaderGateOpen$.pipe(
+      switchMap(() => this.dsAppDomSettled$()),
+    );
+  }
+
+  /**
+   * Emits once when the live <ds-app> subtree stops being mutated (elements added/removed) for
+   * `ssrOverlaySettleQuietMs` AND it holds real content — or after `ssrOverlaySettleMaxMs`, whichever
+   * comes first. The cap guarantees a page that never goes quiet (constant background DOM updates)
+   * still reveals; the 15s fallback in index.html remains the ultimate net.
+   */
+  private dsAppDomSettled$(): Observable<unknown> {
+    const dsApp: Element | null = this.document.querySelector('ds-app');
+    if (!dsApp) {
+      return timer(this.ssrOverlaySettleMaxMs);
     }
+    const elementMutations$ = new Observable<void>((subscriber) => {
+      const observer = new MutationObserver((records) => {
+        if (records.some((record) => this.isElementChildListChange(record))) {
+          subscriber.next();
+        }
+      });
+      observer.observe(dsApp, { childList: true, subtree: true });
+      return () => observer.disconnect();
+    });
+    const settled$ = elementMutations$.pipe(
+      startWith(undefined),                              // start the quiet window immediately
+      debounceTime(this.ssrOverlaySettleQuietMs),        // ... reset by each render, fires once quiet
+      filter(() => this.dsAppHasRenderedContent(dsApp)), // ... but never on the empty shell
+    );
+    return race(settled$, timer(this.ssrOverlaySettleMaxMs)).pipe(take(1));
+  }
+
+  /** True once the live <ds-app> is no longer the empty shell the overlay script left behind. */
+  private dsAppHasRenderedContent(dsApp: Element): boolean {
+    const height = dsApp.getBoundingClientRect?.().height ?? 0;
+    return height >= this.ssrOverlayMinContentHeightPx && dsApp.querySelector('#main-content') !== null;
+  }
+
+  /** A childList mutation that adds or removes at least one element node (ignores text/attr noise). */
+  private isElementChildListChange(record: MutationRecord): boolean {
+    if (record.type !== 'childList') {
+      return false;
+    }
+    const changedNodes = [...Array.from(record.addedNodes), ...Array.from(record.removedNodes)];
+    return changedNodes.some((node) => node.nodeType === Node.ELEMENT_NODE);
+  }
+
+  /** Runs `callback` after the next paint (or synchronously if requestAnimationFrame is unavailable). */
+  private runAfterNextFrame(win: Window, callback: () => void): void {
+    if (typeof win.requestAnimationFrame === 'function') {
+      win.requestAnimationFrame(() => callback());
+    } else {
+      callback();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   ngOnInit() {
