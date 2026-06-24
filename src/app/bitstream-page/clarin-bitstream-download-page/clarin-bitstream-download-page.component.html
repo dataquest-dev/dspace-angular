@@ -1,0 +1,22 @@
+<div class="container">
+  @if ((downloadStatus | async) === 'Success') {
+    <div>
+      <h3>{{'bitstream.download.page' | translate:{bitstream: (bitstream$ | async)?.name} }}</h3>
+    </div>
+  }
+  @if ((downloadStatus | async) === 'MissingLicenseAgreementException') {
+    <ds-clarin-license-agreement-page
+      [bitstream$]="bitstream$">
+    </ds-clarin-license-agreement-page>
+  }
+  @if ((downloadStatus | async) === 'DownloadTokenExpiredException') {
+    <ds-clarin-bitstream-token-expired
+      [bitstream$]="bitstream$">
+    </ds-clarin-bitstream-token-expired>
+  }
+  @if ((downloadStatus | async) === 'Authorization denied') {
+    <ds-clarin-bitstream-authorization-denied
+      [bitstream$]="bitstream$">
+    </ds-clarin-bitstream-authorization-denied>
+  }
+</div>

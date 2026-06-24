@@ -1,0 +1,18 @@
+<div class="container">
+  @if (isReplaced != null) {
+    <ds-replaced-tombstone
+      [itemName]="itemName"
+      [isReplaced]="isReplaced"
+      [authors]="authors">
+    </ds-replaced-tombstone>
+  }
+  @if (isReplaced == null) {
+    <ds-withdrawn-tombstone
+      [itemName]="itemName"
+      [reasonOfWithdrawal]="reasonOfWithdrawal"
+      [authors]="authors">
+    </ds-withdrawn-tombstone>
+  }
+
+</div>
+

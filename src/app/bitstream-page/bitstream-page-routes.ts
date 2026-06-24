@@ -11,6 +11,7 @@ import { BitstreamAuthorizationsComponent } from './bitstream-authorizations/bit
 import { BitstreamDownloadPageComponent } from './bitstream-download-page/bitstream-download-page.component';
 import { bitstreamPageResolver } from './bitstream-page.resolver';
 import { bitstreamPageAuthorizationsGuard } from './bitstream-page-authorizations.guard';
+import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page/clarin-bitstream-download-page.component';
 import { ThemedEditBitstreamPageComponent } from './edit-bitstream-page/themed-edit-bitstream-page.component';
 import { legacyBitstreamURLRedirectGuard } from './legacy-bitstream-url-redirect.guard';
 
@@ -35,8 +36,9 @@ export const ROUTES: Route[] = [
   },
   {
     // Resolve angular bitstream download URLs
+    // CLARIN: license-gated download (shows license agreement / token-expired / auth-denied before download)
     path: ':id/download',
-    component: BitstreamDownloadPageComponent,
+    component: ClarinBitstreamDownloadPageComponent,
     resolve: {
       bitstream: bitstreamPageResolver,
     },
