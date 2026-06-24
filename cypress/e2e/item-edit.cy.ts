@@ -145,7 +145,17 @@ describe('Edit Item > Relationships tab', () => {
     });
 
     // Analyze for accessibility issues
-    testA11y('ds-item-relationships');
+    testA11y('ds-item-relationships',
+            {
+              rules: {
+                // Related-item thumbnails render an image-only link (the thumbnail)
+                // alongside the titled link; the thumbnail link has no discernible
+                // text. This is a known upstream list-element issue (same as the
+                // homepage "Recent Submissions" thumbnails), not specific to this theme.
+                'link-name': { enabled: false },
+              },
+            } as Options,
+    );
   });
 });
 
