@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 
 import { i18nBreadcrumbResolver } from '../core/breadcrumbs/i18n-breadcrumb.resolver';
+import { siteAdministratorGuard } from '../core/data/feature-authorization/feature-authorization-guard/site-administrator.guard';
 import { AdminCurationTasksComponent } from './admin-curation-tasks/admin-curation-tasks.component';
 import { BatchImportPageComponent } from './admin-import-batch-page/batch-import-page.component';
 import { ThemedMetadataImportPageComponent } from './admin-import-metadata-page/themed-metadata-import-page.component';
@@ -12,6 +13,7 @@ import {
   REPORTS_MODULE_PATH,
 } from './admin-routing-paths';
 import { ThemedAdminSearchPageComponent } from './admin-search-page/themed-admin-search-page.component';
+import { AdminUpdateConfigComponent } from './admin-update-config/admin-update-config.component';
 import { ThemedAdminWorkflowPageComponent } from './admin-workflow-page/themed-admin-workflow-page.component';
 
 export const ROUTES: Route[] = [
@@ -30,6 +32,13 @@ export const ROUTES: Route[] = [
     resolve: { breadcrumb: i18nBreadcrumbResolver },
     component: ThemedAdminSearchPageComponent,
     data: { title: 'admin.search.title', breadcrumbKey: 'admin.search' },
+  },
+  {
+    path: 'update-config',
+    resolve: { breadcrumb: i18nBreadcrumbResolver },
+    component: AdminUpdateConfigComponent,
+    canActivate: [siteAdministratorGuard],
+    data: { title: 'admin.update-config.title', breadcrumbKey: 'admin.update-config' },
   },
   {
     path: 'workflow',
