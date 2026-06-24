@@ -1,0 +1,61 @@
+<div class="container">
+  <div class="card">
+    <h5 class="card-header">{{'contract.message.distribution-license-agreement' | translate}}</h5>
+    @if (!isListMode()) {
+      <ng-container *ngVar="(collectionRD$ | async) as collectionRD">
+        @if (collectionRD?.hasFailed) {
+          <ds-error message="{{'error.collection' | translate}}"></ds-error>
+        }
+        @if (!collectionRD || collectionRD?.isLoading) {
+          <ds-loading message="{{'loading.collection' | translate}}"></ds-loading>
+        }
+        @if (collectionRD?.payload) {
+          <div class="card-body">
+            <div class=" well" id="cz_cuni_mff_ufal_ContractPage_div_licenses">
+              <h3>{{collectionRD?.payload?.name}}</h3>
+              <textarea class="form-control" cols="0" id="cz_cuni_mff_ufal_ContractPage_field_license_text_18"
+                name="license_text_18" readonly
+              rows="34">{{(licenseRD$ | async)?.payload?.text}}</textarea>
+            </div>
+          </div>
+        }
+      </ng-container>
+    } @else {
+      <ng-container *ngVar="(collectionsRD$ | async) as collectionsRD">
+        @if (collectionsRD?.payload?.totalElements > 0 || collectionsRD?.payload?.page?.length > 0) {
+          <ds-pagination
+            [paginationOptions]="pageConfig"
+            [collectionSize]="collectionsRD?.payload?.totalElements"
+            [hideGear]="true"
+            [hidePagerWhenSinglePage]="true">
+            @for (collection of collectionsRD?.payload?.page; track collection; let i = $index) {
+              <div class="card-body">
+                <div class=" well" id="cz_cuni_mff_ufal_ContractPage_div_licenses_{{i}}">
+                  <h3>{{collection?.name}}</h3>
+                  <textarea class="form-control"
+                    cols="0"
+                    readonly
+                  rows="34">{{(collection?.license | async)?.payload?.text}}</textarea>
+                </div>
+              </div>
+            }
+          </ds-pagination>
+        }
+        @if (collectionsRD?.payload?.totalElements === 0 || collectionsRD?.payload?.page?.length === 0) {
+          <div
+            class="alert alert-info mt-3"
+            role="alert">
+            {{'collection.select.empty' | translate}}
+          </div>
+        }
+        @if (collectionsRD?.hasFailed) {
+          <ds-error message="{{'error.collections' | translate}}"></ds-error>
+        }
+        @if (!collectionsRD || collectionsRD?.isLoading) {
+          <ds-loading message="{{'loading.collections' | translate}}"></ds-loading>
+        }
+      </ng-container>
+    }
+  </div>
+</div>
+

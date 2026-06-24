@@ -295,6 +295,10 @@ export const APP_ROUTES: Route[] = [
         loadChildren: () => import('./contact-page/contact-page-routes').then((m) => m.ROUTES),
       },
       {
+        path: 'contract',
+        loadChildren: () => import('./license-contract-page/license-contract-page-routes').then((m) => m.ROUTES),
+      },
+      {
         path: STATIC_PAGE_PATH,
         loadChildren: () => import('./static-page/static-page-routes').then((m) => m.ROUTES),
       },
