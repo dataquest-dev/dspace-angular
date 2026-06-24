@@ -20,7 +20,7 @@
     </div>
   }
 
-  @if (!(isLoading$ | async) && (hasMore$ | async)) {
+  @if ((isLoading$ | async) !== true && (hasMore$ | async)) {
     <a
       (click)="$event.preventDefault(); handleLoadMore()"
       class="load-more-btn btn btn-sm btn-outline-secondary"

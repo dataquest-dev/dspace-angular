@@ -1,15 +1,22 @@
-import { Component, Input } from '@angular/core';
-import { VarDirective } from '../../../../shared/utils/var.directive';
+import {
+  Component,
+  Input,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { Item } from '../../../../core/shared/item.model';
 import { SEPARATOR } from '../../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
+import { VarDirective } from '../../../../shared/utils/var.directive';
 
 
 @Component({
-  imports: [VarDirective, TranslateModule],
+  imports: [
+    TranslateModule,
+    VarDirective,
+  ],
   selector: 'ds-clarin-sponsor-item-field',
   templateUrl: './clarin-sponsor-item-field.component.html',
-  styleUrls: ['./clarin-sponsor-item-field.component.scss']
+  styleUrls: ['./clarin-sponsor-item-field.component.scss'],
 })
 export class ClarinSponsorItemFieldComponent {
 

@@ -58,7 +58,7 @@
                 }
               </span>
             }
-            @if (type == null) {
+            @if (type === null) {
               <span class="pr-1">
                 {{mdValue.value | dsReplace: this.replaceCharacter}}@if (!last) {
                 <span [innerHTML]="separator"></span>

@@ -2,7 +2,7 @@
   <button
     class="btn btn-outline-info btn-sm"
     (click)="onSubscribe()"
-    [disabled]="isLoading"
+    [dsBtnDisabled]="isLoading"
     [title]="'matomo.subscription.subscribe.tooltip' | translate">
     <i class="fa fa-bell" aria-hidden="true"></i>
     {{ 'matomo.subscription.subscribe.button' | translate }}
@@ -12,7 +12,7 @@
   <button
     class="btn btn-secondary btn-sm"
     (click)="onUnsubscribe()"
-    [disabled]="isLoading"
+    [dsBtnDisabled]="isLoading"
     [title]="'matomo.subscription.unsubscribe.tooltip' | translate">
     <i class="fa fa-bell-slash" aria-hidden="true"></i>
     {{ 'matomo.subscription.unsubscribe.button' | translate }}

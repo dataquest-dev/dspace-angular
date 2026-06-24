@@ -1,14 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { Item } from '../../../../core/shared/item.model';
+import {
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
+import { Item } from '../../../../core/shared/item.model';
 import { ClarinDateService } from '../../../../shared/clarin-date.service';
 
 @Component({
-  imports: [AsyncPipe],
+  imports: [
+    AsyncPipe,
+  ],
   selector: 'ds-clarin-date-item-field',
   templateUrl: './clarin-date-item-field.component.html',
-  styleUrls: ['./clarin-date-item-field.component.scss']
+  styleUrls: ['./clarin-date-item-field.component.scss'],
 })
 export class ClarinDateItemFieldComponent implements OnInit {
 

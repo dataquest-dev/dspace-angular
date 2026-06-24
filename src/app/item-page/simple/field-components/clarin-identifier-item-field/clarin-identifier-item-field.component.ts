@@ -1,24 +1,32 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
-import { Item } from '../../../../core/shared/item.model';
-import { BehaviorSubject } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { AsyncPipe } from '@angular/common';
+import {
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject } from 'rxjs';
+
+import { Item } from '../../../../core/shared/item.model';
 import { ItemIdentifierService } from '../../../../shared/item-identifier.service';
 
 
 @Component({
-  imports: [AsyncPipe],
+  imports: [
+    AsyncPipe,
+  ],
   selector: 'ds-clarin-identifier-item-field',
   templateUrl: './clarin-identifier-item-field.component.html',
-  styleUrls: ['./clarin-identifier-item-field.component.scss']
+  styleUrls: ['./clarin-identifier-item-field.component.scss'],
 })
 export class ClarinIdentifierItemFieldComponent implements OnInit {
 
   /**
    * After clicking on the `Copy` icon the message `Copied` is popped up.
    */
-  @ViewChild('copyButton', {static: false}) copyButtonRef: NgbTooltip;
+  @ViewChild('copyButton', { static: false }) copyButtonRef: NgbTooltip;
 
   /**
    * The item to display metadata for

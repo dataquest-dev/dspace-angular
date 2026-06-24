@@ -1,13 +1,26 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
+import {
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Observable, of, combineLatest } from 'rxjs';
-import { map, switchMap, shareReplay } from 'rxjs/operators';
-import { ItemVersionsComponent } from '../../../versions/item-versions.component';
+import {
+  combineLatest,
+  Observable,
+  of,
+} from 'rxjs';
+import {
+  map,
+  shareReplay,
+  switchMap,
+} from 'rxjs/operators';
+
+import { RemoteData } from '../../../../core/data/remote-data';
 import { Item } from '../../../../core/shared/item.model';
 import { Version } from '../../../../core/shared/version.model';
-import { RemoteData } from '../../../../core/data/remote-data';
+import { ItemVersionsComponent } from '../../../versions/item-versions.component';
 
 /**
  * Local type definition matching the parent component's VersionsDTO structure
@@ -37,10 +50,14 @@ interface EnhancedVersionDTO extends VersionDTO {
  * Clarin-specific field component for User/Anonymous view of item version history that extends ItemVersionsComponent
  */
 @Component({
-  imports: [RouterLink, AsyncPipe, TranslateModule],
+  imports: [
+    AsyncPipe,
+    RouterLink,
+    TranslateModule,
+  ],
   selector: 'ds-clarin-item-versions-field',
   templateUrl: './clarin-item-versions-field.component.html',
-  styleUrls: ['./clarin-item-versions-field.component.scss']
+  styleUrls: ['./clarin-item-versions-field.component.scss'],
 })
 export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent implements OnInit {
 
@@ -74,7 +91,7 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
     // Override the parent's pageSize to fetch all versions at once for the dropdown display
     this.pageSize = this.MAX_VERSIONS_TO_DISPLAY;
     this.options = Object.assign(this.options, {
-      pageSize: this.pageSize
+      pageSize: this.pageSize,
     });
 
     super.ngOnInit();
@@ -82,13 +99,13 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
     // Set up clarin-specific showMetadataValue logic
     if (this.versionsDTO$) {
       this.showMetadataValue = this.versionsDTO$.pipe(
-        map((versionsDTO: VersionsDTO) => versionsDTO && versionsDTO.totalElements > 1)
+        map((versionsDTO: VersionsDTO) => versionsDTO && versionsDTO.totalElements > 1),
       );
 
       // Pre-compute workspace/workflow IDs to optimize template performance
       this.enhancedVersions$ = combineLatest([
         this.versionsDTO$,
-        this.versionRD$
+        this.versionRD$,
       ]).pipe(
         map(([versionsDTO, versionRD]) => {
           const currentVersionId = versionRD?.payload?.id;
@@ -96,24 +113,24 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
             const versionItem$ = versionDTO.version.item;
             const workspaceId$ = (this.hasDraftVersion$ ?? of(false)).pipe(
               switchMap(hasDraftVersion =>
-                hasDraftVersion ? this.getWorkspaceId(versionItem$) : of(undefined)
-              )
+                hasDraftVersion ? this.getWorkspaceId(versionItem$) : of(undefined),
+              ),
             );
             const workflowId$ = workspaceId$.pipe(
               switchMap((workspaceId) =>
-                workspaceId ? of(undefined) : this.getWorkflowId(versionItem$)
-              )
+                workspaceId ? of(undefined) : this.getWorkflowId(versionItem$),
+              ),
             );
             return {
               ...versionDTO,
               versionItem$,
               workspaceId$,
               workflowId$,
-              isCurrentVersion: versionDTO.version.id === currentVersionId
+              isCurrentVersion: versionDTO.version.id === currentVersionId,
             } as EnhancedVersionDTO;
           });
         }),
-        shareReplay(1) // Cache the result to prevent duplicate requests
+        shareReplay({ bufferSize: 1, refCount: true }), // Cache the result to prevent duplicate requests
       );
     } else {
       // Fallback: check if isAdmin$ is available, otherwise hide the component
@@ -156,8 +173,8 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
   getVersionWorkspaceId(versionItem: Observable<Item>): Observable<string | undefined> {
     return (this.hasDraftVersion$ ?? of(false)).pipe(
       switchMap(hasDraftVersion =>
-        hasDraftVersion ? this.getWorkspaceId(versionItem) : of(undefined)
-      )
+        hasDraftVersion ? this.getWorkspaceId(versionItem) : of(undefined),
+      ),
     );
   }
 
@@ -170,8 +187,8 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
   getVersionWorkflowId(versionItem: Observable<Item>, workspaceId$: Observable<string | undefined>): Observable<string | undefined> {
     return workspaceId$.pipe(
       switchMap((workspaceId) =>
-        workspaceId ? of(undefined) : this.getWorkflowId(versionItem)
-      )
+        workspaceId ? of(undefined) : this.getWorkflowId(versionItem),
+      ),
     );
   }
 

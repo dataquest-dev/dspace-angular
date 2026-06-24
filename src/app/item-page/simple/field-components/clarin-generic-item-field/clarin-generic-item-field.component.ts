@@ -1,31 +1,54 @@
-import { Component, Input, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { ReplacePipe } from '../../../../shared/utils/replace.pipe';
+import {
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import {
+  BehaviorSubject,
+  firstValueFrom,
+} from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
+import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
+import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
+import { Item } from '../../../../core/shared/item.model';
+import { getFirstSucceededRemoteDataPayload } from '../../../../core/shared/operators';
+import { ClarinItemAuthorPreviewComponent } from '../../../../shared/clarin-item-author-preview/clarin-item-author-preview.component';
+import {
+  convertMetadataFieldIntoSearchType,
+  getBaseUrl,
+} from '../../../../shared/clarin-shared-util';
+import {
+  isEmpty,
+  isNotUndefined,
+} from '../../../../shared/empty.util';
+import { ReplacePipe } from '../../../../shared/utils/replace.pipe';
 import { ClarinDateItemFieldComponent } from '../clarin-date-item-field/clarin-date-item-field.component';
 import { ClarinDescriptionItemFieldComponent } from '../clarin-description-item-field/clarin-description-item-field.component';
 import { ClarinIdentifierItemFieldComponent } from '../clarin-identifier-item-field/clarin-identifier-item-field.component';
-import { ClarinItemAuthorPreviewComponent } from '../../../../shared/clarin-item-author-preview/clarin-item-author-preview.component';
 import { ClarinSponsorItemFieldComponent } from '../clarin-sponsor-item-field/clarin-sponsor-item-field.component';
-import { Item } from '../../../../core/shared/item.model';
-import { isEmpty, isNotUndefined } from '../../../../shared/empty.util';
-import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
-import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
-import { convertMetadataFieldIntoSearchType, getBaseUrl } from '../../../../shared/clarin-shared-util';
-import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { getFirstSucceededRemoteDataPayload } from '../../../../core/shared/operators';
-import { map } from 'rxjs/operators';
 
 export const DOI_METADATA_FIELD = 'dc.identifier.doi';
 export const HANDLE_METADATA_FIELD = 'dc.identifier.uri';
 const SHOW_HANDLE_AND_DOI_PROPERTY_NAME = 'item-page.show-handle-and-doi';
 
 @Component({
-  imports: [AsyncPipe, ReplacePipe, TranslateModule, ClarinDateItemFieldComponent, ClarinDescriptionItemFieldComponent, ClarinIdentifierItemFieldComponent, ClarinItemAuthorPreviewComponent, ClarinSponsorItemFieldComponent],
+  imports: [
+    AsyncPipe,
+    ClarinDateItemFieldComponent,
+    ClarinDescriptionItemFieldComponent,
+    ClarinIdentifierItemFieldComponent,
+    ClarinItemAuthorPreviewComponent,
+    ClarinSponsorItemFieldComponent,
+    ReplacePipe,
+    TranslateModule,
+  ],
   selector: 'ds-clarin-generic-item-field',
   templateUrl: './clarin-generic-item-field.component.html',
-  styleUrls: ['./clarin-generic-item-field.component.scss']
+  styleUrls: ['./clarin-generic-item-field.component.scss'],
 })
 export class ClarinGenericItemFieldComponent implements OnInit {
 

@@ -10,7 +10,7 @@
         <button
           class="btn btn-outline-secondary"
           (click)="loadConfigFiles()"
-          [disabled]="loading"
+          [dsBtnDisabled]="loading"
           title="{{ 'admin.update-config.refresh.tooltip' | translate }}">
           <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
           {{ 'admin.update-config.refresh' | translate }}
@@ -103,7 +103,7 @@
                 <button
                   class="btn btn-outline-secondary btn-lg"
                   (click)="resetContent()"
-                  [disabled]="!hasUnsavedChanges() || loading || saving"
+                  [dsBtnDisabled]="!hasUnsavedChanges() || loading || saving"
                   [title]="'admin.update-config.buttons.undo.tooltip' | translate">
                   <i class="fas fa-undo me-2"></i>
                   {{ 'admin.update-config.buttons.undo' | translate }}
@@ -111,7 +111,7 @@
                 <button
                   class="btn btn-outline-warning btn-lg"
                   (click)="resetToOriginalFile()"
-                  [disabled]="loading || saving"
+                  [dsBtnDisabled]="loading || saving"
                   [title]="'admin.update-config.buttons.reload.tooltip' | translate">
                   <i class="fas fa-sync me-2"></i>
                   {{ 'admin.update-config.buttons.reload' | translate }}
@@ -119,7 +119,7 @@
                 <button
                   class="btn btn-success btn-lg px-4"
                   (click)="saveFile()"
-                  [disabled]="!hasUnsavedChanges() || loading || saving"
+                  [dsBtnDisabled]="!hasUnsavedChanges() || loading || saving"
                   [title]="'admin.update-config.buttons.save.tooltip' | translate">
                   @if (!saving) {
                     <i class="fas fa-save me-2"></i>

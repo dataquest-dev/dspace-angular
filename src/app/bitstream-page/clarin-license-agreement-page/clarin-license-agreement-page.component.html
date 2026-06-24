@@ -35,13 +35,13 @@
     <div class="col-12">
       <table class="table table-bordered">
         <tbody>
-          @if ((currentUser$ | async) != null) {
+          @if ((currentUser$ | async) !== null) {
             <tr>
               <td><b>{{'clarin.license.agreement.signer.name' | translate}}</b></td>
               <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(currentUser$ | async)?.name"></td>
             </tr>
           }
-          @if ((currentUser$ | async) != null) {
+          @if ((currentUser$ | async) !== null) {
             <tr>
               <td><b>{{'clarin.license.agreement.signer.id' | translate}}</b></td>
               <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(userRegistration$ | async)?.email"></td>
@@ -51,7 +51,7 @@
             <td><b>{{'clarin.license.agreement.item.handle' | translate}}</b></td>
             <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(item$ | async)?.handle"></td>
           </tr>
-          @if ((currentUser$ | async) == null || (userMetadata$ | async)) {
+          @if ((currentUser$ | async) === null || (userMetadata$ | async)) {
             @for (requiredInfo of requiredInfo$ | async; track requiredInfo) {
               <tr>
                 <td><b>{{'clarin.license.agreement.signer.' + requiredInfo.name | translate}}</b></td>
@@ -96,7 +96,7 @@
   </div>
   <div class="row pt-3">
     <div class="col-12">
-      <button class="btn btn-success max-width" [disabled]="error$.value.length !== 0 || (isLoading | async)" (click)="accept()">
+      <button class="btn btn-success max-width" [dsBtnDisabled]="error$.value.length !== 0 || (isLoading | async)" (click)="accept()">
         {{'clarin.license.agreement.button.agree' | translate}}
         @if (isLoading | async) {
           <span

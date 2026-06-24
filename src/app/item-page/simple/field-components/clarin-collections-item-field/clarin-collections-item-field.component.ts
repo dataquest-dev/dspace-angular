@@ -1,26 +1,47 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
+import {
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Item } from '../../../../core/shared/item.model';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { Collection } from '../../../../core/shared/collection.model';
+import {
+  BehaviorSubject,
+  combineLatest,
+  Observable,
+} from 'rxjs';
+import {
+  map,
+  scan,
+  startWith,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
+import { FindListOptions } from 'src/app/core/data/find-list-options.model';
+
 import { CollectionDataService } from '../../../../core/data/collection-data.service';
+import { PaginatedList } from '../../../../core/data/paginated-list.model';
+import { Collection } from '../../../../core/shared/collection.model';
+import { Item } from '../../../../core/shared/item.model';
 import {
   getAllCompletedRemoteData,
   getAllSucceededRemoteDataPayload,
-  getFirstSucceededRemoteDataPayload, getPaginatedListPayload
- } from '../../../../core/shared/operators';
-import { map, scan, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { PaginatedList } from '../../../../core/data/paginated-list.model';
+  getFirstSucceededRemoteDataPayload,
+  getPaginatedListPayload,
+} from '../../../../core/shared/operators';
 import { hasValue } from '../../../../shared/empty.util';
-import { FindListOptions } from 'src/app/core/data/find-list-options.model';
 
 @Component({
-  imports: [RouterLink, AsyncPipe, TranslateModule],
+  imports: [
+    AsyncPipe,
+    RouterLink,
+    TranslateModule,
+  ],
   selector: 'ds-clarin-collections-item-field',
   templateUrl: './clarin-collections-item-field.component.html',
-  styleUrls: ['./clarin-collections-item-field.component.scss']
+  styleUrls: ['./clarin-collections-item-field.component.scss'],
 })
 export class ClarinCollectionsItemFieldComponent implements OnInit {
 

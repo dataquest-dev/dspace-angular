@@ -1,4 +1,4 @@
-@if (item != null) {
+@if (item !== null) {
   <div class="pt-3">
     <div class="card">
       <div class="card-body pt-0 pb-0">
@@ -15,7 +15,7 @@
               @if (isSearchResult) {
                 <div class="pt-1">
                   <div class="font-weight-bold">{{ 'item.view.box.publisher.message' | translate }}</div>
-                  <span>(@if (itemPublisher != null) {
+                  <span>(@if (itemPublisher !== null) {
                     <span><a [href]="publisherRedirectLink">{{itemPublisher}}</a> / </span>
                   }{{itemDate}})</span>
                 </div>
@@ -33,7 +33,7 @@
           <div class="row">
             <ds-clarin-item-author-preview [item]="item" [fields]="AUTHOR_METADATA_FIELDS"></ds-clarin-item-author-preview>
           </div>
-          @if (isSearchResult === false && itemDescription != null) {
+          @if (isSearchResult === false && itemDescription !== null) {
             <div class="row d-block pt-1">
               <div><strong>{{'item.view.box.description.message' | translate}}</strong></div>
               <div class="clarin-item-description pr-3">{{itemDescription}}</div>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div [ngClass]="{'row': true, 'justify-content-end': true, 'pt-3': (itemCountOfFiles | async) === -1}">
-          @if (licenseType != null) {
+          @if (licenseType !== null) {
             <div
               [ngClass]="'d-inline py-1 px-1 label label-license  label-default' + ' label-' + licenseLabel + ' rounded text-white'">
               <span>

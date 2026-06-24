@@ -5,7 +5,7 @@
       <p class="card-text">{{authors && authors.join(', ')}}</p>
       <h5 class="card-title">{{'item.tombstone.withdrawn.message' | translate}}</h5>
       <p class="card-text">{{'item.tombstone.no.available.message' | translate}}</p>
-      @if (reasonOfWithdrawal != null) {
+      @if (reasonOfWithdrawal !== null) {
         <p>
           <span class="card-text">
             {{'item.tombstone.withdrawal.reason.message' | translate}}

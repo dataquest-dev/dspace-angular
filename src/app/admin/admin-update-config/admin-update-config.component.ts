@@ -1,9 +1,12 @@
 import {
+  DatePipe,
+  DecimalPipe,
+} from '@angular/common';
+import {
   ChangeDetectorRef,
   Component,
   OnInit,
 } from '@angular/core';
-import { DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   TranslateModule,

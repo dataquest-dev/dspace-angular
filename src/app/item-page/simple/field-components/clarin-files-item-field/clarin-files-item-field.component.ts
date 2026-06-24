@@ -1,26 +1,40 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { VarDirective } from '../../../../shared/utils/var.directive';
-import { FileDownloadLinkComponent } from '../../../../shared/file-download-link/file-download-link.component';
-import { ThemedLoadingComponent } from '../../../../shared/loading/themed-loading.component';
-import { RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
-import { Item } from '../../../../core/shared/item.model';
+import {
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
+import { RouterLink } from '@angular/router';
+import {
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
-import { Bitstream } from '../../../../core/shared/bitstream.model';
+
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
-import { NotificationsService } from '../../../../shared/notifications/notifications.service';
-import { TranslateService } from '@ngx-translate/core';
-import { getFirstCompletedRemoteData } from '../../../../core/shared/operators';
-import { RemoteData } from '../../../../core/data/remote-data';
 import { PaginatedList } from '../../../../core/data/paginated-list.model';
+import { RemoteData } from '../../../../core/data/remote-data';
+import { Bitstream } from '../../../../core/shared/bitstream.model';
+import { Item } from '../../../../core/shared/item.model';
+import { getFirstCompletedRemoteData } from '../../../../core/shared/operators';
 import { hasValue } from '../../../../shared/empty.util';
+import { ThemedFileDownloadLinkComponent } from '../../../../shared/file-download-link/themed-file-download-link.component';
+import { ThemedLoadingComponent } from '../../../../shared/loading/themed-loading.component';
+import { NotificationsService } from '../../../../shared/notifications/notifications.service';
+import { VarDirective } from '../../../../shared/utils/var.directive';
 
 @Component({
-  imports: [VarDirective, FileDownloadLinkComponent, ThemedLoadingComponent, RouterLink, AsyncPipe, TranslateModule],
+  imports: [
+    AsyncPipe,
+    RouterLink,
+    ThemedFileDownloadLinkComponent,
+    ThemedLoadingComponent,
+    TranslateModule,
+    VarDirective,
+  ],
   selector: 'ds-clarin-files-item-field',
   templateUrl: './clarin-files-item-field.component.html',
-  styleUrls: ['./clarin-files-item-field.component.scss']
+  styleUrls: ['./clarin-files-item-field.component.scss'],
 })
 export class ClarinFilesItemFieldComponent implements OnInit {
 
@@ -58,7 +72,7 @@ export class ClarinFilesItemFieldComponent implements OnInit {
   constructor(
     protected bitstreamDataService: BitstreamDataService,
     protected notificationsService: NotificationsService,
-    protected translateService: TranslateService
+    protected translateService: TranslateService,
   ) {
   }
 
@@ -82,7 +96,7 @@ export class ClarinFilesItemFieldComponent implements OnInit {
     }
     this.bitstreamDataService.findAllByItemAndBundleName(this.item, 'ORIGINAL', {
       currentPage: this.currentPage,
-      elementsPerPage: this.pageSize
+      elementsPerPage: this.pageSize,
     }).pipe(
       getFirstCompletedRemoteData(),
     ).subscribe((bitstreamsRD: RemoteData<PaginatedList<Bitstream>>) => {
