@@ -1,0 +1,7 @@
+@if (showAccessStatus) {
+  @if (accessStatus$ | async; as accessStatus) {
+    <div>
+      <span class="badge badge-secondary">{{ accessStatus | translate }}</span>
+    </div>
+  }
+}
