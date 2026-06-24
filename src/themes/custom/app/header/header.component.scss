@@ -13,9 +13,8 @@
     }
   }
 
-  // Official JU colour logotype on the white header
   .jcu-brand {
-    flex: 0 0 auto; // never shrink/distort the logo (the navbar gives way instead)
+    flex: 0 0 auto;
 
     &:focus-visible {
       outline: 2px solid var(--bs-primary);
@@ -26,7 +25,7 @@
 
   img#header-logo {
     height: var(--ds-header-logo-height);
-    width: auto; // keep the logo's intrinsic aspect ratio at every zoom level
+    width: auto;
     display: block;
   }
 

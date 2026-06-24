@@ -3,25 +3,18 @@
 // imports the base global style
 @import '../../../styles/_global-styles.scss';
 
-// Item type badges (Item / Collection / Community / Person ...) shown next to results.
-// Univerzitní šedá (JCU grey) tag look.
 ds-themed-type-badge .badge,
 ds-type-badge .badge {
-  background-color: #939598 !important; // univerzitní šedá
+  background-color: #939598 !important;
   color: #fff !important;
 }
 
-// Cookie consent (Orejime): the "learn more / Customize" button defaults to a vanilla blue.
-// Re-skin it to univerzitní černá so the banner stays on-brand (accept button is already red).
 .orejime-Button--info {
-  background-color: var(--bs-dark) !important; // #1E1E1E
+  background-color: var(--bs-dark) !important;
   border-color: var(--bs-dark) !important;
   color: #fff !important;
 }
 
-// Vertically centre the desktop navbar within the taller white header.
-// ds-navbar is display:block and only as tall as its content, so #main-navbar sat at the top
-// of the full-height #desktop-navbar — make ds-navbar a flex container that centres it.
 #desktop-navbar ds-navbar {
   display: flex;
   align-items: center;
@@ -36,8 +29,6 @@ ds-type-badge .badge {
   }
 }
 
-// Navbar dropdown ("All of DSpace", "Browse", ...): white panel with red items, and a
-// FULL-WIDTH red highlight on hover (items must be block-level, not content-width).
 .nav-dropdown-menu {
   padding: 0.25rem 0 !important;
   overflow: hidden;
@@ -51,6 +42,6 @@ ds-type-badge .badge {
   .ds-menu-item:hover,
   .ds-menu-item:focus {
     color: #fff !important;
-    background-color: var(--bs-primary); // full-row red highlight
+    background-color: var(--bs-primary);
   }
 }

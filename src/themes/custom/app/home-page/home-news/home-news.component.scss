@@ -1,13 +1,11 @@
 :host {
-  // Light, modern hero on a soft grey surface (like the sections on www.jcu.cz),
-  // with the JCU red used as an accent rather than a full-bleed background.
   .jcu-home-banner {
     position: relative;
     overflow: hidden;
-    background: #f6f6f7; // soft university grey surface
+    background: #f6f6f7;
     color: var(--bs-body-color);
-    border-bottom: 3px solid var(--bs-primary); // red accent line
-    margin-bottom: 2.5rem; // breathing room before the search box
+    border-bottom: 3px solid var(--bs-primary);
+    margin-bottom: 2.5rem;
   }
 
   .jcu-home-banner-inner {
@@ -24,7 +22,7 @@
     letter-spacing: 0.09em;
     font-size: 0.82rem;
     font-weight: 700;
-    color: var(--bs-primary); // red eyebrow
+    color: var(--bs-primary);
     margin-bottom: 0.5rem;
   }
 
@@ -32,7 +30,7 @@
     font-weight: 700;
     font-size: clamp(2.2rem, 5vw, 3.4rem);
     line-height: 1.05;
-    color: var(--bs-dark); // univerzitní černá
+    color: var(--bs-dark);
     margin-bottom: 1rem;
   }
 
@@ -50,7 +48,7 @@
     margin-bottom: 0;
   }
 
-  // Actual JU symbol (real logo artwork) as a subtle watermark on the right
+  // logo artwork as a subtle watermark on the right
   .jcu-home-symbol {
     position: absolute;
     top: 50%;

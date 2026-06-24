@@ -31,7 +31,7 @@
       text-decoration: none;
     }
 
-    #desktop-navbar { // in header component
+    #desktop-navbar {
       #main-site-navigation {
         /* Desktop menu */
 
@@ -42,7 +42,6 @@
           height: 100%;
         }
         .ds-menu-item {
-          // define here the style for top-level navbar menu items
           padding: var(--ds-navbar-item-vertical-padding) var(--ds-navbar-item-horizontal-padding);
         }
         .ds-menu-item, .ds-menu-toggler-wrapper {
@@ -56,10 +55,7 @@
 
         .dropdown-menu {
           .ds-menu-item {
-            // define here the style for second-level navbar menu items
             padding: var(--ds-navbar-dropdown-item-vertical-padding) var(--ds-navbar-dropdown-item-horizontal-padding);
-            // The dropdown opens on a white panel, so its items need dark text
-            // (the top-level navbar links are white for the red header).
             color: var(--bs-body-color) !important;
             &:hover, &:focus {
               color: var(--bs-primary) !important;
@@ -70,7 +66,7 @@
       }
     }
 
-    #collapsible-mobile-navbar { // in header-navbar-wrapper component
+    #collapsible-mobile-navbar {
 
       border-top: var(--ds-expandable-navbar-border-top-style);
       padding-top: var(--ds-expandable-navbar-padding-top);

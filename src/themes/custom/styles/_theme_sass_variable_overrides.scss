@@ -12,26 +12,15 @@
 
 /*** FONT FAMILIES ***/
 
-// JCU official typeface: Clara Sans (self-hosted @font-face declarations).
 @import '../assets/fonts/clara.scss';
-// Calibri is the manual's "doplňkové písmo" (supplementary font); then system fallbacks.
 $font-family-sans-serif: 'Clara Sans', Calibri, 'Helvetica Neue', Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
 
-/*** JCU BRAND COLORS (Brand manual p.73 "Barevnost logotypů JU a fakult") ***/
+/*** JCU BRAND COLORS ***/
 // Single source of truth — defined once as SASS variables.
-$jcu-red:     #E00034;  // Univerzitní červená — Pantone 185  / RAL 3020  (PRIMARY)
-$jcu-black:   #1E1E1E;  // Univerzitní černá   — Process Black / RAL 9011
-$jcu-grey:    #939598;  // Univerzitní šedá    — 50% black     / RAL 7040
-// Faculty accent colours (secondary palette, available for accents/entities)
-$jcu-magenta: #D10074;  // Ekonomická fakulta
-$jcu-blue:    #6F9AD3;  // Filozofická fakulta
-$jcu-orange:  #E98300;  // Pedagogická fakulta
-$jcu-green:   #007D57;  // Přírodovědecká fakulta
-$jcu-teal:    #5BBBB7;  // Fakulta rybářství a ochrany vod
-$jcu-purple:  #9C5FB5;  // Teologická fakulta
-$jcu-cyan:    #009FDA;  // Zdravotně sociální fakulta
-$jcu-green2:  #34B233;  // Fakulta zemědělská a technologická
+$jcu-red:     #E00034;
+$jcu-black:   #1E1E1E;
+$jcu-grey:    #939598;
 
 
 /*** SEMANTIC COLOR SCHEME ***/
@@ -49,16 +38,15 @@ $jcu-green2:  #34B233;  // Fakulta zemědělská a technologická
 //$gray-900: #212529;
 //$black:    #000;
 
-// Override semantic colors here — all mapped to the JCU manual palette (no vanilla
-// Bootstrap colours): primary = university red, accents = official faculty colours.
-$primary:   $jcu-red;               // Univerzitní červená #E00034
-$secondary: #6e6f72;                // Univerzitní šedá, darkened for AA (white text 4.7:1)
-$success:   $jcu-green;             // Přírodovědecká fakulta green #007D57
-$info:      $jcu-cyan;              // Zdravotně sociální fakulta cyan #009FDA
-$warning:   $jcu-orange;            // Pedagogická fakulta orange #E98300
-$danger:    darken($jcu-red, 15%);  // Deep brand red for destructive actions (#ad0028)
-$light:     #f8f9fa;                // As Bootstrap $gray-100
-$dark:      $jcu-black;             // Univerzitní černá #1E1E1E
+// Override semantic colors here
+$primary:   $jcu-red;
+$secondary: #6e6f72;
+$success:   #007D57;
+$info:      #009FDA;
+$warning:   #E98300;
+$danger:    darken($jcu-red, 15%);
+$light:     #f8f9fa;
+$dark:      $jcu-black;
 
 // Add new semantic colors here (you don't need to add existing semantic colors)
 $theme-custom-semantic-colors: (
@@ -68,9 +56,9 @@ $theme-custom-semantic-colors: (
 
 $min-contrast-ratio: 2.06 !default;
 
-$body-color: $jcu-black;    // Univerzitní černá #1E1E1E
+$body-color: $jcu-black;
 
-$link-color: $jcu-red;      // JCU red links (4.97:1 on white — WCAG AA)
+$link-color: $jcu-red;
 $link-decoration: none;
 $link-hover-color: darken($link-color, 12%);
 $link-hover-decoration: underline;
@@ -83,8 +71,8 @@ $navbar-dark-color: #fff;
 
 /*** CUSTOM DSPACE VARIABLES ***/
 
-$ds-home-news-link-color: $jcu-red;                 // links on the light home banner
-$ds-header-navbar-border-bottom-color: $jcu-red;    // red accent line under the white header
+$ds-home-news-link-color: $jcu-red;
+$ds-header-navbar-border-bottom-color: $jcu-red;
 
 $ds-breadcrumb-link-color: $jcu-red !default;
 $ds-breadcrumb-link-active-color: $jcu-black !default;
