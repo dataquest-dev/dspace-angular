@@ -1,0 +1,73 @@
+@if (showMetadataValue | async) {
+  <div class="row clarin-item-page-field justify-content-start">
+    <div class="col-lg-3 col-2-5 d-flex">
+      <div><i [class]="'fas ' + iconName + ' fa-xs'"></i></div>
+      <div class="pl-1"><b>{{label | translate}}</b></div>
+    </div>
+    <div class="col-lg-9">
+      <div>
+        @if (type === 'author') {
+          <div class="d-inline">
+            <ds-clarin-item-author-preview [item]="item" [fields]="fields"></ds-clarin-item-author-preview>
+          </div>
+        }
+        @if (type === 'sponsor') {
+          <div>
+            <ds-clarin-sponsor-item-field [item]="item"></ds-clarin-sponsor-item-field>
+          </div>
+        }
+        @if (type === 'identifier') {
+          <div>
+            <ds-clarin-identifier-item-field [item]="item" [fields]="fields"></ds-clarin-identifier-item-field>
+          </div>
+        }
+        @if (type === 'date') {
+          <div>
+            <ds-clarin-date-item-field [item]="item"></ds-clarin-date-item-field>
+          </div>
+        }
+        @if (type === 'description') {
+          <div>
+            <ds-clarin-description-item-field [item]="item" [fields]="fields"></ds-clarin-description-item-field>
+          </div>
+        }
+        @for (mdValue of item?.allMetadata(fields); track mdValue; let last = $last; let i = $index) {
+          <div class="dont-break-out d-inline">
+            @if (type === 'hyperlink') {
+              <span class="pr-1">
+                <a [href]="mdValue.value">
+                  {{mdValue.value | dsReplace: this.replaceCharacter}}
+                </a>
+              </span>
+            }
+            @if (type === 'search') {
+              <span class="d-inline-flex pr-1">
+                <a [href]="getLinkToSearch(i)">{{mdValue.value | dsReplace: this.replaceCharacter}}</a>
+                @if (!last) {
+                  <span [innerHTML]="separator"></span>
+                }
+              </span>
+            }
+            @if (type === 'subject') {
+              <span class="pr-1">
+                @for (subject of mdValue.value.split(separator); track subject) {
+                  <a class="badge badge-info text-white cursor-pointer mr-1"
+                    [href]="getLinkToSearch(-1, subject)">
+                    {{subject}}
+                  </a>
+                }
+              </span>
+            }
+            @if (type == null) {
+              <span class="pr-1">
+                {{mdValue.value | dsReplace: this.replaceCharacter}}@if (!last) {
+                <span [innerHTML]="separator"></span>
+              }
+            </span>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+}

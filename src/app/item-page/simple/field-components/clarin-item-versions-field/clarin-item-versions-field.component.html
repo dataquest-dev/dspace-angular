@@ -1,0 +1,51 @@
+@if (showMetadataValue | async) {
+  <div class="row clarin-item-page-field justify-content-start">
+    <div class="col-lg-3 col-2-5 d-flex align-self-start">
+      <div><i [class]="'fas ' + iconName + ' fa-xs'"></i></div>
+      <!-- Toggle Header -->
+      <div
+        class="pl-1 d-flex align-items-center"
+        (click)="toggleVersionHistory()"
+        (keydown.enter)="toggleVersionHistory()"
+        role="button"
+        tabindex="0"
+        [attr.aria-expanded]="showVersionHistory"
+        aria-controls="version-history-content"
+        [attr.aria-label]="getToggleAriaLabel()">
+        <b class="mr-1">{{ "item.version.history.head" | translate }}</b>
+        <i class="fas" [ngClass]="showVersionHistory ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+      </div>
+    </div>
+    <!-- Collapsible Content -->
+    <div
+      id="version-history-content"
+      class="col-lg-9 collapse"
+      [ngClass]="{'show': showVersionHistory}"
+      [attr.aria-hidden]="!showVersionHistory">
+      @if (enhancedVersions$ | async; as enhancedVersions) {
+        <div>
+          <ul class="list-unstyled dropdown-versions">
+            @for (enhancedVersion of enhancedVersions; track trackByVersionId($index, enhancedVersion)) {
+              <li
+                [id]="'version-row-' + enhancedVersion.version.id">
+                @if ((enhancedVersion.versionItem$ | async)?.payload; as versionItem) {
+                  @if ((enhancedVersion.workspaceId$ | async) || (enhancedVersion.workflowId$ | async)) {
+                    {{ getVersionItemDisplayName(versionItem) }}
+                  } @else {
+                    <a [routerLink]="getVersionRoute(enhancedVersion.version.id)">
+                      {{ getVersionItemDisplayName(versionItem) }}
+                    </a>
+                  }
+                  @if (enhancedVersion.isCurrentVersion) {
+                    <span>*</span>
+                  }
+                }
+              </li>
+            }
+          </ul>
+          <div>*&nbsp;{{ "item.version.history.selected" | translate }}</div>
+        </div>
+      }
+    </div>
+  </div>
+}
