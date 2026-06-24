@@ -15,7 +15,7 @@
       z-index: var(--ds-nav-z-index);
       overflow: hidden;
 
-      nav#collapsible-mobile-navbar {
+      #collapsible-mobile-navbar {
         // Following parameters are changed by slideMobileNav animation
         min-height: var(--ds-expandable-navbar-height);
         height: auto;
@@ -31,7 +31,7 @@
       text-decoration: none;
     }
 
-    nav#desktop-navbar { // in header component
+    #desktop-navbar { // in header component
       #main-site-navigation {
         /* Desktop menu */
 
@@ -70,7 +70,7 @@
       }
     }
 
-    nav#collapsible-mobile-navbar { // in header-navbar-wrapper component
+    #collapsible-mobile-navbar { // in header-navbar-wrapper component
 
       border-top: var(--ds-expandable-navbar-border-top-style);
       padding-top: var(--ds-expandable-navbar-padding-top);

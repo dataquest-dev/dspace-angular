@@ -10,9 +10,9 @@
         <img id="header-logo" src="assets/images/jcu-logo.png" [attr.alt]="'menu.header.image.logo' | translate"/>
       </a>
       @if ((isMobile$ | async) !== true) {
-        <nav class="navbar navbar-expand p-0 align-items-stretch align-self-stretch flex-grow-1 flex-shrink-1" id="desktop-navbar" [attr.aria-label]="'nav.main.description' | translate">
+        <div class="navbar navbar-expand p-0 align-items-stretch align-self-stretch flex-grow-1 flex-shrink-1" id="desktop-navbar">
           <ds-navbar></ds-navbar>
-        </nav>
+        </div>
       }
     </div>
     <!-- Search bar and other menus -->
