@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { ClarinNavbarTopComponent } from 'src/app/clarin-navbar-top/clarin-navbar-top.component';
 import { ThemedLangSwitchComponent } from 'src/app/shared/lang-switch/themed-lang-switch.component';
 
 import { ContextHelpToggleComponent } from '../../../../app/header/context-help-toggle/context-help-toggle.component';
@@ -25,6 +26,7 @@ import { ImpersonateNavbarComponent } from '../../../../app/shared/impersonate-n
   templateUrl: 'header.component.html',
   imports: [
     AsyncPipe,
+    ClarinNavbarTopComponent,
     ContextHelpToggleComponent,
     ImpersonateNavbarComponent,
     NgbDropdownModule,
