@@ -13,6 +13,7 @@ import {
   takeWhile,
 } from 'rxjs/operators';
 
+import { isNotEmpty } from '../../shared/empty.util';
 import { RelationshipOptions } from '../../shared/form/builder/models/relationship-options.model';
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
 import { PaginatedSearchOptions } from '../../shared/search/models/paginated-search-options.model';
@@ -107,6 +108,26 @@ export class LookupRelationService {
       map((results: PaginatedList<ExternalSourceEntry>) => results.totalElements),
       startWith(0),
       distinctUntilChanged(),
+    );
+  }
+
+  /**
+   * CLARIN: fetch the actual external source entries (used by the sponsor autocomplete).
+   * The entry ids come base64-encoded from the REST layer, so they are decoded here.
+   * @param externalSource  External Source
+   * @param searchOptions   Search options to filter results
+   */
+  getExternalResults(externalSource: ExternalSource, searchOptions: PaginatedSearchOptions): Observable<PaginatedList<ExternalSourceEntry>> {
+    const pagination = isNotEmpty(searchOptions.pagination) ? searchOptions.pagination : { pagination: this.singleResultOptions };
+    return this.externalSourceService.getExternalSourceEntries(externalSource.id, Object.assign(new PaginatedSearchOptions({}), searchOptions, pagination)).pipe(
+      getAllSucceededRemoteData(),
+      getRemoteDataPayload(),
+      map((list: PaginatedList<ExternalSourceEntry>) => {
+        list.page.forEach(source => {
+          source.id = atob(source.id);
+        });
+        return list;
+      }),
     );
   }
 

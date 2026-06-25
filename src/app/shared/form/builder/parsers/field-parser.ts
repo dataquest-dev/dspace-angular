@@ -148,6 +148,19 @@ export abstract class FieldParser {
     }
   }
 
+  /**
+   * CLARIN: a single input inside a complex input type may define its own controlled vocabulary
+   * via the `value-pairs-name` of its complex-definition entry.
+   */
+  public setVocabularyOptionsInComplexInput(controlModel, complexDefinitionInput) {
+    if (isNotEmpty(this.configData.selectableMetadata) && isNotEmpty(complexDefinitionInput['value-pairs-name'])) {
+      controlModel.vocabularyOptions = new VocabularyOptions(
+        complexDefinitionInput['value-pairs-name'],
+        true,
+      );
+    }
+  }
+
   public setValues(modelConfig: DsDynamicInputModelConfig, fieldValue: any, forceValueAsObj: boolean = false, groupModel?: boolean) {
     if (isNotEmpty(fieldValue)) {
       if (groupModel) {

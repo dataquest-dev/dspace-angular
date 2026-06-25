@@ -94,6 +94,18 @@ export class FormFieldModel {
   selectableMetadata: SelectableMetadata[];
 
   /**
+   * CLARIN: complex input-type definition name (from submission-forms.xml `complex-definition`)
+   */
+  @autoserialize
+  complexDefinition: string;
+
+  /**
+   * CLARIN: custom autocomplete source key (from submission-forms.xml `autocomplete-custom`)
+   */
+  @autoserialize
+  autocompleteCustom: string;
+
+  /**
    * Representing additional relationship configuration for this metadata field
    */
   @autoserialize
