@@ -1,7 +1,4 @@
-import {
-  AsyncPipe,
-  CommonModule,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
 import {
   Component,
@@ -45,7 +42,6 @@ import {
 import { getBaseUrl } from '../../shared/clarin-shared-util';
 import { isEmpty } from '../../shared/empty.util';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
-import { SharedModule } from '../../shared/shared.module';
 
 /**
  * This component is showed up when the user has clicked on the `verification token`.
@@ -60,12 +56,7 @@ import { SharedModule } from '../../shared/shared.module';
   ],
   selector: 'ds-autoregistration',
   templateUrl: './autoregistration.component.html',
-  styleUrls: ['./autoregistration.component.scss'],
-  imports: [
-    CommonModule,
-    SharedModule,
-    TranslateModule,
-  ],
+  styleUrls: ['./autoregistration.component.scss'],
 })
 export class AutoregistrationComponent implements OnInit {
 

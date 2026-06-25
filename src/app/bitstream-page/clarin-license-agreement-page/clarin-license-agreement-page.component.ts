@@ -66,6 +66,7 @@ import {
 } from '../../core/shared/operators';
 import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
 import { HELP_DESK_PROPERTY } from '../../item-page/tombstone/tombstone.component';
+import { BtnDisabledDirective } from '../../shared/btn-disabled.directive';
 import {
   hasValue,
   isEmpty,
@@ -84,6 +85,7 @@ import { VarDirective } from '../../shared/utils/var.directive';
 @Component({
   imports: [
     AsyncPipe,
+    BtnDisabledDirective,
     ClarinSafeHtmlPipe,
     TranslateModule,
     VarDirective,

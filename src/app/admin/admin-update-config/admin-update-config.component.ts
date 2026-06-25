@@ -13,6 +13,7 @@ import {
   TranslateService,
 } from '@ngx-translate/core';
 
+import { BtnDisabledDirective } from '../../shared/btn-disabled.directive';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import {
   AdminUpdateConfigService,
@@ -23,7 +24,7 @@ import {
   selector: 'ds-admin-update-config',
   templateUrl: './admin-update-config.component.html',
   styleUrls: ['./admin-update-config.component.scss'],
-  imports: [
+  imports: [BtnDisabledDirective,
     DatePipe,
     DecimalPipe,
     FormsModule,

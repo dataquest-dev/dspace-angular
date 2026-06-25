@@ -3,6 +3,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   TranslateModule,
@@ -30,6 +31,7 @@ import { NotificationsService } from '../../shared/notifications/notifications.s
 @Component({
   imports: [
     AsyncPipe,
+    FormsModule,
     TranslateModule,
   ],
   selector: 'ds-auth-failed-page',
