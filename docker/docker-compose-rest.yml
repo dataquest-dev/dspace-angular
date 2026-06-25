@@ -146,7 +146,7 @@ services:
         cp -r /opt/solr/server/solr/configsets/search/* search
         precreate-core statistics /opt/solr/server/solr/configsets/statistics
         cp -r /opt/solr/server/solr/configsets/statistics/* statistics
-        exec solr -p ${SOLR_PORT} -f -m 4g
+        exec solr -p ${SOLR_PORT} -f -m "${SOLR_HEAP:-4g}"
 volumes:
   # Commented out because there are a lot of files in the assetstore
   assetstore:
