@@ -32,6 +32,7 @@ import { INotificationBoardOptions } from './notifications-config.interfaces';
 import { QualityAssuranceConfig } from './quality-assurance.config';
 import { SearchConfig } from './search-page-config.interface';
 import { ServerConfig } from './server-config.interface';
+import { StatisticsConfig } from './statistics-config';
 import { SubmissionConfig } from './submission-config.interface';
 import { SuggestionConfig } from './suggestion-config.interfaces';
 import { ThemeConfig } from './theme.config';
@@ -57,6 +58,8 @@ interface AppConfig extends Config {
   collection: CollectionPageConfig;
   themes: ThemeConfig[];
   mediaViewer: MediaViewerConfig;
+  // CLARIN: external statistics (Matomo-backed) service for the per-item views/downloads page
+  statistics?: StatisticsConfig;
   suggestion: SuggestionConfig[];
   bundle: BundleConfig;
   actuators: ActuatorsConfig

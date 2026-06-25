@@ -16,11 +16,13 @@ import { RemoteData } from '../../core/data/remote-data';
 import { MatomoReportSubscription } from '../../core/shared/clarin/matomo-report-subscription.model';
 import { Item } from '../../core/shared/item.model';
 import { getFirstCompletedRemoteData } from '../../core/shared/operators';
+import { BtnDisabledDirective } from '../../shared/btn-disabled.directive';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 
 
 @Component({
   imports: [
+    BtnDisabledDirective,
     TranslateModule,
   ],
   selector: 'ds-matomo-subscription-button',

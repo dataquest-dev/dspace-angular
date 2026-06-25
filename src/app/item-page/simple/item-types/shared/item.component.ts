@@ -1,5 +1,6 @@
 import {
   Component,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
@@ -10,6 +11,10 @@ import {
   take,
 } from 'rxjs/operators';
 
+import {
+  APP_CONFIG,
+  AppConfig,
+} from '../../../../../config/app-config.interface';
 import { environment } from '../../../../../environments/environment';
 import { RouteService } from '../../../../core/services/route.service';
 import { Item } from '../../../../core/shared/item.model';
@@ -30,6 +35,20 @@ import {
  */
 export class ItemComponent implements OnInit {
   @Input() object: Item;
+
+  /**
+   * CLARIN: the external statistics service config, used to decide whether to show the
+   * per-item views/downloads statistics button. Injected via `inject()` to avoid changing
+   * the (widely-extended) constructor signature.
+   */
+  protected readonly appConfig: AppConfig = inject(APP_CONFIG);
+
+  /**
+   * CLARIN: true when the external statistics (Matomo-backed) service is configured.
+   */
+  get hasConfiguredStatistics(): boolean {
+    return !!this.appConfig.statistics?.baseUrl && !!this.appConfig.statistics?.endpoint;
+  }
 
   /**
    * Whether to show the badge label or not

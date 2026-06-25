@@ -16,6 +16,7 @@ import { ThemedThumbnailComponent } from '../../../../thumbnail/themed-thumbnail
 import { CollectionsComponent } from '../../../field-components/collections/collections.component';
 import { ThemedMediaViewerComponent } from '../../../media-viewer/themed-media-viewer.component';
 import { MiradorViewerComponent } from '../../../mirador-viewer/mirador-viewer.component';
+import { ViewsDownloadsStatisticsButtonComponent } from '../../../views-downloads-statistics-button/views-downloads-statistics-button.component';
 import { ThemedFileSectionComponent } from '../../field-components/file-section/themed-file-section.component';
 import { ItemPageAbstractFieldComponent } from '../../field-components/specific-field/abstract/item-page-abstract-field.component';
 import { ItemPageCcLicenseFieldComponent } from '../../field-components/specific-field/cc-license/item-page-cc-license-field.component';
@@ -57,6 +58,7 @@ import { ItemComponent } from '../shared/item.component';
     ThemedResultsBackButtonComponent,
     ThemedThumbnailComponent,
     TranslateModule,
+    ViewsDownloadsStatisticsButtonComponent,
   ],
 })
 export class UntypedItemComponent extends ItemComponent {}

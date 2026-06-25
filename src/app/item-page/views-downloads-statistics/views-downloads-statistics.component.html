@@ -1,0 +1,118 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <div class="header-content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="d-flex gap-2">
+            <h2 class="card-title mb-0">{{ getTitle() }}</h2>
+            <ds-matomo-subscription-button [item]="item"></ds-matomo-subscription-button>
+          </div>
+          <button class="btn btn-outline-secondary btn-sm" (click)="backToItem()">
+            <i class="fas fa-arrow-left"></i> {{ 'statistics.views-downloads.back-to-item' | translate }}
+          </button>
+        </div>
+        <div class="row px-2 py-2 rounded alert-info">
+          <i class="fas fa-info-circle pt-1"></i>
+          <span class="pl-2">{{ 'statistics.views-downloads.drill-down-info' | translate }}</span>
+        </div>
+
+        <div class="toggles-and-back">
+          <div class="metric-toggles">
+            <button type="button"
+              class="btn btn-outline-success stats-toggle-btn"
+              [class.active]="activeMetric === 'views'"
+              (click)="selectMetric('views')">
+              <div class="toggle-icon-wrapper">
+                <i class="far fa-eye"></i>
+              </div>
+              <div class="toggle-content">
+                <span>{{ 'statistics.views-downloads.views' | translate }}</span>
+                <strong>{{ formatNumber(getTotalViews()) }}</strong>
+              </div>
+            </button>
+            <button type="button"
+              class="btn btn-outline-info stats-toggle-btn"
+              [class.active]="activeMetric === 'downloads'"
+              (click)="selectMetric('downloads')">
+              <div class="toggle-icon-wrapper">
+                <i class="fas fa-download"></i>
+              </div>
+              <div class="toggle-content">
+                <span>{{ 'statistics.views-downloads.downloads' | translate }}</span>
+                <strong>{{ formatNumber(getTotalDownloads()) }}</strong>
+              </div>
+            </button>
+          </div>
+          @if (selectedYear || selectedMonth) {
+            <button class="btn btn-info"
+              (click)="onBack()">
+              <i class="fas fa-arrow-left"></i>
+              {{ (selectedMonth ? 'statistics.views-downloads.back-to-months' : 'statistics.views-downloads.back-to-years') | translate }}
+            </button>
+          }
+        </div>
+
+        <div class="stats-range-title">
+          {{ 'statistics.views-downloads.statistics-for' | translate }} {{ getYearLabel() }} {{ getYearRange() }}
+        </div>
+      </div>
+    </div>
+
+    <div class="card-content">
+      @if (loading) {
+        <div class="loading">
+          <i class="fas fa-spinner fa-spin"></i> {{ 'statistics.views-downloads.loading' | translate }}
+        </div>
+      }
+      @if (error) {
+        <div class="alert alert-danger">
+          {{ error }}
+        </div>
+      }
+
+      @if (!loading && !error) {
+        <div class="chart-container">
+          <div #chartContainer></div>
+        </div>
+      }
+    </div>
+
+    @if (activeMetric === 'downloads' && !loading && !error) {
+      <div class="file-stats-section">
+        <h3 class="file-stats-title">{{ 'statistics.views-downloads.file-wise-statistics' | translate }}</h3>
+        @if (yearlyFileStats.length > 0) {
+          <div class="yearly-stats">
+            @for (yearData of yearlyFileStats; track yearData) {
+              <div class="year-group">
+                <h4 class="year-heading">{{ yearData.year }}</h4>
+                <div class="file-stats-list">
+                  @for (file of yearData.files; track file) {
+                    <div class="file-stat-item">
+                      <span class="file-count">{{ file.count }}</span>
+                      <span class="file-name">{{ file.filename }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+        @if (fileStats.length > 0 && yearlyFileStats.length === 0) {
+          <div class="file-stats-list">
+            @for (file of fileStats; track file) {
+              <div class="file-stat-item">
+                <span class="file-count">{{ file.count }}</span>
+                <span class="file-name">{{ file.filename }}</span>
+              </div>
+            }
+          </div>
+        }
+        @if (fileStats.length === 0 && yearlyFileStats.length === 0) {
+          <div class="no-data">
+            {{ 'statistics.views-downloads.no-data' | translate }}
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

@@ -48,6 +48,7 @@ import { ThemedItemPageTitleFieldComponent } from '../simple/field-components/sp
 import { ItemPageComponent } from '../simple/item-page.component';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
+import { ViewsDownloadsStatisticsButtonComponent } from '../views-downloads-statistics-button/views-downloads-statistics-button.component';
 import { ThemedFullFileSectionComponent } from './field-components/file-section/themed-full-file-section.component';
 
 /**
@@ -76,6 +77,7 @@ import { ThemedFullFileSectionComponent } from './field-components/file-section/
     ThemedLoadingComponent,
     TranslateModule,
     VarDirective,
+    ViewsDownloadsStatisticsButtonComponent,
   ],
 })
 export class FullItemPageComponent extends ItemPageComponent implements OnInit, OnDestroy {
