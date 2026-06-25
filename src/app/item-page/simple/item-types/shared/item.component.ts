@@ -41,13 +41,13 @@ export class ItemComponent implements OnInit {
    * per-item views/downloads statistics button. Injected via `inject()` to avoid changing
    * the (widely-extended) constructor signature.
    */
-  protected readonly appConfig: AppConfig = inject(APP_CONFIG);
+  protected readonly appConfig: AppConfig = inject(APP_CONFIG, { optional: true });
 
   /**
    * CLARIN: true when the external statistics (Matomo-backed) service is configured.
    */
   get hasConfiguredStatistics(): boolean {
-    return !!this.appConfig.statistics?.baseUrl && !!this.appConfig.statistics?.endpoint;
+    return !!this.appConfig?.statistics?.baseUrl && !!this.appConfig?.statistics?.endpoint;
   }
 
   /**
