@@ -160,6 +160,12 @@ export const EDIT_ITEM_PATH = 'edit-items';
 export function getEditItemPageRoute() {
   return `/${EDIT_ITEM_PATH}`;
 }
+
+// CLARIN: distribution-license contract page
+export const CONTRACT_PAGE_MODULE_PATH = 'contract';
+export function getLicenseContractPagePath() {
+  return `/${CONTRACT_PAGE_MODULE_PATH}`;
+}
 export const CORRECTION_TYPE_PATH = 'corrections';
 
 
