@@ -57,6 +57,12 @@
         {{ 'footer.copyright' | translate:{year: dateObj | date:'y'} }}
         <a class="text-white"
         href="https://www.lyrasis.org/" role="link" tabindex="0">{{ 'footer.link.lyrasis' | translate}}</a>
+        @if ((themedByCompanyName$ | async)?.payload?.values?.[0]; as themedByCompany) {
+          <span class="ms-2">&middot;&nbsp;Theme by
+            <a class="text-white text-decoration-underline"
+            [href]="((themedByUrl$ | async)?.payload?.values)?.[0] || '#'" target="_blank" rel="noopener noreferrer" role="link">{{ themedByCompany }}</a>
+          </span>
+        }
       </p>
       <ul class="footer-info list-unstyled d-flex justify-content-center mb-0">
         @if (showCookieSettings) {

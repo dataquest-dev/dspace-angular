@@ -1,0 +1,39 @@
+:host {
+  #main-site-header {
+    min-height: var(--ds-header-height);
+
+    @include media-breakpoint-up(md) {
+      height: var(--ds-header-height);
+    }
+
+    background-color: var(--ds-header-bg);
+
+    &-container {
+      min-height: var(--ds-header-height);
+    }
+  }
+
+  .jcu-brand {
+    flex: 0 0 auto;
+
+    &:focus-visible {
+      outline: 2px solid var(--bs-primary);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+  }
+
+  img#header-logo {
+    height: var(--ds-header-logo-height);
+    width: auto;
+    display: block;
+  }
+
+  button#navbar-toggler {
+    color: var(--ds-header-icon-color);
+
+    &:hover, &:focus {
+      color: var(--ds-header-icon-color-hover);
+    }
+  }
+}

@@ -3329,6 +3329,12 @@
   // "home.description": "",
   "home.description": "",
 
+  // "home.jcu.eyebrow": "University of South Bohemia in České Budějovice",
+  "home.jcu.eyebrow": "Jihočeská univerzita v Českých Budějovicích",
+
+  // "home.jcu.title": "Publication Repository",
+  "home.jcu.title": "Repozitář publikací",
+
   // "home.breadcrumbs": "Home",
   "home.breadcrumbs": "Domů",
 

@@ -2213,6 +2213,10 @@
 
   "home.description": "",
 
+  "home.jcu.eyebrow": "University of South Bohemia in České Budějovice",
+
+  "home.jcu.title": "Publication Repository",
+
   "home.breadcrumbs": "Home",
 
   "home.search-form.placeholder": "Search the repository ...",

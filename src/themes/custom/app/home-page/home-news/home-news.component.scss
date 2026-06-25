@@ -1,0 +1,70 @@
+:host {
+  .jcu-home-banner {
+    position: relative;
+    overflow: hidden;
+    background: #f6f6f7;
+    color: var(--bs-body-color);
+    border-bottom: 3px solid var(--bs-primary);
+    margin-bottom: 2.5rem;
+  }
+
+  .jcu-home-banner-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .jcu-home-banner-text {
+    max-width: 46rem;
+  }
+
+  .jcu-home-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--bs-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .jcu-home-title {
+    font-weight: 700;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 1.05;
+    color: var(--bs-dark);
+    margin-bottom: 1rem;
+  }
+
+  .jcu-home-lead {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: #333;
+    margin-bottom: 0.25rem;
+  }
+
+  .jcu-home-lead-en {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #6e6f72;
+    margin-bottom: 0;
+  }
+
+  // logo artwork as a subtle watermark on the right
+  .jcu-home-symbol {
+    position: absolute;
+    top: 50%;
+    right: -24px;
+    transform: translateY(-50%);
+    height: 280px;
+    width: auto;
+    opacity: 0.09;
+    pointer-events: none;
+  }
+
+  @include media-breakpoint-down(md) {
+    .jcu-home-symbol {
+      height: 190px;
+      right: -55px;
+      opacity: 0.06;
+    }
+  }
+}

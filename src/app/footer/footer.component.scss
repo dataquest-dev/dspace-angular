@@ -34,6 +34,7 @@
         .n-coar {
           height: var(--ds-footer-n-coar-height);
           margin-bottom: 8.5px;
+          filter: brightness(0) invert(1);
         }
 
         @media screen and (min-width: map-get($grid-breakpoints, md))  {

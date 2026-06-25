@@ -1,8 +1,51 @@
 // Override or add CSS variables for your theme here
 
 :root {
-  //--ds-header-logo-height: 80px;
-  //--ds-header-logo-height-xs: 50px;
-  //--ds-header-icon-color: #{$link-color};
-  //--ds-header-icon-color-hover: #{darken($link-color, 15%)};
+
+  @include media-breakpoint-up(md) {
+    --ds-header-logo-height: 72px;
+    --ds-header-height: 104px;
+  }
+  @include media-breakpoint-down(sm) {
+    --ds-header-logo-height: 52px;
+    --ds-header-height: 82px;
+  }
+
+  --ds-login-logo-height: auto;
+  --ds-login-logo-width: 300px;
+
+  --ds-header-bg: #ffffff;
+  --ds-header-icon-color: #{$jcu-red};
+  --ds-header-icon-color-hover: #{darken($jcu-red, 12%)};
+
+  --ds-navbar-bg: transparent;
+  --ds-navbar-link-color: #{$jcu-red};
+  --ds-navbar-link-color-hover: #{darken($jcu-red, 12%)};
+  --ds-navbar-dropdown-bg: #{$white};
+
+  --ds-breadcrumb-link-color: #{$jcu-red};
+
+  --green1: #{$jcu-red};
+
+  --ds-footer-bg: #{$jcu-black};
+  --ds-top-footer-bg: #{$jcu-black};
+
+  --ds-admin-sidebar-bg: #292b2f;
+  --ds-admin-sidebar-active-bg: #{$jcu-black};
+  --ds-admin-sidebar-header-bg: #{$jcu-black};
+
+  --ds-banner-text-background: rgba(0, 0, 0, 0.58);
+  --ds-banner-background-gradient-width: 300px;
+
+  --ds-header-navbar-border-bottom-height: 3px;
+
+  /* set the next two properties as `--ds-header-navbar-border-bottom-*`
+  in order to keep the bottom border of the header when navbar is expanded */
+
+  --ds-expandable-navbar-border-top-color: #{$white};
+  --ds-expandable-navbar-border-top-height: 0;
+  --ds-expandable-navbar-padding-top: 0;
+
+  --ds-item-page-img-field-default-inline-height: 24px;
+  --ds-item-page-img-field-ror-inline-height: var(--ds-item-page-img-field-default-inline-height);
 }

@@ -1,33 +1,78 @@
 // DSpace works with CSS variables for its own components, and has a mapping of all bootstrap Sass
 // variables to CSS equivalents (see src/styles/_bootstrap_variables_mapping.scss). However Bootstrap
-// still uses Sass variables internally. So if you want to override bootstrap (or other sass
-// variables) you can do so here. Their CSS counterparts will include the changes you make here
+// still uses Sass variables internally. So if you want to override Bootstrap (or other sass
+// variables) you can do so here. Their CSS counterparts will include the changes you make here.
 
-// $font-family-sans-serif:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
-//
-// $gray-700: #495057 !default;  // Bootstrap $gray-700
-// $gray-100: #f8f9fa !default;  //           $gray-100
-//
-// $blue:   #2B4E72 !default;
-// $green:  #94BA65 !default;
-// $cyan:   #006666 !default;
-// $yellow: #ec9433 !default;
-// $red:    #CF4444 !default;
-// $dark:   darken($blue, 17%) !default;
-//
-// $primary: $blue !default;
-// $secondary: $gray-700 !default;
-// $success: $green !default;
-// $info: $cyan !default;
-// $warning: $yellow !default;
-// $danger: $red !default;
-// $light: $gray-100 !default;
-// $dark: $dark !default;
-//
-// $link-color: $info !default;
+// When this file is going to be compiled, internal Bootstrap variables won't have been declared yet,
+// therefore if you want to use any Bootstrap variable you also need to declare it here.
+
+// All SASS variables from the base theme are also included here. Do not use the '!default' flag
+// here if you want to override them.
+
+
+/*** FONT FAMILIES ***/
+
+@import '../assets/fonts/clara.scss';
+$font-family-sans-serif: 'Clara Sans', Calibri, 'Helvetica Neue', Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+
+/*** JCU BRAND COLORS ***/
+// Single source of truth — defined once as SASS variables.
+$jcu-red:     #E00034;
+$jcu-black:   #1E1E1E;
+$jcu-grey:    #939598;
+
+
+/*** SEMANTIC COLOR SCHEME ***/
+
+// Gray scale (uncomment the variables that you want to override or that you need to use in this file)
+//$white:    #fff;
+//$gray-100: #f8f9fa;
+//$gray-200: #e9ecef;
+//$gray-300: #dee2e6;
+//$gray-400: #ced4da;
+//$gray-500: #adb5bd;
+//$gray-600: #6c757d;
+//$gray-700: #495057;
+//$gray-800: #343a40;
+//$gray-900: #212529;
+//$black:    #000;
+
+// Override semantic colors here
+$primary:   $jcu-red;
+$secondary: #6e6f72;
+$success:   #007D57;
+$info:      #009FDA;
+$warning:   #E98300;
+$danger:    darken($jcu-red, 15%);
+$light:     #f8f9fa;
+$dark:      $jcu-black;
 
 // Add new semantic colors here (you don't need to add existing semantic colors)
-@import '../../../styles/_variables.scss';
 $theme-custom-semantic-colors: (
 );
-$theme-colors: map-merge($theme-colors, $theme-custom-semantic-colors);
+
+/*** OTHER BOOTSTRAP VARIABLES ***/
+
+$min-contrast-ratio: 2.06 !default;
+
+$body-color: $jcu-black;
+
+$link-color: $jcu-red;
+$link-decoration: none;
+$link-hover-color: darken($link-color, 12%);
+$link-hover-decoration: underline;
+
+$table-accent-bg: #f8f9fa;  // As Bootstrap $gray-100
+$table-hover-bg: #ced4da;   // As Bootstrap $gray-400
+
+$navbar-dark-color: #fff;
+
+
+/*** CUSTOM DSPACE VARIABLES ***/
+
+$ds-home-news-link-color: $jcu-red;
+$ds-header-navbar-border-bottom-color: $jcu-red;
+
+$ds-breadcrumb-link-color: $jcu-red !default;
+$ds-breadcrumb-link-active-color: $jcu-black !default;

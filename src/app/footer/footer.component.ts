@@ -20,8 +20,11 @@ import {
   AppConfig,
 } from '../../config/app-config.interface';
 import { NotifyInfoService } from '../core/coar-notify/notify-info/notify-info.service';
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { AuthorizationDataService } from '../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../core/data/feature-authorization/feature-id';
+import { RemoteData } from '../core/data/remote-data';
+import { ConfigurationProperty } from '../core/shared/configuration-property.model';
 import { OrejimeService } from '../shared/cookies/orejime.service';
 import { hasValue } from '../shared/empty.util';
 
@@ -49,10 +52,21 @@ export class FooterComponent implements OnInit {
   showSendFeedback$: Observable<boolean>;
   coarLdnEnabled$: Observable<boolean>;
 
+  /**
+   * The company URL which customised this DSpace (backend property themed.by.url)
+   */
+  themedByUrl$: Observable<RemoteData<ConfigurationProperty>>;
+
+  /**
+   * The company name which customised this DSpace (backend property themed.by.company.name)
+   */
+  themedByCompanyName$: Observable<RemoteData<ConfigurationProperty>>;
+
   constructor(
     @Optional() public cookies: OrejimeService,
     protected authorizationService: AuthorizationDataService,
     protected notifyInfoService: NotifyInfoService,
+    protected configurationDataService: ConfigurationDataService,
     @Inject(APP_CONFIG) protected appConfig: AppConfig,
   ) {
   }
@@ -63,6 +77,7 @@ export class FooterComponent implements OnInit {
     this.showEndUserAgreement = this.appConfig.info.enableEndUserAgreement;
     this.coarLdnEnabled$ = this.appConfig.info.enableCOARNotifySupport ? this.notifyInfoService.isCoarConfigEnabled() : of(false);
     this.showSendFeedback$ = this.authorizationService.isAuthorized(FeatureID.CanSendFeedback);
+    this.loadThemedByProps();
   }
 
   openCookieSettings() {
@@ -70,5 +85,10 @@ export class FooterComponent implements OnInit {
       this.cookies.showSettings();
     }
     return false;
+  }
+
+  private loadThemedByProps() {
+    this.themedByUrl$ = this.configurationDataService.findByPropertyName('themed.by.url');
+    this.themedByCompanyName$ = this.configurationDataService.findByPropertyName('themed.by.company.name');
   }
 }

@@ -2,3 +2,46 @@
 
 // imports the base global style
 @import '../../../styles/_global-styles.scss';
+
+ds-themed-type-badge .badge,
+ds-type-badge .badge {
+  background-color: #939598 !important;
+  color: #fff !important;
+}
+
+.orejime-Button--info {
+  background-color: var(--bs-dark) !important;
+  border-color: var(--bs-dark) !important;
+  color: #fff !important;
+}
+
+#desktop-navbar ds-navbar {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+#desktop-navbar {
+  .ds-menu-item-wrapper,
+  .ds-menu-toggler-wrapper {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.nav-dropdown-menu {
+  padding: 0.25rem 0 !important;
+  overflow: hidden;
+
+  .ds-menu-item {
+    display: block !important;
+    width: 100%;
+    padding: 0.5rem 1.25rem !important;
+    color: var(--bs-primary) !important;
+  }
+  .ds-menu-item:hover,
+  .ds-menu-item:focus {
+    color: #fff !important;
+    background-color: var(--bs-primary);
+  }
+}
