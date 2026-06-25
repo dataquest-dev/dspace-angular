@@ -161,7 +161,7 @@ services:
       cp -r -u /opt/solr/server/solr/configsets/dspace/search/* search
       precreate-core statistics /opt/solr/server/solr/configsets/dspace/statistics
       cp -r -u /opt/solr/server/solr/configsets/dspace/statistics/* statistics
-      exec solr -p 898${INSTANCE} -f -m 4g
+      exec solr -p 898${INSTANCE} -f -m "${SOLR_HEAP:-4g}"
 volumes:
   assetstore:
   pgdata:
