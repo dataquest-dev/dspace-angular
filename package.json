@@ -150,7 +150,15 @@
     "rxjs": "^7.8.0",
     "uuid": "^14.0.0",
     "xhr2": "^0.2.1",
-    "zone.js": "~0.15.1"
+    "zone.js": "~0.15.1",
+    "d3": "^7.9.0",
+    "chart.js": "4.3.3",
+    "ng2-charts": "4.1.1",
+    "@nth-cloud/ng-toggle": "11.0.0",
+    "lindat-common": "^1.5.0",
+    "ngx-mask": "13.1.15",
+    "sanitize-html": "^2.17.0",
+    "@popperjs/core": "^2.11.6"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "~20.0.0",
@@ -224,7 +232,10 @@
     "ts-node": "^8.10.2",
     "typescript": "~5.9.3",
     "webpack": "^5.106.2",
-    "webpack-cli": "^6.0.1"
+    "webpack-cli": "^6.0.1",
+    "@types/d3": "7.1.0",
+    "@types/d3-dispatch": "3.0.6",
+    "@types/sanitize-html": "^2.16.0"
   },
   "engines": {
     "node": ">=20.0.0 <25.0.0"
