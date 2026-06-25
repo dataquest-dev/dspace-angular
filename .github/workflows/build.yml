@@ -3,8 +3,14 @@
 # https://docs.github.com/en/free-pro-team@latest/actions/guides/building-and-testing-nodejs
 name: Build
 
-# Run this Build for all pushes / PRs to current branch
-on: [push, pull_request]
+# Run this Build for pushes to our main and all PRs
+on:
+  push:
+    branches:
+      - dtq-dev
+      - customer/*
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read  # to fetch code (actions/checkout)
@@ -21,10 +27,9 @@ jobs:
       DSPACE_REST_PORT: 8080
       DSPACE_REST_NAMESPACE: '/server'
       DSPACE_REST_SSL: false
-      # Spin up UI on 127.0.0.1 to avoid host resolution issues in e2e tests with Node 20+
+      # Spin up UI on 127.0.0.1 to avoid host resolution issues in e2e tests with Node 18+
       DSPACE_UI_HOST: 127.0.0.1
       DSPACE_UI_PORT: 4000
-      DSPACE_UI_BASEURL: http://127.0.0.1:4000
       # Ensure all SSR caching is disabled in test environment
       DSPACE_CACHE_SERVERSIDE_BOTCACHE_MAX: 0
       DSPACE_CACHE_SERVERSIDE_ANONYMOUSCACHE_MAX: 0
@@ -40,26 +45,23 @@ jobs:
       # Project name to use when running "docker compose" prior to e2e tests
       COMPOSE_PROJECT_NAME: 'ci'
       # Docker Registry to use for Docker compose scripts below.
-      # On the upstream dspace/dspace-angular repository we use GitHub's Container Registry
-      # (ghcr.io) to avoid aggressive rate limits at DockerHub. Forks cannot authenticate
-      # against ghcr.io/dspace/* with their own GITHUB_TOKEN (and the images there require
-      # auth), so on forks we fall back to docker.io where the same images are public.
-      DOCKER_REGISTRY: ${{ github.repository == 'dspace/dspace-angular' && 'ghcr.io' || 'docker.io' }}
+      # Using DockerHub as the images are publicly available there
+      DOCKER_REGISTRY: docker.io
     strategy:
       # Create a matrix of Node versions to test against (in parallel)
       matrix:
-        node-version: [20.x, 22.x]
+        node-version: [18.x, 20.x]
       # Do NOT exit immediately if one matrix job fails
       fail-fast: false
     # These are the actual CI steps to perform per job
     steps:
       # https://github.com/actions/checkout
       - name: Checkout codebase
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       # https://github.com/actions/setup-node
       - name: Install Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -84,13 +86,18 @@ jobs:
         id: npm-cache-dir
         run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
       - name: Cache NPM dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           # Cache entire NPM cache directory (see previous step)
           path: ${{ steps.npm-cache-dir.outputs.dir }}
           # Cache key is hash of package-lock.json. Therefore changes to package-lock.json will invalidate cache
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-npm-
+
+      # Workaround for npm bug with optional dependencies (https://github.com/npm/cli/issues/4828)
+      # Clean npm cache to avoid corrupted Rollup optional dependencies
+      - name: Clean npm cache
+        run: npm cache clean --force
 
       - name: Install NPM dependencies
         run: npm clean-install
@@ -117,25 +124,21 @@ jobs:
       # so that it can be shared with the 'codecov' job (see below)
       # NOTE: Angular CLI only supports code coverage for specs. See https://github.com/angular/angular-cli/issues/6286
       - name: Upload code coverage report to Artifact
-        uses: actions/upload-artifact@v7
-        if: matrix.node-version == '20.x'
+        uses: actions/upload-artifact@v4
+        if: matrix.node-version == '18.x'
         with:
           name: coverage-report-${{ matrix.node-version }}
           path: 'coverage/dspace-angular/lcov.info'
           retention-days: 14
 
-      # Login to our Docker registry, so that we can access Docker images using "docker compose" below.
-      # This login is required on the upstream repository because DOCKER_REGISTRY is set to ghcr.io
-      # and pulling ghcr.io/dspace/* requires authentication. On forks, DOCKER_REGISTRY falls back to
-      # docker.io (see env block above) where the same images are publicly pullable without a login,
-      # and forks cannot authenticate against ghcr.io/dspace/* with their own GITHUB_TOKEN anyway.
-      - name: Login to ${{ env.DOCKER_REGISTRY }}
-        uses: docker/login-action@v4
-        if: github.repository == 'dspace/dspace-angular'
-        with:
-          registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # Note: Docker login not required for public images from docker.io
+      # If you need to use ghcr.io images, uncomment the login step below:
+      # - name: Login to ${{ env.DOCKER_REGISTRY }}
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ${{ env.DOCKER_REGISTRY }}
+      #     username: ${{ github.repository_owner }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
 
       # Using "docker compose" start backend using CI configuration
       # and load assetstore from a cached copy
@@ -149,7 +152,7 @@ jobs:
       # https://github.com/cypress-io/github-action
       # (NOTE: to run these e2e tests locally, just use 'ng e2e')
       - name: Run e2e tests (integration tests)
-        uses: cypress-io/github-action@v7.1.9
+        uses: cypress-io/github-action@v6
         with:
           # Run tests in Chrome, headless mode (default)
           browser: chrome
@@ -164,7 +167,7 @@ jobs:
       # Cypress always creates a video of all e2e tests (whether they succeeded or failed)
       # Save those in an Artifact
       - name: Upload e2e test videos to Artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: e2e-test-videos-${{ matrix.node-version }}
@@ -173,7 +176,7 @@ jobs:
       # If e2e tests fail, Cypress creates a screenshot of what happened
       # Save those in an Artifact
       - name: Upload e2e test failure screenshots to Artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-test-screenshots-${{ matrix.node-version }}
@@ -315,40 +318,3 @@ jobs:
 
       - name: Shutdown Docker containers
         run: docker compose -f ./docker/docker-compose-ci.yml down
-
-  # Codecov upload is a separate job in order to allow us to restart this separate from the entire build/test
-  # job above. This is necessary because Codecov uploads seem to randomly fail at times.
-  # See https://community.codecov.com/t/upload-issues-unable-to-locate-build-via-github-actions-api/3954
-  codecov:
-    # Must run after 'tests' job above
-    needs: tests
-    # Only run on the upstream repository: forks do not have the CODECOV_TOKEN secret,
-    # and Codecov refuses to create a commit on a protected branch without a token.
-    if: github.repository == 'dspace/dspace-angular'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      # Download artifacts from previous 'tests' job
-      - name: Download coverage artifacts
-        uses: actions/download-artifact@v8
-
-      # Now attempt upload to Codecov using its action.
-      # NOTE: We use a retry action to retry the Codecov upload if it fails the first time.
-      #
-      # Retry action: https://github.com/marketplace/actions/retry-action
-      # Codecov action: https://github.com/codecov/codecov-action
-      - name: Upload coverage to Codecov.io
-        uses: Wandalen/wretry.action@v3.8.0
-        with:
-          action: codecov/codecov-action@v4
-          # Ensure codecov-action throws an error when it fails to upload
-          # This allows us to auto-restart the action if an error is thrown
-          with: |
-            fail_ci_if_error: true
-            token: ${{ secrets.CODECOV_TOKEN }}
-          # Try re-running action 5 times max
-          attempt_limit: 5
-          # Run again in 30 seconds
-          attempt_delay: 30000
