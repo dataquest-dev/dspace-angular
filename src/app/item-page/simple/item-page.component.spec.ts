@@ -1,5 +1,4 @@
 import {
-import { ClarinFilesSectionComponent } from '../clarin-files-section/clarin-files-section.component';
   ChangeDetectionStrategy,
   NO_ERRORS_SCHEMA,
   PLATFORM_ID,
@@ -46,6 +45,7 @@ import { ActivatedRouteStub } from '../../shared/testing/active-router.stub';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
+import { ClarinFilesSectionComponent } from '../clarin-files-section/clarin-files-section.component';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
 import { ItemPageComponent } from './item-page.component';
