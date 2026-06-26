@@ -18,7 +18,8 @@
           </span>
         </div>
       }
-      <a class="hidden" id="repository_path" [href]="repositoryPath"></a>
+      <!-- hidden helper link read by the DiscoJuice script; not user-facing (a11y: aria-hidden) -->
+      <a class="hidden" id="repository_path" [href]="repositoryPath" aria-hidden="true" tabindex="-1"></a>
       @if (authenticatedUser !== null) {
         <div class="badge clarin-logout-badge px-2 py-1">
           <span>
