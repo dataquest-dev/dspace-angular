@@ -1,4 +1,5 @@
 import {
+import { ClarinFilesSectionComponent } from '../clarin-files-section/clarin-files-section.component';
   ChangeDetectionStrategy,
   NO_ERRORS_SCHEMA,
   PLATFORM_ID,
@@ -156,6 +157,7 @@ describe('FullItemPageComponent', () => {
       .overrideComponent(FullItemPageComponent, {
         remove: {
           imports: [
+            ClarinFilesSectionComponent,
             ItemVersionsComponent,
             ItemVersionsNoticeComponent,
             ThemedLoadingComponent,
