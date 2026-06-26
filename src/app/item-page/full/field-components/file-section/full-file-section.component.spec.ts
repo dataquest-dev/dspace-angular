@@ -7,6 +7,7 @@ import { TranslateLoaderMock } from '../../../../shared/mocks/translate-loader.m
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarDirective } from '../../../../shared/utils/var.directive';
 import { FileSizePipe } from '../../../../shared/utils/file-size-pipe';
+import { DsLangPipe } from '../../../../shared/utils/ds-lang.pipe';
 import { MetadataFieldWrapperComponent } from '../../../../shared/metadata-field-wrapper/metadata-field-wrapper.component';
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -67,7 +68,7 @@ describe('FullFileSectionComponent', () => {
           useClass: TranslateLoaderMock
         }
       }), BrowserAnimationsModule],
-      declarations: [FullFileSectionComponent, VarDirective, FileSizePipe, MetadataFieldWrapperComponent],
+      declarations: [FullFileSectionComponent, VarDirective, FileSizePipe, MetadataFieldWrapperComponent, DsLangPipe],
       providers: [
         { provide: BitstreamDataService, useValue: bitstreamDataService },
         { provide: NotificationsService, useValue: new NotificationsServiceStub() },

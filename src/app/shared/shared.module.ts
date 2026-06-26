@@ -300,6 +300,7 @@ import { ReplacePipe } from './utils/replace.pipe';
 import { ClarinDateService } from './clarin-date.service';
 import { ItemIdentifierService } from './item-identifier.service';
 import { ClarinLicenseRequiredInfoCheckedPipe } from './utils/clarin-license-required-info-checked.pipe';
+import { DsLangPipe } from './utils/ds-lang.pipe';
 
 const MODULES = [
   CommonModule,
@@ -347,7 +348,8 @@ const PIPES = [
   ClarinLicenseRequiredInfoPipe,
   CharToEndPipe,
   ClarinSafeHtmlPipe,
-  ReplacePipe
+  ReplacePipe,
+  DsLangPipe
 ];
 
 const COMPONENTS = [

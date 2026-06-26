@@ -25,7 +25,7 @@
       </ds-truncatable-part>
       <p *ngIf="dso.hasMetadata('dc.description')" class="item-description card-text text-muted">
         <ds-truncatable-part [id]="dso.id" [minLines]="3">
-          <span [innerHTML]="firstMetadataValue('dc.description')"></span>
+          <span [innerHTML]="firstMetadataValue('dc.description')" [attr.lang]="dso.firstMetadata('dc.description')?.language | dsLang"></span>
         </ds-truncatable-part>
       </p>
       <div *ngIf="linkType != linkTypes.None" class="text-center">
