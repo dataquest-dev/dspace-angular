@@ -52,6 +52,7 @@ import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.comp
 import { ListableObjectComponentLoaderComponent } from '../../shared/object-collection/shared/listable-object/listable-object-component-loader.component';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
+import { ClarinFilesSectionComponent } from '../clarin-files-section/clarin-files-section.component';
 import { getItemPageRoute } from '../item-page-routing-paths';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
@@ -73,6 +74,7 @@ import { QaEventNotificationComponent } from './qa-event-notification/qa-event-n
   imports: [
     AccessByTokenNotificationComponent,
     AsyncPipe,
+    ClarinFilesSectionComponent,
     ErrorComponent,
     ItemVersionsComponent,
     ItemVersionsNoticeComponent,

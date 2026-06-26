@@ -11,6 +11,7 @@
           <ds-item-versions-notice [item]="item"></ds-item-versions-notice>
           @if (!item.isWithdrawn || (isAdmin$|async)) {
             <ds-listable-object-component-loader [object]="item" [viewMode]="viewMode"></ds-listable-object-component-loader>
+          <ds-clarin-files-section [item]="item" [itemHandle]="item.handle"></ds-clarin-files-section>
           }
           <ds-item-versions class="mt-2" [item]="item" [displayActions]="false"></ds-item-versions>
         </div>

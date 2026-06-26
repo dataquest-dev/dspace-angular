@@ -1,0 +1,50 @@
+<ng-container>
+  <ds-clarin-license-info class="mt-3 d-block" [item]="item"></ds-clarin-license-info>
+  <h6><i class="fa fa-paperclip">&nbsp;</i>{{'item.page.files.head' | translate}}</h6>
+  <div class="pb-3">
+    <span class="pr-1">
+      @if (canShowCurlDownload) {
+        <a class="btn btn-download" (click)="openCommandModal(commandModal)" style="text-decoration: none"
+          >
+          <i class="fa fa-download fa-3x" style="display: block">&nbsp;</i>
+          {{'item.page.download.button.command.line' | translate}}
+        </a>
+      }
+    </span>
+
+    <ng-template #commandModal let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title" id="commandModalTitle">{{'item.page.download.button.command.line' | translate}}</h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre class="command-pre mb-0">{{ command }}</pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" (click)="copyCommand()">
+          <i class="fa" [ngClass]="commandCopied ? 'fa-check' : 'fa-clipboard'"></i>
+          {{ commandCopied ? ('item.page.download.command.copied' | translate) : ('item.page.download.command.copy' | translate) }}
+        </button>
+        <button class="btn btn-secondary" (click)="modal.close()">
+          {{'item.page.download.command.close' | translate}}
+        </button>
+      </div>
+    </ng-template>
+    <span>
+      @if (
+        (totalFileSizes | async) > (downloadZipMinFileSize | async) &&
+        (totalFileSizes | async) < (downloadZipMaxFileSize | async) &&
+        (listOfFiles | async).length >= (downloadZipMinFileCount | async)) {
+        <a
+          class="btn btn-download" id="download-all-button" (click)="downloadFiles()"
+          style="visibility: visible">
+          <i style="display: block" class="fa fa-download fa-3x">&nbsp;</i>
+          {{'item.page.download.button.all.files.zip' | translate}} ({{ (totalFileSizes | async) | dsFileSize }})
+        </a>
+      }
+    </span>
+  </div>
+  <ds-preview-section [item]="item"></ds-preview-section>
+</ng-container>

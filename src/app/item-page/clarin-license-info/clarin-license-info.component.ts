@@ -1,10 +1,14 @@
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  NgClass,
+} from '@angular/common';
 import {
   Component,
   Input,
   OnInit,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -25,6 +29,8 @@ import { secureImageData } from '../../shared/clarin-shared-util';
 @Component({
   imports: [
     AsyncPipe,
+    NgbTooltipModule,
+    NgClass,
     TranslateModule,
   ],
   selector: 'ds-clarin-license-info',
@@ -32,6 +38,8 @@ import { secureImageData } from '../../shared/clarin-shared-util';
   styleUrls: ['./clarin-license-info.component.scss'],
 })
 export class ClarinLicenseInfoComponent implements OnInit {
+
+  currentLangCode: string;
 
   constructor(private sanitizer: DomSanitizer,
               private clarinLicenseService: ClarinLicenseDataService,
@@ -68,6 +76,9 @@ export class ClarinLicenseInfoComponent implements OnInit {
   licenseLabelIcons: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   ngOnInit(): void {
+    this.localeService.getCurrentLanguageCode().subscribe((code) => {
+      this.currentLangCode = code;
+    });
     // load license info from item attributes
     this.licenseLabel = this.item.metadata?.['dc.rights.label']?.[0]?.value;
     this.license = this.item.metadata?.['dc.rights']?.[0]?.value;
@@ -111,7 +122,7 @@ export class ClarinLicenseInfoComponent implements OnInit {
    * Check if current language is Czech
    */
   isCsLocale() {
-    return this.localeService.getCurrentLanguageCode() === 'cs';
+    return this.currentLangCode === 'cs';
   }
 }
 

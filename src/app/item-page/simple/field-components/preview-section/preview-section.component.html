@@ -1,0 +1,28 @@
+@if ((listOfFiles | async); as files) {
+  <!-- Show "No files" message -->
+  @if ((hasNoFiles | async)) {
+    <div class="text-center text-muted my-3">
+      {{ 'item.view.box.no-files.message' | translate }}
+    </div>
+  }
+  <!-- Show list of files -->
+  @for (file of files; track file) {
+    <div>
+      <ds-file-description [fileInput]="file"></ds-file-description>
+    </div>
+  }
+} @else {
+  <div class="d-flex flex-column justify-content-center align-items-center my-3">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="px-4 pt-2">
+      {{ 'item.preview.loading-files' | translate }}
+      @if (emailToContact) {
+        <a [href]="'mailto:' + emailToContact" class="email-text">
+          {{ emailToContact }}
+        </a>
+      }
+    </div>
+  </div>
+}
+
+<!-- Spinner shown only while listOfFiles is null or undefined -->
