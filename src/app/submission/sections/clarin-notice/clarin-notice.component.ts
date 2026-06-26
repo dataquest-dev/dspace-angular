@@ -25,7 +25,7 @@ import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder
 import { Collection } from '../../../core/shared/collection.model';
 import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
 import { getRemoteDataPayload } from '../../../core/shared/operators';
-import { HELP_DESK_PROPERTY } from '../../../item-page/tombstone/tombstone.component';
+import { HELP_DESK_PROPERTY } from '../../../item-page/tombstone/tombstone.constants';
 import { hasValue } from '../../../shared/empty.util';
 import { SectionModelComponent } from '../models/section.model';
 import { SectionDataObject } from '../models/section-data.model';

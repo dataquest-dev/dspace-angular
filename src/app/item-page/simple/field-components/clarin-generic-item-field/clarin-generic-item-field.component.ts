@@ -30,9 +30,11 @@ import { ClarinDateItemFieldComponent } from '../clarin-date-item-field/clarin-d
 import { ClarinDescriptionItemFieldComponent } from '../clarin-description-item-field/clarin-description-item-field.component';
 import { ClarinIdentifierItemFieldComponent } from '../clarin-identifier-item-field/clarin-identifier-item-field.component';
 import { ClarinSponsorItemFieldComponent } from '../clarin-sponsor-item-field/clarin-sponsor-item-field.component';
+import {
+  DOI_METADATA_FIELD,
+  HANDLE_METADATA_FIELD,
+} from './clarin-generic-item-field.constants';
 
-export const DOI_METADATA_FIELD = 'dc.identifier.doi';
-export const HANDLE_METADATA_FIELD = 'dc.identifier.uri';
 const SHOW_HANDLE_AND_DOI_PROPERTY_NAME = 'item-page.show-handle-and-doi';
 
 @Component({

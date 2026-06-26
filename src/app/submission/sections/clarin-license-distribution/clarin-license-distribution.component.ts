@@ -33,7 +33,7 @@ import {
 import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
 import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
 import { WorkspaceitemSectionLicenseObject } from '../../../core/submission/models/workspaceitem-section-license.model';
-import { HELP_DESK_PROPERTY } from '../../../item-page/tombstone/tombstone.component';
+import { HELP_DESK_PROPERTY } from '../../../item-page/tombstone/tombstone.constants';
 import {
   isNotEmpty,
   isNotNull,

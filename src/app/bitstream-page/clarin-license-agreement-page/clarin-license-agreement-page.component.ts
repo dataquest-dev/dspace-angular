@@ -65,7 +65,7 @@ import {
   getFirstSucceededRemoteListPayload,
 } from '../../core/shared/operators';
 import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
-import { HELP_DESK_PROPERTY } from '../../item-page/tombstone/tombstone.component';
+import { HELP_DESK_PROPERTY } from '../../item-page/tombstone/tombstone.constants';
 import { BtnDisabledDirective } from '../../shared/btn-disabled.directive';
 import {
   hasValue,

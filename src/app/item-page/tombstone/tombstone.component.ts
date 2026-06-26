@@ -11,7 +11,6 @@ import { ReplacedTombstoneComponent } from './replaced-tombstone/replaced-tombst
 import { WithdrawnTombstoneComponent } from './withdrawn-tombstone/withdrawn-tombstone.component';
 
 // Property for the configuration service to get help-desk mail property from the server
-export const HELP_DESK_PROPERTY = 'lr.help.mail';
 
 @Component({
   imports: [

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { RemoteData } from '../../core/data/remote-data';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
-import { HELP_DESK_PROPERTY } from '../../item-page/tombstone/tombstone.component';
+import { HELP_DESK_PROPERTY } from '../../item-page/tombstone/tombstone.constants';
 
 @Component({
   imports: [

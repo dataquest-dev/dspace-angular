@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { getFirstCompletedRemoteData } from '../core/shared/operators';
-import { DOI_METADATA_FIELD } from '../item-page/simple/field-components/clarin-generic-item-field/clarin-generic-item-field.component';
+import { DOI_METADATA_FIELD } from '../item-page/simple/field-components/clarin-generic-item-field/clarin-generic-item-field.constants';
 import { isEmpty } from './empty.util';
 
 export const DEFAULT_DOI_RESOLVER = 'https://doi.org/';

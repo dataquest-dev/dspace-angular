@@ -49,7 +49,7 @@ import {
 import { WorkspaceItem } from '../../../core/submission/models/workspaceitem.model';
 import { normalizeSectionData } from '../../../core/submission/submission-response-parsing.service';
 import { WorkspaceitemDataService } from '../../../core/submission/workspaceitem-data.service';
-import { HELP_DESK_PROPERTY } from '../../../item-page/tombstone/tombstone.component';
+import { HELP_DESK_PROPERTY } from '../../../item-page/tombstone/tombstone.constants';
 import {
   hasValue,
   isEmpty,

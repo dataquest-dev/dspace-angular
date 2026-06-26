@@ -20,7 +20,7 @@ import { RequestService } from '../../core/data/request.service';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { getFirstCompletedRemoteData } from '../../core/shared/operators';
-import { HELP_DESK_PROPERTY } from '../../item-page/tombstone/tombstone.component';
+import { HELP_DESK_PROPERTY } from '../../item-page/tombstone/tombstone.constants';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 
 /**
