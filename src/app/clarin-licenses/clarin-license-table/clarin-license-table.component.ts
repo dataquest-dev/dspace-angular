@@ -436,7 +436,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
       };
     } catch {
       // no new file selected – clear the icon when requested, otherwise keep the existing one
-      updatedLabel.icon = formValues.clearIcon ? [] : selectedLabel.icon;
+      updatedLabel.icon = formValues.clearIcon ? [] : undefined;
       this.doUpdateLabel(updatedLabel, successMsg, errorMsg);
     }
   }
@@ -655,7 +655,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
     accumulatedLicenses: ClarinLicense[]
   ): Observable<{ response: RemoteData<PaginatedList<ClarinLicense>>, licenses: ClarinLicense[] }> {
     return this.clarinLicenseService.searchBy('byNameLike', {
-      currentPage,
+      currentPage: currentPage + 1,
       elementsPerPage: this.allLicensesPageSize,
       sort: { field: defaultSortConfiguration.field, direction: defaultSortConfiguration.direction },
       searchParams: [new RequestParam('name', '')]

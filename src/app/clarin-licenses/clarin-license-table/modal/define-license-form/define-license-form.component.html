@@ -1,6 +1,6 @@
 <div class="modal-header">
   <h4 class="modal-title">{{'clarin-license.define-license-form.form-name' | translate}}</h4>
-  <button type="button" class="btn btn-danger" (click)="activeModal.dismiss('Cross click')" aria-label="Left Align">
+  <button type="button" class="btn btn-danger" (click)="activeModal.dismiss('Cross click')" [attr.aria-label]="'clarin.license.label.modal.close' | translate">
     <span class="fas fa-times" aria-hidden="true"></span>
   </button>
 </div>
