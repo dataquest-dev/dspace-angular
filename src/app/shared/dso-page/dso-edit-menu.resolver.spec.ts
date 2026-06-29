@@ -267,6 +267,16 @@ describe('DSOEditMenuResolver', () => {
       it('should return Community/Collection-specific entries', (done) => {
         const result = resolver.getDsoMenus(testObject, route, state);
         combineLatest(result).pipe(map(flatten)).subscribe((menu) => {
+          const searchEntry = menu.find(entry => entry.id === 'search-dso');
+          expect(searchEntry).toBeTruthy();
+          expect(searchEntry.active).toBeFalse();
+          expect(searchEntry.visible).toBeTrue();
+          expect(searchEntry.model.type).toEqual(MenuItemType.LINK);
+          expect((searchEntry.model as LinkMenuItemModel).text).toEqual('search.title');
+          expect((searchEntry.model as LinkMenuItemModel).link).toEqual('/search');
+          expect((searchEntry.model as LinkMenuItemModel).queryParams['spc.page']).toEqual('1');
+          expect((searchEntry.model as LinkMenuItemModel).queryParams.scope).toEqual('test-community-uuid');
+
           const subscribeEntry = menu.find(entry => entry.id === 'subscribe');
           expect(subscribeEntry).toBeTruthy();
           expect(subscribeEntry.active).toBeFalse();
@@ -318,6 +328,16 @@ describe('DSOEditMenuResolver', () => {
       it('should return Community/Collection-specific entries', (done) => {
         const result = resolver.getDsoMenus(testObject, route, state);
         combineLatest(result).pipe(map(flatten)).subscribe((menu) => {
+          const searchEntry = menu.find(entry => entry.id === 'search-dso');
+          expect(searchEntry).toBeTruthy();
+          expect(searchEntry.active).toBeFalse();
+          expect(searchEntry.visible).toBeTrue();
+          expect(searchEntry.model.type).toEqual(MenuItemType.LINK);
+          expect((searchEntry.model as LinkMenuItemModel).text).toEqual('search.title');
+          expect((searchEntry.model as LinkMenuItemModel).link).toEqual('/search');
+          expect((searchEntry.model as LinkMenuItemModel).queryParams['spc.page']).toEqual('1');
+          expect((searchEntry.model as LinkMenuItemModel).queryParams.scope).toEqual('test-collection-uuid');
+
           const subscribeEntry = menu.find(entry => entry.id === 'subscribe');
           expect(subscribeEntry).toBeTruthy();
           expect(subscribeEntry.active).toBeFalse();
@@ -378,6 +398,9 @@ describe('DSOEditMenuResolver', () => {
       it('should not return Community/Collection-specific entries', (done) => {
         const result = resolver.getDsoMenus(testObject, route, state);
         combineLatest(result).pipe(map(flatten)).subscribe((menu) => {
+          const searchEntry = menu.find(entry => entry.id === 'search-dso');
+          expect(searchEntry).toBeFalsy();
+
           const subscribeEntry = menu.find(entry => entry.id === 'subscribe');
           expect(subscribeEntry).toBeFalsy();
           done();
