@@ -215,7 +215,7 @@ describe('My DSpace page', () => {
     cy.get('#dc_date_issued_year').type(currentYear.toString());
     cy.get('input[name="dc.type"]').click();
     cy.get('.dropdown-menu').should('be.visible').contains('button', 'Other').click();
-    cy.get('#granted').check();
+    cy.get('ds-clarin-license-distribution ng-toggle').click();
 
     //Press deposit button
     cy.get('button[data-test="deposit"]').click();
