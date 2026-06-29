@@ -10,14 +10,14 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout Playwright tests
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: dataquest-dev/dspace-ui-tests
           path: dspace-ui-tests
           token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
       - name: Checkout main repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: this-repository
 

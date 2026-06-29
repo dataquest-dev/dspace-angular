@@ -52,7 +52,7 @@ jobs:
       CONFIG_PATH: /opt/dspace-envs/${{inputs.INSTANCE}}
       ENVFILE: /opt/dspace-envs/${{inputs.INSTANCE}}/.env
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: ./.github/actions/erase-db
         if: inputs.ERASE_DB
