@@ -1,0 +1,39 @@
+name: Playwright tests
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  playwright-tests:
+    runs-on: dspace-test-1
+    timeout-minutes: 45
+    steps:
+      - name: Checkout Playwright tests
+        uses: actions/checkout@v4
+        with:
+          repository: dataquest-dev/dspace-ui-tests
+          path: dspace-ui-tests
+          token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
+
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+        with:
+          path: this-repository
+
+      - name: Copy customer config to UI tests repository for merging
+        run: |
+          cp this-repository/config/config.jcu.ui.tests.json dspace-ui-tests/customer-constants/
+
+      - name: test
+        working-directory: dspace-ui-tests/scripts
+        env:
+          HOME_URL: https://dev-5.pc:8443/repository/
+          NAME: LINDAT
+        run: |
+          ./test.sh
+
+      - uses: mazoea/ga-maz/end@master
+        with:
+          CHOWN_DIR: ./
+        if: ${{ always() }}
