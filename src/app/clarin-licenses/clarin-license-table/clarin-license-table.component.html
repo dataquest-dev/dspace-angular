@@ -76,11 +76,92 @@
           </button>
         </div>
         <div class="btn-group pr-1">
-          <button type="button" class="btn btn-danger" [disabled]="selectedLicense == null" (click)="deleteLicense()">
-            {{'clarin-license.button.delete-license' | translate}}
-          </button>
+          <span
+            [ngbTooltip]="isSelectedLicenseInUse() ? ('clarin-license.button.delete-license.disabled-tooltip' | translate:{name: selectedLicense?.name}) : null"
+            container="body"
+            placement="top"
+            [attr.tabindex]="isSelectedLicenseInUse() ? 0 : null">
+            <button
+              type="button"
+              class="btn btn-danger"
+              [dsBtnDisabled]="selectedLicense == null || isSelectedLicenseInUse()"
+              (click)="selectedLicense != null && !isSelectedLicenseInUse() && deleteLicense()"
+              [attr.aria-label]="'clarin-license.button.delete-license' | translate">
+              <i class="fas fa-trash" aria-hidden="true"></i>
+              {{ 'clarin-license.button.delete-license' | translate }}
+            </button>
+          </span>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="labels-section mt-4">
+    <h3 class="border-bottom pb-2">{{'clarin.license.label.section.title' | translate}}</h3>
+
+    <div *ngVar="(labelsRD$ | async)?.payload as cLicenseLabels">
+      <ds-pagination
+        [paginationOptions]="labelPaginationOptions"
+        [collectionSize]="cLicenseLabels?.totalElements"
+        [hideGear]="true"
+        [hidePagerWhenSinglePage]="true"
+        [retainScrollPosition]="true">
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle my-2">
+          <thead>
+          <tr>
+            <th>{{'clarin.license.label.table.header.label' | translate}}</th>
+            <th>{{'clarin.license.label.table.header.title' | translate}}</th>
+            <th>{{'clarin.license.label.table.header.extended' | translate}}</th>
+            <th>{{'clarin.license.label.table.header.icon' | translate}}</th>
+            <th class="labels-actions-column">{{'clarin.license.label.table.header.actions' | translate}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let label of cLicenseLabels?.page">
+            <td>{{label?.label}}</td>
+            <td>{{label?.title}}</td>
+            <td>{{label?.extended ? ('clarin.license.label.table.boolean.yes' | translate) : ('clarin.license.label.table.boolean.no' | translate)}}</td>
+            <td>
+              <i class="fas" [ngClass]="label?.icon?.length > 0 ? 'fa-check text-success' : 'fa-times text-muted'" aria-hidden="true"></i>
+              <span class="sr-only">{{label?.icon?.length > 0 ? ('clarin.license.label.table.icon.available' | translate) : ('clarin.license.label.table.icon.none' | translate)}}</span>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-warning btn-sm mr-1"
+                (click)="editLabel(label)"
+                [attr.aria-label]="('clarin.license.label.table.edit.aria' | translate:{label: (label?.label || '')})">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+                {{'clarin.license.label.table.edit' | translate}}
+              </button>
+                <ng-container *ngVar="(labelUsageReady$ | async) as usageReady">
+                  <span [ngbTooltip]="!usageReady
+                          ? ('clarin.license.label.table.delete.checking-tooltip' | translate)
+                          : (isLabelInUse(label) ? ('clarin.license.label.table.delete.disabled-tooltip' | translate:{ label: label.label }) : null)"
+                        [attr.tabindex]="(!usageReady || isLabelInUse(label)) ? 0 : null">
+                    <button class="btn btn-danger btn-sm"
+                            type="button"
+                            [dsBtnDisabled]="!usageReady || isLabelInUse(label)"
+                      [attr.aria-label]="('clarin.license.label.table.delete.aria' | translate:{label: (label?.label || '')})"
+                            (click)="usageReady && !isLabelInUse(label) && confirmDeleteLabel(label)">
+                      <i class="fas fa-trash" aria-hidden="true"></i>
+                      {{ 'clarin.license.label.table.delete' | translate }}
+                    </button>
+                  </span>
+                </ng-container>
+            </td>
+          </tr>
+          <tr *ngIf="!(loading$ | async) && (labelsRD$ | async)?.hasSucceeded && !(cLicenseLabels?.page?.length > 0)">
+            <td colspan="5" class="text-center text-muted">{{'clarin.license.label.table.empty' | translate}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ds-loading *ngIf="loading$ | async" class="text-center"></ds-loading>
+      <span *ngIf="loading$ | async" class="sr-only">{{'clarin.license.label.table.loading' | translate}}</span>
+      </ds-pagination>
     </div>
   </div>
 </div>
