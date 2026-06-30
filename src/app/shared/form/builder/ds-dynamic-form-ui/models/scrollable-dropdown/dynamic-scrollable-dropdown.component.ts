@@ -276,7 +276,7 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
 
     if (init && !this.useFindAllService) {
       result = this.getInitValueFromModel().pipe(
-        map((formValue: FormFieldMetadataValueObject) => formValue.display)
+        map((formValue: FormFieldMetadataValueObject) => formValue.display || formValue.value)
       );
     } else {
       if (isEmpty(value)) {
@@ -286,7 +286,7 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
       } else if (this.useFindAllService) {
         result = observableOf(value[this.model.displayKey]);
       } else {
-        result = observableOf(value.display);
+        result = observableOf(value.display || value.value);
       }
     }
 
