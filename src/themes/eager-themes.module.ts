@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { EagerThemeModule as DSpaceEagerThemeModule } from './dspace/eager-theme.module';
-import { EagerThemeModule } from './dspace/eager-theme.module';
 import { EagerThemeModule as CustomEagerThemeModule } from './custom/eager-theme.module';
 
 /**
@@ -18,10 +17,6 @@ import { EagerThemeModule as CustomEagerThemeModule } from './custom/eager-theme
 @NgModule({
   imports: [
     DSpaceEagerThemeModule,
-    // Uncomment this because the `untyped-item` theming is not working when it is commented out.
-    // Issue: https://github.com/DSpace/dspace-angular/issues/1897
-    // Useful info in PR: https://github.com/DSpace/dspace-angular/pull/2262#issuecomment-1557146081
-    EagerThemeModule,
     CustomEagerThemeModule,
   ],
 })
