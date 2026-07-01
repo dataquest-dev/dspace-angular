@@ -6,9 +6,9 @@ interface Scripts {
 }
 
 export const ScriptStore: Scripts[] = [
-  { name: 'aai', src: 'aai.js' },
-  { name: 'aaiConfig', src: 'aai_config.js' },
-  { name: 'discojuice', src: 'discojuice.js' },
+  { name: 'aai', src: 'aai/aai.js' },
+  { name: 'aaiConfig', src: 'aai/aai_config.js' },
+  { name: 'discojuice', src: 'aai/discojuice/discojuice.js' },
 ];
 
 declare let document: any;

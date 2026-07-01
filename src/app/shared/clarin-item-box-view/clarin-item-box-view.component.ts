@@ -1,5 +1,8 @@
 // eslint-disable-next-line max-classes-per-file
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  NgClass,
+} from '@angular/common';
 import {
   Component,
   Input,
@@ -7,6 +10,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -59,6 +63,8 @@ import { VarDirective } from '../utils/var.directive';
     AsyncPipe,
     ClarinItemAuthorPreviewComponent,
     FileSizePipe,
+    NgbTooltipModule,
+    NgClass,
     RouterLink,
     TranslateModule,
     VarDirective,
