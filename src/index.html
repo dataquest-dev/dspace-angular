@@ -11,7 +11,7 @@
     /* Hydration-safe anti-flicker overlay (DSpace 9 / Angular 18).
        Unlike the Angular-15 variant, this NEVER moves or mutates the SSR DOM that Angular
        hydrates — it only paints a detached *clone* on top. See the bootstrap script below +
-       AppComponent.removeSsrOverlayWhenStable. Root cause this masks: DSpace's ThemedComponent
+       AppComponent.removeSsrOverlayWhenContentVisible. Root cause this masks: DSpace's ThemedComponent
        instantiates themed wrappers imperatively (ViewContainerRef.createComponent in
        ngAfterViewInit), which Angular hydration cannot reuse, so every themed subtree is
        re-created client-side. Tracked upstream: DSpace/dspace-angular#3867. */
@@ -43,8 +43,8 @@
   We therefore must NOT touch the DOM Angular hydrates (the 15.x overlay MOVED nodes, which would
   *worsen* the mismatch here). Instead we paint a detached CLONE of the SSR view on top, let
   hydration + the themed re-render happen invisibly underneath on the untouched original, and drop
-  the clone once ApplicationRef.isStable (AppComponent.removeSsrOverlayWhenStable), with a 15s
-  hard fallback.
+  the clone once the routed DOM has settled (AppComponent.removeSsrOverlayWhenContentVisible), with
+  a 15s hard fallback.
 */
 (function () {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
@@ -71,7 +71,7 @@
 
     var removing = false;
     window.__dspaceRemoveSsrOverlay = function () {
-      // Re-entrancy guard so a racing isStable + the 15s fallback can't double-run the fade.
+      // Re-entrancy guard so a racing DOM-settle removal + the 15s fallback can't double-run the fade.
       if (removing) return;
       removing = true;
       window.__dspaceRemoveSsrOverlay = null;
@@ -85,7 +85,7 @@
       }, 200);
     };
 
-    // Safety net: if isStable never fires, never trap the user behind the frozen frame.
+    // Safety net: if AppComponent never removes it, never trap the user behind the frozen frame.
     setTimeout(function () {
       if (typeof window.__dspaceRemoveSsrOverlay === 'function') {
         window.__dspaceRemoveSsrOverlay();
