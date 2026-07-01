@@ -27,8 +27,8 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
 
   beforeEach(() => {
     // Return the promise so the module (and its fresh getMockFormBuilderService() spy mock) is fully set up
-    // before each spec runs; the previous dangling .then() did not await, allowing async setup slop between
-    // specs.
+    // before each spec runs; the previous dangling .then() did not await, letting asynchronous module setup
+    // leak between specs.
     return TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       providers: [
