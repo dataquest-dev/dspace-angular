@@ -14,6 +14,8 @@ import { ClarinLicenseDataService } from 'src/app/core/data/clarin/clarin-licens
 import { ClarinDateService } from '../clarin-date.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DSONameServiceMock } from '../mocks/dso-name.service.mock';
+import { Item } from '../../core/shared/item.model';
+import { of } from 'rxjs';
 
 describe('ClarinItemBoxViewComponent', () => {
   let component: ClarinItemBoxViewComponent;
@@ -48,6 +50,7 @@ describe('ClarinItemBoxViewComponent', () => {
   ]);
 
   beforeEach(waitForAsync(() => {
+    configurationServiceMock.findByPropertyName.and.returnValue(of({ values: ['http://localhost:4000'] }));
     TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
@@ -82,6 +85,7 @@ describe('ClarinItemBoxViewComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ClarinItemBoxViewComponent);
     component = fixture.componentInstance;
+    component.baseUrl = 'http://localhost:4000';
     fixture.detectChanges();
   });
 
@@ -114,5 +118,120 @@ describe('ClarinItemBoxViewComponent', () => {
       const result = component.formateIconsAltText('research_data');
       expect(result).toBe('Research data icon');
     });
+  });
+
+  it('should build publisher link with authority when authority exists', async () => {
+    const mockItem = new Item();
+    mockItem.metadata = {
+      'dc.publisher': [
+        {
+        value: 'Test Publisher',
+        authority: 'test123',
+        confidence: 600,
+        place: 0,
+        language: null,
+        uuid: 'mock-uuid-1',
+        isVirtual: false,
+        virtualValue: null
+      }
+      ]
+    };
+    component.object = mockItem;
+    component.isSearchResult = true;
+    spyOn(component, 'assignBaseUrl').and.returnValue(Promise.resolve());
+    spyOn(component as any, 'getItemCommunity').and.stub();
+    spyOn(component as any, 'getItemFilesSize').and.stub();
+    spyOn(component as any, 'loadItemLicense').and.stub();
+    await component.ngOnInit();
+    fixture.detectChanges();
+    expect(component.publisherRedirectLink).toContain('f.publisher=test123,authority');
+    expect(component.hasPublisherRorAuthority).toBeTrue();
+  });
+
+  it('should build publisher link with equals when no authority', async () => {
+    const mockItem = new Item();
+    mockItem.metadata = {
+      'dc.publisher': [
+        {
+          value: 'Test Publisher',
+          authority: null,
+          confidence: -1,
+          place: 0,
+          language: null,
+          uuid: 'mock-uuid-2',
+          isVirtual: false,
+          virtualValue: null
+        }
+      ]
+    };
+    component.object = mockItem;
+    component.isSearchResult = true;
+    spyOn(component, 'assignBaseUrl').and.returnValue(Promise.resolve());
+    spyOn(component as any, 'getItemCommunity').and.stub();
+    spyOn(component as any, 'getItemFilesSize').and.stub();
+    spyOn(component as any, 'loadItemLicense').and.stub();
+    await component.ngOnInit();
+    fixture.detectChanges();
+    expect(component.publisherRedirectLink).toContain('f.publisher=Test%20Publisher,equals');
+    expect(component.hasPublisherRorAuthority).toBeFalse();
+  });
+
+  it('should show ROR icon when hasPublisherRorAuthority is true', async () => {
+    const mockItem = new Item();
+    mockItem.metadata = {
+      'dc.publisher': [
+        {
+          value: 'Test Publisher',
+          authority: 'test123',
+          confidence: 600,
+          place: 0,
+          language: null,
+          uuid: 'mock-uuid-1',
+          isVirtual: false,
+          virtualValue: null
+        }
+      ]
+    };
+    component.object = mockItem;
+    component.isSearchResult = true;
+    spyOn(component, 'assignBaseUrl').and.returnValue(Promise.resolve());
+    spyOn(component as any, 'getItemCommunity').and.stub();
+    spyOn(component as any, 'getItemFilesSize').and.stub();
+    spyOn(component as any, 'loadItemLicense').and.stub();
+    await component.ngOnInit();
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement;
+    const icon = compiled.querySelector('img[src*="ror-icon.svg"]');
+    expect(icon).toBeTruthy();
+    expect(icon.src).toContain('ror-icon.svg');
+  });
+
+  it('should hide ROR icon when hasPublisherRorAuthority is false', async () => {
+    const mockItem = new Item();
+    mockItem.metadata = {
+      'dc.publisher': [
+        {
+          value: 'Test Publisher',
+          authority: null,
+          confidence: -1,
+          place: 0,
+          language: null,
+          uuid: 'mock-uuid-2',
+          isVirtual: false,
+          virtualValue: null
+        }
+      ]
+    };
+    component.object = mockItem;
+    component.isSearchResult = true;
+    spyOn(component, 'assignBaseUrl').and.returnValue(Promise.resolve());
+    spyOn(component as any, 'getItemCommunity').and.stub();
+    spyOn(component as any, 'getItemFilesSize').and.stub();
+    spyOn(component as any, 'loadItemLicense').and.stub();
+    await component.ngOnInit();
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement;
+    const icon = compiled.querySelector('img[src*="ror-icon.svg"]');
+    expect(icon).toBeFalsy();
   });
 });
