@@ -225,7 +225,14 @@ export function app() {
  * The callback function to serve server side angular
  */
 function ngApp(req, res, next) {
-  if (environment.ssr.enabled && req.method === 'GET' && (req.path === '/' || !isExcludedFromSsr(req.path, environment.ssr.excludePathPatterns))) {
+  // The CLARIN home page is highly request-heavy and, during the server-side render, its
+  // earliest HAL calls race the SSR HTTP bootstrap: the first root-endpoint request fails and
+  // that cached error poisons every subsequent root-link lookup in the same render, turning the
+  // home page into a 500. The page renders correctly client-side, so serve the home route via
+  // CSR (the rest of the app keeps full SSR/SEO). '/' redirects to '/home'.
+  const isHomeRoute = req.path === '/' || req.path === '/home' || req.path === '/home/';
+  if (environment.ssr.enabled && req.method === 'GET' && !isHomeRoute &&
+      !isExcludedFromSsr(req.path, environment.ssr.excludePathPatterns)) {
     // Render the page to user via SSR (server side rendering)
     serverSideRender(req, res, next);
   } else {
@@ -328,6 +335,14 @@ function clientSideRender(req, res) {
     /<base href="[^"]*">/,
     `<base href="${namespace.endsWith('/') ? namespace : namespace + '/'}">`
   );
+
+  // The CLARIN home route is served via CSR (see ngApp), so Angular only sets the page title
+  // after it bootstraps. Production LINDAT renders the home page server-side and therefore ships
+  // the title in the initial HTML. Mirror that for the CSR home route by baking the title into the
+  // pre-hydration HTML; other routes keep the default until the client sets the correct title.
+  if (req.path === '/' || req.path === '/home' || req.path === '/home/') {
+    html = html.replace(/<title>[^<]*<\/title>/, '<title>LINDAT/CLARIAH-CZ Repository Home</title>');
+  }
 
   // Replace REST URL with UI URL
   if (environment.ssr.replaceRestUrl && REST_BASE_URL !== environment.rest.baseUrl) {

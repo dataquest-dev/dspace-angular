@@ -43,6 +43,13 @@ export class ClarinNavbarTopComponent implements OnInit, AfterViewInit {
   authenticatedUser = null;
 
   /**
+   * Becomes true once the AAI/DiscoJuice scripts have loaded and DiscoJuice has bound its click
+   * handler to the sign-on link. Until then the sign-on link is not clickable, so a click can never
+   * race ahead of the (asynchronously loaded) DiscoJuice binding and be silently dropped.
+   */
+  scriptsReady = false;
+
+  /**
    * The server path e.g., `http://localhost:8080/server/api/`
    */
   repositoryPath = '';
@@ -73,12 +80,16 @@ export class ClarinNavbarTopComponent implements OnInit, AfterViewInit {
   }
 
   loadScripts() {
-    // At first load DiscoJuice, second AAI and at last AAIConfig
-    this.loadDiscoJuice().then(() => {
-      this.loadAAI().then(() => {
-        this.loadAAIConfig().catch(error => console.log(error));
-      }).catch(error => console.log(error));
-    }).catch(error => console.log(error));
+    // DiscoJuice and AAI have no ordering dependency between them (both only need jQuery, which is
+    // loaded up-front in index.html), so load them in parallel; AAIConfig must run last because it
+    // calls aai.setup() which uses both. Once AAIConfig has run, DiscoJuice is bound to the sign-on
+    // link, so mark the link ready (see scriptsReady).
+    Promise.all([this.loadDiscoJuice(), this.loadAAI()])
+      .then(() => this.loadAAIConfig())
+      .then(() => {
+        this.scriptsReady = true;
+      })
+      .catch(error => console.log(error));
   }
 
   private loadDiscoJuice = (): Promise<any> => {

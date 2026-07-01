@@ -3,7 +3,18 @@
   function AAI() {
     var host = 'https://' + window.location.hostname,
         ourEntityID = host.match("lindat.mff.cuni.cz") ? "https://ufal-point.mff.cuni.cz" : host;
-    var namespace = 'repository';
+    // Derive the UI namespace from the document <base href> so the AAI/DiscoJuice login
+    // navigation targets the right path regardless of where the app is mounted
+    // ('/' -> '', '/repository/' -> 'repository'). Falls back to 'repository' (production LINDAT).
+    var namespace = (function () {
+      try {
+        var baseEl = window.document.querySelector('base');
+        var href = baseEl ? baseEl.getAttribute('href') : '/';
+        return (href || '/').replace(/^\/+|\/+$/g, '');
+      } catch (e) {
+        return 'repository';
+      }
+    })();
     this.defaults = {
       //host : 'https://ufal-point.mff.cuni.cz',
       host : host, //better default (useful when testing on ufal-point-dev)

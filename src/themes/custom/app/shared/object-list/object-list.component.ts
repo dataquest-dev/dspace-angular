@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { ClarinItemBoxViewComponent } from '../../../../../app/shared/clarin-item-box-view/clarin-item-box-view.component';
 import { ImportableListItemControlComponent } from '../../../../../app/shared/object-collection/shared/importable-list-item-control/importable-list-item-control.component';
 import { ListableObjectComponentLoaderComponent } from '../../../../../app/shared/object-collection/shared/listable-object/listable-object-component-loader.component';
 import { SelectableListItemControlComponent } from '../../../../../app/shared/object-collection/shared/selectable-list-item-control/selectable-list-item-control.component';
@@ -16,6 +17,7 @@ import { BrowserOnlyPipe } from '../../../../../app/shared/utils/browser-only.pi
   templateUrl: '../../../../../app/shared/object-list/object-list.component.html',
   imports: [
     BrowserOnlyPipe,
+    ClarinItemBoxViewComponent,
     ImportableListItemControlComponent,
     ListableObjectComponentLoaderComponent,
     NgClass,

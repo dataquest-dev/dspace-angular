@@ -1,12 +1,15 @@
 // eslint-disable-next-line max-classes-per-file
 import {
   AsyncPipe,
+  isPlatformBrowser,
   NgFor,
   NgIf,
 } from '@angular/common';
 import {
   Component,
+  Inject,
   OnInit,
+  PLATFORM_ID,
 } from '@angular/core';
 import {
   ActivatedRoute,
@@ -111,6 +114,7 @@ export class HomePageComponent implements OnInit {
     protected siteService: SiteDataService,
     protected itemService: ItemDataService,
     protected router: Router,
+    @Inject(PLATFORM_ID) protected platformId: object,
   ) {
     this.recentSubmissionspageSize = environment.homePage.recentSubmissions.pageSize;
     config.interval = 5000;
@@ -126,16 +130,23 @@ export class HomePageComponent implements OnInit {
     );
     this.assignSiteId();
 
-    // Load the most used authors, subjects and language (ISO)
-    this.loadAuthors();
-    this.loadSubject();
-    this.loadLanguages();
-
-    // Load the most viewed Items and the new Items
-    this.loadTopItems();
-    this.loadNewItems();
-
     this.searchLink = this.searchService.getSearchLink();
+
+    // The statistics/personalization widgets (most-used authors/subjects/languages,
+    // most-viewed and newest items) rely on Solr statistics and a large number of
+    // parallel REST calls. They are not needed for SSR/SEO and firing them during the
+    // server render races the HAL root-endpoint resolution (crashing the home page).
+    // Run them in the browser only; the server renders the static shell.
+    if (isPlatformBrowser(this.platformId)) {
+      // Load the most used authors, subjects and language (ISO)
+      this.loadAuthors();
+      this.loadSubject();
+      this.loadLanguages();
+
+      // Load the most viewed Items and the new Items
+      void this.loadTopItems();
+      this.loadNewItems();
+    }
   }
 
   /**
@@ -210,7 +221,7 @@ export class HomePageComponent implements OnInit {
     this.site$
       .pipe(take(1))
       .subscribe((site: Site) => {
-        this.siteId = site.uuid;
+        this.siteId = site?.uuid;
       });
   }
 

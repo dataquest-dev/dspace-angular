@@ -17,6 +17,7 @@ import { RemoteData } from '../../core/data/remote-data';
 import { Context } from '../../core/shared/context.model';
 import { ViewMode } from '../../core/shared/view-mode.model';
 import { fadeIn } from '../animations/fade';
+import { ClarinItemBoxViewComponent } from '../clarin-item-box-view/clarin-item-box-view.component';
 import { CollectionElementLinkType } from '../object-collection/collection-element-link.type';
 import { ImportableListItemControlComponent } from '../object-collection/shared/importable-list-item-control/importable-list-item-control.component';
 import { ListableObject } from '../object-collection/shared/listable-object.model';
@@ -36,6 +37,7 @@ import { SelectableListService } from './selectable-list/selectable-list.service
   animations: [fadeIn],
   imports: [
     BrowserOnlyPipe,
+    ClarinItemBoxViewComponent,
     ImportableListItemControlComponent,
     ListableObjectComponentLoaderComponent,
     NgClass,
@@ -44,6 +46,10 @@ import { SelectableListService } from './selectable-list/selectable-list.service
   ],
 })
 export class ObjectListComponent {
+  /**
+   * List id used by the bulk-access admin page; the CLARIN search box view is suppressed there.
+   */
+  BULK_ACCESS_LIST_ID = 'bulk-access-list';
   /**
    * The view mode of this component
    */
@@ -255,6 +261,14 @@ export class ObjectListComponent {
   */
   goNext() {
     this.next.emit(true);
+  }
+
+  /**
+   * Show the search results in the CLARIN item box view instead of the default list element.
+   * Used on the search page (but not in the bulk-access admin list).
+   */
+  showClarinViewBox(): boolean {
+    return this.context === 'search' && this.selectionConfig?.listId !== this.BULK_ACCESS_LIST_ID;
   }
 
 }

@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  of as observableOf,
+  timer as observableTimer,
+} from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -27,6 +31,17 @@ import { getFirstCompletedRemoteData } from './operators';
 @Injectable({ providedIn: 'root' })
 export class HALEndpointService {
 
+  /**
+   * How many times to retry resolving a HAL endpoint map that transiently completed without a
+   * payload (e.g. a root-endpoint request issued before the SSR HTTP layer was ready).
+   */
+  private static readonly MAX_ENDPOINT_MAP_RETRIES = 3;
+
+  /**
+   * Delay (ms) between endpoint-map resolution retries.
+   */
+  private static readonly ENDPOINT_MAP_RETRY_DELAY_MS = 200;
+
   constructor(
     private requestService: RequestService,
     private rdbService: RemoteDataBuildService,
@@ -41,10 +56,12 @@ export class HALEndpointService {
     return this.getEndpointMapAt(this.getRootHref());
   }
 
-  private getEndpointMapAt(href): Observable<EndpointMap> {
+  private getEndpointMapAt(href, attempt = 0): Observable<EndpointMap> {
     const request = new EndpointMapRequest(this.requestService.generateRequestId(), href);
 
-    this.requestService.send(request, true);
+    // On the first attempt reuse a cached response if present; on a retry force a fresh, uncached
+    // request so we bypass a previously cached transient error (see the retry branch below).
+    this.requestService.send(request, attempt === 0);
 
     return this.rdbService.buildFromHref<CacheableObject>(href).pipe(
       // Re-request stale responses
@@ -57,12 +74,21 @@ export class HALEndpointService {
       // completed RemoteData
       filter((rd: RemoteData<CacheableObject>) => !rd.isStale),
       getFirstCompletedRemoteData(),
-      map((response: RemoteData<CacheableObject>) => {
+      switchMap((response: RemoteData<CacheableObject>) => {
         if (hasValue(response.payload)) {
-          return response.payload._links;
+          return observableOf(response.payload._links);
+        } else if (attempt < HALEndpointService.MAX_ENDPOINT_MAP_RETRIES) {
+          // The HAL root endpoint request can transiently fail when it is issued before the
+          // (server-side render) HTTP layer is fully initialised - e.g. an early site/authorization
+          // lookup on the home or login page. Left unhandled, that first failure is cached and
+          // poisons every later root-link lookup in the same render, turning the page into a 500.
+          // Retry with a fresh, uncached request after a short delay so the render recovers.
+          return observableTimer(HALEndpointService.ENDPOINT_MAP_RETRY_DELAY_MS).pipe(
+            switchMap(() => this.getEndpointMapAt(href, attempt + 1)),
+          );
         } else {
           console.warn(`No _links section found at ${href}`);
-          return undefined;
+          return observableOf(undefined);
         }
       }),
     );
