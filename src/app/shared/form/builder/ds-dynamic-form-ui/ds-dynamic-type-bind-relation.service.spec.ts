@@ -26,7 +26,10 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
   let injector: Injector;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
+    // Return the promise so the module (and its fresh getMockFormBuilderService() spy mock) is fully set up
+    // before each spec runs; the previous dangling .then() did not await, allowing async setup slop between
+    // specs.
+    return TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       providers: [
         { provide: FormBuilderService, useValue: getMockFormBuilderService() },
@@ -34,7 +37,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
         { provide: DynamicFormRelationService },
         DISABLED_MATCHER_PROVIDER, HIDDEN_MATCHER_PROVIDER, REQUIRED_MATCHER_PROVIDER
       ]
-    }).compileComponents().then();
+    }).compileComponents();
   });
 
   beforeEach(inject([DsDynamicTypeBindRelationService, DynamicFormRelationService],
