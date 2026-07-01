@@ -86,7 +86,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
     it('Should not push undefined bind models', () => {
       const testModel = mockInputWithTypeBindModel;
       testModel.typeBindRelations = getTypeBindRelations(['boundType']);
-      spyOn((service as any).formBuilderService, 'getTypeBindModel').and.returnValue(undefined);
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.returnValue(undefined);
 
       const relatedModels = service.getRelatedFormModel(testModel);
 
@@ -143,7 +143,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
         opposingMatch: HIDDEN_MATCHER.match,
         onChange: jasmine.createSpy('onChange')
       };
-      spyOn((service as any).formBuilderService, 'getTypeBindModel').and.returnValue(undefined);
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.returnValue(undefined);
 
       const hasMatch = service.matchesCondition(relation, visibleMatcher);
 
@@ -159,7 +159,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
         opposingMatch: MATCH_VISIBLE,
         onChange: jasmine.createSpy('onChange')
       };
-      spyOn((service as any).formBuilderService, 'getTypeBindModel').and.returnValue(undefined);
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.returnValue(undefined);
 
       const hasMatch = service.matchesCondition(relation, hiddenMatcher);
 
@@ -185,8 +185,8 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
         onChange: jasmine.createSpy('onChange')
       };
       (service as any).dynamicMatchers = [visibleMatcher];
-      spyOn((service as any).formBuilderService, 'getTypeBindModel').and.callFake(() => bindModelAvailable ? bindModel : undefined);
-      spyOn((service as any).formBuilderService, 'getTypeBindModelUpdates').and.returnValue(bindModelUpdates$.asObservable());
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.callFake(() => bindModelAvailable ? bindModel : undefined);
+      ((service as any).formBuilderService.getTypeBindModelUpdates as jasmine.Spy).and.returnValue(bindModelUpdates$.asObservable());
 
       const subscriptions = service.subscribeRelations(testModel, dcTypeControl);
       expect(subscriptions.length).toBe(1);
@@ -220,8 +220,8 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
         onChange: jasmine.createSpy('onChange')
       };
       (service as any).dynamicMatchers = [hiddenMatcher];
-      spyOn((service as any).formBuilderService, 'getTypeBindModel').and.callFake(() => bindModelAvailable ? bindModel : undefined);
-      spyOn((service as any).formBuilderService, 'getTypeBindModelUpdates').and.returnValue(bindModelUpdates$.asObservable());
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.callFake(() => bindModelAvailable ? bindModel : undefined);
+      ((service as any).formBuilderService.getTypeBindModelUpdates as jasmine.Spy).and.returnValue(bindModelUpdates$.asObservable());
 
       const subscriptions = service.subscribeRelations(testModel, dcTypeControl);
       expect(subscriptions.length).toBe(1);
@@ -254,8 +254,8 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
         onChange: jasmine.createSpy('onChange')
       };
       (service as any).dynamicMatchers = [visibleMatcher];
-      spyOn((service as any).formBuilderService, 'getTypeBindModel').and.callFake(() => bindModelAvailable ? bindModel : undefined);
-      spyOn((service as any).formBuilderService, 'getTypeBindModelUpdates').and.returnValue(bindModelUpdates$.asObservable());
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.callFake(() => bindModelAvailable ? bindModel : undefined);
+      ((service as any).formBuilderService.getTypeBindModelUpdates as jasmine.Spy).and.returnValue(bindModelUpdates$.asObservable());
 
       const subscriptions = service.subscribeRelations(testModel, dcTypeControl);
       expect(visibleMatcher.onChange).toHaveBeenCalledWith(false, testModel, dcTypeControl, jasmine.anything());
