@@ -3,8 +3,14 @@
 # https://docs.github.com/en/free-pro-team@latest/actions/guides/building-and-testing-nodejs
 name: Build
 
-# Run this Build for all pushes / PRs to current branch
-on: [push, pull_request]
+# Run this Build for pushes to our main and all PRs
+on:
+  push:
+    branches:
+      - dtq-dev
+      - customer/*
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read  # to fetch code (actions/checkout)
@@ -24,6 +30,8 @@ jobs:
       # Spin up UI on 127.0.0.1 to avoid host resolution issues in e2e tests with Node 20+
       DSPACE_UI_HOST: 127.0.0.1
       DSPACE_UI_PORT: 4000
+      # SSR only renders when the request Host matches ui.baseUrl's host. Set it explicitly to
+      # the 127.0.0.1 host the e2e/SSR checks use; otherwise SSR falls back to CSR.
       DSPACE_UI_BASEURL: http://127.0.0.1:4000
       # Ensure all SSR caching is disabled in test environment
       DSPACE_CACHE_SERVERSIDE_BOTCACHE_MAX: 0
@@ -40,11 +48,8 @@ jobs:
       # Project name to use when running "docker compose" prior to e2e tests
       COMPOSE_PROJECT_NAME: 'ci'
       # Docker Registry to use for Docker compose scripts below.
-      # On the upstream dspace/dspace-angular repository we use GitHub's Container Registry
-      # (ghcr.io) to avoid aggressive rate limits at DockerHub. Forks cannot authenticate
-      # against ghcr.io/dspace/* with their own GITHUB_TOKEN (and the images there require
-      # auth), so on forks we fall back to docker.io where the same images are public.
-      DOCKER_REGISTRY: ${{ github.repository == 'dspace/dspace-angular' && 'ghcr.io' || 'docker.io' }}
+      # Using DockerHub as the images are publicly available there
+      DOCKER_REGISTRY: docker.io
     strategy:
       # Create a matrix of Node versions to test against (in parallel)
       matrix:
@@ -124,18 +129,14 @@ jobs:
           path: 'coverage/dspace-angular/lcov.info'
           retention-days: 14
 
-      # Login to our Docker registry, so that we can access Docker images using "docker compose" below.
-      # This login is required on the upstream repository because DOCKER_REGISTRY is set to ghcr.io
-      # and pulling ghcr.io/dspace/* requires authentication. On forks, DOCKER_REGISTRY falls back to
-      # docker.io (see env block above) where the same images are publicly pullable without a login,
-      # and forks cannot authenticate against ghcr.io/dspace/* with their own GITHUB_TOKEN anyway.
-      - name: Login to ${{ env.DOCKER_REGISTRY }}
-        uses: docker/login-action@v4
-        if: github.repository == 'dspace/dspace-angular'
-        with:
-          registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # Note: Docker login not required for public images from docker.io
+      # If you need to use ghcr.io images, uncomment the login step below:
+      # - name: Login to ${{ env.DOCKER_REGISTRY }}
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ${{ env.DOCKER_REGISTRY }}
+      #     username: ${{ github.repository_owner }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
 
       # Using "docker compose" start backend using CI configuration
       # and load assetstore from a cached copy
@@ -315,40 +316,3 @@ jobs:
 
       - name: Shutdown Docker containers
         run: docker compose -f ./docker/docker-compose-ci.yml down
-
-  # Codecov upload is a separate job in order to allow us to restart this separate from the entire build/test
-  # job above. This is necessary because Codecov uploads seem to randomly fail at times.
-  # See https://community.codecov.com/t/upload-issues-unable-to-locate-build-via-github-actions-api/3954
-  codecov:
-    # Must run after 'tests' job above
-    needs: tests
-    # Only run on the upstream repository: forks do not have the CODECOV_TOKEN secret,
-    # and Codecov refuses to create a commit on a protected branch without a token.
-    if: github.repository == 'dspace/dspace-angular'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      # Download artifacts from previous 'tests' job
-      - name: Download coverage artifacts
-        uses: actions/download-artifact@v8
-
-      # Now attempt upload to Codecov using its action.
-      # NOTE: We use a retry action to retry the Codecov upload if it fails the first time.
-      #
-      # Retry action: https://github.com/marketplace/actions/retry-action
-      # Codecov action: https://github.com/codecov/codecov-action
-      - name: Upload coverage to Codecov.io
-        uses: Wandalen/wretry.action@v3.8.0
-        with:
-          action: codecov/codecov-action@v4
-          # Ensure codecov-action throws an error when it fails to upload
-          # This allows us to auto-restart the action if an error is thrown
-          with: |
-            fail_ci_if_error: true
-            token: ${{ secrets.CODECOV_TOKEN }}
-          # Try re-running action 5 times max
-          attempt_limit: 5
-          # Run again in 30 seconds
-          attempt_delay: 30000
