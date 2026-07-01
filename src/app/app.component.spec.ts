@@ -17,7 +17,10 @@ import {
   Store,
   StoreModule,
 } from '@ngrx/store';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {
+  MockStore,
+  provideMockStore,
+} from '@ngrx/store/testing';
 import {
   TranslateLoader,
   TranslateModule,
