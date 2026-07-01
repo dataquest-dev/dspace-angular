@@ -34,10 +34,13 @@ services:
     networks:
     - dspacenet
     ports:
-    - published: 4000
+    # Publish the UI on a per-instance loopback port so multiple customer
+    # instances can coexist on the same dev host. DSPACE_FE_PORT comes from the
+    # instance .env (e.g. 4593 for 8593); nginx proxies :<INSTANCE> -> this port.
+    # A fixed 0.0.0.0:4000 let only one deployed instance exist per host.
+    - published: ${DSPACE_FE_PORT:-4000}
       target: 4000
-    - published: 9876
-      target: 9876
+      host_ip: 127.0.0.1
     volumes:
     # Mount the local 'src' directory to the '/app' directory on the container.
     # Allows the UI to "watch" this directory for changes and reload/rebuild when changes are detected.
