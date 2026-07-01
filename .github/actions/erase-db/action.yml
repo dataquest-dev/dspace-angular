@@ -5,10 +5,12 @@ inputs:
   INSTANCE:
     description: 'port suffix'
     required: true
+    default: '8593'
     type: string
   NAME:
     description: 'docker compose project name'
     required: true
+    default: 'dspace-8593'
     type: string
 
 runs:
