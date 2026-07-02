@@ -1,11 +1,6 @@
-<div id="header-navbar-wrapper"><!-- [class.open]="!(isNavBarCollapsed$ | async)" -->
+<div id="header-navbar-wrapper">
+  <!-- LINDAT/CLARIAH-CZ layout (v7 production parity): the header carries the complete navigation
+       (CLARIN top bar + dark lindat-common menu with its own mobile toggler), so no separate
+       DSpace navbar row is rendered. -->
   <ds-header></ds-header>
-  <!-- Collapsible navbar (mobile only) -->
-  @if ((isMobile$ | async)) {
-    <div id="mobile-navbar-wrapper" [@slideMobileNav]="(isNavBarCollapsed$ | async) ? 'collapsed' : 'expanded'">
-      <nav class="px-3" id="collapsible-mobile-navbar" [attr.aria-hidden]="(isNavBarCollapsed$ | async)" [attr.aria-label]="'nav.main.description' | translate">
-        <ds-navbar></ds-navbar>
-      </nav>
-    </div>
-  }
 </div>
