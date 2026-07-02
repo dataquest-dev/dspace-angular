@@ -46,9 +46,11 @@
             />
             <div class="input-group-append">
               <button
-                class="btn btn-outline-secondary fas fa-calendar"
+                class="btn btn-outline-secondary"
+                [attr.aria-label]="'access-control.start-date.calendar-button' | translate"
                 [dsBtnDisabled]="ngForm.disabled"
                 (click)="d.toggle()" type="button">
+                <i class="fas fa-calendar" aria-hidden="true"></i>
               </button>
             </div>
           </div>
@@ -75,9 +77,11 @@
             />
             <div class="input-group-append">
               <button
-                type="button" class="btn btn-outline-secondary fas fa-calendar"
+                type="button" class="btn btn-outline-secondary"
+                [attr.aria-label]="'access-control.end-date.calendar-button' | translate"
                 [dsBtnDisabled]="ngForm.disabled"
                 (click)="d1.toggle()">
+                <i class="fas fa-calendar" aria-hidden="true"></i>
               </button>
             </div>
           </div>

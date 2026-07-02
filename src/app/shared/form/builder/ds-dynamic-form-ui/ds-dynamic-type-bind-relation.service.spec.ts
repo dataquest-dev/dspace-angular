@@ -18,6 +18,7 @@ import {UntypedFormControl, ReactiveFormsModule} from '@angular/forms';
 import {FormBuilderService} from '../form-builder.service';
 import {getMockFormBuilderService} from '../../../mocks/form-builder-service.mock';
 import {Injector} from '@angular/core';
+import { Subject } from 'rxjs';
 
 describe('DSDynamicTypeBindRelationService test suite', () => {
   let service: DsDynamicTypeBindRelationService;
@@ -25,7 +26,10 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
   let injector: Injector;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
+    // Return the promise so the module (and its fresh getMockFormBuilderService() spy mock) is fully set up
+    // before each spec runs; the previous dangling .then() did not await, letting asynchronous module setup
+    // leak between specs.
+    return TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       providers: [
         { provide: FormBuilderService, useValue: getMockFormBuilderService() },
@@ -33,7 +37,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
         { provide: DynamicFormRelationService },
         DISABLED_MATCHER_PROVIDER, HIDDEN_MATCHER_PROVIDER, REQUIRED_MATCHER_PROVIDER
       ]
-    }).compileComponents().then();
+    }).compileComponents();
   });
 
   beforeEach(inject([DsDynamicTypeBindRelationService, DynamicFormRelationService],
@@ -81,6 +85,16 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       const relatedModels = service.getRelatedFormModel(testModel);
       expect(relatedModels).toHaveSize(1);
     });
+
+    it('Should not push undefined bind models', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType']);
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.returnValue(undefined);
+
+      const relatedModels = service.getRelatedFormModel(testModel);
+
+      expect(relatedModels).toHaveSize(0);
+    });
   });
 
   describe('Test matchesCondition method', () => {
@@ -121,6 +135,163 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
         matcher.onChange(hasMatch, testModel, dcTypeControl, injector);
         expect(hasMatch).toBeFalsy();
       }
+    });
+
+    it('Should return false for MATCH_VISIBLE when bind model is missing', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType']);
+      const relation = testModel.typeBindRelations[0];
+      const visibleMatcher: any = {
+        match: MATCH_VISIBLE,
+        opposingMatch: HIDDEN_MATCHER.match,
+        onChange: jasmine.createSpy('onChange')
+      };
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.returnValue(undefined);
+
+      const hasMatch = service.matchesCondition(relation, visibleMatcher);
+
+      expect(hasMatch).toBeFalse();
+    });
+
+    it('Should return true for MATCH_HIDDEN matcher when bind model is missing', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType']);
+      const relation = testModel.typeBindRelations[0];
+      const hiddenMatcher: any = {
+        match: HIDDEN_MATCHER.match,
+        opposingMatch: MATCH_VISIBLE,
+        onChange: jasmine.createSpy('onChange')
+      };
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.returnValue(undefined);
+
+      const hasMatch = service.matchesCondition(relation, hiddenMatcher);
+
+      expect(hasMatch).toBeTrue();
+    });
+
+    it('Should re-evaluate visibility when bind model becomes available after setup', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType']);
+      const dcTypeControl = new UntypedFormControl();
+      const bindModelUpdates$ = new Subject<string>();
+      let bindModelAvailable = false;
+      const bindModel: any = {
+        type: 'INPUT',
+        value: 'boundType',
+        valueChanges: new Subject<string>(),
+        valueUpdates: new Subject<string>(),
+      };
+
+      const visibleMatcher: any = {
+        match: MATCH_VISIBLE,
+        opposingMatch: HIDDEN_MATCHER.match,
+        onChange: jasmine.createSpy('onChange')
+      };
+      (service as any).dynamicMatchers = [visibleMatcher];
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.callFake(() => bindModelAvailable ? bindModel : undefined);
+      ((service as any).formBuilderService.getTypeBindModelUpdates as jasmine.Spy).and.returnValue(bindModelUpdates$.asObservable());
+
+      const subscriptions = service.subscribeRelations(testModel, dcTypeControl);
+      expect(subscriptions.length).toBe(1);
+      // Initial evaluation with missing bind model keeps MATCH_VISIBLE hidden.
+      expect(visibleMatcher.onChange).toHaveBeenCalledWith(false, testModel, dcTypeControl, jasmine.anything());
+
+      // Simulate late registration of a type bind model.
+      bindModelAvailable = true;
+      bindModelUpdates$.next('dc_type');
+
+      expect(visibleMatcher.onChange).toHaveBeenCalledWith(true, testModel, dcTypeControl, jasmine.anything());
+      subscriptions.forEach((sub) => sub.unsubscribe());
+    });
+
+    it('Should re-evaluate hidden matcher when bind model becomes available after setup', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType']);
+      const dcTypeControl = new UntypedFormControl();
+      const bindModelUpdates$ = new Subject<string>();
+      let bindModelAvailable = false;
+      const bindModel: any = {
+        type: 'INPUT',
+        value: 'boundType',
+        valueChanges: new Subject<string>(),
+        valueUpdates: new Subject<string>(),
+      };
+
+      const hiddenMatcher: any = {
+        match: HIDDEN_MATCHER.match,
+        opposingMatch: MATCH_VISIBLE,
+        onChange: jasmine.createSpy('onChange')
+      };
+      (service as any).dynamicMatchers = [hiddenMatcher];
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.callFake(() => bindModelAvailable ? bindModel : undefined);
+      ((service as any).formBuilderService.getTypeBindModelUpdates as jasmine.Spy).and.returnValue(bindModelUpdates$.asObservable());
+
+      const subscriptions = service.subscribeRelations(testModel, dcTypeControl);
+      expect(subscriptions.length).toBe(1);
+      expect(hiddenMatcher.onChange).toHaveBeenCalledWith(true, testModel, dcTypeControl, jasmine.anything());
+
+      bindModelAvailable = true;
+      bindModelUpdates$.next('dc_type');
+
+      expect(hiddenMatcher.onChange).toHaveBeenCalledWith(false, testModel, dcTypeControl, jasmine.anything());
+      subscriptions.forEach((sub) => sub.unsubscribe());
+    });
+
+    it('Should react to late bind model value changes after registration', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType']);
+      const dcTypeControl = new UntypedFormControl();
+      const bindModelUpdates$ = new Subject<string>();
+      let bindModelAvailable = false;
+      const bindModel: any = {
+        id: 'dc_type',
+        type: 'INPUT',
+        value: 'boundType',
+        valueChanges: new Subject<string>(),
+        valueUpdates: new Subject<string>(),
+      };
+
+      const visibleMatcher: any = {
+        match: MATCH_VISIBLE,
+        opposingMatch: HIDDEN_MATCHER.match,
+        onChange: jasmine.createSpy('onChange')
+      };
+      (service as any).dynamicMatchers = [visibleMatcher];
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.callFake(() => bindModelAvailable ? bindModel : undefined);
+      ((service as any).formBuilderService.getTypeBindModelUpdates as jasmine.Spy).and.returnValue(bindModelUpdates$.asObservable());
+
+      const subscriptions = service.subscribeRelations(testModel, dcTypeControl);
+      expect(visibleMatcher.onChange).toHaveBeenCalledWith(false, testModel, dcTypeControl, jasmine.anything());
+
+      // Register late model and verify the matcher becomes visible.
+      bindModelAvailable = true;
+      bindModelUpdates$.next('dc_type');
+      expect(visibleMatcher.onChange).toHaveBeenCalledWith(true, testModel, dcTypeControl, jasmine.anything());
+
+      // Changing controlling model value should re-trigger evaluation via valueChanges subscription.
+      visibleMatcher.onChange.calls.reset();
+      bindModel.value = 'anotherType';
+      bindModel.valueChanges.next('anotherType');
+      expect(visibleMatcher.onChange).toHaveBeenCalledWith(false, testModel, dcTypeControl, jasmine.anything());
+
+      subscriptions.forEach((sub) => sub.unsubscribe());
+    });
+
+    it('Should evaluate only once during setup when related model already exists', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType']);
+      const dcTypeControl = new UntypedFormControl();
+      const visibleMatcher: any = {
+        match: MATCH_VISIBLE,
+        opposingMatch: HIDDEN_MATCHER.match,
+        onChange: jasmine.createSpy('onChange')
+      };
+      (service as any).dynamicMatchers = [visibleMatcher];
+
+      const subscriptions = service.subscribeRelations(testModel, dcTypeControl);
+
+      expect(visibleMatcher.onChange.calls.count()).toBe(1);
+      subscriptions.forEach((sub) => sub.unsubscribe());
     });
 
   });

@@ -193,6 +193,23 @@ export class DSOEditMenuResolver implements Resolve<{ [key: string]: MenuSection
         map(([canSubscribe]) => {
           return [
             {
+              id: 'search-dso',
+              active: false,
+              visible: true,
+              model: {
+                type: MenuItemType.LINK,
+                disabled: false,
+                text: 'search.title',
+                link: '/search',
+                queryParams: {
+                  'spc.page': '1',
+                  scope: dso.uuid
+                }
+              } as LinkMenuItemModel,
+              icon: 'search',
+              index: 3
+            },
+            {
               id: 'subscribe',
               active: false,
               visible: canSubscribe,

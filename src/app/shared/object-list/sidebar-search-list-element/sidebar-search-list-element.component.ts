@@ -34,6 +34,11 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
    */
   description: string;
 
+  /**
+   * Language of the description metadata value, used for the lang attribute.
+   */
+  descriptionLang: string | null = null;
+
   expandable = false;
   expanded = false;
   private truncatedStates: Map<number, boolean> = new Map();
@@ -56,6 +61,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
     if (hasValue(this.dso)) {
       this.parentTitle$ = this.getParentHierarchyTitle();
       this.description = this.getDescription();
+      this.descriptionLang = this.getDescriptionLang();
     }
   }
 
@@ -152,6 +158,15 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
       });
     }
     return this.undefinedIfEmpty(description);
+  }
+
+  /**
+   * Get the language of the description metadata value.
+   * Override in subclasses to return the language of the displayed description.
+   * Default: null (no lang attribute rendered)
+   */
+  getDescriptionLang(): string | null {
+    return null;
   }
 
   /**

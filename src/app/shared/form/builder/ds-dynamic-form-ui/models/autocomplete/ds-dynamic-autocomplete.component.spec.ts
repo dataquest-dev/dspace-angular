@@ -170,9 +170,32 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
       autFixture.detectChanges();
       flush();
 
-      expect(autComp.model.value).toEqual(modelValue.display);
+      expect(autComp.model.value).toEqual(modelValue.value);
+      expect(autComp.currentValue).toEqual(modelValue.value);
       expect(autComp.change.emit).toHaveBeenCalled();
     }));
+
+    it('should normalize object value to string on blur', () => {
+      spyOn(autComp.change, 'emit');
+      autComp.currentValue = { value: 'aig', display: 'Alumu-Tesu' };
+
+      autComp.onBlur(new Event('blur'));
+
+      expect(autComp.model.value).toEqual('aig');
+      expect(autComp.change.emit).toHaveBeenCalledWith('aig');
+    });
+
+    it('should format string values as-is', () => {
+      expect(autComp.formatter('aig')).toEqual('aig');
+    });
+
+    it('should format object values using value first', () => {
+      expect(autComp.formatter({ value: 'aig', display: 'Alumu-Tesu' })).toEqual('aig');
+    });
+
+    it('should format object values using display fallback', () => {
+      expect(autComp.formatter({ display: 'Alumu-Tesu' })).toEqual('Alumu-Tesu');
+    });
   });
 });
 

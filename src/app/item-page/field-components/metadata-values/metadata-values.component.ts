@@ -5,6 +5,7 @@ import { BrowseDefinition } from '../../../core/shared/browse-definition.model';
 import { hasValue } from '../../../shared/empty.util';
 import { VALUE_LIST_BROWSE_DEFINITION } from '../../../core/shared/value-list-browse-definition.resource-type';
 import { environment } from '../../../../environments/environment';
+import { metadataLangToBcp47 } from '../../../shared/utils/metadata-language.util';
 
 /**
  * This component renders the configured 'values' into the ds-metadata-field-wrapper component.
@@ -111,5 +112,14 @@ export class MetadataValuesComponent implements OnChanges {
     } else {
       return { target: '_blank', rel: 'noopener noreferrer' };
     }
+  }
+
+  /**
+   * Normalize a metadata value's language into a valid BCP 47 tag for the HTML
+   * `lang` attribute, or null when none applies.
+   * @param value A MetadataValue being displayed
+   */
+  getLang(value: MetadataValue): string | null {
+    return metadataLangToBcp47(value.language);
   }
 }

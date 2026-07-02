@@ -36,9 +36,9 @@
           </span>
         </ds-truncatable-part>
       </span>
-      <div *ngIf="dso.firstMetadataValue('dc.description.abstract')" class="item-list-abstract">
+      <div *ngIf="dso.firstMetadataValue('dc.description')" class="item-list-abstract">
         <ds-truncatable-part [id]="dso.id" [minLines]="3"><span
-          [innerHTML]="firstMetadataValue('dc.description.abstract')"></span>
+          [innerHTML]="firstMetadataValue('dc.description')"></span>
         </ds-truncatable-part>
       </div>
     </ds-truncatable>

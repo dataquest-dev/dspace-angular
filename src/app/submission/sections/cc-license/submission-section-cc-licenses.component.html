@@ -47,8 +47,9 @@
       </div>
       <button
         class="btn btn-outline-info btn-sm ml-2"
+        [attr.aria-label]="'submission.cc-license.field-info' | translate"
         (click)="openInfoModal(infoModal)">
-        <i class="fas fa-question"></i>
+        <i class="fas fa-question" aria-hidden="true"></i>
       </button>
     </div>
 

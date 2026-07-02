@@ -31,7 +31,7 @@
       <span *ngIf="dso.allMetadata(['dc.description']).length > 0"
             class="item-list-org-unit-description">
             <ds-truncatable-part [id]="dso.id" [minLines]="3"><span
-                    [innerHTML]="firstMetadataValue('dc.description')"></span>
+                    [innerHTML]="firstMetadataValue('dc.description')" [attr.lang]="dso.firstMetadata('dc.description')?.language | dsLang"></span>
             </ds-truncatable-part>
       </span>
   </span>

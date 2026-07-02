@@ -1,1 +1,3 @@
-<div [innerHTML]="validTextMetadata" style="white-space: pre-line;"></div>
+<div *ngFor="let entry of descriptionEntries" [attr.lang]="entry.language" style="white-space: pre-line;">
+  <span [innerHTML]="entry.value"></span>
+</div>

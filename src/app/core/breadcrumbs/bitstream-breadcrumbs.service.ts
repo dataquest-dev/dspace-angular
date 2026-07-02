@@ -62,12 +62,12 @@ export class BitstreamBreadcrumbsService extends DSOBreadcrumbsService {
       getFirstCompletedRemoteData(),
       getRemoteDataPayload(),
       switchMap((bitstream: Bitstream) => {
-        if (hasValue(bitstream)) {
+        if (hasValue(bitstream) && hasValue(bitstream.bundle)) {
           return bitstream.bundle.pipe(
             getFirstCompletedRemoteData(),
             getRemoteDataPayload(),
             switchMap((bundle: Bundle) => {
-              if (hasValue(bundle)) {
+              if (hasValue(bundle) && hasValue(bundle.item)) {
                 return bundle.item.pipe(
                   getFirstCompletedRemoteData(),
                 );
