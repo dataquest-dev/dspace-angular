@@ -76,11 +76,26 @@
                           title="{{labelPrefix + 'table.edit.buttons.edit' | translate: { name: dsoNameService.getName(epersonDto.eperson) } }}">
                     <i class="fas fa-edit fa-fw"></i>
                   </button>
-                  <button *ngIf="epersonDto.ableToDelete" (click)="deleteEPerson(epersonDto.eperson)"
-                          class="delete-button btn btn-outline-danger btn-sm access-control-deleteEPersonButton"
-                          title="{{labelPrefix + 'table.edit.buttons.remove' | translate: { name: dsoNameService.getName(epersonDto.eperson) } }}">
-                    <i class="fas fa-trash-alt fa-fw"></i>
-                  </button>
+                  <ng-container *ngIf="epersonDto.ableToDelete && currentAuthenticatedUserId">
+                    <ng-container *ngIf="isCurrentUser(epersonDto.eperson); else enabledDeleteButton">
+                      <span tabindex="0" [ngbTooltip]="selfDeleteWarningLabel | translate">
+                        <button [dsBtnDisabled]="true"
+                                tabindex="-1"
+                                [attr.aria-label]="selfDeleteWarningLabel | translate"
+                                class="delete-button btn btn-outline-danger btn-sm access-control-deleteEPersonButton"
+                                type="button">
+                          <i class="fas fa-trash-alt fa-fw"></i>
+                        </button>
+                      </span>
+                    </ng-container>
+                  </ng-container>
+                  <ng-template #enabledDeleteButton>
+                    <button (click)="deleteEPerson(epersonDto.eperson)"
+                            class="delete-button btn btn-outline-danger btn-sm access-control-deleteEPersonButton"
+                            title="{{labelPrefix + 'table.edit.buttons.remove' | translate: { name: dsoNameService.getName(epersonDto.eperson) } }}">
+                      <i class="fas fa-trash-alt fa-fw"></i>
+                    </button>
+                  </ng-template>
                 </div>
               </td>
             </tr>
