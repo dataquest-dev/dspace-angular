@@ -6,6 +6,9 @@
 /tsd_typings/
 npm-debug.log
 
+# build/install/spec logs emitted by local deploy tooling
+/_*.log
+
 /build/
 
 /coverage
