@@ -209,7 +209,28 @@ export class UploadBitstreamComponent implements OnInit, OnDestroy {
   public onCompleteItem(bitstream) {
     // Clear cached requests for this bundle's bitstreams to ensure lists on all pages are up-to-date
     this.bundleService.getBitstreamsEndpoint(this.selectedBundleId).pipe(take(1)).subscribe((href: string) => {
-      this.requestService.removeByHrefSubstring(href);
+      this.requestService.setStaleByHrefSubstring(href);
+    });
+
+    // Clear cached requests for this item's bundles to ensure bundle resolution uses fresh data
+    this.itemService.getBundlesEndpoint(this.itemId).pipe(take(1)).subscribe((href: string) => {
+      this.requestService.setStaleByHrefSubstring(href);
+    });
+
+    // Clear cached requests for this item to ensure breadcrumb navigation resolves a fresh item
+    this.itemRD$.pipe(
+      getFirstSucceededRemoteDataPayload(),
+      take(1),
+    ).subscribe((item: Item) => {
+      this.requestService.setStaleByHrefSubstring(item._links.self.href);
+
+      // Clear metadatabitstreams search cache used by preview and CLARIN files sections
+      if (item?.handle) {
+        const byHandleBase = '/api/core/metadatabitstreams/search/byHandle';
+        const encodedHandle = encodeURIComponent(item.handle);
+        this.requestService.setStaleByHrefSubstring(`${byHandleBase}?handle=${encodedHandle}&fileGrpType=ORIGINAL`);
+        this.requestService.setStaleByHrefSubstring(`${byHandleBase}?handle=${item.handle}&fileGrpType=ORIGINAL`);
+      }
     });
 
     // Bring over the item ID as a query parameter

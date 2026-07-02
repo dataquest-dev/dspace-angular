@@ -1,10 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { HtmlContentService } from '../shared/html-content.service';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { isEmpty, isNotEmpty } from '../shared/empty.util';
-import { STATIC_FILES_DEFAULT_ERROR_PAGE_PATH, STATIC_PAGE_PATH } from './static-page-routing-paths';
+import { isEmpty } from '../shared/empty.util';
+import { STATIC_PAGE_PATH } from './static-page-routing-paths';
 import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
+import { ServerResponseService } from '../core/services/server-response.service';
 
 /**
  * Component which load and show static files from the `static-files` folder.
@@ -16,30 +17,50 @@ import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
   styleUrls: ['./static-page.component.scss']
 })
 export class StaticPageComponent implements OnInit {
-  static readonly no_static: string = 'no_static_';
   htmlContent: BehaviorSubject<string> = new BehaviorSubject<string>('');
   htmlFileName: string;
+  contentState: 'loading' | 'found' | 'not-found' = 'loading';
 
   constructor(private htmlContentService: HtmlContentService,
               private router: Router,
+              private responseService: ServerResponseService,
+              private changeDetector: ChangeDetectorRef,
               @Inject(APP_CONFIG) protected appConfig?: AppConfig) { }
 
   async ngOnInit(): Promise<void> {
-    // Fetch html file name from the url path. `static/some_file.html`
-    this.htmlFileName = this.getHtmlFileName();
+    try {
+      this.contentState = 'loading';
+      this.htmlContent.next('');
 
-    let htmlContent = await this.htmlContentService.getHmtlContentByPathAndLocale(this.htmlFileName);
-    if (isNotEmpty(htmlContent)) {
-      const restBase = this.appConfig?.rest?.baseUrl;
-      const oaiUrl = restBase ? restBase.replace(/\/+$/, '') + '/oai' : '/server/oai';
-      htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
+      // Fetch html file name from the url path. `static/some_file.html`
+      this.htmlFileName = this.getHtmlFileName();
 
-      this.htmlContent.next(htmlContent);
-      return;
+      let htmlContent = await this.htmlContentService.getHmtlContentByPathAndLocale(this.htmlFileName);
+      if (htmlContent !== undefined) {
+        const restBase = this.appConfig?.rest?.baseUrl;
+        const oaiUrl = restBase ? restBase.replace(/\/+$/, '') + '/oai' : '/server/oai';
+        htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
+
+        this.htmlContent.next(htmlContent);
+        this.contentState = 'found';
+        this.changeDetector.detectChanges();
+        return;
+      }
+
+      // Content not found - set 404 status for SSR and show inline error
+      this.responseService.setNotFound();
+      this.contentState = 'not-found';
+      this.changeDetector.detectChanges();
+    } catch (error) {
+      console.error('Static page load error:', {
+        fileName: this.htmlFileName,
+        url: this.router.url,
+        error: error
+      });
+      this.responseService.setNotFound();
+      this.contentState = 'not-found';
+      this.changeDetector.detectChanges();
     }
-
-    // Show error page
-    await this.loadErrorPage();
   }
 
   /**
@@ -47,46 +68,36 @@ export class StaticPageComponent implements OnInit {
    * @param event
    */
   processLinks(event: Event): void {
-    const targetElement = event.target as HTMLElement;
+    const targetElement = event.target as HTMLElement | null;
+    const anchorElement = targetElement?.closest?.('a');
+    if (!anchorElement) {
+      return;
+    }
 
-    if (targetElement.nodeName !== 'A') {
+    const href = anchorElement.getAttribute('href');
+    if (!href || !this.isRelativeLink(href)) {
       return;
     }
 
     event.preventDefault();
-
-    const href = targetElement.getAttribute('href');
-    const { nameSpace } = this.appConfig.ui;
-    const namespacePrefix = nameSpace === '/' ? '' : nameSpace;
-
-    const redirectUrl = this.composeRedirectUrl(href, namespacePrefix);
-
-    if (this.isFragmentLink(href)) {
-      this.redirectToFragment(redirectUrl, href);
-    } else if (this.isRelativeLink(href)) {
-      this.redirectToRelativeLink(redirectUrl, href);
-    } else if (this.isExternalLink(href)) {
-      this.redirectToExternalLink(href);
-    } else {
-      this.redirectToAbsoluteLink(redirectUrl, href, namespacePrefix);
-    }
+    const namespacePrefix = this.getNamespacePrefix();
+    const staticPageBaseUrl = this.composeStaticPageBaseUrl(namespacePrefix);
+    this.redirectToRelativeLink(staticPageBaseUrl, href);
   }
 
-  private composeRedirectUrl(href: string | null, namespacePrefix: string): string {
-    const staticPagePath = STATIC_PAGE_PATH;
+  private getNamespacePrefix(): string {
+    const nameSpace = this.appConfig?.ui?.nameSpace ?? '/';
+    return nameSpace === '/' ? '' : nameSpace.replace(/\/$/, '');
+  }
+
+  private composeUrl(pathname: string): string {
     const baseUrl = new URL(window.location.origin);
-    baseUrl.pathname = href.startsWith(StaticPageComponent.no_static)
-            ? `${namespacePrefix}/`
-            : `${namespacePrefix}/${staticPagePath}/`;
+    baseUrl.pathname = pathname;
     return baseUrl.href;
   }
 
-  private isFragmentLink(href: string | null): boolean {
-    return href?.startsWith('#') ?? false;
-  }
-
-  private redirectToFragment(redirectUrl: string, href: string | null): void {
-    window.location.href = `${redirectUrl}${this.htmlFileName}${href}`;
+  private composeStaticPageBaseUrl(namespacePrefix: string): string {
+    return this.composeUrl(`${namespacePrefix}/${STATIC_PAGE_PATH}/`);
   }
 
   private isRelativeLink(href: string | null): boolean {
@@ -94,23 +105,11 @@ export class StaticPageComponent implements OnInit {
   }
 
   private redirectToRelativeLink(redirectUrl: string, href: string | null): void {
-    window.location.href = new URL(href, redirectUrl).href;
+    this.navigateTo(new URL(href, redirectUrl).href);
   }
 
-  private isExternalLink(href: string | null): boolean {
-    return (href?.startsWith('http') || href?.startsWith('www')) ?? false;
-  }
-
-  private redirectToExternalLink(href: string | null): void {
-    window.location.replace(href);
-  }
-
-  private redirectToAbsoluteLink(redirectUrl: string, href: string | null, namespacePrefix: string): void {
-    if (href.startsWith(StaticPageComponent.no_static)) {
-      href = href.replace(StaticPageComponent.no_static, '');
-    }
-    const absoluteUrl = new URL(href, redirectUrl.replace(namespacePrefix, ''));
-    window.location.href = absoluteUrl.href;
+  private navigateTo(url: string): void {
+    window.location.href = url;
   }
 
   /**
@@ -123,24 +122,10 @@ export class StaticPageComponent implements OnInit {
     urlInList = urlInList.filter(n => n);
     // if length is 1 - html file name wasn't defined.
     if (isEmpty(urlInList) || urlInList.length === 1) {
-      void this.loadErrorPage();
       return null;
     }
 
     // If the url is too long take just the first string after `/static` prefix.
     return urlInList[1]?.split('#')?.[0];
-  }
-
-  /**
-   * Load `static-files/error.html`
-   * @private
-   */
-  private async loadErrorPage() {
-    let errorPage = await firstValueFrom(this.htmlContentService.fetchHtmlContent(STATIC_FILES_DEFAULT_ERROR_PAGE_PATH));
-    if (isEmpty(errorPage)) {
-      console.error('Cannot load error page from the path: ' + STATIC_FILES_DEFAULT_ERROR_PAGE_PATH);
-      return;
-    }
-    this.htmlContent.next(errorPage);
   }
 }

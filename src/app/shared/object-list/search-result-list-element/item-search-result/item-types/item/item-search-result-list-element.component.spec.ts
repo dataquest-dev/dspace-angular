@@ -48,10 +48,24 @@ const mockItemWithMetadata: ItemSearchResult = Object.assign(new ItemSearchResul
             value: '2015-06-26'
           }
         ],
-        'dc.description.abstract': [
+        'dc.description': [
           {
             language: 'en_US',
             value: 'This is the abstract'
+          }
+        ]
+      }
+    })
+});
+const mockItemWithAbstractOnly: ItemSearchResult = Object.assign(new ItemSearchResult(), {
+  indexableObject:
+    Object.assign(new Item(), {
+      bundles: observableOf({}),
+      metadata: {
+        'dc.description.abstract': [
+          {
+            language: 'en_US',
+            value: 'Legacy abstract only'
           }
         ]
       }
@@ -99,7 +113,7 @@ const mockPerson: ItemSearchResult = Object.assign(new ItemSearchResult(), {
             value: '2015-06-26'
           }
         ],
-        'dc.description.abstract': [
+        'dc.description': [
           {
             language: 'en_US',
             value: 'This is the abstract'
@@ -153,7 +167,7 @@ const mockOrgUnit: ItemSearchResult = Object.assign(new ItemSearchResult(), {
             value: '2015-06-26'
           }
         ],
-        'dc.description.abstract': [
+        'dc.description': [
           {
             language: 'en_US',
             value: 'This is the abstract'
@@ -308,6 +322,18 @@ describe('ItemSearchResultListElementComponent', () => {
   describe('When the item has no abstract', () => {
     beforeEach(() => {
       publicationListElementComponent.object = mockItemWithoutMetadata;
+      fixture.detectChanges();
+    });
+
+    it('should not show the abstract span', () => {
+      const abstractField = fixture.debugElement.query(By.css('div.item-list-abstract'));
+      expect(abstractField).toBeNull();
+    });
+  });
+
+  describe('When the item has only dc.description.abstract metadata', () => {
+    beforeEach(() => {
+      publicationListElementComponent.object = mockItemWithAbstractOnly;
       fixture.detectChanges();
     });
 

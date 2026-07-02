@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subject } from 'rxjs';
+import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { RemoteData } from '../core/data/remote-data';
 import { Collection } from '../core/shared/collection.model';
 import { CollectionDataService } from '../core/data/collection-data.service';
 import { License } from '../core/shared/license.model';
 import { followLink } from '../shared/utils/follow-link-config.model';
-import { filter } from 'rxjs/operators';
-import { isNotUndefined } from '../shared/empty.util';
+import { isNotEmpty } from '../shared/empty.util';
+import { PaginatedList } from '../core/data/paginated-list.model';
+import { PaginationComponentOptions } from '../shared/pagination/pagination-component-options.model';
+import { FindListOptions } from '../core/data/find-list-options.model';
+import { PaginationService } from '../core/pagination/pagination.service';
 
 /**
  * The component load and show distribution license based on the collection.
@@ -17,10 +21,14 @@ import { isNotUndefined } from '../shared/empty.util';
   templateUrl: './license-contract-page.component.html',
   styleUrls: ['./license-contract-page.component.scss']
 })
-export class LicenseContractPageComponent implements OnInit {
+export class LicenseContractPageComponent implements OnInit, OnDestroy {
+
+  readonly paginationId = 'contract-collections';
+  private readonly destroy$ = new Subject<void>();
 
   constructor(private route: ActivatedRoute,
-              protected collectionDataService: CollectionDataService,) {
+              protected collectionDataService: CollectionDataService,
+              protected paginationService: PaginationService,) {
   }
 
   /**
@@ -38,18 +46,58 @@ export class LicenseContractPageComponent implements OnInit {
    */
   licenseRD$: BehaviorSubject<RemoteData<License>> = new BehaviorSubject<RemoteData<License>>(null);
 
+  /**
+   * Collection list RemoteData object loaded from the API.
+   */
+  collectionsRD$: Observable<RemoteData<PaginatedList<Collection>>>;
+
+  /**
+   * The current pagination configuration for the page used by the authorized collection request.
+   */
+  config: FindListOptions = Object.assign(new FindListOptions(), {
+    elementsPerPage: 10
+  });
+
+  /**
+   * The current pagination configuration for the page.
+   */
+  pageConfig: PaginationComponentOptions = Object.assign(new PaginationComponentOptions(), {
+    id: this.paginationId,
+    pageSize: 10
+  });
+
   ngOnInit(): void {
     this.collectionId = this.route.snapshot.queryParams.collectionId;
-    this.collectionDataService.findById(this.collectionId, false, true, followLink('license'))
-      .pipe(
-        filter((collectionData: RemoteData<Collection>) => isNotUndefined((collectionData.payload))))
-      .subscribe(res => {
-        // load collection
-        this.collectionRD$.next(res);
-        res.payload.license.subscribe(licenseRD$ => {
-          // load license of the collection
-          this.licenseRD$.next(licenseRD$);
-        });
-      });
+    if (isNotEmpty(this.collectionId)) {
+      this.collectionDataService.findById(this.collectionId, false, true, followLink('license'))
+        .pipe(
+          tap((collectionData: RemoteData<Collection>) => this.collectionRD$.next(collectionData)),
+          filter((collectionData: RemoteData<Collection>) => isNotEmpty(collectionData.payload)),
+          switchMap((collectionData: RemoteData<Collection>) => collectionData.payload.license ?? EMPTY),
+          tap((licenseRD: RemoteData<License>) => this.licenseRD$.next(licenseRD)),
+          takeUntil(this.destroy$)
+        )
+        .subscribe();
+    } else {
+      this.loadAuthorizedCollections();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.isListMode()) {
+      this.paginationService.clearPagination(this.paginationId);
+    }
+  }
+
+  isListMode(): boolean {
+    return !isNotEmpty(this.collectionId);
+  }
+
+  private loadAuthorizedCollections(): void {
+    this.collectionsRD$ = this.paginationService.getFindListOptions(this.paginationId, this.config).pipe(
+      switchMap((config: FindListOptions) => this.collectionDataService.getAuthorizedCollection('', config, true, true, followLink('license')))
+    );
   }
 }

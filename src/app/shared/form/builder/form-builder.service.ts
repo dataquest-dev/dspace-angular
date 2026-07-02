@@ -18,6 +18,7 @@ import {
   DynamicPathable,
   parseReviver,
 } from '@ng-dynamic-forms/core';
+import { Observable, Subject } from 'rxjs';
 import isObject from 'lodash/isObject';
 import isString from 'lodash/isString';
 import mergeWith from 'lodash/mergeWith';
@@ -65,6 +66,11 @@ export class FormBuilderService extends DynamicFormService {
   private typeBindModel:  Map<string,DynamicFormControlModel>;
 
   /**
+   * Emits when a type bind model is registered.
+   */
+  private typeBindModelUpdates: Subject<string>;
+
+  /**
    * This map contains the active forms model
    */
   private formModels: Map<string, DynamicFormControlModel[]>;
@@ -90,6 +96,7 @@ export class FormBuilderService extends DynamicFormService {
     this.formGroups = new Map();
     this.typeFields = new Map();
     this.typeBindModel = new Map();
+    this.typeBindModelUpdates = new Subject<string>();
 
     this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
     // If optional config service was passed, perform an initial set of type field (default dc_type) for type binds
@@ -134,6 +141,11 @@ export class FormBuilderService extends DynamicFormService {
 
   setTypeBindModel(model: DynamicFormControlModel) {
     this.typeBindModel.set(model.id, model);
+    this.typeBindModelUpdates.next(model.id);
+  }
+
+  getTypeBindModelUpdates(): Observable<string> {
+    return this.typeBindModelUpdates.asObservable();
   }
 
   findById(id: string | string[], groupModel: DynamicFormControlModel[], arrayIndex = null): DynamicFormControlModel | null {

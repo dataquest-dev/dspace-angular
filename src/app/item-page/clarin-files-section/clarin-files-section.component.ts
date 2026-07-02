@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Item } from '../../core/shared/item.model';
 import { getAllSucceededRemoteListPayload, getFirstSucceededRemoteDataPayload } from '../../core/shared/operators';
 import { getItemPageRoute } from '../item-page-routing-paths';
@@ -7,7 +7,7 @@ import { RegistryService } from '../../core/registry/registry.service';
 import { Router } from '@angular/router';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -15,7 +15,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './clarin-files-section.component.html',
   styleUrls: ['./clarin-files-section.component.scss']
 })
-export class ClarinFilesSectionComponent implements OnInit {
+export class ClarinFilesSectionComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * The item to display files for
@@ -72,6 +72,9 @@ export class ClarinFilesSectionComponent implements OnInit {
    */
   downloadZipMinFileCount: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
 
+  private currentItemHandle: string;
+  private filesSubscription?: Subscription;
+
 
   constructor(protected registryService: RegistryService,
               protected router: Router,
@@ -81,15 +84,17 @@ export class ClarinFilesSectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.registryService
-      .getMetadataBitstream(this.itemHandle, 'ORIGINAL')
-      .pipe(getAllSucceededRemoteListPayload())
-      .subscribe((data: MetadataBitstream[]) => {
-        this.listOfFiles.next(data);
-        this.generateCurlCommand();
-      });
-    this.totalFileSizes.next(Number(this.item.firstMetadataValue('local.files.size')));
     this.loadDownloadZipConfigProperties();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.item || changes.itemHandle) {
+      this.refreshFromInputs(true);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.filesSubscription?.unsubscribe();
   }
 
   openCommandModal(content: any) {
@@ -112,7 +117,6 @@ export class ClarinFilesSectionComponent implements OnInit {
   }
 
   generateCurlCommand() {
-    this.canShowCurlDownload = false;
     const fileNames = this.listOfFiles.value.map((file: MetadataBitstream) => {
       if (file.canPreview) {
         this.canShowCurlDownload = true;
@@ -159,6 +163,31 @@ export class ClarinFilesSectionComponent implements OnInit {
       )
       .subscribe((config) => {
         this.downloadZipMinFileSize.next(Number(config.values[0]));
+      });
+  }
+
+  private refreshFromInputs(force = false): void {
+    if (this.item) {
+      this.totalFileSizes.next(Number(this.item.firstMetadataValue('local.files.size')));
+    }
+
+    const handle = this.itemHandle || this.item?.handle;
+    if (!handle) {
+      return;
+    }
+
+    if (!force && handle === this.currentItemHandle) {
+      return;
+    }
+
+    this.currentItemHandle = handle;
+    this.filesSubscription?.unsubscribe();
+    this.filesSubscription = this.registryService
+      .getMetadataBitstream(handle, 'ORIGINAL')
+      .pipe(getAllSucceededRemoteListPayload())
+      .subscribe((data: MetadataBitstream[]) => {
+        this.listOfFiles.next(data);
+        this.generateCurlCommand();
       });
   }
 }

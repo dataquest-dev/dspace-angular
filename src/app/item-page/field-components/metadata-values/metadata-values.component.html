@@ -4,24 +4,25 @@
       Choose a template. Priority: markdown, link, browse link.
       -->
       <ng-container *ngTemplateOutlet="(renderMarkdown ? markdown : (hasLink(mdValue) ? link : (hasBrowseDefinition() ? browselink : simple)));
-        context: {value: mdValue.value}">
+        context: {value: mdValue.value, lang: getLang(mdValue)}">
       </ng-container>
       <span class="separator" *ngIf="!last" [innerHTML]="separator"></span>
     </ng-container>
 </ds-metadata-field-wrapper>
 
 <!-- Render value as markdown -->
-<ng-template #markdown let-value="value">
-  <span class="dont-break-out" [innerHTML]="value | dsMarkdown | async">
+<ng-template #markdown let-value="value" let-lang="lang">
+  <span class="dont-break-out" [innerHTML]="value | dsMarkdown | async" [attr.lang]="lang">
   </span>
 </ng-template>
 
 <!-- Render value as a link (href and label) -->
-<ng-template #link let-value="value">
+<ng-template #link let-value="value" let-lang="lang">
     <a class="dont-break-out ds-simple-metadata-link"
       [href]="value"
       [attr.target]="getLinkAttributes(value).target"
       [attr.rel]="getLinkAttributes(value).rel"
+      [attr.lang]="lang"
       role="link"
       tabindex="0">
       {{value}}
@@ -29,13 +30,13 @@
 </ng-template>
 
 <!-- Render simple value in a span  -->
-<ng-template #simple let-value="value">
-  <span class="dont-break-out preserve-line-breaks">{{value}}</span>
+<ng-template #simple let-value="value" let-lang="lang">
+  <span class="dont-break-out preserve-line-breaks" [attr.lang]="lang">{{value}}</span>
 </ng-template>
 
 <!-- Render value as a link to browse index -->
-<ng-template #browselink let-value="value">
+<ng-template #browselink let-value="value" let-lang="lang">
   <a class="dont-break-out preserve-line-breaks ds-browse-link"
      [routerLink]="['/browse', browseDefinition.id]"
-     [queryParams]="getQueryParams(value)" role="link" tabindex="0">{{value}}</a>
+     [queryParams]="getQueryParams(value)" [attr.lang]="lang" role="link" tabindex="0">{{value}}</a>
 </ng-template>

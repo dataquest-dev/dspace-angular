@@ -3,3 +3,12 @@
             [routerLink]="[itemPageRoute]">
   <i class="fa fa-info-circle"></i> {{"submission.workflow.generic.view" | translate}}
 </button>
+
+<button class="btn btn-outline-primary mt-1 mb-3 ml-1"
+        *ngIf="canCreateVersion$ | async"
+        [dsBtnDisabled]="disableNewVersion$ | async"
+        [ngbTooltip]="(newVersionTooltip$ | async) | translate"
+        [attr.aria-label]="(newVersionTooltip$ | async) | translate"
+        (click)="openCreateVersionModal()">
+  <i class="fas fa-code-branch"></i> {{ 'item.page.version.create' | translate }}
+</button>

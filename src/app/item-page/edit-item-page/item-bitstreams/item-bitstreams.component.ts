@@ -24,6 +24,7 @@ import { NoContent } from '../../../core/shared/NoContent.model';
 import { ItemBitstreamsService } from './item-bitstreams.service';
 import { AlertType } from '../../../shared/alert/alert-type';
 import { PaginationComponentOptions } from '../../../shared/pagination/pagination-component-options.model';
+import { hasValue } from '../../../shared/empty.util';
 
 @Component({
   selector: 'ds-item-bitstreams',
@@ -224,6 +225,24 @@ export class ItemBitstreamsComponent extends AbstractItemUpdateComponent impleme
     removedResponses$.subscribe((responses: RemoteData<NoContent>) => {
       this.itemBitstreamsService.displayNotifications('item.edit.bitstreams.notifications.remove', [responses]);
       this.submitting = false;
+
+      // Clear caches to ensure file lists are refreshed after bitstream removal (same as upload)
+      this.bundles$.pipe(take(1)).subscribe((bundles: Bundle[]) => {
+        if (!hasValue(bundles)) { return; }
+        bundles.forEach((bundle: Bundle) => {
+          if (bundle?._links?.bitstreams?.href) {
+            this.requestService.setStaleByHrefSubstring(bundle._links.bitstreams.href);
+          }
+        });
+      });
+
+      // Clear metadatabitstreams search cache used by preview and CLARIN files sections
+      if (this.item?.handle) {
+        const byHandleBase = '/api/core/metadatabitstreams/search/byHandle';
+        const encodedHandle = encodeURIComponent(this.item.handle);
+        this.requestService.setStaleByHrefSubstring(`${byHandleBase}?handle=${encodedHandle}&fileGrpType=ORIGINAL`);
+        this.requestService.setStaleByHrefSubstring(`${byHandleBase}?handle=${this.item.handle}&fileGrpType=ORIGINAL`);
+      }
     });
   }
 

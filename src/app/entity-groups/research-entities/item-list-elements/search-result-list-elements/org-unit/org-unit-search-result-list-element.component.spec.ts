@@ -5,6 +5,7 @@ import { of as observableOf } from 'rxjs';
 import { OrgUnitSearchResultListElementComponent } from './org-unit-search-result-list-element.component';
 import { Item } from '../../../../../core/shared/item.model';
 import { TruncatePipe } from '../../../../../shared/utils/truncate.pipe';
+import { DsLangPipe } from '../../../../../shared/utils/ds-lang.pipe';
 import { TruncatableService } from '../../../../../shared/truncatable/truncatable.service';
 import { ItemSearchResult } from '../../../../../shared/object-collection/shared/item-search-result.model';
 import { DSONameService } from '../../../../../core/breadcrumbs/dso-name.service';
@@ -75,7 +76,7 @@ describe('OrgUnitSearchResultListElementComponent', () => {
           }
         }
       )],
-      declarations: [ OrgUnitSearchResultListElementComponent , TruncatePipe],
+      declarations: [ OrgUnitSearchResultListElementComponent , TruncatePipe, DsLangPipe],
       providers: [
         { provide: TruncatableService, useValue: {} },
         { provide: DSONameService, useClass: DSONameServiceMock },
@@ -145,7 +146,7 @@ describe('OrgUnitSearchResultListElementComponent', () => {
           }
         }
       )],
-      declarations: [OrgUnitSearchResultListElementComponent, TruncatePipe],
+      declarations: [OrgUnitSearchResultListElementComponent, TruncatePipe, DsLangPipe],
       providers: [
         {provide: TruncatableService, useValue: {}},
         {provide: DSONameService, useClass: DSONameServiceMock},

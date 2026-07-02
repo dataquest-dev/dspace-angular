@@ -14,6 +14,7 @@ import { ReorderableRelationship } from '../existing-metadata-list-element/exist
 import { createSuccessfulRemoteDataObject$ } from '../../../../remote-data.utils';
 import { SubmissionService } from '../../../../../submission/submission.service';
 import { SubmissionServiceStub } from '../../../../testing/submission-service.stub';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ExistingRelationListElementComponent', () => {
   let component: ExistingRelationListElementComponent;
@@ -66,6 +67,7 @@ describe('ExistingRelationListElementComponent', () => {
     init();
     TestBed.configureTestingModule({
       declarations: [ExistingRelationListElementComponent],
+      imports: [TranslateModule.forRoot()],
       providers: [
         { provide: SelectableListService, useValue: selectionService },
         { provide: Store, useValue: store },

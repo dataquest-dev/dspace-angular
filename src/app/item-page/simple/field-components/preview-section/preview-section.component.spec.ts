@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject, of } from 'rxjs';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
 import { RegistryService } from 'src/app/core/registry/registry.service';
+import { SimpleChange } from '@angular/core';
 
 import { PreviewSectionComponent } from './preview-section.component';
 import { ResourceType } from 'src/app/core/shared/resource-type';
@@ -75,7 +76,10 @@ describe('PreviewSectionComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call getMetadataBitstream on init', () => {
+  it('should call getMetadataBitstream on item input change', () => {
+    component.ngOnChanges({
+      item: new SimpleChange(undefined, component.item, true),
+    });
     expect(mockRegistryService.getMetadataBitstream).toHaveBeenCalled();
   });
 

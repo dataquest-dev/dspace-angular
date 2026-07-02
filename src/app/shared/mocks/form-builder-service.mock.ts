@@ -1,8 +1,10 @@
 import { FormBuilderService } from '../form/builder/form-builder.service';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import {DsDynamicInputModel} from '../form/builder/ds-dynamic-form-ui/models/ds-dynamic-input.model';
+import { Subject } from 'rxjs';
 
 export function getMockFormBuilderService(): FormBuilderService {
+  const typeBindModelUpdates = new Subject<string>();
 
   return jasmine.createSpyObj('FormBuilderService', {
     modelFromConfiguration: [],
@@ -40,6 +42,7 @@ export function getMockFormBuilderService(): FormBuilderService {
         ]
       }
     ),
+    getTypeBindModelUpdates: typeBindModelUpdates.asObservable(),
     setTypeBindFieldFromConfig: {},
   });
 
