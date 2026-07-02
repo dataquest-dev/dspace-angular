@@ -105,7 +105,7 @@ export class EPersonDeleteGuardService {
       searchParams: [new RequestParam('uuid', epersonId)],
     });
     const archivedSearchOptions = new PaginatedSearchOptions({
-      query: `submitter_authority:${epersonId}`,
+      query: `submitter_authority:"${epersonId}"`,
       pagination: Object.assign(new PaginationComponentOptions(), {
         currentPage: 1,
         pageSize: 1,
