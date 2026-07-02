@@ -10,6 +10,7 @@ import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 export class ConfirmationModalComponent {
   @Input() headerLabel: string;
   @Input() infoLabel: string;
+  @Input() warningLabel?: string;
   @Input() cancelLabel: string;
   @Input() confirmLabel: string;
   @Input() confirmIcon: string;
