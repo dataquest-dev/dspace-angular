@@ -94,7 +94,7 @@ jobs:
       INSTANCE: ${{inputs.INSTANCE}}
       CONFIG_PATH: /opt/dspace-envs/
       FNAME: old_dump.sql
-      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
     steps:
       - name: vanilla import
         run: |
@@ -112,9 +112,9 @@ jobs:
 
           # Create database, import dumpand extensions, then cleanup
           docker exec $DDBNAME /bin/bash -c "
-          dropdb -U dspace -p 10593 dspace || true &&
-          createdb -U dspace -p 10593 --owner=dspace --encoding=UNICODE dspace &&
-          psql -p 10593 -U dspace -d dspace -f /tmp/$FNAME
+          dropdb -U dspace dspace || true &&
+          createdb -U dspace --owner=dspace --encoding=UNICODE dspace &&
+          psql -U dspace -d dspace -f /tmp/$FNAME
           "
           echo "====="
           docker start $DNAME
