@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   Observable,
-  of as observableOf,
-  timer as observableTimer,
+  of,
+  timer,
 } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -76,19 +76,19 @@ export class HALEndpointService {
       getFirstCompletedRemoteData(),
       switchMap((response: RemoteData<CacheableObject>) => {
         if (hasValue(response.payload)) {
-          return observableOf(response.payload._links);
+          return of(response.payload._links);
         } else if (attempt < HALEndpointService.MAX_ENDPOINT_MAP_RETRIES) {
           // The HAL root endpoint request can transiently fail when it is issued before the
           // (server-side render) HTTP layer is fully initialised - e.g. an early site/authorization
           // lookup on the home or login page. Left unhandled, that first failure is cached and
           // poisons every later root-link lookup in the same render, turning the page into a 500.
           // Retry with a fresh, uncached request after a short delay so the render recovers.
-          return observableTimer(HALEndpointService.ENDPOINT_MAP_RETRY_DELAY_MS).pipe(
+          return timer(HALEndpointService.ENDPOINT_MAP_RETRY_DELAY_MS).pipe(
             switchMap(() => this.getEndpointMapAt(href, attempt + 1)),
           );
         } else {
-          console.warn(`No _links section found at ${href}`);
-          return observableOf(undefined);
+          console.warn(`No _links section found at ${href} (status: ${response.statusCode}, error: ${response.errorMessage})`);
+          return of(undefined);
         }
       }),
     );

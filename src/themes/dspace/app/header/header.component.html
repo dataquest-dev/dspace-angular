@@ -1,5 +1,7 @@
 <header class="header">
   <ds-clarin-navbar-top></ds-clarin-navbar-top>
+  <!-- renders only while an administrator impersonates an EPerson (button to stop impersonating) -->
+  <ds-impersonate-navbar></ds-impersonate-navbar>
   <div class="lindat-common2 lindat-common-header">
     <header data-version="3.0.5" data-build="05eff1186f12528f221a63b021c7b7dc81301429">
       <nav class="lindat-navbar lindat-navbar-expand-lg lindat-justify-content-between lindat-navbar-dark ">
@@ -35,7 +37,9 @@
                   <a routerLink="en/services" class="lindat-nav-link ">{{'navbar.services' | translate}}</a>
                 </li>
                 <li class="lindat-nav-item lindat-dropdown">
-                  <a routerLink="/" class="lindat-nav-link lindat-dropdown-toggle"
+                  <!-- no routerLink here: Angular's RouterLink would navigate on every click even
+                       when the inline handler returns false, so the dropdown could never stay open -->
+                  <a href="javascript:void(0);" class="lindat-nav-link lindat-dropdown-toggle"
                      data-toggle="dropdown"
                      onclick="this.parentNode.querySelector('.lindat-dropdown-toggle+div.lindat-dropdown-menu').classList.toggle('lindat-show'); return false;">{{'navbar.about' | translate}}</a>
                   <div class="lindat-dropdown-menu">

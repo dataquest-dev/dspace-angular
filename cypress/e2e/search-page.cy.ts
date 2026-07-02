@@ -22,7 +22,8 @@ describe('Search Page', () => {
     cy.get('ds-search-page').should('be.visible');
 
     // At least one search result should be displayed
-    cy.get('[data-test="list-object"]').should('be.visible');
+    // NOTE (CLARIN/LINDAT): Item results render in the CLARIN box view instead of the plain list element
+    cy.get('ds-clarin-item-box-view').should('be.visible');
 
     // Click each filter toggle to open *every* filter
     // (As we want to scan filter section for accessibility issues as well)

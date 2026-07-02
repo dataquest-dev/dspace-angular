@@ -221,7 +221,7 @@ describe('HeadTagService', () => {
   }));
 
   it('route titles should overwrite dso titles', fakeAsync(() => {
-    (translateService.get as jasmine.Spy).and.returnValues(of('DSpace :: '), of('Translated Route Title'));
+    (translateService.get as jasmine.Spy).and.returnValues(of('DSpace ::'), of('Translated Route Title'));
     (headTagService as any).processRouteChange({
       data: {
         value: {
@@ -237,7 +237,7 @@ describe('HeadTagService', () => {
   }));
 
   it('other navigation should add title and description', fakeAsync(() => {
-    (translateService.get as jasmine.Spy).and.returnValues(of('DSpace :: '), of('Dummy Title'), of('This is a dummy item component for testing!'));
+    (translateService.get as jasmine.Spy).and.returnValues(of('DSpace ::'), of('Dummy Title'), of('This is a dummy item component for testing!'));
     (headTagService as any).processRouteChange({
       data: {
         value: {

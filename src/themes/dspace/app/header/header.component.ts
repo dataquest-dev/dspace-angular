@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ClarinNavbarTopComponent } from 'src/app/clarin-navbar-top/clarin-navbar-top.component';
 
 import { HeaderComponent as BaseComponent } from '../../../../app/header/header.component';
+import { ImpersonateNavbarComponent } from '../../../../app/shared/impersonate-navbar/impersonate-navbar.component';
 
 /**
  * Represents the LINDAT/CLARIAH-CZ header: the CLARIN top bar (language flags + AAI/DiscoJuice
@@ -17,6 +18,7 @@ import { HeaderComponent as BaseComponent } from '../../../../app/header/header.
   templateUrl: 'header.component.html',
   imports: [
     ClarinNavbarTopComponent,
+    ImpersonateNavbarComponent,
     RouterLink,
     TranslateModule,
   ],

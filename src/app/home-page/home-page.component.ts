@@ -2,8 +2,6 @@
 import {
   AsyncPipe,
   isPlatformBrowser,
-  NgFor,
-  NgIf,
 } from '@angular/common';
 import {
   Component,
@@ -32,7 +30,10 @@ import {
 } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
-import { SortDirection, SortOptions } from '../core/cache/models/sort-options.model';
+import {
+  SortDirection,
+  SortOptions,
+} from '../core/cache/models/sort-options.model';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { ItemDataService } from '../core/data/item-data.service';
 import { SiteDataService } from '../core/data/site-data.service';
@@ -70,8 +71,6 @@ const MAX_TRUNCATE_LENGTH = 20;
     AsyncPipe,
     ClarinItemBoxViewComponent,
     NgbCarouselModule,
-    NgFor,
-    NgIf,
     RouterLink,
     RSSComponent,
     ThemedSearchFormComponent,
@@ -278,6 +277,9 @@ export class HomePageComponent implements OnInit {
         authorStats.page.forEach((facetValue: FacetValue) => {
           let updatedSearchUrl = facetValue?._links?.search?.href?.replace(this.halService.getRootHref() +
             '/discover', this.baseUrl);
+          if (isUndefined(updatedSearchUrl)) {
+            return;
+          }
           // remove `/objects` from the updatedSearchUrl
           updatedSearchUrl = updatedSearchUrl.replace('/objects', '');
           const fastSearchLink: FastSearchLink = Object.assign(new FastSearchLink(), {

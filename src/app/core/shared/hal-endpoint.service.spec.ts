@@ -324,14 +324,16 @@ describe('HALEndpointService', () => {
       });
     });
 
-    it(`should emit undefined when the response doesn't have a payload`, () => {
+    it(`should emit undefined when the response doesn't have a payload, after retrying`, () => {
       testScheduler.run(({ cold, expectObservable }) => {
         (rdbService.buildFromHref as jasmine.Spy).and.returnValue(cold('a', {
           a: remoteDataMocks.Error,
         }));
-        const expected = '(a|)';
+        // a payload-less response is transiently retried 3 times (200ms apart) before giving up
+        // (see HALEndpointService.MAX_ENDPOINT_MAP_RETRIES / ENDPOINT_MAP_RETRY_DELAY_MS)
+        const expected = '600ms (a|)';
         const values = {
-          g: undefined,
+          a: undefined,
         };
         expectObservable((service as any).getEndpointMapAt(href)).toBe(expected, values);
       });

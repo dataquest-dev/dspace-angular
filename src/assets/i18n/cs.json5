@@ -5653,6 +5653,12 @@
   // "nav.user.description": "User profile bar",
   "nav.user.description": "Panel uživatelského profilu",
 
+  // "language.english": "English",
+  "language.english": "Anglicky",
+
+  // "language.czech": "Czech",
+  "language.czech": "Česky",
+
   // "navbar.repository": "Repository",
   "navbar.repository": "Repozitář",
 

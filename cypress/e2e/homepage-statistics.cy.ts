@@ -6,7 +6,8 @@ import { testA11y } from 'cypress/support/utils';
 describe('Site Statistics Page', () => {
   it('should load if you click on "Statistics" from homepage', () => {
     cy.visit('/');
-    cy.get('ds-navbar ds-link-menu-item a[data-test="link-menu-item.menu.section.statistics"]').click();
+    // NOTE (CLARIN/LINDAT): the LINDAT header has no public navbar; navigate directly
+    cy.visit('/statistics');
     cy.location('pathname').should('eq', '/statistics');
   });
 

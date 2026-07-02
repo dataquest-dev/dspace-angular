@@ -3,31 +3,39 @@
     <div class="row d-none d-md-flex">
       <div class="col-md-8 justify-content-center align-self-center pl-3">
         <ngb-carousel>
-          <ng-template ngbSlide *ngFor="let slide of slides">
-            <div class="wrapper">
-              <div *ngIf="slide.short === 'LData'">
-                <img src="assets/images/home-page-glass.png" class="glass-image" alt="{{'home.image.glass' | translate}}">
-                <h3 class="carousel-ldata-info">{{'home-page.carousel.ldata.info' | translate}}</h3>
-                <h5 class="carousel-ldata-find">{{'home-page.carousel.ldata.find' | translate}}</h5>
-                <h5 class="carousel-ldata-citation-support">{{'home-page.carousel.ldata.citation-support' | translate}}</h5>
+          @for (slide of slides; track slide.short) {
+            <ng-template ngbSlide>
+              <div class="wrapper">
+                @if (slide.short === 'LData') {
+                  <div>
+                    <img src="assets/images/home-page-glass.png" class="glass-image" alt="{{'home.image.glass' | translate}}">
+                    <h3 class="carousel-ldata-info">{{'home-page.carousel.ldata.info' | translate}}</h3>
+                    <h5 class="carousel-ldata-find">{{'home-page.carousel.ldata.find' | translate}}</h5>
+                    <h5 class="carousel-ldata-citation-support">{{'home-page.carousel.ldata.citation-support' | translate}}</h5>
+                  </div>
+                }
+                @if (slide.short === 'Free Deposit') {
+                  <div>
+                    <h3 class="h5-font carousel-deposit-header">{{'home-page.carousel.deposit.header' | translate}}</h3>
+                    <h5 class="h5-font carousel-deposit-info">{{'home-page.carousel.deposit.info' | translate}}</h5>
+                    <h5 class="h5-font carousel-deposit-find">{{'home-page.carousel.deposit.find' | translate}}</h5>
+                    <h5 class="h5-font carousel-deposit-cite">{{'home-page.carousel.deposit.cite' | translate}}</h5>
+                  </div>
+                }
+                @if (slide.short === 'Citation') {
+                  <div>
+                    <div class="carousel-deposit-citation">
+                      <blockquote class="h5-font">
+                        <strong>
+                          <i class="fa fa-quote-left fa-2x pull-left">&nbsp;</i>{{'home-page.carousel.deposit.citation' | translate}}</strong>
+                        <small>{{'home-page.carousel.deposit.small' | translate}}</small>
+                      </blockquote>
+                    </div>
+                  </div>
+                }
               </div>
-              <div *ngIf="slide.short === 'Free Deposit'">
-                <h3 class="h5-font carousel-deposit-header">{{'home-page.carousel.deposit.header' | translate}}</h3>
-                <h5 class="h5-font carousel-deposit-info">{{'home-page.carousel.deposit.info' | translate}}</h5>
-                <h5 class="h5-font carousel-deposit-find">{{'home-page.carousel.deposit.find' | translate}}</h5>
-                <h5 class="h5-font carousel-deposit-cite">{{'home-page.carousel.deposit.cite' | translate}}</h5>
-              </div>
-              <div *ngIf="slide.short === 'Citation'">
-                <div class="carousel-deposit-citation">
-                  <blockquote class="h5-font">
-                    <strong>
-                      <i class="fa fa-quote-left fa-2x pull-left">&nbsp;</i>{{'home-page.carousel.deposit.citation' | translate}}</strong>
-                    <small>{{'home-page.carousel.deposit.small' | translate}}</small>
-                  </blockquote>
-                </div>
-              </div>
-            </div>
-          </ng-template>
+            </ng-template>
+          }
         </ngb-carousel>
       </div>
       <div class="col-md-4 d-none d-lg-block">
@@ -69,9 +77,11 @@
         <div class="row offset-md-1">
           <div class="col-md-4 border-bottom">
             <strong>{{'home-page.hyperlink.author.message' | translate}}</strong>
-            <div *ngFor="let authorLink of (authors$| async); let i = index">
-              <span><a [href]="authorLink.url">{{ authorLink.name }} ({{ authorLink.occurrences }})</a></span>
-            </div>
+            @for (authorLink of (authors$| async); track authorLink.url) {
+              <div>
+                <span><a [href]="authorLink.url">{{ authorLink.name }} ({{ authorLink.occurrences }})</a></span>
+              </div>
+            }
             <div>
               <a href="javascript:void(0);" (click)="redirectToBrowseByField('author')">
                 {{ 'home-page.hyperlink.view-more.message' | translate }}
@@ -80,9 +90,11 @@
           </div>
           <div class="col-md-4 border-bottom">
             <strong>{{'home-page.hyperlink.subject.message' | translate}}</strong>
-            <div *ngFor="let subjectLink of (subjects$| async); let i = index">
-              <span><a [href]="subjectLink.url">{{ subjectLink.name }} ({{ subjectLink.occurrences }})</a></span>
-            </div>
+            @for (subjectLink of (subjects$| async); track subjectLink.url) {
+              <div>
+                <span><a [href]="subjectLink.url">{{ subjectLink.name }} ({{ subjectLink.occurrences }})</a></span>
+              </div>
+            }
             <div>
               <a href="javascript:void(0);" (click)="redirectToBrowseByField('subject')">
                 {{ 'home-page.hyperlink.view-more.message' | translate }}
@@ -91,9 +103,11 @@
           </div>
           <div class="col-md-4 border-bottom">
             <strong>{{'home-page.hyperlink.language.message' | translate}}</strong>
-            <div *ngFor="let languageLink of (languages$| async); let i = index">
-              <span><a [href]="languageLink.url">{{ languageLink.name }} ({{ languageLink.occurrences }})</a></span>
-            </div>
+            @for (languageLink of (languages$| async); track languageLink.url) {
+              <div>
+                <span><a [href]="languageLink.url">{{ languageLink.name }} ({{ languageLink.occurrences }})</a></span>
+              </div>
+            }
             <div>
               <a href="javascript:void(0);" (click)="redirectToBrowseByField('language')">
                 {{ 'home-page.hyperlink.view-more.message' | translate }}
@@ -112,9 +126,9 @@
           <div class="recent-submissions-head flex-fill">{{'home-page.whats-new.message' | translate}}</div>
           <ds-rss class="ml-1 override-css"></ds-rss>
         </div>
-        <ds-clarin-item-box-view
-          *ngFor="let newItem of (newItems$ | async)"
-          [object]="newItem"></ds-clarin-item-box-view>
+        @for (newItem of (newItems$ | async); track newItem.uuid) {
+          <ds-clarin-item-box-view [object]="newItem"></ds-clarin-item-box-view>
+        }
       </div>
     </div>
   </div>
@@ -123,9 +137,9 @@
     <div class="card clarin-home-page-items-color">
       <div class="card-body">
         <div class="top-items-head">{{'home-page.new-items.message' | translate}}</div>
-        <ds-clarin-item-box-view
-          *ngFor="let topItem of (topItems$ | async)"
-          [object]="topItem"></ds-clarin-item-box-view>
+        @for (topItem of (topItems$ | async); track topItem.uuid) {
+          <ds-clarin-item-box-view [object]="topItem"></ds-clarin-item-box-view>
+        }
       </div>
     </div>
   </div>
