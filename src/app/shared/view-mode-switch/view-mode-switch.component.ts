@@ -81,7 +81,8 @@ export class ViewModeSwitchComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     if (isEmpty(this.viewModeList)) {
-      this.viewModeList = [ViewMode.ListElement, ViewMode.GridElement];
+      // CLARIN/LINDAT: search results are list-only (the switch hides itself for a single mode)
+      this.viewModeList = [ViewMode.ListElement];
       if (environment.geospatialMapViewer.enableSearchViewMode) {
         this.viewModeList.push(ViewMode.GeospatialMap);
       }

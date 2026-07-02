@@ -351,18 +351,22 @@ export class DefaultAppConfig implements AppConfig {
   };
 
   // Community Page Config
+  // CLARIN/LINDAT: land on the subcommunity/collection lists (production parity) and keep the
+  // embedded search section plain (no filter sidebar)
   community: CommunityPageConfig = {
-    defaultBrowseTab: 'search',
+    defaultBrowseTab: 'comcols',
     searchSection: {
-      showSidebar: true,
+      showSidebar: false,
     },
   };
 
   // Collection Page Config
+  // CLARIN/LINDAT: the item listing without the filter sidebar approximates the v7 collection
+  // landing ("Recent Submissions" list)
   collection: CollectionPageConfig = {
     defaultBrowseTab: 'search',
     searchSection: {
-      showSidebar: true,
+      showSidebar: false,
     },
     edit: {
       undoTimeout: 10000, // 10 seconds

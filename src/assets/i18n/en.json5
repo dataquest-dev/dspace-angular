@@ -2911,7 +2911,7 @@
 
   "item.page.abstract": "Abstract",
 
-  "item.page.author": "Author",
+  "item.page.author": "Authors",
 
   "item.page.authors": "Authors",
 
@@ -2923,7 +2923,7 @@
 
   "item.page.collections.load-more": "Load more",
 
-  "item.page.date": "Date",
+  "item.page.date": "Date issued",
 
   "item.page.edit": "Edit this item",
 
@@ -2941,9 +2941,9 @@
 
   "item.page.journal.search.title": "Articles in this journal",
 
-  "item.page.link.full": "Full item page",
+  "item.page.link.full": "Show full item record",
 
-  "item.page.link.simple": "Simple item page",
+  "item.page.link.simple": "Show simple item record",
 
   "item.page.options": "Options",
 
@@ -2969,9 +2969,9 @@
 
   "item.page.relationships.isOrgUnitOfProject": "Research Projects",
 
-  "item.page.subject": "Keywords",
+  "item.page.subject": "Subject(s)",
 
-  "item.page.uri": "URI",
+  "item.page.uri": "Item identifier",
 
   "item.page.bitstreams.view-more": "Show more",
 
@@ -3927,7 +3927,7 @@
 
   "pagination.results-per-page": "Results Per Page",
 
-  "pagination.showing.detail": "{{ range }} of {{ total }}",
+  "pagination.showing.detail": "{{ range }} out of {{ total }} results",
 
   "pagination.showing.label": "Now showing ",
 
@@ -4611,7 +4611,7 @@
 
   "search.filters.applied.f.entityType": "Item Type",
 
-  "search.filters.applied.f.has_content_in_original_bundle": "Has files",
+  "search.filters.applied.f.has_content_in_original_bundle": "Has Files",
 
   "search.filters.applied.f.original_bundle_filenames": "File name",
 
@@ -4728,7 +4728,7 @@
 
   "search.filters.filter.expand": "Expand filter",
 
-  "search.filters.filter.has_content_in_original_bundle.head": "Has files",
+  "search.filters.filter.has_content_in_original_bundle.head": "Has Files",
 
   "search.filters.filter.original_bundle_filenames.head": "File name",
 
@@ -4874,7 +4874,7 @@
 
   "search.filters.withdrawn.false": "No",
 
-  "search.filters.head": "Filters",
+  "search.filters.head": "Limit your search",
 
   "search.filters.reset": "Reset filters",
 

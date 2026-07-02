@@ -7,6 +7,7 @@ import {
 import {
   NgbModal,
   NgbModalRef,
+  NgbTooltipModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -22,6 +23,7 @@ import { SubscriptionModalComponent } from '../../subscriptions/subscription-mod
 @Component({
   imports: [
     AsyncPipe,
+    NgbTooltipModule,
     TranslateModule,
   ],
   selector: 'ds-dso-page-subscription-button',

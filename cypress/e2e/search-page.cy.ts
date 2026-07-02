@@ -1,5 +1,4 @@
 import { testA11y } from 'cypress/support/utils';
-import { Options } from 'cypress-axe';
 
 describe('Search Page', () => {
   // NOTE: these tests currently assume this query will return results!
@@ -33,26 +32,27 @@ describe('Search Page', () => {
     testA11y('ds-search-page');
   });
 
-  it('should have a working grid view that passes accessibility tests', () => {
-    cy.visit('/search?query='.concat(query));
-
-    // Click button in sidebar to display grid view
-    cy.get('ds-search-sidebar [data-test="grid-view"]').click();
-
-    // <ds-search-page> tag must be loaded
-    cy.get('ds-search-page').should('be.visible');
-
-    // At least one grid object (card) should be displayed
-    cy.get('[data-test="grid-object"]').should('be.visible');
-
-    // Analyze <ds-search-page> for accessibility issues
-    testA11y('ds-search-page',
-            {
-              rules: {
-                // Card titles fail this test currently
-                'heading-order': { enabled: false },
-              },
-            } as Options,
-    );
-  });
+  // NOTE (CLARIN/LINDAT): search results are list-only (view-mode switch hidden), same as production.
+  //   it('should have a working grid view that passes accessibility tests', () => {
+  //     cy.visit('/search?query='.concat(query));
+  //
+  //     // Click button in sidebar to display grid view
+  //     cy.get('ds-search-sidebar [data-test="grid-view"]').click();
+  //
+  //     // <ds-search-page> tag must be loaded
+  //     cy.get('ds-search-page').should('be.visible');
+  //
+  //     // At least one grid object (card) should be displayed
+  //     cy.get('[data-test="grid-object"]').should('be.visible');
+  //
+  //     // Analyze <ds-search-page> for accessibility issues
+  //     testA11y('ds-search-page',
+  //             {
+  //               rules: {
+  //                 // Card titles fail this test currently
+  //                 'heading-order': { enabled: false },
+  //               },
+  //             } as Options,
+  //     );
+  //   });
 });

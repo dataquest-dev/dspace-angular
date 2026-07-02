@@ -14,6 +14,7 @@ import {
   NgbModal,
   NgbTooltip,
   NgbTooltipConfig,
+  NgbTooltipModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
@@ -37,6 +38,7 @@ import { ClarinRefCitationModalComponent } from '../clarin-ref-citation-modal/cl
   imports: [
     AsyncPipe,
     ClarinRefCitationModalComponent,
+    NgbTooltipModule,
     TranslateModule,
   ],
   selector: 'ds-clarin-ref-citation',

@@ -6,7 +6,10 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbTooltip,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 
 import { Item } from '../../../../core/shared/item.model';
@@ -16,6 +19,7 @@ import { ItemIdentifierService } from '../../../../shared/item-identifier.servic
 @Component({
   imports: [
     AsyncPipe,
+    NgbTooltipModule,
   ],
   selector: 'ds-clarin-identifier-item-field',
   templateUrl: './clarin-identifier-item-field.component.html',
