@@ -4,8 +4,8 @@
     @if (sub) {
       <div>
         <span>{{'change.submitter.page.message' | translate}}</span>
-        <span class="font-weight-bold">{{getName(sub)}}</span>
-        <span class="font-weight-bold"> ({{sub?.email}})</span>
+        <span class="fw-bold">{{getName(sub)}}</span>
+        <span class="fw-bold"> ({{sub?.email}})</span>
       </div>
     }
     @if (sub === null) {
@@ -16,18 +16,18 @@
 
     <div>
       <span>{{'change.submitter.page.items.handle.message' | translate}}</span>
-      <span class="font-weight-bold">{{item?.handle}}</span>
+      <span class="fw-bold">{{item?.handle}}</span>
     </div>
     <div>
       <span>{{'change.submitter.page.items.name.message' | translate}}</span>
-      <span class="font-weight-bold">{{getName(item)}}</span>
+      <span class="fw-bold">{{getName(item)}}</span>
     </div>
 
     <div class="pt-4">
       <button class="btn btn-info" (click)="changeSubmitter()">
         @if (changeSubmitterSpinner) {
           <span
-            class="spinner-border spinner-border-sm spinner-button mr-1" role="status" aria-hidden="true">
+            class="spinner-border spinner-border-sm spinner-button me-1" role="status" aria-hidden="true">
           </span>
         }
         <span>{{'change.submitter.page.button.take-it' | translate}}</span>

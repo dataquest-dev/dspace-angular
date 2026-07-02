@@ -6,7 +6,7 @@
           <i class="fas fa-puzzle-piece clarin-ref-box-footer-icon"></i>
         </div>
         <div>
-          <span class="pl-2">
+          <span class="ps-2">
             {{'item.refbox.featured-service.heading' | translate}}
           </span>
         </div>
@@ -14,7 +14,7 @@
 
       <div class="d-flex align-items-start clarin-ref-box-footer-services pt-1">
         @for (featuredService of (featuredServices | async); track featuredService; let i = $index) {
-          <div class="btn-group pr-2" ngbDropdown>
+          <div class="btn-group pe-2" ngbDropdown>
             <a class="btn btn-danger clarin-ref-box-services-button"
               type="button"
               target="_blank"
@@ -46,9 +46,9 @@
     <div class="d-flex align-items-start">
       <div class="d-flex align-items-center pt-1">
         <i class="fas fa-share-alt clarin-ref-box-footer-icon"></i>
-        <span class="pl-2">{{'item.refbox.featured-service.share.message' | translate}}</span>
+        <span class="ps-2">{{'item.refbox.featured-service.share.message' | translate}}</span>
       </div>
-      <div class="pl-2">
+      <div class="ps-2">
         <a class="fab fa-facebook-square clarin-share-buttons clarin-share-facebook" [href]="fbRedirectURL | async"></a>
         <a class="fab fa-twitter-square clarin-share-buttons clarin-share-twitter" [href]="twitterRedirectURL | async"></a>
       </div>

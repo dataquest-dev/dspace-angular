@@ -3,10 +3,10 @@
     <div class="col-12">
       <h2>{{'item.edit.license.head' | translate}}</h2>
       <div class="alert alert-dismissible alert-info">
-        <a [href]="(currentLicense | async)?.definition" class="badge badge-info">
+        <a [href]="(currentLicense | async)?.definition" class="badge text-bg-info">
           {{(currentLicense | async)?.name}}
         </a>
-        <a class="pl-2 text-info" (click)="removeLicense()">
+        <a class="ps-2 text-info" (click)="removeLicense()">
           {{'item.edit.license.remove.license.message' | translate}}
         </a>
       </div>
@@ -14,7 +14,7 @@
   </div>
   <div class="form-group row pt-3">
     <div class="col-12">
-      <label class="font-weight-bold" for="selectLicense">{{'item.edit.license.select.license.select.message' | translate}}</label>
+      <label class="fw-bold" for="selectLicense">{{'item.edit.license.select.license.select.message' | translate}}</label>
       <select class="form-control" [(ngModel)]="selectedLicenseId" name="selectLicense" id="selectLicense">
         <option [ngValue]="null">{{'item.edit.license.select.license.initial-value.message' | translate}}</option>
         @for (license of (allLicenses | async); track license) {
@@ -23,7 +23,7 @@
       </select>
       <label class="text-info pt-2" for="selectLicense">
         <i class="fa fa-info-circle"></i>
-        <span class="pl-1">{{'item.edit.license.select.license.info' | translate}}</span>
+        <span class="ps-1">{{'item.edit.license.select.license.info' | translate}}</span>
       </label>
     </div>
   </div>
@@ -37,7 +37,7 @@
       (click)="updateLicense()">
       {{'item.edit.license.button.name.update' | translate}}
     </button>
-    <button class="btn btn-primary ml-2" (click)="return()">
+    <button class="btn btn-primary ms-2" (click)="return()">
       {{'item.edit.license.button.name.return' | translate}}
     </button>
   </div>

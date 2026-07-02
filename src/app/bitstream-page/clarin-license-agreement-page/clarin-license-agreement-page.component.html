@@ -27,7 +27,7 @@
   <div class="row pt-3">
     <div class="col-12">
       <span>{{'clarin.license.agreement.signer.header.info.0' | translate}}</span>
-      <a class="ml-1 mr-1" [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">{{'clarin.license.agreement.signer.header.info.1' | translate}}</a>
+      <a class="ms-1 me-1" [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">{{'clarin.license.agreement.signer.header.info.1' | translate}}</a>
       <span>{{'clarin.license.agreement.signer.header.info.2' | translate}}</span>
     </div>
   </div>
@@ -100,7 +100,7 @@
         {{'clarin.license.agreement.button.agree' | translate}}
         @if (isLoading | async) {
           <span
-            class="ml-1 spinner-border spinner-border-sm"
+            class="ms-1 spinner-border spinner-border-sm"
             role="status"
             aria-hidden="true"
           ></span>
@@ -113,7 +113,7 @@
       <div class="col-12">
         <div class="card bg-clarin-red">
           <div class="card-body row">
-            <div class="pl-3">{{'clarin.license.agreement.error.message.cannot.download.0' | translate}}
+            <div class="ps-3">{{'clarin.license.agreement.error.message.cannot.download.0' | translate}}
               <a [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">
                 {{'clarin.license.agreement.error.message.cannot.download.1' | translate}}
               </a>

@@ -7,11 +7,11 @@
         </div>
         <div class="sponsor-padding">
           <span>{{ 'item.page.acknowledgement.project-code' | translate }}</span>
-          <span id="project-code-value-{{ i }}" class="pl-1">{{ getValueOrError(sponsorMetadataValueParts?.[1], PROJECT_CODE_ERROR) }}</span>
+          <span id="project-code-value-{{ i }}" class="ps-1">{{ getValueOrError(sponsorMetadataValueParts?.[1], PROJECT_CODE_ERROR) }}</span>
         </div>
         <div class="sponsor-padding">
           <span>{{ 'item.page.acknowledgement.project-name' | translate }}</span>
-          <span id="project-name-value-{{ i }}" class="pl-1">{{ getValueOrError(sponsorMetadataValueParts?.[3], PROJECT_NAME_ERROR) }}</span>
+          <span id="project-name-value-{{ i }}" class="ps-1">{{ getValueOrError(sponsorMetadataValueParts?.[3], PROJECT_NAME_ERROR) }}</span>
         </div>
         @if (!lastItem) {
           <div class="pb-3"></div>

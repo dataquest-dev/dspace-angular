@@ -36,11 +36,11 @@
     <div class="btn-group mt-3">
       <button type="submit" class="btn btn-primary" [dsBtnDisabled]="!editHandle.form.valid || isLoading">
         @if (isLoading) {
-          <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
         }
         {{ 'epic-handle-table.edit-handle.form-button-submit' | translate }}
       </button>
-      <button type="button" class="btn btn-secondary ml-2" (click)="onCancel()" [dsBtnDisabled]="isLoading">
+      <button type="button" class="btn btn-secondary ms-2" (click)="onCancel()" [dsBtnDisabled]="isLoading">
         {{ 'epic-handle-table.edit-handle.form-button-cancel' | translate }}
       </button>
     </div>

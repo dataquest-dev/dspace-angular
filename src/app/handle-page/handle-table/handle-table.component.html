@@ -157,20 +157,20 @@
               }
             </ds-pagination>
             <div class="mt-2">
-              <div class="btn-group pr-1">
+              <div class="btn-group pe-1">
                 <button type="button" class="btn btn-success"
                   (click)="redirectWithCurrentPage()">
                   {{'handle-table.button.new-handle' | translate}}
                 </button>
               </div>
-              <div class="btn-group pr-1">
+              <div class="btn-group pe-1">
                 <button type="button" class="btn btn-warning"
                   (click)="redirectWithHandleParams()"
                   [dsBtnDisabled]="selectedHandle === null">
                   {{'handle-table.button.edit-handle' | translate}}
                 </button>
               </div>
-              <div class="btn-group pr-1">
+              <div class="btn-group pe-1">
                 <button type="button" class="btn btn-danger"
                   (click)="deleteHandles()"
                   [dsBtnDisabled]="selectedHandle === null">

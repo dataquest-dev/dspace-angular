@@ -4,7 +4,7 @@
       <div><i [class]="'fas ' + iconName + ' fa-xs'"></i></div>
       <!-- Toggle Header -->
       <div
-        class="pl-1 d-flex align-items-center"
+        class="ps-1 d-flex align-items-center"
         (click)="toggleVersionHistory()"
         (keydown.enter)="toggleVersionHistory()"
         role="button"
@@ -12,7 +12,7 @@
         [attr.aria-expanded]="showVersionHistory"
         aria-controls="version-history-content"
         [attr.aria-label]="getToggleAriaLabel()">
-        <b class="mr-1">{{ "item.version.history.head" | translate }}</b>
+        <b class="me-1">{{ "item.version.history.head" | translate }}</b>
         <i class="fas" [ngClass]="showVersionHistory ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
       </div>
     </div>

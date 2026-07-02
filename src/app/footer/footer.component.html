@@ -1,7 +1,8 @@
 <footer class="text-lg-start">
   <div class="lindat-common2 lindat-common-footer">
-    <!-- div, not <footer>: a nested footer would register a duplicate contentinfo landmark (axe) -->
-    <div data-version="3.5.0" data-build="67e455771cd6a00647a289a5d7b0c8a3380d3410">
+    <!-- role="presentation": a nested footer must not register a second contentinfo landmark (axe);
+         the element itself stays <footer> because the lindat-common stylesheet targets it by element -->
+    <footer role="presentation" data-version="3.5.0" data-build="67e455771cd6a00647a289a5d7b0c8a3380d3410">
       <div id="about-lindat">
         <h4><a href="https://lindat.cz/sites/default/files/2021-01/lindat_clariah_flyer.pdf">LINDAT/CLARIAH-CZ</a></h4>
         <ul>
@@ -88,6 +89,6 @@
       </div>
       <div id="ack-freepik">Icons ©  Smashicons and Freepik from flaticon.com licensed by <a href="https://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</a></div>
       <div id="ack-ufal">website © 2025 by <a href="https://ufal.mff.cuni.cz/">ÚFAL</a></div>
-    </div>
+    </footer>
   </div>
 </footer>

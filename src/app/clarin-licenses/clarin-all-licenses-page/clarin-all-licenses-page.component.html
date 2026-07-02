@@ -19,7 +19,7 @@
             </span>
             @for (clarinLicenseLabel of clarinLicense?.extendedClarinLicenseLabels; track clarinLicenseLabel) {
               <span
-                class="px-1 label label-default rounded text-white ml-1">
+                class="px-1 label label-default rounded text-white ms-1">
                 {{clarinLicenseLabel?.title}}
               </span>
             }
@@ -32,7 +32,7 @@
             }
             @for (requiredInformation of getRequiredInfo(clarinLicense); track requiredInformation) {
               <span
-                class="px-1 label label-default rounded text-white mr-1">
+                class="px-1 label label-default rounded text-white me-1">
                 {{requiredInformation?.value}}
               </span>
             }

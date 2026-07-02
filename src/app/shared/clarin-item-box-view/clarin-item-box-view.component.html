@@ -2,7 +2,7 @@
   <div class="pt-3">
     <div class="card">
       <div class="card-body pt-0 pb-0">
-        <div *ngVar="hasItemType() as nonEmptyItemType" [ngClass]="{'row': true, 'justify-content-between': nonEmptyItemType, 'justify-content-end': !nonEmptyItemType}">
+        <div *ngVar="hasItemType() as nonEmptyItemType" [ngClass]="{'d-flex': true, 'justify-content-between': nonEmptyItemType, 'justify-content-end': !nonEmptyItemType}">
           @if (nonEmptyItemType) {
             <span class="item-type">{{ itemType }}</span>
           }
@@ -12,13 +12,13 @@
             <span class="label item-community"><a class="pt-2" [href]="communitySearchRedirect | async">{{ (itemCommunity | async)?.name }}</a></span>
           }
         </div>
-        <div class="pl-3">
+        <div class="ps-3">
           <div class="row pt-3 justify-content-between">
-            <div class="col-10 pl-0">
+            <div class="col-10 ps-0">
               <div><a [routerLink]="itemUri" class="item-name">{{ itemName }}</a></div>
               @if (isSearchResult) {
                 <div class="pt-1">
-                  <div class="font-weight-bold">{{ 'item.view.box.publisher.message' | translate }}</div>
+                  <div class="fw-bold">{{ 'item.view.box.publisher.message' | translate }}</div>
                   <!-- truthiness check: a missing dc.publisher is undefined, and an empty <a>
                        has no accessible name (axe link-name) -->
                   <span>(@if (itemPublisher) {
@@ -42,10 +42,10 @@
           @if (isSearchResult === false && itemDescription !== null) {
             <div class="row d-block pt-1">
               <div><strong>{{'item.view.box.description.message' | translate}}</strong></div>
-              <div class="clarin-item-description pr-3">{{itemDescription}}</div>
+              <div class="clarin-item-description pe-3">{{itemDescription}}</div>
             </div>
           }
-          <div class="row d-flex pt-1">
+          <div class="d-flex pt-1">
             <div class="label label-info label-icon"><i class="fas fa-paperclip fa-sm"></i></div>
             @if (hasMoreFiles()) {
               <div class="label label-info"> {{'item.view.box.files.message.0' | translate}} {{ (itemCountOfFiles | async) }} {{'item.view.box.files.message.1' | translate}} ({{(itemFilesSizeBytes | async) | dsFileSize }}). </div>
@@ -58,7 +58,7 @@
             }
           </div>
         </div>
-        <div [ngClass]="{'row': true, 'justify-content-end': true, 'pt-3': (itemCountOfFiles | async) === -1}">
+        <div [ngClass]="{'d-flex': true, 'justify-content-end': true, 'pt-3': (itemCountOfFiles | async) === -1}">
           @if (licenseType !== null) {
             <div
               [ngClass]="'d-inline py-1 px-1 label label-license  label-default' + ' label-' + licenseLabel + ' rounded text-white'">

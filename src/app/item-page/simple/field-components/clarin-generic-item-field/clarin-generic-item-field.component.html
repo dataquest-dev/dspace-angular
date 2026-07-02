@@ -2,7 +2,7 @@
   <div class="row clarin-item-page-field justify-content-start">
     <div class="col-lg-3 col-2-5 d-flex">
       <div><i [class]="'fas ' + iconName + ' fa-xs'"></i></div>
-      <div class="pl-1"><b>{{label | translate}}</b></div>
+      <div class="ps-1"><b>{{label | translate}}</b></div>
     </div>
     <div class="col-lg-9">
       <div>
@@ -34,14 +34,14 @@
         @for (mdValue of item?.allMetadata(fields); track mdValue; let last = $last; let i = $index) {
           <div class="dont-break-out d-inline">
             @if (type === 'hyperlink') {
-              <span class="pr-1">
+              <span class="pe-1">
                 <a [href]="mdValue.value">
                   {{mdValue.value | dsReplace: this.replaceCharacter}}
                 </a>
               </span>
             }
             @if (type === 'search') {
-              <span class="d-inline-flex pr-1">
+              <span class="d-inline-flex pe-1">
                 <a [href]="getLinkToSearch(i)">{{mdValue.value | dsReplace: this.replaceCharacter}}</a>
                 @if (!last) {
                   <span [innerHTML]="separator"></span>
@@ -49,9 +49,9 @@
               </span>
             }
             @if (type === 'subject') {
-              <span class="pr-1">
+              <span class="pe-1">
                 @for (subject of mdValue.value.split(separator); track subject) {
-                  <a class="badge badge-info text-white cursor-pointer mr-1"
+                  <a class="badge text-bg-info text-white cursor-pointer me-1"
                     [href]="getLinkToSearch(-1, subject)">
                     {{subject}}
                   </a>
@@ -59,7 +59,7 @@
               </span>
             }
             @if (type === null) {
-              <span class="pr-1">
+              <span class="pe-1">
                 {{mdValue.value | dsReplace: this.replaceCharacter}}@if (!last) {
                 <span [innerHTML]="separator"></span>
               }

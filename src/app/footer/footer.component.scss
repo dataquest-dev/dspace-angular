@@ -790,4 +790,10 @@
 li.list-spacer {
   height: 1em;
   list-style: none;
+
+  // the lindat-common stylesheet prefixes footer list items with a dash (li:before);
+  // the invisible spacer item must not render one
+  &::before {
+    content: none !important;
+  }
 }
