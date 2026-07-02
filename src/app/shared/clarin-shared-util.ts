@@ -57,7 +57,7 @@ export function buildAuthoritySearchFilter(searchType: string, mdValue: { author
   const hasAuthority = !isEmpty(mdValue?.authority);
   const filterValue = hasAuthority ? mdValue.authority : mdValue?.value;
   const operator = hasAuthority ? 'authority' : 'equals';
-  return 'f.' + encodeURIComponent(searchType) + '=' + encodeURIComponent(filterValue) + ',' + operator;
+  return 'f.' + encodeURIComponent(searchType) + '=' + encodeURIComponent(filterValue ?? '') + ',' + operator;
 }
 
 /**
