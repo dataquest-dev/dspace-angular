@@ -117,6 +117,7 @@ export class ClarinFilesSectionComponent implements OnInit, OnChanges, OnDestroy
   }
 
   generateCurlCommand() {
+    this.canShowCurlDownload = false;
     const fileNames = this.listOfFiles.value.map((file: MetadataBitstream) => {
       if (file.canPreview) {
         this.canShowCurlDownload = true;
