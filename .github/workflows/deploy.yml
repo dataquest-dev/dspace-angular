@@ -96,6 +96,8 @@ jobs:
       FNAME: old_dump.sql
       ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
     steps:
+      - uses: actions/checkout@v6
+
       - name: vanilla import
         run: |
           export DATADIR=$CONFIG_PATH/${{inputs.INSTANCE}}/dump/$FNAME
@@ -122,36 +124,29 @@ jobs:
       - name: run database migration
         run: |
           export DNAME=dspace${{inputs.INSTANCE}}
-          export DDBNAME=dspacedb${{inputs.INSTANCE}}
-          export SYNCSEQSETUP=$CONFIG_PATH/${{inputs.INSTANCE}}/$SYNCSEQFNAME
+          export ENVFILE=$CONFIG_PATH/${{inputs.INSTANCE}}/.env
+          export OVERLAY=$CONFIG_PATH/${{inputs.INSTANCE}}
 
           # ---------------------------------------------------------------
-          # Why a one-shot migration container instead of `docker exec $DNAME migrate`:
-          # The $DNAME entrypoint auto-runs `dspace database migrate` (WITHOUT `ignored`)
+          # Why a one-off `docker compose run` instead of `docker exec $DNAME migrate`:
+          # The dspace entrypoint auto-runs `dspace database migrate` (WITHOUT `ignored`)
           # and then starts the REST webapp. On a freshly imported DSpace-6 dump the
           # "Ignored" XMLWorkflow migrations are NOT applied, so the webapp boots against
           # an un-migrated DB, crashes, and (with the restart policy) the container
           # restarts. That restart SIGKILLs any `docker exec` running inside it -> the
-          # migration dies with exit 137. Running the migration in a separate one-shot
-          # container (PID 1 = migrate, no webapp, no restart policy) removes the race.
+          # migration dies with exit 137. So we stop the app and run the migration as a
+          # one-off compose container (overridden entrypoint = migrate only, no webapp,
+          # no restart policy), using the same compose files/env as the deploy step.
           # ---------------------------------------------------------------
 
           echo "Stopping app container so its restart loop can't kill the migration..."
           docker stop $DNAME || true
 
-          # Reuse the app container's exact image / network / volumes / env so the
-          # one-shot process connects to the same DB (db.url etc. live in Config.Env).
-          IMG=$(docker inspect $DNAME --format '{{.Config.Image}}')
-          NET=$(docker inspect $DNAME --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}' | awk '{print $1}')
-          docker inspect $DNAME --format '{{range .Config.Env}}{{println .}}{{end}}' > /tmp/dspace-migrate-$INSTANCE.env
-
-          echo "One-shot migration: image=$IMG network=$NET"
-          docker run --rm \
-            --network "$NET" \
-            --volumes-from "$DNAME" \
-            --env-file /tmp/dspace-migrate-$INSTANCE.env \
-            --entrypoint /bin/bash \
-            "$IMG" \
+          echo "Running one-off DB migration via docker compose..."
+          docker compose --env-file $ENVFILE -p dspace-${{inputs.INSTANCE}} \
+            -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
+            -f $OVERLAY/docker-compose-rest.yml -f $OVERLAY/docker-compose.yml \
+            run --rm --no-deps --entrypoint /bin/bash dspace \
             -c "while (!</dev/tcp/dspacedb/5432) >/dev/null 2>&1; do sleep 1; done; cd /dspace/bin && ./dspace database migrate ignored"
 
           echo "Migration done. Starting app container (entrypoint migrate is now a no-op)..."
