@@ -264,7 +264,7 @@ describe('My DSpace page', () => {
     //Check that we have at least one item in worflow search, the item have claim-button and can click in it.
     cy.get('[data-test="list-object"]')
       .then(($items) => {
-        const itemWithClaim = [...$items].find(item =>
+        const itemWithClaim = $items.toArray().find(item =>
           item.querySelector('[data-test="claim-button"]'),
         );
         cy.wrap(itemWithClaim).should('exist');

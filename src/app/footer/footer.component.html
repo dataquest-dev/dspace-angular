@@ -1,6 +1,7 @@
 <footer class="text-lg-start">
   <div class="lindat-common2 lindat-common-footer">
-    <footer data-version="3.5.0" data-build="67e455771cd6a00647a289a5d7b0c8a3380d3410">
+    <!-- div, not <footer>: a nested footer would register a duplicate contentinfo landmark (axe) -->
+    <div data-version="3.5.0" data-build="67e455771cd6a00647a289a5d7b0c8a3380d3410">
       <div id="about-lindat">
         <h4><a href="https://lindat.cz/sites/default/files/2021-01/lindat_clariah_flyer.pdf">LINDAT/CLARIAH-CZ</a></h4>
         <ul>
@@ -9,11 +10,11 @@
           <li><a href="https://lindat.cz/events">Events</a></li>
           <li><a href="https://www.clarin.eu/">CLARIN Participation</a></li>
           <li><a href="https://www.dariah.eu/">DARIAH Participation</a></li>
-          <br/>
+          <li aria-hidden="true" class="list-spacer"></li>
           <li><a href="https://lindat.cz/faq-repository">FAQ</a></li>
           <li><a href="mailto:lindat-help@ufal.mff.cuni.cz">Helpdesk</a></li>
           <li><a href="https://lindat.cz/user_feedback">User Feedback Form</a></li>
-          <br/>
+          <li aria-hidden="true" class="list-spacer"></li>
           <li><a href="https://ufal.mff.cuni.cz/grants/lindatclariah-cz/en">Hosting Institution</a></li>
           <li><a href="https://lindat.cz/acknowledgement">Acknowledge LINDAT/CLARIAH-CZ</a></li>
           <li><a href="https://ror.org/00dd4fz34">Research Organization Registry</a></li>
@@ -87,6 +88,6 @@
       </div>
       <div id="ack-freepik">Icons ©  Smashicons and Freepik from flaticon.com licensed by <a href="https://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</a></div>
       <div id="ack-ufal">website © 2025 by <a href="https://ufal.mff.cuni.cz/">ÚFAL</a></div>
-    </footer>
+    </div>
   </div>
 </footer>

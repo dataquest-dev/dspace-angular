@@ -784,3 +784,10 @@
   letter-spacing: 0.01em;
 }
 
+
+// spacer between link groups in the lindat-common footer columns (an <li> instead of the original
+// <br/>, because a <ul> may only contain <li> children - axe "list" rule)
+li.list-spacer {
+  height: 1em;
+  list-style: none;
+}

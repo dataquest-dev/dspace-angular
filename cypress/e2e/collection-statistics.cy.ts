@@ -6,8 +6,8 @@ describe('Collection Statistics Page', () => {
 
   it('should load if you click on "Statistics" from a Collection page', () => {
     cy.visit('/collections/'.concat(Cypress.env('DSPACE_TEST_COLLECTION')));
-    // NOTE (CLARIN/LINDAT): the LINDAT header has no public navbar; navigate directly
-    cy.visit('/statistics');
+    // NOTE (CLARIN/LINDAT): the LINDAT header has no public navbar; navigate directly to the object's statistics page (where the navbar link led)
+    cy.visit('/statistics/collections/'.concat(Cypress.env('DSPACE_TEST_COLLECTION')));
     cy.location('pathname').should('eq', COLLECTIONSTATISTICSPAGE);
   });
 

@@ -3,7 +3,8 @@
   <!-- renders only while an administrator impersonates an EPerson (button to stop impersonating) -->
   <ds-impersonate-navbar></ds-impersonate-navbar>
   <div class="lindat-common2 lindat-common-header">
-    <header data-version="3.0.5" data-build="05eff1186f12528f221a63b021c7b7dc81301429">
+    <!-- div, not <header>: a nested header would register a duplicate banner landmark (axe) -->
+    <div data-version="3.0.5" data-build="05eff1186f12528f221a63b021c7b7dc81301429">
       <nav class="lindat-navbar lindat-navbar-expand-lg lindat-justify-content-between lindat-navbar-dark ">
         <div class="lindat-block lindat-block--clariah-theme-branding">
           <a routerLink="/home" class="lindat-navbar-brand lindat-d-flex lindat-align-items-center " aria-label="">
@@ -68,6 +69,6 @@
           <slot name="languageswitcher"></slot>
         </div>
       </nav>
-    </header>
+    </div>
   </div>
 </header>
