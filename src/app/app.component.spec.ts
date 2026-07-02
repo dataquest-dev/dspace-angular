@@ -2,8 +2,11 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
   ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
   inject,
   TestBed,
+  tick,
   waitForAsync,
 } from '@angular/core/testing';
 import {
@@ -14,11 +17,15 @@ import {
   Store,
   StoreModule,
 } from '@ngrx/store';
-import { provideMockStore } from '@ngrx/store/testing';
+import {
+  MockStore,
+  provideMockStore,
+} from '@ngrx/store/testing';
 import {
   TranslateLoader,
   TranslateModule,
 } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 
 import { APP_CONFIG } from '../config/app-config.interface';
 import { environment } from '../environments/environment';
@@ -58,7 +65,7 @@ let comp: AppComponent;
 let fixture: ComponentFixture<AppComponent>;
 const menuService = new MenuServiceStub();
 const initialState = {
-  core: { auth: { loading: false } },
+  core: { auth: { loading: false, blocking: false } },
 };
 
 export function getMockLocaleService(): LocaleService {
@@ -148,5 +155,79 @@ describe('App component', () => {
       expect(store.dispatch).toHaveBeenCalledWith(new HostWindowResizeAction(width, height));
     });
 
+  });
+
+  describe('removeSsrOverlayWhenContentVisible', () => {
+    // The inline bootstrap script in src/index.html injects window.__dspaceRemoveSsrOverlay.
+    // Once auth blocking and theme loading are both false, AppComponent waits for the <ds-app> DOM
+    // to settle (no element added/removed for the quiet window) and only then removes the overlay.
+    let mockStore: MockStore;
+    let themeLoading$: BehaviorSubject<boolean>;
+    let themeService: ThemeService;
+    let originalRaF: typeof window.requestAnimationFrame;
+    let dsAppEl: HTMLElement;
+
+    beforeEach(() => {
+      mockStore = TestBed.inject(MockStore);
+      themeService = TestBed.inject(ThemeService);
+      themeLoading$ = new BehaviorSubject<boolean>(true);
+      (themeService as any).isThemeLoading$ = themeLoading$.asObservable();
+      mockStore.setState({ core: { auth: { loading: false, blocking: true } } });
+
+      // A settled <ds-app> with real content present, so the DOM-settle watcher can resolve.
+      dsAppEl = document.createElement('ds-app');
+      dsAppEl.setAttribute('style', 'display:block;height:800px');
+      dsAppEl.innerHTML = '<main id="main-content" style="display:block;height:800px">home content</main>';
+      document.body.appendChild(dsAppEl);
+
+      // Force rAF to a synchronous shim so assertions are deterministic.
+      originalRaF = window.requestAnimationFrame;
+      (window as any).requestAnimationFrame = (cb: FrameRequestCallback) => {
+        cb(0);
+        return 0 as any;
+      };
+    });
+
+    afterEach(() => {
+      (window as any).requestAnimationFrame = originalRaF;
+      delete (window as any).__dspaceRemoveSsrOverlay;
+      if (dsAppEl && dsAppEl.parentNode) { dsAppEl.parentNode.removeChild(dsAppEl); }
+    });
+
+    it('removes the overlay once auth/theme are ready AND the DOM has settled', fakeAsync(() => {
+      const spy = jasmine.createSpy('__dspaceRemoveSsrOverlay');
+      window.__dspaceRemoveSsrOverlay = spy;
+
+      // Re-construct so constructor-time subscription picks up our patched streams + global.
+      const f = TestBed.createComponent(AppComponent);
+      f.detectChanges();
+
+      expect(spy).not.toHaveBeenCalled();
+
+      mockStore.setState({ core: { auth: { loading: false, blocking: false } } });
+      themeLoading$.next(false);
+
+      // Not removed at the gate: the DOM-settle quiet window must elapse first.
+      expect(spy).not.toHaveBeenCalled();
+      tick(700); // > SETTLE_QUIET_MS
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      discardPeriodicTasks();
+    }));
+
+    it('is a no-op when the global is not injected (e.g. CSR-only route, SSR skipped)', fakeAsync(() => {
+      // Global intentionally absent; constructor should not throw and should not break later.
+      delete (window as any).__dspaceRemoveSsrOverlay;
+
+      const f = TestBed.createComponent(AppComponent);
+      expect(() => f.detectChanges()).not.toThrow();
+
+      mockStore.setState({ core: { auth: { loading: false, blocking: false } } });
+      themeLoading$.next(false);
+      tick(700);
+
+      expect(window.__dspaceRemoveSsrOverlay).toBeUndefined();
+      discardPeriodicTasks();
+    }));
   });
 });
