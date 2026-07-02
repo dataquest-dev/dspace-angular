@@ -125,59 +125,37 @@ jobs:
           export DDBNAME=dspacedb${{inputs.INSTANCE}}
           export SYNCSEQSETUP=$CONFIG_PATH/${{inputs.INSTANCE}}/$SYNCSEQFNAME
 
-          echo "Starting DSpace container for migration..."
+          # ---------------------------------------------------------------
+          # Why a one-shot migration container instead of `docker exec $DNAME migrate`:
+          # The $DNAME entrypoint auto-runs `dspace database migrate` (WITHOUT `ignored`)
+          # and then starts the REST webapp. On a freshly imported DSpace-6 dump the
+          # "Ignored" XMLWorkflow migrations are NOT applied, so the webapp boots against
+          # an un-migrated DB, crashes, and (with the restart policy) the container
+          # restarts. That restart SIGKILLs any `docker exec` running inside it -> the
+          # migration dies with exit 137. Running the migration in a separate one-shot
+          # container (PID 1 = migrate, no webapp, no restart policy) removes the race.
+          # ---------------------------------------------------------------
+
+          echo "Stopping app container so its restart loop can't kill the migration..."
+          docker stop $DNAME || true
+
+          # Reuse the app container's exact image / network / volumes / env so the
+          # one-shot process connects to the same DB (db.url etc. live in Config.Env).
+          IMG=$(docker inspect $DNAME --format '{{.Config.Image}}')
+          NET=$(docker inspect $DNAME --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}' | awk '{print $1}')
+          docker inspect $DNAME --format '{{range .Config.Env}}{{println .}}{{end}}' > /tmp/dspace-migrate-$INSTANCE.env
+
+          echo "One-shot migration: image=$IMG network=$NET"
+          docker run --rm \
+            --network "$NET" \
+            --volumes-from "$DNAME" \
+            --env-file /tmp/dspace-migrate-$INSTANCE.env \
+            --entrypoint /bin/bash \
+            "$IMG" \
+            -c "while (!</dev/tcp/dspacedb/5432) >/dev/null 2>&1; do sleep 1; done; cd /dspace/bin && ./dspace database migrate ignored"
+
+          echo "Migration done. Starting app container (entrypoint migrate is now a no-op)..."
           docker start $DNAME
-
-          echo "Waiting longer for DSpace to be fully ready and locks to clear..."
-          sleep 20
-
-          # ---------------------------------------------------------------
-          # DEBUG: baseline resource state BEFORE migration
-          # ---------------------------------------------------------------
-          echo "===== DEBUG: host memory (free -h) BEFORE ====="
-          free -h || true
-          echo "===== DEBUG: container memory limit / swap ====="
-          docker inspect $DNAME --format 'MemLimit(bytes)={{.HostConfig.Memory}} MemSwap={{.HostConfig.MemorySwap}} OomKillDisable={{.HostConfig.OomKillDisable}}' || true
-          echo "===== DEBUG: docker stats snapshot BEFORE ====="
-          docker stats --no-stream || true
-          echo "===== DEBUG: java processes already running in container ====="
-          docker exec $DNAME /bin/bash -c "ps -eo pid,rss,cmd --sort=-rss | head -20" || true
-
-          # ---------------------------------------------------------------
-          # DEBUG: sample docker stats every 2s in the background during migrate
-          # ---------------------------------------------------------------
-          ( while true; do \
-              echo "[stats $(date +%H:%M:%S)] $(docker stats --no-stream --format '{{.Name}} mem={{.MemUsage}} ({{.MemPerc}}) cpu={{.CPUPerc}}' $DNAME $DDBNAME 2>/dev/null | tr '\n' ' ')"; \
-              sleep 2; \
-            done ) &
-          STATS_PID=$!
-
-          echo "Running DSpace database migration..."
-          # Do NOT let 'set -e' abort before we print diagnostics: capture the rc.
-          MIGRATE_RC=0
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace database migrate ignored" || MIGRATE_RC=$?
-
-          # stop the stats sampler
-          kill $STATS_PID 2>/dev/null || true
-
-          echo "===== DEBUG: migrate exit code = $MIGRATE_RC ====="
-
-          # ---------------------------------------------------------------
-          # DEBUG: post-mortem state AFTER migration (runs even on failure)
-          # ---------------------------------------------------------------
-          echo "===== DEBUG: container state / OOM flag AFTER ====="
-          docker inspect $DNAME --format 'status={{.State.Status}} exit={{.State.ExitCode}} OOMKilled={{.State.OOMKilled}} restarts={{.RestartCount}}' || true
-          echo "===== DEBUG: host memory (free -h) AFTER ====="
-          free -h || true
-          echo "===== DEBUG: kernel OOM-killer evidence (dmesg) ====="
-          (sudo dmesg -T 2>/dev/null || dmesg -T 2>/dev/null || true) | grep -iE 'oom|killed process|out of memory|java' | tail -30 || true
-          echo "===== DEBUG: last 60 lines of dspace-cli.log ====="
-          docker exec $DNAME /bin/bash -c "tail -n 60 /dspace/log/dspace-cli.log" || true
-
-          if [ "$MIGRATE_RC" -ne 0 ]; then
-            echo "Migration failed with exit code $MIGRATE_RC (137 = 128+9 = SIGKILL, typically OOM)."
-            exit $MIGRATE_RC
-          fi
 
           echo "Waiting for DSpace to be ready..."
           sleep 10
