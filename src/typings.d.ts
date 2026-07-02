@@ -86,3 +86,13 @@ declare module '*.scss' {
   const content: any;
   export default content;
 }
+
+/**
+ * Window global injected by the inline anti-flicker bootstrap script in `src/index.html`.
+ * Called once by `AppComponent.removeSsrOverlayWhenContentVisible()` (via
+ * `removeSsrOverlayWhenDomSettles()`) once the routed CSR page's DOM has settled, to drop the
+ * SSR-mask overlay and let the freshly built CSR DOM become visible.
+ */
+interface Window {
+  __dspaceRemoveSsrOverlay?: (() => void) | null;
+}

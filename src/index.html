@@ -7,12 +7,146 @@
   <title>DSpace</title>
   <meta name="viewport" content="width=device-width,minimum-scale=1">
   <meta http-equiv="cache-control" content="no-store">
+  <style id="__dspace-ssr-overlay-style">
+    /* Overlay used to mask the Angular 15 bootstrap re-render of the SSR DOM.
+       See src/index.html bootstrap script + AppComponent.removeSsrOverlayWhenContentVisible
+       (-> removeSsrOverlayWhenDomSettles). The overlay element holds the SSR-rendered children
+       moved out of <ds-app>, so it keeps every original Angular view-encapsulation attribute
+       (_ngcontent-scXXX), inline style, and lifecycle context — i.e. it looks pixel-identical to
+       what SSR sent.
+
+       Interactivity: the overlay is opaque (background:#fff) and on top (z-index), but
+       pointer-events:none, AND the real <ds-app> underneath is NO LONGER visibility:hidden. So the
+       overlay only MASKS the CSR rebuild visually — clicks pass straight through it to the live,
+       already-built app underneath. That is what keeps the page interactive while masked and stops
+       the masking window from reproducing issue #725 ("looks rendered but nothing is clickable").
+       min-height:100vh guarantees the opaque mask always covers the viewport so the rebuilding app
+       cannot peek through (the live <ds-app> only ever grows up to the snapshot's height while it
+       rebuilds, so it stays behind the overlay until removal). */
+    #__dspace_ssr_overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      min-height: 100vh;
+      z-index: 10000;
+      background: #fff;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
 <!-- dependencies -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
   <ds-app></ds-app>
+<script>
+/*
+  Anti-flicker overlay.
+  Why this exists: this codebase is on Angular 15 + ngUniversal. There is no provideClientHydration
+  available before Angular 16, so on every browser load Angular tears down the entire SSR DOM and
+  re-renders the component tree from scratch. The rebuild takes ~600-1500 ms on slow connections,
+  during which the user sees the SSR view -> blank/half-built CSR view -> final CSR view.
+  This script captures the SSR DOM as a snapshot the moment it's parsed (before any module/main
+  script runs - those are type=module and therefore deferred). While Angular rebuilds the real
+  <ds-app> underneath (visually covered by the opaque snapshot, but still interactive), the snapshot
+  keeps the page looking stable. AppComponent removes the overlay once the routed CSR page has
+  finished rendering (its DOM has settled) - see AppComponent.removeSsrOverlayWhenDomSettles.
+*/
+(function () {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  // Skip when an E2E runner is driving the page. The overlay duplicates SSR DOM (moved into the
+  // overlay) alongside the CSR DOM (rendered into <ds-app>) during the masking window — so a
+  // strict-mode locator like cy.get('#x')/page.locator('#x') picks up two elements and fails. The
+  // overlay is a pure UX nicety and E2E doesn't measure visual smoothness, so bail early for both
+  // Cypress (window.Cypress) and any WebDriver-based runner (Playwright/Selenium: navigator.webdriver).
+  if (typeof window.Cypress !== 'undefined') return;
+  if (typeof navigator !== 'undefined' && navigator.webdriver) return;
+  try {
+    var app = document.querySelector('ds-app');
+    // If SSR was skipped for this route (excludePathPatterns), there are no children; nothing to mask.
+    if (!app || !app.firstElementChild) return;
+    if (document.getElementById('__dspace_ssr_overlay')) return;
+
+    // Critical: Angular's BrowserModule.withServerTransition removes ALL <style ng-transition="...">
+    // tags during bootstrap. Those tags hold the component-scoped CSS that styles the SSR DOM
+    // via attribute selectors like [_ngcontent-scXXX]. If we don't preserve copies, the overlay
+    // renders unstyled. Clone the SSR styles into <style data-dspace-ssr-keep> tags that Angular
+    // ignores, so the overlay keeps looking like the page the user already saw.
+    var ssrStyles = document.querySelectorAll('style[ng-transition]');
+    var keptStyles = [];
+    for (var i = 0; i < ssrStyles.length; i++) {
+      var copy = document.createElement('style');
+      copy.setAttribute('data-dspace-ssr-keep', '');
+      copy.textContent = ssrStyles[i].textContent;
+      document.head.appendChild(copy);
+      keptStyles.push(copy);
+    }
+
+    // Build overlay and MOVE (not clone) the SSR children into it. Moving keeps every live DOM
+    // detail (Angular's view-encapsulation attributes, computed inline styles, image-load state)
+    // so the overlay is pixel-identical to what the user already saw before Angular booted.
+    // Cloning via innerHTML loses parent-context-dependent rendering.
+    //
+    // Accessibility: the snapshot is now a purely VISUAL mask, so we mark it aria-hidden. The real
+    // <ds-app> underneath is no longer visibility:hidden — it stays in the accessibility tree and
+    // is the interactive surface — so assistive tech (and mouse clicks) target the live, functional
+    // app rather than a soon-to-be-removed duplicate snapshot. This also avoids the duplicate
+    // a11y nodes the old (overlay-as-a11y-surface) approach produced during masking.
+    var overlay = document.createElement('div');
+    overlay.id = '__dspace_ssr_overlay';
+    overlay.setAttribute('aria-hidden', 'true');
+    while (app.firstChild) {
+      overlay.appendChild(app.firstChild);
+    }
+
+    // Mark <ds-app> as being masked. NOTE: this attribute is now only a state hook — it no longer
+    // hides the element (the visibility:hidden CSS rule was removed) so the live app stays visible
+    // (covered by the opaque overlay) and, crucially, INTERACTIVE while Angular rebuilds into it.
+    app.setAttribute('data-dspace-ssr-hidden', '');
+    document.body.appendChild(overlay);
+
+    var removing = false;
+    window.__dspaceRemoveSsrOverlay = function () {
+      // Re-entrancy guard: null the pointer up-front so a racing DOM-settle removal + 15s safety
+      // fallback cannot start two interleaving fade-out passes (which would re-remove
+      // the kept styles from underneath the first pass).
+      if (removing) return;
+      removing = true;
+      window.__dspaceRemoveSsrOverlay = null;
+
+      var el = document.getElementById('__dspace_ssr_overlay');
+      if (!el) return;
+      app.removeAttribute('data-dspace-ssr-hidden');
+      el.style.transition = 'opacity 150ms ease-out';
+      el.style.opacity = '0';
+      setTimeout(function () {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+        for (var i = 0; i < keptStyles.length; i++) {
+          if (keptStyles[i].parentNode) keptStyles[i].parentNode.removeChild(keptStyles[i]);
+        }
+        keptStyles = [];
+      }, 200);
+    };
+
+    // Hard safety net: only fires on catastrophic JS errors that prevent AppComponent from
+    // running its overlay-removal logic. Under normal operation the overlay is removed
+    // event-driven (no timeout) the moment the real CSR content becomes visible.
+    setTimeout(function () {
+      if (typeof window.__dspaceRemoveSsrOverlay === 'function') {
+        window.__dspaceRemoveSsrOverlay();
+      }
+    }, 15000);
+  } catch (e) {
+    // Don't let the overlay logic kill the page, but surface the failure so a silently-broken
+    // flicker fix is at least diagnosable in DevTools.
+    if (window.console && typeof console.warn === 'function') {
+      console.warn('[dspace-ssr-overlay] disabled due to error:', e);
+    }
+  }
+})();
+</script>
 </body>
 
 <!-- do not include client bundle, it is injected with Zone already loaded -->
