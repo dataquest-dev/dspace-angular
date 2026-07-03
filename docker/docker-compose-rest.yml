@@ -146,7 +146,7 @@ services:
       precreate-core suggestion /opt/solr/server/solr/configsets/suggestion
       cp -r /opt/solr/server/solr/configsets/suggestion/* suggestion
       chown -R solr:solr /var/solr
-      runuser -u solr -- solr-foreground
+      runuser -u solr -- env SOLR_HEAP="${SOLR_HEAP:-4g}" solr-foreground
 volumes:
   assetstore:
   pgdata:
