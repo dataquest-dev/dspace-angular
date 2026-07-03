@@ -75,12 +75,12 @@
             </div>
           </div>
           <div class="btn-group pe-1">
-            <button type="button" class="btn btn-warning" [dsBtnDisabled]="selectedLicense == null" (click)="openEditLicenseForm()">
+            <button type="button" class="btn btn-warning" [dsBtnDisabled]="!selectedLicense" (click)="openEditLicenseForm()">
               {{'clarin-license.button.edit-license' | translate}}
             </button>
           </div>
           <div class="btn-group pe-1">
-            <button type="button" class="btn btn-danger" [dsBtnDisabled]="selectedLicense == null" (click)="deleteLicense()">
+            <button type="button" class="btn btn-danger" [dsBtnDisabled]="!selectedLicense" (click)="deleteLicense()">
               {{'clarin-license.button.delete-license' | translate}}
             </button>
           </div>

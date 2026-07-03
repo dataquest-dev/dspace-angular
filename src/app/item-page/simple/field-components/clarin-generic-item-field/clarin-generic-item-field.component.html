@@ -58,8 +58,8 @@
                 }
               </span>
             }
-            <!-- loose equality: [type] is usually not bound, so `type` is undefined (v7 used `type == null`) -->
-        @if (type == null) {
+            <!-- [type] is usually not bound, so `type` is undefined here - render the plain-value branch -->
+            @if (!type) {
               <span class="pe-1">
                 {{mdValue.value | dsReplace: this.replaceCharacter}}@if (!last) {
                 <span [innerHTML]="separator"></span>

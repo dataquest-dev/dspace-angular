@@ -31,7 +31,7 @@
           [readonly]="true">
       </div>
     }
-    @if (resourceType == null) {
+    @if (!resourceType) {
       <div class="form-group">
         <label for="url">{{'handle-table.edit-handle.form-url-input-text' | translate}}</label>
         <input type="text" class="form-control" id="url" name="url"

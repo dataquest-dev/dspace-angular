@@ -1,6 +1,6 @@
 @if ((showAttributes | async) === true) {
   <div class="container" >
-    @if ((verificationToken$ | async) != null) {
+    @if (verificationToken$ | async) {
       <div>
         <h5 class="display-4">{{'clarin.autoregistration.welcome.message' | translate}} {{dspaceName$ | async}}</h5>
         <div class="alert alert-info" role="alert" style="width: 100%">
@@ -39,7 +39,7 @@
         </div>
       </div>
     }
-    @if ((verificationToken$ | async) == null) {
+    @if (((verificationToken$ | async) ?? null) === null) {
       <div>
         {{'clarin.autoregistration.token.not.valid.message' | translate}}
       </div>
