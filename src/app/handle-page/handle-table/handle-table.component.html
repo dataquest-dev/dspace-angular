@@ -11,10 +11,10 @@
             class="btn btn-outline-secondary dropdown-toggle"
             data-bs-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
-            @if (searchOption !== null) {
+            @if (searchOption != null) {
               <span>{{searchOption}}</span>
             }
-            @if (searchOption === null) {
+            @if (searchOption == null) {
               <span >{{'handle-table.dropdown.search-option' | translate}}</span>
             }
           </button>
@@ -114,12 +114,12 @@
                         {{handle?.handle}}
                       </td>
                       <td class="version-row-element-editor">
-                        @if (handle?.resourceTypeID === null) {
+                        @if (handle?.resourceTypeID == null) {
                           <span>
                             {{ 'handle-table.table.not-internal' | translate }}
                           </span>
                         }
-                        @if (handle?.resourceTypeID !== null) {
+                        @if (handle?.resourceTypeID != null) {
                           <span>
                             {{ 'handle-table.table.is-internal' | translate }}
                           </span>

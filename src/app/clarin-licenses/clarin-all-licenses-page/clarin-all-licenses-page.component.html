@@ -26,7 +26,7 @@
           </div>
           <div>
             <div><b>{{'clarin.license.all-page.extra-information' | translate}}</b></div>
-            @if (clarinLicense?.requiredInfo === null) {
+            @if (clarinLicense?.requiredInfo == null) {
               <span>{{'clarin.license.all-page.extra-information.default' | translate}}
               </span>
             }

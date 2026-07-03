@@ -1,12 +1,13 @@
 <div class="container">
-  @if (isReplaced !== null) {
+  <!-- loose equality: isReplaced is undefined when the metadata is absent (v7 used `!= null` / `== null`) -->
+  @if (isReplaced != null) {
     <ds-replaced-tombstone
       [itemName]="itemName"
       [isReplaced]="isReplaced"
       [authors]="authors">
     </ds-replaced-tombstone>
   }
-  @if (isReplaced === null) {
+  @if (isReplaced == null) {
     <ds-withdrawn-tombstone
       [itemName]="itemName"
       [reasonOfWithdrawal]="reasonOfWithdrawal"

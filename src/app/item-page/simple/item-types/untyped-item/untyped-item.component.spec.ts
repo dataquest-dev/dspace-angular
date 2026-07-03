@@ -47,7 +47,6 @@ import { SearchService } from '../../../../core/shared/search/search.service';
 import { UUIDService } from '../../../../core/shared/uuid.service';
 import { WorkspaceitemDataService } from '../../../../core/submission/workspaceitem-data.service';
 import { DsoEditMenuComponent } from '../../../../shared/dso-page/dso-edit-menu/dso-edit-menu.component';
-import { MetadataFieldWrapperComponent } from '../../../../shared/metadata-field-wrapper/metadata-field-wrapper.component';
 import { mockTruncatableService } from '../../../../shared/mocks/mock-trucatable.service';
 import { TranslateLoaderMock } from '../../../../shared/mocks/translate-loader.mock';
 import { NotificationsService } from '../../../../shared/notifications/notifications.service';
@@ -57,18 +56,15 @@ import { BrowseDefinitionDataServiceStub } from '../../../../shared/testing/brow
 import { createPaginatedList } from '../../../../shared/testing/utils.test';
 import { TruncatableService } from '../../../../shared/truncatable/truncatable.service';
 import { TruncatePipe } from '../../../../shared/utils/truncate.pipe';
-import { ThemedThumbnailComponent } from '../../../../thumbnail/themed-thumbnail.component';
-import { CollectionsComponent } from '../../../field-components/collections/collections.component';
+import { ClarinRefBoxComponent } from '../../../clarin-ref-box/clarin-ref-box.component';
 import { ThemedMediaViewerComponent } from '../../../media-viewer/themed-media-viewer.component';
 import { MiradorViewerComponent } from '../../../mirador-viewer/mirador-viewer.component';
 import { ItemVersionsSharedService } from '../../../versions/item-versions-shared.service';
-import { ThemedFileSectionComponent } from '../../field-components/file-section/themed-file-section.component';
-import { ItemPageAbstractFieldComponent } from '../../field-components/specific-field/abstract/item-page-abstract-field.component';
-import { ItemPageDateFieldComponent } from '../../field-components/specific-field/date/item-page-date-field.component';
+import { ViewsDownloadsStatisticsButtonComponent } from '../../../views-downloads-statistics-button/views-downloads-statistics-button.component';
+import { ClarinCollectionsItemFieldComponent } from '../../field-components/clarin-collections-item-field/clarin-collections-item-field.component';
+import { ClarinGenericItemFieldComponent } from '../../field-components/clarin-generic-item-field/clarin-generic-item-field.component';
 import { GenericItemPageFieldComponent } from '../../field-components/specific-field/generic/generic-item-page-field.component';
 import { ThemedItemPageTitleFieldComponent } from '../../field-components/specific-field/title/themed-item-page-field.component';
-import { ItemPageUriFieldComponent } from '../../field-components/specific-field/uri/item-page-uri-field.component';
-import { ThemedMetadataRepresentationListComponent } from '../../metadata-representation-list/themed-metadata-representation-list.component';
 import {
   createRelationshipsObservable,
   getIIIFEnabled,
@@ -145,16 +141,11 @@ describe('UntypedItemComponent', () => {
           MiradorViewerComponent,
           ThemedItemPageTitleFieldComponent,
           DsoEditMenuComponent,
-          MetadataFieldWrapperComponent,
-          ThemedThumbnailComponent,
           ThemedMediaViewerComponent,
-          ThemedFileSectionComponent,
-          ItemPageDateFieldComponent,
-          ThemedMetadataRepresentationListComponent,
-          GenericItemPageFieldComponent,
-          ItemPageAbstractFieldComponent,
-          ItemPageUriFieldComponent,
-          CollectionsComponent,
+          ClarinRefBoxComponent,
+          ClarinGenericItemFieldComponent,
+          ClarinCollectionsItemFieldComponent,
+          ViewsDownloadsStatisticsButtonComponent,
         ],
       },
     });
@@ -169,9 +160,14 @@ describe('UntypedItemComponent', () => {
       fixture.detectChanges();
     }));
 
-    it('should contain a component to display the date', () => {
-      const fields = fixture.debugElement.queryAll(By.css('ds-item-page-date-field'));
-      expect(fields.length).toBeGreaterThanOrEqual(1);
+    it('should contain the clarin citation box', () => {
+      const fields = fixture.debugElement.queryAll(By.css('ds-clarin-ref-box'));
+      expect(fields.length).toBe(1);
+    });
+
+    it('should contain clarin generic item fields for the metadata (date, uri, description, ...)', () => {
+      const fields = fixture.debugElement.queryAll(By.css('ds-clarin-generic-item-field'));
+      expect(fields.length).toBeGreaterThanOrEqual(10);
     });
 
     it('should not contain a metadata only author field', () => {
@@ -179,23 +175,8 @@ describe('UntypedItemComponent', () => {
       expect(fields.length).toBe(0);
     });
 
-    it('should contain a mixed metadata and relationship field for authors', () => {
-      const fields = fixture.debugElement.queryAll(By.css('.ds-item-page-mixed-author-field'));
-      expect(fields.length).toBe(1);
-    });
-
-    it('should contain a component to display the abstract', () => {
-      const fields = fixture.debugElement.queryAll(By.css('ds-item-page-abstract-field'));
-      expect(fields.length).toBeGreaterThanOrEqual(1);
-    });
-
-    it('should contain a component to display the uri', () => {
-      const fields = fixture.debugElement.queryAll(By.css('ds-item-page-uri-field'));
-      expect(fields.length).toBeGreaterThanOrEqual(1);
-    });
-
     it('should contain a component to display the collections', () => {
-      const fields = fixture.debugElement.queryAll(By.css('ds-item-page-collections'));
+      const fields = fixture.debugElement.queryAll(By.css('ds-clarin-collections-item-field'));
       expect(fields.length).toBeGreaterThanOrEqual(1);
     });
 
