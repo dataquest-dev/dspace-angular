@@ -1,8 +1,24 @@
+@import '../simple/item-page.component.scss';
 :host {
     div.simple-view-link {
-        text-align: center;
+        text-align: left;
         a {
             min-width: 25%;
         }
     }
+}
+// WCAG 1.4.1: Links must be distinguishable by more than color alone (ported from the v7 fork)
+.full-item-info ::ng-deep a:not(.btn):not(.fab):not(.fas):not(.far):not(.badge):not(.nav-link):not(.dropdown-item) {
+  font-weight: 600;
+  font-style: italic;
+}
+
+.full-item-info ::ng-deep a:not(.btn):not(.fab):not(.fas):not(.far):not(.badge):not(.nav-link):not(.dropdown-item):hover,
+.full-item-info ::ng-deep a:not(.btn):not(.fab):not(.fas):not(.far):not(.badge):not(.nav-link):not(.dropdown-item):focus {
+  text-decoration-thickness: 0.08em;
+}
+
+.full-item-info ::ng-deep a:focus-visible {
+  outline: 2px solid #{$primary};
+  outline-offset: 2px;
 }

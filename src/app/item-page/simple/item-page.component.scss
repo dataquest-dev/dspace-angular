@@ -5,3 +5,44 @@
   }
 }
 
+
+/* CLARIN/LINDAT item page card (ported from the v7 fork) */
+.clarin-home-page-borders {
+  border-left: 1px solid silver;
+  border-right: 1px solid silver;
+}
+
+.clarin-shadow {
+  box-shadow: 8px 0px 8px -7px rgb(0 0 0 / 8%), -8px 0px 8px -7px rgb(0 0 0 / 8%);
+}
+
+.clarin-cut-bottom-2 {
+  margin-bottom: -18px;
+}
+
+.clarin-cut-top-1 {
+  margin-top: -16px;
+  padding-top: 16px;
+}
+
+.clarin-item-page-field {
+  border-bottom: 1px dotted #f8f8f8;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+// WCAG 1.4.1: Links must be distinguishable by more than color alone
+.item-page ::ng-deep a:not(.btn):not(.badge):not(.nav-link):not(.dropdown-item):not(.fab):not(.fas):not(.far) {
+  font-weight: 600;
+  font-style: italic;
+}
+
+.item-page ::ng-deep a:not(.btn):not(.badge):not(.nav-link):not(.dropdown-item):not(.fab):not(.fas):not(.far):hover,
+.item-page ::ng-deep a:not(.btn):not(.badge):not(.nav-link):not(.dropdown-item):not(.fab):not(.fas):not(.far):focus {
+  text-decoration-thickness: 0.08em;
+}
+
+.item-page ::ng-deep a:focus-visible {
+  outline: 2px solid #{$primary};
+  outline-offset: 2px;
+}

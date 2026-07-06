@@ -28,6 +28,34 @@ $h6-font-size: $font-size-base !default;
 
 $enable-shadows: true !default;
 
+/*** GRID (CLARIN/LINDAT production parity) ***/
+
+// Bootstrap 5 added the xxl container tier (1320px); the LINDAT UI was designed for
+// Bootstrap 4's 1140px maximum. Cap xxl so wide screens keep the production layout.
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1140px
+) !default;
+
+// Bootstrap 4 input border (Bootstrap 5 lightened it to $gray-300 #dee2e6)
+$input-border-color: #ced4da !default;
+
+// Bootstrap 4 densities (Bootstrap 5 shrank these; the LINDAT UI uses the v4 metrics)
+$list-group-item-padding-y: .75rem !default;
+$list-group-item-padding-x: 1.25rem !default;
+$table-cell-padding-y: .75rem !default;
+$table-cell-padding-x: .75rem !default;
+$card-spacer-y: 1.25rem !default;
+$card-spacer-x: 1.25rem !default;
+$card-border-color: rgba(0, 0, 0, .125) !default;
+$grid-gutter-width: 1.875rem !default;
+$alert-padding-y: .75rem !default;
+$alert-padding-x: 1.25rem !default;
+$breadcrumb-padding-x: .25rem !default;
+
 
 /*** SEMANTIC COLOR SCHEME ***/
 

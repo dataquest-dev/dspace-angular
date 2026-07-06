@@ -1,4 +1,4 @@
-<div class="container" *ngVar="(itemRD$ | async) as itemRD">
+<div class="container clarin-shadow clarin-home-page-borders clarin-cut-bottom-2 clarin-cut-top-1 pb-2" *ngVar="(itemRD$ | async) as itemRD">
   @if (itemRD?.hasSucceeded) {
     <div class="item-page" @fadeInOut>
       @if (itemRD?.payload; as item) {

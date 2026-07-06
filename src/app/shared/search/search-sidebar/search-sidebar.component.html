@@ -15,7 +15,7 @@
     (changeViewMode)="changeViewMode.emit($event)"></ds-view-mode-switch>
   }
   <div class="sidebar-content">
-    @if (configurationList) {
+    @if (configurationList?.length > 1) {
       <ds-search-switch-configuration
         [configurationList]="configurationList"
         [defaultConfiguration]="configuration"

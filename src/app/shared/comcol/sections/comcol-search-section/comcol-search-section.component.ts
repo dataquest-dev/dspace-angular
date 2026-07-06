@@ -18,10 +18,11 @@ import {
 import { RemoteData } from '../../../../core/data/remote-data';
 import { Collection } from '../../../../core/shared/collection.model';
 import { Community } from '../../../../core/shared/community.model';
-import { SearchConfigurationService } from '../../../../core/shared/search/search-configuration.service';
+import { Context } from '../../../../core/shared/context.model';
 import { SEARCH_CONFIG_SERVICE } from '../../../../my-dspace-page/my-dspace-configuration.service';
 import { hasValue } from '../../../empty.util';
 import { ThemedSearchComponent } from '../../../search/themed-search.component';
+import { ComcolSearchSectionConfigurationService } from './comcol-search-section-configuration.service';
 
 /**
  * The search tab on community & collection pages
@@ -33,7 +34,7 @@ import { ThemedSearchComponent } from '../../../search/themed-search.component';
   providers: [
     {
       provide: SEARCH_CONFIG_SERVICE,
-      useClass: SearchConfigurationService,
+      useClass: ComcolSearchSectionConfigurationService,
     },
   ],
   imports: [
@@ -42,6 +43,9 @@ import { ThemedSearchComponent } from '../../../search/themed-search.component';
   ],
 })
 export class ComcolSearchSectionComponent implements OnInit {
+
+  protected readonly comcolContext = Context.Any;
+
 
   comcol$: Observable<Community | Collection>;
 

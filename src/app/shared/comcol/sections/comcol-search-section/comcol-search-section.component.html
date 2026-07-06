@@ -1,5 +1,10 @@
+<!-- CLARIN/LINDAT (production parity): the comcol landing is a plain item list - no search
+     form or 'Search Results' heading, and items render with the standard list element
+     (context Any) instead of the search-page CLARIN boxes -->
 <ds-search
   [configuration]="(comcol$ | async)?.type"
+  [context]="comcolContext"
+  [searchEnabled]="false"
   [showSidebar]="showSidebar$ | async"
   [showScopeSelector]="false"
   [hideScopeInUrl]="true"

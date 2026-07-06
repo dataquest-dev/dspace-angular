@@ -89,6 +89,12 @@ export const ROUTES: Route[] = [
             path: '',
             pathMatch: 'full',
             component: ComcolSearchSectionComponent,
+            // CLARIN/LINDAT: the collection landing (Recent Submissions); keep the inherited
+            // breadcrumb trail visible (a leaf without breadcrumb data hides the whole bar)
+            data: {
+              enableRSS: true,
+              showBreadcrumbs: true,
+            },
           },
           {
             path: 'search',
@@ -114,6 +120,7 @@ export const ROUTES: Route[] = [
             data: {
               breadcrumbKey: 'browse.metadata',
               menuRoute: MenuRoute.COLLECTION_PAGE,
+              enableRSS: true,
             },
           },
         ],
