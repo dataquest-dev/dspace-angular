@@ -28,10 +28,11 @@ describe('My DSpace page', () => {
 
     cy.get('ds-my-dspace-page').should('be.visible');
 
-    // Click button in sidebar to display detailed view
-    cy.get('ds-search-sidebar [data-test="detail-view"]').click();
-
-    cy.get('ds-object-detail').should('be.visible');
+    // NOTE (CLARIN/LINDAT): the view-mode switch is hidden everywhere (results are list-only,
+    // as on production), so there is no detailed-view button to click - same adaptation as the
+    // v7 fork's my-dspace spec.
+    // cy.get('ds-search-sidebar [data-test="detail-view"]').click();
+    // cy.get('ds-object-detail').should('be.visible');
 
     // Analyze <ds-my-dspace-page> for accessibility issues
     testA11y('ds-my-dspace-page');
