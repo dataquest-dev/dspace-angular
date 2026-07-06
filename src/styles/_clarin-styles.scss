@@ -82,3 +82,10 @@ ds-themed-home-page ds-search-form {
 ds-rss.override-css div {
   margin-right: 0 !important;
 }
+
+/* Production (v7/BS4) containers have 1rem side padding; Bootstrap 5 computes 12px
+   from its gutter var. Measured on lindat.mff.cuni.cz: container 16px, breadcrumb 16px. */
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}

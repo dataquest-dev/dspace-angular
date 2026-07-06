@@ -7,8 +7,9 @@
   padding-bottom: calc(var(--ds-content-spacing) / 2);
   padding-top: calc(var(--ds-content-spacing) / 2);
   background-color: var(--ds-breadcrumb-bg) !important;
-  padding-left: calc(var(--bs-spacer) *.75);
-  padding-right: calc(var(--bs-spacer) *.75);
+  /* production (v7) breadcrumb side padding is a full spacer (16px) */
+  padding-left: var(--bs-spacer);
+  padding-right: var(--bs-spacer);
 }
 
 li.breadcrumb-item {
