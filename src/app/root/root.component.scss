@@ -14,3 +14,31 @@
     top: 0;
   }
 }
+
+// Admin-sidebar left gutter. Driven by the `ds-admin-sidebar-*` class set in root.component.html (from
+// sidebarPaddingState$) rather than the @slideSidebarPadding Angular animation. The animation needed a
+// concrete width from the browser-only CSS-variable store, so on the server it rendered padding-left:0
+// and the authenticated page jumped right when the anti-flicker SSR snapshot was removed. Resolving the
+// gutter from the sidebar-width custom properties in CSS instead renders identically on the server
+// (snapshot) and the browser (live app) — no hardcoded px, theme- and viewport-aware — and the
+// transition keeps the pin/unpin slide. 'hidden' (no admin sidebar) keeps the default padding-left: 0.
+.outer-wrapper {
+  // padding-left:0 (no admin sidebar); explicit for self-documentation.
+  &.ds-admin-sidebar-hidden {
+    padding-left: 0;
+  }
+
+  &.ds-admin-sidebar-unpinned {
+    padding-left: var(--ds-collapsed-sidebar-width);
+  }
+
+  &.ds-admin-sidebar-pinned {
+    padding-left: var(--ds-total-sidebar-width);
+  }
+
+  // Slide only genuine pin/unpin toggles. The class is added after first paint (gutterTransitionEnabled)
+  // so the initial SSR->CSR gutter resolution behind the anti-flicker overlay never animates.
+  &.ds-admin-sidebar-animate {
+    transition: padding-left 300ms ease-in-out;
+  }
+}
