@@ -74,6 +74,11 @@ export class ItemPageCitationFieldComponent implements OnInit {
     if (!citaceProBaseUrl || !universityUsingDspace || !this.handle) {
       return null;
     }
+    // Only http(s) bases may bypass Angular's resource-URL sanitization;
+    // anything else (javascript:, data:, ...) must not be trusted as iframe src.
+    if (!/^https?:\/\//i.test(citaceProBaseUrl)) {
+      return null;
+    }
     const url = `${citaceProBaseUrl}:${universityUsingDspace}:${this.handle}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
