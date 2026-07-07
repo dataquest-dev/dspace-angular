@@ -94,6 +94,7 @@ export const ROUTES: Route[] = [
             data: {
               enableRSS: true,
               showBreadcrumbs: true,
+              searchEnabled: false,
             },
           },
           {
@@ -107,6 +108,7 @@ export const ROUTES: Route[] = [
               breadcrumbKey: 'collection.search',
               menuRoute: MenuRoute.COLLECTION_PAGE,
               enableRSS: true,
+              searchEnabled: true,
             },
           },
           {

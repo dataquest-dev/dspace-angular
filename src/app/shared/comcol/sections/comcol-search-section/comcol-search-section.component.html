@@ -1,10 +1,11 @@
 <!-- CLARIN/LINDAT (production parity): the comcol landing is a plain item list - no search
      form or 'Search Results' heading, and items render with the standard list element
-     (context Any) instead of the search-page CLARIN boxes -->
+     (context Any) instead of the search-page CLARIN boxes. The explicit /search sub-route
+     keeps the query box (searchEnabled route data). -->
 <ds-search
   [configuration]="(comcol$ | async)?.type"
   [context]="comcolContext"
-  [searchEnabled]="false"
+  [searchEnabled]="(searchEnabled$ | async) === true"
   [showSidebar]="showSidebar$ | async"
   [showScopeSelector]="false"
   [hideScopeInUrl]="true"

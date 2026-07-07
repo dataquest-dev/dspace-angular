@@ -82,6 +82,7 @@ export const ROUTES: Route[] = [
             data: {
               enableRSS: true,
               showBreadcrumbs: true,
+              searchEnabled: false,
             },
           },
           {
@@ -95,6 +96,7 @@ export const ROUTES: Route[] = [
               breadcrumbKey: 'community.search',
               menuRoute: MenuRoute.COMMUNITY_PAGE,
               enableRSS: true,
+              searchEnabled: true,
             },
           },
           {

@@ -51,6 +51,12 @@ export class ComcolSearchSectionComponent implements OnInit {
 
   showSidebar$: Observable<boolean>;
 
+  /**
+   * CLARIN/LINDAT: the landing tab is a plain list (no search form), but the explicit
+   * /search sub-route keeps the query box - driven by the route's searchEnabled data flag.
+   */
+  searchEnabled$: Observable<boolean>;
+
   constructor(
     @Inject(APP_CONFIG) public appConfig: AppConfig,
     protected route: ActivatedRoute,
@@ -63,6 +69,9 @@ export class ComcolSearchSectionComponent implements OnInit {
     );
     this.showSidebar$ = this.comcol$.pipe(
       map((comcol: Community | Collection) => hasValue(comcol) && this.appConfig[comcol.type as any].searchSection.showSidebar),
+    );
+    this.searchEnabled$ = this.route.data.pipe(
+      map((data: Data) => data.searchEnabled === true),
     );
   }
 
