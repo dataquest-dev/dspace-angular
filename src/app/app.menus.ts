@@ -11,6 +11,7 @@ import { MenuRoute } from './shared/menu/menu-route.model';
 import { AccessControlMenuProvider } from './shared/menu/providers/access-control.menu';
 import { AdminSearchMenuProvider } from './shared/menu/providers/admin-search.menu';
 import { BrowseMenuProvider } from './shared/menu/providers/browse.menu';
+import { ClarinAdminMenuProvider } from './shared/menu/providers/clarin-admin.menu';
 import { CoarNotifyMenuProvider } from './shared/menu/providers/coar-notify.menu';
 import { SubscribeMenuProvider } from './shared/menu/providers/comcol-subscribe.menu';
 import { CommunityListMenuProvider } from './shared/menu/providers/community-list.menu';
@@ -72,6 +73,8 @@ export const MENUS = buildMenuStructure({
     HealthMenuProvider,
     SystemWideAlertMenuProvider,
     CoarNotifyMenuProvider,
+    // CLARIN/LINDAT: handle table, ePIC handles, license administration
+    ClarinAdminMenuProvider,
   ],
   [MenuID.DSO_EDIT]: [
     DsoOptionMenuProvider.withSubs([
