@@ -82,6 +82,9 @@ export class EPersonDeleteGuardService {
 
   /**
    * Whether the backend rejected the delete because an admin tried to delete themselves.
+   * Best-effort only: Spring Boot omits the exception message from the response body by
+   * default, so callers should treat this as a fallback alongside a client-side identity
+   * check rather than the sole signal.
    */
   isSelfDeletionError(restResponse: RemoteData<NoContent> | null): boolean {
     return restResponse?.statusCode === 400 && restResponse?.errorMessage?.toLowerCase().includes('cannot delete yourself');

@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Observable, of as observableOf, throwError as observableThrowError } from 'rxjs';
+import { defer, Observable, of as observableOf, throwError as observableThrowError } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
@@ -381,6 +381,27 @@ describe('EPeopleRegistryComponent', () => {
 
       expect(modalService.open).not.toHaveBeenCalled();
       expect(deleteSpy).not.toHaveBeenCalled();
+    }));
+
+    it('should still show the friendly self-delete notification if the authenticated user id resolves late and the backend rejection carries no usable message', fakeAsync(() => {
+      // Simulates the authenticated-user subscription resolving after the click (so the
+      // pre-flight self-delete check is bypassed) combined with a backend response whose error
+      // message can't be pattern-matched (e.g. Spring Boot's default message suppression).
+      // The self-delete notification must still win over the generic failure one.
+      modalRef.componentInstance.response = observableOf(true);
+      component.currentAuthenticatedUserId = EPersonMock.id;
+      ePersonDataServiceStub.deleteEPerson = jasmine.createSpy('deleteEPerson').and.returnValue(defer(() => {
+        component.currentAuthenticatedUserId = EPersonMock2.id;
+        return createFailedRemoteDataObject$(undefined, 400);
+      }));
+
+      component.deleteEPerson(EPersonMock2);
+      tick();
+
+      expect(notificationsService.error).toHaveBeenCalled();
+      let translatedKey: string;
+      notificationsService.error.calls.mostRecent().args[0].subscribe((value) => translatedKey = value);
+      expect(translatedKey).toBe('admin.access-control.epeople.notification.deleted.forbidden.self');
     }));
   });
 

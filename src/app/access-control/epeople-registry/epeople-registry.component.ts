@@ -224,7 +224,7 @@ export class EPeopleRegistryComponent implements OnInit, OnDestroy {
             this.epersonService.deleteEPerson(ePerson).pipe(getFirstCompletedRemoteData()).subscribe((restResponse: RemoteData<NoContent>) => {
               if (restResponse.hasSucceeded) {
                 this.notificationsService.success(this.translateService.get(this.labelPrefix + 'notification.deleted.success', {name: this.dsoNameService.getName(ePerson)}));
-              } else if (this.deleteGuard.isSelfDeletionError(restResponse)) {
+              } else if (this.isCurrentUser(ePerson) || this.deleteGuard.isSelfDeletionError(restResponse)) {
                 this.deleteGuard.showSelfDeleteNotification();
               } else {
                 this.notificationsService.error(this.translateService.get(this.labelPrefix + 'notification.deleted.failure', {
