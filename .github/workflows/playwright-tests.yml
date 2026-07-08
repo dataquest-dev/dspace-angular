@@ -20,7 +20,7 @@ jobs:
         working-directory: dspace-ui-tests/scripts
         env:
           HOME_URL: http://dev-5.pc:84/
-          NAME: ZCU
+          NAME: ZCU-PUB
         run: |
           ./test.sh
       - uses: mazoea/ga-maz/end@master
