@@ -21,6 +21,7 @@ jobs:
         env:
           HOME_URL: http://dev-5.pc:86/
           NAME: TUL
+          PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
         run: |
           ./test.sh
       - uses: mazoea/ga-maz/end@master
