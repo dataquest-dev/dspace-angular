@@ -16,20 +16,12 @@ jobs:
           path: dspace-ui-tests
           token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
-      - name: Checkout main repository
-        uses: actions/checkout@v4
-        with:
-          path: this-repository
-
-      - name: Copy customer config to UI tests repository for merging
-        run: |
-          cp this-repository/config/config.uk.ui.tests.json dspace-ui-tests/customer-constants/
-
       - name: test
         working-directory: dspace-ui-tests/scripts
         env:
           HOME_URL: http://dev-5.pc:82/
           NAME: UK
+          PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
         run: |
           ./test.sh
 
