@@ -28,7 +28,7 @@ jobs:
       - name: test
         working-directory: dspace-ui-tests/scripts
         env:
-          HOME_URL: https://dev-6.pc:8593/
+          HOME_URL: http://dev-6.pc:8593/
           NAME: JCU
         run: |
           ./test.sh
