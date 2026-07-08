@@ -21,6 +21,7 @@ jobs:
         env:
           HOME_URL: https://dev-6.pc:8593/
           NAME: JCU
+          PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
         run: |
           ./test.sh
 
