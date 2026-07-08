@@ -21,6 +21,7 @@ jobs:
         env:
           HOME_URL: http://dev-5.pc:82/
           NAME: UK
+          PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
         run: |
           ./test.sh
 
