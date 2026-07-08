@@ -20,7 +20,8 @@ describe('SearchConfigurationService', () => {
   const prefixFilter = {
     'f.author': ['another value'],
     'f.date.min': ['2013'],
-    'f.date.max': ['2018']
+    'f.date.max': ['2018'],
+    'f.subject': ['some subject,contains']
   };
   const defaults = new PaginatedSearchOptions({
     pagination: Object.assign(new PaginationComponentOptions(), { id: 'page-id', currentPage: 1, pageSize: 20 }),
@@ -32,7 +33,9 @@ describe('SearchConfigurationService', () => {
 
   const backendFilters = [
     new SearchFilter('f.author', ['another value'], 'equals'),
-    new SearchFilter('f.date', ['[2013 TO 2018]'], 'equals')
+    new SearchFilter('f.date', ['[2013 TO 2018]'], 'equals'),
+    // value already carries an operator suffix -> operator must stay unset (not overridden to equals)
+    new SearchFilter('f.subject', ['some subject,contains'])
   ];
 
   const routeService = jasmine.createSpyObj('RouteService', {
