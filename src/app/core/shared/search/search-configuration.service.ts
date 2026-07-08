@@ -196,7 +196,11 @@ export class SearchConfigurationService implements OnDestroy {
               filters.push(new SearchFilter(realKey, ['[' + min + ' TO ' + max + ']'], 'equals'));
             }
           } else {
-            filters.push(new SearchFilter(key, filterParams[key]));
+            // Default to the "equals" operator when a filter value carries none (e.g. a legacy or
+            // crawled URL like "f.subject=foo" instead of "f.subject=foo,equals"). Without this the
+            // backend rejects the operator-less filter with HTTP 422. Values that already embed an
+            // operator (contain a comma) keep it - see SearchOptions.toRestUrl. dspace-customers#781.
+            filters.push(new SearchFilter(key, filterParams[key], 'equals'));
           }
         });
         return filters;

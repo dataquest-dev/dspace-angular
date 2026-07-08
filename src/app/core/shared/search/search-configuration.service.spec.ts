@@ -31,7 +31,7 @@ describe('SearchConfigurationService', () => {
   });
 
   const backendFilters = [
-    new SearchFilter('f.author', ['another value']),
+    new SearchFilter('f.author', ['another value'], 'equals'),
     new SearchFilter('f.date', ['[2013 TO 2018]'], 'equals')
   ];
 
