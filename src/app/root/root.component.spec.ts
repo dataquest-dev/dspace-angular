@@ -74,4 +74,13 @@ describe('RootComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // The SSR anti-flicker overlay (src/index.html) is removed event-driven only once
+  // AppComponent.dsAppHasRenderedContent() sees dsApp.querySelector('#main-content') (see
+  // src/app/app.component.ts). If the root template ever drops this id again (as it silently did
+  // on TUL, leaving the overlay to be removed only by the 10s settle cap on every hard reload -> a
+  // frozen, "unresponsive" page), this test fails instead of the regression reaching production.
+  it('renders the #main-content landmark required by the SSR overlay reveal', () => {
+    expect(fixture.nativeElement.querySelector('main#main-content')).not.toBeNull();
+  });
 });
