@@ -1,4 +1,4 @@
-import { Observable, of as observableOf, throwError as observableThrowError } from 'rxjs';
+import { defer, Observable, of as observableOf, throwError as observableThrowError } from 'rxjs';
 import { FeatureID } from '../../../core/data/feature-authorization/feature-id';
 import { EPersonDeleteGuardService } from '../eperson-delete-guard.service';
 import { CommonModule } from '@angular/common';
@@ -609,6 +609,21 @@ describe('EPersonFormComponent', () => {
 
       expect(modalService.open).not.toHaveBeenCalled();
       expect(deleteSpy).not.toHaveBeenCalled();
+    });
+
+    it('should still show the friendly self-delete notification if the authenticated user id resolves late and the backend rejection carries no usable message', () => {
+      spyOn(component.epersonService, 'deleteEPerson').and.returnValue(defer(() => {
+        component.currentAuthenticatedUserId = eperson.id;
+        return createFailedRemoteDataObject$(undefined, 400);
+      }));
+
+      const deleteButton = fixture.debugElement.query(By.css('.delete-button'));
+      deleteButton.triggerEventHandler('click', null);
+
+      expect(notificationsService.error).toHaveBeenCalled();
+      let translatedKey: string;
+      notificationsService.error.calls.mostRecent().args[0].subscribe((value) => translatedKey = value);
+      expect(translatedKey).toBe('admin.access-control.epeople.notification.deleted.forbidden.self');
     });
   });
 
