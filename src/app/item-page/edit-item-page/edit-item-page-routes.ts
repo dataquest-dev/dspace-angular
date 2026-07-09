@@ -23,6 +23,7 @@ import { ItemBitstreamsComponent } from './item-bitstreams/item-bitstreams.compo
 import { ItemCollectionMapperComponent } from './item-collection-mapper/item-collection-mapper.component';
 import { ItemCurateComponent } from './item-curate/item-curate.component';
 import { ItemDeleteComponent } from './item-delete/item-delete.component';
+import { ItemLicenseMapperComponent } from './item-license-mapper/item-license-mapper.component';
 import { ItemMoveComponent } from './item-move/item-move.component';
 import { itemPageAccessControlGuard } from './item-page-access-control.guard';
 import { itemPageBitstreamsGuard } from './item-page-bitstreams.guard';
@@ -30,6 +31,7 @@ import { itemPageCollectionMapperGuard } from './item-page-collection-mapper.gua
 import { itemPageCurateGuard } from './item-page-curate.guard';
 import { itemPageDeleteGuard } from './item-page-delete.guard';
 import { itemPageEditAuthorizationsGuard } from './item-page-edit-authorizations.guard';
+import { itemPageLicenseMapperGuard } from './item-page-license-mapper.guard';
 import { itemPageMetadataGuard } from './item-page-metadata.guard';
 import { itemPageMoveGuard } from './item-page-move.guard';
 import { itemPagePrivateGuard } from './item-page-private.guard';
@@ -128,6 +130,12 @@ export const ROUTES: Route[] = [
             component: ItemCollectionMapperComponent,
             data: { title: 'item.edit.tabs.item-mapper.title', showBreadcrumbs: true },
             canActivate: [itemPageCollectionMapperGuard],
+          },
+          {
+            path: 'license',
+            component: ItemLicenseMapperComponent,
+            data: { title: 'item.edit.tabs.license.title', showBreadcrumbs: true },
+            canActivate: [itemPageLicenseMapperGuard],
           },
         ],
       },

@@ -65,6 +65,7 @@ import { DefineLicenseLabelFormComponent } from './modal/define-license-label-fo
     PaginationComponent,
     ThemedLoadingComponent,
     TranslateModule, VarDirective],
+  providers: [NgbActiveModal],
   selector: 'ds-clarin-license-table',
   templateUrl: './clarin-license-table.component.html',
   styleUrls: ['./clarin-license-table.component.scss'],

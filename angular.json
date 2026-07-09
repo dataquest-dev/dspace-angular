@@ -40,6 +40,7 @@
             "aot": true,
             "assets": [
               "src/assets",
+              "src/static-files",
               "src/robots.txt",
               {
                 "glob": "**/*",
@@ -155,7 +156,8 @@
               "vendor": false
             },
             "assets": [
-              "src/assets"
+              "src/assets",
+              "src/static-files"
             ],
             "styles": [
               {

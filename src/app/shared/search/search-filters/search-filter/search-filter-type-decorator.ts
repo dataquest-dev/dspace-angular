@@ -15,6 +15,7 @@ filterTypeMap.set(FilterType.authority, SearchAuthorityFilterComponent);
 filterTypeMap.set(FilterType.boolean, SearchBooleanFilterComponent);
 filterTypeMap.set(FilterType.hierarchy, SearchHierarchyFilterComponent);
 filterTypeMap.set(FilterType.range, SearchRangeFilterComponent);
+filterTypeMap.set(FilterType.isoLanguage, SearchTextFilterComponent);
 
 /**
  * Sets the mapping for a facet component in relation to a filter type

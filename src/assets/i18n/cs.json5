@@ -420,6 +420,9 @@
   // "admin.access-control.epeople.search.head": "Search",
   "admin.access-control.epeople.search.head": "Hledat",
 
+  // "admin.access-control.epeople.search.input": "Search input",
+  "admin.access-control.epeople.search.input": "Vyhledávací vstup",
+
   // "admin.access-control.epeople.button.see-all": "Browse All",
   "admin.access-control.epeople.button.see-all": "Procházet vše",
 
@@ -435,11 +438,17 @@
   // "admin.access-control.epeople.search.placeholder": "Search people...",
   "admin.access-control.epeople.search.placeholder": "Hledat uživatele...",
 
+  // "admin.access-control.epeople.search.scope": "Search scope",
+  "admin.access-control.epeople.search.scope": "Rozsah vyhledávání",
+
   // "admin.access-control.epeople.button.add": "Add EPerson",
   "admin.access-control.epeople.button.add": "Přidat uživatele",
 
   // "admin.access-control.epeople.table.id": "ID",
   "admin.access-control.epeople.table.id": "ID",
+
+  // "admin.access-control.epeople.table.lastActive": "Last time active",
+  "admin.access-control.epeople.table.lastActive": "Naposledy aktivní",
 
   // "admin.access-control.epeople.table.name": "Name",
   "admin.access-control.epeople.table.name": "Jméno",
@@ -576,6 +585,9 @@
   // "admin.access-control.groups.search.head": "Search groups",
   "admin.access-control.groups.search.head": "Hledat skupiny",
 
+  // "admin.access-control.groups.search.input": "Search input",
+  "admin.access-control.groups.search.input": "Vyhledávací vstup",
+
   // "admin.access-control.groups.button.see-all": "Browse all",
   "admin.access-control.groups.button.see-all": "Procházet vše",
 
@@ -687,6 +699,9 @@
   // "admin.access-control.groups.form.members-list.search.head": "Add EPeople",
   "admin.access-control.groups.form.members-list.search.head": "Přidat uživatele",
 
+  // "admin.access-control.groups.form.members-list.search.input": "Search input",
+  "admin.access-control.groups.form.members-list.search.input": "Vyhledávací vstup",
+
   // "admin.access-control.groups.form.members-list.button.see-all": "Browse All",
   "admin.access-control.groups.form.members-list.button.see-all": "Procházet vše",
 
@@ -749,6 +764,9 @@
 
   // "admin.access-control.groups.form.subgroups-list.search.head": "Add Subgroup",
   "admin.access-control.groups.form.subgroups-list.search.head": "Přidat podskupinu",
+
+  // "admin.access-control.groups.form.subgroups-list.search.input": "Search input",
+  "admin.access-control.groups.form.subgroups-list.search.input": "Vyhledávací vstup",
 
   // "admin.access-control.groups.form.subgroups-list.button.see-all": "Browse All",
   "admin.access-control.groups.form.subgroups-list.button.see-all": "Procházet vše",
@@ -1359,6 +1377,24 @@
   // "auth.messages.token-refresh-failed": "Refreshing your session token failed. Please log in again.",
   "auth.messages.token-refresh-failed": "Nepodařilo se obnovit váš přístupový token. Prosím, přihlaste se znovu.",
 
+  // "autocomplete.suggestion.language.iso": "ISO",
+  "autocomplete.suggestion.language.iso": "Kód",
+
+  // "autocomplete.suggestion.language.title": "Language",
+  "autocomplete.suggestion.language.title": "Jazyk",
+
+  // "autocomplete.suggestion.sponsor.empty": "N/A",
+  "autocomplete.suggestion.sponsor.empty": "nepoužitelné",
+
+  // "autocomplete.suggestion.sponsor.eu": "EU",
+  "autocomplete.suggestion.sponsor.eu": "EU",
+
+  // "autocomplete.suggestion.sponsor.funding-code": "Funding code",
+  "autocomplete.suggestion.sponsor.funding-code": "Kód financování",
+
+  // "autocomplete.suggestion.sponsor.project-name": "Project name",
+  "autocomplete.suggestion.sponsor.project-name": "Název projektu",
+
   // "bitstream.download.page": "Now downloading {{bitstream}}...",
   "bitstream.download.page": "Nyní se stahuje {{bitstream}}...",
 
@@ -1536,6 +1572,9 @@
   // "browse.comcol.by.dateissued": "By Issue Date",
   "browse.comcol.by.dateissued": "Podle data vydání",
 
+  // "browse.comcol.by.language": "By Language",
+  "browse.comcol.by.language": "Podle jazyka",
+
   // "browse.comcol.by.subject": "By Subject",
   "browse.comcol.by.subject": "Podle předmětu",
 
@@ -1575,6 +1614,12 @@
 
   // "browse.metadata.dateissued.breadcrumbs": "Browse by Date",
   "browse.metadata.dateissued.breadcrumbs": "Procházet podle data vydání",
+
+  // "browse.metadata.language": "Language",
+  "browse.metadata.language": "Jazyk",
+
+  // "browse.metadata.language.breadcrumbs": "Browse by Language",
+  "browse.metadata.language.breadcrumbs": "Procházet podle jazyka",
 
   // "browse.metadata.subject.breadcrumbs": "Browse by Subject",
   "browse.metadata.subject.breadcrumbs": "Procházet podle předmětu",
@@ -1702,8 +1747,38 @@
   // TODO New key - Add a translation
   "browse.taxonomy.show_previous_results": "Show previous results",
 
+  // "browse.taxonomy_srsc.title": "Browsing by Subject Category",
+  "browse.taxonomy_srsc.title": "Prohlížení podle kategorií předmětů",
+
   // "browse.title.page": "Browsing by {{ field }} {{ value }}",
   "browse.title.page": "Procházet podle {{ field }} {{ value }}",
+
+  // "change.submitter.breadcrumbs": "Change submitter",
+  "change.submitter.breadcrumbs": "Změna předkladatele",
+
+  // "change.submitter.page.button.take-it": "Take it",
+  "change.submitter.page.button.take-it": "Převzít",
+
+  // "change.submitter.page.cannot.see.submitter.message": "You do not have permission to see submitter information.",
+  "change.submitter.page.cannot.see.submitter.message": "Nemáte oprávnění k zobrazení informací o předkladateli.",
+
+  // "change.submitter.page.changed-error": "An error occurred while changing the submitter",
+  "change.submitter.page.changed-error": "Při změně předkladatele došlo k chybě",
+
+  // "change.submitter.page.changed-successfully": "The submitter has been successfully changed",
+  "change.submitter.page.changed-successfully": "Předkladatel byl úspěšně změněn",
+
+  // "change.submitter.page.items.handle.message": "Item's handle: ",
+  "change.submitter.page.items.handle.message": "Handle záznamu: ",
+
+  // "change.submitter.page.items.name.message": "Item's name: ",
+  "change.submitter.page.items.name.message": "Název záznamu: ",
+
+  // "change.submitter.page.message": "This items currently belongs to: ",
+  "change.submitter.page.message": "Tato položka nyní patří: ",
+
+  // "change.submitter.page.title": "Change submitter",
+  "change.submitter.page.title": "Změna předkladatele",
 
   // "search.browse.item-back": "Back to Results",
   "search.browse.item-back": "Zpět na seznam výsledků",
@@ -1719,6 +1794,303 @@
 
   // "claimed-declined-task-search-result-list-element.title": "Declined, sent back to Review Manager's workflow",
   "claimed-declined-task-search-result-list-element.title": "Zamítnuto, posláno zpět správci schvalovacího workflow",
+
+  // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+  "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
+
+  // "clarin-license-label.define-license-label.input-icon": "Icon",
+  "clarin-license-label.define-license-label.input-icon": "Ikona",
+
+  // "clarin-license-label.define-license-label.input-is-extended": "Is extended",
+  "clarin-license-label.define-license-label.input-is-extended": "Je rozšířena",
+
+  // "clarin-license-label.define-license-label.input-label": "Short Label (max 5. chars)",
+  "clarin-license-label.define-license-label.input-label": "Krátký popisek (max. 5 znaků)",
+
+  // "clarin-license-label.define-license-label.input-title": "Label Title",
+  "clarin-license-label.define-license-label.input-title": "Název štítku",
+
+  // "clarin-license-label.define-license-label.notification.error-content": "Error: cannot define new License Label",
+  "clarin-license-label.define-license-label.notification.error-content": "Chyba: Nelze definovat nový popisek licence",
+
+  // "clarin-license-label.define-license-label.notification.successful-content": "License Label was defined successfully",
+  "clarin-license-label.define-license-label.notification.successful-content": "Licenční štítek byl úspěšně definován",
+
+  // "clarin-license-table.title": "License Administration",
+  "clarin-license-table.title": "Správa licencí",
+
+  // "clarin-license.button.define": "Define",
+  "clarin-license.button.define": "Definovat",
+
+  // "clarin-license.button.define-license": "Define License",
+  "clarin-license.button.define-license": "Definovat licenci",
+
+  // "clarin-license.button.define-license-label": "Define License Label",
+  "clarin-license.button.define-license-label": "Definice licenčního štítku",
+
+  // "clarin-license.button.delete-license": "Delete License",
+  "clarin-license.button.delete-license": "Odstranit licenci",
+
+  // "clarin-license.button.edit-license": "Edit License",
+  "clarin-license.button.edit-license": "Upravit licenci",
+
+  // "clarin-license.button.search": "Search",
+  "clarin-license.button.search": "Hledat",
+
+  // "clarin-license.button.search.placeholder": "Search by the license name ...",
+  "clarin-license.button.search.placeholder": "Hledat podle názvu licence ...",
+
+  // "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
+  "clarin-license.define-license-form.extended-license-labels": "Rozšířené licenční štítky",
+
+  // "clarin-license.define-license-form.form-name": "Define new license",
+  "clarin-license.define-license-form.form-name": "Definice nové licence",
+
+  // "clarin-license.define-license-form.input-confirmation": "License requires confirmation",
+  "clarin-license.define-license-form.input-confirmation": "Licence vyžaduje potvrzení",
+
+  // "clarin-license.define-license-form.input-definition-url": "License Definition URL",
+  "clarin-license.define-license-form.input-definition-url": "URL adresa pro definici licence",
+
+  // "clarin-license.define-license-form.input-name": "License name",
+  "clarin-license.define-license-form.input-name": "Název licence",
+
+  // "clarin-license.define-license-form.license-labels": "License Labels",
+  "clarin-license.define-license-form.license-labels": "Licenční štítky",
+
+  // "clarin-license.define-license-form.required-info": "Additional required user info",
+  "clarin-license.define-license-form.required-info": "Další požadované informace o uživateli",
+
+  // "clarin-license.define-license-form.submit-button": "Save",
+  "clarin-license.define-license-form.submit-button": "Uložit",
+
+  // "clarin-license.define-license.notification.error-content": "Error: cannot define new License",
+  "clarin-license.define-license.notification.error-content": "Chyba: nelze definovat novou licenci",
+
+  // "clarin-license.define-license.notification.successful-content": "License was defined successfully",
+  "clarin-license.define-license.notification.successful-content": "Licence byla úspěšně definována",
+
+  // "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
+  "clarin-license.delete-license.notification.error-content": "Chyba: nelze odstranit licenci",
+
+  // "clarin-license.delete-license.notification.successful-content": "License was deleted successfully",
+  "clarin-license.delete-license.notification.successful-content": "Licence byla úspěšně odstraněna",
+
+  // "clarin-license.edit-license.notification.error-content": "Error: cannot edit the License",
+  "clarin-license.edit-license.notification.error-content": "Chyba: Licenci nelze upravit",
+
+  // "clarin-license.edit-license.notification.successful-content": "License was updated successfully",
+  "clarin-license.edit-license.notification.successful-content": "Licence byla úspěšně aktualizována",
+
+  // "clarin-license.table.bitstreams": "Used by Bitstreams",
+  "clarin-license.table.bitstreams": "Používána soubory",
+
+  // "clarin-license.table.confirmation": "Confirmation",
+  "clarin-license.table.confirmation": "Potvrzení",
+
+  // "clarin-license.table.definition": "Definition (URL)",
+  "clarin-license.table.definition": "Definice (URL)",
+
+  // "clarin-license.table.extended-labels": "Extended Labels",
+  "clarin-license.table.extended-labels": "Rozšířené štítky",
+
+  // "clarin-license.table.label": "License Label",
+  "clarin-license.table.label": "Licenční štítek",
+
+  // "clarin-license.table.name": "License Name",
+  "clarin-license.table.name": "Název licence",
+
+  // "clarin-license.table.required-user-info": "Required user info",
+  "clarin-license.table.required-user-info": "Požadované informace o uživateli",
+
+  // "clarin.auth-failed.button.login": "Redirect to login",
+  "clarin.auth-failed.button.login": "Přesměrování na přihlášení",
+
+  // "clarin.auth-failed.button.submit": "Submit",
+  "clarin.auth-failed.button.submit": "Odeslat",
+
+  // "clarin.auth-failed.duplicate-user.error.message": ["Your email", "is already associated with a different user. It is also possible that you used a different identity provider to before. For more information please contact our", "Help Desk"],
+  "clarin.auth-failed.duplicate-user.error.message": ["Váš email", "již používá jiný uživatel. Je také možné, že se přihlašujete přes jinou instituci než minule. Pro více informací prosím kontaktujte ", "poradnu"],
+
+  // "clarin.auth-failed.duplicate-user.header.message": "Authentication Failed",
+  "clarin.auth-failed.duplicate-user.header.message": "Autentifikace se nezdařila",
+
+  // "clarin.auth-failed.email": "Email",
+  "clarin.auth-failed.email": "Email",
+
+  // "clarin.auth-failed.error.message": "Authentication Failed",
+  "clarin.auth-failed.error.message": "Ověření selhalo",
+
+  // "clarin.auth-failed.fname": "First Name",
+  "clarin.auth-failed.fname": "Křestní jméno",
+
+  // "clarin.auth-failed.lname": "Last Name",
+  "clarin.auth-failed.lname": "Příjmení",
+
+  // "clarin.auth-failed.netid": "netid",
+  "clarin.auth-failed.netid": "NetID",
+
+  // "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
+  "clarin.auth-failed.send-email.error.message": "Chyba: Nelze odeslat ověřovací email.",
+
+  // "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
+  "clarin.auth-failed.send-email.successful.message": "Ověřovací e-mail byl úspěšně odeslán",
+
+  // "clarin.auth-failed.warning.email-info": "This address will be verified and remembered until your IDP provides a different one. You will still sign in through your IDP.",
+  "clarin.auth-failed.warning.email-info": "Tato adresa bude ověřena a zapamatována, dokud IDP nezadá jinou adresu. Stále se budete přihlašovat prostřednictvím svého IDP.",
+
+  // "clarin.auth-failed.warning.has-email.message": ["Your IDP (home organization) has not provided your email address.", "You are registered by the e-mail: ", ". Try to login with that e-mail.", " If you have any login issues contact the ", "Help Desk."],
+  "clarin.auth-failed.warning.has-email.message": ["Váš IDP (domovská organizace) nám neposkytl vaši emailovou adresu.", "Jste registrován/a pomocí e-mailu: ", ". Zkuste se přihlásit s tímto e-mailem", "V případě jakýchkoli dotazů se můžete obrátit na naši ", "poradnu"],
+
+  // "clarin.auth-failed.warning.important.message": "Important!",
+  "clarin.auth-failed.warning.important.message": "Důležité!",
+
+  // "clarin.auth-failed.warning.no-email.message": ["Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.", "If you have any question contact the ", "Help Desk."],
+  "clarin.auth-failed.warning.no-email.message": ["Váš IDP (domovská organizace) nám neposkytl vaši emailovou adresu. Pokud chcete přidávat záznamy do repozitáře, stahovat veřejně nedostupné záznamy, případně se přihlásit k zásílání statistik a novinek, vyplňte a ověřte váš email.", "V případě jakýchkoli dotazů se můžete obrátit na naši", "poradnu"],
+
+  // "clarin.auth-failed.warning.reason.message": "Reason!",
+  "clarin.auth-failed.warning.reason.message": "Důvod!",
+
+  // "clarin.autologin.error.message": "Something went wrong, the user cannot be signed in automatically.",
+  "clarin.autologin.error.message": "Něco se pokazilo, uživatele nelze automaticky přihlásit.",
+
+  // "clarin.autoregistration.button.continue.to.login": "Continue to login",
+  "clarin.autoregistration.button.continue.to.login": "Pokračovat v přihlašování",
+
+  // "clarin.autoregistration.error.message": "Error: registration failed.",
+  "clarin.autoregistration.error.message": "Chyba: registrace se nezdařila.",
+
+  // "clarin.autoregistration.information.released.by.idp.message": "The information released by your IdP (home organisation) is shown below.",
+  "clarin.autoregistration.information.released.by.idp.message": "Informace zveřejněné vaším IDP (domovskou organizací) jsou uvedeny níže.",
+
+  // "clarin.autoregistration.privacy.statement": "Privacy statement",
+  "clarin.autoregistration.privacy.statement": "Prohlášení o ochraně osobních údajů",
+
+  // "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in", "However we may log the attributes and keep them for a time period."],
+  "clarin.autoregistration.repository.policy.message": ["Používáme pouze povinné atributy tak jak jsou zmíněny v", "Atributy jsou nějaký čas uchovány v záznamech."],
+
+  // "clarin.autoregistration.successful.message": "You have been successfully registered.",
+  "clarin.autoregistration.successful.message": "Byli jste úspěšně zaregistrováni.",
+
+  // "clarin.autoregistration.table.header": "Header",
+  "clarin.autoregistration.table.header": "Hlavička",
+
+  // "clarin.autoregistration.table.value": "Value",
+  "clarin.autoregistration.table.value": "Hodnota",
+
+  // "clarin.autoregistration.token.not.valid.message": "Verification token is not valid.",
+  "clarin.autoregistration.token.not.valid.message": "Ověřovací token není platný.",
+
+  // "clarin.autoregistration.welcome.message": "Welcome to",
+  "clarin.autoregistration.welcome.message": "Vítejte v",
+
+  // "clarin.bitstream.authorization.denied.message": "Access to download the \"{{bitstream}}\" file was denied by the bitstream resource policy.",
+  "clarin.bitstream.authorization.denied.message": "Přístup ke stažení souboru \"{{bitstream}}\" byl zamítnut.",
+
+  // "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
+  "clarin.bitstream.expired.dtoken.message": "Platnost tokenu pro stahování vypršel, budete přesměrováni na stránku stahování.",
+
+  // "clarin.help-desk.name": "Help Desk",
+  "clarin.help-desk.name": "Help Desk",
+
+  // "clarin.license.agreement.bitstream.name": "Bitstream",
+  "clarin.license.agreement.bitstream.name": "Bitstream",
+
+  // "clarin.license.agreement.breadcrumbs": "License Agreement",
+  "clarin.license.agreement.breadcrumbs": "Licenční smlouva",
+
+  // "clarin.license.agreement.button.agree": "I AGREE",
+  "clarin.license.agreement.button.agree": "SOUHLASÍM",
+
+  // "clarin.license.agreement.error.message.cannot.download": ["Something went wrong and you cannot download this bitstream, please contact", " Help Desk."],
+  "clarin.license.agreement.error.message.cannot.download": ["Error: Nelze stáhnout tento bitstream, prosím kontaktujte:", "poradnu.:"],
+
+  // "clarin.license.agreement.header.info": "The requested content is distributed under one or more licence(s). You have to agree to the licence(s) below before you can obtain the content. Please, view the licence(s) by clicking on the button(s) and read it carefully. The data filled below might be shared with the submitter of the item and/or for creating statistics.",
+  "clarin.license.agreement.header.info": "Požadovaný obsah je šířen pod jednou nebo více licencemi. Před získáním obsahu musíte souhlasit s níže uvedenými licencemi. Prohlédněte si prosím licenci (e) kliknutím na tlačítko(a) a pečlivě si ji (je) přečtěte. Níže vyplněné údaje mohou být sdíleny s odesílatelem položky a/nebo pro vytváření statistik.",
+
+  // "clarin.license.agreement.item.handle": "Item handle",
+  "clarin.license.agreement.item.handle": "Handle položky",
+
+  // "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
+  "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
+
+  // "clarin.license.agreement.notification.check.email": "You will receive email with download link.",
+  "clarin.license.agreement.notification.check.email": "Obdržíte e-mail s odkazem ke stažení.",
+
+  // "clarin.license.agreement.notification.error.required.info": "You must fill in required info.",
+  "clarin.license.agreement.notification.error.required.info": "Musíte vyplnit požadované informace.",
+
+  // "clarin.license.agreement.signer.ACA_ORG_NAME_AND_SEAT": "Name and seat (address) of your academic institution",
+  "clarin.license.agreement.signer.ACA_ORG_NAME_AND_SEAT": "Název a sídlo vědecké instituce",
+
+  // "clarin.license.agreement.signer.ADDRESS": "Address",
+  "clarin.license.agreement.signer.ADDRESS": "Adresa",
+
+  // "clarin.license.agreement.signer.COUNTRY": "Country",
+  "clarin.license.agreement.signer.COUNTRY": "Země",
+
+  // "clarin.license.agreement.signer.DOB": "Date of birth",
+  "clarin.license.agreement.signer.DOB": "Datum narození",
+
+  // "clarin.license.agreement.signer.EXTRA_EMAIL": "E-mail",
+  "clarin.license.agreement.signer.EXTRA_EMAIL": "E-mail",
+
+  // "clarin.license.agreement.signer.INTENDED_USE": "Intended use",
+  "clarin.license.agreement.signer.INTENDED_USE": "Zamýšlené použití",
+
+  // "clarin.license.agreement.signer.NAME": "Name (given name and surname)",
+  "clarin.license.agreement.signer.NAME": "Jméno a příjmení",
+
+  // "clarin.license.agreement.signer.ORGANIZATION": "Organization",
+  "clarin.license.agreement.signer.ORGANIZATION": "Organizace",
+
+  // "clarin.license.agreement.signer.REQUIRED_ORGANIZATION": "Organization",
+  "clarin.license.agreement.signer.REQUIRED_ORGANIZATION": "Organizace",
+
+  // "clarin.license.agreement.signer.SEND_TOKEN": "E-mail",
+  "clarin.license.agreement.signer.SEND_TOKEN": "Email",
+
+  // "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
+  "clarin.license.agreement.signer.header.info": ["Informace uvedené níže vás, PODEPSANÉHO, identifikují. Pokud jsou tyto informace nesprávné, kontaktujte prosím", "poradnu.", "Tyto informace budou uloženy spolu se záznamem o souhlasu."],
+
+  // "clarin.license.agreement.signer.id": "User ID",
+  "clarin.license.agreement.signer.id": "ID uživatele",
+
+  // "clarin.license.agreement.signer.ip.address": "IP Address",
+  "clarin.license.agreement.signer.ip.address": "IP adresa",
+
+  // "clarin.license.agreement.signer.name": "Signer",
+  "clarin.license.agreement.signer.name": "Podepisovatel",
+
+  // "clarin.license.agreement.title": "License Agreement",
+  "clarin.license.agreement.title": "Licenční smlouva",
+
+  // "clarin.license.agreement.token.info": "You will receive an email with download instructions.",
+  "clarin.license.agreement.token.info": "Obdržíte e-mail s pokyny ke stažení.",
+
+  // "clarin.license.agreement.warning": "By clicking on the button below I, SIGNER with the above ID, agree to the LICENCE(s) restricting the usage of requested BITSTREAM(s).",
+  "clarin.license.agreement.warning": "Kliknutím na tlačítko níže Já, PODPISUJÍCÍ s výše uvedeným ID, souhlasím s LICENCÍ omezující používání požadovaného BITSTREAMU.",
+
+  // "clarin.license.all-page.extra-information": "Extra information required:",
+  "clarin.license.all-page.extra-information": "Vyžadovány dodatečné informace:",
+
+  // "clarin.license.all-page.extra-information.default": "NONE",
+  "clarin.license.all-page.extra-information.default": "Žádné",
+
+  // "clarin.license.all-page.labels": "Labels:",
+  "clarin.license.all-page.labels": "Štítky:",
+
+  // "clarin.license.all-page.source": "Source:",
+  "clarin.license.all-page.source": "Zdroj:",
+
+  // "clarin.license.all-page.title": "Available Licenses",
+  "clarin.license.all-page.title": "Dostupné licence",
+
+  // "clarin.missing-headers.contact-us.message": "If you have any questions you can contact the ",
+  "clarin.missing-headers.contact-us.message": "V případě jakýchkoli dotazů se můžete obrátit na",
+
+  // "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
+  "clarin.missing-headers.error.message": "Vaše IDP (domovská organizace) neposkytla požadované hlavičky. Bez požadovaných informací vám nemůžeme umožnit přihlášení do našeho úložiště.",
 
   // "collection.create.breadcrumbs": "Create collection",
   "collection.create.breadcrumbs": "Vytvořit kolekci",
@@ -2022,6 +2394,12 @@
 
   // "collection.logo": "Collection logo",
   "collection.logo": "Logo kolekce",
+
+  // "collection.page.browse.recent.empty": "No items to show",
+  "collection.page.browse.recent.empty": "Žádné položky k zobrazení",
+
+  // "collection.page.browse.recent.head": "Recent Submissions",
+  "collection.page.browse.recent.head": "Nejnovější příspěvky",
 
   // "collection.page.browse.search.head": "Search",
   "collection.page.browse.search.head": "Hledat",
@@ -2551,6 +2929,9 @@
   // "curation-task.task.citationpage.label": "Generate Citation Page",
   "curation-task.task.citationpage.label": "Vytvořit stránku s citacemi",
 
+  // "curation-task.task.metadataqa.label": "Metadata QA",
+  "curation-task.task.metadataqa.label": "Metadata QA",
+
   // "curation-task.task.checklinks.label": "Check Links in Metadata",
   "curation-task.task.checklinks.label": "Zkontrolovat odkazy v metadatech",
 
@@ -2843,6 +3224,24 @@
   // "confirmation-modal.review-account-info.save": "Save",
   "confirmation-modal.review-account-info.save": "Uložit",
 
+  // "contact-us.breadcrumbs": "Contact Us",
+  "contact-us.breadcrumbs": "Kontaktujte nás",
+
+  // "contact-us.description": "DSpace administrators may be contacted at:",
+  "contact-us.description": "Správce DSpace můžete kontaktovat na adrese:",
+
+  // "contact-us.email": "Email: ",
+  "contact-us.email": "Email: ",
+
+  // "contact-us.feedback": "Feedback",
+  "contact-us.feedback": "Zpětná vazba",
+
+  // "contact-us.form": "On-line form: ",
+  "contact-us.form": "On-line formulář:",
+
+  // "contact-us.title": "Contact Us",
+  "contact-us.title": "Kontaktujte nás",
+
   // "error.bitstream": "Error fetching bitstream",
   "error.bitstream": "Chyba při načítání souboru",
 
@@ -2902,6 +3301,9 @@
 
   // "error.validation.cclicense.required": "You must grant this cclicense to complete your submission. If you are unable to grant the cclicense at this time, you may save your work and return later or remove the submission.",
   "error.validation.cclicense.required": "Pro dokončení vkladu musíte udělit tuto licenci CC. Pokud v tuto chvíli nemůžete licenci CC udělit, můžete svou práci uložit a vrátit se později nebo vklad odstranit.",
+
+  // "error.validation.clarin-license.notgranted": "You must choose one of the resource licenses.",
+  "error.validation.clarin-license.notgranted": "Musíte si vybrat jednu z licencí zdrojů.",
 
   // "error.validation.pattern": "This input is restricted by the current pattern: {{ pattern }}.",
   "error.validation.pattern": "Toto zadání je omezeno aktuálním vzorcem: {{ pattern }}.",
@@ -2980,6 +3382,9 @@
 
   // "footer.link.coar-notify-support": "COAR Notify",
   "footer.link.coar-notify-support": "COAR Notify",
+
+  // "footer.link.contact-us": "Contact us",
+  "footer.link.contact-us": "Kontaktujte nás",
 
   // "forgot-email.form.header": "Forgot Password",
   "forgot-email.form.header": "Zapomenuté heslo",
@@ -3134,6 +3539,9 @@
   // "form.other-information.orcid": "ORCID",
   "form.other-information.orcid": "ORCID",
 
+  // "form.other-information.other-names": "Other Names",
+  "form.other-information.other-names": "Další jména",
+
   // "form.remove": "Remove",
   "form.remove": "Odstranit",
 
@@ -3164,6 +3572,9 @@
   // "form.number-picker.label.Year": "Year",
   // TODO New key - Add a translation
   "form.number-picker.label.Year": "Year",
+
+  // "form.other-information.credit-name": "Credit Name",
+  "form.other-information.credit-name": "Preferované jméno",
 
   // "form.number-picker.label.Month": "Month",
   // TODO New key - Add a translation
@@ -3248,6 +3659,195 @@
   // "grant-request-copy.success": "Successfully granted item request",
   "grant-request-copy.success": "Úspěšně vyřízená žádost o záznam",
 
+  // "handle-page.title": "Handles",
+  "handle-page.title": "Handle",
+
+  // "handle-table.breadcrumbs": "Handles",
+  "handle-table.breadcrumbs": "Handle",
+
+  // "handle-table.button.delete-handle": "Delete handle",
+  "handle-table.button.delete-handle": "Odstranit Handle",
+
+  // "handle-table.button.edit-handle": "Edit handle",
+  "handle-table.button.edit-handle": "Upravit Handle",
+
+  // "handle-table.button.new-handle": "New external handle",
+  "handle-table.button.new-handle": "Nový vnější Handle",
+
+  // "handle-table.change-handle-prefix.form-archive-input-check": "Archive old handles?",
+  "handle-table.change-handle-prefix.form-archive-input-check": "Archivovat staré Handles?",
+
+  // "handle-table.change-handle-prefix.form-new-prefix-input-error": "Valid new prefix is required",
+  "handle-table.change-handle-prefix.form-new-prefix-input-error": "Je vyžadována nová platná  předpona",
+
+  // "handle-table.change-handle-prefix.form-new-prefix-input-placeholder": "Enter new prefix",
+  "handle-table.change-handle-prefix.form-new-prefix-input-placeholder": "Zadat novou předponu",
+
+  // "handle-table.change-handle-prefix.form-new-prefix-input-text": "New prefix",
+  "handle-table.change-handle-prefix.form-new-prefix-input-text": "Nová předpona",
+
+  // "handle-table.change-handle-prefix.form-old-prefix-input-error": "Valid old prefix is required",
+  "handle-table.change-handle-prefix.form-old-prefix-input-error": "Je vyžadována platná stará předpona",
+
+  // "handle-table.change-handle-prefix.form-old-prefix-input-placeholder": "Enter old prefix",
+  "handle-table.change-handle-prefix.form-old-prefix-input-placeholder": "Zadat starou předponu",
+
+  // "handle-table.change-handle-prefix.form-old-prefix-input-text": "Old prefix",
+  "handle-table.change-handle-prefix.form-old-prefix-input-text": "Stará předpona",
+
+  // "handle-table.change-handle-prefix.notify.error": "Server Error - Cannot change the global prefix",
+  "handle-table.change-handle-prefix.notify.error": "Chyba serveru - Nelze změnit globální předponu",
+
+  // "handle-table.change-handle-prefix.notify.error.empty-table": "Server Error - Cannot change the global prefix because no Handle exist.",
+  "handle-table.change-handle-prefix.notify.error.empty-table": "Chyba serveru - Nelze změnit globální předponu, protože neexistuje žádný Handle.",
+
+  // "handle-table.change-handle-prefix.notify.started": "Changing of the prefix has been started, it will take some time.",
+  "handle-table.change-handle-prefix.notify.started": "Změna prefixu byla zahájena, bude to nějakou dobu trvat.",
+
+  // "handle-table.change-handle-prefix.notify.successful": "The global prefix was changed!",
+  "handle-table.change-handle-prefix.notify.successful": "Globální předpona byla změněna!",
+
+  // "handle-table.delete-handle.notify.error": "Server Error - Cannot delete this handle",
+  "handle-table.delete-handle.notify.error": "Chyba serveru - Nelze odstranit tento handle",
+
+  // "handle-table.delete-handle.notify.successful": "The handle was deleted!",
+  "handle-table.delete-handle.notify.successful": "Handle byl odstraněn!",
+
+  // "handle-table.dropdown.search-button": "Search",
+  "handle-table.dropdown.search-button": "Hledat",
+
+  // "handle-table.dropdown.search-option": "Search option",
+  "handle-table.dropdown.search-option": "Možnost vyhledávání",
+
+  // "handle-table.edit-handle.breadcrumbs": "Edit Handle",
+  "handle-table.edit-handle.breadcrumbs": "Upravit Handle",
+
+  // "handle-table.edit-handle.form-archive-input-check": "Archive old handle?",
+  "handle-table.edit-handle.form-archive-input-check": "Archivovat starý Handle?",
+
+  // "handle-table.edit-handle.form-button-submit": "Submit",
+  "handle-table.edit-handle.form-button-submit": "Odeslat",
+
+  // "handle-table.edit-handle.form-handle-input-placeholder": "Enter new handle",
+  "handle-table.edit-handle.form-handle-input-placeholder": "Zadat nový Handle",
+
+  // "handle-table.edit-handle.form-handle-input-text": "Handle",
+  "handle-table.edit-handle.form-handle-input-text": "Handle",
+
+  // "handle-table.edit-handle.form-id-input-placeholder": "...",
+  "handle-table.edit-handle.form-id-input-placeholder": "...",
+
+  // "handle-table.edit-handle.form-id-input-text": "ID",
+  "handle-table.edit-handle.form-id-input-text": "ID",
+
+  // "handle-table.edit-handle.form-url-input-placeholder": "Enter new URL",
+  "handle-table.edit-handle.form-url-input-placeholder": "Zadejte novou URL adresu",
+
+  // "handle-table.edit-handle.form-url-input-text": "URL",
+  "handle-table.edit-handle.form-url-input-text": "URL adresa",
+
+  // "handle-table.edit-handle.notify.error": "Server Error - Cannot edit this handle",
+  "handle-table.edit-handle.notify.error": "Chyba serveru - Nelze upravit tento Handle",
+
+  // "handle-table.edit-handle.notify.successful": "The handle was edited!",
+  "handle-table.edit-handle.notify.successful": "Handle byl upraven!",
+
+  // "handle-table.global-actions.actions-list-message": "This is the list of available global actions.",
+  "handle-table.global-actions.actions-list-message": "Toto je seznam dostupných globálních akcí.",
+
+  // "handle-table.global-actions.breadcrumbs": "Global Actions",
+  "handle-table.global-actions.breadcrumbs": "Globální akce",
+
+  // "handle-table.global-actions.button.change-prefix": "Change handle prefix",
+  "handle-table.global-actions.button.change-prefix": "Změnit předponu Handlu",
+
+  // "handle-table.global-actions.title": "Global Actions",
+  "handle-table.global-actions.title": "Globální akce",
+
+  // "handle-table.new-handle.breadcrumbs": "New Handle",
+  "handle-table.new-handle.breadcrumbs": "Nový Handle",
+
+  // "handle-table.new-handle.form-button-submit": "Submit",
+  "handle-table.new-handle.form-button-submit": "Odeslat",
+
+  // "handle-table.new-handle.form-handle-input-placeholder": "Enter handle",
+  "handle-table.new-handle.form-handle-input-placeholder": "Zadat Handle",
+
+  // "handle-table.new-handle.form-handle-input-text": "Handle",
+  "handle-table.new-handle.form-handle-input-text": "Handle",
+
+  // "handle-table.new-handle.form-url-input-placeholder": "Enter URL",
+  "handle-table.new-handle.form-url-input-placeholder": "Zadejte URL adresu",
+
+  // "handle-table.new-handle.form-url-input-text": "URL",
+  "handle-table.new-handle.form-url-input-text": "URL adresa",
+
+  // "handle-table.new-handle.notify.error": "Server Error - Cannot create new handle",
+  "handle-table.new-handle.notify.error": "Chyba serveru - Nelze vytvořit nový Handle",
+
+  // "handle-table.new-handle.notify.successful": "The new handle was created!",
+  "handle-table.new-handle.notify.successful": "Byl vytvořen nový Handle",
+
+  // "handle-table.search.aria.select-internal": "Select internal option",
+  "handle-table.search.aria.select-internal": "Vyberte možnost interní",
+
+  // "handle-table.search.aria.select-resource-type": "Select resource type",
+  "handle-table.search.aria.select-resource-type": "Vyberte typ zdroje",
+
+  // "handle-table.search.internal.no": "No",
+  "handle-table.search.internal.no": "Ne",
+
+  // "handle-table.search.internal.select": "Select internal option",
+  "handle-table.search.internal.select": "Vyberte možnost interní",
+
+  // "handle-table.search.internal.yes": "Yes",
+  "handle-table.search.internal.yes": "Ano",
+
+  // "handle-table.search.placeholder.handle": "Enter handle",
+  "handle-table.search.placeholder.handle": "Zadejte Handle",
+
+  // "handle-table.search.placeholder.no-option": "Please select a search option first",
+  "handle-table.search.placeholder.no-option": "Nejprve vyberte možnost vyhledávání",
+
+  // "handle-table.search.resource-type.collection": "Collection",
+  "handle-table.search.resource-type.collection": "Kolekce",
+
+  // "handle-table.search.resource-type.community": "Community",
+  "handle-table.search.resource-type.community": "Komunita",
+
+  // "handle-table.search.resource-type.item": "Item",
+  "handle-table.search.resource-type.item": "Záznam",
+
+  // "handle-table.search.resource-type.select": "Select resource type",
+  "handle-table.search.resource-type.select": "Vyberte typ zdroje",
+
+  // "handle-table.search.resource-type.site": "Site",
+  "handle-table.search.resource-type.site": "Stránka",
+
+  // "handle-table.table.handle": "Handle",
+  "handle-table.table.handle": "Handle",
+
+  // "handle-table.table.internal": "Is internal",
+  "handle-table.table.internal": "Je interní",
+
+  // "handle-table.table.is-internal": "Yes",
+  "handle-table.table.is-internal": "Ano",
+
+  // "handle-table.table.not-internal": "No",
+  "handle-table.table.not-internal": "Ne",
+
+  // "handle-table.table.resource-id": "Resource id",
+  "handle-table.table.resource-id": "ID zdroje",
+
+  // "handle-table.table.resource-type": "Resource type",
+  "handle-table.table.resource-type": "Typ zdroje",
+
+  // "handle-table.table.url": "URL",
+  "handle-table.table.url": "URL",
+
+  // "handle-table.title": "Handle List",
+  "handle-table.title": "Handle seznam",
+
   // "grant-request-copy.access-period.header": "Access period",
   "grant-request-copy.access-period.header": "Doba přístupu",
 
@@ -3268,6 +3868,57 @@
 
   // "health.breadcrumbs": "Health",
   "health.breadcrumbs": "Stav systému",
+
+  // "home-page.advanced-search": "Advanced Search",
+  "home-page.advanced-search": "Rozšířené hledání",
+
+  // "home-page.carousel.deposit.citation": "“There ought to be only one grand dépôt of art in the world, to\n                        which the artist might repair with his works, and on presenting them\n                        receive what he required... ”",
+  "home-page.carousel.deposit.citation": "“Na světě by mělo být jen jedno velké úložiště umění,\n                        které by umělec obohatil svými díly a při prezentaci\n                        získal přesně, co žádal... ”",
+
+  // "home-page.carousel.deposit.cite": "Easy to Cite",
+  "home-page.carousel.deposit.cite": "Snadná citace",
+
+  // "home-page.carousel.deposit.find": "Easy to Find",
+  "home-page.carousel.deposit.find": "Snadné hledání",
+
+  // "home-page.carousel.deposit.header": "Deposit Free and Safe",
+  "home-page.carousel.deposit.header": "Úschova zdarma a bezpečně",
+
+  // "home-page.carousel.deposit.info": "License of your Choice (Open licenses encouraged)",
+  "home-page.carousel.deposit.info": "Volitelné licence (avšak preferujeme otevřené)",
+
+  // "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
+  "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
+
+  // "home-page.carousel.ldata.citation-support": "Citation Support (with Persistent IDs)",
+  "home-page.carousel.ldata.citation-support": "Podpora citací (persistentní identifikátory)",
+
+  // "home-page.carousel.ldata.find": "Find",
+  "home-page.carousel.ldata.find": "Vyhledávání",
+
+  // "home-page.carousel.ldata.info": "Linguistic Data and NLP Tools",
+  "home-page.carousel.ldata.info": "Lingvistická data a nástroje",
+
+  // "home-page.hyperlink.author.message": "Author",
+  "home-page.hyperlink.author.message": "Autor",
+
+  // "home-page.hyperlink.language.message": "Language (ISO)",
+  "home-page.hyperlink.language.message": "Jazyk",
+
+  // "home-page.hyperlink.subject.message": "Subject",
+  "home-page.hyperlink.subject.message": "Klíčové slovo",
+
+  // "home-page.hyperlink.view-more.message": "... View More",
+  "home-page.hyperlink.view-more.message": "... zobrazit další",
+
+  // "home-page.new-items.message": "Most Viewed Items - Last Month",
+  "home-page.new-items.message": "Nejnavštěvovanější záznamy - za poslední měsíc",
+
+  // "home-page.search": "Search",
+  "home-page.search": "Hledat",
+
+  // "home-page.whats-new.message": "What's New",
+  "home-page.whats-new.message": "Nově přidané",
 
   // "health-page.heading": "Health",
   "health-page.heading": "Stav systému",
@@ -3328,6 +3979,15 @@
 
   // "home.description": "",
   "home.description": "",
+
+  // "home.image.glass": "Home page glass magnifier image",
+  "home.image.glass": "Lupa",
+
+  // "home.image.lindat-color-line": "Lindat color line image",
+  "home.image.lindat-color-line": "Barevná linka s barvami LINDAT",
+
+  // "home.news.image.banner": "Home news banner image",
+  "home.news.image.banner": "Baner",
 
   // "home.breadcrumbs": "Home",
   "home.breadcrumbs": "Domů",
@@ -3565,6 +4225,30 @@
   // "item.edit.bitstreams.bundle.tooltip": "You can move a bitstream to a different page by dropping it on the page number.",
   "item.edit.bitstreams.bundle.tooltip": "Soubor lze přesunout na jinou stránku přetažením na číslo stránky.",
 
+  // "item.edit.bitstreams.checksum.active-store": "Active store",
+  "item.edit.bitstreams.checksum.active-store": "Aktivní úložiště",
+
+  // "item.edit.bitstreams.checksum.algorithm": "Algorithm:",
+  "item.edit.bitstreams.checksum.algorithm": "Algoritmus:",
+
+  // "item.edit.bitstreams.checksum.database": "DB",
+  "item.edit.bitstreams.checksum.database": "DB",
+
+  // "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.",
+  "item.edit.bitstreams.checksum.popover.info.body": "Stáhněte soubor a vypočítejte kontrolní součet (checksum).",
+
+  // "item.edit.bitstreams.checksum.popover.warning.body": "The file must be downloaded for the checksum to be computed.:",
+  "item.edit.bitstreams.checksum.popover.warning.body": "Soubor musí být stažen, aby bylo možné vypočítat kontrolní součet (checksum).",
+
+  // "item.edit.bitstreams.checksum.popover.warning.header": "Warning:",
+  "item.edit.bitstreams.checksum.popover.warning.header": "Pozor:",
+
+  // "item.edit.bitstreams.checksum.sync-store": "Sync store",
+  "item.edit.bitstreams.checksum.sync-store": "Sync úložiště",
+
+  // "item.edit.bitstreams.checksum.value": "Value: ",
+  "item.edit.bitstreams.checksum.value": "Hodnota: ",
+
   // "item.edit.bitstreams.discard-button": "Discard",
   "item.edit.bitstreams.discard-button": "Zahodit",
 
@@ -3618,6 +4302,9 @@
 
   // "item.edit.bitstreams.headers.name": "Name",
   "item.edit.bitstreams.headers.name": "Název",
+
+  // "item.edit.bitstreams.headers.synchronized": "Sync | Checksum",
+  "item.edit.bitstreams.headers.synchronized": "Synchronizace | Checksum",
 
   // "item.edit.bitstreams.notifications.discarded.content": "Your changes were discarded. To reinstate your changes click the 'Undo' button",
   "item.edit.bitstreams.notifications.discarded.content": "Vaše změny byly zahozeny. Pro obnovení změn klikněte na tlačítko 'Vrátit změny'",
@@ -3826,6 +4513,36 @@
 
   // "item.edit.item-mapper.tabs.map": "Map new collections",
   "item.edit.item-mapper.tabs.map": "Mapovat nové kolekce",
+
+  // "item.edit.license.button.name.return": "Return",
+  "item.edit.license.button.name.return": "Návrat",
+
+  // "item.edit.license.button.name.update": "Update",
+  "item.edit.license.button.name.update": "Aktualizovat",
+
+  // "item.edit.license.define.license.message": "Define a new license",
+  "item.edit.license.define.license.message": "Definovat novou licenci",
+
+  // "item.edit.license.head": "Current License",
+  "item.edit.license.head": "Stávající licence",
+
+  // "item.edit.license.remove.license.message": "Remove License",
+  "item.edit.license.remove.license.message": "Odstranit licenci",
+
+  // "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
+  "item.edit.license.select.license.info": "Přejete-li si změnit licenci, vyberte ji ze seznamu a zmáčkněte aktualizovat.",
+
+  // "item.edit.license.select.license.initial-value.message": "-Select License-",
+  "item.edit.license.select.license.initial-value.message": "-Vyberte licenci-",
+
+  // "item.edit.license.select.license.select.message": "Select a license",
+  "item.edit.license.select.license.select.message": "Vyberte licenci",
+
+  // "item.edit.license.update.error": "Error: cannot update license",
+  "item.edit.license.update.error": "Chyba: nelze aktualizovat licenci",
+
+  // "item.edit.license.update.success": "License updated successfully",
+  "item.edit.license.update.success": "Licence byla úspěšně aktualizována",
 
   // "item.edit.metadata.add-button": "Add",
   "item.edit.metadata.add-button": "Přidat",
@@ -4173,6 +4890,12 @@
   // "item.edit.tabs.status.buttons.withdraw.button": "Withdraw this item",
   "item.edit.tabs.status.buttons.withdraw.button": "Odstranit...",
 
+  // "item.edit.tabs.license.head": "License",
+  "item.edit.tabs.license.head": "Licence",
+
+  // "item.edit.tabs.license.title": "Item Edit - License",
+  "item.edit.tabs.license.title": "Úprava záznamu - Licence",
+
   // "item.edit.tabs.status.buttons.withdraw.label": "Withdraw item from the repository",
   "item.edit.tabs.status.buttons.withdraw.label": "Odstranit záznam z repozitáře",
 
@@ -4232,6 +4955,33 @@
   // "item.edit.withdraw.success": "The item was withdrawn successfully",
   "item.edit.withdraw.success": "Záznam byl úspěšně odebrán",
 
+  // "item.file.description.checksum": "MD5",
+  "item.file.description.checksum": "MD5",
+
+  // "item.file.description.description": "Description",
+  "item.file.description.description": "Popis",
+
+  // "item.file.description.download.file": "Download file",
+  "item.file.description.download.file": "Stáhnout soubor",
+
+  // "item.file.description.file.preview": "File Preview",
+  "item.file.description.file.preview": "Náhled souboru",
+
+  // "item.file.description.format": "Format",
+  "item.file.description.format": "Formát",
+
+  // "item.file.description.name": "Name",
+  "item.file.description.name": "Název",
+
+  // "item.file.description.not.supported.video": "Your browser does not support the video tag.",
+  "item.file.description.not.supported.video": "Váš prohlížeč nepodporuje videa.",
+
+  // "item.file.description.preview": "Preview",
+  "item.file.description.preview": "Náhled",
+
+  // "item.file.description.size": "Size",
+  "item.file.description.size": "Velikost",
+
   // "item.orcid.return": "Back",
   "item.orcid.return": "Zpět",
 
@@ -4241,6 +4991,21 @@
   // "item.page.description": "Description",
   "item.page.description": "Popis",
 
+  // "item.page.doi": "DOI",
+  "item.page.doi": "DOI",
+
+  // "item.page.download.button.all.files.zip": "Download all files in item",
+  "item.page.download.button.all.files.zip": "Stáhnout všechny soubory záznamu",
+
+  // "item.page.download.button.command.line": "Download instructions for command line",
+  "item.page.download.button.command.line": "Instrukce pro stažení z příkazové řádky",
+
+  "item.page.download.command.close": "Zavřít",
+
+  "item.page.download.command.copied": "Zkopírováno!",
+
+  "item.page.download.command.copy": "Kopírovat",
+
   // "item.page.org-unit": "Organizational Unit",
   "item.page.org-unit": "Organizační jednotka",
 
@@ -4249,6 +5014,9 @@
 
   // "item.page.project": "Research Project",
   "item.page.project": "Výzkumný projekt",
+
+  // "item.page.project-url": "Project URL",
+  "item.page.project-url": "URL projektu",
 
   // "item.page.projects": "Research Projects",
   "item.page.projects": "Výzkumné projekty",
@@ -4270,6 +5038,12 @@
 
   // "item.page.journals": "Journals",
   "item.page.journals": "Časopisy",
+
+  // "item.page.language": "Language(s)",
+  "item.page.language": "Jazyky",
+
+  // "item.page.license.message": ["This item is", "and licensed under:"],
+  "item.page.license.message": ["Tento záznam je", "a je licencován pod licencí:"],
 
   // "item.page.journal-issue": "Journal Issue",
   "item.page.journal-issue": "Číslo časopisu",
@@ -4295,11 +5069,17 @@
   // "item.page.titleprefix": "Item: ",
   "item.page.titleprefix": "Záznam: ",
 
+  // "item.page.type": "Type",
+  "item.page.type": "Typ",
+
   // "item.page.volume-title": "Volume Title",
   "item.page.volume-title": "Název svazku",
 
   // "item.page.dcterms.spatial": "Geospatial point",
   "item.page.dcterms.spatial": "Geoprostorový bod",
+
+  // "item.page.demo.uri": "Demo URL",
+  "item.page.demo.uri": "URL dema",
 
   // "item.search.results.head": "Item Search Results",
   "item.search.results.head": "Výsledky vyhledávání",
@@ -4389,6 +5169,12 @@
   // "item.page.abstract": "Abstract",
   "item.page.abstract": "Abstrakt",
 
+  // "item.page.acknowledgement.project-code": "Project code:",
+  "item.page.acknowledgement.project-code": "Kód projektu:",
+
+  // "item.page.acknowledgement.project-name": "Project name:",
+  "item.page.acknowledgement.project-name": "Jméno projektu:",
+
   // "item.page.author": "Author",
   "item.page.author": "Autor",
 
@@ -4410,11 +5196,23 @@
   // "item.page.date": "Date",
   "item.page.date": "Datum",
 
+  // "item.page.date.cca.message": "The exact date is unknown",
+  "item.page.date.cca.message": "Přesné datum není známo",
+
+  // "item.page.date.composed.message": "This item is composed of parts issued in",
+  "item.page.date.composed.message": "Tato položka je složena z částí vydaných v letech",
+
   // "item.page.edit": "Edit this item",
   "item.page.edit": "Upravit tento záznam",
 
   // "item.page.files": "Files",
   "item.page.files": "Soubory",
+
+  // "item.page.files.downloads": "Downloads",
+  "item.page.files.downloads": "Stažení",
+
+  // "item.page.files.head": "Files in this item",
+  "item.page.files.head": "Soubory tohoto záznamu",
 
   // "item.page.filesection.description": "Description:",
   "item.page.filesection.description": "Popis:",
@@ -4484,8 +5282,17 @@
   // "item.page.uri": "URI",
   "item.page.uri": "Permanentní identifikátor",
 
+  // "item.page.users.note": "User's note:",
+  "item.page.users.note": "Vzkaz od uživatele:",
+
   // "item.page.bitstreams.view-more": "Show more",
   "item.page.bitstreams.view-more": "Zobrazit více",
+
+  // "item.page.cc-license": "License",
+  "item.page.cc-license": "Licence",
+
+  // "item.page.cc-license.description": "This work is licensed under a Creative Commons license.",
+  "item.page.cc-license.description": "Tato práce je licencována podle licence Creative Commons.",
 
   // "item.page.bitstreams.collapse": "Collapse",
   "item.page.bitstreams.collapse": "Sbalit",
@@ -4507,6 +5314,12 @@
 
   // "item.page.withdrawn": "Request a withdrawal for this item",
   "item.page.withdrawn": "Požádat o stažení tohoto záznamu",
+
+  // "item.preview.authors.et.al": " ; et al.",
+  "item.preview.authors.et.al": "; et al.",
+
+  // "item.preview.authors.show.everyone": "Show everyone",
+  "item.preview.authors.show.everyone": "Zobraz všechny autory",
 
   // "item.page.reinstate": "Request reinstatement",
   "item.page.reinstate": "Požádat o obnovení",
@@ -4659,6 +5472,12 @@
   // "item.preview.dspace.entity.type": "Entity Type:",
   "item.preview.dspace.entity.type": "Typ entity:",
 
+  // "item.preview.loading-files": "Loading files... This may take a few seconds as file previews are being generated. If the process takes too long, please contact the system administrator",
+  "item.preview.loading-files": "Načítání souborů... Může to trvat několik sekund, protože se generují náhledy souborů. Pokud proces trvá příliš dlouho, kontaktujte prosím správce systému",
+
+  // "item.preview.no-preview": "The file preview has not been generated yet. Please try again later or contact the system administrator",
+  "item.preview.no-preview": "Náhled souboru zatím nebyl vygenerován. Zkuste to prosím znovu později, nebo kontaktujte správce systému",
+
   // "item.preview.creativework.publisher": "Publisher",
   "item.preview.creativework.publisher": "Vydavatel",
 
@@ -4699,11 +5518,41 @@
   // "item.select.table.title": "Title",
   "item.select.table.title": "Název",
 
+  // "item.tombstone.no.available.message": "The selected item is withdrawn and is no longer available.",
+  "item.tombstone.no.available.message": "Vybraná položka je stažena a již není k dispozici.",
+
+  // "item.tombstone.replaced.another-repository.message": "This item is managed by another repository",
+  "item.tombstone.replaced.another-repository.message": "Tato položka je spravována jiným úložištěm",
+
+  // "item.tombstone.replaced.help-desk.message": ["The author(s) asked us to hide this submission.", "We still keep all the data and metadata of the original submission but the submission", "is now located at the above url(s). If you need the contents of the original submission, contact us at our", "Help Desk."],
+  "item.tombstone.replaced.help-desk.message": ["Autoři tohoto záznamu nás požádali o jeho skrytí.", "Stále máme všechna data i metadata původního záznamu.", "K záznamu by mělo být přistupováno výhradně přes výše uvedené url. Pokud z nějakého důvodu potřebujete původní záznam, kontaktujte naši", "poradnu"],
+
+  // "item.tombstone.replaced.locations.message": "You will find this item at the following location(s):",
+  "item.tombstone.replaced.locations.message": "Tuto položku najdete na následujících místech:",
+
+  // "item.tombstone.restricted.contact.help": ["Your user account does not have the credentials to view this item. Please contact the", "Help Desk", "if you have any questions."],
+  "item.tombstone.restricted.contact.help": ["Váš účet nemá potřebná oprávnění pro zobrazení tohoto záznamu. Obraťte se na", "poradnu", " jestli máte jakékoliv nejasnosti."],
+
+  // "item.tombstone.withdrawal.reason.default.value": "The reason wasn't specified.",
+  "item.tombstone.withdrawal.reason.default.value": "Důvod nebyl upřesněn.",
+
+  // "item.tombstone.withdrawal.reason.message": "The reason for withdrawal:",
+  "item.tombstone.withdrawal.reason.message": "Důvod stažení:",
+
+  // "item.tombstone.withdrawn.message": "This item is withdrawn",
+  "item.tombstone.withdrawn.message": "Tato položka je stažena",
+
   // "item.version.history.empty": "There are no other versions for this item yet.",
   "item.version.history.empty": "Pro tento záznam zatím neexistují žádné další verze.",
 
+  // "item.version.history.expand": "Expand",
+  "item.version.history.expand": "Rozbalit",
+
   // "item.version.history.head": "Version History",
   "item.version.history.head": "Historie verzí",
+
+  // "item.version.history.label": "version history",
+  "item.version.history.label": "historie verzí",
 
   // "item.version.history.return": "Back",
   "item.version.history.return": "Zpět",
@@ -4720,8 +5569,14 @@
   // "item.version.history.table.item": "Item",
   "item.version.history.table.item": "Záznam",
 
+  // "item.version.history.table.name": "Name",
+  "item.version.history.table.name": "Název",
+
   // "item.version.history.table.editor": "Editor",
   "item.version.history.table.editor": "Upravit",
+
+  // "item.version.history.table.handle": "Handle",
+  "item.version.history.table.handle": "Handle",
 
   // "item.version.history.table.date": "Date",
   "item.version.history.table.date": "Datum",
@@ -4761,6 +5616,30 @@
 
   // "item.version.notice": "This is not the latest version of this item. The latest version can be found <a href='{{destination}}'>here</a>.",
   "item.version.notice": "Toto není nejnovější verze tohoto záznamu. Nejnovější verzi naleznete <a href='{{destination}}'>zde</a>.",
+
+  // "item.view.box.author.message": "Author(s):",
+  "item.view.box.author.message": "Autoři:",
+
+  // "item.view.box.author.preview.and": "and",
+  "item.view.box.author.preview.and": "a",
+
+  // "item.view.box.author.preview.show-everyone": "show everyone",
+  "item.view.box.author.preview.show-everyone": "zobraz všechny autory",
+
+  // "item.view.box.description.message": "Description:",
+  "item.view.box.description.message": "Popis:",
+
+  // "item.view.box.files.message": ["This item contains", "files"],
+  "item.view.box.files.message": ["Tento záznam obsahuje", "souborů"],
+
+  // "item.view.box.no-files.message": "This item contains no files.",
+  "item.view.box.no-files.message": "Tento záznam neobsahuje soubory.",
+
+  // "item.view.box.one.file.message": "This item contains 1 file",
+  "item.view.box.one.file.message": "Tento záznam obsahuje 1 soubor",
+
+  // "item.view.box.publisher.message": "Publisher:",
+  "item.view.box.publisher.message": "Nakladatel:",
 
   // "item.version.create.modal.header": "New version",
   "item.version.create.modal.header": "Nová verze",
@@ -4837,11 +5716,35 @@
   // "item.qa.withdrawn.modal.submitted.header": "Sending withdrawn request...",
   "item.qa.withdrawn.modal.submitted.header": "Odesílání žádosti o stažení...",
 
+  // "item.refbox.citation.bibtex.button": "bibtex",
+  "item.refbox.citation.bibtex.button": "bibtex",
+
+  // "item.refbox.citation.cmdi.button": "cmdi",
+  "item.refbox.citation.cmdi.button": "cmdi",
+
+  // "item.refbox.citation.featured-service.message": "Please use the following text to cite this item or export to a predefined format:",
+  "item.refbox.citation.featured-service.message": "Pro citování této položky použijte následující text nebo ji exportujte do předdefinovaného formátu:",
+
+  // "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
+  "item.refbox.featured-service.heading": "Tento zdroj je také integrován do následujících služeb:",
+
+  // "item.refbox.featured-service.share.message": "Share",
+  "item.refbox.featured-service.share.message": "Sdílet",
+
+  // "item.refbox.modal.copy.instruction": ["Press", "ctrl + c", "to copy"],
+  "item.refbox.modal.copy.instruction": ["Stiskněte", "ctrl + c", "pro kopírování"],
+
+  // "item.refbox.modal.submit": "Ok",
+  "item.refbox.modal.submit": "Ok",
+
   // "correction-type.manage-relation.action.notification.reinstate": "Reinstate request sent.",
   "correction-type.manage-relation.action.notification.reinstate": "Žádost o obnovení odeslána.",
 
   // "correction-type.manage-relation.action.notification.withdrawn": "Withdraw request sent.",
   "correction-type.manage-relation.action.notification.withdrawn": "Žádost o stažení odeslána.",
+
+  // "curation-task.task.checkhandles.label": "Check Item Handles",
+  "curation-task.task.checkhandles.label": "Zkontrolovat handly v záznamech",
 
   // "item.version.create.modal.submitted.text": "The new version is being created. This may take some time if the item has a lot of relationships.",
   "item.version.create.modal.submitted.text": "Vytváří se nová verze. To může nějakou dobu trvat, pokud má záznam mnoho vztahů.",
@@ -4881,6 +5784,9 @@
 
   // "item.version.edit.notification.success": "The summary of version number {{version}} has been changed",
   "item.version.edit.notification.success": "Souhrn verze číslo {{version}} byl změněn",
+
+  // "item.version.history.collapse": "Collapse",
+  "item.version.history.collapse": "Sbalit",
 
   // "item.version.edit.notification.failure": "The summary of version number {{version}} has not been changed",
   "item.version.edit.notification.failure": "Souhrn verze číslo {{version}} nebyl změněn",
@@ -5152,6 +6058,27 @@
   // "loading.top-level-communities": "Loading top-level communities...",
   "loading.top-level-communities": "Načítají se komunity nejvyšší úrovně...",
 
+  // "login.already-authenticated.go-home": "Home",
+  "login.already-authenticated.go-home": "Domů",
+
+  // "login.already-authenticated.go-profile": "Profile",
+  "login.already-authenticated.go-profile": "Profil",
+
+  // "login.already-authenticated.header": "You're Already Logged In",
+  "login.already-authenticated.header": "Již jste přihlášeni",
+
+  // "login.already-authenticated.logout": "Logout",
+  "login.already-authenticated.logout": "Odhlásit se",
+
+  // "login.already-authenticated.message": "You are currently authenticated. Would you like to go to the home page or your profile?",
+  "login.already-authenticated.message": "Jste aktuálně přihlášeni. Chcete přejít do svého osobního profilu nebo na domovskou stránku?",
+
+  // "login.auth.failed.shibboleth.message": "Authentication failed because your IDP did not send the required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .",
+  "login.auth.failed.shibboleth.message": "Přihlášení selhalo, protože váš IDP neodeslal požadované hlavičky Shibboleth. Kontaktujte prosím poradnu emailem: {{ email }} .",
+
+  // "login.auth.failed.shibboleth.title": "Shibboleth authentication failed",
+  "login.auth.failed.shibboleth.title": "Přihlášení pomocí Shibboleth selhalo",
+
   // "login.form.email": "Email address",
   "login.form.email": "E-mailová adresa",
 
@@ -5166,6 +6093,9 @@
 
   // "login.form.oidc": "Log in with OIDC",
   "login.form.oidc": "Přihlásit se pomocí OIDC",
+
+  // "login.form.or-divider": "or",
+  "login.form.or-divider": "nebo",
 
   // "login.form.orcid": "Log in with ORCID",
   "login.form.orcid": "Přihlásit se pomocí ORCID",
@@ -5196,6 +6126,42 @@
 
   // "logout.title": "Logout",
   "logout.title": "Odhlášení",
+
+  // "matomo.subscription.subscribe.button": "Subscribe",
+  "matomo.subscription.subscribe.button": "Přihlásit se k odběru",
+
+  // "matomo.subscription.subscribe.error.message": "Unable to subscribe to item statistics. Please try again later.",
+  "matomo.subscription.subscribe.error.message": "Nepodařilo se přihlásit k odběru statistik položky. Zkuste to prosím později.",
+
+  // "matomo.subscription.subscribe.error.title": "Subscription Failed",
+  "matomo.subscription.subscribe.error.title": "Přihlášení k odběru se nezdařilo",
+
+  // "matomo.subscription.subscribe.success.message": "Subscribed successfully to item statistics!",
+  "matomo.subscription.subscribe.success.message": "Úspěšně jste se přihlásili k odběru statistik položky!",
+
+  // "matomo.subscription.subscribe.success.title": "Subscribed!",
+  "matomo.subscription.subscribe.success.title": "Přihlášeno k odběru",
+
+  // "matomo.subscription.subscribe.tooltip": "Subscribe to receive monthly statistics reports for this item",
+  "matomo.subscription.subscribe.tooltip": "Přihlásit se k odběru měsíčních statistik  pro tento záznam",
+
+  // "matomo.subscription.unsubscribe.button": "Unsubscribe",
+  "matomo.subscription.unsubscribe.button": "Odhlásit odběr",
+
+  // "matomo.subscription.unsubscribe.error.message": "Unable to unsubscribe from item statistics. Please try again later.",
+  "matomo.subscription.unsubscribe.error.message": "Nepodařilo se odhlásit z odběru statistik záznamu. Zkuste to prosím později.",
+
+  // "matomo.subscription.unsubscribe.error.title": "Unsubscribe Failed",
+  "matomo.subscription.unsubscribe.error.title": "Odhlášení se nezdařilo",
+
+  // "matomo.subscription.unsubscribe.success.message": "Unsubscribed successfully from item statistics!",
+  "matomo.subscription.unsubscribe.success.message": "Úspěšně jste se odhlásili z odběru statistik položky!",
+
+  // "matomo.subscription.unsubscribe.success.title": "Unsubscribed!",
+  "matomo.subscription.unsubscribe.success.title": "Odhlášeno",
+
+  // "matomo.subscription.unsubscribe.tooltip": "Unsubscribe from monthly statistics reports for this item",
+  "matomo.subscription.unsubscribe.tooltip": "Odhlásit se z odběru měsíčních statistik pro tento záznam",
 
   // "menu.header.nav.description": "Admin navigation bar",
   "menu.header.nav.description": "Navigační lišta administrátora",
@@ -5257,6 +6223,9 @@
   // "menu.section.browse_global_by_dateissued": "By Issue Date",
   "menu.section.browse_global_by_dateissued": "Podle data vydání",
 
+  // "menu.section.browse_global_by_language": "By Language",
+  "menu.section.browse_global_by_language": "Podle jazyka",
+
   // "menu.section.browse_global_by_subject": "By Subject",
   "menu.section.browse_global_by_subject": "Podle předmětu",
 
@@ -5293,6 +6262,9 @@
   // "menu.section.edit_item": "Item",
   "menu.section.edit_item": "Záznam",
 
+  // "menu.section.epic-handle": "ePIC Handles",
+  "menu.section.epic-handle": "ePIC Handles",
+
   // "menu.section.export": "Export",
   "menu.section.export": "Export",
 
@@ -5308,6 +6280,9 @@
   // "menu.section.export_metadata": "Metadata",
   "menu.section.export_metadata": "Metadata",
 
+  // "menu.section.handle": "Manage Handles",
+  "menu.section.handle": "Správa Handles",
+
   // "menu.section.export_batch": "Batch Export (ZIP)",
   "menu.section.export_batch": "Dávkový export (ZIP)",
 
@@ -5316,6 +6291,12 @@
 
   // "menu.section.icon.reports": "Reports menu section",
   "menu.section.icon.reports": "Sekce menu Zprávy",
+
+  // "menu.section.icon.statistics": "Show site statistics",
+  "menu.section.icon.statistics": "Zobrazit statistiky webu",
+
+  // "menu.section.icon.submissions": "Show my submissions",
+  "menu.section.icon.submissions": "Zobrazit moje záznamy",
 
   // "menu.section.icon.admin_search": "Admin search menu section",
   "menu.section.icon.admin_search": "Sekce menu Administrátorské vyhledávání",
@@ -5362,6 +6343,9 @@
   // "menu.section.import_metadata": "Metadata",
   "menu.section.import_metadata": "Metadata",
 
+  // "menu.section.licenses": "License Administration",
+  "menu.section.licenses": "Správa licencí",
+
   // "menu.section.new": "New",
   "menu.section.new": "Nový",
 
@@ -5395,6 +6379,9 @@
   // "menu.section.unpin": "Unpin sidebar",
   "menu.section.unpin": "Odepnout postranní panel",
 
+  // "menu.section.update-config": "Update Config",
+  "menu.section.update-config": "Úprava konfigurace",
+
   // "menu.section.processes": "Processes",
   "menu.section.processes": "Procesy",
 
@@ -5415,6 +6402,9 @@
 
   // "menu.section.statistics_task": "Statistics Task",
   "menu.section.statistics_task": "Statistická úloha",
+
+  // "menu.section.submissions": "Submissions",
+  "menu.section.submissions": "Příspěvky",
 
   // "menu.section.toggle.access_control": "Toggle Access Control section",
   "menu.section.toggle.access_control": "Přepnout sekci Řízení přístupu",
@@ -6283,6 +7273,9 @@
   // "profile.groups.head": "Authorization groups you belong to",
   "profile.groups.head": "Autorizační skupiny, do kterých patříte",
 
+  // "profile.head": "Update Profile",
+  "profile.head": "Aktualizovat profil",
+
   // "profile.special.groups.head": "Authorization special groups you belong to",
   "profile.special.groups.head": "Speciální autorizační skupiny, do kterých patříte",
 
@@ -6757,11 +7750,17 @@
   // "repository.image.logo": "Repository logo",
   "repository.image.logo": "Logo repozitáře",
 
+  // "repository.policy.page": "Change me: policy page",
+  "repository.policy.page": "policy page",
+
   // "repository.title": "DSpace Repository",
   "repository.title": "Institucionální digitální repozitář",
 
   // "repository.title.prefix": "DSpace Repository :: ",
   "repository.title.prefix": "IDR :: ",
+
+  // "repository.title.prefixDSpace": "DSpace",
+  "repository.title.prefixDSpace": "DSpace",
 
   // "resource-policies.add.button": "Add",
   "resource-policies.add.button": "Přidat",
@@ -6974,6 +7973,9 @@
   // "search.filters.applied.f.title": "Title",
   "search.filters.applied.f.title": "Název",
 
+  // "search.filters.applied.f.type": "Type",
+  "search.filters.applied.f.type": "Typ",
+
   // "search.filters.applied.f.author": "Author",
   "search.filters.applied.f.author": "Autor",
 
@@ -7003,6 +8005,9 @@
   // "search.filters.applied.f.has_geospatial_metadata": "Has geographical location",
   "search.filters.applied.f.has_geospatial_metadata": "Má geografickou polohu",
 
+  // "search.filters.applied.f.items_owning_community": "Community",
+  "search.filters.applied.f.items_owning_community": "Komunita",
+
   // "search.filters.applied.f.itemtype": "Type",
   "search.filters.applied.f.itemtype": "Typ",
 
@@ -7012,11 +8017,17 @@
   // "search.filters.applied.f.subject": "Subject",
   "search.filters.applied.f.subject": "Předmět",
 
+  // "search.filters.applied.f.subjectFirstValue": "Subject",
+  "search.filters.applied.f.subjectFirstValue": "Předmět",
+
   // "search.filters.applied.f.submitter": "Submitter",
   "search.filters.applied.f.submitter": "Odesílatel",
 
   // "search.filters.applied.f.jobTitle": "Job Title",
   "search.filters.applied.f.jobTitle": "Název pracovní pozice",
+
+  // "search.filters.applied.f.language": "Language (ISO)",
+  "search.filters.applied.f.language": "Jazyk",
 
   // "search.filters.applied.f.birthDate.max": "End birth date",
   "search.filters.applied.f.birthDate.max": "Datum narození do",
@@ -7054,11 +8065,23 @@
   // "search.filters.applied.f.point": "Coordinates",
   "search.filters.applied.f.point": "Souřadnice",
 
+  // "search.filters.applied.f.publisher": "Publisher",
+  "search.filters.applied.f.publisher": "Nakladatel",
+
   // "search.filters.filter.title.head": "Title",
   "search.filters.filter.title.head": "Název",
 
   // "search.filters.filter.title.placeholder": "Title",
   "search.filters.filter.title.placeholder": "Název",
+
+  // "search.filters.filter.type.head": "Type",
+  "search.filters.filter.type.head": "Typ",
+
+  // "search.filters.filter.type.label": "Search type",
+  "search.filters.filter.type.label": "Hledat typ",
+
+  // "search.filters.filter.type.placeholder": "Type",
+  "search.filters.filter.type.placeholder": "Typ",
 
   // "search.filters.filter.title.label": "Search Title",
   "search.filters.filter.title.label": "Hledat název",
@@ -7177,6 +8200,15 @@
   // "search.filters.filter.has_geospatial_metadata.head": "Has geographical location",
   "search.filters.filter.has_geospatial_metadata.head": "Má geografickou polohu",
 
+  // "search.filters.filter.items_owning_community.head": "Community",
+  "search.filters.filter.items_owning_community.head": "Komunita",
+
+  // "search.filters.filter.items_owning_community.label": "Search community",
+  "search.filters.filter.items_owning_community.label": "Hledat komunitu",
+
+  // "search.filters.filter.items_owning_community.placeholder": "Community",
+  "search.filters.filter.items_owning_community.placeholder": "Komunita",
+
   // "search.filters.filter.original_bundle_filenames.placeholder": "File name",
   "search.filters.filter.original_bundle_filenames.placeholder": "Název souboru",
 
@@ -7215,6 +8247,15 @@
 
   // "search.filters.filter.knowsLanguage.placeholder": "Known language",
   "search.filters.filter.knowsLanguage.placeholder": "Známý jazyk",
+
+  // "search.filters.filter.language.head": "Language (ISO)",
+  "search.filters.filter.language.head": "Jazyk",
+
+  // "search.filters.filter.language.label": "Search language",
+  "search.filters.filter.language.label": "Hledat jazyk",
+
+  // "search.filters.filter.language.placeholder": "Language",
+  "search.filters.filter.language.placeholder": "Jazyk",
 
   // "search.filters.filter.knowsLanguage.label": "Search known language",
   "search.filters.filter.knowsLanguage.label": "Známý jazyk",
@@ -7525,6 +8566,45 @@
   // "sorting.score.DESC": "Most Relevant",
   "sorting.score.DESC": "Nejvíce relevantní",
 
+  // "static-page.404.help": "The static page you requested does not exist. It may have been moved or deleted. You can use the button below to get back to the home page.",
+  "static-page.404.help": "Požadovaná statická stránka neexistuje. Mohla být přesunuta nebo smazána. Pomocí níže uvedeného tlačítka se můžete vrátit na domovskou stránku.",
+
+  // "static-page.404.link.home-page": "Take me to the home page",
+  "static-page.404.link.home-page": "Návrat na domovskou stránku",
+
+  // "static-page.404.page-not-found": "page not found",
+  "static-page.404.page-not-found": "stránka nebyla nalezena",
+
+  // "static.deposit.image.step-1": "Step 1 Menu Login image",
+  "static.deposit.image.step-1": "Krok 1: menu - přihlášení",
+
+  // "static.deposit.image.step-2": "Step 2 Menu Submissions image",
+  "static.deposit.image.step-2": "Krok 2: menu - příspěvky",
+
+  // "static.deposit.image.step-2-1": "Step 2.1 Starting a submission image",
+  "static.deposit.image.step-2-1": "Krok 2.1: vytvoření nového příspěvku",
+
+  // "static.deposit.image.step-3": "Step 3 Submission information image",
+  "static.deposit.image.step-3": "Krok 3: informace o příspěvku",
+
+  // "static.deposit.image.step-4": "Step 4 Describing item people and organizations image",
+  "static.deposit.image.step-4": "Krok 4: popis osob a organizací u příspěvku",
+
+  // "static.deposit.image.step-4-1": "Step 4.1 Describing item source details image",
+  "static.deposit.image.step-4-1": "Krok 4.1: podrobnosti o původu příspěvku",
+
+  // "static.deposit.image.step-5": "Step 5 Uploading file image",
+  "static.deposit.image.step-5": "Krok 5: nahrání souboru",
+
+  // "static.deposit.image.step-6-1": "Step 6.1 Distribution license agreement image",
+  "static.deposit.image.step-6-1": "Krok 6.1: Odsouhlasení distribuční licence",
+
+  // "static.deposit.image.step-6-2": "Step 6.2 Selecting license image",
+  "static.deposit.image.step-6-2": "Krok 6.2: Výběr licence",
+
+  // "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
+  "static.deposit.image.step-6-3": "Krok 6.3: Open license selector - nástroj pro výběr licence",
+
   // "sorting.dc.date.issued.ASC": "Date Issued Ascending",
   "sorting.dc.date.issued.ASC": "Datum vydání vzestupně",
 
@@ -7563,6 +8643,93 @@
 
   // "statistics.title": "Statistics",
   "statistics.title": "Statistiky",
+
+  // "statistics.views-downloads.all-months": "All Months",
+  "statistics.views-downloads.all-months": "All Months",
+
+  // "statistics.views-downloads.all-years": "All Years",
+  "statistics.views-downloads.all-years": "All Years",
+
+  // "statistics.views-downloads.back-to-item": "Back to Item",
+  "statistics.views-downloads.back-to-item": "Back to Item",
+
+  // "statistics.views-downloads.back-to-months": "Back to Months",
+  "statistics.views-downloads.back-to-months": "Back to Months",
+
+  // "statistics.views-downloads.back-to-years": "Back to Years",
+  "statistics.views-downloads.back-to-years": "Back to Years",
+
+  // "statistics.views-downloads.downloads": "Downloads",
+  "statistics.views-downloads.downloads": "Downloads",
+
+  // "statistics.views-downloads.drill-down-info": "Click on a data point to drill down by year / month.",
+  "statistics.views-downloads.drill-down-info": "Click on a data point to drill down by year / month.",
+
+  // "statistics.views-downloads.error": "Failed to load statistics. Please try again later.",
+  "statistics.views-downloads.error": "Failed to load statistics. Please try again later.",
+
+  // "statistics.views-downloads.file-wise-statistics": "File-wise Download Statistics",
+  "statistics.views-downloads.file-wise-statistics": "File-wise Download Statistics",
+
+  // "statistics.views-downloads.loading": "Loading statistics...",
+  "statistics.views-downloads.loading": "Loading statistics...",
+
+  // "statistics.views-downloads.months.april": "April",
+  "statistics.views-downloads.months.april": "April",
+
+  // "statistics.views-downloads.months.august": "August",
+  "statistics.views-downloads.months.august": "August",
+
+  // "statistics.views-downloads.months.december": "December",
+  "statistics.views-downloads.months.december": "December",
+
+  // "statistics.views-downloads.months.february": "February",
+  "statistics.views-downloads.months.february": "February",
+
+  // "statistics.views-downloads.months.january": "January",
+  "statistics.views-downloads.months.january": "January",
+
+  // "statistics.views-downloads.months.july": "July",
+  "statistics.views-downloads.months.july": "July",
+
+  // "statistics.views-downloads.months.june": "June",
+  "statistics.views-downloads.months.june": "June",
+
+  // "statistics.views-downloads.months.march": "March",
+  "statistics.views-downloads.months.march": "March",
+
+  // "statistics.views-downloads.months.may": "May",
+  "statistics.views-downloads.months.may": "May",
+
+  // "statistics.views-downloads.months.november": "November",
+  "statistics.views-downloads.months.november": "November",
+
+  // "statistics.views-downloads.months.october": "October",
+  "statistics.views-downloads.months.october": "October",
+
+  // "statistics.views-downloads.months.september": "September",
+  "statistics.views-downloads.months.september": "September",
+
+  // "statistics.views-downloads.no-data": "No download statistics available",
+  "statistics.views-downloads.no-data": "No download statistics available",
+
+  // "statistics.views-downloads.statistics-for": "Statistics for",
+  "statistics.views-downloads.statistics-for": "Statistics for",
+
+  // "statistics.views-downloads.title.daily": "Daily Statistics for {{month}} {{year}}",
+  "statistics.views-downloads.title.daily": "Daily Statistics for {{month}} {{year}}",
+
+  // "statistics.views-downloads.title.monthly": "Monthly Statistics for {{year}}",
+  "statistics.views-downloads.title.monthly": "Monthly Statistics for {{year}}",
+
+  // "statistics.views-downloads.title.yearly": "Repository Usage Statistics",
+  "statistics.views-downloads.title.yearly": "Repository Usage Statistics",
+
+  // "statistics.views-downloads.view-button": "Statistics",
+  "statistics.views-downloads.view-button": "Statistiky",
+
+  // "statistics.views-downloads.views": "Views",
+  "statistics.views-downloads.views": "Views",
 
   // "statistics.header": "Statistics for {{ scope }}",
   "statistics.header": "Statistiky pro {{ scope }}",
@@ -7731,6 +8898,9 @@
 
   // "submission.import-external.source.loading": "Loading ...",
   "submission.import-external.source.loading": "Načítá se ...",
+
+  // "submission.import-external.source.openAIREFunding": "Funding OpenAIRE API",
+  "submission.import-external.source.openAIREFunding": "Financování OpenAIRE API",
 
   // "submission.import-external.source.sherpaJournal": "SHERPA Journals",
   "submission.import-external.source.sherpaJournal": "SHERPA Journals",
@@ -7909,6 +9079,9 @@
   // "submission.sections.describe.relationship-lookup.external-source.import-modal.head.lcname": "Importing from LC Name",
   "submission.sections.describe.relationship-lookup.external-source.import-modal.head.lcname": "Import z LC Name",
 
+  // "submission.sections.describe.relationship-lookup.external-source.import-modal.head.openAIREFunding": "Funding OpenAIRE API",
+  "submission.sections.describe.relationship-lookup.external-source.import-modal.head.openAIREFunding": "Financování OpenAIRE API",
+
   // "submission.sections.describe.relationship-lookup.external-source.import-modal.head.orcid": "Importing from ORCID",
   "submission.sections.describe.relationship-lookup.external-source.import-modal.head.orcid": "Import z ORCID",
 
@@ -8058,6 +9231,9 @@
 
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.lcname": "LC Names ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.lcname": "LC Names ({{ count }})",
+
+  // "submission.sections.describe.relationship-lookup.search-tab.tab-title.openAIREFunding": "Funding OpenAIRE API",
+  "submission.sections.describe.relationship-lookup.search-tab.tab-title.openAIREFunding": "Financování OpenAIRE API",
 
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.pubmed": "PubMed ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.pubmed": "PubMed ({{ count }})",
@@ -8287,6 +9463,9 @@
   // "submission.sections.describe.relationship-lookup.selection-tab.title.lcname": "Search Results",
   "submission.sections.describe.relationship-lookup.selection-tab.title.lcname": "Výsledky vyhledávání",
 
+  // "submission.sections.describe.relationship-lookup.selection-tab.title.openAIREFunding": "Funding OpenAIRE API",
+  "submission.sections.describe.relationship-lookup.selection-tab.title.openAIREFunding": "Financování OpenAIRE API",
+
   // "submission.sections.describe.relationship-lookup.selection-tab.title.pubmed": "Search Results",
   "submission.sections.describe.relationship-lookup.selection-tab.title.pubmed": "Výsledky vyhledávání",
 
@@ -8340,6 +9519,81 @@
 
   // "submission.sections.ccLicense.type": "License Type",
   "submission.sections.ccLicense.type": "Typ licence",
+
+  // "submission.sections.clarin-license.head.license-agreement": "Distribution License Agreement",
+  "submission.sections.clarin-license.head.license-agreement": "Licenční smlouva o distribuci",
+
+  // "submission.sections.clarin-license.head.license-decision-message": "By checking this box, you agree to the Distribution License Agreement for this repository to reproduce, translate and distribute your submissions worldwide.",
+  "submission.sections.clarin-license.head.license-decision-message": "Zaškrtnutím tohoto políčka vyjadřujete souhlas s licenční smlouvou o distribuci, která umožňuje tomuto úložišti reprodukovat, překládat a distribuovat vaše příspěvky celosvětově.",
+
+  // "submission.sections.clarin-license.head.license-do-not-suits-needs": "None of these licenses suits your needs",
+  "submission.sections.clarin-license.head.license-do-not-suits-needs": "Žádná z těchto licencí nevyhovuje vašim potřebám",
+
+  // "submission.sections.clarin-license.head.license-dropdown-info": "If you already know under which license you want to distribute your work, please select from the dropdown below.",
+  "submission.sections.clarin-license.head.license-dropdown-info": "Pokud již víte, pod jakou licencí chcete své dílo šířit, vyberte si z rozbalovacího seznamu níže.",
+
+  // "submission.sections.clarin-license.head.license-more-details": "See more details for the licenses",
+  "submission.sections.clarin-license.head.license-more-details": "Více podrobností o licencích",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-continue": "You will be able to continue the submission afterwards.",
+  "submission.sections.clarin-license.head.license-not-offer-proceed-continue": "Poté budete moci pokračovat v odesílání.",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Send an email to", "Help Desk", "with the license details."],
+  "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Pošlete", "nám", "e-mail s detaily licence."],
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-link": "Obtain a link (or a copy) to the license.",
+  "submission.sections.clarin-license.head.license-not-offer-proceed-link": "Získejte odkaz (nebo kopii) na licenci.",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceed-wait": "Save the unfinished submission and wait. We will add the license to the selection list and contact you.",
+  "submission.sections.clarin-license.head.license-not-offer-proceed-wait": "Uložte nedokončený záznam a počkejte. Licenci přidáme do výběrového seznamu a budeme vás kontaktovat.",
+
+  // "submission.sections.clarin-license.head.license-not-offer-proceeds": "If you need to use a license we currently do not offer, proceed as follows:",
+  "submission.sections.clarin-license.head.license-not-offer-proceeds": "Pokud potřebujete použít licenci, kterou v současné době nenabízíme, postupujte následovně:",
+
+  // "submission.sections.clarin-license.head.license-not-supported-message": "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\".",
+  "submission.sections.clarin-license.head.license-not-supported-message": "Vybraná licence není v současnosti podporována. Postupujte podle postupu popsaného v části \"Žádná z těchto licencí nevyhovuje vašim potřebám\".",
+
+  // "submission.sections.clarin-license.head.license-open-selector": "OPEN License Selector",
+  "submission.sections.clarin-license.head.license-open-selector": "Výběr licence",
+
+  // "submission.sections.clarin-license.head.license-question-help-desk": ["If you have questions regarding this licence please contact the", "Help Desk"],
+  "submission.sections.clarin-license.head.license-question-help-desk": ["Pokud máte dotazy týkající se této licence, prosím kontaktujte", "poradnu"],
+
+  // "submission.sections.clarin-license.head.license-select-default-value": "Select a License ...",
+  "submission.sections.clarin-license.head.license-select-default-value": "Vyberte licenci ...",
+
+  // "submission.sections.clarin-license.head.license-select-or": "- OR -",
+  "submission.sections.clarin-license.head.license-select-or": "- NEBO -",
+
+  // "submission.sections.clarin-license.head.license-select-providing": ["The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ", "License List Page", "."],
+  "submission.sections.clarin-license.head.license-select-providing": ["License Selector vám pomůže vybrat nejvhodnější licenci pro vaše data nebo software. Momentálně pouze v angličtině ", "Seznam Licencii", "."],
+
+  // "submission.sections.clarin-license.head.license-select-resource": "Select the resource license",
+  "submission.sections.clarin-license.head.license-select-resource": "Vyberte licenci zdroje",
+
+  // "submission.sections.clarin-license.head.read-accept": "Read and accept the ",
+  "submission.sections.clarin-license.head.read-accept": "Přečtěte si a přijměte",
+
+  // "submission.sections.clarin-license.toggle.off-text": "Click to accept",
+  "submission.sections.clarin-license.toggle.off-text": "Klikněte pro přijetí",
+
+  // "submission.sections.clarin-license.toggle.on-text": "Accepted",
+  "submission.sections.clarin-license.toggle.on-text": "Přijato",
+
+  // "submission.sections.clarin-notice.error": "Please confirm that you have read the Notice.",
+  "submission.sections.clarin-notice.error": "Prosím potvrďte, že jste si přečetli oznámení.",
+
+  // "submission.sections.clarin-notice.message": ["The submission process for this collection (\"","\") is still being fine-tuned. If you find yourself unable to continue the submission because you can't provide the required information, because the required format for a field is too strict, because there's no appropriate field for your information, or for any other reason", "let us know"],
+  "submission.sections.clarin-notice.message": ["Proces přidávání záznamů do této kolekce (\"", "\") stále ladíme. Pokud se vám nedaří přidat záznam, protože nemáte požadované informace, nebo protože některé z polí má příliš přísné požadavky na formát, nebo protože chybí pole, do kterého by se dala vaše informace zachytit, nebo z jakéhokoliv jiného důvodu,", "kontaktujte nás"],
+
+  // "submission.sections.clarin-notice.toggle.message": "By checking this box, you confirm that you read the text above and that you understand it.",
+  "submission.sections.clarin-notice.toggle.message": "Zaškrtnutím tohoto políčka potvrzujete, že jste si přečetli výše uvedený text a že mu rozumíte.",
+
+  // "submission.sections.clarin-notice.toggle.off-text": "Click to confirm",
+  "submission.sections.clarin-notice.toggle.off-text": "Klikněte pro potvrzení",
+
+  // "submission.sections.clarin-notice.toggle.on-text": "Confirmed",
+  "submission.sections.clarin-notice.toggle.on-text": "Potvrzeno",
 
   // "submission.sections.ccLicense.select": "Select a license type…",
   "submission.sections.ccLicense.select": "Vyberte typ licence...",
@@ -8428,6 +9682,12 @@
   // "submission.sections.submit.progressbar.accessCondition": "Item access conditions",
   "submission.sections.submit.progressbar.accessCondition": "Podmínky přístupu k záznamu",
 
+  // "submission.sections.submit.progressbar.clarin-license": "Pick license",
+  "submission.sections.submit.progressbar.clarin-license": "Vybrat licenci",
+
+  // "submission.sections.submit.progressbar.clarin-notice": "Notice",
+  "submission.sections.submit.progressbar.clarin-notice": "Oznámení",
+
   // "submission.sections.submit.progressbar.CClicense": "Creative commons license",
   "submission.sections.submit.progressbar.CClicense": "Licence Creative Commons",
 
@@ -8442,6 +9702,9 @@
 
   // "submission.sections.submit.progressbar.describe.steptwo": "Describe",
   "submission.sections.submit.progressbar.describe.steptwo": "Popsat",
+
+  // "submission.sections.submit.progressbar.detect-duplicate": "Potential duplicates",
+  "submission.sections.submit.progressbar.detect-duplicate": "Potenciální duplicity",
 
   // "submission.sections.submit.progressbar.duplicates": "Potential duplicates",
   "submission.sections.submit.progressbar.duplicates": "Potenciální duplicity",
@@ -8592,6 +9855,9 @@
 
   // "submission.sections.upload.upload-failed": "Upload failed",
   "submission.sections.upload.upload-failed": "Nahrání se nezdařilo",
+
+  // "submission.sections.upload.upload-failed.size-limit-exceeded": "File size exceeds the maximum upload size",
+  "submission.sections.upload.upload-failed.size-limit-exceeded": "Velikost souboru překračuje maximální povolenou velikost pro nahrávání",
 
   // "submission.sections.upload.upload-successful": "Upload successful",
   "submission.sections.upload.upload-successful": "Úspěšně nahráno",
@@ -8747,6 +10013,12 @@
   // "submission.submit.title": "New submission",
   "submission.submit.title": "Nový příspěvek",
 
+  // "submission.workflow.generic.curate": "Curate",
+  "submission.workflow.generic.curate": "Zkontrolovat",
+
+  // "submission.workflow.generic.curate-help": "Validate the item with the curation framework",
+  "submission.workflow.generic.curate-help": "Ověřit položku pomocí kurátorského frameworku",
+
   // "submission.workflow.generic.delete": "Delete",
   "submission.workflow.generic.delete": "Smazat",
 
@@ -8759,11 +10031,23 @@
   // "submission.workflow.generic.edit-help": "Select this option to change the item's metadata.",
   "submission.workflow.generic.edit-help": "Zvolte tuto možnost, chcete-li změnit metadata záznamu.",
 
+  // "submission.workflow.generic.share-submission": "Share submission",
+  "submission.workflow.generic.share-submission": "Sdílet příspěvek",
+
+  // "submission.workflow.generic.share-submission.tooltip": "Share submission",
+  "submission.workflow.generic.share-submission.tooltip": "Sdílet příspěvek",
+
   // "submission.workflow.generic.view": "View",
   "submission.workflow.generic.view": "Zobrazit",
 
   // "submission.workflow.generic.view-help": "Select this option to view the item's metadata.",
   "submission.workflow.generic.view-help": "Tuto možnost vyberte, chcete-li zobrazit metadata záznamu.",
+
+  // "submission.workflow.share-submission.email.error": "Cannot send the email with share link",
+  "submission.workflow.share-submission.email.error": "Nelze odeslat e-mail s odkazem na sdílení",
+
+  // "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
+  "submission.workflow.share-submission.email.successful": "E-mail s odkazem na sdílení byl úspěšně odeslán",
 
   // "submission.workflow.generic.submit_select_reviewer": "Select Reviewer",
   "submission.workflow.generic.submit_select_reviewer": "Vybrat recenzenta",
@@ -9660,6 +10944,233 @@
   // "admin.system-wide-alert.title": "System-wide Alerts",
   "admin.system-wide-alert.title": "Systémová upozornění",
 
+  "admin.update-config.breadcrumbs": "Aktualizace konfigurace",
+
+  // "admin.update-config.buttons.reload": "Reload File",
+  "admin.update-config.buttons.reload": "Znovu načíst soubor",
+
+  // "admin.update-config.buttons.reload.tooltip": "Reload file from server",
+  "admin.update-config.buttons.reload.tooltip": "Znovu načíst soubor ze serveru",
+
+  // "admin.update-config.buttons.save": "Save to File",
+  "admin.update-config.buttons.save": "Uložit do souboru",
+
+  // "admin.update-config.buttons.save.tooltip": "Save changes to configuration file",
+  "admin.update-config.buttons.save.tooltip": "Uložit změny do konfiguračního souboru",
+
+  // "admin.update-config.buttons.saving": "Saving to File...",
+  "admin.update-config.buttons.saving": "Ukládání do souboru...",
+
+  // "admin.update-config.buttons.undo": "Undo Changes",
+  "admin.update-config.buttons.undo": "Vrátit změny",
+
+  // "admin.update-config.buttons.undo.tooltip": "Reset to last saved version",
+  "admin.update-config.buttons.undo.tooltip": "Obnovit na poslední uloženou verzi",
+
+  // "admin.update-config.content": "File Content",
+  "admin.update-config.content": "Obsah souboru",
+
+  // "admin.update-config.description": "Edit DSpace configuration files through the web interface.",
+  "admin.update-config.description": "Editace konfiguračních souborů DSpace prostřednictvím webového rozhraní.",
+
+  // "admin.update-config.editor.characters": "characters",
+  "admin.update-config.editor.characters": "znaků",
+
+  // "admin.update-config.editor.content": "File Content",
+  "admin.update-config.editor.content": "Obsah souboru",
+
+  // "admin.update-config.editor.notice.description": "Editing configuration file {{fileName}}. Changes are saved immediately to the server.",
+  "admin.update-config.editor.notice.description": "Editace konfiguračního souboru {{fileName}}. Změny jsou ukládány okamžitě na server.",
+
+  // "admin.update-config.editor.notice.title": "File Editor",
+  "admin.update-config.editor.notice.title": "Editor souborů",
+
+  // "admin.update-config.editor.placeholder": "Select a file to begin editing...",
+  "admin.update-config.editor.placeholder": "Vyberte soubor pro zahájení editace...",
+
+  // "admin.update-config.editor.reset": "Reset",
+  "admin.update-config.editor.reset": "Obnovit",
+
+  // "admin.update-config.editor.reset.tooltip": "Reset content to original version",
+  "admin.update-config.editor.reset.tooltip": "Obnovit obsah na původní verzi",
+
+  // "admin.update-config.editor.save": "Save Changes",
+  "admin.update-config.editor.save": "Uložit změny",
+
+  // "admin.update-config.editor.save.tooltip": "Save changes to the configuration file",
+  "admin.update-config.editor.save.tooltip": "Uložit změny do konfiguračního souboru",
+
+  // "admin.update-config.editor.title": "Configuration Editor",
+  "admin.update-config.editor.title": "Editor konfigurace",
+
+  // "admin.update-config.error.load-content.message": "Could not load {{fileName}}",
+  "admin.update-config.error.load-content.message": "Nepodařilo se načíst {{fileName}}",
+
+  // "admin.update-config.error.load-content.title": "Load Failed",
+  "admin.update-config.error.load-content.title": "Načtení selhalo",
+
+  // "admin.update-config.error.load-files.message": "Failed to load configuration files list",
+  "admin.update-config.error.load-files.message": "Nepodařilo se načíst seznam konfiguračních souborů",
+
+  // "admin.update-config.error.load-files.title": "Load Error",
+  "admin.update-config.error.load-files.title": "Chyba načtení",
+
+  // "admin.update-config.error.load.message": "Unable to load configuration file: {{fileName}}",
+  "admin.update-config.error.load.message": "Nepodařilo se načíst konfigurační soubor: {{fileName}}",
+
+  // "admin.update-config.error.load.title": "Load Failed",
+  "admin.update-config.error.load.title": "Načtení selhalo",
+
+  // "admin.update-config.error.reload.message": "Could not reload original file",
+  "admin.update-config.error.reload.message": "Nepodařilo se znovu načíst původní soubor",
+
+  // "admin.update-config.error.reload.title": "Reload Failed",
+  "admin.update-config.error.reload.title": "Opětovné načtení selhalo",
+
+  // "admin.update-config.error.save.message": "Could not save {{fileName}}",
+  "admin.update-config.error.save.message": "Nepodařilo se uložit {{fileName}}",
+
+  // "admin.update-config.error.save.title": "Save Failed",
+  "admin.update-config.error.save.title": "Uložení selhalo",
+
+  // "admin.update-config.file-info.bytes": "bytes",
+  "admin.update-config.file-info.bytes": "bajtů",
+
+  // "admin.update-config.file-info.modified": "Modified",
+  "admin.update-config.file-info.modified": "Změněno",
+
+  // "admin.update-config.file-info.name": "File",
+  "admin.update-config.file-info.name": "Soubor",
+
+  // "admin.update-config.file-info.path": "Path",
+  "admin.update-config.file-info.path": "Cesta",
+
+  // "admin.update-config.file-info.ready": "Ready for editing",
+  "admin.update-config.file-info.ready": "Připraven k editaci",
+
+  // "admin.update-config.file-info.size": "Size",
+  "admin.update-config.file-info.size": "Velikost",
+
+  // "admin.update-config.file-info.status": "Status",
+  "admin.update-config.file-info.status": "Stav",
+
+  // "admin.update-config.file-info.title": "File Information",
+  "admin.update-config.file-info.title": "Informace o souboru",
+
+  // "admin.update-config.file-selection.label": "Select Configuration File",
+  "admin.update-config.file-selection.label": "Vyberte konfigurační soubor",
+
+  // "admin.update-config.file-selection.title": "File Selection",
+  "admin.update-config.file-selection.title": "Výběr souboru",
+
+  // "admin.update-config.file.info": "File",
+  "admin.update-config.file.info": "Soubor",
+
+  // "admin.update-config.file.no-name": "[No Name]",
+  "admin.update-config.file.no-name": "[Bez názvu]",
+
+  // "admin.update-config.help.allowed-files.description": "Only XML files in the config-be directory can be edited for security reasons:",
+  "admin.update-config.help.allowed-files.description": "Pouze XML soubory v adresáři config-be mohou být editovány z bezpečnostních důvodů:",
+
+  // "admin.update-config.help.allowed-files.title": "Editable Files",
+  "admin.update-config.help.allowed-files.title": "Editovatelné soubory",
+
+  // "admin.update-config.help.backup": "Always backup configuration files before making changes.",
+  "admin.update-config.help.backup": "Vždy zálohujte konfigurační soubory před prováděním změn.",
+
+  // "admin.update-config.help.directory": "Only files in /config/config-be/ directory can be edited for security reasons.",
+  "admin.update-config.help.directory": "Pouze soubory v adresáři /config/config-be/ mohou být editovány z bezpečnostních důvodů.",
+
+  // "admin.update-config.help.important.backup": "Always backup configuration files before making changes",
+  "admin.update-config.help.important.backup": "Vždy zálohujte konfigurační soubory před prováděním změn",
+
+  // "admin.update-config.help.important.restart": "DSpace may require restart after configuration changes",
+  "admin.update-config.help.important.restart": "DSpace může vyžadovat restart po změnách konfigurace",
+
+  // "admin.update-config.help.important.title": "Before You Start",
+  "admin.update-config.help.important.title": "Než začnete",
+
+  // "admin.update-config.help.important.validation": "Configuration validation prevents saving invalid files",
+  "admin.update-config.help.important.validation": "Validace konfigurace předchází uložení neplatných souborů",
+
+  // "admin.update-config.help.restart": "Changes may require application restart to take effect.",
+  "admin.update-config.help.restart": "Změny mohou vyžadovat restart aplikace pro aktivaci.",
+
+  // "admin.update-config.help.title": "Important Notes",
+  "admin.update-config.help.title": "Důležité poznámky",
+
+  // "admin.update-config.help.validate": "Ensure your configuration is valid before saving to prevent system errors.",
+  "admin.update-config.help.validate": "Ujistěte se, že je vaše konfigurace platná před uložením pro předejití systémovým chybám.",
+
+  // "admin.update-config.invalid": "Invalid",
+  "admin.update-config.invalid": "Neplatný",
+
+  // "admin.update-config.last.modified": "Last modified",
+  "admin.update-config.last.modified": "Naposledy změněno",
+
+  // "admin.update-config.loading": "Loading...",
+  "admin.update-config.loading": "Načítání...",
+
+  // "admin.update-config.loading-content": "Loading file content...",
+  "admin.update-config.loading-content": "Načítání obsahu souboru...",
+
+  // "admin.update-config.loading-files": "Loading configuration files...",
+  "admin.update-config.loading-files": "Načítání konfiguračních souborů...",
+
+  // "admin.update-config.refresh": "Refresh",
+  "admin.update-config.refresh": "Obnovit",
+
+  // "admin.update-config.refresh.tooltip": "Reload configuration files list",
+  "admin.update-config.refresh.tooltip": "Znovu načíst seznam konfiguračních souborů",
+
+  // "admin.update-config.reset": "Reset",
+  "admin.update-config.reset": "Obnovit",
+
+  // "admin.update-config.save": "Save Configuration",
+  "admin.update-config.save": "Uložit konfiguraci",
+
+  // "admin.update-config.select.choose-file": "Choose a configuration file to edit",
+  "admin.update-config.select.choose-file": "Vyberte konfigurační soubor k editaci",
+
+  // "admin.update-config.select.file": "Select Configuration File",
+  "admin.update-config.select.file": "Vyberte konfigurační soubor",
+
+  // "admin.update-config.select.file.placeholder": "Choose a file to edit...",
+  "admin.update-config.select.file.placeholder": "Vyberte soubor k editaci...",
+
+  // "admin.update-config.select.no-files": "No configuration files found",
+  "admin.update-config.select.no-files": "Nenalezeny žádné konfigurační soubory",
+
+  // "admin.update-config.success.reload.message": "Reloaded {{fileName}} from server",
+  "admin.update-config.success.reload.message": "{{fileName}} byl znovu načten ze serveru",
+
+  // "admin.update-config.success.reload.title": "File Reloaded",
+  "admin.update-config.success.reload.title": "Soubor znovu načten",
+
+  // "admin.update-config.success.save.message": "{{fileName}} has been updated successfully",
+  "admin.update-config.success.save.message": "{{fileName}} byl úspěšně aktualizován",
+
+  // "admin.update-config.success.save.title": "File Saved Successfully",
+  "admin.update-config.success.save.title": "Soubor úspěšně uložen",
+
+  // "admin.update-config.title": "Update Configuration",
+  "admin.update-config.title": "Aktualizace konfigurace",
+
+  // "admin.update-config.valid": "Valid",
+  "admin.update-config.valid": "Platný",
+
+  // "admin.update-config.validation.errors": "Configuration Validation Errors",
+  "admin.update-config.validation.errors": "Chyby validace konfigurace",
+
+  // "admin.update-config.validation.invalid": "Configuration contains errors - please fix before saving",
+  "admin.update-config.validation.invalid": "Konfigurace obsahuje chyby - prosím opravte před uložením",
+
+  // "admin.update-config.validation.unsaved-changes": "File has unsaved changes",
+  "admin.update-config.validation.unsaved-changes": "Soubor má neuložené změny",
+
+  // "admin.update-config.validation.valid": "Configuration is valid",
+  "admin.update-config.validation.valid": "Konfigurace je platná",
+
   // "discover.filters.head": "Discover",
   "discover.filters.head": "Objevovat",
 
@@ -9827,6 +11338,24 @@
   "service.confirm.create": "Vytvořit",
   // "service.refuse.create": "Cancel",
   "service.refuse.create": "Zrušit",
+
+  // "share.submission.breadcrumbs": "Share submission",
+  "share.submission.breadcrumbs": "Sdílení příspěvku",
+
+  // "share.submission.page.share-link.message.end": ". You will also receive an email with this link.",
+  "share.submission.page.share-link.message.end": ". Odkaz vám také přijde e-mailem (v angličtině).",
+
+  // "share.submission.page.share-link.message.start": "To pass your submission to another user give them the following link: ",
+  "share.submission.page.share-link.message.start": "Chcete-li tento záznam předat někomu jinému, předejte tento odkaz: ",
+
+  // "share.submission.page.title": "Share link",
+  "share.submission.page.title": "Sdílet odkaz",
+
+  // "sidebar.collapse.all": "Collapse all",
+  "sidebar.collapse.all": "Sbalit vše",
+
+  // "sidebar.expand.all": "Expand all",
+  "sidebar.expand.all": "Rozbalit vše",
   // "ldn-register-new-service.title": "Register a new service",
   "ldn-register-new-service.title": "Zaregistrovat novou službu",
   // "ldn-new-service.form.label.submit": "Save",
@@ -10080,8 +11609,20 @@
   // "item.page.review": "Review",
   "item.page.review": "Recenze",
 
+  // "item.page.size-info": "Size",
+  "item.page.size-info": "Velikost",
+
+  // "item.page.sponsor": "Acknowledgement",
+  "item.page.sponsor": "Sponzoři",
+
+  // "item.page.statistics": "Show item statistics",
+  "item.page.statistics": "Zobrazit statistiky záznamu",
+
   // "item.page.referenced": "Referenced By",
   "item.page.referenced": "Odkazováno od",
+
+  // "item.page.referenced-by": "Referenced by",
+  "item.page.referenced-by": "Odkaz na záznam v",
 
   // "item.page.supplemented": "Supplemented By",
   "item.page.supplemented": "Doplněno",
@@ -10159,6 +11700,15 @@
 
   // "submission.sections.submit.progressbar.coarnotify": "COAR Notify",
   "submission.sections.submit.progressbar.coarnotify": "COAR Notify",
+
+  // "submission.sections.submit.progressbar.describe.dataciteoptional": "Optional Properties",
+  "submission.sections.submit.progressbar.describe.dataciteoptional": "Rozšířený popis (volitelné)",
+
+  // "submission.sections.submit.progressbar.describe.dataciterecommended": "Recommended Properties",
+  "submission.sections.submit.progressbar.describe.dataciterecommended": "Rozšířený popis (doporučené)",
+
+  // "submission.sections.submit.progressbar.describe.dataciterequired": "Required Properties",
+  "submission.sections.submit.progressbar.describe.dataciterequired": "Minimální popis (povinné)",
 
   // "submission.section.section-coar-notify.control.request-review.label": "You can request a review to one of the following services",
   "submission.section.section-coar-notify.control.request-review.label": "Můžete požádat o recenzi u jedné z následujících služeb",
@@ -10416,6 +11966,9 @@
   // "search.filters.applied.f.relateditem": "Related items",
   "search.filters.applied.f.relateditem": "Související záznamy",
 
+  // "search.filters.applied.f.rights": "Rights",
+  "search.filters.applied.f.rights": "Práva",
+
   // "search.filters.applied.f.ldn_service": "LDN Service",
   "search.filters.applied.f.ldn_service": "LDN služba",
 
@@ -10535,6 +12088,15 @@
 
   // "search.filters.filter.relateditem.placeholder": "Related items",
   "search.filters.filter.relateditem.placeholder": "Související záznamy",
+
+  // "search.filters.filter.rights.head": "Rights",
+  "search.filters.filter.rights.head": "Práva",
+
+  // "search.filters.filter.rights.label": "Search rights",
+  "search.filters.filter.rights.label": "Hledat práva",
+
+  // "search.filters.filter.rights.placeholder": "Rights",
+  "search.filters.filter.rights.placeholder": "Práva",
 
   // "search.filters.filter.target.placeholder": "Target",
   "search.filters.filter.target.placeholder": "Cíl",
@@ -10704,6 +12266,12 @@
   // "context.notify-detail-modal": "Repository Item",
   "context.notify-detail-modal": "Záznam v repozitáři",
 
+  // "contract.breadcrumbs": "Distribution License Agreement",
+  "contract.breadcrumbs": "Licenční smlouva o distribuci",
+
+  // "contract.message.distribution-license-agreement": "Distribution License Agreement",
+  "contract.message.distribution-license-agreement": "Licenční smlouva o distribuci",
+
   // "queueAttempts.notify-detail-modal": "Queue attempts",
   "queueAttempts.notify-detail-modal": "Pokusy fronty",
 
@@ -10775,6 +12343,12 @@
 
   // "ldnService.notify-detail-modal": "LDN Service",
   "ldnService.notify-detail-modal": "LDN služba",
+
+  // "licenses.breadcrumbs": "Licenses",
+  "licenses.breadcrumbs": "License",
+
+  // "licenses.manage-table.breadcrumbs": "License administration",
+  "licenses.manage-table.breadcrumbs": "Správa licencí",
 
   // "relatedItem.notify-detail-modal": "Related Item",
   "relatedItem.notify-detail-modal": "Související záznam",
@@ -10984,6 +12558,222 @@
 
   // "embargo.listelement.badge": "Embargo until {{ date }}",
   "embargo.listelement.badge": "Embargo do {{ date }}",
+
+  // "epic-handle-page.title": "ePIC Handles",
+  "epic-handle-page.title": "ePIC Handles",
+
+  // "epic-handle-table": "ePIC Handles",
+  "epic-handle-table": "ePIC Handles",
+
+  "epic-handle-table.breadcrumbs": "ePIC Handles",
+
+  // "epic-handle-table.button.change-prefix": "Change Prefix",
+  "epic-handle-table.button.change-prefix": "Change Prefix",
+
+  // "epic-handle-table.button.delete-handle": "Delete Handle",
+  "epic-handle-table.button.delete-handle": "Delete Handle",
+
+  // "epic-handle-table.button.edit-handle": "Edit Handle",
+  "epic-handle-table.button.edit-handle": "Edit Handle",
+
+  // "epic-handle-table.button.goto-handle": "Go to Handle",
+  "epic-handle-table.button.goto-handle": "Go to Handle",
+
+  // "epic-handle-table.button.new-handle": "Create New Handle",
+  "epic-handle-table.button.new-handle": "Create New Handle",
+
+  // "epic-handle-table.delete-handle.confirm": "Are you sure you want to delete this handle? This action cannot be undone.",
+  "epic-handle-table.delete-handle.confirm": "Are you sure you want to delete this handle? This action cannot be undone.",
+
+  // "epic-handle-table.delete-handle.notify.error": "Failed to delete handle. Please try again.",
+  "epic-handle-table.delete-handle.notify.error": "Failed to delete handle. Please try again.",
+
+  // "epic-handle-table.delete-handle.notify.successful": "Handle deleted successfully.",
+  "epic-handle-table.delete-handle.notify.successful": "Handle deleted successfully.",
+
+  // "epic-handle-table.edit-handle": "Edit ePIC Handle",
+  "epic-handle-table.edit-handle": "Edit ePIC Handle",
+
+  // "epic-handle-table.edit-handle.breadcrumbs": "Edit ePIC handle",
+  "epic-handle-table.edit-handle.breadcrumbs": "Edit ePIC handle",
+
+  // "epic-handle-table.edit-handle.description": "Update the target URL for this ePIC handle.",
+  "epic-handle-table.edit-handle.description": "Update the target URL for this ePIC handle.",
+
+  // "epic-handle-table.edit-handle.form-button-cancel": "Cancel",
+  "epic-handle-table.edit-handle.form-button-cancel": "Cancel",
+
+  // "epic-handle-table.edit-handle.form-button-submit": "Update Handle",
+  "epic-handle-table.edit-handle.form-button-submit": "Update Handle",
+
+  // "epic-handle-table.edit-handle.form-current-url-text": "Current URL",
+  "epic-handle-table.edit-handle.form-current-url-text": "Current URL",
+
+  // "epic-handle-table.edit-handle.form-handle-input-placeholder": "Handle ID",
+  "epic-handle-table.edit-handle.form-handle-input-placeholder": "Handle ID",
+
+  // "epic-handle-table.edit-handle.form-handle-input-text": "Handle ID",
+  "epic-handle-table.edit-handle.form-handle-input-text": "Handle ID",
+
+  // "epic-handle-table.edit-handle.form-url-help": "Enter the new URL that this handle should resolve to.",
+  "epic-handle-table.edit-handle.form-url-help": "Enter the new URL that this handle should resolve to.",
+
+  // "epic-handle-table.edit-handle.form-url-input-placeholder": "Enter new target URL",
+  "epic-handle-table.edit-handle.form-url-input-placeholder": "Enter new target URL",
+
+  // "epic-handle-table.edit-handle.form-url-input-text": "New URL",
+  "epic-handle-table.edit-handle.form-url-input-text": "New URL",
+
+  // "epic-handle-table.edit-handle.notify.error": "Failed to update ePIC handle.",
+  "epic-handle-table.edit-handle.notify.error": "Failed to update ePIC handle.",
+
+  // "epic-handle-table.edit-handle.notify.error.invalid-handle": "Invalid handle format.",
+  "epic-handle-table.edit-handle.notify.error.invalid-handle": "Invalid handle format.",
+
+  // "epic-handle-table.edit-handle.notify.error.no-handle": "No handle specified.",
+  "epic-handle-table.edit-handle.notify.error.no-handle": "No handle specified.",
+
+  // "epic-handle-table.edit-handle.notify.error.url-required": "URL is required.",
+  "epic-handle-table.edit-handle.notify.error.url-required": "URL is required.",
+
+  // "epic-handle-table.edit-handle.notify.successful": "ePIC handle updated successfully.",
+  "epic-handle-table.edit-handle.notify.successful": "ePIC handle updated successfully.",
+
+  // "epic-handle-table.edit-handle.title": "Edit ePIC Handle",
+  "epic-handle-table.edit-handle.title": "Edit ePIC Handle",
+
+  "epic-handle-table.go-to-pid.button": "Go to PID",
+
+  // "epic-handle-table.new-handle": "New ePIC Handle",
+  "epic-handle-table.new-handle": "New ePIC Handle",
+
+  // "epic-handle-table.new-handle.breadcrumbs": "New ePIC handle",
+  "epic-handle-table.new-handle.breadcrumbs": "New ePIC handle",
+
+  // "epic-handle-table.new-handle.description": "Create a new ePIC handle with prefix: {{prefix}}",
+  "epic-handle-table.new-handle.description": "Create a new ePIC handle with prefix: {{prefix}}",
+
+  // "epic-handle-table.new-handle.form-button-cancel": "Cancel",
+  "epic-handle-table.new-handle.form-button-cancel": "Cancel",
+
+  // "epic-handle-table.new-handle.form-button-submit": "Create Handle",
+  "epic-handle-table.new-handle.form-button-submit": "Create Handle",
+
+  // "epic-handle-table.new-handle.form-subprefix-help": "Optional prefix for the generated handle suffix. Will be converted to uppercase.",
+  "epic-handle-table.new-handle.form-subprefix-help": "Optional prefix for the generated handle suffix. Will be converted to uppercase.",
+
+  // "epic-handle-table.new-handle.form-subprefix-input-placeholder": "Enter sub-prefix (e.g., TEST)",
+  "epic-handle-table.new-handle.form-subprefix-input-placeholder": "Enter sub-prefix (e.g., TEST)",
+
+  // "epic-handle-table.new-handle.form-subprefix-input-text": "Sub-prefix (Optional)",
+  "epic-handle-table.new-handle.form-subprefix-input-text": "Sub-prefix (Optional)",
+
+  // "epic-handle-table.new-handle.form-subsuffix-help": "Optional suffix for the generated handle suffix. Will be converted to uppercase.",
+  "epic-handle-table.new-handle.form-subsuffix-help": "Optional suffix for the generated handle suffix. Will be converted to uppercase.",
+
+  // "epic-handle-table.new-handle.form-subsuffix-input-placeholder": "Enter sub-suffix (e.g., UFAL)",
+  "epic-handle-table.new-handle.form-subsuffix-input-placeholder": "Enter sub-suffix (e.g., UFAL)",
+
+  // "epic-handle-table.new-handle.form-subsuffix-input-text": "Sub-suffix (Optional)",
+  "epic-handle-table.new-handle.form-subsuffix-input-text": "Sub-suffix (Optional)",
+
+  // "epic-handle-table.new-handle.form-suffix-input-placeholder": "Enter suffix (e.g., test)",
+  "epic-handle-table.new-handle.form-suffix-input-placeholder": "Enter suffix (e.g., test)",
+
+  // "epic-handle-table.new-handle.form-suffix-input-text": "Suffix  (Optional)",
+  "epic-handle-table.new-handle.form-suffix-input-text": "Suffix  (Optional)",
+
+  // "epic-handle-table.new-handle.form-url-help": "The URL that this handle will resolve to. Must start with http:// or https://",
+  "epic-handle-table.new-handle.form-url-help": "The URL that this handle will resolve to. Must start with http:// or https://",
+
+  // "epic-handle-table.new-handle.form-url-input-placeholder": "Enter target URL (e.g., http://example.com)",
+  "epic-handle-table.new-handle.form-url-input-placeholder": "Enter target URL (e.g., http://example.com)",
+
+  // "epic-handle-table.new-handle.form-url-input-text": "Target URL",
+  "epic-handle-table.new-handle.form-url-input-text": "Target URL",
+
+  // "epic-handle-table.new-handle.notify.error": "Failed to create ePIC handle.",
+  "epic-handle-table.new-handle.notify.error": "Failed to create ePIC handle.",
+
+  // "epic-handle-table.new-handle.notify.error.url-required": "URL is required.",
+  "epic-handle-table.new-handle.notify.error.url-required": "URL is required.",
+
+  // "epic-handle-table.new-handle.notify.successful": "ePIC handle created successfully.",
+  "epic-handle-table.new-handle.notify.successful": "ePIC handle created successfully.",
+
+  // "epic-handle-table.new-handle.title": "Create New ePIC Handle",
+  "epic-handle-table.new-handle.title": "Create New ePIC Handle",
+
+  // "epic-handle-table.notify.error.load-failed": "Failed to load handles. Please try again.",
+  "epic-handle-table.notify.error.load-failed": "Failed to load handles. Please try again.",
+
+  "epic-handle-table.pid.placeholder": "Enter PID suffix",
+
+  // "epic-handle-table.pid.prefix-suffix-required": "Suffix is required!",
+  "epic-handle-table.pid.prefix-suffix-required": "Suffix is required!",
+
+  // "epic-handle-table.search.button": "Search",
+  "epic-handle-table.search.button": "Search",
+
+  // "epic-handle-table.search.clear": "Clear",
+  "epic-handle-table.search.clear": "Clear",
+
+  // "epic-handle-table.search.placeholder": "Search by URL...",
+  "epic-handle-table.search.placeholder": "Search by URL...",
+
+  // "epic-handle-table.table.actions": "Actions",
+  "epic-handle-table.table.actions": "Actions",
+
+  // "epic-handle-table.table.handle": "Handle",
+  "epic-handle-table.table.handle": "Handle",
+
+  // "epic-handle-table.table.no-results": "No handles found.",
+  "epic-handle-table.table.no-results": "No handles found.",
+
+  // "epic-handle-table.table.no-url": "No URL",
+  "epic-handle-table.table.no-url": "No URL",
+
+  // "epic-handle-table.table.showing": "Showing {{count}} of {{total}} handles",
+  "epic-handle-table.table.showing": "Showing {{count}} of {{total}} handles",
+
+  // "epic-handle-table.table.url": "URL",
+  "epic-handle-table.table.url": "URL",
+
+  // "epic-handle-table.title": "ePIC Handle List",
+  "epic-handle-table.title": "ePIC Handle List",
+
+  // "epic-prefix-handle-page": "ePIC Handle Prefix",
+  "epic-prefix-handle-page": "ePIC Handle Prefix",
+
+  // "epic-prefix-handle-page.description": "Please enter the handle prefix to manage ePIC handles. The prefix is the first part of your handle identifier.",
+  "epic-prefix-handle-page.description": "Please enter the handle prefix to manage ePIC handles. The prefix is the first part of your handle identifier.",
+
+  // "epic-prefix-handle-page.example.text": "Example prefix:",
+  "epic-prefix-handle-page.example.text": "Example prefix:",
+
+  // "epic-prefix-handle-page.example.title": "Example",
+  "epic-prefix-handle-page.example.title": "Example",
+
+  // "epic-prefix-handle-page.form.error.pattern": "Prefix must contain only letters and numbers.",
+  "epic-prefix-handle-page.form.error.pattern": "Prefix must contain only letters and numbers.",
+
+  // "epic-prefix-handle-page.form.error.required": "Prefix is required.",
+  "epic-prefix-handle-page.form.error.required": "Prefix is required.",
+
+  // "epic-prefix-handle-page.form.help": "The prefix should contain only alphanumeric characters (letters and numbers).",
+  "epic-prefix-handle-page.form.help": "The prefix should contain only alphanumeric characters (letters and numbers).",
+
+  // "epic-prefix-handle-page.form.prefix-label": "Handle Prefix",
+  "epic-prefix-handle-page.form.prefix-label": "Handle Prefix",
+
+  // "epic-prefix-handle-page.form.prefix-placeholder": "Enter prefix (e.g., 11148)",
+  "epic-prefix-handle-page.form.prefix-placeholder": "Enter prefix (e.g., 11148)",
+
+  // "epic-prefix-handle-page.form.submit-button": "Continue",
+  "epic-prefix-handle-page.form.submit-button": "Continue",
+
+  // "epic-prefix-handle-page.title": "Enter ePIC Handle Prefix",
+  "epic-prefix-handle-page.title": "Enter ePIC Handle Prefix",
 
   // "metadata-export-search.submit.error.limit-exceeded": "Only the first {{limit}} items will be exported",
   "metadata-export-search.submit.error.limit-exceeded": "Budou exportovány pouze první {{limit}} položky",
