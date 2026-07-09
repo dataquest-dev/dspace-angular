@@ -1,10 +1,17 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import {
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
-import { HtmlContentService } from './html-content.service';
-import { LocaleService } from '../core/locale/locale.service';
 import { APP_CONFIG } from '../../config/app-config.interface';
+import { LocaleService } from '../core/locale/locale.service';
+import { HtmlContentService } from './html-content.service';
 
 class LocaleServiceStub {
   languageCode = 'en';

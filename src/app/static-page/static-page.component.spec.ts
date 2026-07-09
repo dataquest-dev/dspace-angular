@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-
-import { StaticPageComponent } from './static-page.component';
-import { HtmlContentService } from '../shared/html-content.service';
 import { Router } from '@angular/router';
-import { RouterMock } from '../shared/mocks/router.mock';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
+
 import { APP_CONFIG } from '../../config/app-config.interface';
 import { environment } from '../../environments/environment';
-import { ClarinSafeHtmlPipe } from '../shared/utils/clarin-safehtml.pipe';
 import { ServerResponseService } from '../core/services/server-response.service';
+import { HtmlContentService } from '../shared/html-content.service';
+import { RouterMock } from '../shared/mocks/router.mock';
+import { ClarinSafeHtmlPipe } from '../shared/utils/clarin-safehtml.pipe';
+import { StaticPageComponent } from './static-page.component';
 
 describe('StaticPageComponent', () => {
   function createDeferred<T>() {
@@ -26,15 +26,15 @@ describe('StaticPageComponent', () => {
     html: string | undefined,
     restBase?: string,
     contentPromise?: Promise<string | undefined>,
-    route: string = '/static/test-file.html'
+    route: string = '/static/test-file.html',
   ) {
     const htmlContentService = jasmine.createSpyObj('htmlContentService', {
       fetchHtmlContent: of(html),
-      getHmtlContentByPathAndLocale: contentPromise ?? Promise.resolve(html)
+      getHmtlContentByPathAndLocale: contentPromise ?? Promise.resolve(html),
     });
 
     const responseService = jasmine.createSpyObj('responseService', {
-      setNotFound: null
+      setNotFound: null,
     });
 
     const router = new RouterMock();
@@ -44,25 +44,25 @@ describe('StaticPageComponent', () => {
       ...environment,
       ui: {
         ...(environment as any).ui,
-        nameSpace: '/testNamespace'
+        nameSpace: '/testNamespace',
       },
       rest: {
         ...(environment as any).rest,
-        baseUrl: restBase
-      }
+        baseUrl: restBase,
+      },
     };
 
     await TestBed.configureTestingModule({
       declarations: [ StaticPageComponent, ClarinSafeHtmlPipe ],
       imports: [
-        TranslateModule.forRoot()
+        TranslateModule.forRoot(),
       ],
       providers: [
         { provide: HtmlContentService, useValue: htmlContentService },
         { provide: Router, useValue: router },
         { provide: ServerResponseService, useValue: responseService },
-        { provide: APP_CONFIG, useValue: appConfig }
-      ]
+        { provide: APP_CONFIG, useValue: appConfig },
+      ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(StaticPageComponent);
@@ -83,7 +83,7 @@ describe('StaticPageComponent', () => {
 
     return {
       target,
-      preventDefault: jasmine.createSpy('preventDefault')
+      preventDefault: jasmine.createSpy('preventDefault'),
     } as unknown as Event;
   }
 
