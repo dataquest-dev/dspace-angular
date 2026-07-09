@@ -384,10 +384,6 @@ describe('EPeopleRegistryComponent', () => {
     }));
 
     it('should still show the friendly self-delete notification if the authenticated user id resolves late and the backend rejection carries no usable message', fakeAsync(() => {
-      // Simulates the authenticated-user subscription resolving after the click (so the
-      // pre-flight self-delete check is bypassed) combined with a backend response whose error
-      // message can't be pattern-matched (e.g. Spring Boot's default message suppression).
-      // The self-delete notification must still win over the generic failure one.
       modalRef.componentInstance.response = observableOf(true);
       component.currentAuthenticatedUserId = EPersonMock.id;
       ePersonDataServiceStub.deleteEPerson = jasmine.createSpy('deleteEPerson').and.returnValue(defer(() => {

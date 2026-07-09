@@ -612,10 +612,6 @@ describe('EPersonFormComponent', () => {
     });
 
     it('should still show the friendly self-delete notification if the authenticated user id resolves late and the backend rejection carries no usable message', () => {
-      // Simulates the authenticated-user subscription resolving after the modal was confirmed
-      // (so the pre-flight self-delete check was bypassed) combined with a backend response
-      // whose error message can't be pattern-matched (e.g. Spring Boot's default message
-      // suppression). The self-delete notification must still win over the generic failure one.
       spyOn(component.epersonService, 'deleteEPerson').and.returnValue(defer(() => {
         component.currentAuthenticatedUserId = eperson.id;
         return createFailedRemoteDataObject$(undefined, 400);
