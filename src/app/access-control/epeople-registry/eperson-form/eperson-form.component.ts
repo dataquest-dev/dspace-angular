@@ -535,7 +535,7 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
       if (restResponse?.hasSucceeded) {
         this.notificationsService.success(this.translateService.get(this.labelPrefix + 'notification.deleted.success', { name: this.dsoNameService.getName(eperson) }));
         void this.router.navigate([getEPersonsRoute()]);
-      } else if (this.deleteGuard.isSelfDeletionError(restResponse)) {
+      } else if (this.isCurrentUser(eperson) || this.deleteGuard.isSelfDeletionError(restResponse)) {
         this.deleteGuard.showSelfDeleteNotification();
       } else {
         this.notificationsService.error(this.translateService.get(this.labelPrefix + 'notification.deleted.failure', {
