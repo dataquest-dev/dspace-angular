@@ -25,12 +25,12 @@ jobs:
   #############################################################
   dspace-angular:
     # Ensure this job never runs on forked repos. It's only executed for 'dspace/dspace-angular'
-    if: github.repository == 'dspace/dspace-angular'
+    if: github.repository == 'dataquest-dev/dspace-angular'
     # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
-    uses: DSpace/DSpace/.github/workflows/reusable-docker-build.yml@main
+    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@ufal/clarin-dspace-upgrade-v9
     with:
       build_id: dspace-angular-dev
-      image_name: dspace/dspace-angular
+      image_name: dataquest/dspace-angular
       dockerfile_path: ./Dockerfile
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -41,12 +41,12 @@ jobs:
   #############################################################
   dspace-angular-dist:
     # Ensure this job never runs on forked repos. It's only executed for 'dspace/dspace-angular'
-    if: github.repository == 'dspace/dspace-angular'
+    if: github.repository == 'dataquest-dev/dspace-angular'
     # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
-    uses: DSpace/DSpace/.github/workflows/reusable-docker-build.yml@main
+    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@ufal/clarin-dspace-upgrade-v9
     with:
       build_id: dspace-angular-dist
-      image_name: dspace/dspace-angular
+      image_name: dataquest/dspace-angular
       dockerfile_path: ./Dockerfile.dist
       # As this is a "dist" image, its tags are all suffixed with "-dist". Otherwise, it uses the same
       # tagging logic as the primary 'dspace/dspace-angular' image above.
@@ -64,7 +64,7 @@ jobs:
   #################################################################################
   docker-deploy:
     # Ensure this job never runs on forked repos. It's only executed for 'dspace/dspace-angular'
-    if: github.repository == 'dspace/dspace-angular'
+    if: github.repository == 'dataquest-dev/dspace-angular'
     runs-on: ubuntu-latest
         # Must run after all major images are built
     needs: [dspace-angular, dspace-angular-dist]
