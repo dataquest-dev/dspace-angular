@@ -1,9 +1,9 @@
-import { FormFieldModel } from '../models/form-field.model';
-import { ClarinNameFieldParser } from './clarin-name-field-parser';
-import { DynamicConcatModel } from '../ds-dynamic-form-ui/models/ds-dynamic-concat.model';
-import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
-import { ParserOptions } from './parser-options';
 import { getMockTranslateService } from '../../../mocks/translate.service.mock';
+import { DynamicConcatModel } from '../ds-dynamic-form-ui/models/ds-dynamic-concat.model';
+import { FormFieldModel } from '../models/form-field.model';
+import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
+import { ClarinNameFieldParser } from './clarin-name-field-parser';
+import { ParserOptions } from './parser-options';
 
 describe('ClarinNameFieldParser test suite', () => {
   let field1: FormFieldModel;
@@ -17,13 +17,13 @@ describe('ClarinNameFieldParser test suite', () => {
     readOnly: false,
     submissionScope: 'testScopeUUID',
     collectionUUID: null,
-    typeField: 'dc_type'
+    typeField: 'dc_type',
   };
 
   beforeEach(() => {
     field1 = {
       input: {
-        type: 'name'
+        type: 'name',
       },
       label: 'Name',
       mandatory: 'false',
@@ -32,9 +32,9 @@ describe('ClarinNameFieldParser test suite', () => {
       selectableMetadata: [
         {
           metadata: 'name',
-        }
+        },
       ],
-      languageCodes: []
+      languageCodes: [],
     } as FormFieldModel;
 
     field2 = {
@@ -53,8 +53,8 @@ describe('ClarinNameFieldParser test suite', () => {
         { metadata: 'dc.identifier.isbn', label: 'ISBN' },
         { metadata: 'dc.identifier.doi', label: 'DOI' },
         { metadata: 'dc.identifier.pmid', label: 'PubMed ID' },
-        { metadata: 'dc.identifier.arxiv', label: 'arXiv' }
-      ]
+        { metadata: 'dc.identifier.arxiv', label: 'arXiv' },
+      ],
     } as FormFieldModel;
 
     field3 = {
@@ -66,9 +66,9 @@ describe('ClarinNameFieldParser test suite', () => {
       selectableMetadata: [
         {
           metadata: 'title',
-        }
+        },
       ],
-      languageCodes: []
+      languageCodes: [],
     } as FormFieldModel;
   });
 

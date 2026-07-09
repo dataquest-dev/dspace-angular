@@ -1,8 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ShareSubmissionPageComponent } from './share-submission-page.component';
+import {
+  ComponentFixture,
+  TestBed,
+} from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+
+import { ShareSubmissionPageComponent } from './share-submission-page.component';
 
 describe('ShareSubmissionPageComponent', () => {
   let component: ShareSubmissionPageComponent;
@@ -14,8 +17,8 @@ describe('ShareSubmissionPageComponent', () => {
       snapshot: {
         queryParams: new Map([
           ['shareToken', 'fake-share-token'],
-        ])
-      }
+        ]),
+      },
     };
 
     await TestBed.configureTestingModule({
@@ -24,10 +27,10 @@ describe('ShareSubmissionPageComponent', () => {
         TranslateModule.forRoot(),
       ],
       providers: [
-        { provide: ActivatedRoute, useValue: activatedRoute }
-      ]
+        { provide: ActivatedRoute, useValue: activatedRoute },
+      ],
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ShareSubmissionPageComponent);
     component = fixture.componentInstance;
