@@ -3162,16 +3162,16 @@
   "form.number-picker.increment": "Zvýšit {{field}}",
 
   // "form.number-picker.label.Year": "Year",
-  // TODO New key - Add a translation
-  "form.number-picker.label.Year": "Year",
+  // Keyed on the translated placeholder text (see form.date-picker.placeholder.year = "Rok"),
+  // not the English default, since number-picker.component.html looks the key up as
+  // 'form.number-picker.label.' + placeholder.
+  "form.number-picker.label.Rok": "Rok",
 
   // "form.number-picker.label.Month": "Month",
-  // TODO New key - Add a translation
-  "form.number-picker.label.Month": "Month",
+  "form.number-picker.label.Měsíc": "Měsíc",
 
   // "form.number-picker.label.Day": "Day",
-  // TODO New key - Add a translation
-  "form.number-picker.label.Day": "Day",
+  "form.number-picker.label.Den": "Den",
 
   // "form.repeatable.sort.tip": "Drop the item in the new position",
   "form.repeatable.sort.tip": "Přetáhněte záznam na novou pozici",
