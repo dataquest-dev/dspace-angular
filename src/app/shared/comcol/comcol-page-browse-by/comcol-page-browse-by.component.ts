@@ -93,7 +93,7 @@ export class ComcolPageBrowseByComponent implements OnDestroy, OnInit {
           let comColRoute: string;
           // CLARIN/LINDAT (production parity): a collection lands on its item list labelled
           // 'Recent Submissions' (the root route renders the search section sorted by accession
-          // date); a community lands on the subcommunity/collection lists and has no Search tab.
+          // date). Communities keep the vanilla Search tab.
           if (this.contentType === 'collection') {
             comColRoute = getCollectionPageRoute(this.id);
             allOptions.push({
@@ -103,6 +103,11 @@ export class ComcolPageBrowseByComponent implements OnDestroy, OnInit {
             });
           } else if (this.contentType === 'community') {
             comColRoute = getCommunityPageRoute(this.id);
+            allOptions.push({
+              id: 'search',
+              label: 'collection.page.browse.search.head',
+              routerLink: `${comColRoute}/search`,
+            });
             allOptions.push({
               id: 'comcols',
               label: 'community.all-lists.head',
@@ -116,6 +121,11 @@ export class ComcolPageBrowseByComponent implements OnDestroy, OnInit {
             routerLink: `${comColRoute}/browse/${config.id}`,
           })));
 
+          // When the default tab is not the "search" tab, the "search" tab is moved
+          // at the end of the tabs ribbon for aesthetics purposes.
+          if (this.appConfig[this.contentType].defaultBrowseTab !== 'search') {
+            allOptions.push(allOptions.shift());
+          }
         }
         return allOptions;
       }),

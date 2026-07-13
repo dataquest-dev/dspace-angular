@@ -351,12 +351,10 @@ export class DefaultAppConfig implements AppConfig {
   };
 
   // Community Page Config
-  // CLARIN/LINDAT: land on the subcommunity/collection lists (production parity) and keep the
-  // embedded search section plain (no filter sidebar)
   community: CommunityPageConfig = {
-    defaultBrowseTab: 'comcols',
+    defaultBrowseTab: 'search',
     searchSection: {
-      showSidebar: false,
+      showSidebar: true,
     },
   };
 
