@@ -75,7 +75,7 @@
                   </button>
                   <ng-container *ngIf="epersonDto.ableToDelete && currentAuthenticatedUserId">
                     <ng-container *ngIf="isCurrentUser(epersonDto.eperson); else enabledDeleteButton">
-                      <span tabindex="0" [ngbTooltip]="selfDeleteWarningLabel | translate">
+                      <span tabindex="0" [ngbTooltip]="selfDeleteWarningLabel | translate" container="body">
                         <button [disabled]="true"
                                 tabindex="-1"
                                 [attr.aria-label]="selfDeleteWarningLabel | translate"
