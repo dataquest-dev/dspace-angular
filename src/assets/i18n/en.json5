@@ -351,6 +351,14 @@
 
   "admin.access-control.epeople.form.notification.deleted.failure": "Failed to delete EPerson \"{{name}}\"",
 
+  "admin.access-control.epeople.notification.deleted.forbidden.self": "You cannot delete your own EPerson account.",
+
+  "admin.access-control.epeople.delete.warning.submitter": "Warning: this user has submitted items. Deleting this EPerson may affect submission ownership and related repository records.",
+
+  "admin.access-control.epeople.delete.warning.admin": "Warning: this user has administrator privileges. Deleting this EPerson will remove an administrator account.",
+
+  "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Warning: this user has submitted items and has administrator privileges. Deleting this EPerson may affect submission ownership and remove an administrator account.",
+
   "admin.access-control.epeople.form.groupsEPersonIsMemberOf": "Member of these groups:",
 
   "admin.access-control.epeople.form.table.id": "ID",

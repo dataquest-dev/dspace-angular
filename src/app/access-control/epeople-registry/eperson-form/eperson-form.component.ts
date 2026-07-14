@@ -40,6 +40,7 @@ import { TYPE_REQUEST_FORGOT } from '../../../register-email-form/register-email
 import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getEPersonsRoute } from '../../access-control-routing-paths';
+import { EPersonDeleteGuardService, SELF_DELETE_WARNING_LABEL } from '../eperson-delete-guard.service';
 
 @Component({
   selector: 'ds-eperson-form',
@@ -51,6 +52,9 @@ import { getEPersonsRoute } from '../../access-control-routing-paths';
 export class EPersonFormComponent implements OnInit, OnDestroy {
 
   labelPrefix = 'admin.access-control.epeople.form.';
+  selfDeleteWarningLabel = SELF_DELETE_WARNING_LABEL;
+
+  currentAuthenticatedUserId: string;
 
   /**
    * A unique id used for ds-form
@@ -198,6 +202,7 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
     private authorizationService: AuthorizationDataService,
     private modalService: NgbModal,
     private paginationService: PaginationService,
+    private deleteGuard: EPersonDeleteGuardService,
     public requestService: RequestService,
     private epersonRegistrationService: EpersonRegistrationService,
     public dsoNameService: DSONameService,
@@ -208,6 +213,9 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.activeEPerson$ = this.epersonService.getActiveEPerson();
+    this.subs.push(this.authService.getAuthenticatedUserFromStore().subscribe((currentUser: EPerson) => {
+      this.currentAuthenticatedUserId = currentUser?.id;
+    }));
     this.subs.push(this.activeEPerson$.subscribe((eperson: EPerson) => {
       this.epersonInitial = eperson;
       if (hasValue(eperson)) {
@@ -474,40 +482,76 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
     this.activeEPerson$.pipe(
       take(1),
       switchMap((eperson: EPerson) => {
-        const modalRef = this.modalService.open(ConfirmationModalComponent);
-        modalRef.componentInstance.dso = eperson;
-        modalRef.componentInstance.headerLabel = 'confirmation-modal.delete-eperson.header';
-        modalRef.componentInstance.infoLabel = 'confirmation-modal.delete-eperson.info';
-        modalRef.componentInstance.cancelLabel = 'confirmation-modal.delete-eperson.cancel';
-        modalRef.componentInstance.confirmLabel = 'confirmation-modal.delete-eperson.confirm';
-        modalRef.componentInstance.brandColor = 'danger';
-        modalRef.componentInstance.confirmIcon = 'fas fa-trash';
+        if (!hasValue(eperson?.id)) {
+          return observableOf(null);
+        }
 
-        return modalRef.componentInstance.response.pipe(
+        if (!hasValue(this.currentAuthenticatedUserId)) {
+          return observableOf(null);
+        }
+
+        if (this.isCurrentUser(eperson)) {
+          this.deleteGuard.showSelfDeleteNotification();
+          return observableOf(null);
+        }
+
+        return this.deleteGuard.getDeleteWarningLabel(eperson).pipe(
           take(1),
-          switchMap((confirm: boolean) => {
-            if (confirm && hasValue(eperson.id)) {
-              this.canDelete$ = observableOf(false);
-              return this.epersonService.deleteEPerson(eperson).pipe(
-                getFirstCompletedRemoteData(),
-                map((restResponse: RemoteData<NoContent>) => ({ restResponse, eperson }))
-              );
-            } else {
-              return observableOf(null);
-            }
-          }),
-          finalize(() => this.canDelete$ = observableOf(true))
+          switchMap((warningLabel: string | undefined) => {
+            const modalRef = this.modalService.open(ConfirmationModalComponent);
+            modalRef.componentInstance.dso = eperson;
+            modalRef.componentInstance.headerLabel = 'confirmation-modal.delete-eperson.header';
+            modalRef.componentInstance.infoLabel = 'confirmation-modal.delete-eperson.info';
+            modalRef.componentInstance.warningLabel = warningLabel;
+            modalRef.componentInstance.cancelLabel = 'confirmation-modal.delete-eperson.cancel';
+            modalRef.componentInstance.confirmLabel = 'confirmation-modal.delete-eperson.confirm';
+            modalRef.componentInstance.brandColor = 'danger';
+            modalRef.componentInstance.confirmIcon = 'fas fa-trash';
+
+            return modalRef.componentInstance.response.pipe(
+              take(1),
+              switchMap((confirm: boolean) => {
+                if (confirm) {
+                  this.canDelete$ = observableOf(false);
+                  return this.epersonService.deleteEPerson(eperson).pipe(
+                    getFirstCompletedRemoteData(),
+                    map((restResponse: RemoteData<NoContent>) => ({ restResponse, eperson, attempted: true }))
+                  );
+                }
+
+                return observableOf({ restResponse: null, eperson, attempted: false });
+              }),
+              finalize(() => this.canDelete$ = observableOf(true))
+            );
+          })
         );
       })
-    ).subscribe(({ restResponse, eperson }: { restResponse: RemoteData<NoContent> | null, eperson: EPerson }) => {
+    ).subscribe((result: { restResponse: RemoteData<NoContent> | null, eperson: EPerson, attempted: boolean } | null) => {
+      if (!result?.attempted) {
+        return;
+      }
+
+      const { restResponse, eperson } = result;
       if (restResponse?.hasSucceeded) {
         this.notificationsService.success(this.translateService.get(this.labelPrefix + 'notification.deleted.success', { name: this.dsoNameService.getName(eperson) }));
         void this.router.navigate([getEPersonsRoute()]);
+      } else if (this.isCurrentUser(eperson) || this.deleteGuard.isSelfDeletionError(restResponse)) {
+        this.deleteGuard.showSelfDeleteNotification();
       } else {
-        this.notificationsService.error(`Error occurred when trying to delete EPerson with id: ${eperson?.id} with code: ${restResponse?.statusCode} and message: ${restResponse?.errorMessage}`);
+        this.notificationsService.error(this.translateService.get(this.labelPrefix + 'notification.deleted.failure', {
+          name: this.dsoNameService.getName(eperson),
+          id: eperson?.id,
+          statusCode: restResponse?.statusCode,
+          errorMessage: restResponse?.errorMessage,
+          restResponse,
+        }));
       }
       this.cancelForm.emit();
     });
+  }
+
+  isCurrentUser(ePerson: EPerson): boolean {
+    return this.deleteGuard.isCurrentUser(ePerson, this.currentAuthenticatedUserId);
   }
 
   /**

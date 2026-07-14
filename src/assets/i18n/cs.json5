@@ -551,6 +551,18 @@
   // "admin.access-control.epeople.notification.deleted.success": "Successfully deleted EPerson: \"{{name}}\"",
   "admin.access-control.epeople.notification.deleted.success": "Úspěšně odstraněn uživatel: \"{{name}}\"",
 
+  // "admin.access-control.epeople.notification.deleted.forbidden.self": "You cannot delete your own EPerson account.",
+  "admin.access-control.epeople.notification.deleted.forbidden.self": "Nemůžete smazat svůj vlastní účet uživatele.",
+
+  // "admin.access-control.epeople.delete.warning.submitter": "Warning: this user has submitted items. Deleting this EPerson may affect submission ownership and related repository records.",
+  "admin.access-control.epeople.delete.warning.submitter": "Upozornění: Tento uživatel odeslal položky. Smazání tohoto uživatele může ovlivnit vlastnictví příspěvků a související záznamy v repozitáři.",
+
+  // "admin.access-control.epeople.delete.warning.admin": "Warning: this user has administrator privileges. Deleting this EPerson will remove an administrator account.",
+  "admin.access-control.epeople.delete.warning.admin": "Upozornění: Tento uživatel má oprávnění správce. Smazání tohoto uživatele odebere účet správce.",
+
+  // "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Warning: this user has submitted items and has administrator privileges. Deleting this EPerson may affect submission ownership and remove an administrator account.",
+  "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Upozornění: Tento uživatel odeslal položky a má oprávnění správce. Smazání tohoto uživatele může ovlivnit vlastnictví příspěvků a odebrat účet správce.",
+
   // "admin.access-control.groups.title": "Groups",
   "admin.access-control.groups.title": "Skupiny",
 
