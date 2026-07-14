@@ -72,8 +72,6 @@ import { ClarinRefBoxComponent } from './clarin-ref-box/clarin-ref-box.component
 import { ClarinRefCitationComponent } from './clarin-ref-citation/clarin-ref-citation.component';
 import { ClarinRefFeaturedServicesComponent } from './clarin-ref-featured-services/clarin-ref-featured-services.component';
 import { ClarinRefCitationModalComponent } from './clarin-ref-citation-modal/clarin-ref-citation-modal.component';
-import { ClarinMatomoStatisticsComponent } from './clarin-matomo-statistics/clarin-matomo-statistics.component';
-import { ClarinStatisticsButtonComponent } from './clarin-statistics-button/clarin-statistics-button.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ClarinGenericItemFieldComponent } from './simple/field-components/clarin-generic-item-field/clarin-generic-item-field.component';
 import { ClarinCollectionsItemFieldComponent } from './simple/field-components/clarin-collections-item-field/clarin-collections-item-field.component';
@@ -150,8 +148,6 @@ const DECLARATIONS = [
   ClarinRefCitationComponent,
   ClarinRefFeaturedServicesComponent,
   ClarinRefCitationModalComponent,
-  ClarinMatomoStatisticsComponent,
-  ClarinStatisticsButtonComponent,
   ClarinGenericItemFieldComponent,
   ClarinCollectionsItemFieldComponent,
   ClarinFilesItemFieldComponent,

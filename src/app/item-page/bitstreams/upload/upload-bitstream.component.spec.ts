@@ -67,6 +67,11 @@ describe('UploadBitstreamComponent', () => {
   const mockItem = Object.assign(new Item(), {
     id: 'fake-id',
     handle: 'fake/handle',
+    _links: {
+      self: {
+        href: '/api/core/items/fake-id'
+      }
+    },
     metadata: {
       'dc.title': [
         {
@@ -83,6 +88,7 @@ describe('UploadBitstreamComponent', () => {
   const restEndpoint = 'fake-rest-endpoint';
   const mockItemDataService = jasmine.createSpyObj('mockItemDataService', {
     getBitstreamsEndpoint: observableOf(restEndpoint),
+    getBundlesEndpoint: observableOf('/api/core/items/fake-id/bundles'),
     createBundle: createSuccessfulRemoteDataObject$(createdBundle),
     getBundles: createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [bundle])),
   });
@@ -97,7 +103,7 @@ describe('UploadBitstreamComponent', () => {
   const notificationsServiceStub = new NotificationsServiceStub();
   const uploaderComponent = jasmine.createSpyObj('uploaderComponent', ['ngOnInit', 'ngAfterViewInit']);
   const requestService = jasmine.createSpyObj('requestService', {
-    removeByHrefSubstring: {}
+    setStaleByHrefSubstring: {}
   });
 
   describe('when a file is uploaded', () => {
@@ -130,6 +136,28 @@ describe('UploadBitstreamComponent', () => {
 
       it('should navigate the user to the next page', () => {
         expect(routerStub.navigate).toHaveBeenCalled();
+      });
+
+      it('should clear cached requests for the selected bundle bitstreams endpoint', () => {
+        expect(requestService.setStaleByHrefSubstring).toHaveBeenCalledWith(restEndpoint);
+      });
+
+      it('should clear cached requests for the item bundles endpoint', () => {
+        expect(requestService.setStaleByHrefSubstring).toHaveBeenCalledWith('/api/core/items/fake-id/bundles');
+      });
+
+      it('should clear cached requests for the item self endpoint', () => {
+        expect(requestService.setStaleByHrefSubstring).toHaveBeenCalledWith('/api/core/items/fake-id');
+      });
+
+      it('should clear cached requests for the metadatabitstreams byHandle endpoint with encoded handle', () => {
+        expect(requestService.setStaleByHrefSubstring)
+          .toHaveBeenCalledWith('/api/core/metadatabitstreams/search/byHandle?handle=fake%2Fhandle&fileGrpType=ORIGINAL');
+      });
+
+      it('should clear cached requests for the metadatabitstreams byHandle endpoint with raw handle', () => {
+        expect(requestService.setStaleByHrefSubstring)
+          .toHaveBeenCalledWith('/api/core/metadatabitstreams/search/byHandle?handle=fake/handle&fileGrpType=ORIGINAL');
       });
     });
   });

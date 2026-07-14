@@ -27,6 +27,7 @@ import { FormComponent } from '../../../shared/form/form.component';
 import { SubmissionSectionClarinLicenseComponent } from './section-license.component';
 import { CollectionDataService } from '../../../core/data/collection-data.service';
 import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
+import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { SectionFormOperationsService } from '../form/section-form-operations.service';
 import { Collection } from '../../../core/shared/collection.model';
 import { License } from '../../../core/shared/license.model';
@@ -37,6 +38,7 @@ import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
 import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
 import { RequestService } from '../../../core/data/request.service';
+import { PatchRequest } from '../../../core/data/request.models';
 import { SubmissionFormsConfigDataService } from 'src/app/core/config/submission-forms-config-data.service';
 
 const collectionId = mockSubmissionCollectionId;
@@ -189,6 +191,42 @@ describe('ClarinSubmissionSectionLicenseComponent test suite', () => {
     it('should create ClarinSubmissionSectionLicenseComponent', inject([SubmissionSectionClarinLicenseComponent], (app: SubmissionSectionClarinLicenseComponent) => {
       expect(app).toBeDefined();
     }));
+
+    it('sendRequest should PATCH /sections/<sectionId>/select',
+      inject([SubmissionSectionClarinLicenseComponent], (app: SubmissionSectionClarinLicenseComponent) => {
+        // Arrange: enable validation flow so sendRequest actually executes
+        (app as any).couldShowValidationErrors = true;
+        (app as any).sectionData = { id: 'clarin-license' } as any;
+        (app as any).pathCombiner = new JsonPatchOperationPathCombiner('sections', 'clarin-license');
+
+        const wsiId = 42;
+        const selfHref = 'http://localhost/api/submission/workspaceitems/' + wsiId;
+
+        // The component now resolves the current submission object and PATCHes its
+        // self link directly, so stub getActualSubmissionItem with a succeeded
+        // RemoteData exposing _links.self.href.
+        spyOn(app as any, 'getActualSubmissionItem').and.returnValue(
+          Promise.resolve({ hasSucceeded: true, payload: { _links: { self: { href: selfHref } } } })
+        );
+        spyOn(app as any, 'updateSectionStatus').and.callFake(() => undefined);
+
+        mockRequestService.generateRequestId.and.returnValue('req-id-1');
+        mockRequestService.send.calls.reset();
+        mockRdbService.buildFromRequestUUID.and.returnValue(of({ payload: { sections: {}, errors: [] } } as any));
+
+        // Act
+        return (app as any).sendRequest('My CLARIN License').then(() => {
+          // Assert
+          expect(mockRequestService.send).toHaveBeenCalledTimes(1);
+          const sentRequest = mockRequestService.send.calls.mostRecent().args[0] as PatchRequest;
+          expect(sentRequest.href).toBe(selfHref);
+          const body: any[] = (sentRequest as any).body;
+          expect(body.length).toBe(1);
+          expect(body[0].op).toBe('replace');
+          expect(body[0].path).toBe('/sections/clarin-license/select');
+          expect(body[0].value).toBe('My CLARIN License');
+        });
+      }));
   });
 });
 

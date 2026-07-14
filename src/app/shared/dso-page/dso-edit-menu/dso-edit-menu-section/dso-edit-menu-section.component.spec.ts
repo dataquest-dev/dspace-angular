@@ -58,7 +58,10 @@ describe('DsoEditMenuSectionComponent', () => {
       type: MenuItemType.LINK,
       disabled: false,
       text: 'text',
-      link: 'link'
+      link: 'link',
+      queryParams: {
+        scope: 'test-scope-id'
+      }
     },
     icon: iconString
   };
@@ -156,6 +159,11 @@ describe('DsoEditMenuSectionComponent', () => {
 
     it('should show the link element', () => {
       expect(fixture.debugElement.query(By.css('a'))).not.toBeNull();
+    });
+
+    it('should bind queryParams on the link element', () => {
+      const link = fixture.debugElement.query(By.css('a'));
+      expect(link.properties.queryParams.scope).toEqual('test-scope-id');
     });
 
   });

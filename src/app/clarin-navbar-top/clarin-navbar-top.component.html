@@ -16,7 +16,7 @@
           </a>
         </span>
       </div>
-      <a class="hidden" id="repository_path" [href]="repositoryPath"></a>
+      <a class="hidden" id="repository_path" [href]="repositoryPath" aria-hidden="true"></a>
       <div *ngIf="authenticatedUser != null" class="badge clarin-logout-badge px-2 py-1">
         <span>
           <a routerLink="/profile" style="color: #FFF;">

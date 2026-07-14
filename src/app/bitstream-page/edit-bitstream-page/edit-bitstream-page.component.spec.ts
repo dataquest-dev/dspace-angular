@@ -414,6 +414,19 @@ describe('EditBitstreamPageComponent', () => {
         comp.navigateToItemEditBitstreams();
         expect(router.navigate).toHaveBeenCalledWith([getEntityEditRoute(null, 'some-uuid1'), 'bitstreams']);
       });
+
+      it('should resolve itemId from bundle.item when query param is missing', () => {
+        const mockItem = new Item();
+        mockItem.uuid = 'resolved-uuid-456';
+        const mockBundle = {
+          item: createSuccessfulRemoteDataObject$(mockItem)
+        };
+        (comp as any).bundle = mockBundle;
+        comp.itemId = undefined;
+        comp.navigateToItemEditBitstreams();
+        fixture.detectChanges();
+        expect(router.navigate).toHaveBeenCalledWith([getEntityEditRoute(null, 'resolved-uuid-456'), 'bitstreams']);
+      });
     });
   });
 

@@ -1,13 +1,48 @@
 <div class="container">
-  <div class="card" *ngVar="(collectionRD$ | async)?.payload as collection">
+  <div class="card">
     <h5 class="card-header">{{'contract.message.distribution-license-agreement' | translate}}</h5>
-    <div class="card-body">
-      <div class=" well" id="cz_cuni_mff_ufal_ContractPage_div_licenses">
-          <h3>{{collection?.name}}</h3>
+    <ng-container *ngIf="!isListMode(); else authorizedCollectionsTemplate">
+      <ng-container *ngVar="(collectionRD$ | async) as collectionRD">
+        <ds-error *ngIf="collectionRD?.hasFailed" message="{{'error.collection' | translate}}"></ds-error>
+        <ds-themed-loading *ngIf="!collectionRD || collectionRD?.isLoading" message="{{'loading.collection' | translate}}"></ds-themed-loading>
+        <div class="card-body" *ngIf="collectionRD?.payload">
+          <div class=" well" id="cz_cuni_mff_ufal_ContractPage_div_licenses">
+            <h3>{{collectionRD?.payload?.name}}</h3>
             <textarea class="form-control" cols="0" id="cz_cuni_mff_ufal_ContractPage_field_license_text_18"
                       name="license_text_18" readonly
                       rows="34">{{(licenseRD$ | async)?.payload?.text}}</textarea>
-      </div>
-    </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
   </div>
 </div>
+
+<ng-template #authorizedCollectionsTemplate>
+  <ng-container *ngVar="(collectionsRD$ | async) as collectionsRD">
+    <ds-pagination *ngIf="collectionsRD?.payload?.totalElements > 0 || collectionsRD?.payload?.page?.length > 0"
+                   [paginationOptions]="pageConfig"
+                   [collectionSize]="collectionsRD?.payload?.totalElements"
+                   [hideGear]="true"
+                   [hidePagerWhenSinglePage]="true">
+      <div class="card-body" *ngFor="let collection of collectionsRD?.payload?.page; let i = index">
+        <div class=" well" id="cz_cuni_mff_ufal_ContractPage_div_licenses_{{i}}">
+          <h3>{{collection?.name}}</h3>
+          <textarea class="form-control"
+                    cols="0"
+                    readonly
+                    rows="34">{{(collection?.license | async)?.payload?.text}}</textarea>
+        </div>
+      </div>
+    </ds-pagination>
+
+    <div *ngIf="collectionsRD?.payload?.totalElements === 0 || collectionsRD?.payload?.page?.length === 0"
+         class="alert alert-info mt-3"
+         role="alert">
+      {{'collection.select.empty' | translate}}
+    </div>
+
+    <ds-error *ngIf="collectionsRD?.hasFailed" message="{{'error.collections' | translate}}"></ds-error>
+    <ds-themed-loading *ngIf="!collectionsRD || collectionsRD?.isLoading" message="{{'loading.collections' | translate}}"></ds-themed-loading>
+  </ng-container>
+</ng-template>

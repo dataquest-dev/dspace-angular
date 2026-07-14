@@ -35,6 +35,15 @@
   // "404.page-not-found": "Page not found",
   "404.page-not-found": "Stránka nebyla nalezena",
 
+  // "static-page.404.help": "The static page you requested does not exist. It may have been moved or deleted. You can use the button below to get back to the home page.",
+  "static-page.404.help": "Požadovaná statická stránka neexistuje. Mohla být přesunuta nebo smazána. Pomocí níže uvedeného tlačítka se můžete vrátit na domovskou stránku.",
+
+  // "static-page.404.link.home-page": "Take me to the home page",
+  "static-page.404.link.home-page": "Návrat na domovskou stránku",
+
+  // "static-page.404.page-not-found": "page not found",
+  "static-page.404.page-not-found": "stránka nebyla nalezena",
+
   // "error-page.description.401": "Unauthorized",
   "error-page.description.401": "Neautorizovaný přístup",
 
@@ -2708,8 +2717,14 @@
   // "form.other-information.last-name": "Last Name",
   "form.other-information.last-name": "Příjmení",
 
+  // "form.other-information.location": "Location",
+  "form.other-information.location": "Místo",
+
   // "form.other-information.orcid": "ORCID",
   "form.other-information.orcid": "ORCID",
+
+  // "form.other-information.ror-id": "ROR ID",
+  "form.other-information.ror-id": "ROR ID",
 
   // "form.remove": "Remove",
   "form.remove": "Odstranit",
@@ -8578,6 +8593,15 @@
   "access-control-option-end-date": "Povolit přístup do",
 
   // "access-control-option-end-date-note": "Select the date until which the related access condition is applied",
+
+  "item.delete.virtual-metadata.info": "Zobrazit informace o virtuálních metadatech",
+  "access-control.start-date.calendar-button": "Otevřít kalendář počátečního data",
+  "access-control.end-date.calendar-button": "Otevřít kalendář koncového data",
+  "form.remove-related-item": "Odebrat související položku",
+  "form.relation-group.save": "Uložit skupinu vztahů",
+  "form.relation-group.delete": "Smazat skupinu vztahů",
+  "form.relation-group.clear": "Vyčistit skupinu vztahů",
+  "submission.cc-license.field-info": "Více informací o tomto licenčním poli",
   "access-control-option-end-date-note": "Vyberte datum, do kterého má být typ přístupu aktivován",
 
   // "vocabulary-treeview.search.form.add": "Add",
@@ -9093,12 +9117,6 @@
   // "item.page.license.message": ["This item is", "and licensed under:"],
   "item.page.license.message": ["Tento záznam je", "a je licencován pod licencí:"],
 
-  // "item.page.matomo-statistics.views.button": "Views",
-  "item.page.matomo-statistics.views.button": "Zobrazení",
-
-  // "item.page.matomo-statistics.downloads.button": "Downloads",
-  "item.page.matomo-statistics.downloads.button": "Stažené",
-
   // "item.page.acknowledgement.project-name": "Project name:",
   "item.page.acknowledgement.project-name": "Jméno projektu:",
 
@@ -9143,9 +9161,6 @@
 
   // "item.refbox.featured-service.share.message": "Share",
   "item.refbox.featured-service.share.message": "Sdílet",
-
-  // "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
-  "item.matomo-statistics.info.message": "Kliknutím na datový bod provedete shrnutí podle roku/měsíce.",
 
   // "item.view.box.author.message": "Author(s):",
   "item.view.box.author.message": "Autoři:",
@@ -9423,6 +9438,9 @@
   // "clarin-license.button.delete-license": "Delete License",
   "clarin-license.button.delete-license": "Odstranit licenci",
 
+  // "clarin-license.button.delete-license.disabled-tooltip": "License \"{{name}}\" cannot be deleted because it is attached to one or more bitstreams.",
+  "clarin-license.button.delete-license.disabled-tooltip": "Licenci \"{{name}}\" nelze smazat, protože jsou k ní připojeny jeden nebo více bitstreamů.",
+
   // "clarin-license.button.search": "Search",
   "clarin-license.button.search": "Hledat",
 
@@ -9452,6 +9470,120 @@
 
   // "clarin-license.define-license-form.submit-button": "Save",
   "clarin-license.define-license-form.submit-button": "Uložit",
+
+  // "clarin.license.label.section.title": "License Labels",
+  "clarin.license.label.section.title": "Licenční štítky",
+
+  // "clarin.license.label.table.header.label": "Label",
+  "clarin.license.label.table.header.label": "Štítek",
+
+  // "clarin.license.label.table.header.title": "Title",
+  "clarin.license.label.table.header.title": "Název",
+
+  // "clarin.license.label.table.header.extended": "Extended",
+  "clarin.license.label.table.header.extended": "Rozšířený",
+
+  // "clarin.license.label.table.header.icon": "Icon",
+  "clarin.license.label.table.header.icon": "Ikona",
+
+  // "clarin.license.label.table.header.actions": "Actions",
+  "clarin.license.label.table.header.actions": "Akce",
+
+  // "clarin.license.label.table.boolean.yes": "Yes",
+  "clarin.license.label.table.boolean.yes": "Ano",
+
+  // "clarin.license.label.table.boolean.no": "No",
+  "clarin.license.label.table.boolean.no": "Ne",
+
+  // "clarin.license.label.table.icon.available": "Icon available",
+  "clarin.license.label.table.icon.available": "Ikona je k dispozici",
+
+  // "clarin.license.label.table.icon.none": "No icon",
+  "clarin.license.label.table.icon.none": "Bez ikony",
+
+  // "clarin.license.label.table.select.aria": "Select label {{label}}",
+  "clarin.license.label.table.select.aria": "Vybrat štítek {{label}}",
+
+  // "clarin.license.label.table.edit": "Edit",
+  "clarin.license.label.table.edit": "Upravit",
+
+  // "clarin.license.label.table.edit.aria": "Edit label {{label}}",
+  "clarin.license.label.table.edit.aria": "Upravit štítek {{label}}",
+
+  // "clarin.license.label.table.delete": "Delete",
+  "clarin.license.label.table.delete": "Odstranit",
+
+  // "clarin.license.label.table.delete.aria": "Delete label {{label}}",
+  "clarin.license.label.table.delete.aria": "Odstranit štítek {{label}}",
+
+  // "clarin.license.label.table.delete.disabled-tooltip": "Label \"{{label}}\" cannot be deleted because it is assigned to one or more licenses.",
+  "clarin.license.label.table.delete.disabled-tooltip": "Štítek \"{{label}}\" nelze odstranit, protože je přiřazen k jedné nebo více licencím.",
+
+  // "clarin.license.label.table.delete.checking-tooltip": "Checking whether this label is in use…",
+  "clarin.license.label.table.delete.checking-tooltip": "Zjišťuje se, zda se tento štítek používá…",
+
+  // "clarin.license.label.table.empty": "No license labels available.",
+  "clarin.license.label.table.empty": "Nejsou k dispozici žádné licenční štítky.",
+
+  // "clarin.license.label.table.loading": "Loading labels...",
+  "clarin.license.label.table.loading": "Načítají se licenční štítky...",
+
+  // "clarin.license.label.create.title": "Define License Label",
+  "clarin.license.label.create.title": "Definovat licenční štítek",
+
+  // "clarin.license.label.create.submit": "Save",
+  "clarin.license.label.create.submit": "Uložit",
+
+  // "clarin.license.label.create.success": "License label created successfully.",
+  "clarin.license.label.create.success": "Licenční štítek byl úspěšně vytvořen.",
+
+  // "clarin.license.label.create.error": "Failed to create license label.",
+  "clarin.license.label.create.error": "Nepodařilo se vytvořit licenční štítek.",
+
+  // "clarin.license.label.load.error": "Failed to load license labels.",
+  "clarin.license.label.load.error": "Nepodařilo se načíst licenční štítky.",
+
+  // "clarin.license.label.edit.title": "Edit License Label",
+  "clarin.license.label.edit.title": "Upravit licenční štítek",
+
+  // "clarin.license.label.edit.submit": "Save Changes",
+  "clarin.license.label.edit.submit": "Uložit změny",
+
+  // "clarin.license.label.edit.icon.note": "Leave empty to keep current icon.",
+  "clarin.license.label.edit.icon.note": "Ponechte prázdné, chcete-li zachovat stávající ikonu.",
+
+  // "clarin.license.label.edit.icon.preview": "Current icon",
+  "clarin.license.label.edit.icon.preview": "Stávající ikona",
+
+  // "clarin.license.label.edit.icon.clear": "Remove current icon",
+  "clarin.license.label.edit.icon.clear": "Odstranit stávající ikonu",
+
+  // "clarin.license.label.edit.success": "License label updated successfully.",
+  "clarin.license.label.edit.success": "Licenční štítek byl úspěšně aktualizován.",
+
+  // "clarin.license.label.edit.error": "Failed to update license label.",
+  "clarin.license.label.edit.error": "Nepodařilo se aktualizovat licenční štítek.",
+
+  // "clarin.license.label.modal.close": "Close",
+  "clarin.license.label.modal.close": "Zavřít",
+
+  // "clarin.license.label.delete.confirm.title": "Delete License Label \"{{ dsoName }}\"",
+  "clarin.license.label.delete.confirm.title": "Odstranit licenční štítek \"{{ dsoName }}\"",
+
+  // "clarin.license.label.delete.confirm.message": "Are you sure you want to delete the label \"{{ dsoName }}\"? This action cannot be undone.",
+  "clarin.license.label.delete.confirm.message": "Opravdu chcete odstranit štítek \"{{ dsoName }}\"? Tuto akci nelze vrátit zpět.",
+
+  // "clarin.license.label.delete.confirm.button": "Delete",
+  "clarin.license.label.delete.confirm.button": "Odstranit",
+
+  // "clarin.license.label.delete.cancel.button": "Cancel",
+  "clarin.license.label.delete.cancel.button": "Zrušit",
+
+  // "clarin.license.label.delete.success": "License label deleted successfully.",
+  "clarin.license.label.delete.success": "Licenční štítek byl úspěšně odstraněn.",
+
+  // "clarin.license.label.delete.error": "Failed to delete license label.",
+  "clarin.license.label.delete.error": "Nepodařilo se odstranit licenční štítek.",
 
   // "clarin-license.define-license.notification.successful-content": "License was defined successfully",
   "clarin-license.define-license.notification.successful-content": "Licence byla úspěšně definována",
@@ -9647,6 +9779,33 @@
 
   // "submission.workflow.generic.share-submission.tooltip": "Share submission",
   "submission.workflow.generic.share-submission.tooltip": "Sdílet příspěvek",
+
+  // "submission.workflow.generic.add-url-bitstream": "Add bitstream from URL",
+  "submission.workflow.generic.add-url-bitstream": "Přidat bitstream z URL",
+
+  // "submission.workflow.generic.add-url-bitstream.tooltip": "Add a new bitstream to this workspace item using a URL",
+  "submission.workflow.generic.add-url-bitstream.tooltip": "Přidat nový bitstream do této položky pracovního prostoru pomocí URL",
+
+  // "submission.workflow.generic.add-url-bitstream.modal.title": "Add bitstream from URL",
+  "submission.workflow.generic.add-url-bitstream.modal.title": "Přidat bitstream z URL",
+
+  // "submission.workflow.generic.add-url-bitstream.url.label": "File URL",
+  "submission.workflow.generic.add-url-bitstream.url.label": "URL souboru",
+
+  // "submission.workflow.generic.add-url-bitstream.url.required": "URL is required",
+  "submission.workflow.generic.add-url-bitstream.url.required": "URL je povinná",
+
+  // "submission.workflow.generic.add-url-bitstream.name.label": "Bitstream name (optional)",
+  "submission.workflow.generic.add-url-bitstream.name.label": "Název bitstreamu (volitelné)",
+
+  // "submission.workflow.generic.add-url-bitstream.name.placeholder": "e.g. image.png",
+  "submission.workflow.generic.add-url-bitstream.name.placeholder": "např. image.png",
+
+  // "submission.workflow.generic.add-url-bitstream.cancel": "Cancel",
+  "submission.workflow.generic.add-url-bitstream.cancel": "Zrušit",
+
+  // "submission.workflow.generic.add-url-bitstream.submit": "Add",
+  "submission.workflow.generic.add-url-bitstream.submit": "Přidat",
 
   // "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
   "submission.workflow.share-submission.email.successful": "E-mail s odkazem na sdílení byl úspěšně odeslán",

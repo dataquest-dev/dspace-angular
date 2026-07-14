@@ -17,11 +17,17 @@
 
   "500.link.home-page": "Take me to the home page",
 
-  "404.help": "We can't find the page you're looking for. The page may have been moved or deleted. You can use the button below to get back to the home page. ",
+  "404.help": "We can't find the page you're looking for. The page may have been moved or deleted. You can use the button below to get back to the home page.",
 
   "404.link.home-page": "Take me to the home page",
 
   "404.page-not-found": "Page not found",
+
+  "static-page.404.help": "The static page you requested does not exist. It may have been moved or deleted. You can use the button below to get back to the home page.",
+
+  "static-page.404.link.home-page": "Take me to the home page",
+
+  "static-page.404.page-not-found": "page not found",
 
   "error-page.description.401": "Unauthorized",
 
@@ -1805,7 +1811,11 @@
 
   "form.other-information.last-name": "Last Name",
 
+  "form.other-information.location": "Location",
+
   "form.other-information.orcid": "ORCID",
+
+  "form.other-information.ror-id": "ROR ID",
 
   "form.remove": "Remove",
 
@@ -2059,7 +2069,7 @@
 
   "item.edit.bitstreams.bundle.name": "BUNDLE: {{ name }}",
 
-  "item.edit.bitstreams.bundle.table.aria-label": "Bitstreams in the  {{ bundle }} Bundle",
+  "item.edit.bitstreams.bundle.table.aria-label": "Bitstreams in the {{ bundle }} Bundle",
 
   "item.edit.bitstreams.bundle.tooltip": "You can move a bitstream to a different page by dropping it on the page number.",
 
@@ -2407,7 +2417,7 @@
 
   "item.edit.tabs.metadata.head": "Metadata",
 
-  "item.edit.tabs.metadata.title": "Item Edit -  Metadata",
+  "item.edit.tabs.metadata.title": "Item Edit - Metadata",
 
   "item.edit.tabs.relationships.head": "Relationships",
 
@@ -2459,7 +2469,7 @@
 
   "item.edit.tabs.status.labels.lastModified": "Last Modified",
 
-  "item.edit.tabs.status.title": "Item Edit -  Status",
+  "item.edit.tabs.status.title": "Item Edit - Status",
 
   "item.edit.tabs.versionhistory.head": "Version History",
 
@@ -2469,7 +2479,7 @@
 
   "item.edit.tabs.view.head": "View Item",
 
-  "item.edit.tabs.view.title": "Item Edit -  View",
+  "item.edit.tabs.view.title": "Item Edit - View",
 
   "item.edit.withdraw.cancel": "Cancel",
 
@@ -3453,7 +3463,7 @@
 
   "process.bulk.delete.error.head": "Error on deleteing process",
 
-  "process.bulk.delete.error.body": "The process with ID {{processId}} could not be deleted. The remaining processes will continue being deleted. ",
+  "process.bulk.delete.error.body": "The process with ID {{processId}} could not be deleted. The remaining processes will continue being deleted.",
 
   "process.bulk.delete.success": "{{count}} process(es) have been succesfully deleted",
 
@@ -5684,6 +5694,14 @@
 
   "access-control-option-end-date-note": "Select the date until which the related access condition is applied",
 
+  "item.delete.virtual-metadata.info": "Show virtual metadata information",
+  "access-control.start-date.calendar-button": "Open start date calendar",
+  "access-control.end-date.calendar-button": "Open end date calendar",
+  "form.remove-related-item": "Remove related item",
+  "form.relation-group.save": "Save relation group",
+  "form.relation-group.delete": "Delete relation group",
+  "form.relation-group.clear": "Clear relation group",
+  "submission.cc-license.field-info": "More information about this license field",
   "vocabulary-treeview.search.form.add": "Add",
 
   "process.overview.unknown.user": "Unknown",
@@ -5700,7 +5718,7 @@
 
   "live-region.ordering.instructions": "Press spacebar to reorder {{ itemName }}.",
 
-  "live-region.ordering.status": "{{ itemName }}, grabbed. Current position in list: {{ index }} of  {{ length }}. Press up and down arrow keys to change position, SpaceBar to drop, Escape to cancel.",
+  "live-region.ordering.status": "{{ itemName }}, grabbed. Current position in list: {{ index }} of {{ length }}. Press up and down arrow keys to change position, SpaceBar to drop, Escape to cancel.",
 
   "live-region.ordering.moved": "{{ itemName }}, moved to position {{ index }} of {{ length }}. Press up and down arrow keys to change position, SpaceBar to drop, Escape to cancel.",
 
@@ -6026,10 +6044,6 @@
 
   "item.page.license.message": ["This item is", "and licensed under:"],
 
-  "item.page.matomo-statistics.views.button": "Views",
-
-  "item.page.matomo-statistics.downloads.button": "Downloads",
-
   "item.page.acknowledgement.project-name": "Project name:",
 
   "item.page.acknowledgement.project-code": "Project code:",
@@ -6059,8 +6073,6 @@
   "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
 
   "item.refbox.featured-service.share.message": "Share",
-
-  "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
 
   "item.view.box.author.message": "Author(s):",
 
@@ -6245,6 +6257,8 @@
 
   "clarin-license.button.delete-license": "Delete License",
 
+  "clarin-license.button.delete-license.disabled-tooltip": "License \"{{name}}\" cannot be deleted because it is attached to one or more bitstreams.",
+
   "clarin-license.button.search": "Search",
 
   "clarin-license.button.search.placeholder": "Search by the license name ...",
@@ -6264,6 +6278,44 @@
   "clarin-license.define-license-form.required-info": "Additional required user info",
 
   "clarin-license.define-license-form.submit-button": "Save",
+  "clarin.license.label.section.title": "License Labels",
+  "clarin.license.label.table.header.label": "Label",
+  "clarin.license.label.table.header.title": "Title",
+  "clarin.license.label.table.header.extended": "Extended",
+  "clarin.license.label.table.header.icon": "Icon",
+  "clarin.license.label.table.header.actions": "Actions",
+  "clarin.license.label.table.boolean.yes": "Yes",
+  "clarin.license.label.table.boolean.no": "No",
+  "clarin.license.label.table.icon.available": "Icon available",
+  "clarin.license.label.table.icon.none": "No icon",
+  "clarin.license.label.table.select.aria": "Select label {{label}}",
+  "clarin.license.label.table.edit": "Edit",
+  "clarin.license.label.table.edit.aria": "Edit label {{label}}",
+  "clarin.license.label.table.delete": "Delete",
+  "clarin.license.label.table.delete.aria": "Delete label {{label}}",
+  "clarin.license.label.table.delete.disabled-tooltip": "Label \"{{label}}\" cannot be deleted because it is assigned to one or more licenses.",
+  "clarin.license.label.table.delete.checking-tooltip": "Checking whether this label is in use…",
+  "clarin.license.label.table.empty": "No license labels available.",
+  "clarin.license.label.table.loading": "Loading labels...",
+  "clarin.license.label.create.title": "Define License Label",
+  "clarin.license.label.create.submit": "Save",
+  "clarin.license.label.create.success": "License label created successfully.",
+  "clarin.license.label.create.error": "Failed to create license label.",
+  "clarin.license.label.load.error": "Failed to load license labels.",
+  "clarin.license.label.edit.title": "Edit License Label",
+  "clarin.license.label.edit.submit": "Save Changes",
+  "clarin.license.label.edit.icon.note": "Leave empty to keep current icon.",
+  "clarin.license.label.edit.icon.preview": "Current icon",
+  "clarin.license.label.edit.icon.clear": "Remove current icon",
+  "clarin.license.label.edit.success": "License label updated successfully.",
+  "clarin.license.label.edit.error": "Failed to update license label.",
+  "clarin.license.label.modal.close": "Close",
+  "clarin.license.label.delete.confirm.title": "Delete License Label \"{{ dsoName }}\"",
+  "clarin.license.label.delete.confirm.message": "Are you sure you want to delete the label \"{{ dsoName }}\"? This action cannot be undone.",
+  "clarin.license.label.delete.confirm.button": "Delete",
+  "clarin.license.label.delete.cancel.button": "Cancel",
+  "clarin.license.label.delete.success": "License label deleted successfully.",
+  "clarin.license.label.delete.error": "Failed to delete license label.",
 
   "clarin-license.define-license.notification.successful-content": "License was defined successfully",
 
@@ -6394,6 +6446,24 @@
   "submission.workflow.generic.share-submission": "Share submission",
 
   "submission.workflow.generic.share-submission.tooltip": "Share submission",
+
+  "submission.workflow.generic.add-url-bitstream": "Add bitstream from URL",
+
+  "submission.workflow.generic.add-url-bitstream.tooltip": "Add a new bitstream to this workspace item using a URL",
+
+  "submission.workflow.generic.add-url-bitstream.modal.title": "Add bitstream from URL",
+
+  "submission.workflow.generic.add-url-bitstream.url.label": "File URL",
+
+  "submission.workflow.generic.add-url-bitstream.url.required": "URL is required",
+
+  "submission.workflow.generic.add-url-bitstream.name.label": "Bitstream name (optional)",
+
+  "submission.workflow.generic.add-url-bitstream.name.placeholder": "e.g. image.png",
+
+  "submission.workflow.generic.add-url-bitstream.cancel": "Cancel",
+
+  "submission.workflow.generic.add-url-bitstream.submit": "Add",
 
   "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
 

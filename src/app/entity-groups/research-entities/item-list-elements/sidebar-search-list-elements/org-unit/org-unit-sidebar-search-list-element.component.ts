@@ -5,6 +5,7 @@ import { ItemSearchResult } from '../../../../../shared/object-collection/shared
 import { Component } from '@angular/core';
 import { SidebarSearchListElementComponent } from '../../../../../shared/object-list/sidebar-search-list-element/sidebar-search-list-element.component';
 import { Item } from '../../../../../core/shared/item.model';
+import { metadataLangToBcp47 } from '../../../../../shared/utils/metadata-language.util';
 
 @listableObjectComponent('OrgUnitSearchResult', ViewMode.ListElement, Context.SideBarSearchModal)
 @listableObjectComponent('OrgUnitSearchResult', ViewMode.ListElement, Context.SideBarSearchModalCurrent)
@@ -23,5 +24,12 @@ export class OrgUnitSidebarSearchListElementComponent extends SidebarSearchListE
    */
   getDescription(): string {
     return this.firstMetadataValue('dc.description');
+  }
+
+  /**
+   * Get the language of the Org Unit description.
+   */
+  getDescriptionLang(): string | null {
+    return metadataLangToBcp47(this.dso.firstMetadata('dc.description')?.language);
   }
 }
