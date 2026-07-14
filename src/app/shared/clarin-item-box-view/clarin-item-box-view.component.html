@@ -11,7 +11,7 @@
             <div><a [routerLink]="itemUri" class="item-name">{{ itemName }}</a></div>
             <div *ngIf="isSearchResult" class="pt-1">
               <div class="font-weight-bold">{{ 'item.view.box.publisher.message' | translate }}</div>
-              <span>(<span *ngIf="itemPublisher != null"><a [href]="publisherRedirectLink">{{itemPublisher}}</a> / </span>{{itemDate}})</span>
+              <span>(<span *ngIf="itemPublisher != null"><a [attr.href]="publisherRedirectLink">{{itemPublisher}} <img *ngIf="hasPublisherRorAuthority" src="assets/images/ror-icon.svg" alt="ROR ID" height="16" class="ror-icon ml-1 align-middle"></a> / </span>{{itemDate}})</span>
             </div>
           </div>
           <div class="col-2 d-flex justify-content-end">
