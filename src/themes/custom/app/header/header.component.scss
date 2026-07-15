@@ -25,4 +25,38 @@
     }
   }
 
+  // ds-auth-nav-menu (desktop) renders nothing until its `showAuth$` observable (initialised to
+  // `of(false)` in AuthNavMenuComponent) resolves. On a hard reload this component is recreated
+  // client-side by ThemedComponent (SSR content is discarded, see
+  // src/app/shared/theme-support/themed.component.ts), so it briefly goes from the SSR-resolved
+  // "Admin Access" button back to empty before resolving again. #header-right is a flex-nowrap row,
+  // so that 0 -> ~126px jump pushes the search box next to it — the anti-flicker overlay
+  // (src/index.html) usually masks this, but it's a timing race, not a guarantee. Reserving the
+  // widest label's width here (en "Admin Access" / cs "Admin přístup", both ~127px) keeps the row's
+  // footprint stable regardless of timing, so nothing visibly shifts even if the mask lifts early.
+  @include media-breakpoint-up(md) {
+    ds-auth-nav-menu {
+      display: flex;
+      justify-content: flex-end;
+      min-width: 150px;
+      // Logged-in users get the narrow icon-only state (~40px); flex-end keeps it pinned to its
+      // usual spot flush with the row's trailing edge instead of floating in the reserved space.
+    }
+
+    // #desktop-navbar (<ds-navbar>, the "Communities & Collections" / "All of DSpace" / "Statistics"
+    // top-level menu) is populated by MenuService from the same ThemedComponent recreation pipeline
+    // as ds-auth-nav-menu above, and is subject to the identical hard-reload flash: it briefly renders
+    // narrower before settling to its final width. Because #header-left is flex-grow and #header-right
+    // is pinned via justify-content:end, that narrower-then-wider swing on the left pushes
+    // #header-right sideways even though header-right's own width is now fixed. Reserving width here
+    // stops that push. Measured settled width for mendelu's current menu (2 top-level items, en/cs) is
+    // ~366px; 380px leaves a little headroom without risking overflow at the md breakpoint (768px),
+    // where this nav, the logo, and the reserved header-right width above are already a tight fit.
+    // If a menu item is ever added/removed/renamed here, remeasure and adjust — this is
+    // content-driven, not a fixed upstream constant.
+    #desktop-navbar {
+      min-width: 380px;
+    }
+  }
+
 }
