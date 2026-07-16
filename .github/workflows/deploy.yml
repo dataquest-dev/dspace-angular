@@ -23,7 +23,7 @@ on:
       DUMP_PATH:
         required: false
         type: string
-        default: '/opt/dspace-envs/8603/dspace_dev5_dump_26.07.16.sql'
+        default: '/opt/dspace-envs/8603/dump/dspace_dev5_dump_26.07.16.sql'
 
   workflow_dispatch:
     inputs:
@@ -201,13 +201,20 @@ jobs:
           echo "Stopping app container so its restart loop can't kill the migration..."
           docker stop $DNAME || true
 
-          echo "Running one-off DB migration via docker compose..."
+          # `database repair` before `migrate`: the dump comes from a CLARIN 7.6 instance,
+          # so its flyway_schema_history lists CLARIN-specific migrations that do not exist
+          # in this vanilla v9 tree. Flyway validation then refuses to migrate at all:
+          #   "Detected applied migration not resolved locally: 7.6.2026.06.01."
+          # repair marks those unresolvable entries as deleted, which is exactly what we want
+          # when migrating an old CLARIN dump onto vanilla v9 -- their DDL is already in the
+          # dump, we just do not carry the migration scripts any more.
+          echo "Running one-off DB repair + migration via docker compose..."
           docker compose --env-file $ENVFILE -p dspace-${INSTANCE} \
             -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
             -f docker/docker-compose-instance-ports.yml \
             -f $OVERLAY/docker-compose-rest.yml -f $OVERLAY/docker-compose.yml \
             run --rm --no-deps --entrypoint /bin/bash dspace \
-            -c "while (!</dev/tcp/dspacedb/5432) >/dev/null 2>&1; do sleep 1; done; cd /dspace/bin && ./dspace database migrate ignored"
+            -c "while (!</dev/tcp/dspacedb/5432) >/dev/null 2>&1; do sleep 1; done; cd /dspace/bin && ./dspace database repair && ./dspace database migrate ignored"
 
           echo "Migration done. Starting app container (entrypoint migrate is now a no-op)..."
           docker start $DNAME

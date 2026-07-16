@@ -1,15 +1,21 @@
 name: Import Weekly
 
 on:
-  schedule:
-    - cron: '0 0 * * 0'  # every Sunday at midnight UTC
+  # NOTE: the schedule is intentionally disabled on this branch. It used to wipe and
+  # re-import instance '8' on dev-5, which does not exist in the v9 base setup, and
+  # ERASE_DB: true makes this destructive. Re-enable once an unattended weekly wipe of
+  # 8603 is actually wanted.
+  # schedule:
+  #   - cron: '0 0 * * 0'  # every Sunday at midnight UTC
   workflow_dispatch:
 
 jobs:
   deploy:
     uses: ./.github/workflows/deploy.yml
     with:
-      INSTANCE: '8'
+      # Must match a job in deploy.yml, otherwise every job is skipped and this run
+      # still reports success. On this branch the deployed instance is 8603 on dev-6.
+      INSTANCE: '8603'
       IMPORT: true
       ERASE_DB: true
     secrets: inherit
