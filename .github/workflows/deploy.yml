@@ -4,29 +4,35 @@ name: Deploy DSpace
 on:
   workflow_call:
     inputs:
+      DEV_MACHINE:
+        required: false
+        type: string
+        default: 'dev-6'
       INSTANCE:
         required: false
         type: string
-        default: '5'
+        default: '8603'
       IMPORT:
         required: false
-        default: true
+        default: false
         type: boolean
       ERASE_DB:
         required: false
         default: false
         type: boolean
+      DUMP_PATH:
+        required: false
+        type: string
+        default: '/opt/dspace-envs/8603/dspace_dev5_dump_26.07.16.sql'
 
   workflow_dispatch:
     inputs:
       INSTANCE:
         required: true
-        default: '5'
+        default: '8603'
         type: choice
         options:
-          - '*'
-          - '5'
-          - '8'
+          - '8603'
       IMPORT:
         required: true
         default: true
@@ -35,19 +41,42 @@ on:
         required: false
         default: false
         type: boolean
+      DEV_MACHINE:
+        required: false
+        type: string
+        default: 'dev-6'
+      DUMP_PATH:
+        description: 'Absolute path of the SQL dump ON THE DEV MACHINE (used only when IMPORT is checked)'
+        required: false
+        type: string
+        default: '/opt/dspace-envs/8603/dspace_dev5_dump_26.07.16.sql'
 
 jobs:
-  deploy-5:
-    if: inputs.INSTANCE == '*' || inputs.INSTANCE == '5'
-    runs-on: dspace-dep-1
-    timeout-minutes: 10
+  deploy-8603:
+    if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8603'
+    runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
+    timeout-minutes: 60
     env:
-      INSTANCE: '5'
-      ENVFILE: /opt/dspace-envs/.env.dspace.dev-5
-      ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
-      USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
+      INSTANCE: '8603'
+      CONFIG_PATH: /opt/dspace-envs/${{inputs.INSTANCE}}
+      ENVFILE: /opt/dspace-envs/${{inputs.INSTANCE}}/.env
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+
+      # Report the environment we are about to deploy into. Everything here is
+      # tolerant of failure: it must never be the reason a deploy goes red.
+      - name: probe environment
+        run: |
+          echo "===== $CONFIG_PATH"
+          ls -la "$CONFIG_PATH/" || echo "MISSING: $CONFIG_PATH"
+          echo "===== .env keys (values redacted)"
+          sed 's/=.*/=<redacted>/' "$ENVFILE" || echo "MISSING: $ENVFILE"
+          echo "===== containers for instance $INSTANCE"
+          docker ps -a --format '{{.Names}}\t{{.Image}}\t{{.Status}}' | grep -E "${INSTANCE}" || echo "no containers matching $INSTANCE"
+          echo "===== postgres port inside dspacedb$INSTANCE"
+          docker exec dspacedb$INSTANCE sh -c 'echo "PGPORT=$PGPORT"; pg_isready -U dspace; psql -U dspace -d postgres -tAc "SHOW port;" 2>/dev/null' || echo "could not probe dspacedb$INSTANCE"
+          echo "===== dump file"
+          ls -la "${{ inputs.DUMP_PATH }}" || echo "MISSING dump: ${{ inputs.DUMP_PATH }}"
 
       - uses: ./.github/actions/erase-db
         if: inputs.ERASE_DB
@@ -55,198 +84,110 @@ jobs:
           INSTANCE: ${{ env.INSTANCE }}
           NAME: dspace-${{ env.INSTANCE }}
 
-      - name: deploy to dev-5
+      - name: Set start.sh as executable
+        run: chmod +x build-scripts/run/start.sh
+
+      - name: deploy to ${{inputs.DEV_MACHINE}}
         working-directory: build-scripts/run/
+        env:
+          ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+          USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
         run: |
           ./start.sh dspace-$INSTANCE
           cd ../..
-          # use customized docker-compose file for the `85` port because the server is exposed with the namespace `repository`
-          # `/repository/server`
-          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f /opt/dspace-envs/5/docker-compose-rest.yml -f /opt/dspace-envs/5/docker-compose.yml up -d --no-build
+          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
 
-  deploy-8:
-    if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8'
-    runs-on: dspace-dep-1
-    timeout-minutes: 120
+  import-8603:
+    runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
+    if: inputs.IMPORT
+    timeout-minutes: 900
+    needs: deploy-8603
     env:
-      INSTANCE: '8'
-      # 2024/02: this .env replaces ENTRYPOINT to angular
-      # !!!!WARNING!!!!
-      # disable TSL checks = allowing to cooperate with https backend with invalid
-      # certificate
-      ENVFILE: /opt/dspace-envs/.env.dspace.imported.dev-5
+      INSTANCE: ${{inputs.INSTANCE}}
+      CONFIG_PATH: /opt/dspace-envs/${{inputs.INSTANCE}}
+      DUMP_PATH: ${{inputs.DUMP_PATH}}
       ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
-      USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: ./.github/actions/erase-db
-        if: inputs.ERASE_DB
-        with:
-          INSTANCE: ${{ env.INSTANCE }}
-          NAME: dspace-${{ env.INSTANCE }}
-
-      - name: deploy dspace-import on dev-5
-        working-directory: build-scripts/run/
+      - name: vanilla import
         run: |
-          ./start.sh dspace-$INSTANCE
-          cd ../..
-          # this is not necessary, since extra.yml doesn't contain any new images that weren't pulled within script above
-          # docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f /opt/dspace-envs/8/extra.yml pull
-          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f /opt/dspace-envs/8/extra.yml up -d --no-build
+          export DNAME=dspace${INSTANCE}
+          export DDBNAME=dspacedb${INSTANCE}
 
-          # this must be here and not in the start.sh, because extra.yml replaces dspace container
-          ## !!!!! please remove this section if you do not want handle server !!!!!!!
+          if [ ! -f "$DUMP_PATH" ]; then
+            echo "::error::Dump not found on ${{inputs.DEV_MACHINE}}: $DUMP_PATH"
+            exit 1
+          fi
+          echo "Importing dump: $DUMP_PATH ($(du -h "$DUMP_PATH" | cut -f1))"
+
+          # Stop the app so it cannot hold connections to the database we are about to drop.
+          docker stop $DNAME || true
+
           echo "====="
-          echo "installing handle server"
-          docker exec dspace${INSTANCE} /dspace/bin/make-handle-config
-          echo "made handle config:"
-          docker exec dspace${INSTANCE} cat /dspace/handle-server/config.dct
-          docker exec dspace${INSTANCE} /dspace/bin/start-handle-server
-          echo "started handle server"
-          # this seems to be the easiest solution for now
-          docker restart dockerized-nginx-with-shibboleth-nginx-1
-          /bin/bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://dev-5.pc:8$INSTANCE/repository/server/api)" != "200" ]]; do sleep 5; done'
+          docker cp "$DUMP_PATH" $DDBNAME:/tmp/dump.sql
 
+          # Recreate the database from scratch and load the vanilla dump.
+          docker exec $DDBNAME /bin/bash -c "
+          dropdb -U dspace dspace || true &&
+          createdb -U dspace --owner=dspace --encoding=UNICODE dspace &&
+          psql -U dspace -d dspace -f /tmp/dump.sql
+          "
+          echo "====="
+          docker exec $DDBNAME /bin/bash -c "rm -f /tmp/dump.sql" || true
 
-  import-5:
-    runs-on: dspace-dep-1
-    if: inputs.IMPORT
-    needs: deploy-5
-    env:
-      INSTANCE: '5'
-      ENVFILE: /opt/dspace-envs/.env.dspace.dev-5
-    steps:
-      - uses: ./.github/actions/import-db
-        with:
-          INSTANCE: ${{ env.INSTANCE }}
-          DATADIR: /opt/dspace-data/clarin-dspace-oxford/
-          ASSETSTORE: /opt/dspace-data/clarin-dspace-oxford/assetstore/
-          LOGDIR: /log/
-          ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
-
-      - name: dspace basic command
+      - name: run database migration
         run: |
-          export DNAME=dspace$INSTANCE
-          docker logs -n 50 $DNAME
+          export DNAME=dspace${INSTANCE}
+          export ENVFILE=$CONFIG_PATH/.env
+          export OVERLAY=$CONFIG_PATH
 
-          echo "dspace version:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace version"
+          # ---------------------------------------------------------------
+          # Why a one-off `docker compose run` instead of `docker exec $DNAME migrate`:
+          # The dspace entrypoint auto-runs `dspace database migrate` (WITHOUT `ignored`)
+          # and then starts the REST webapp. On a freshly imported dump the
+          # "Ignored" XMLWorkflow migrations are NOT applied, so the webapp boots against
+          # an un-migrated DB, crashes, and (with the restart policy) the container
+          # restarts. That restart SIGKILLs any `docker exec` running inside it -> the
+          # migration dies with exit 137. So we stop the app and run the migration as a
+          # one-off compose container (overridden entrypoint = migrate only, no webapp,
+          # no restart policy), using the same compose files/env as the deploy step.
+          # ---------------------------------------------------------------
 
-          echo "dspace cleanup:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace cleanup -v"
+          echo "Stopping app container so its restart loop can't kill the migration..."
+          docker stop $DNAME || true
 
-          echo "dspace reindex solr:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace index-discovery -b"
+          echo "Running one-off DB migration via docker compose..."
+          docker compose --env-file $ENVFILE -p dspace-${INSTANCE} \
+            -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
+            -f $OVERLAY/docker-compose-rest.yml -f $OVERLAY/docker-compose.yml \
+            run --rm --no-deps --entrypoint /bin/bash dspace \
+            -c "while (!</dev/tcp/dspacedb/5432) >/dev/null 2>&1; do sleep 1; done; cd /dspace/bin && ./dspace database migrate ignored"
 
-          echo "dspace reindex OAI-PMH:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace oai import -c"
+          echo "Migration done. Starting app container (entrypoint migrate is now a no-op)..."
+          docker start $DNAME
 
-          echo "dspace checker:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace checker -v -l"
+          echo "Waiting for DSpace to be ready..."
+          sleep 10
 
-      - name: dspace healthcheck
+      - name: restart dspace container
         run: |
-          export DNAME=dspace$INSTANCE
-          echo "dspace healthcheck:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
+          export DNAME=dspace${INSTANCE}
+          echo "Restarting DSpace container..."
+          docker restart $DNAME
+          sleep 60
 
-  import-8:
-    runs-on: dspace-dep-1
-    if: inputs.IMPORT
-    needs: deploy-8
-    env:
-      INSTANCE: '8'
-      ENVFILE: /opt/dspace-envs/.env.dspace.imported.dev-5
-    steps:
-      - uses: ./.github/actions/import-db
-        with:
-          INSTANCE: ${{ env.INSTANCE }}
-          DATADIR: /opt/dspace-data/clarin-dspace/
-          ASSETSTORE: /opt/dspace-data/clarin-dspace/assetstore/
-          LOGDIR: /log/
-          ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
-
-      - name: dspace basic command
+      - name: create administrator
         run: |
-          export DNAME=dspace$INSTANCE
-          docker logs -n 50 $DNAME
+          export DNAME=dspace${INSTANCE}
+          echo "Creating DSpace administrator..."
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p \"${ADMIN_PASSWORD}\" -c en"
 
-          echo "dspace version:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace version"
-
-          echo "dspace cleanup:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace cleanup -v"
-
-          echo "dspace reindex solr:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace index-discovery -b"
-
-          echo "dspace reindex OAI-PMH:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace oai import -c"
-
-          echo "dspace checker:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace checker -v -l"
-
-      - name: dspace healthcheck
+      - name: rebuild discovery index and run oai import
         run: |
-          export DNAME=dspace$INSTANCE
-          echo "dspace healthcheck:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
+          export DNAME=dspace${INSTANCE}
+          echo "Rebuilding discovery index..."
+          docker exec $DNAME /bin/bash -c "/dspace/bin/dspace index-discovery -b"
 
-  playwright-after-deploy8:
-    needs: deploy-8
-    if: '!inputs.IMPORT'
-    uses: ./.github/workflows/playwright-tests.yml
-    secrets: inherit
-
-  rest-tests-after-deploy8:
-    runs-on: ubuntu-latest
-    needs: playwright-after-deploy8
-    if: '!inputs.IMPORT'
-    timeout-minutes: 120
-    env:
-      GH_TOKEN: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
-      REPO: dataquest-dev/dspace-rest-test
-      WORKFLOW: run_unittests.yml
-    steps:
-      - name: run rest-tests
-        run: |
-          OUTPUT=$(gh workflow run "$WORKFLOW" \
-            --repo "$REPO" \
-            --ref master \
-            -f CUSTOMER="${{ github.ref_name }}" \
-            -f URL="http://dev-5.pc:88/repository/server/api" 2>&1)
-
-          RUN_ID=$(echo "$OUTPUT" | grep -oE '/runs/[0-9]+' | grep -oE '[0-9]+')
-
-          echo "Watching run: https://github.com/$REPO/actions/runs/$RUN_ID"
-          gh run watch "$RUN_ID" --repo "$REPO" --interval 30 --exit-status
-
-
-  playwright-after-import8:
-    needs: import-8
-    if: inputs.IMPORT
-    uses: ./.github/workflows/playwright-tests.yml
-    secrets: inherit
-
-  rest-tests-after-import8:
-    runs-on: ubuntu-latest
-    needs: playwright-after-import8
-    timeout-minutes: 120
-    env:
-      GH_TOKEN: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
-      REPO: dataquest-dev/dspace-rest-test
-      WORKFLOW: run_unittests.yml
-    steps:
-      - name: run rest-tests
-        run: |
-          OUTPUT=$(gh workflow run "$WORKFLOW" \
-            --repo "$REPO" \
-            --ref master \
-            -f CUSTOMER="${{ github.ref_name }}" \
-            -f URL="http://dev-5.pc:88/repository/server/api" 2>&1)
-
-          RUN_ID=$(echo "$OUTPUT" | grep -oE '/runs/[0-9]+' | grep -oE '[0-9]+')
-
-          echo "Watching run: https://github.com/$REPO/actions/runs/$RUN_ID"
-          gh run watch "$RUN_ID" --repo "$REPO" --interval 30 --exit-status
+          echo "Running OAI import..."
+          docker exec $DNAME /bin/bash -c "/dspace/bin/dspace oai import -c"
