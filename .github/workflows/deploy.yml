@@ -119,6 +119,17 @@ jobs:
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
             "select version, script, success from schema_version order by installed_rank desc limit 5;" \
             2>&1 || echo "could not read schema_version"
+          # What `database repair` did to the imported CLARIN history. repair only rewrites
+          # this bookkeeping table -- it never touches user tables or their rows.
+          echo "===== CLARIN 7.6 entries / anything repair marked deleted"
+          docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
+            "select installed_rank||' | '||version||' | type='||type||' | success='||success||' | '||script from schema_version where version like '7.6%' or type='DELETE' order by installed_rank desc limit 12;" \
+            2>&1 || echo "could not read schema_version"
+          echo "===== CLARIN-specific tables still present after repair"
+          docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
+            "select 'public tables total='||count(*) from information_schema.tables where table_schema='public';" 2>&1 || true
+          docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
+            "select string_agg(table_name, ', ') from information_schema.tables where table_schema='public' and (table_name like '%clarin%' or table_name like '%license%');" 2>&1 || true
           echo "===== row counts"
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
             "select 'item='||(select count(*) from item) || ' bitstream='||(select count(*) from bitstream) || ' collection='||(select count(*) from collection) || ' community='||(select count(*) from community) || ' eperson='||(select count(*) from eperson);" \
