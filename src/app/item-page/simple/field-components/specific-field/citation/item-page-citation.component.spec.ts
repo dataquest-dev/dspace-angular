@@ -11,9 +11,14 @@ import {
   By,
   DomSanitizer,
 } from '@angular/platform-browser';
+import {
+  TranslateLoader,
+  TranslateModule,
+} from '@ngx-translate/core';
 
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
+import { TranslateLoaderMock } from '../../../../../shared/mocks/translate-loader.mock';
 import { createSuccessfulRemoteDataObject$ } from '../../../../../shared/remote-data.utils';
 import { ItemPageCitationFieldComponent } from './item-page-citation.component';
 
@@ -40,7 +45,12 @@ describe('ItemPageCitationFieldComponent', () => {
 
   async function init(allowed: string): Promise<void> {
     await TestBed.configureTestingModule({
-      imports: [ItemPageCitationFieldComponent],
+      imports: [
+        ItemPageCitationFieldComponent,
+        TranslateModule.forRoot({
+          loader: { provide: TranslateLoader, useClass: TranslateLoaderMock },
+        }),
+      ],
       providers: [
         { provide: ConfigurationDataService, useValue: mockConfigurationDataService(allowed) },
       ],
@@ -73,10 +83,11 @@ describe('ItemPageCitationFieldComponent', () => {
         .toBe(`${CITACE_PRO_URL}:${CITACE_PRO_UNIVERSITY}:${mockHandle}`);
     });
 
-    it('should render the iframe with a title', () => {
+    it('should render the iframe with a translated title', () => {
       const iframe = fixture.debugElement.query(By.css('iframe'));
       expect(iframe).not.toBeNull();
-      expect(iframe.nativeElement.getAttribute('title')).toBe('Citace PRO');
+      // TranslateLoaderMock returns no translations, so the pipe emits the key
+      expect(iframe.nativeElement.getAttribute('title')).toBe('item.page.citace-pro.title');
     });
   });
 
