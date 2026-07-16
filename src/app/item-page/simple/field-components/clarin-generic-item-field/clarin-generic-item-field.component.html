@@ -31,7 +31,7 @@
           <span *ngIf="!last" [innerHTML]="separator"></span>
         </span>
         <span *ngIf="type === 'subject'" class="pr-1">
-          <a class="badge badge-info text-white cursor-pointer mr-1"
+          <a class="badge text-wrap text-left badge-info text-white cursor-pointer mr-1"
              *ngFor="let subject of mdValue.value.split(separator);"
              [href]="getLinkToSearch(-1, subject)">
             {{subject}}
