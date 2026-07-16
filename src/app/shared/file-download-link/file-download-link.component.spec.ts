@@ -8,6 +8,7 @@ import { AuthorizationDataService } from '../../core/data/feature-authorization/
 import { cold, getTestScheduler } from 'jasmine-marbles';
 import { Item } from '../../core/shared/item.model';
 import { RouterLinkDirectiveStub } from '../testing/router-link-directive.stub';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('FileDownloadLinkComponent', () => {
   let component: FileDownloadLinkComponent;
@@ -39,6 +40,9 @@ describe('FileDownloadLinkComponent', () => {
 
   function initTestbed() {
     TestBed.configureTestingModule({
+      imports: [
+        TranslateModule.forRoot(),
+      ],
       declarations: [FileDownloadLinkComponent, RouterLinkDirectiveStub],
       providers: [
         {provide: AuthorizationDataService, useValue: authorizationService},

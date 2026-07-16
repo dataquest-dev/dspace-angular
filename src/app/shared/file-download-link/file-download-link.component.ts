@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Bitstream } from '../../core/shared/bitstream.model';
+import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 import { getBitstreamDownloadRoute } from '../../app-routing-paths';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
@@ -48,6 +49,7 @@ export class FileDownloadLinkComponent implements OnInit {
 
   constructor(
     private authorizationService: AuthorizationDataService,
+    public dsoNameService: DSONameService,
   ) {
   }
 
