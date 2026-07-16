@@ -107,11 +107,10 @@ jobs:
 
       - name: TEMP does the dump already contain the DELETE marker
         run: |
-          echo "===== schema_version rows for 7.6.2026.06.01 INSIDE THE DUMP FILE"
-          grep -aoE "[0-9]+\s+7\.6\.2026\.06\.01[^\n]{0,120}" "${{ inputs.DUMP_PATH }}" | head -5 || echo "no direct match"
-          echo "===== any DELETE-type rows in the dump's schema_version"
-          grep -acE "DELETE" "${{ inputs.DUMP_PATH }}" || true
-          grep -aoE "V7\.6_2026\.06\.01__license_label_constraint\.sql[^\n]{0,80}" "${{ inputs.DUMP_PATH }}" | head -5 || echo "script name not found"
+          echo "===== every dump line mentioning license_label_constraint (tabs shown as ->)"
+          grep -a "license_label_constraint" "${{ inputs.DUMP_PATH }}" | head -5 | sed 's/	/ -> /g'
+          echo "===== dump lines whose version column is 7.6.2026.06.01"
+          grep -a "7\.6\.2026\.06\.01" "${{ inputs.DUMP_PATH }}" | head -5 | sed 's/	/ -> /g'
 
       - name: postgres inside the instance db container
         run: |
