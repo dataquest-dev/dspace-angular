@@ -1,0 +1,21 @@
+# Drop the FIXED host ports that the vanilla docker-compose.yml / docker-compose-rest.yml
+# publish (dspace 8080, dspace-angular 4000+9876, dspacedb 5432, dspacesolr 8983).
+#
+# Those are global to the machine, so on a shared dev host only ONE instance can ever own
+# them: the second instance to deploy dies with
+#   "Bind for 0.0.0.0:5432 failed: port is already allocated".
+# Compose MERGES `ports` lists across -f files rather than replacing them, so a per-instance
+# overlay that only adds its own ports still inherits the fixed ones.
+#
+# Include this file AFTER the vanilla compose files and BEFORE the per-instance overlay in
+# /opt/dspace-envs/<instance>/: it resets the list, and the overlay then contributes the real
+# instance-scoped ports (e.g. 10603->5432).
+services:
+  dspace:
+    ports: !override []
+  dspace-angular:
+    ports: !override []
+  dspacedb:
+    ports: !override []
+  dspacesolr:
+    ports: !override []

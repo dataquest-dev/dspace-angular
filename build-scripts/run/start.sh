@@ -10,14 +10,25 @@ echo "Using envfile: [$ENVFILE] for project: [$PROJECT]"
 
 source $ENVFILE
 
+# The vanilla compose files publish fixed host ports (5432/8080/8983/4000), which are global
+# to the machine. When INSTANCE_OVERLAY points at /opt/dspace-envs/<instance>, bring the
+# containers up through that overlay instead, with docker-compose-instance-ports.yml resetting
+# the fixed ports first -- otherwise this `up` fights whichever instance already owns them.
+COMPOSE_FILES="-f docker/docker-compose.yml -f docker/docker-compose-rest.yml"
+if [[ -n "$INSTANCE_OVERLAY" ]]; then
+    COMPOSE_FILES="$COMPOSE_FILES -f docker/docker-compose-instance-ports.yml -f $INSTANCE_OVERLAY/docker-compose-rest.yml -f $INSTANCE_OVERLAY/docker-compose.yml"
+    echo "Using instance overlay: [$INSTANCE_OVERLAY]"
+fi
+echo "Compose files: [$COMPOSE_FILES]"
+
 # docker-compose does not pull those that have `build` section?!
 echo "====="
 docker pull $DSPACE_UI_IMAGE
 
 pushd ../..
 echo "====="
-docker compose --env-file $ENVFILE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml pull
-docker compose --env-file $ENVFILE -p $PROJECT -f docker/docker-compose.yml -f docker/docker-compose-rest.yml up -d --no-build --remove-orphans
+docker compose --env-file $ENVFILE $COMPOSE_FILES pull
+docker compose --env-file $ENVFILE -p $PROJECT $COMPOSE_FILES up -d --no-build --remove-orphans
 popd
 
 # Create admin user
