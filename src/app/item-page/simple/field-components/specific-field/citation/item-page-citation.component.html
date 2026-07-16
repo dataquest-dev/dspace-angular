@@ -1,0 +1,12 @@
+@if ((citaceProStatus$ | async) && (citaceProURL$ | async); as citaceProURL) {
+  <div class="mb-2">
+    <iframe
+      class="d-block"
+      title="{{ 'item.page.citace-pro.title' | translate }}"
+      height="150px"
+      width="100%"
+      style="border: none;"
+      [src]="citaceProURL"
+    ></iframe>
+  </div>
+}
