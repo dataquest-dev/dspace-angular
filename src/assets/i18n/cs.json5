@@ -3161,15 +3161,6 @@
   // "form.number-picker.increment": "Increment {{field}}",
   "form.number-picker.increment": "Zvýšit {{field}}",
 
-  // "form.number-picker.label.Year": "Year",
-  "form.number-picker.label.Rok": "Rok",
-
-  // "form.number-picker.label.Month": "Month",
-  "form.number-picker.label.Měsíc": "Měsíc",
-
-  // "form.number-picker.label.Day": "Day",
-  "form.number-picker.label.Den": "Den",
-
   // "form.repeatable.sort.tip": "Drop the item in the new position",
   "form.repeatable.sort.tip": "Přetáhněte záznam na novou pozici",
 
@@ -10960,6 +10951,5 @@
   // "item.preview.organization.alternateName": "Alternative name",
   // TODO New key - Add a translation
   "item.preview.organization.alternateName": "Alternative name",
-
 
 }
