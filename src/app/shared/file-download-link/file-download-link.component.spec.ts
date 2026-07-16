@@ -9,6 +9,7 @@ import { cold, getTestScheduler } from 'jasmine-marbles';
 import { Item } from '../../core/shared/item.model';
 import { RouterLinkDirectiveStub } from '../testing/router-link-directive.stub';
 import { TranslateModule } from '@ngx-translate/core';
+import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 
 describe('FileDownloadLinkComponent', () => {
   let component: FileDownloadLinkComponent;
@@ -16,6 +17,9 @@ describe('FileDownloadLinkComponent', () => {
 
   let scheduler;
   let authorizationService: AuthorizationDataService;
+  let dsoNameService: DSONameService;
+
+  const bitstreamName = 'Test bitstream name';
 
   let bitstream: Bitstream;
   let item: Item;
@@ -23,6 +27,9 @@ describe('FileDownloadLinkComponent', () => {
   function init() {
     authorizationService = jasmine.createSpyObj('authorizationService', {
       isAuthorized: cold('-a', {a: true})
+    });
+    dsoNameService = jasmine.createSpyObj('dsoNameService', {
+      getName: bitstreamName
     });
     bitstream = Object.assign(new Bitstream(), {
       uuid: 'bitstreamUuid',
@@ -46,6 +53,7 @@ describe('FileDownloadLinkComponent', () => {
       declarations: [FileDownloadLinkComponent, RouterLinkDirectiveStub],
       providers: [
         {provide: AuthorizationDataService, useValue: authorizationService},
+        {provide: DSONameService, useValue: dsoNameService},
       ]
     })
       .compileComponents();
@@ -79,6 +87,18 @@ describe('FileDownloadLinkComponent', () => {
           expect(link.injector.get(RouterLinkDirectiveStub).routerLink).toContain(new URLCombiner(getBitstreamModuleRoute(), bitstream.uuid, 'download').toString());
           const lock = fixture.debugElement.query(By.css('.fa-lock'));
           expect(lock).toBeNull();
+        });
+        it('should set an accessible aria-label on the download link containing the bitstream name', () => {
+          scheduler.flush();
+          fixture.detectChanges();
+          const link = fixture.debugElement.query(By.css('a'));
+          expect(link.nativeElement.getAttribute('aria-label')).toContain(bitstreamName);
+        });
+        it('should not show the restricted-bitstream text', () => {
+          scheduler.flush();
+          fixture.detectChanges();
+          const restricted = fixture.debugElement.query(By.css('.sr-only'));
+          expect(restricted).toBeNull();
         });
       });
       // describe('when the user has no download rights but has the right to request a copy', () => {
@@ -140,6 +160,14 @@ describe('FileDownloadLinkComponent', () => {
           expect(link.injector.get(RouterLinkDirectiveStub).routerLink).toContain(new URLCombiner(getBitstreamModuleRoute(), bitstream.uuid, 'download').toString());
           const lock = fixture.debugElement.query(By.css('.fa-lock')).nativeElement;
           expect(lock).toBeTruthy();
+        });
+        it('should mark the lock icon as decorative and expose the restricted state via a sr-only text node', () => {
+          scheduler.flush();
+          fixture.detectChanges();
+          const lock = fixture.debugElement.query(By.css('.fa-lock')).nativeElement;
+          expect(lock.getAttribute('aria-hidden')).toBe('true');
+          const restricted = fixture.debugElement.query(By.css('.sr-only'));
+          expect(restricted.nativeElement.textContent.trim()).toBe('file-download-link.restricted');
         });
       });
     });
