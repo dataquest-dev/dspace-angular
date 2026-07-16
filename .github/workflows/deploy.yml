@@ -105,6 +105,14 @@ jobs:
             config 2>&1 | grep -nE '^  [a-z-]+:|container_name:|published:|^\s+ports:' | head -40 \
             || echo "compose config failed"
 
+      - name: TEMP does the dump already contain the DELETE marker
+        run: |
+          echo "===== schema_version rows for 7.6.2026.06.01 INSIDE THE DUMP FILE"
+          grep -aoE "[0-9]+\s+7\.6\.2026\.06\.01[^\n]{0,120}" "${{ inputs.DUMP_PATH }}" | head -5 || echo "no direct match"
+          echo "===== any DELETE-type rows in the dump's schema_version"
+          grep -acE "DELETE" "${{ inputs.DUMP_PATH }}" || true
+          grep -aoE "V7\.6_2026\.06\.01__license_label_constraint\.sql[^\n]{0,80}" "${{ inputs.DUMP_PATH }}" | head -5 || echo "script name not found"
+
       - name: postgres inside the instance db container
         run: |
           docker exec dspacedb$INSTANCE sh -c 'echo "PGPORT=$PGPORT"; pg_isready -U dspace; psql -U dspace -d postgres -tAc "SHOW port;" 2>/dev/null' || echo "could not probe dspacedb$INSTANCE"
