@@ -1,0 +1,19 @@
+<div class="container">
+  <!-- isReplaced is undefined when the dc.relation.isreplacedby metadata is absent -->
+  @if (isReplaced) {
+    <ds-replaced-tombstone
+      [itemName]="itemName"
+      [isReplaced]="isReplaced"
+      [authors]="authors">
+    </ds-replaced-tombstone>
+  }
+  @if (!isReplaced) {
+    <ds-withdrawn-tombstone
+      [itemName]="itemName"
+      [reasonOfWithdrawal]="reasonOfWithdrawal"
+      [authors]="authors">
+    </ds-withdrawn-tombstone>
+  }
+
+</div>
+

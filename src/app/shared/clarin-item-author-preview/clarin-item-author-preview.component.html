@@ -1,0 +1,65 @@
+@if ((itemAuthors | async).length) {
+  <div>
+    @if ((itemAuthors | async).length <= 5) {
+      <div class="item-author-wrapper pb-1">
+        @for (author of (itemAuthors | async); track author; let i = $index) {
+          <span>
+            @if (i > 0 && i < (itemAuthors | async).length -1) {
+              <span>; </span>
+            }
+            @if (i === (itemAuthors | async).length -1 && (itemAuthors | async).length > 1) {
+              <span>
+                {{'item.view.box.author.preview.and' | translate}}
+              </span>
+            }
+            <a [href]="author.url" class="item-author">{{ author.name }}
+              @if (author.isAuthority) {
+                <i class="fa-brands fa-orcid"> &nbsp;</i>
+              }</a>
+            </span>
+          }
+        </div>
+      }
+      @if ((itemAuthors | async).length > 5) {
+        <div>
+          @for (author of (itemAuthors | async); track author; let i = $index) {
+            <div>
+              @if (i === 0) {
+                <span ><a [href]="author.url" class="item-author">{{ author.name }}
+                  @if (author.isAuthority) {
+                    <i class="fa-brands fa-orcid"> &nbsp;</i>
+                  }</a>; et al.</span>
+                }
+              </div>
+            }
+            <div class="item-author-wrapper">
+              <span (click)="toggleShowEveryAuthor()" class="clarin-font-size cursor-pointer">
+                <i [hidden]="showEveryAuthor | async" class="fas fa-caret-right"></i>
+                <i [hidden]="(showEveryAuthor | async) !== true" class="fas fa-caret-down"></i>
+                {{'item.view.box.author.preview.show-everyone' | translate}}
+              </span>
+              <div [hidden]="(showEveryAuthor | async) !== true">
+                @for (author of (itemAuthors | async); track author; let i = $index) {
+                  <span>
+                    @if (i > 1 && i < (itemAuthors | async).length -1) {
+                      <span>; </span>
+                    }
+                    @if (i === (itemAuthors | async).length -1) {
+                      <span>
+                        {{'item.view.box.author.preview.and' | translate}}
+                      </span>
+                    }
+                    @if (i > 0) {
+                      <a [href]="author.url" class="item-author">{{author.name}}
+                        @if (author.isAuthority) {
+                          <i class="fa-brands fa-orcid"> &nbsp;</i>
+                        }</a>
+                      }
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }

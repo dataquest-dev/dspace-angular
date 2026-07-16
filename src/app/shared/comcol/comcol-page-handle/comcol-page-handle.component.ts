@@ -26,6 +26,11 @@ export class ComcolPageHandleComponent {
   @Input() content: string;
 
   public getHandle(): string {
+    // CLARIN-era comcols carry no dc.identifier.uri metadata, so the REST handle field
+    // (a bare handle) gets here - render the canonical resolver URL like production
+    if (this.content && !this.content.startsWith('http')) {
+      return 'http://hdl.handle.net/' + this.content;
+    }
     return this.content;
   }
 }

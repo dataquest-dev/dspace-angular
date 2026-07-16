@@ -33,6 +33,7 @@ import { NotificationsServiceStub } from '../../shared/testing/notifications-ser
 import { StoreMock } from '../../shared/testing/store.mock';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { FindListOptions } from '../data/find-list-options.model';
+import { MetadataBitstreamDataService } from '../data/metadata-bitstream-data.service';
 import { MetadataFieldDataService } from '../data/metadata-field-data.service';
 import { MetadataSchemaDataService } from '../data/metadata-schema-data.service';
 import { RemoteData } from '../data/remote-data';
@@ -164,6 +165,7 @@ describe('RegistryService', () => {
         { provide: NotificationsService, useValue: new NotificationsServiceStub() },
         { provide: MetadataSchemaDataService, useValue: metadataSchemaService },
         { provide: MetadataFieldDataService, useValue: metadataFieldService },
+        { provide: MetadataBitstreamDataService, useValue: jasmine.createSpyObj('metadataBitstreamDataService', ['searchByHandleParams']) },
         RegistryService,
       ],
     });

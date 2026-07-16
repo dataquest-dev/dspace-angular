@@ -15,12 +15,14 @@ import {
   ITEM_EDIT_PATH,
   ORCID_PATH,
   UPLOAD_BITSTREAM_PATH,
+  VIEWS_DOWNLOADS_STATISTICS_PATH,
 } from './item-page-routing-paths';
 import { OrcidPageComponent } from './orcid-page/orcid-page.component';
 import { orcidPageGuard } from './orcid-page/orcid-page.guard';
 import { ThemedItemPageComponent } from './simple/themed-item-page.component';
 import { versionResolver } from './version-page/version.resolver';
 import { VersionPageComponent } from './version-page/version-page/version-page.component';
+import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/views-downloads-statistics.component';
 
 export const ROUTES: Route[] = [
   {
@@ -78,6 +80,11 @@ export const ROUTES: Route[] = [
         resolve: {
           menu: accessTokenResolver,
         },
+      },
+      {
+        // CLARIN: per-item views/downloads statistics page
+        path: VIEWS_DOWNLOADS_STATISTICS_PATH,
+        component: ViewsDownloadsStatisticsComponent,
       },
     ],
   },

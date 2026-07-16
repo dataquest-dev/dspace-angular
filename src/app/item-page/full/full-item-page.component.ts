@@ -37,18 +37,22 @@ import { ServerResponseService } from '../../core/services/server-response.servi
 import { Item } from '../../core/shared/item.model';
 import { MetadataMap } from '../../core/shared/metadata.models';
 import { fadeInOut } from '../../shared/animations/fade';
+import { makeLinks } from '../../shared/clarin-shared-util';
 import { DsoEditMenuComponent } from '../../shared/dso-page/dso-edit-menu/dso-edit-menu.component';
 import { hasValue } from '../../shared/empty.util';
 import { ErrorComponent } from '../../shared/error/error.component';
+import { SEPARATOR } from '../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
+import { ReplacePipe } from '../../shared/utils/replace.pipe';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
+import { ClarinFilesSectionComponent } from '../clarin-files-section/clarin-files-section.component';
+import { ClarinRefBoxComponent } from '../clarin-ref-box/clarin-ref-box.component';
 import { CollectionsComponent } from '../field-components/collections/collections.component';
-import { ThemedItemPageTitleFieldComponent } from '../simple/field-components/specific-field/title/themed-item-page-field.component';
 import { ItemPageComponent } from '../simple/item-page.component';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
-import { ThemedFullFileSectionComponent } from './field-components/file-section/themed-full-file-section.component';
+import { ViewsDownloadsStatisticsButtonComponent } from '../views-downloads-statistics-button/views-downloads-statistics-button.component';
 
 /**
  * This component renders a full item page.
@@ -63,22 +67,27 @@ import { ThemedFullFileSectionComponent } from './field-components/file-section/
   animations: [fadeInOut],
   imports: [
     AsyncPipe,
+    ClarinFilesSectionComponent,
+    ClarinRefBoxComponent,
     CollectionsComponent,
     DsoEditMenuComponent,
     ErrorComponent,
     ItemVersionsComponent,
     ItemVersionsNoticeComponent,
     KeyValuePipe,
+    ReplacePipe,
     RouterLink,
-    ThemedFullFileSectionComponent,
     ThemedItemAlertsComponent,
-    ThemedItemPageTitleFieldComponent,
     ThemedLoadingComponent,
     TranslateModule,
     VarDirective,
+    ViewsDownloadsStatisticsButtonComponent,
   ],
 })
 export class FullItemPageComponent extends ItemPageComponent implements OnInit, OnDestroy {
+  protected readonly makeLinks = makeLinks;
+  protected readonly SEPARATOR = SEPARATOR;
+
 
   itemRD$: BehaviorSubject<RemoteData<Item>>;
 

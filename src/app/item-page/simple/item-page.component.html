@@ -1,4 +1,4 @@
-<div class="container" *ngVar="(itemRD$ | async) as itemRD">
+<div class="container clarin-shadow clarin-home-page-borders clarin-cut-bottom-2 clarin-cut-top-1 pb-2" *ngVar="(itemRD$ | async) as itemRD">
   @if (itemRD?.hasSucceeded) {
     <div class="item-page" @fadeInOut>
       @if (itemRD?.payload; as item) {
@@ -11,6 +11,7 @@
           <ds-item-versions-notice [item]="item"></ds-item-versions-notice>
           @if (!item.isWithdrawn || (isAdmin$|async)) {
             <ds-listable-object-component-loader [object]="item" [viewMode]="viewMode"></ds-listable-object-component-loader>
+          <ds-clarin-files-section [item]="item" [itemHandle]="item.handle"></ds-clarin-files-section>
           }
           <ds-item-versions class="mt-2" [item]="item" [displayActions]="false"></ds-item-versions>
         </div>

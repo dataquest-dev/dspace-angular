@@ -1,0 +1,87 @@
+@if (hasCcLicense$ | async) {
+  <div class="clarin-item-page-field justify-content-start">
+    <div class="d-flex">
+      <div><i class="fab fa-creative-commons fa-xs"></i></div>
+      <div class="ps-1"><b>{{ 'item.page.cc-license' | translate }}</b></div>
+    </div>
+    <div>
+      <div>
+        @if ((ccLicenseUrl$ | async); as licenseUrl) {
+          @if ((ccLicenseName$ | async); as licenseName) {
+            <div class="cc-license-content">
+              <div class="cc-license-row">
+                <a [href]="licenseUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="cc-license-link">
+                  <div class="cc-icons">
+                    @switch (getLicenseType(licenseName)) {
+                      @case ('by') {
+                        <i class="fab fa-creative-commons"></i>
+                        <i class="fab fa-creative-commons-by"></i>
+                      }
+                      @case ('by-sa') {
+                        <i class="fab fa-creative-commons"></i>
+                        <i class="fab fa-creative-commons-by"></i>
+                        <i class="fab fa-creative-commons-sa"></i>
+                      }
+                      @case ('by-nc') {
+                        <i class="fab fa-creative-commons"></i>
+                        <i class="fab fa-creative-commons-by"></i>
+                        <i class="fab fa-creative-commons-nc"></i>
+                      }
+                      @case ('by-nc-sa') {
+                        <i class="fab fa-creative-commons"></i>
+                        <i class="fab fa-creative-commons-by"></i>
+                        <i class="fab fa-creative-commons-nc"></i>
+                        <i class="fab fa-creative-commons-sa"></i>
+                      }
+                      @case ('by-nd') {
+                        <i class="fab fa-creative-commons"></i>
+                        <i class="fab fa-creative-commons-by"></i>
+                        <i class="fab fa-creative-commons-nd"></i>
+                      }
+                      @case ('by-nc-nd') {
+                        <i class="fab fa-creative-commons"></i>
+                        <i class="fab fa-creative-commons-by"></i>
+                        <i class="fab fa-creative-commons-nc"></i>
+                        <i class="fab fa-creative-commons-nd"></i>
+                      }
+                      @case ('cc0') {
+                        <i class="fab fa-creative-commons"></i>
+                        <i class="fab fa-creative-commons-zero"></i>
+                      }
+                      @default {
+                        <i class="fab fa-creative-commons"></i>
+                      }
+                    }
+                  </div>
+                  <span class="cc-license-text">{{ licenseName }}</span>
+                </a>
+              </div>
+            </div>
+          } @else {
+            <div class="cc-license-content">
+              <div class="cc-license-row">
+                <a [href]="licenseUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="cc-license-link">
+                  <i class="fab fa-creative-commons"></i>
+                  <span class="cc-license-text">Creative Commons License</span>
+                </a>
+              </div>
+            </div>
+          }
+        } @else {
+          <div class="cc-license-content">
+            <div class="cc-license-row">
+              <i class="fab fa-creative-commons"></i>
+              <span class="cc-license-text">Creative Commons License</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

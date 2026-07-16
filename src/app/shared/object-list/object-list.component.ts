@@ -15,10 +15,13 @@ import {
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { RemoteData } from '../../core/data/remote-data';
 import { Context } from '../../core/shared/context.model';
+import { Item } from '../../core/shared/item.model';
 import { ViewMode } from '../../core/shared/view-mode.model';
 import { fadeIn } from '../animations/fade';
+import { ClarinItemBoxViewComponent } from '../clarin-item-box-view/clarin-item-box-view.component';
 import { CollectionElementLinkType } from '../object-collection/collection-element-link.type';
 import { ImportableListItemControlComponent } from '../object-collection/shared/importable-list-item-control/importable-list-item-control.component';
+import { ItemSearchResult } from '../object-collection/shared/item-search-result.model';
 import { ListableObject } from '../object-collection/shared/listable-object.model';
 import { ListableObjectComponentLoaderComponent } from '../object-collection/shared/listable-object/listable-object-component-loader.component';
 import { SelectableListItemControlComponent } from '../object-collection/shared/selectable-list-item-control/selectable-list-item-control.component';
@@ -36,6 +39,7 @@ import { SelectableListService } from './selectable-list/selectable-list.service
   animations: [fadeIn],
   imports: [
     BrowserOnlyPipe,
+    ClarinItemBoxViewComponent,
     ImportableListItemControlComponent,
     ListableObjectComponentLoaderComponent,
     NgClass,
@@ -44,6 +48,10 @@ import { SelectableListService } from './selectable-list/selectable-list.service
   ],
 })
 export class ObjectListComponent {
+  /**
+   * List id used by the bulk-access admin page; the CLARIN search box view is suppressed there.
+   */
+  BULK_ACCESS_LIST_ID = 'bulk-access-list';
   /**
    * The view mode of this component
    */
@@ -255,6 +263,16 @@ export class ObjectListComponent {
   */
   goNext() {
     this.next.emit(true);
+  }
+
+  /**
+   * Show the given search result in the CLARIN item box view instead of the default list element.
+   * Used for Item results on the search page (but not in the bulk-access admin list); any other
+   * result type falls back to the default list element (the CLARIN box only renders Items).
+   */
+  showClarinViewBox(object: ListableObject): boolean {
+    const isItem = object instanceof Item || (object instanceof ItemSearchResult && object.indexableObject instanceof Item);
+    return isItem && this.context === Context.Search && this.selectionConfig?.listId !== this.BULK_ACCESS_LIST_ID;
   }
 
 }

@@ -199,7 +199,8 @@ export class SearchComponent implements OnDestroy, OnInit {
   /**
    * Whether to show the view mode switch
    */
-  @Input() showViewModes = true;
+  // CLARIN/LINDAT: results are list-only, the single-mode switch is never shown
+  @Input() showViewModes = false;
 
   /**
    * List of available view mode

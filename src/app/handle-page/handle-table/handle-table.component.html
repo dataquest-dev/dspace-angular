@@ -1,0 +1,185 @@
+<div class="container">
+  <div class="card">
+    <h5 class="card-header">{{ 'handle-table.title' | translate }}</h5>
+    <div class="card-body">
+
+      <!-- The search panel -->
+      <div class="input-group mb-3">
+        <div ngbDropdown class="input-group-prepend">
+          <button id="resultdropdown" type="button"
+            ngbDropdownToggle
+            class="btn btn-outline-secondary dropdown-toggle"
+            data-bs-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            @if (searchOption) {
+              <span>{{searchOption}}</span>
+            }
+            @if (!searchOption) {
+              <span >{{'handle-table.dropdown.search-option' | translate}}</span>
+            }
+          </button>
+          <div ngbDropdownMenu aria-labelledby="resultdropdown">
+            <button class="dropdown-item" (click)="setSearchOption($event)">{{"handle-table.table.handle" | translate}}</button>
+            <button class="dropdown-item" (click)="setSearchOption($event)">{{"handle-table.table.internal" | translate}}</button>
+            <button class="dropdown-item" (click)="setSearchOption($event)">{{"handle-table.table.resource-type" | translate}}</button>
+          </div>
+        </div>
+
+        <!-- Search input area -->
+        <div class="search-input-container flex-fill">
+          <!-- Default disabled search input when no option is selected -->
+          @if (!searchOption) {
+            <input
+              type="text"
+              class="form-control search-input"
+              [placeholder]="'handle-table.search.placeholder.no-option' | translate"
+              disabled>
+          }
+
+          <!-- Text input for Handle search -->
+          @if (searchOption === handleOption) {
+            <input
+              type="text"
+              class="form-control search-input"
+              [(ngModel)]="searchQuery"
+              (keyup.enter)="searchHandles()"
+              [placeholder]="'handle-table.search.placeholder.handle' | translate">
+          }
+
+          <!-- Dropdown for Internal search -->
+          @if (searchOption === internalOption) {
+            <div class="select-wrapper">
+              <select class="form-select w-100"
+                [(ngModel)]="searchQuery"
+                (change)="searchHandles()"
+                [attr.aria-label]="'handle-table.search.aria.select-internal' | translate">
+                <option value="" disabled [selected]="!searchQuery">{{'handle-table.search.internal.select' | translate}}</option>
+                <option value="yes">{{'handle-table.search.internal.yes' | translate}}</option>
+                <option value="no">{{'handle-table.search.internal.no' | translate}}</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
+          }
+
+          <!-- Dropdown for Resource Type search -->
+          @if (searchOption === resourceTypeOption) {
+            <div class="select-wrapper">
+              <select class="form-select w-100"
+                [(ngModel)]="searchQuery"
+                (change)="searchHandles()"
+                [attr.aria-label]="'handle-table.search.aria.select-resource-type' | translate">
+                <option value="" disabled [selected]="!searchQuery">{{'handle-table.search.resource-type.select' | translate}}</option>
+                <option value="Site">{{'handle-table.search.resource-type.site' | translate}}</option>
+                <option value="Community">{{'handle-table.search.resource-type.community' | translate}}</option>
+                <option value="Collection">{{'handle-table.search.resource-type.collection' | translate}}</option>
+                <option value="Item">{{'handle-table.search.resource-type.item' | translate}}</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
+          }
+        </div>
+
+        <span class="input-group-append" (click)="searchHandles()">
+          <button type="submit" class="btn btn-primary search-button">
+            <i class="fas fa-search"></i>{{'handle-table.dropdown.search-button' | translate}}</button>
+          </span>
+        </div>
+
+        <!-- The table with pagination -->
+        <div *ngVar="(handlesRD$ | async)?.payload as handles">
+          <div class="mb-2 table-responsive">
+            <ds-pagination (paginationChange)="onPageChange()"
+              [sortOptions]="sortConfiguration"
+              [hideGear]="true"
+              [hidePagerWhenSinglePage]="true"
+              [paginationOptions]="options"
+              [collectionSize]="handles?.totalElements"
+              [retainScrollPosition]="true">
+              <table class="table table-striped table-bordered align-middle my-2">
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col">{{"handle-table.table.handle" | translate}}</th>
+                    <th scope="col">{{"handle-table.table.internal" | translate}}</th>
+                    <th scope="col">{{"handle-table.table.url" | translate}}</th>
+                    <th scope="col">{{"handle-table.table.resource-type" | translate}}</th>
+                    <th scope="col">{{"handle-table.table.resource-id" | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (handle of handles?.page; track handle) {
+                    <tr [id]="'handle-row-' + handle.id">
+                      <td><input class="collection-checkbox" [ngModel]="selectedHandle === handle.id" (change)="switchSelectedHandle(handle.id)" type="checkbox" name="{{handle.id}}"></td>
+                      <td class="version-row-element-version">
+                        {{handle?.handle}}
+                      </td>
+                      <td class="version-row-element-editor">
+                        @if (handle?.resourceTypeID === null || handle?.resourceTypeID === undefined) {
+                          <span>
+                            {{ 'handle-table.table.not-internal' | translate }}
+                          </span>
+                        }
+                        @if (handle?.resourceTypeID !== null && handle?.resourceTypeID !== undefined) {
+                          <span>
+                            {{ 'handle-table.table.is-internal' | translate }}
+                          </span>
+                        }
+                      </td>
+                      <td class="version-row-element-editor">
+                        @if (handle?.url) {
+                          <a [href]="handle?.url" target="_blank" rel="noopener noreferrer">
+                            {{handle?.url}}
+                          </a>
+                        }
+                      </td>
+                      <td class="version-row-element-editor">
+                        {{getTranslatedResourceType(handle?.resourceTypeID)}}
+                      </td>
+                      <td class="version-row-element-editor">
+                        @if (handle?.resourceId !== null) {
+                          <span>
+                            @if (shouldLink(handle)) {
+                              <a [href]="getHandleTargetPageRoute(handle)" target="_blank" rel="noopener noreferrer">
+                                {{handle?.resourceId}}
+                              </a>
+                            } @else {
+                              {{handle?.resourceId}}
+                            }
+                          </span>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+              @if (isLoading) {
+                <ds-loading class="text-center"></ds-loading>
+              }
+            </ds-pagination>
+            <div class="mt-2">
+              <div class="btn-group pe-1">
+                <button type="button" class="btn btn-success"
+                  (click)="redirectWithCurrentPage()">
+                  {{'handle-table.button.new-handle' | translate}}
+                </button>
+              </div>
+              <div class="btn-group pe-1">
+                <button type="button" class="btn btn-warning"
+                  (click)="redirectWithHandleParams()"
+                  [dsBtnDisabled]="selectedHandle === null">
+                  {{'handle-table.button.edit-handle' | translate}}
+                </button>
+              </div>
+              <div class="btn-group pe-1">
+                <button type="button" class="btn btn-danger"
+                  (click)="deleteHandles()"
+                  [dsBtnDisabled]="selectedHandle === null">
+                  {{'handle-table.button.delete-handle' | translate}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

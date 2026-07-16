@@ -25,5 +25,10 @@ export enum FilterType {
   /**
    * Represents binary facets
    */
-  boolean = 'standard'
+  boolean = 'standard',
+
+  /**
+   * Represents ISO language facets (CLARIN)
+   */
+  isoLanguage = 'iso_language'
 }

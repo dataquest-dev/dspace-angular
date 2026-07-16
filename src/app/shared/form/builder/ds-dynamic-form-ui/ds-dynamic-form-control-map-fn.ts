@@ -25,8 +25,11 @@ import {
   DynamicNGBootstrapTimePickerComponent,
 } from '@ng-dynamic-forms/ui-ng-bootstrap';
 
+import { isNotEmpty } from '../../../empty.util';
 import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './ds-dynamic-form-constants';
 import { DsDynamicFormArrayComponent } from './models/array-group/dynamic-form-array.component';
+import { DsDynamicAutocompleteComponent } from './models/autocomplete/ds-dynamic-autocomplete.component';
+import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/ds-dynamic-autocomplete.model';
 import { CustomSwitchComponent } from './models/custom-switch/custom-switch.component';
 import { DYNAMIC_FORM_CONTROL_TYPE_CUSTOM_SWITCH } from './models/custom-switch/custom-switch.model';
 import { DsDatePickerComponent } from './models/date-picker/date-picker.component';
@@ -34,6 +37,7 @@ import { DYNAMIC_FORM_CONTROL_TYPE_DSDATEPICKER } from './models/date-picker/dat
 import { DsDatePickerInlineComponent } from './models/date-picker-inline/dynamic-date-picker-inline.component';
 import { DsDynamicDisabledComponent } from './models/disabled/dynamic-disabled.component';
 import { DYNAMIC_FORM_CONTROL_TYPE_DISABLED } from './models/disabled/dynamic-disabled.model';
+import { SPONSOR_METADATA_NAME } from './models/ds-dynamic-complex.model';
 import { DsDynamicFormGroupComponent } from './models/form-group/dynamic-form-group.component';
 import { DsDynamicListComponent } from './models/list/dynamic-list.component';
 import { DynamicListCheckboxGroupModel } from './models/list/dynamic-list-checkbox-group.model';
@@ -46,6 +50,8 @@ import { DYNAMIC_FORM_CONTROL_TYPE_ONEBOX } from './models/onebox/dynamic-onebox
 import { DsDynamicRelationGroupComponent } from './models/relation-group/dynamic-relation-group.components';
 import { DsDynamicScrollableDropdownComponent } from './models/scrollable-dropdown/dynamic-scrollable-dropdown.component';
 import { DYNAMIC_FORM_CONTROL_TYPE_SCROLLABLE_DROPDOWN } from './models/scrollable-dropdown/dynamic-scrollable-dropdown.model';
+import { DsDynamicSponsorAutocompleteComponent } from './models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
+import { DsDynamicSponsorScrollableDropdownComponent } from './models/sponsor-scrollable-dropdown/dynamic-sponsor-scrollable-dropdown.component';
 import { DsDynamicTagComponent } from './models/tag/dynamic-tag.component';
 import { DYNAMIC_FORM_CONTROL_TYPE_TAG } from './models/tag/dynamic-tag.model';
 
@@ -87,7 +93,18 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
       return DsDynamicOneboxComponent;
 
     case DYNAMIC_FORM_CONTROL_TYPE_SCROLLABLE_DROPDOWN:
+      // CLARIN: sponsor fields use a dedicated scrollable-dropdown variant
+      if (isNotEmpty(model.name) && model.name.startsWith(SPONSOR_METADATA_NAME)) {
+        return DsDynamicSponsorScrollableDropdownComponent;
+      }
       return DsDynamicScrollableDropdownComponent;
+
+    // CLARIN: autocomplete field (sponsor fields use a dedicated variant)
+    case DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE:
+      if (isNotEmpty(model.name) && model.name.startsWith(SPONSOR_METADATA_NAME)) {
+        return DsDynamicSponsorAutocompleteComponent;
+      }
+      return DsDynamicAutocompleteComponent;
 
     case DYNAMIC_FORM_CONTROL_TYPE_TAG:
       return DsDynamicTagComponent;

@@ -16,6 +16,7 @@ import {
   INFO_MODULE_PATH,
   INTERNAL_SERVER_ERROR,
   LEGACY_BITSTREAM_MODULE_PATH,
+  LICENSES_MODULE_PATH,
   PROFILE_MODULE_PATH,
   REGISTER_PATH,
   REQUEST_COPY_MODULE_PATH,
@@ -33,7 +34,9 @@ import { endUserAgreementCurrentUserGuard } from './core/end-user-agreement/end-
 import { reloadGuard } from './core/reload/reload.guard';
 import { forgotPasswordCheckGuard } from './core/rest-property/forgot-password-check-guard.guard';
 import { ServerCheckGuard } from './core/server-check/server-check.guard';
+import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing-paths';
 import { ThemedForbiddenComponent } from './forbidden/themed-forbidden.component';
+import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
 import { homePageResolver } from './home-page/home-page.resolver';
 import { ITEM_MODULE_PATH } from './item-page/item-page-routing-paths';
 import { provideSuggestionNotificationsState } from './notifications/provide-suggestion-notifications-state';
@@ -41,6 +44,7 @@ import { ThemedPageErrorComponent } from './page-error/themed-page-error.compone
 import { ThemedPageInternalServerErrorComponent } from './page-internal-server-error/themed-page-internal-server-error.component';
 import { ThemedPageNotFoundComponent } from './pagenotfound/themed-pagenotfound.component';
 import { PROCESS_MODULE_PATH } from './process-page/process-page-routing.paths';
+import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
 import { viewTrackerResolver } from './statistics/angulartics/dspace/view-tracker.resolver';
 import { provideSubmissionState } from './submission/provide-submission-state';
 import { SUGGESTION_MODULE_PATH } from './suggestions-page/suggestions-page-routing-paths';
@@ -146,7 +150,6 @@ export const APP_ROUTES: Route[] = [
         path: 'mydspace',
         loadChildren: () => import('./my-dspace-page/my-dspace-page-routes')
           .then((m) => m.ROUTES),
-        data: { enableRSS: true },
         providers: [provideSuggestionNotificationsState()],
         canActivate: [authenticatedGuard, endUserAgreementCurrentUserGuard],
       },
@@ -154,7 +157,7 @@ export const APP_ROUTES: Route[] = [
         path: 'search',
         loadChildren: () => import('./search-page/search-page-routes')
           .then((m) => m.ROUTES),
-        data: { enableRSS: true },
+        // CLARIN/LINDAT: production shows the RSS button only on home and comcol pages
         canActivate: [endUserAgreementCurrentUserGuard],
       },
       {
@@ -167,7 +170,6 @@ export const APP_ROUTES: Route[] = [
         path: ADMIN_MODULE_PATH,
         loadChildren: () => import('./admin/admin-routes')
           .then((m) => m.ROUTES),
-        data: { enableRSS: true },
         canActivate: [siteAdministratorGuard, endUserAgreementCurrentUserGuard],
       },
       {
@@ -214,7 +216,6 @@ export const APP_ROUTES: Route[] = [
         providers: [provideSubmissionState()],
         loadChildren: () => import('./workflowitems-edit-page/workflowitems-edit-page-routes')
           .then((m) => m.ROUTES),
-        data: { enableRSS: true },
         canActivate: [endUserAgreementCurrentUserGuard],
       },
       {
@@ -266,6 +267,37 @@ export const APP_ROUTES: Route[] = [
         path: ACCESS_CONTROL_MODULE_PATH,
         loadChildren: () => import('./access-control/access-control-routes').then((m) => m.ROUTES),
         canActivate: [groupAdministratorGuard, endUserAgreementCurrentUserGuard],
+      },
+      {
+        path: LICENSES_MODULE_PATH,
+        loadChildren: () => import('./clarin-licenses/clarin-license-routes').then((m) => m.ROUTES),
+      },
+      {
+        path: HANDLE_TABLE_MODULE_PATH,
+        loadChildren: () => import('./handle-page/handle-page-routes').then((m) => m.ROUTES),
+        canActivate: [siteAdministratorGuard, endUserAgreementCurrentUserGuard],
+      },
+      {
+        path: EPIC_HANDLE_TABLE_MODULE_PATH,
+        loadChildren: () => import('./epic-handle/epic-handle-routes').then((m) => m.ROUTES),
+        canActivate: [siteAdministratorGuard, endUserAgreementCurrentUserGuard],
+      },
+      {
+        path: 'share-submission',
+        loadChildren: () => import('./share-submission/share-submission-routes').then((m) => m.ROUTES),
+        canActivate: [authenticatedGuard, endUserAgreementCurrentUserGuard],
+      },
+      {
+        path: 'contact',
+        loadChildren: () => import('./contact-page/contact-page-routes').then((m) => m.ROUTES),
+      },
+      {
+        path: 'contract',
+        loadChildren: () => import('./license-contract-page/license-contract-page-routes').then((m) => m.ROUTES),
+      },
+      {
+        path: STATIC_PAGE_PATH,
+        loadChildren: () => import('./static-page/static-page-routes').then((m) => m.ROUTES),
       },
       {
         path: 'subscriptions',

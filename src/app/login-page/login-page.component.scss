@@ -2,3 +2,14 @@
   height: var(--ds-login-logo-height);
   width: var(--ds-login-logo-width);
 }
+.clarin-logo {
+  height: var(--ds-login-logo-height);
+  width: var(--ds-login-logo-width);
+  margin-left: 3rem;
+  vertical-align: middle;
+}
+
+/* production login form controls are 280px wide (container 328px incl. the px-4 padding) */
+:host ::ng-deep div.login-container {
+  max-width: 328px !important;
+}

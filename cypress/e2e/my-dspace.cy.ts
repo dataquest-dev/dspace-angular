@@ -28,10 +28,11 @@ describe('My DSpace page', () => {
 
     cy.get('ds-my-dspace-page').should('be.visible');
 
-    // Click button in sidebar to display detailed view
-    cy.get('ds-search-sidebar [data-test="detail-view"]').click();
-
-    cy.get('ds-object-detail').should('be.visible');
+    // NOTE (CLARIN/LINDAT): the view-mode switch is hidden everywhere (results are list-only,
+    // as on production), so there is no detailed-view button to click - same adaptation as the
+    // v7 fork's my-dspace spec.
+    // cy.get('ds-search-sidebar [data-test="detail-view"]').click();
+    // cy.get('ds-object-detail').should('be.visible');
 
     // Analyze <ds-my-dspace-page> for accessibility issues
     testA11y('ds-my-dspace-page');
@@ -215,7 +216,7 @@ describe('My DSpace page', () => {
     cy.get('#dc_date_issued_year').type(currentYear.toString());
     cy.get('input[name="dc.type"]').click();
     cy.get('.dropdown-menu').should('be.visible').contains('button', 'Other').click();
-    cy.get('#granted').check();
+    cy.get('ds-clarin-license-distribution ng-toggle').click();
 
     //Press deposit button
     cy.get('button[data-test="deposit"]').click();
@@ -264,7 +265,7 @@ describe('My DSpace page', () => {
     //Check that we have at least one item in worflow search, the item have claim-button and can click in it.
     cy.get('[data-test="list-object"]')
       .then(($items) => {
-        const itemWithClaim = [...$items].find(item =>
+        const itemWithClaim = $items.toArray().find(item =>
           item.querySelector('[data-test="claim-button"]'),
         );
         cy.wrap(itemWithClaim).should('exist');

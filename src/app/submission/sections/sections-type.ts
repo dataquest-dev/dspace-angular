@@ -9,5 +9,8 @@ export enum SectionsType {
   Identifiers = 'identifiers',
   Collection = 'collection',
   CoarNotify = 'coarnotify',
-  Duplicates = 'duplicates'
+  Duplicates = 'duplicates',
+  // CLARIN submission sections
+  clarinLicense = 'clarin-license',
+  clarinNotice = 'clarin-notice',
 }

@@ -125,7 +125,7 @@ describe('New Submission page', () => {
 
     // Confirm the required license by checking checkbox
     // (NOTE: requires "force:true" cause Cypress claims this checkbox is covered by its own <span>)
-    cy.get('input#granted').check( { force: true } );
+    cy.get('ds-clarin-license-distribution ng-toggle').click();
 
     // Before using Cypress drag & drop, we have to manually trigger the "dragover" event.
     // This ensures our UI displays the dropzone that covers the entire submission page.

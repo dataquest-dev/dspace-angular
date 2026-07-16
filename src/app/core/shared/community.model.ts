@@ -1,5 +1,6 @@
 import {
   autoserialize,
+  autoserializeAs,
   deserialize,
   inheritSerialization,
 } from 'cerialize';
@@ -76,8 +77,16 @@ export class Community extends DSpaceObject implements ChildHALResource, HandleO
    * A string representing the unique handle of this Community
    */
   get handle(): string {
-    return this.firstMetadataValue('dc.identifier.uri');
+    // fall back to the REST handle field - older (CLARIN 7.x) data does not carry
+    // dc.identifier.uri metadata on community objects
+    return this.firstMetadataValue('dc.identifier.uri') ?? this.handleField;
   }
+
+  /**
+   * The handle exposed by the REST API as a plain field
+   */
+  @autoserializeAs('handle')
+  protected handleField: string;
 
   /**
    * The introductory text of this Community

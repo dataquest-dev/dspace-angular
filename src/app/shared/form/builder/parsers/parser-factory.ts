@@ -1,6 +1,9 @@
 import { StaticProvider } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
+import { AutocompleteFieldParser } from './autocomplete-field-parser';
+import { ClarinNameFieldParser } from './clarin-name-field-parser';
+import { ComplexFieldParser } from './complex-field-parser';
 import { DateFieldParser } from './date-field-parser';
 import { DisabledFieldParser } from './disabled-field-parser';
 import { DropdownFieldParser } from './dropdown-field-parser';
@@ -110,6 +113,28 @@ export class ParserFactory {
         return {
           provide: FieldParser,
           useClass: TextareaFieldParser,
+          deps: [...fieldParserDeps],
+        };
+      }
+      // CLARIN custom field parsers
+      case ParserType.Autocomplete: {
+        return {
+          provide: FieldParser,
+          useClass: AutocompleteFieldParser,
+          deps: [...fieldParserDeps],
+        };
+      }
+      case ParserType.Complex: {
+        return {
+          provide: FieldParser,
+          useClass: ComplexFieldParser,
+          deps: [...fieldParserDeps],
+        };
+      }
+      case ParserType.ClarinName: {
+        return {
+          provide: FieldParser,
+          useClass: ClarinNameFieldParser,
           deps: [...fieldParserDeps],
         };
       }

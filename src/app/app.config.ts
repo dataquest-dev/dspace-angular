@@ -8,6 +8,7 @@ import {
 import {
   NoPreloading,
   provideRouter,
+  UrlSerializer,
   withComponentInputBinding,
   withEnabledBlockingInitialNavigation,
   withInMemoryScrolling,
@@ -65,6 +66,7 @@ import {
 } from './core/provide-core';
 import { ClientCookieService } from './core/services/client-cookie.service';
 import { ListableModule } from './core/shared/listable.module';
+import { BitstreamUrlSerializer } from './core/url-serializer/bitstream-url-serializer';
 import { XsrfInterceptor } from './core/xsrf/xsrf.interceptor';
 import { LOGIN_METHOD_FOR_DECORATOR_MAP } from './external-log-in/decorators/external-log-in.methods-decorator';
 import { RootModule } from './root.module';
@@ -126,6 +128,11 @@ export const commonAppConfig: ApplicationConfig = {
     {
       provide: RouterStateSerializer,
       useClass: DSpaceRouterStateSerializer,
+    },
+    // CLARIN: percent-encode the filename segment of /bitstream/ download URLs
+    {
+      provide: UrlSerializer,
+      useClass: BitstreamUrlSerializer,
     },
     ClientCookieService,
     // register AuthInterceptor as HttpInterceptor

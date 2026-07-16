@@ -1,0 +1,126 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 pb-3">
+      <h2 id="header" class="border-bottom pb-2">{{'clarin.license.agreement.title' | translate}}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div>{{'clarin.license.agreement.header.info' | translate}}</div>
+    </div>
+  </div>
+  <div class="row pt-3" *ngVar="(clarinLicense$ | async) as clarinLicense">
+    <div class="col-12">
+      <div class="card bg-clarin-yellow border-clarin-yellow">
+        <div class="card-body text-center">
+          <a [href]="clarinLicense?.definition">{{clarinLicense?.name}}</a>
+          @if (clarinLicense?.name === LICENSE_NAME_SEZNAM) {
+            <div
+              class="pt-3"
+              [innerHTML]="(licenseContentSeznam | async) | dsSafeHtml">
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-12">
+      <span>{{'clarin.license.agreement.signer.header.info.0' | translate}}</span>
+      <a class="ms-1 me-1" [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">{{'clarin.license.agreement.signer.header.info.1' | translate}}</a>
+      <span>{{'clarin.license.agreement.signer.header.info.2' | translate}}</span>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-12">
+      <table class="table table-bordered">
+        <tbody>
+          @if (currentUser$ | async) {
+            <tr>
+              <td><b>{{'clarin.license.agreement.signer.name' | translate}}</b></td>
+              <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(currentUser$ | async)?.name"></td>
+            </tr>
+          }
+          @if (currentUser$ | async) {
+            <tr>
+              <td><b>{{'clarin.license.agreement.signer.id' | translate}}</b></td>
+              <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(userRegistration$ | async)?.email"></td>
+            </tr>
+          }
+          <tr>
+            <td><b>{{'clarin.license.agreement.item.handle' | translate}}</b></td>
+            <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(item$ | async)?.handle"></td>
+          </tr>
+          @if (((currentUser$ | async) ?? null) === null || (userMetadata$ | async)) {
+            @for (requiredInfo of requiredInfo$ | async; track requiredInfo) {
+              <tr>
+                <td><b>{{'clarin.license.agreement.signer.' + requiredInfo.name | translate}}</b></td>
+                <td class="input-group">
+                  <input #requiredInfoRef class="rounded-sm max-width border-gray"
+                    [value]="getMetadataValueByKey(requiredInfo.name)"
+                    (blur)="setMetadataValue(requiredInfo.name, requiredInfoRef.value)"/>
+                </td>
+              </tr>
+            }
+          }
+          <tr>
+            <td><b>{{'clarin.license.agreement.bitstream.name' | translate}}</b></td>
+            <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(bitstream$ | async)?.name"></td>
+          </tr>
+          <tr>
+            <td><b>{{'clarin.license.agreement.signer.ip.address' | translate}}</b></td>
+            <td><input type="text" disabled class="rounded-sm max-width border-gray" [value]="(ipAddress$ | async)"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row" [hidden]="!shouldSeeSendTokenInfo()">
+    <div class="col-12">
+      <div class="card bg-clarin-blue">
+        <div class="card-body row">
+          <div class="col-11"><b>{{'clarin.license.agreement.token.info' | translate}}</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-12">
+      <div class="card bg-clarin-red">
+        <div class="card-body row">
+          <div class="col-11"><b>{{'clarin.license.agreement.warning' | translate}}</b></div>
+          <div class="col-1"><i class="fas fa-exclamation-triangle fa-3x"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-12">
+      <button class="btn btn-success max-width" [dsBtnDisabled]="error$.value.length !== 0 || (isLoading | async)" (click)="accept()">
+        {{'clarin.license.agreement.button.agree' | translate}}
+        @if (isLoading | async) {
+          <span
+            class="ms-1 spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+        }
+      </button>
+    </div>
+  </div>
+  @if (error$.value.length !== 0) {
+    <div class="row pt-3">
+      <div class="col-12">
+        <div class="card bg-clarin-red">
+          <div class="card-body row">
+            <div class="ps-3">{{'clarin.license.agreement.error.message.cannot.download.0' | translate}}
+              <a [href]="'mailto:'+(helpDesk$ | async)?.payload?.values[0]">
+                {{'clarin.license.agreement.error.message.cannot.download.1' | translate}}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

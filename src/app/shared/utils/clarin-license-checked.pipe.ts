@@ -1,0 +1,35 @@
+import {
+  Pipe,
+  PipeTransform,
+} from '@angular/core';
+
+import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
+import { isEmpty } from '../empty.util';
+
+/**
+ * Pipe to mark checkbox or input to true/false based on the input form data.
+ * This Pipe is used for editing Clarin License - extended license labels.
+ */
+@Pipe({ standalone: true,
+  name: 'dsCheckedLicense',
+})
+export class ClarinLicenseCheckedPipe implements PipeTransform {
+
+  /**
+   * If the clarin license contains extended clarinLicenseLabel return true otherwise return false
+   * @param clarinLicenseProp extended license label to compare
+   * @param clarinLicenseProps all extended or non-extended clarin license labels clarin license label in array
+   */
+  transform(clarinLicenseProp: any | ClarinLicenseRequiredInfo, clarinLicenseProps: any[]): boolean {
+    let contains = false;
+    if (isEmpty(clarinLicenseProp) || isEmpty(clarinLicenseProps)) {
+      return contains;
+    }
+    clarinLicenseProps.forEach(cll => {
+      if (cll.title === clarinLicenseProp.title) {
+        contains = true;
+      }
+    });
+    return contains;
+  }
+}

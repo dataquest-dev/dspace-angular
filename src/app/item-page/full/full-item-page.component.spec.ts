@@ -46,12 +46,12 @@ import { ThemeService } from '../../shared/theme-support/theme.service';
 import { TruncatePipe } from '../../shared/utils/truncate.pipe';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
+import { ClarinFilesSectionComponent } from '../clarin-files-section/clarin-files-section.component';
+import { ClarinRefBoxComponent } from '../clarin-ref-box/clarin-ref-box.component';
 import { CollectionsComponent } from '../field-components/collections/collections.component';
-import { ThemedItemPageTitleFieldComponent } from '../simple/field-components/specific-field/title/themed-item-page-field.component';
 import { createRelationshipsObservable } from '../simple/item-types/shared/item.component.spec';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
-import { ThemedFullFileSectionComponent } from './field-components/file-section/themed-full-file-section.component';
 import { FullItemPageComponent } from './full-item-page.component';
 
 const mockItem: Item = Object.assign(new Item(), {
@@ -156,14 +156,14 @@ describe('FullItemPageComponent', () => {
       .overrideComponent(FullItemPageComponent, {
         remove: {
           imports: [
+            ClarinFilesSectionComponent,
+            ClarinRefBoxComponent,
             ItemVersionsComponent,
             ItemVersionsNoticeComponent,
             ThemedLoadingComponent,
-            ThemedItemPageTitleFieldComponent,
             DsoEditMenuComponent,
             ThemedItemAlertsComponent,
             CollectionsComponent,
-            ThemedFullFileSectionComponent,
           ],
         },
         add: { changeDetection: ChangeDetectionStrategy.Default },

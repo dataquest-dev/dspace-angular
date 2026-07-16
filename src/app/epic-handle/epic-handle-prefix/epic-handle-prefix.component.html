@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 pb-4">
+      <h2 id="header" class="border-bottom pb-2">{{ 'epic-prefix-handle-page.title' | translate }}</h2>
+    </div>
+  </div>
+
+  <form [formGroup]="prefixForm" (ngSubmit)="navigateToEpicHandleList(prefixForm.value)" class="d-flex justify-content-between">
+    <div class="flex-grow-1 me-3 ms-3">
+      <div class="form-group input-group">
+        <input type="text" name="query" id="query"
+          formControlName="prefix"
+          class="form-control"
+          [placeholder]="'Enter prefix'">
+        <span class="input-group-append">
+          <button type="submit" class="search-button btn btn-primary">
+            Submit
+          </button>
+        </span>
+      </div>
+      @if (hasError('prefix', 'required')) {
+        <div class="invalid-feedback d-block">
+          {{ 'epic-prefix-handle-page.form.error.required' | translate }}
+        </div>
+      }
+      @if (hasError('prefix', 'pattern')) {
+        <div class="invalid-feedback d-block">
+          {{ 'epic-prefix-handle-page.form.error.pattern' | translate }}
+        </div>
+      }
+    </div>
+  </form>
+</div>

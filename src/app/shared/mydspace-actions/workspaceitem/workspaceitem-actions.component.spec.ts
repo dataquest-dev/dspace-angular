@@ -24,13 +24,16 @@ import {
 import { of } from 'rxjs';
 
 import { AuthService } from '../../../core/auth/auth.service';
+import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
 import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
 import { RequestService } from '../../../core/data/request.service';
 import { EPerson } from '../../../core/eperson/models/eperson.model';
+import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { Item } from '../../../core/shared/item.model';
 import { SearchService } from '../../../core/shared/search/search.service';
 import { WorkspaceItem } from '../../../core/submission/models/workspaceitem.model';
 import { WorkspaceitemDataService } from '../../../core/submission/workspaceitem-data.service';
+import { getMockRemoteDataBuildService } from '../../mocks/remote-data-build.service.mock';
 import { getMockRequestService } from '../../mocks/request.service.mock';
 import { getMockSearchService } from '../../mocks/search-service.mock';
 import { TranslateLoaderMock } from '../../mocks/translate-loader.mock';
@@ -41,6 +44,7 @@ import {
   createSuccessfulRemoteDataObject$,
 } from '../../remote-data.utils';
 import { ActivatedRouteStub } from '../../testing/active-router.stub';
+import { HALEndpointServiceStub } from '../../testing/hal-endpoint-service.stub';
 import { NotificationsServiceStub } from '../../testing/notifications-service.stub';
 import { RouterStub } from '../../testing/router.stub';
 import { WorkspaceitemActionsComponent } from './workspaceitem-actions.component';
@@ -198,6 +202,8 @@ describe('WorkspaceitemActionsComponent', () => {
         { provide: AuthService, useValue: authService },
         { provide: AuthorizationDataService, useValue: authorizationService },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+        { provide: HALEndpointService, useValue: new HALEndpointServiceStub('https://rest.api/server/api') },
+        { provide: RemoteDataBuildService, useValue: getMockRemoteDataBuildService() },
         NgbModal,
       ],
       schemas: [NO_ERRORS_SCHEMA],

@@ -1,14 +1,19 @@
-import { NgTemplateOutlet } from '@angular/common';
+import {
+  AsyncPipe,
+  NgFor,
+  NgIf,
+} from '@angular/common';
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import {
+  NgbCarouselConfig,
+  NgbCarouselModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { HomeCoarComponent } from '../../../../app/home-page/home-coar/home-coar.component';
-import { ThemedHomeNewsComponent } from '../../../../app/home-page/home-news/themed-home-news.component';
 import { HomePageComponent as BaseComponent } from '../../../../app/home-page/home-page.component';
-import { RecentItemListComponent } from '../../../../app/home-page/recent-item-list/recent-item-list.component';
-import { ThemedTopLevelCommunityListComponent } from '../../../../app/home-page/top-level-community-list/themed-top-level-community-list.component';
-import { SuggestionsPopupComponent } from '../../../../app/notifications/suggestions/popup/suggestions-popup.component';
-import { ThemedConfigurationSearchPageComponent } from '../../../../app/search-page/themed-configuration-search-page.component';
+import { ClarinItemBoxViewComponent } from '../../../../app/shared/clarin-item-box-view/clarin-item-box-view.component';
+import { RSSComponent } from '../../../../app/shared/rss-feed/rss.component';
 import { ThemedSearchFormComponent } from '../../../../app/shared/search-form/themed-search-form.component';
 
 @Component({
@@ -17,15 +22,16 @@ import { ThemedSearchFormComponent } from '../../../../app/shared/search-form/th
   styleUrls: ['../../../../app/home-page/home-page.component.scss'],
   // templateUrl: './home-page.component.html'
   templateUrl: '../../../../app/home-page/home-page.component.html',
+  providers: [NgbCarouselConfig],
   imports: [
-    HomeCoarComponent,
-    NgTemplateOutlet,
-    RecentItemListComponent,
-    SuggestionsPopupComponent,
-    ThemedConfigurationSearchPageComponent,
-    ThemedHomeNewsComponent,
+    AsyncPipe,
+    ClarinItemBoxViewComponent,
+    NgbCarouselModule,
+    NgFor,
+    NgIf,
+    RouterLink,
+    RSSComponent,
     ThemedSearchFormComponent,
-    ThemedTopLevelCommunityListComponent,
     TranslateModule,
   ],
 })

@@ -6,7 +6,8 @@ describe('Item Statistics Page', () => {
 
   it('should load if you click on "Statistics" from an Item/Entity page', () => {
     cy.visit('/entities/publication/'.concat(Cypress.env('DSPACE_TEST_ENTITY_PUBLICATION')));
-    cy.get('ds-navbar ds-link-menu-item a[data-test="link-menu-item.menu.section.statistics"]').click();
+    // NOTE (CLARIN/LINDAT): the LINDAT header has no public navbar; navigate directly to the object's statistics page (where the navbar link led)
+    cy.visit('/statistics/entities/publication/'.concat(Cypress.env('DSPACE_TEST_ENTITY_PUBLICATION')));
     cy.location('pathname').should('eq', '/statistics/entities/publication/'.concat(Cypress.env('DSPACE_TEST_ENTITY_PUBLICATION')));
   });
 

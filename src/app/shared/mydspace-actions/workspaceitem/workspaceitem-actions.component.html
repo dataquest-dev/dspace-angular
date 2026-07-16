@@ -31,6 +31,23 @@
   }
 </button>
 }
+
+@if ((canEditItem$ | async)) {
+  <button type="button" id="{{'share_' + object.id}}" class="btn btn-danger mt-1 mb-3"
+    [ngbTooltip]="'submission.workflow.generic.share-submission.tooltip' | translate"
+    [attr.aria-label]="'submission.workflow.generic.share-submission.tooltip' | translate"
+    (click)="$event.preventDefault();shareSubmission()">
+    <span>
+      @if (shareSubmissionSpinner) {
+        <span class="spinner-border spinner-border-sm spinner-button" role="status" aria-hidden="true"></span>
+      }
+      @if (!shareSubmissionSpinner) {
+        <i class="fa-solid fa-share"></i>
+      }
+      {{'submission.workflow.generic.share-submission' | translate}}
+    </span>
+  </button>
+}
 </div>
 
 

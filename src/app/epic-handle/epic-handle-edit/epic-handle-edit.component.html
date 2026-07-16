@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 pb-4">
+      <h2 id="header" class="border-bottom pb-2">{{ 'epic-handle-table.edit-handle.title' | translate }}</h2>
+      <p class="text-muted">{{ 'epic-handle-table.edit-handle.description' | translate }}</p>
+    </div>
+  </div>
+
+  <form #editHandle="ngForm" (ngSubmit)="onClickSubmit(editHandle.value)" class="needs-validation">
+
+    <div class="form-group mb-3">
+      <label for="handleId" class="form-label">
+        {{ 'epic-handle-table.edit-handle.form-handle-input-text' | translate }}
+      </label>
+      <input type="text" class="form-control" id="handleId" name="handleId" [value]="handleId"
+        [placeholder]="'epic-handle-table.edit-handle.form-handle-input-placeholder' | translate" readonly disabled>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="currentUrl" class="form-label">
+        {{ 'epic-handle-table.edit-handle.form-current-url-text' | translate }}
+      </label>
+      <input type="url" class="form-control" id="currentUrl" name="currentUrl" [value]="url" readonly disabled>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="url" class="form-label">
+        {{ 'epic-handle-table.edit-handle.form-url-input-text' | translate }}
+        <span class="text-danger">*</span>
+      </label>
+      <input type="url" class="form-control" id="url" name="url" [(ngModel)]="newUrl"
+        [placeholder]="'epic-handle-table.edit-handle.form-url-input-placeholder' | translate" required
+        [disabled]="isLoading">
+    </div>
+
+    <div class="btn-group mt-3">
+      <button type="submit" class="btn btn-primary" [dsBtnDisabled]="!editHandle.form.valid || isLoading">
+        @if (isLoading) {
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        }
+        {{ 'epic-handle-table.edit-handle.form-button-submit' | translate }}
+      </button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="onCancel()" [dsBtnDisabled]="isLoading">
+        {{ 'epic-handle-table.edit-handle.form-button-cancel' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

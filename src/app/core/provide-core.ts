@@ -29,6 +29,8 @@ import { Root } from './data/root.model';
 import { DspaceRestService } from './dspace-rest/dspace-rest.service';
 import { EPerson } from './eperson/models/eperson.model';
 import { Group } from './eperson/models/group.model';
+import { Handle } from './handle/handle.model';
+import { MetadataBitstream } from './metadata/metadata-bitstream.model';
 import { MetadataField } from './metadata/metadata-field.model';
 import { MetadataSchema } from './metadata/metadata-schema.model';
 import { QualityAssuranceEventObject } from './notifications/qa/models/quality-assurance-event.model';
@@ -187,4 +189,6 @@ export const models =
     SubmissionCoarNotifyConfig,
     NotifyRequestsStatus,
     SystemWideAlert,
+    Handle,
+    MetadataBitstream,
   ];

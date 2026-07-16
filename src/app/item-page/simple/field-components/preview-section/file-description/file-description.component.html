@@ -1,0 +1,103 @@
+<div class="file-preview-box rounded pt-2">
+  @if (fileInput.format === 'video/mp4') {
+    <div style="text-align: left">
+      <video #videoPreview preload="none" controls="controls" [src]="content_url" [poster]="thumbnail_url$ | async"
+        height="240">
+        <!--source [src]="content_url" type="video/mp4"-->
+        {{'item.file.description.not.supported.video' | translate}}
+      </video>
+    </div>
+  }
+  <div class="file-content">
+    <dl class="dl-horizontal">
+      <dt>{{'item.file.description.name' | translate}}</dt>
+      <dd>
+        {{ fileInput.name }}
+      </dd>
+      <dt>{{'item.file.description.size' | translate}}</dt>
+      <dd>
+        {{ fileInput.fileSize | dsFileSize }}
+      </dd>
+      <dt>{{'item.file.description.format' | translate}}</dt>
+      <dd>
+        {{ fileInput.format }}
+      </dd>
+      <dt>{{'item.file.description.description' | translate}}</dt>
+      <dd>
+        {{ fileInput.description }}
+      </dd>
+      <dt>{{'item.file.description.checksum' | translate}}</dt>
+      <dd>
+        {{ fileInput.checksum }}
+      </dd>
+    </dl>
+    @if (fileInput.format !== 'video/mp4') {
+      <img
+      [src]="(thumbnail_url$ | async) ? (thumbnail_url$ | async) : MIME_TYPE_IMAGES_PATH +
+      fileInput.format?.replace('/','-') + '.png'"
+        (error)="handleImageError($event)"
+        (click)="downloadFile()"
+        alt="Preview"
+        class="preview-image cursor-pointer"/>
+    }
+  </div>
+  <div class="button-container">
+    <span>
+      <a class="download-btn" (click)="downloadFile()">
+        <i class="fa fa-chevron-circle-down">&nbsp;</i>
+        {{'item.file.description.download.file' | translate}}
+      </a>
+    </span>
+    <span class="ps-1">
+      @if (couldPreview()) {
+        <a class="preview-btn collapsed" data-toggle="collapse" role="button"
+          href="#file_file_{{ fileInput.id }}">
+          <i class="fa fa-eye">&nbsp;</i>
+          {{'item.file.description.preview' | translate}}
+        </a>
+      }
+    </span>
+  </div>
+  <div class="in collapse" id="file_file_{{ fileInput.id }}" style="height: auto">
+    <div style="margin: 5px 1px 1px 1px" class="panel panel-info">
+      <div style="height: auto; padding: 0px" class="bold panel-heading text-center">
+        <i class="fa fa-eye">&nbsp;</i>
+        {{'item.file.description.file.preview' | translate}}
+        <a class="pull-right collapsed" data-toggle="collapse" role="button" href="#file_file_{{ fileInput.id }}">
+          <i class="fa fa-remove">&nbsp;</i>
+        </a>
+      </div>
+      <div [style]="'max-height: 500px; padding: 0px; overflow: scroll'" class="panel-body">
+        <ul class="treeview collapse show">
+          @if (hasNoPreview()) {
+            <div class="d-flex justify-content-center align-items-center my-3">
+              <div>{{ 'item.preview.no-preview' | translate }}
+                @if (emailToContact) {
+                  <a [href]="'mailto:' + emailToContact" class="email-text">{{ emailToContact }}</a>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- File Content -->
+          @if (fileInput.fileInfo.length !== 0) {
+            <!-- ZIP or TAR File Format -->
+            @if (isArchive(fileInput.format)) {
+              @for (node of fileInput.fileInfo; track node) {
+                <ds-file-tree-view [node]="node"></ds-file-tree-view>
+              }
+            }
+            <!-- TXT Format -->
+            @if (isTxt()) {
+              <pre>{{ fileInput.fileInfo[0]?.content }}</pre>
+            }
+            <!-- HTML Format -->
+            @if (fileInput.format === 'text/html') {
+              <div [innerHTML]="fileInput.fileInfo[0]?.content"></div>
+            }
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

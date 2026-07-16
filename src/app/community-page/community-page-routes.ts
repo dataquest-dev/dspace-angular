@@ -79,6 +79,11 @@ export const ROUTES: Route[] = [
             path: '',
             pathMatch: 'full',
             component: ComcolSearchSectionComponent,
+            data: {
+              enableRSS: true,
+              showBreadcrumbs: true,
+              searchEnabled: false,
+            },
           },
           {
             path: 'search',
@@ -91,18 +96,20 @@ export const ROUTES: Route[] = [
               breadcrumbKey: 'community.search',
               menuRoute: MenuRoute.COMMUNITY_PAGE,
               enableRSS: true,
+              searchEnabled: true,
             },
           },
           {
             path: 'subcoms-cols',
             pathMatch: 'full',
             component: SubComColSectionComponent,
-            resolve: {
-              breadcrumb: i18nBreadcrumbResolver,
-            },
+            // CLARIN/LINDAT: the default landing tab - no extra breadcrumb (v7 lands on the
+            // root), but keep the inherited trail visible (a leaf without breadcrumb data
+            // hides the whole bar in BreadcrumbsService)
             data: {
-              breadcrumbKey: 'community.subcoms-cols',
               menuRoute: MenuRoute.COMMUNITY_PAGE,
+              enableRSS: true,
+              showBreadcrumbs: true,
             },
           },
           {
@@ -116,6 +123,7 @@ export const ROUTES: Route[] = [
             data: {
               breadcrumbKey: 'browse.metadata',
               menuRoute: MenuRoute.COMMUNITY_PAGE,
+              enableRSS: true,
             },
           },
         ],

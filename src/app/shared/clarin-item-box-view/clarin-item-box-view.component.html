@@ -1,0 +1,84 @@
+@if (item) {
+  <div class="pt-3">
+    <div class="card">
+      <div class="card-body pt-0 pb-0">
+        <div *ngVar="hasItemType() as nonEmptyItemType" class="clarin-corner-row" [ngClass]="{'d-flex': true, 'justify-content-between': nonEmptyItemType, 'justify-content-end': !nonEmptyItemType}">
+          @if (nonEmptyItemType) {
+            <span class="item-type">{{ itemType }}</span>
+          }
+          <!-- render the link only once the owning community has loaded - an empty <a> has no
+               accessible name (axe link-name) -->
+          @if ((itemCommunity | async)?.name) {
+            <span class="label item-community"><a class="pt-2" [href]="communitySearchRedirect | async">{{ (itemCommunity | async)?.name }}</a></span>
+          }
+        </div>
+        <div>
+          <div class="row pt-3 justify-content-between">
+            <div class="col-10">
+              <div><a [routerLink]="itemUri" class="item-name">{{ itemName }}</a></div>
+              @if (isSearchResult) {
+                <div class="pt-1">
+                  <div class="fw-bold">{{ 'item.view.box.publisher.message' | translate }}</div>
+                  <!-- truthiness check: a missing dc.publisher is undefined, and an empty <a>
+                       has no accessible name (axe link-name) -->
+                  <span>(@if (itemPublisher) {
+                    <span><a [href]="publisherRedirectLink">{{itemPublisher}}</a> / </span>
+                  }{{itemDate}})</span>
+                </div>
+              }
+            </div>
+            <div class="col-2 d-flex justify-content-end position-relative">
+              <img class="artifact-icon"
+                [src]="ITEM_TYPE_IMAGES_PATH + itemType + '.png'"
+                (error)="handleImageError($event)"  [alt]="formateIconsAltText(itemType)">
+            </div>
+          </div>
+          <div class="pt-1">
+            <strong>{{'item.view.box.author.message' | translate}}</strong>
+          </div>
+          <div>
+            <ds-clarin-item-author-preview [item]="item" [fields]="AUTHOR_METADATA_FIELDS"></ds-clarin-item-author-preview>
+          </div>
+          @if (isSearchResult === false && itemDescription) {
+            <div class="pt-1">
+              <div><strong>{{'item.view.box.description.message' | translate}}</strong></div>
+              <div class="clarin-item-description pe-3">{{itemDescription}}</div>
+            </div>
+          }
+          <div class="d-flex pt-1">
+            <div class="label label-info label-icon"><i class="fas fa-paperclip fa-sm"></i></div>
+            @if (hasMoreFiles()) {
+              <div class="label label-info"> {{'item.view.box.files.message.0' | translate}} {{ (itemCountOfFiles | async) }} {{'item.view.box.files.message.1' | translate}} ({{(itemFilesSizeBytes | async) | dsFileSize }}). </div>
+            }
+            @if ((itemCountOfFiles | async) === 1) {
+              <div class="label label-info"> {{'item.view.box.one.file.message' | translate}} ({{(itemFilesSizeBytes | async) | dsFileSize }}). </div>
+            }
+            @if ((itemCountOfFiles | async) === -1) {
+              <div class="label label-info"> {{'item.view.box.no-files.message' | translate}}</div>
+            }
+          </div>
+        </div>
+        <div class="clarin-corner-row" [ngClass]="{'d-flex': true, 'justify-content-end': true, 'pt-3': (itemCountOfFiles | async) === -1}">
+          @if (licenseType) {
+            <div
+              [ngClass]="'d-inline py-1 px-1 label label-license  label-default' + ' label-' + licenseLabel + ' rounded text-white'">
+              <span>
+                {{licenseType }}
+              </span>
+              @for (lli of (licenseLabelIcons | async); track lli) {
+                <div class="d-inline">
+                  <img [ngClass]="{'clarin-license-icon-mr':licenseLabelIcons.value.length > 1}"
+                  [src]="secureImageData(lli?.icon)"
+                  [ngbTooltip]="lli?.title"
+                  triggers="mouseenter:mouseleave"
+                  placement="bottom"
+                  alt="" width="16px">
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

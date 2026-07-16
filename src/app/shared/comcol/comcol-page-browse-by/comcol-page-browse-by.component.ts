@@ -91,12 +91,15 @@ export class ComcolPageBrowseByComponent implements OnDestroy, OnInit {
         const allOptions: ComColPageNavOption[] = [];
         if (browseDefListRD.hasSucceeded) {
           let comColRoute: string;
+          // CLARIN/LINDAT (production parity): a collection lands on its item list labelled
+          // 'Recent Submissions' (the root route renders the search section sorted by accession
+          // date). Communities keep the vanilla Search tab.
           if (this.contentType === 'collection') {
             comColRoute = getCollectionPageRoute(this.id);
             allOptions.push({
               id: 'search',
-              label: 'collection.page.browse.search.head',
-              routerLink: `${comColRoute}/search`,
+              label: 'collection.page.browse.recent.head',
+              routerLink: comColRoute,
             });
           } else if (this.contentType === 'community') {
             comColRoute = getCommunityPageRoute(this.id);
@@ -145,11 +148,11 @@ export class ComcolPageBrowseByComponent implements OnDestroy, OnInit {
       ),
     ]).subscribe(([navOptions, url]: [ComColPageNavOption[], string]) => {
       for (const option of navOptions) {
-        if (url?.split('?')[0] === comColRoute && option.id === this.appConfig[this.contentType].defaultBrowseTab) {
-          void this.router.navigate([option.routerLink], { queryParams: option.params, replaceUrl: true  });
-          break;
-        } else if (option.routerLink === url?.split('?')[0]) {
+        if (option.routerLink === url?.split('?')[0]) {
           this.currentOption$.next(option);
+          break;
+        } else if (url?.split('?')[0] === comColRoute && option.id === this.appConfig[this.contentType].defaultBrowseTab) {
+          void this.router.navigate([option.routerLink], { queryParams: option.params, replaceUrl: true  });
           break;
         }
       }
@@ -161,8 +164,10 @@ export class ComcolPageBrowseByComponent implements OnDestroy, OnInit {
       ).subscribe((allOptions: ComColPageNavOption[]) => {
         for (const option of allOptions) {
           if (option.id === this.appConfig[this.contentType].defaultBrowseTab) {
-            this.currentOption$.next(option[0]);
-            void this.router.navigate([option.routerLink], { queryParams: option.params });
+            this.currentOption$.next(option);
+            if (option.routerLink !== this.router.url?.split('?')[0]) {
+              void this.router.navigate([option.routerLink], { queryParams: option.params });
+            }
             break;
           }
         }
@@ -180,7 +185,7 @@ export class ComcolPageBrowseByComponent implements OnDestroy, OnInit {
     ).subscribe((allOptions: ComColPageNavOption[]) => {
       for (const option of allOptions) {
         if (option.id === event.target.value) {
-          this.currentOption$.next(option[0]);
+          this.currentOption$.next(option);
           void this.router.navigate([option.routerLink], { queryParams: option.params });
           break;
         }

@@ -8,6 +8,11 @@
     max-width: 100%;
   }
 
+  .clarin-logo {
+    height: var(--ds-login-logo-height);
+    width: var(--ds-login-logo-width);
+  }
+
   .navbar-toggler {
     border: none;
     color: var(--ds-header-icon-color);

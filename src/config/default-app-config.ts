@@ -359,10 +359,12 @@ export class DefaultAppConfig implements AppConfig {
   };
 
   // Collection Page Config
+  // CLARIN/LINDAT: the item listing without the filter sidebar approximates the v7 collection
+  // landing ("Recent Submissions" list)
   collection: CollectionPageConfig = {
     defaultBrowseTab: 'search',
     searchSection: {
-      showSidebar: true,
+      showSidebar: false,
     },
     edit: {
       undoTimeout: 10000, // 10 seconds

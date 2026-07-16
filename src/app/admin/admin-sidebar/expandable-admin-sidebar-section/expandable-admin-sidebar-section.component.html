@@ -10,7 +10,7 @@
       aria-haspopup="menu"
       [attr.aria-controls]="adminMenuSectionId(section)"
       [attr.aria-expanded]="isExpanded$ | async"
-      [attr.aria-label]="('menu.section.toggle.' + section.id) | translate"
+      [attr.aria-label]="('menu.section.toggle.' + (section.accessibilityHandle ?? section.id)) | translate"
       [class.disabled]="section.model?.disabled"
       (click)="toggleSection($event)"
       (keyup.space)="toggleSection($event)"
