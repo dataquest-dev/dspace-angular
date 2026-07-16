@@ -109,6 +109,25 @@ jobs:
         run: |
           docker exec dspacedb$INSTANCE sh -c 'echo "PGPORT=$PGPORT"; pg_isready -U dspace; psql -U dspace -d postgres -tAc "SHOW port;" 2>/dev/null' || echo "could not probe dspacedb$INSTANCE"
 
+      # Does the instance actually hold the imported data and serve it? A green import
+      # job only proves the commands exited 0.
+      - name: data + service health
+        run: |
+          echo "===== schema version (flyway)"
+          docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
+            "select version, script, success from flyway_schema_history order by installed_rank desc limit 5;" \
+            2>&1 || echo "could not read flyway_schema_history"
+          echo "===== row counts"
+          docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
+            "select 'item='||(select count(*) from item) || ' bitstream='||(select count(*) from bitstream) || ' collection='||(select count(*) from collection) || ' community='||(select count(*) from community) || ' eperson='||(select count(*) from eperson);" \
+            2>&1 || echo "could not count rows"
+          echo "===== dspace version"
+          docker exec dspace$INSTANCE /bin/bash -c "cd /dspace/bin && ./dspace version" 2>&1 | head -5 || echo "dspace version failed"
+          echo "===== REST API on the instance"
+          curl -s -o /dev/null -w "  server/api -> HTTP %{http_code}\n" "http://localhost:${DSPACE_DOCKER_REST_PORT:-6603}/server/api" || true
+          curl -s "http://localhost:${DSPACE_DOCKER_REST_PORT:-6603}/server/api/core/items?size=1" 2>/dev/null | head -c 300 || true
+          echo ""
+
   deploy-8603:
     if: (inputs.INSTANCE == '*' || inputs.INSTANCE == '8603') && !inputs.PROBE_ONLY
     needs: probe
