@@ -91,14 +91,14 @@ jobs:
 
       - name: resolved compose ports for this instance
         run: |
-          echo "===== ports WITH the instance-ports reset (this is what deploy actually uses)"
+          echo "===== resolved ports for this instance (this is what deploy uses)"
           docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
             -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
-            -f docker/docker-compose-instance-ports.yml \
+            \
             -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
             config 2>&1 | grep -nE '^  [a-z-]+:|container_name:|published:|^\s+ports:' | head -40 \
             || echo "compose config failed"
-          echo "===== ports WITHOUT the reset (the vanilla fixed ports we are dropping)"
+          echo "===== same, without the instance overlay (vanilla fixed ports)"
           docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
             -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
             -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
@@ -171,7 +171,7 @@ jobs:
         run: |
           ./start.sh dspace-$INSTANCE
           cd ../..
-          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f docker/docker-compose-instance-ports.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
+          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
 
   import-8603:
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
@@ -243,7 +243,7 @@ jobs:
           echo "Running one-off DB repair + migration via docker compose..."
           docker compose --env-file $ENVFILE -p dspace-${INSTANCE} \
             -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
-            -f docker/docker-compose-instance-ports.yml \
+            \
             -f $OVERLAY/docker-compose-rest.yml -f $OVERLAY/docker-compose.yml \
             run --rm --no-deps --entrypoint /bin/bash dspace \
             -c "while (!</dev/tcp/dspacedb/5432) >/dev/null 2>&1; do sleep 1; done; cd /dspace/bin && ./dspace database repair && ./dspace database migrate ignored"

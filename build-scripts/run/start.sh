@@ -10,13 +10,13 @@ echo "Using envfile: [$ENVFILE] for project: [$PROJECT]"
 
 source $ENVFILE
 
-# The vanilla compose files publish fixed host ports (5432/8080/8983/4000), which are global
-# to the machine. When INSTANCE_OVERLAY points at /opt/dspace-envs/<instance>, bring the
-# containers up through that overlay instead, with docker-compose-instance-ports.yml resetting
-# the fixed ports first -- otherwise this `up` fights whichever instance already owns them.
+# The vanilla compose files publish fixed host ports (5432/8080/8983/4000), which are global to
+# the machine, so this `up` would fight whichever instance already owns them. When
+# INSTANCE_OVERLAY points at /opt/dspace-envs/<instance>, bring the containers up through that
+# overlay too: its `ports: !override` replaces the fixed ports with instance-scoped ones.
 COMPOSE_FILES="-f docker/docker-compose.yml -f docker/docker-compose-rest.yml"
 if [[ -n "$INSTANCE_OVERLAY" ]]; then
-    COMPOSE_FILES="$COMPOSE_FILES -f docker/docker-compose-instance-ports.yml -f $INSTANCE_OVERLAY/docker-compose-rest.yml -f $INSTANCE_OVERLAY/docker-compose.yml"
+    COMPOSE_FILES="$COMPOSE_FILES -f $INSTANCE_OVERLAY/docker-compose-rest.yml -f $INSTANCE_OVERLAY/docker-compose.yml"
     echo "Using instance overlay: [$INSTANCE_OVERLAY]"
 fi
 echo "Compose files: [$COMPOSE_FILES]"
