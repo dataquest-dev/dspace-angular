@@ -113,10 +113,12 @@ jobs:
       # job only proves the commands exited 0.
       - name: data + service health
         run: |
-          echo "===== schema version (flyway)"
+          # DSpace keeps Flyway's history in "schema_version", not Flyway's default
+          # "flyway_schema_history" -- see DatabaseUtils.FLYWAY_TABLE.
+          echo "===== last applied migrations (schema_version)"
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
-            "select version, script, success from flyway_schema_history order by installed_rank desc limit 5;" \
-            2>&1 || echo "could not read flyway_schema_history"
+            "select version, script, success from schema_version order by installed_rank desc limit 5;" \
+            2>&1 || echo "could not read schema_version"
           echo "===== row counts"
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
             "select 'item='||(select count(*) from item) || ' bitstream='||(select count(*) from bitstream) || ' collection='||(select count(*) from collection) || ' community='||(select count(*) from community) || ' eperson='||(select count(*) from eperson);" \
