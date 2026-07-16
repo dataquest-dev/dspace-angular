@@ -49,11 +49,67 @@ on:
         description: 'Absolute path of the SQL dump ON THE DEV MACHINE (used only when IMPORT is checked)'
         required: false
         type: string
-        default: '/opt/dspace-envs/8603/dspace_dev5_dump_26.07.16.sql'
+        default: '/opt/dspace-envs/8603/dump/dspace_dev5_dump_26.07.16.sql'
+      PROBE_ONLY:
+        description: 'Only report the state of the target machine; deploy and import nothing'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
+  # Read-only report of the machine we are about to touch. Runs first so that a
+  # misconfigured target is visible in the log even when the deploy then fails.
+  probe:
+    runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
+    timeout-minutes: 10
+    env:
+      INSTANCE: ${{inputs.INSTANCE}}
+      CONFIG_PATH: /opt/dspace-envs/${{inputs.INSTANCE}}
+      ENVFILE: /opt/dspace-envs/${{inputs.INSTANCE}}/.env
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: config dir + dump
+        run: |
+          echo "===== $CONFIG_PATH"
+          ls -la "$CONFIG_PATH/" || echo "MISSING: $CONFIG_PATH"
+          echo "===== $CONFIG_PATH/dump"
+          ls -la "$CONFIG_PATH/dump/" || echo "MISSING: $CONFIG_PATH/dump"
+          echo "===== dump referenced by DUMP_PATH input"
+          ls -la "${{ inputs.DUMP_PATH }}" || echo "MISSING dump: ${{ inputs.DUMP_PATH }}"
+          echo "===== port-ish keys from .env (values shown; these are ports, not secrets)"
+          grep -E '^(PG_PORT|SOLR_PORT|DSPACE_PORT|DSPACE_FE_PORT|DSPACE_REST_PORT|DSPACE_DOCKER_REST_PORT|DSPACE_VER|DSPACE_HOST)=' "$ENVFILE" || echo "no port keys found"
+
+      - name: who owns the host ports
+        run: |
+          echo "===== all dspace-ish containers and their published ports"
+          docker ps -a --format '{{.Names}}\t{{.Status}}\t{{.Ports}}' | grep -Ei 'dspace|postgres|solr' || echo "none"
+          echo "===== anything publishing host port 5432"
+          docker ps --format '{{.Names}}\t{{.Ports}}' | grep -E '(^|[^0-9])5432->' || echo "nothing publishes 5432"
+          echo "===== host listeners on 5432"
+          (ss -lntp 2>/dev/null || netstat -lntp 2>/dev/null) | grep -E ':5432' || echo "no listener on 5432 (or no permission to see it)"
+
+      - name: resolved compose ports for this instance
+        run: |
+          echo "===== merged compose config (dspacedb ports) for -p dspace-$INSTANCE"
+          docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
+            -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
+            -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
+            config 2>&1 | grep -nE '^  [a-z-]+:|container_name:|published:|target:|^\s+ports:' | head -60 \
+            || echo "compose config failed"
+          echo "===== what start.sh alone would publish (NO instance overlay)"
+          docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
+            -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
+            config 2>&1 | grep -nE '^  [a-z-]+:|container_name:|published:|target:|^\s+ports:' | head -40 \
+            || echo "compose config failed"
+
+      - name: postgres inside the instance db container
+        run: |
+          docker exec dspacedb$INSTANCE sh -c 'echo "PGPORT=$PGPORT"; pg_isready -U dspace; psql -U dspace -d postgres -tAc "SHOW port;" 2>/dev/null' || echo "could not probe dspacedb$INSTANCE"
+
   deploy-8603:
-    if: inputs.INSTANCE == '*' || inputs.INSTANCE == '8603'
+    if: (inputs.INSTANCE == '*' || inputs.INSTANCE == '8603') && !inputs.PROBE_ONLY
+    needs: probe
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
     timeout-minutes: 60
     env:
@@ -62,21 +118,6 @@ jobs:
       ENVFILE: /opt/dspace-envs/${{inputs.INSTANCE}}/.env
     steps:
       - uses: actions/checkout@v6
-
-      # Report the environment we are about to deploy into. Everything here is
-      # tolerant of failure: it must never be the reason a deploy goes red.
-      - name: probe environment
-        run: |
-          echo "===== $CONFIG_PATH"
-          ls -la "$CONFIG_PATH/" || echo "MISSING: $CONFIG_PATH"
-          echo "===== .env keys (values redacted)"
-          sed 's/=.*/=<redacted>/' "$ENVFILE" || echo "MISSING: $ENVFILE"
-          echo "===== containers for instance $INSTANCE"
-          docker ps -a --format '{{.Names}}\t{{.Image}}\t{{.Status}}' | grep -E "${INSTANCE}" || echo "no containers matching $INSTANCE"
-          echo "===== postgres port inside dspacedb$INSTANCE"
-          docker exec dspacedb$INSTANCE sh -c 'echo "PGPORT=$PGPORT"; pg_isready -U dspace; psql -U dspace -d postgres -tAc "SHOW port;" 2>/dev/null' || echo "could not probe dspacedb$INSTANCE"
-          echo "===== dump file"
-          ls -la "${{ inputs.DUMP_PATH }}" || echo "MISSING dump: ${{ inputs.DUMP_PATH }}"
 
       - uses: ./.github/actions/erase-db
         if: inputs.ERASE_DB
