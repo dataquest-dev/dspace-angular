@@ -2,7 +2,7 @@
    [queryParams]="(bitstreamPath$| async)?.queryParams"
    [target]="isBlank ? '_blank': '_self'"
    [ngClass]="cssClasses"
-   [attr.aria-label]="('file-download-link.download' | translate) + ' ' + dsoNameService.getName(bitstream)"
+   [attr.aria-label]="(('file-download-link.download' | translate).trim() + ' ' + dsoNameService.getName(bitstream)).trim()"
    role="link"
    tabindex="0">
   <span *ngIf="!(canDownload$ |async)" class="pr-1"><i class="fas fa-lock" aria-hidden="true"></i><span class="sr-only">{{ 'file-download-link.restricted' | translate }}</span></span>
