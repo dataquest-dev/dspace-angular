@@ -94,16 +94,29 @@ jobs:
           echo "===== resolved ports for this instance (this is what deploy uses)"
           docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
             -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
-            \
             -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
             config 2>&1 | grep -nE '^  [a-z-]+:|container_name:|published:|^\s+ports:' | head -40 \
             || echo "compose config failed"
-          echo "===== same, without the instance overlay (vanilla fixed ports)"
+          # The overlay must REPLACE the fixed ports the vanilla files publish, not add to
+          # them: compose merges `ports` lists across -f files. If a fixed port survives the
+          # merge above, the overlay is missing `ports: !override` and this instance will
+          # fight whichever one already owns it on the host.
+          echo "===== vanilla files alone, for comparison (the fixed ports the overlay must replace)"
           docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
             -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
-            -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
-            config 2>&1 | grep -nE '^  [a-z-]+:|container_name:|published:|^\s+ports:' | head -40 \
+            config 2>&1 | grep -nE '^  [a-z-]+:|container_name:|published:|^\s+ports:' | head -30 \
             || echo "compose config failed"
+          echo "===== verdict"
+          if docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
+               -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
+               -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
+               config 2>/dev/null | grep -qE 'published: "(5432|8080|8983|4000|9876)"'; then
+            echo "  WARNING: overlay still inherits vanilla fixed ports."
+            echo "  Add 'ports: !override' to $CONFIG_PATH/docker-compose.yml and docker-compose-rest.yml,"
+            echo "  otherwise the deploy will fail with 'port is already allocated'."
+          else
+            echo "  OK: only instance-scoped ports are published"
+          fi
 
       - name: postgres inside the instance db container
         run: |
