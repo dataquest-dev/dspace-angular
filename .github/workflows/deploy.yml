@@ -288,3 +288,61 @@ jobs:
 
           echo "Running OAI import..."
           docker exec $DNAME /bin/bash -c "/dspace/bin/dspace oai import -c"
+
+  playwright-after-deploy8603:
+    needs: deploy-8603
+    if: '!inputs.IMPORT'
+    uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
+
+  rest-tests-after-deploy8603:
+    runs-on: ubuntu-latest
+    needs: playwright-after-deploy8603
+    if: '!inputs.IMPORT'
+    timeout-minutes: 120
+    env:
+      GH_TOKEN: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
+      REPO: dataquest-dev/dspace-rest-test
+      WORKFLOW: run_unittests.yml
+    steps:
+      - name: run rest-tests
+        run: |
+          OUTPUT=$(gh workflow run "$WORKFLOW" \
+            --repo "$REPO" \
+            --ref master \
+            -f CUSTOMER="${{ github.ref_name }}" \
+            -f URL="http://dev-6.pc:8603/server/api" 2>&1)
+
+          RUN_ID=$(echo "$OUTPUT" | grep -oE '/runs/[0-9]+' | grep -oE '[0-9]+')
+
+          echo "Watching run: https://github.com/$REPO/actions/runs/$RUN_ID"
+          gh run watch "$RUN_ID" --repo "$REPO" --interval 30 --exit-status
+
+  playwright-after-import8603:
+    needs: import-8603
+    if: inputs.IMPORT
+    uses: ./.github/workflows/playwright-tests.yml
+    secrets: inherit
+
+  rest-tests-after-import8603:
+    runs-on: ubuntu-latest
+    needs: playwright-after-import8603
+    if: inputs.IMPORT
+    timeout-minutes: 120
+    env:
+      GH_TOKEN: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
+      REPO: dataquest-dev/dspace-rest-test
+      WORKFLOW: run_unittests.yml
+    steps:
+      - name: run rest-tests
+        run: |
+          OUTPUT=$(gh workflow run "$WORKFLOW" \
+            --repo "$REPO" \
+            --ref master \
+            -f CUSTOMER="${{ github.ref_name }}" \
+            -f URL="http://dev-6.pc:8603/server/api" 2>&1)
+
+          RUN_ID=$(echo "$OUTPUT" | grep -oE '/runs/[0-9]+' | grep -oE '[0-9]+')
+
+          echo "Watching run: https://github.com/$REPO/actions/runs/$RUN_ID"
+          gh run watch "$RUN_ID" --repo "$REPO" --interval 30 --exit-status
