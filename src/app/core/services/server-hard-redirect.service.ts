@@ -26,6 +26,13 @@ export class ServerHardRedirectService extends HardRedirectService {
    */
   redirect(url: string, statusCode?: number) {
 
+    // A relative URL in the Location header is resolved by the browser against the request URL
+    // (e.g. 'reload/123' requested at /bitstreams/<uuid>/download resolves to
+    // /bitstreams/<uuid>/reload/123) - make sure only absolute URLs are emitted
+    if (!url.startsWith('/') && !/^https?:\/\//i.test(url)) {
+      url = '/' + url;
+    }
+
     if (url === this.req.url) {
       return;
     }
