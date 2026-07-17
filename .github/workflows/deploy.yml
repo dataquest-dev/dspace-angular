@@ -311,7 +311,7 @@ jobs:
             --repo "$REPO" \
             --ref master \
             -f CUSTOMER="${{ github.ref_name }}" \
-            -f URL="http://dev-6.pc:8603/server/api" 2>&1)
+            -f URL="http://dev-6.pc:8603/repository/server/api" 2>&1)
 
           RUN_ID=$(echo "$OUTPUT" | grep -oE '/runs/[0-9]+' | grep -oE '[0-9]+')
 
@@ -340,7 +340,7 @@ jobs:
             --repo "$REPO" \
             --ref master \
             -f CUSTOMER="${{ github.ref_name }}" \
-            -f URL="http://dev-6.pc:8603/server/api" 2>&1)
+            -f URL="http://dev-6.pc:8603/repository/server/api" 2>&1)
 
           RUN_ID=$(echo "$OUTPUT" | grep -oE '/runs/[0-9]+' | grep -oE '[0-9]+')
 
