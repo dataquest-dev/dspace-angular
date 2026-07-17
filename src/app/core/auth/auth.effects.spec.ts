@@ -1,5 +1,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { NgZone } from '@angular/core';
 
+import { Actions } from '@ngrx/effects';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -17,6 +19,7 @@ import {
   CheckAuthenticationTokenCookieAction,
   LogOutErrorAction,
   LogOutSuccessAction,
+  RedirectAfterLoginSuccessAction,
   RefreshTokenErrorAction,
   RefreshTokenSuccessAction,
   RetrieveAuthenticatedEpersonAction,
@@ -174,6 +177,52 @@ describe('AuthEffects', () => {
 
       expect(authEffects.authenticatedSuccess$).toBeObservable(expected);
       done();
+    });
+
+    describe('when a redirect url is set', () => {
+      const redirectUrl = '/bitstreams/eb0ca4e9-3e00-4c1f-8b19-a2c9f4f01234/download';
+
+      beforeEach(() => {
+        spyOn((authEffects as any).authService, 'storeToken');
+        authServiceStub.setRedirectUrl(redirectUrl);
+        actions = hot('--a-', {
+          a: {
+            type: AuthActionTypes.AUTHENTICATED_SUCCESS, payload: {
+              authenticated: true,
+              authToken: token,
+              userHref: EPersonMock._links.self.href
+            }
+          }
+        });
+      });
+
+      afterEach(() => {
+        authServiceStub.setRedirectUrl(undefined);
+      });
+
+      it('should return a REDIRECT_AFTER_LOGIN_SUCCESS action in the browser', () => {
+        const expected = cold('--b-', { b: new RedirectAfterLoginSuccessAction(redirectUrl) });
+
+        expect(authEffects.authenticatedSuccess$).toBeObservable(expected);
+      });
+
+      it('should return a RETRIEVE_AUTHENTICATED_EPERSON action during server-side rendering', () => {
+        // The server cannot clear the redirect cookie (ServerCookieService.set/remove are no-ops),
+        // so a hard redirect during SSR would repeat on every request and create a redirect loop.
+        // The redirect must be left to the browser.
+        const serverAuthEffects: AuthEffects = new (AuthEffects as any)(
+          TestBed.inject(Actions),
+          TestBed.inject(NgZone),
+          authorizationService,
+          authServiceStub as any,
+          TestBed.inject(Store) as any,
+          'server'
+        );
+
+        const expected = cold('--b-', { b: new RetrieveAuthenticatedEpersonAction(EPersonMock._links.self.href) });
+
+        expect(serverAuthEffects.authenticatedSuccess$).toBeObservable(expected);
+      });
     });
 
   });

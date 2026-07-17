@@ -27,7 +27,9 @@ describe('StaticPageComponent', () => {
       getCurrentLanguageCode: jasmine.createSpy('getCurrentLanguageCode'),
     });
 
-    appConfig = Object.assign(environment, {
+    // Do not mutate the shared `environment` object - replacing `environment.ui` would
+    // break any later spec that reads e.g. environment.ui.nameSpace
+    appConfig = Object.assign({}, environment, {
       ui: {
         namespace: 'testNamespace'
       }
