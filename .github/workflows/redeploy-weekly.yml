@@ -1,0 +1,23 @@
+name: Redeploy Weekly
+
+# Replaces the old "Import Weekly": instance 8603 is not re-imported on a schedule.
+# This only redeploys, which is non-destructive -- start.sh pulls the images first, so the
+# instance picks up the latest dtq-dev-9-base build. The database and assetstore are left
+# alone (IMPORT and ERASE_DB both false).
+#
+# To load a dump, run "Deploy DSpace" manually with IMPORT checked.
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # every Sunday at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  redeploy:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      # Must match a job in deploy.yml, otherwise every job is skipped and this run
+      # still reports success.
+      INSTANCE: '8603'
+      IMPORT: false
+      ERASE_DB: false
+    secrets: inherit
