@@ -58,3 +58,12 @@ jobs:
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+  deploy:
+    needs: dspace-angular
+    if: ${{ github.event_name != 'pull_request' }}
+    uses: ./.github/workflows/deploy.yml
+    with:
+      INSTANCE: '8603'
+      IMPORT: false
+    secrets: inherit
