@@ -34,6 +34,10 @@ services:
       # dspace__P__dir: /dspace
       # dspace__P__server__P__url: http://localhost:8080/server
       # dspace__P__ui__P__url: http://localhost:4000
+      # server.servlet.context-path: base path the Spring Boot REST webapp is served under (default /server).
+      # Override per-instance via the .env passed to `docker compose --env-file`, e.g.
+      # server__P__servlet__P__context__D__path=/repository/server when running behind a namespaced proxy.
+      server__P__servlet__P__context__D__path: ${SERVER_SERVLET_CONTEXT_PATH:-/server}
       # Set SSR URL to the Docker container name so that UI can contact container directly in Production mode.
       # (This is necessary for docker-compose-dist.yml)
       dspace__P__server__P__ssr__P__url: ${dspace__P__server__P__ssr__P__url:-http://dspace:8080/server}

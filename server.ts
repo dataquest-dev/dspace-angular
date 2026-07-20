@@ -164,7 +164,8 @@ export function app() {
    */
   router.use('/sitemap**', createProxyMiddleware({
     target: `${REST_BASE_URL}/sitemaps`,
-    pathRewrite: path => path.replace(environment.ui.nameSpace, '/'),
+    // strip the UI namespace prefix; collapse any leading double slash it may leave (e.g. nameSpace '/repository')
+    pathRewrite: path => path.replace(environment.ui.nameSpace, '/').replace(/^\/{2,}/, '/'),
     changeOrigin: true,
   }));
 
@@ -173,7 +174,8 @@ export function app() {
    */
   router.use('/signposting**', createProxyMiddleware({
     target: `${REST_BASE_URL}`,
-    pathRewrite: path => path.replace(environment.ui.nameSpace, '/'),
+    // strip the UI namespace prefix; collapse any leading double slash it may leave (e.g. nameSpace '/repository')
+    pathRewrite: path => path.replace(environment.ui.nameSpace, '/').replace(/^\/{2,}/, '/'),
     changeOrigin: true,
   }));
 
