@@ -254,7 +254,9 @@ export const environment: BuildConfig = {
       // Number of entries in the bitstream list in the item view page.
       // Rounded to the nearest size in the list of selectable sizes on the
       // settings menu.  See pageSizeOptions in 'pagination-component-options.model.ts'.
-      pageSize: 5
+      pageSize: 5,
+      // Show the bitstream embargo-date badge
+      showAccessStatuses: false
     }
   },
   collection: {
