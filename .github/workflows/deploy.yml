@@ -150,8 +150,8 @@ jobs:
           echo "===== dspace version"
           docker exec dspace$INSTANCE /bin/bash -c "cd /dspace/bin && ./dspace version" 2>&1 | head -5 || echo "dspace version failed"
           echo "===== REST API on the instance"
-          curl -s -o /dev/null -w "  server/api -> HTTP %{http_code}\n" "http://localhost:${DSPACE_DOCKER_REST_PORT:-6603}/server/api" || true
-          curl -s "http://localhost:${DSPACE_DOCKER_REST_PORT:-6603}/server/api/core/items?size=1" 2>/dev/null | head -c 300 || true
+          curl -s -o /dev/null -w "  repository/server/api -> HTTP %{http_code}\n" "http://localhost:${DSPACE_DOCKER_REST_PORT:-6603}/repository/server/api" || true
+          curl -s "http://localhost:${DSPACE_DOCKER_REST_PORT:-6603}/repository/server/api/core/items?size=1" 2>/dev/null | head -c 300 || true
           echo ""
 
   deploy-8603:
