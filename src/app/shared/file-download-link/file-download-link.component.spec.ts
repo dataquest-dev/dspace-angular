@@ -94,11 +94,11 @@ describe('FileDownloadLinkComponent', () => {
           const link = fixture.debugElement.query(By.css('a'));
           expect(link.nativeElement.getAttribute('aria-label')).toContain(bitstreamName);
         });
-        it('should not show the restricted-bitstream text', () => {
+        it('should not include the restricted-bitstream text in the aria-label', () => {
           scheduler.flush();
           fixture.detectChanges();
-          const restricted = fixture.debugElement.query(By.css('.sr-only'));
-          expect(restricted).toBeNull();
+          const link = fixture.debugElement.query(By.css('a'));
+          expect(link.nativeElement.getAttribute('aria-label')).not.toContain('file-download-link.restricted');
         });
       });
       // describe('when the user has no download rights but has the right to request a copy', () => {
@@ -161,13 +161,16 @@ describe('FileDownloadLinkComponent', () => {
           const lock = fixture.debugElement.query(By.css('.fa-lock')).nativeElement;
           expect(lock).toBeTruthy();
         });
-        it('should mark the lock icon as decorative and expose the restricted state via a sr-only text node', () => {
+        it('should mark the lock icon as decorative and expose the restricted state via the link\'s own aria-label', () => {
           scheduler.flush();
           fixture.detectChanges();
           const lock = fixture.debugElement.query(By.css('.fa-lock')).nativeElement;
           expect(lock.getAttribute('aria-hidden')).toBe('true');
-          const restricted = fixture.debugElement.query(By.css('.sr-only'));
-          expect(restricted.nativeElement.textContent.trim()).toBe('file-download-link.restricted');
+          // The restricted state must be part of the link's own aria-label: an element's
+          // aria-label overrides its accessible-name computation entirely, so a nested
+          // sr-only text node would never be announced (this is the bug the fix corrects).
+          const link = fixture.debugElement.query(By.css('a'));
+          expect(link.nativeElement.getAttribute('aria-label')).toContain('file-download-link.restricted');
         });
       });
     });
