@@ -1,4 +1,5 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Inject, Injectable, NgZone, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 import {
   asyncScheduler,
@@ -100,7 +101,11 @@ export class AuthEffects {
       map((redirectUrl: string) => [action, redirectUrl])
     )),
     map(([action, redirectUrl]: [AuthenticatedSuccessAction, string]) => {
-      if (hasValue(redirectUrl)) {
+      // Perform the redirect only in the browser: the server cannot clear the redirect cookie
+      // (ServerCookieService.set/remove are no-ops), so a hard redirect during SSR would repeat
+      // on every request and create a redirect loop.
+      // The browser re-runs this effect after hydration and performs the redirect itself.
+      if (hasValue(redirectUrl) && isPlatformBrowser(this.platformId)) {
         return new RedirectAfterLoginSuccessAction(redirectUrl);
       } else {
         return new RetrieveAuthenticatedEpersonAction(action.payload.userHref);
@@ -287,6 +292,7 @@ export class AuthEffects {
               private zone: NgZone,
               private authorizationsService: AuthorizationDataService,
               private authService: AuthService,
-              private store: Store<AppState>) {
+              private store: Store<AppState>,
+              @Inject(PLATFORM_ID) private platformId: any) {
   }
 }

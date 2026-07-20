@@ -191,8 +191,13 @@ export class LocaleService {
   public refreshAfterChangeLanguage() {
     this.routeService.getCurrentUrl().pipe(take(1)).subscribe((currentURL) => {
       // Hard redirect to the reload page with a unique number behind it
-      // so that all state is definitely lost
-      this._window.nativeWindow.location.href = `reload/${new Date().getTime()}?redirect=` + encodeURIComponent(currentURL);
+      // so that all state is definitely lost.
+      // The reload URL must be absolute (nameSpace-aware). A relative 'reload/...' URL is resolved
+      // against the current URL and produces invalid nested URLs like /items/<uuid>/reload/...
+      // which never match the 'reload/:rnd' route.
+      const nameSpace = (environment.ui.nameSpace || '').replace(/\/$/, '');
+      this._window.nativeWindow.location.href =
+        `${nameSpace}/reload/${new Date().getTime()}?redirect=` + encodeURIComponent(currentURL);
     });
 
   }

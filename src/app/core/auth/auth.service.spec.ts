@@ -34,6 +34,7 @@ import { NotificationsServiceStub } from '../../shared/testing/notifications-ser
 import { SetUserAsIdleAction, UnsetUserAsIdleAction } from './auth.actions';
 import { SpecialGroupDataMock, SpecialGroupDataMock$ } from '../../shared/testing/special-group.mock';
 import { cold } from 'jasmine-marbles';
+import { environment } from '../../../environments/environment';
 
 describe('AuthService test', () => {
 
@@ -103,7 +104,7 @@ describe('AuthService test', () => {
     linkService = {
       resolveLinks: {}
     };
-    hardRedirectService = jasmine.createSpyObj('hardRedirectService', ['redirect']);
+    hardRedirectService = jasmine.createSpyObj('hardRedirectService', ['redirect', 'getCurrentRoute']);
     spyOn(linkService, 'resolveLinks').and.returnValue({ authenticated: true, eperson: observableOf({ payload: {} }) });
 
   }
@@ -374,28 +375,39 @@ describe('AuthService test', () => {
       expect(storage.remove).toHaveBeenCalled();
     });
 
-    it('should redirect to reload with redirect url', () => {
+    // The reload URL must be absolute (nameSpace-aware): a relative 'reload/...' URL is resolved
+    // against the current URL - e.g. against /bitstreams/<uuid>/download after an external
+    // (Shibboleth) login - producing invalid nested URLs like /bitstreams/<uuid>/reload/reload/...
+    const reloadPrefix = environment.ui.nameSpace.replace(/\/$/, '') + '/reload/';
+
+    it('should redirect to the absolute reload URL with redirect url', () => {
       authService.navigateToRedirectUrl('/collection/123');
       // Reload with redirect URL set to /collection/123
-      expect(hardRedirectService.redirect).toHaveBeenCalledWith(jasmine.stringMatching(new RegExp('reload/[0-9]*\\?redirect=' + encodeURIComponent('/collection/123'))));
+      expect(hardRedirectService.redirect).toHaveBeenCalledWith(jasmine.stringMatching(new RegExp('^' + reloadPrefix + '[0-9]+\\?redirect=' + encodeURIComponent('/collection/123') + '$')));
     });
 
-    it('should redirect to reload with /home', () => {
+    it('should redirect to the absolute reload URL with /home', () => {
       authService.navigateToRedirectUrl('/home');
       // Reload with redirect URL set to /home
-      expect(hardRedirectService.redirect).toHaveBeenCalledWith(jasmine.stringMatching(new RegExp('reload/[0-9]*\\?redirect=' + encodeURIComponent('/home'))));
+      expect(hardRedirectService.redirect).toHaveBeenCalledWith(jasmine.stringMatching(new RegExp('^' + reloadPrefix + '[0-9]+\\?redirect=' + encodeURIComponent('/home') + '$')));
     });
 
-    it('should redirect to regular reload and not to /login', () => {
+    it('should redirect to the absolute reload URL and not to /login', () => {
       authService.navigateToRedirectUrl('/login');
       // Reload without a redirect URL
-      expect(hardRedirectService.redirect).toHaveBeenCalledWith(jasmine.stringMatching(new RegExp('reload/[0-9]*(?!\\?)$')));
+      expect(hardRedirectService.redirect).toHaveBeenCalledWith(jasmine.stringMatching(new RegExp('^' + reloadPrefix + '[0-9]+$')));
     });
 
-    it('should redirect to regular reload when no redirect url is found', () => {
+    it('should redirect to the absolute reload URL when no redirect url is found', () => {
       authService.navigateToRedirectUrl(undefined);
       // Reload without a redirect URL
-      expect(hardRedirectService.redirect).toHaveBeenCalledWith(jasmine.stringMatching(new RegExp('reload/[0-9]*(?!\\?)$')));
+      expect(hardRedirectService.redirect).toHaveBeenCalledWith(jasmine.stringMatching(new RegExp('^' + reloadPrefix + '[0-9]+$')));
+    });
+
+    it('should not redirect again when the current route is already the reload page', () => {
+      hardRedirectService.getCurrentRoute.and.returnValue(reloadPrefix + '123456789?redirect=' + encodeURIComponent('/home'));
+      authService.navigateToRedirectUrl('/collection/123');
+      expect(hardRedirectService.redirect).not.toHaveBeenCalled();
     });
 
     describe('impersonate', () => {
