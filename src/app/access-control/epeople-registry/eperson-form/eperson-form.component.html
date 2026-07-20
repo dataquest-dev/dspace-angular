@@ -43,10 +43,18 @@
             }
           </div>
         }
-        @if (canDelete$ | async) {
-          <button after class="btn btn-danger delete-button" type="button" (click)="delete()">
-            <i class="fas fa-trash"></i> {{'admin.access-control.epeople.actions.delete' | translate}}
-          </button>
+        @if ((canDelete$ | async) && (activeEPerson$ | async); as activeEPerson) {
+          @if (isCurrentUser(activeEPerson)) {
+            <span after tabindex="0" [ngbTooltip]="selfDeleteWarningLabel | translate" container="body">
+              <button class="btn btn-danger delete-button" [dsBtnDisabled]="true" tabindex="-1" type="button">
+                <i class="fas fa-trash"></i> {{'admin.access-control.epeople.actions.delete' | translate}}
+              </button>
+            </span>
+          } @else if (currentAuthenticatedUserId) {
+            <button after class="btn btn-danger delete-button" type="button" (click)="delete()">
+              <i class="fas fa-trash"></i> {{'admin.access-control.epeople.actions.delete' | translate}}
+            </button>
+          }
         }
       </ds-form>
 
