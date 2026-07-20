@@ -285,7 +285,10 @@ export class DefaultAppConfig implements AppConfig {
       // Number of entries in the bitstream list in the item view page.
       // Rounded to the nearest size in the list of selectable sizes on the
       // settings menu.  See pageSizeOptions in 'pagination-component-options.model.ts'.
-      pageSize: 5
+      pageSize: 5,
+      // Show the bitstream embargo-date badge.
+      // Keep this false until the backend accessStatus support (DSpace#1380) is deployed.
+      showAccessStatuses: false
     }
   };
 

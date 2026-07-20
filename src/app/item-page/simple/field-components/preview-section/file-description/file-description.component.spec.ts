@@ -12,6 +12,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
 import { FileSizePipe } from '../../../../../shared/utils/file-size-pipe';
+import { environment } from '../../../../../../environments/environment';
 
 describe('FileDescriptionComponent', () => {
   let component: FileDescriptionComponent;
@@ -47,11 +48,7 @@ describe('FileDescriptionComponent', () => {
     }).compileComponents();
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(FileDescriptionComponent);
-    component = fixture.componentInstance;
-
-    // Mock the input value
+  function createFileInput(overrides: Partial<MetadataBitstream> = {}): MetadataBitstream {
     const fileInput = new MetadataBitstream();
     fileInput.id = 123;
     fileInput.name = 'testFile';
@@ -66,20 +63,65 @@ describe('FileDescriptionComponent', () => {
       self: { href: '' },
       schema: { href: '' },
     };
+    return Object.assign(fileInput, overrides);
+  }
 
-    component.fileInput = fileInput;
+  describe('by default', () => {
+    beforeEach(() => {
+      fixture = TestBed.createComponent(FileDescriptionComponent);
+      component = fixture.componentInstance;
+      component.fileInput = createFileInput();
+      fixture.detectChanges();
+    });
 
-    fixture.detectChanges();
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('should display the file name', () => {
+      const fileNameElement = fixture.debugElement.query(
+        By.css('.file-content dd')
+      ).nativeElement;
+      expect(fileNameElement.textContent).toContain('testFile');
+    });
+
+    it('should not show the embargo badge', () => {
+      const badge = fixture.debugElement.query(By.css('span.badge'));
+      expect(badge).toBeNull();
+    });
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('when the bitstream is embargoed and the feature flag is on', () => {
+    beforeEach(() => {
+      environment.item.bitstream.showAccessStatuses = true;
+      fixture = TestBed.createComponent(FileDescriptionComponent);
+      component = fixture.componentInstance;
+      component.fileInput = createFileInput({ status: 'embargo', embargoDate: '2050-01-01' });
+      fixture.detectChanges();
+    });
+
+    afterEach(() => {
+      environment.item.bitstream.showAccessStatuses = false;
+    });
+
+    it('should show the embargo badge', () => {
+      const badge = fixture.debugElement.query(By.css('span.badge'));
+      expect(badge).not.toBeNull();
+      expect(badge.nativeElement.textContent).toContain('embargo.listelement.badge');
+    });
   });
 
-  it('should display the file name', () => {
-    const fileNameElement = fixture.debugElement.query(
-      By.css('.file-content dd')
-    ).nativeElement;
-    expect(fileNameElement.textContent).toContain('testFile');
+  describe('when the bitstream is embargoed but the feature flag is off', () => {
+    beforeEach(() => {
+      fixture = TestBed.createComponent(FileDescriptionComponent);
+      component = fixture.componentInstance;
+      component.fileInput = createFileInput({ status: 'embargo', embargoDate: '2050-01-01' });
+      fixture.detectChanges();
+    });
+
+    it('should not show the embargo badge', () => {
+      const badge = fixture.debugElement.query(By.css('span.badge'));
+      expect(badge).toBeNull();
+    });
   });
 });

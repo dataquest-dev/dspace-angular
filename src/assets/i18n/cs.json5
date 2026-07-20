@@ -8397,4 +8397,6 @@
   // "item.page.cc.license.disclaimer": "Except where otherwised noted, this item's license is described as",
   // TODO New key - Add a translation
   "item.page.cc.license.disclaimer": "Except where otherwised noted, this item's license is described as",
+  // "embargo.listelement.badge": "Embargo until {{ date }}",
+  "embargo.listelement.badge": "Embargo do {{ date }}",
 }

@@ -9,6 +9,8 @@
       <dt>{{'item.file.description.name' | translate}}</dt>
       <dd title="ud-treebanks-v2.12.tgz">
         {{ fileInput.name }}
+        <span *ngIf="showAccessStatus && fileInput.embargoDate"
+              class="badge badge-secondary access-status-list-element-badge">{{ 'embargo.listelement.badge' | translate: { date: fileInput.embargoDate } }}</span>
       </dd>
       <dt>{{'item.file.description.size' | translate}}</dt>
       <dd>
