@@ -2134,9 +2134,10 @@
   "error.validation.metadata.qualifier.max-length": "Toto pole nesmí obsahovat více než 64 znaků",
   // "feed.description": "Syndication feed",
   "feed.description": "Synchronizační kanál",
+  // "file-download-link.download": "Download",
+  "file-download-link.download": "Stáhnout",
   // "file-download-link.restricted": "Restricted bitstream",
-  // TODO New key - Add a translation
-  "file-download-link.restricted": "Restricted bitstream",
+  "file-download-link.restricted": "Omezený soubor",
   // "file-section.error.header": "Error obtaining files for this item",
   "file-section.error.header": "Chyba při získávání souborů pro tento záznam",
   // "footer.copyright": "copyright © 2002-{{ year }}",

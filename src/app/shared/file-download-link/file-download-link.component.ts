@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Bitstream } from '../../core/shared/bitstream.model';
+import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 import { getBitstreamDownloadRoute } from '../../app-routing-paths';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
@@ -48,6 +49,7 @@ export class FileDownloadLinkComponent implements OnInit {
 
   constructor(
     private authorizationService: AuthorizationDataService,
+    public dsoNameService: DSONameService,
   ) {
   }
 
@@ -76,5 +78,17 @@ export class FileDownloadLinkComponent implements OnInit {
       routerLink: getBitstreamDownloadRoute(this.bitstream),
       queryParams: {}
     };
+  }
+
+  /**
+   * Builds the download link's accessible name. When the bitstream is restricted, the
+   * restricted state is folded into this same string (rather than relying on a nested
+   * sr-only text node) because an element's own aria-label overrides its accessible name
+   * computation entirely - descendant text, including sr-only spans, is not announced
+   * alongside it.
+   */
+  getDownloadLinkAriaLabel(canDownload: boolean | null, downloadLabel: string, restrictedLabel: string): string {
+    const download = `${downloadLabel.trim()} ${this.dsoNameService.getName(this.bitstream)}`.trim();
+    return canDownload ? download : `${restrictedLabel.trim()}, ${download}`;
   }
 }

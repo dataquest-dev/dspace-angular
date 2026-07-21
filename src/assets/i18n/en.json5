@@ -1701,6 +1701,10 @@
 
   "feed.description": "RSS feed",
 
+  "file-download-link.download": "Download",
+
+  "file-download-link.restricted": "Restricted bitstream",
+
   "file-section.error.header": "Error obtaining files for this item",
 
   "footer.copyright": "copyright © 2002-{{ year }}",
