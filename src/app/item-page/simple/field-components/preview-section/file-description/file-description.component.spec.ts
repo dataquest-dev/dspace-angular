@@ -89,6 +89,11 @@ describe('FileDescriptionComponent', () => {
       const badge = fixture.debugElement.query(By.css('span.badge'));
       expect(badge).toBeNull();
     });
+
+    it('should not show the lock icon', () => {
+      const lockIcon = fixture.debugElement.query(By.css('.file-content dd i.fa-lock'));
+      expect(lockIcon).toBeNull();
+    });
   });
 
   describe('when the bitstream is embargoed and the feature flag is on', () => {
@@ -109,6 +114,11 @@ describe('FileDescriptionComponent', () => {
       expect(badge).not.toBeNull();
       expect(badge.nativeElement.textContent).toContain('embargo.listelement.badge');
     });
+
+    it('should show the lock icon next to the file name', () => {
+      const lockIcon = fixture.debugElement.query(By.css('.file-content dd i.fa-lock'));
+      expect(lockIcon).not.toBeNull();
+    });
   });
 
   describe('when the bitstream is embargoed but the feature flag is off', () => {
@@ -122,6 +132,11 @@ describe('FileDescriptionComponent', () => {
     it('should not show the embargo badge', () => {
       const badge = fixture.debugElement.query(By.css('span.badge'));
       expect(badge).toBeNull();
+    });
+
+    it('should not show the lock icon', () => {
+      const lockIcon = fixture.debugElement.query(By.css('.file-content dd i.fa-lock'));
+      expect(lockIcon).toBeNull();
     });
   });
 });
