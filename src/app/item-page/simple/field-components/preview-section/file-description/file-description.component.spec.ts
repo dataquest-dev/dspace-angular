@@ -119,6 +119,12 @@ describe('FileDescriptionComponent', () => {
       const lockIcon = fixture.debugElement.query(By.css('.file-content dd i.fa-lock'));
       expect(lockIcon).not.toBeNull();
     });
+
+    it('should render the file name as a clickable link, matching the ZCU-PUB pattern', () => {
+      const link = fixture.debugElement.query(By.css('.file-content dd a'));
+      expect(link).not.toBeNull();
+      expect(link.nativeElement.textContent).toContain('testFile');
+    });
   });
 
   describe('when the bitstream is embargoed but the feature flag is off', () => {

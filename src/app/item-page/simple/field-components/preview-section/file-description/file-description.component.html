@@ -8,10 +8,13 @@
     <dl class="dl-horizontal">
       <dt>{{'item.file.description.name' | translate}}</dt>
       <dd title="ud-treebanks-v2.12.tgz">
-        <span *ngIf="showAccessStatus && fileInput.status === 'embargo' && fileInput.embargoDate" class="pr-1"><i class="fas fa-lock"></i></span>
-        {{ fileInput.name }}
-        <span *ngIf="showAccessStatus && fileInput.status === 'embargo' && fileInput.embargoDate"
-              class="badge badge-secondary ml-1 access-status-list-element-badge">{{ 'embargo.listelement.badge' | translate: { date: fileInput.embargoDate } }}</span>
+        <ng-container *ngIf="showAccessStatus && fileInput.status === 'embargo' && fileInput.embargoDate; else plainFileName">
+          <a (click)="downloadFile()" class="cursor-pointer">
+            <span class="pr-1"><i class="fas fa-lock"></i></span>{{ fileInput.name }}
+          </a>
+          <span class="badge badge-secondary ml-1 access-status-list-element-badge">{{ 'embargo.listelement.badge' | translate: { date: fileInput.embargoDate } }}</span>
+        </ng-container>
+        <ng-template #plainFileName>{{ fileInput.name }}</ng-template>
       </dd>
       <dt>{{'item.file.description.size' | translate}}</dt>
       <dd>
