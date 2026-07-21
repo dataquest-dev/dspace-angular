@@ -25,6 +25,7 @@ import { AuthMethod } from '../../../../core/auth/models/auth.method';
 import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
 import { CookieService } from '../../../../core/services/cookie.service';
+import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
 import { CookieServiceMock } from '../../../mocks/cookie.service.mock';
 import { getMockThemeService } from '../../../mocks/theme-service.mock';
 import { ActivatedRouteStub } from '../../../testing/active-router.stub';
