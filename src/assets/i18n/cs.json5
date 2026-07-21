@@ -8347,6 +8347,15 @@
   // "search.filters.filter.subject.label": "Search subject",
   "search.filters.filter.subject.label": "Hledat předmět",
 
+  // "search.filters.filter.subjectFirstValue.head": "Subject",
+  "search.filters.filter.subjectFirstValue.head": "Předmět",
+
+  // "search.filters.filter.subjectFirstValue.placeholder": "Subject",
+  "search.filters.filter.subjectFirstValue.placeholder": "Předmět",
+
+  // "search.filters.filter.subjectFirstValue.label": "Search subject",
+  "search.filters.filter.subjectFirstValue.label": "Hledat předmět",
+
   // "search.filters.filter.submitter.head": "Submitter",
   "search.filters.filter.submitter.head": "Odesílatel",
 
