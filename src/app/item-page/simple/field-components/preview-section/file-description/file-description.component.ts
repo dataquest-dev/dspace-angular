@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
 import {Router} from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip'];
 @Component({
@@ -12,6 +13,14 @@ const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip'];
 export class FileDescriptionComponent {
   MIME_TYPE_IMAGES_PATH = '/assets/images/mime/';
   MIME_TYPE_DEFAULT_IMAGE_NAME = 'application-octet-stream.png';
+
+  /**
+   * Whether to show the embargo-date badge for a restricted bitstream. Same feature flag as
+   * the standard file-download-link/AccessStatusBadgeComponent path on other customer instances.
+   */
+  get showAccessStatus(): boolean {
+    return environment.item.bitstream.showAccessStatuses;
+  }
 
   @Input()
   fileInput: MetadataBitstream;

@@ -81,6 +81,20 @@ export class MetadataBitstream extends ListableObject implements HALResource {
   canPreview: boolean;
 
   /**
+   * The access status of this bitstream (e.g. "open.access", "embargo", "restricted").
+   * Unlike the standard Bitstream HAL resource, this endpoint embeds the status directly
+   * rather than exposing it via a resolvable accessStatus link.
+   */
+  @autoserialize
+  status: string;
+
+  /**
+   * The date this bitstream's embargo lifts. Only set when status is "embargo".
+   */
+  @autoserialize
+  embargoDate: string;
+
+  /**
    * The {@link HALLink}s for this MetadataField
    */
   @deserialize
