@@ -100,8 +100,13 @@ Cypress.Commands.add('login', login);
  * @param password password to login as
  */
 function loginViaForm(email: string, password: string): void {
+  // The CLARIN/LINDAT DiscoJuice federated-login popup auto-opens on /login and covers the local
+  // password form, so close it first (if present) before filling in the local-account credentials.
+  cy.wait(500);
+  cy.get('.discojuice_close').should('exist').click();
+
   // Enter email
-  cy.get('[data-test="email"]').type(email);
+  cy.get('[data-test="email"]').should('be.visible').type(email);
   // Enter password
   cy.get('[data-test="password"]').type(password);
   // Click login button
