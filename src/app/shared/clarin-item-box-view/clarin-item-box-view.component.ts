@@ -42,6 +42,7 @@ import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
 import { ClarinDateService } from '../clarin-date.service';
 import { ClarinItemAuthorPreviewComponent } from '../clarin-item-author-preview/clarin-item-author-preview.component';
 import {
+  buildAuthoritySearchFilter,
   getBaseUrl,
   secureImageData,
 } from '../clarin-shared-util';
@@ -136,6 +137,10 @@ export class ClarinItemBoxViewComponent implements OnInit {
    */
   publisherRedirectLink: string;
   /**
+   * Whether the publisher has an authority (e.g., ROR ID)
+   */
+  hasPublisherRorAuthority = false;
+  /**
    * Composed date of the Item.
    */
   itemDate: string;
@@ -178,12 +183,15 @@ export class ClarinItemBoxViewComponent implements OnInit {
     this.itemName = this.item?.firstMetadataValue('dc.title');
     this.itemUri = getItemPageRoute(this.item);
     this.itemDescription = this.item?.firstMetadataValue('dc.description');
-    this.itemPublisher = this.item?.firstMetadataValue('dc.publisher');
+    const publisherMd = this.item?.allMetadata(['dc.publisher', 'creativework.publisher'])?.[0];
+    this.hasPublisherRorAuthority = !!publisherMd?.authority;
+    this.itemPublisher = publisherMd?.value;
     this.itemDate = this.clarinDateService.composeItemDate(this.item);
 
     await this.assignBaseUrl();
-    this.publisherRedirectLink = this.getSearchEndpoint() + '?f.publisher=' + encodeURIComponent(this.itemPublisher)
-      + ',equals';
+    if (publisherMd) {
+      this.publisherRedirectLink = this.getSearchEndpoint() + '?' + buildAuthoritySearchFilter('publisher', publisherMd);
+    }
     this.getItemCommunity();
     this.loadItemLicense();
     this.getItemFilesSize();

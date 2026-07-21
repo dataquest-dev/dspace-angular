@@ -2091,7 +2091,11 @@
 
   "form.other-information.last-name": "Last Name",
 
+  "form.other-information.location": "Location",
+
   "form.other-information.orcid": "ORCID",
+
+  "form.other-information.ror-id": "ROR ID",
 
   "form.remove": "Remove",
 

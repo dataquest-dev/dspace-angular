@@ -18,6 +18,7 @@ import { Item } from '../../../../core/shared/item.model';
 import { getFirstSucceededRemoteDataPayload } from '../../../../core/shared/operators';
 import { ClarinItemAuthorPreviewComponent } from '../../../../shared/clarin-item-author-preview/clarin-item-author-preview.component';
 import {
+  buildAuthoritySearchFilter,
   convertMetadataFieldIntoSearchType,
   getBaseUrl,
 } from '../../../../shared/clarin-shared-util';
@@ -172,38 +173,17 @@ export class ClarinGenericItemFieldComponent implements OnInit {
    * @param index
    */
   public getLinkToSearch(index, value = '') {
-    let metadataValue = 'Error: value is empty';
-    if (isEmpty(value)) {
-      // Get metadata value from the Item's metadata field
-      metadataValue = this.getMetadataValue(index);
-    } else {
-      // The metadata value is passed from the parameter.
-      metadataValue = value;
-    }
-
     const searchType = convertMetadataFieldIntoSearchType(this.fields);
-    return this.baseUrl + '/search?f.' + encodeURIComponent(searchType) + '=' +
-      encodeURIComponent(metadataValue) + ',equals';
-  }
 
-  /**
-   * If the metadata field has more than 1 value return the value based on the index.
-   * @param index of the metadata value
-   */
-  public getMetadataValue(index) {
-    let metadataValue = '';
-    if (index === 0) {
-      // Return first metadata value.
-      return this.item.firstMetadataValue(this.fields);
+    // If a value is explicitly provided (e.g. a single subject from a split list), search by that plain value.
+    // Otherwise resolve the full MetadataValue for this index so an authority (e.g. ROR) can be used.
+    const mdValue = !isEmpty(value) ? { value } : this.item.allMetadata(this.fields)?.[index];
+    if (!mdValue) {
+      // ultimate fallback (should not happen)
+      return this.baseUrl + '/search';
     }
-    // The metadata field has more metadata values - get the actual one
-    this.item.allMetadataValues(this.fields)?.forEach((metadataValueArray, arrayIndex) => {
-      if (index !== arrayIndex) {
-        return metadataValue;
-      }
-      metadataValue = metadataValueArray;
-    });
-    return metadataValue;
+
+    return this.baseUrl + '/search?' + buildAuthoritySearchFilter(searchType, mdValue);
   }
 
   /**
