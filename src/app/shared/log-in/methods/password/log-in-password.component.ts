@@ -58,12 +58,6 @@ import {
 } from '../../../empty.util';
 import { BrowserOnlyPipe } from '../../../utils/browser-only.pipe';
 
-/**
- * Cookie name that controls whether the CLARIN/LINDAT DiscoJuice federated-login popup is shown on
- * the login page. It is set to `false` from `aai.js` when the user chooses the `local` account
- * option inside the DiscoJuice box, so that landing back on /login shows the password form instead
- * of immediately re-opening the popup.
- */
 export const SHOW_DISCOJUICE_POPUP_CACHE_NAME = 'SHOW_DISCOJUICE_POPUP';
 
 /**
@@ -158,9 +152,6 @@ export class LogInPasswordComponent implements OnInit {
    * @method ngOnInit
    */
   public ngOnInit() {
-    // Auto-open the CLARIN/LINDAT DiscoJuice federated-login popup when the user lands on /login,
-    // unless they just chose local authentication (see SHOW_DISCOJUICE_POPUP_CACHE_NAME). This is
-    // browser-only: it clicks a DOM element and relies on a cookie set client-side by aai.js.
     if (isPlatformBrowser(this.platformId)) {
       this.initializeDiscoJuiceCache();
       this.toggleDiscojuiceLogin();
@@ -251,9 +242,8 @@ export class LogInPasswordComponent implements OnInit {
   }
 
   /**
-   * Show the DiscoJuice popup on every visit to the login page, except right after the user clicked
-   * the `local` button inside the DiscoJuice box (which sets the cookie to `false` from `aai.js`).
-   * The flag is then reset to `true` so the popup shows again on the next visit.
+   * Toggle Discojuice login. Show it every time except the case when the user click
+   * on the `local` button in the discojuice box.
    * @private
    */
   private toggleDiscojuiceLogin() {
@@ -264,13 +254,8 @@ export class LogInPasswordComponent implements OnInit {
   }
 
   /**
-   * Trigger the DiscoJuice popup by programmatically clicking the sign-on link that the AAI script
-   * binds DiscoJuice to (rendered in the CLARIN top navbar). The timeout defers the click until
-   * after Angular has finished rendering this component, otherwise DiscoJuice would not show up.
-   *
-   * A programmatic `click()` bypasses the sign-on link's `pointer-events: none` guard (that guard
-   * only blocks real pointer input), so the popup opens even while the link is still visually
-   * disabled for the mouse.
+   * Show DiscoJuice login modal using javascript functions. The timeout must be set because of angular component
+   * lifecycle. Discojuice won't be showed up without timeout.
    * @private
    */
   private popUpDiscoJuiceLogin() {
@@ -280,7 +265,8 @@ export class LogInPasswordComponent implements OnInit {
   }
 
   /**
-   * Initialise the DiscoJuice popup flag to `true` on first load so the popup is shown by default.
+   * Set SHOW_DISCOJUICE_POPUP_CACHE_NAME to true because the discojuice login must be popped up on init
+   * if it is loaded for the first time.
    * @private
    */
   private initializeDiscoJuiceCache() {
