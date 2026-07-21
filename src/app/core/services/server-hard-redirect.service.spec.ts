@@ -23,7 +23,7 @@ describe('ServerHardRedirectService', () => {
   });
 
   describe('when performing a default redirect', () => {
-    const redirect = 'test redirect';
+    const redirect = '/test/redirect';
 
     beforeEach(() => {
       service.redirect(redirect);
@@ -36,7 +36,7 @@ describe('ServerHardRedirectService', () => {
   });
 
   describe('when performing a 301 redirect', () => {
-    const redirect = 'test 301 redirect';
+    const redirect = '/test/301/redirect';
     const redirectStatusCode = 301;
 
     beforeEach(() => {
@@ -45,6 +45,35 @@ describe('ServerHardRedirectService', () => {
 
     it('should redirect with passed in status code', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith(redirectStatusCode, redirect);
+      expect(mockResponse.end).toHaveBeenCalled();
+    });
+  });
+
+  describe('when performing a redirect to a relative url', () => {
+    // A relative URL in the Location header is resolved by the browser against the request URL,
+    // e.g. 'reload/123' requested at /bitstreams/<uuid>/download resolves
+    // to /bitstreams/<uuid>/reload/123 - such a redirect must never be emitted
+    const redirect = 'reload/123456789';
+
+    beforeEach(() => {
+      service.redirect(redirect);
+    });
+
+    it('should redirect to the URL prefixed with a slash', () => {
+      expect(mockResponse.redirect).toHaveBeenCalledWith(302, '/' + redirect);
+      expect(mockResponse.end).toHaveBeenCalled();
+    });
+  });
+
+  describe('when performing a redirect to an external url', () => {
+    const redirect = 'https://external-host.com/path';
+
+    beforeEach(() => {
+      service.redirect(redirect);
+    });
+
+    it('should redirect to the unchanged external URL', () => {
+      expect(mockResponse.redirect).toHaveBeenCalledWith(302, redirect);
       expect(mockResponse.end).toHaveBeenCalled();
     });
   });

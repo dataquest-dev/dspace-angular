@@ -5933,4 +5933,6 @@
   "navbar.about.service-integrations": "Service integrations",
 
   "navbar.about.project-partnership": "Project partnerships",
+
+  "embargo.listelement.badge": "Embargo until {{ date }}",
 }

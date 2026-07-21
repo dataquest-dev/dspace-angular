@@ -1,6 +1,9 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { of } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
 
 import { CookieService } from '../services/cookie.service';
 import { CookieServiceMock } from '../../shared/mocks/cookie.service.mock';
@@ -146,5 +149,38 @@ describe('LocaleService test suite', () => {
       service.getLanguageCodeList();
       expect(service.getLanguageCodeList).toHaveBeenCalled();
     });
+  });
+
+  describe('refreshAfterChangeLanguage', () => {
+    let originalUi;
+    let originalGetCurrentUrl;
+
+    beforeEach(() => {
+      // Pin the tested nameSpace value: environment is a shared mutable object and some specs
+      // replace environment.ui entirely, so this test must not rely on the suite order.
+      originalUi = (environment as any).ui;
+      (environment as any).ui = Object.assign({}, originalUi, { nameSpace: '/angular-dspace' });
+      originalGetCurrentUrl = (routeService as any).getCurrentUrl;
+    });
+
+    afterEach(() => {
+      (environment as any).ui = originalUi;
+      // routeServiceStub is a shared module-level singleton - restore it
+      (routeService as any).getCurrentUrl = originalGetCurrentUrl;
+    });
+
+    it('should hard redirect to the absolute (nameSpace-aware) reload URL', fakeAsync(() => {
+      // A relative 'reload/...' URL would be resolved against the current URL
+      // (e.g. /items/<uuid>) and produce an invalid nested URL like /items/<uuid>/reload/...
+      const currentUrl = '/items/1234';
+      const fakeLocation = { href: '' };
+      serviceAsAny._window = { nativeWindow: { location: fakeLocation } };
+      (routeService as any).getCurrentUrl = jasmine.createSpy('getCurrentUrl').and.returnValue(of(currentUrl));
+
+      service.refreshAfterChangeLanguage();
+      tick();
+
+      expect(fakeLocation.href).toMatch(new RegExp('^/angular-dspace/reload/[0-9]+\\?redirect=' + encodeURIComponent(currentUrl) + '$'));
+    }));
   });
 });

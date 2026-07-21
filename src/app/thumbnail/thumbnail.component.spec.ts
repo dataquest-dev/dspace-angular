@@ -291,7 +291,8 @@ describe('ThumbnailComponent', () => {
         format: { href: 'format.url' },
         content: { href: CONTENT },
         checksum: { href: 'checksum.url' },
-        thumbnail: undefined
+        thumbnail: undefined,
+        accessStatus: undefined
       };
     });
 

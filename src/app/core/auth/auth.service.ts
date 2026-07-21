@@ -487,9 +487,21 @@ export class AuthService {
    * @param redirectUrl
    */
   public navigateToRedirectUrl(redirectUrl: string) {
+    // Don't do redirect if the current page already is the reload page,
+    // otherwise the reload could be repeated indefinitely
+    // (only the path is checked - a query string could legitimately contain '/reload/')
+    const currentRoute = this.hardRedirectService.getCurrentRoute();
+    if (hasValue(currentRoute) && currentRoute.split('?')[0].includes('/reload/')) {
+      return;
+    }
     // Don't do redirect if already on reload url
     if (!hasValue(redirectUrl) || !redirectUrl.includes('reload/')) {
-      let url = `reload/${new Date().getTime()}`;
+      // The reload URL must be absolute (nameSpace-aware). A relative 'reload/...' URL is resolved
+      // against the current URL - e.g. against /bitstreams/<uuid>/download after an external
+      // (Shibboleth) login - and produces invalid nested URLs like /bitstreams/<uuid>/reload/...
+      // which never match the 'reload/:rnd' route.
+      const nameSpace = (environment.ui.nameSpace || '').replace(/\/$/, '');
+      let url = `${nameSpace}/reload/${new Date().getTime()}`;
       if (isNotEmpty(redirectUrl) && !redirectUrl.startsWith(LOGIN_ROUTE)) {
         url += `?redirect=${encodeURIComponent(redirectUrl)}`;
       }
