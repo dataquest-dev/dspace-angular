@@ -21,7 +21,9 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { AuthMethod } from '../../../core/auth/models/auth.method';
 import { AuthMethodType } from '../../../core/auth/models/auth.method-type';
 import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
+import { CookieService } from '../../../core/services/cookie.service';
 import { HardRedirectService } from '../../../core/services/hard-redirect.service';
+import { CookieServiceMock } from '../../mocks/cookie.service.mock';
 import { AuthServiceStub } from '../../testing/auth-service.stub';
 import { AuthorizationDataServiceStub } from '../../testing/authorization-service.stub';
 import { createTestComponent } from '../../testing/utils.test';
@@ -55,6 +57,7 @@ describe('LogInContainerComponent', () => {
         { provide: AuthService, useClass: AuthServiceStub },
         { provide: AuthorizationDataService, useClass: AuthorizationDataServiceStub },
         { provide: HardRedirectService, useValue: hardRedirectService },
+        { provide: CookieService, useValue: new CookieServiceMock() },
         LogInContainerComponent,
       ],
       schemas: [
