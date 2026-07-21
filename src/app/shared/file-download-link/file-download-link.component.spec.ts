@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FileDownloadLinkComponent } from './file-download-link.component';
 import { Bitstream } from '../../core/shared/bitstream.model';
 import { By } from '@angular/platform-browser';
@@ -42,7 +43,8 @@ describe('FileDownloadLinkComponent', () => {
       declarations: [FileDownloadLinkComponent, RouterLinkDirectiveStub],
       providers: [
         {provide: AuthorizationDataService, useValue: authorizationService},
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
     })
       .compileComponents();
   }

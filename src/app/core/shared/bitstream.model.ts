@@ -12,6 +12,8 @@ import {Bundle} from './bundle.model';
 import { ChildHALResource } from './child-hal-resource.model';
 import { BITSTREAM_CHECKSUM } from './bitstream-checksum.resource';
 import { BitstreamChecksum } from './bitstream-checksum.model';
+import { AccessStatusObject } from '../../shared/object-collection/shared/badges/access-status-badge/access-status.model';
+import { ACCESS_STATUS } from '../../shared/object-collection/shared/badges/access-status-badge/access-status.resource-type';
 
 // Store number if the bitstream is stored in the both stores (S3 and local)
 export const SYNCHRONIZED_STORES_NUMBER = 77;
@@ -56,6 +58,7 @@ export class Bitstream extends DSpaceObject implements ChildHALResource {
     content: HALLink;
     thumbnail: HALLink;
     checksum: HALLink;
+    accessStatus: HALLink;
   };
 
   /**
@@ -84,6 +87,13 @@ export class Bitstream extends DSpaceObject implements ChildHALResource {
    */
   @link(BITSTREAM_CHECKSUM)
   checksum?: Observable<RemoteData<BitstreamChecksum>>;
+
+  /**
+   * The access status for this Bitstream
+   * Will be undefined unless the access status {@link HALLink} has been resolved.
+   */
+  @link(ACCESS_STATUS)
+  accessStatus?: Observable<RemoteData<AccessStatusObject>>;
 
   getParentLinkKey(): keyof this['_links'] {
     return 'format';

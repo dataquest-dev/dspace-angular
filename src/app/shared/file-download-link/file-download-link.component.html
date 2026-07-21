@@ -2,6 +2,7 @@
   <span *ngIf="!(canDownload$ |async)" class="pr-1"><i class="fas fa-lock"></i></span>
   <ng-container *ngTemplateOutlet="content"></ng-container>
 </a>
+<ds-themed-access-status-badge [object]="bitstream"></ds-themed-access-status-badge>
 
 <ng-template #content>
   <ng-content></ng-content>
