@@ -24,7 +24,8 @@ import { AuthService } from '../../../../core/auth/auth.service';
 import { AuthMethod } from '../../../../core/auth/models/auth.method';
 import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
-import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
+import { CookieService } from '../../../../core/services/cookie.service';
+import { CookieServiceMock } from '../../../mocks/cookie.service.mock';
 import { getMockThemeService } from '../../../mocks/theme-service.mock';
 import { ActivatedRouteStub } from '../../../testing/active-router.stub';
 import { AuthServiceStub } from '../../../testing/auth-service.stub';
@@ -75,6 +76,7 @@ describe('LogInPasswordComponent', () => {
         { provide: 'authMethodProvider', useValue: new AuthMethod(AuthMethodType.Password, 0) },
         { provide: 'isStandalonePage', useValue: true },
         { provide: HardRedirectService, useValue: hardRedirectService },
+        { provide: CookieService, useValue: new CookieServiceMock() },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: ThemeService, useValue: themeService },
         provideMockStore({ initialState }),

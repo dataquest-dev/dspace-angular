@@ -1,8 +1,12 @@
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  isPlatformBrowser,
+} from '@angular/common';
 import {
   Component,
   Inject,
   OnInit,
+  PLATFORM_ID,
 } from '@angular/core';
 import {
   FormsModule,
@@ -44,11 +48,23 @@ import {
 import { CoreState } from '../../../../core/core-state.model';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../../../core/data/feature-authorization/feature-id';
+import { CookieService } from '../../../../core/services/cookie.service';
 import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
 import { fadeOut } from '../../../animations/fade';
 import { BtnDisabledDirective } from '../../../btn-disabled.directive';
-import { isNotEmpty } from '../../../empty.util';
+import {
+  isEmpty,
+  isNotEmpty,
+} from '../../../empty.util';
 import { BrowserOnlyPipe } from '../../../utils/browser-only.pipe';
+
+/**
+ * Cookie name that controls whether the CLARIN/LINDAT DiscoJuice federated-login popup is shown on
+ * the login page. It is set to `false` from `aai.js` when the user chooses the `local` account
+ * option inside the DiscoJuice box, so that landing back on /login shows the password form instead
+ * of immediately re-opening the popup.
+ */
+export const SHOW_DISCOJUICE_POPUP_CACHE_NAME = 'SHOW_DISCOJUICE_POPUP';
 
 /**
  * /users/sign-in
@@ -131,6 +147,8 @@ export class LogInPasswordComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     protected store: Store<CoreState>,
     protected authorizationService: AuthorizationDataService,
+    @Inject(PLATFORM_ID) protected platformId: object,
+    protected storage: CookieService,
   ) {
     this.authMethod = injectedAuthMethodModel;
   }
@@ -140,6 +158,13 @@ export class LogInPasswordComponent implements OnInit {
    * @method ngOnInit
    */
   public ngOnInit() {
+    // Auto-open the CLARIN/LINDAT DiscoJuice federated-login popup when the user lands on /login,
+    // unless they just chose local authentication (see SHOW_DISCOJUICE_POPUP_CACHE_NAME). This is
+    // browser-only: it clicks a DOM element and relies on a cookie set client-side by aai.js.
+    if (isPlatformBrowser(this.platformId)) {
+      this.initializeDiscoJuiceCache();
+      this.toggleDiscojuiceLogin();
+    }
 
     // set formGroup
     this.form = this.formBuilder.group({
@@ -223,6 +248,45 @@ export class LogInPasswordComponent implements OnInit {
 
     // clear form
     this.form.reset();
+  }
+
+  /**
+   * Show the DiscoJuice popup on every visit to the login page, except right after the user clicked
+   * the `local` button inside the DiscoJuice box (which sets the cookie to `false` from `aai.js`).
+   * The flag is then reset to `true` so the popup shows again on the next visit.
+   * @private
+   */
+  private toggleDiscojuiceLogin() {
+    if (this.storage.get(SHOW_DISCOJUICE_POPUP_CACHE_NAME) === true) {
+      this.popUpDiscoJuiceLogin();
+    }
+    this.storage.set(SHOW_DISCOJUICE_POPUP_CACHE_NAME, true);
+  }
+
+  /**
+   * Trigger the DiscoJuice popup by programmatically clicking the sign-on link that the AAI script
+   * binds DiscoJuice to (rendered in the CLARIN top navbar). The timeout defers the click until
+   * after Angular has finished rendering this component, otherwise DiscoJuice would not show up.
+   *
+   * A programmatic `click()` bypasses the sign-on link's `pointer-events: none` guard (that guard
+   * only blocks real pointer input), so the popup opens even while the link is still visually
+   * disabled for the mouse.
+   * @private
+   */
+  private popUpDiscoJuiceLogin() {
+    setTimeout(() => {
+      document?.getElementById('clarin-signon-discojuice')?.click();
+    }, 250);
+  }
+
+  /**
+   * Initialise the DiscoJuice popup flag to `true` on first load so the popup is shown by default.
+   * @private
+   */
+  private initializeDiscoJuiceCache() {
+    if (isEmpty(this.storage.get(SHOW_DISCOJUICE_POPUP_CACHE_NAME))) {
+      this.storage.set(SHOW_DISCOJUICE_POPUP_CACHE_NAME, true);
+    }
   }
 
 }
