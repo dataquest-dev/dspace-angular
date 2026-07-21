@@ -18,7 +18,9 @@ export class FileDescriptionComponent {
    * Whether to show the embargo-date badge for a restricted bitstream. Same feature flag as
    * the standard file-download-link/AccessStatusBadgeComponent path on other customer instances.
    */
-  showAccessStatus = environment.item.bitstream.showAccessStatuses;
+  get showAccessStatus(): boolean {
+    return environment.item.bitstream.showAccessStatuses;
+  }
 
   @Input()
   fileInput: MetadataBitstream;
