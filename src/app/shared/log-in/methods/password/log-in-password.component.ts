@@ -5,6 +5,8 @@ import {
 import {
   Component,
   Inject,
+  NgZone,
+  OnDestroy,
   OnInit,
   PLATFORM_ID,
 } from '@angular/core';
@@ -79,7 +81,12 @@ export const SHOW_DISCOJUICE_POPUP_CACHE_NAME = 'SHOW_DISCOJUICE_POPUP';
     TranslateModule,
   ],
 })
-export class LogInPasswordComponent implements OnInit {
+export class LogInPasswordComponent implements OnInit, OnDestroy {
+
+  /**
+   * Handle of the pending DiscoJuice popup-open timer so it can be cancelled on destroy.
+   */
+  private discoJuiceTimer: ReturnType<typeof setTimeout> = null;
 
   /**
    * The authentication method data.
@@ -143,6 +150,7 @@ export class LogInPasswordComponent implements OnInit {
     protected authorizationService: AuthorizationDataService,
     @Inject(PLATFORM_ID) protected platformId: object,
     protected storage: CookieService,
+    protected zone: NgZone,
   ) {
     this.authMethod = injectedAuthMethodModel;
   }
@@ -254,14 +262,46 @@ export class LogInPasswordComponent implements OnInit {
   }
 
   /**
-   * Show DiscoJuice login modal using javascript functions. The timeout must be set because of angular component
-   * lifecycle. Discojuice won't be showed up without timeout.
+   * Trigger the DiscoJuice popup by programmatically clicking the sign-on link that the AAI script
+   * binds DiscoJuice to (rendered in the CLARIN top navbar).
+   *
+   * The AAI/DiscoJuice scripts are loaded asynchronously (and in parallel) by the navbar component,
+   * so on a cold load DiscoJuice may not have bound its click handler by the time this component
+   * initialises. Clicking too early is a silent no-op and the popup never opens. We therefore poll
+   * (bounded) until DiscoJuice has created its popup markup (`div.discojuice`, built when it binds
+   * to the sign-on link) and only then click, which reliably opens the popup regardless of how long
+   * the scripts take to load.
+   *
+   * The polling runs OUTSIDE the Angular zone so it never keeps the application unstable (which
+   * would stall SSR rendering and `fixture.whenStable()` in tests). A programmatic `click()` also
+   * bypasses the sign-on link's `pointer-events: none` guard (that guard only blocks real pointer
+   * input), so the popup opens even while the link is still visually disabled for the mouse.
    * @private
    */
   private popUpDiscoJuiceLogin() {
-    setTimeout(() => {
-      document?.getElementById('clarin-signon-discojuice')?.click();
-    }, 250);
+    const maxAttempts = 40; // ~10s at 250ms intervals — well beyond a normal script load
+    let attempts = 0;
+    this.zone.runOutsideAngular(() => {
+      const tryOpen = () => {
+        const signOnLink = document?.getElementById('clarin-signon-discojuice');
+        // `div.discojuice` is created (hidden) when DiscoJuice binds to the sign-on link, so its
+        // presence means the click handler is wired and a click will actually open the popup.
+        if (signOnLink && document?.querySelector('div.discojuice')) {
+          signOnLink.click();
+          return;
+        }
+        if (++attempts < maxAttempts) {
+          this.discoJuiceTimer = setTimeout(tryOpen, 250);
+        }
+      };
+      this.discoJuiceTimer = setTimeout(tryOpen, 250);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.discoJuiceTimer) {
+      clearTimeout(this.discoJuiceTimer);
+    }
   }
 
   /**
