@@ -47,11 +47,12 @@ import { ViewTrackerResolverService } from './statistics/angulartics/dspace/view
 import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
 import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
 import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing-paths';
+import { notAuthenticatedGuard } from './core/auth/not-authenticated.guard';
 
 @NgModule({
   imports: [
     RouterModule.forRoot([
-      { path: INTERNAL_SERVER_ERROR, component: ThemedPageInternalServerErrorComponent },
+      { path: INTERNAL_SERVER_ERROR, component: ThemedPageInternalServerErrorComponent, data: { title: '500.page-internal-server-error' } },
       { path: ERROR_PAGE , component: ThemedPageErrorComponent },
       {
         path: '',
@@ -103,13 +104,13 @@ import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing
             path: REGISTER_PATH,
             loadChildren: () => import('./register-page/register-page.module')
               .then((m) => m.RegisterPageModule),
-            canActivate: [SiteRegisterGuard]
+            canActivate: [notAuthenticatedGuard, SiteRegisterGuard]
           },
           {
             path: FORGOT_PASSWORD_PATH,
             loadChildren: () => import('./forgot-password/forgot-password.module')
               .then((m) => m.ForgotPasswordModule),
-            canActivate: [EndUserAgreementCurrentUserGuard]
+            canActivate: [notAuthenticatedGuard, EndUserAgreementCurrentUserGuard]
           },
           {
             path: COMMUNITY_MODULE_PATH,
@@ -179,12 +180,14 @@ import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing
           {
             path: 'login',
             loadChildren: () => import('./login-page/login-page.module')
-              .then((m) => m.LoginPageModule)
+              .then((m) => m.LoginPageModule),
+            canActivate: [notAuthenticatedGuard]
           },
           {
             path: 'logout',
             loadChildren: () => import('./logout-page/logout-page.module')
-              .then((m) => m.LogoutPageModule)
+              .then((m) => m.LogoutPageModule),
+            canActivate: [AuthenticatedGuard]
           },
           {
             path: 'submit',
@@ -233,7 +236,8 @@ import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing
           },
           {
             path: FORBIDDEN_PATH,
-            component: ThemedForbiddenComponent
+            component: ThemedForbiddenComponent,
+            data: { title: '403.forbidden' },
           },
           {
             path: 'statistics',
@@ -286,7 +290,7 @@ import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing
             loadChildren: () => import('./share-submission/share-submission.module').then((m) => m.ShareSubmissionModule),
             canActivate: [AuthenticatedGuard, EndUserAgreementCurrentUserGuard]
           },
-          { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent }
+          { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent, data: { title: '404.page-not-found' } },
         ]
       }
     ], {
