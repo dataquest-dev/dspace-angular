@@ -21,6 +21,7 @@ jobs:
         env:
           HOME_URL: http://dev-6.pc:8603/repository/
           NAME: LINDAT-9
+          PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
         run: |
           ./test.sh
 

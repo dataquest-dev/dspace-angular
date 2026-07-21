@@ -96,6 +96,10 @@ services:
   dspacesolr:
     container_name: dspacesolr
     image: "${DOCKER_REGISTRY:-docker.io}/${DOCKER_OWNER:-dspace}/dspace-solr:${DSPACE_VER:-dspace-9_x}"
+    # Solr JVM heap is tunable per deployment via SOLR_HEAP (default 4g);
+    # solr-foreground honors this env var, runuser (without -l) preserves it
+    environment:
+      SOLR_HEAP: "${SOLR_HEAP:-4g}"
     networks:
       - dspacenet
     ports:
