@@ -108,7 +108,7 @@ function loginViaForm(email: string, password: string): void {
   // Enter email
   cy.get('[data-test="email"]').should('be.visible').type(email);
   // Enter password
-  cy.get('[data-test="password"]').type(password);
+  cy.get('[data-test="password"]').should('be.visible').type(password);
   // Click login button
   cy.get('[data-test="login-button"]').click();
 }
