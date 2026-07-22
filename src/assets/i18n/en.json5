@@ -4820,6 +4820,12 @@
 
   "search.filters.filter.subject.label": "Search subject",
 
+  "search.filters.filter.subjectFirstValue.head": "Subject",
+
+  "search.filters.filter.subjectFirstValue.placeholder": "Subject",
+
+  "search.filters.filter.subjectFirstValue.label": "Search subject",
+
   "search.filters.filter.submitter.head": "Submitter",
 
   "search.filters.filter.submitter.placeholder": "Submitter",
