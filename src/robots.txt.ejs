@@ -18,6 +18,15 @@ Disallow: /profile
 Disallow: /workflowitems
 # Crawlers should be able to access entity pages, but not the facet search links present on entity pages
 Disallow: /entities/*?f
+# Scoped search inside a community or collection, and every facet link.
+# "Disallow: /search" above only matches paths that START with /search, so
+# /collections/<uuid>/search and /communities/<uuid>/search stayed crawlable.
+# Crawlers enumerating those facet combinations saturated SSR on 2026-07-22
+# (HTTP 504 for everyone); see the comment in config/config.yml.
+Disallow: /collections/*/search
+Disallow: /communities/*/search
+Disallow: /*?f.
+Disallow: /*&f.
 
 # Optionally uncomment the following line ONLY if sitemaps are working
 # and you have verified that your site is being indexed correctly.
