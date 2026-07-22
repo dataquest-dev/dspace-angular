@@ -262,24 +262,13 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Trigger the DiscoJuice popup by programmatically clicking the sign-on link that the AAI script
-   * binds DiscoJuice to (rendered in the CLARIN top navbar).
-   *
-   * The AAI/DiscoJuice scripts are loaded asynchronously (and in parallel) by the navbar component,
-   * so on a cold load DiscoJuice may not have bound its click handler by the time this component
-   * initialises. Clicking too early is a silent no-op and the popup never opens. We therefore poll
-   * (bounded) until DiscoJuice has created its popup markup (`div.discojuice`, built when it binds
-   * to the sign-on link) and only then click, which reliably opens the popup regardless of how long
-   * the scripts take to load.
-   *
-   * The polling runs OUTSIDE the Angular zone so it never keeps the application unstable (which
-   * would stall SSR rendering and `fixture.whenStable()` in tests). A programmatic `click()` also
-   * bypasses the sign-on link's `pointer-events: none` guard (that guard only blocks real pointer
-   * input), so the popup opens even while the link is still visually disabled for the mouse.
+   * Show DiscoJuice login modal using javascript functions. The timeout must be set because of angular component
+   * lifecycle. Discojuice won't be showed up without timeout. Introducing a timer to check
+   * if the DiscoJuice login is loaded and then pop it up. The timer will be cleared on destroy.
    * @private
    */
   private popUpDiscoJuiceLogin() {
-    const maxAttempts = 40; // ~10s at 250ms intervals — well beyond a normal script load
+    const maxAttempts = 40; // ~10s at 250ms intervals
     let attempts = 0;
     this.zone.runOutsideAngular(() => {
       const tryOpen = () => {
