@@ -25,6 +25,10 @@ Disallow: /entities/*?f
 # (HTTP 504 for everyone); see the comment in config/config.yml.
 Disallow: /collections/*/search
 Disallow: /communities/*/search
+# The two rules below cover any URL carrying a Discovery facet filter
+# (f.author, f.subject, f.dateIssued.min, ...), wherever it appears. Two of
+# them because the facet can be the first query parameter (?f.) or a later
+# one (&f.), and robots.txt has no way to express "either".
 Disallow: /*?f.
 Disallow: /*&f.
 
