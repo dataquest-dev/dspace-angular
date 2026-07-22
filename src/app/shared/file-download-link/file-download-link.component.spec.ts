@@ -53,7 +53,8 @@ describe('FileDownloadLinkComponent', () => {
       ],
       declarations: [FileDownloadLinkComponent, RouterLinkDirectiveStub],
       providers: [
-        {provide: AuthorizationDataService, useValue: authorizationService, provide: DSONameService, useValue: dsoNameService},
+        {provide: AuthorizationDataService, useValue: authorizationService},
+        {provide: DSONameService, useValue: dsoNameService},
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
