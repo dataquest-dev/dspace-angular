@@ -148,3 +148,58 @@ languages:
   - code: uk
     label: Yкраї́нська
     active: false
+
+# ===========================================================================
+# Server-side rendering
+#
+# Added 2026-07-22, after repozitar.mendelu.cz started answering HTTP 504 - to
+# real visitors and to our New Relic availability monitor alike. nginx
+# error.log showed the SSR upstream (127.0.0.1:4000) failing to produce a
+# response header inside its 60 s proxy_read_timeout, and every single
+# timed-out request looked like this:
+#
+#   GET /collections/<uuid>/search?f.author=...,equals&f.subject=...,equals&f.dateIssued.min=2017
+#   GET /communities/<uuid>/search?f.dateAccessioned.min=2021&spc.page=1&f.author=...,equals
+#
+# The clients were crawlers - 116.179.32.0/24 and 220.181.108.0/24 (Baiduspider),
+# plus 111.225.214.0/24 and 119.249.100.0/24 - walking the facet links on
+# community and collection pages. Every facet combination is a distinct URL, so
+# the SSR page cache (keyed by URL) never hits, and each one costs a full
+# Angular render plus Discovery queries against the REST backend. That
+# combination space is effectively unbounded, so the PM2 workers stay saturated
+# and unrelated requests - including the home page - queue until nginx gives up.
+# For reference, the home page normally answers in ~0.24 s.
+#
+# The upstream defaults already exclude browse on communities and collections
+# and the *global* search ("^/search$" is anchored), but NOT the scoped search
+# inside a community or collection - which is the most expensive route in the
+# application. The two patterns marked below close that gap: those paths are
+# served as a plain CSR shell from now on. src/robots.txt.ejs closes the same
+# gap for crawlers that honour robots.txt; this setting is the part that does
+# not depend on their goodwill.
+#
+# The whole upstream default list is repeated here deliberately. Config merging
+# replaces this array instead of appending to it, so listing only the two new
+# patterns would silently drop every default exclusion.
+# ===========================================================================
+ssr:
+  excludePathPatterns:
+    - pattern: "^/communities/[a-f0-9-]{36}/browse(/.*)?$"
+      flag: "i"
+    - pattern: "^/collections/[a-f0-9-]{36}/browse(/.*)?$"
+      flag: "i"
+    # --- added 2026-07-22: scoped search + its facet links (the crawler trap)
+    - pattern: "^/communities/[a-f0-9-]{36}/search(/.*)?$"
+      flag: "i"
+    - pattern: "^/collections/[a-f0-9-]{36}/search(/.*)?$"
+      flag: "i"
+    # --- end added
+    - pattern: "^/browse/"
+    - pattern: "^/search$"
+    - pattern: "^/community-list$"
+    - pattern: "^/admin/"
+    - pattern: "^/processes/?"
+    - pattern: "^/notifications/"
+    - pattern: "^/statistics/?"
+    - pattern: "^/access-control/"
+    - pattern: "^/health$"
