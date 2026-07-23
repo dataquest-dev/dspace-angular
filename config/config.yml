@@ -186,3 +186,11 @@ languages:
   - code: uk
     label: Yкраї́нська
     active: false
+
+# Item view configuration
+item:
+  bitstream:
+    # Per-bitstream embargo-date badge in the Item View (dspace-customers#823).
+    # Enabled now that the backend accessStatus endpoint is deployed (DSpace#1377).
+    # The frontend fails closed if the endpoint is missing, so this is safe.
+    showAccessStatuses: true
