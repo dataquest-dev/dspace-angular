@@ -186,3 +186,9 @@ languages:
   - code: uk
     label: Yкраї́нська
     active: false
+
+# Item view configuration
+item:
+  bitstream:
+    # Per-bitstream embargo-date badge in the Item View
+    showAccessStatuses: true
