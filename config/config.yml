@@ -97,7 +97,5 @@ languages:
 # Item view configuration
 item:
   bitstream:
-    # Per-bitstream embargo-date badge in the Item View (dspace-customers#823).
-    # Enabled now that the backend accessStatus endpoint is deployed (DSpace#1380).
-    # The frontend fails closed if the endpoint is missing, so this is safe.
+    # Per-bitstream embargo-date badge in the Item View
     showAccessStatuses: true
