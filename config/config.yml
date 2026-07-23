@@ -93,3 +93,9 @@ languages:
   - code: cs
     label: Čeština
     active: true
+
+# Item view configuration
+item:
+  bitstream:
+    # Per-bitstream embargo-date badge in the Item View
+    showAccessStatuses: true
