@@ -3262,6 +3262,8 @@
   "item.page.subject": "Klíčová slova",
   // "item.page.uri": "Item identifier",
   "item.page.uri": "Identifikátor",
+  // "item.page.remote-url": "Remote dataset URL",
+  "item.page.remote-url": "Odkaz na externí dataset",
   // "item.page.doi": "DOI",
   "item.page.doi": "DOI",
   // "item.page.bitstreams.view-more": "Show more",

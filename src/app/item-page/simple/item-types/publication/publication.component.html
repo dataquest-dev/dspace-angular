@@ -32,6 +32,12 @@
                                   [type]="'identifier'">
     </ds-clarin-generic-item-field>
     <ds-clarin-generic-item-field [item]="object"
+                                  [fields]="['local.file.remoteUrl']"
+                                  [label]="'item.page.remote-url'"
+                                  [iconName]="'fa-external-link-alt'"
+                                  [type]="'hyperlink'">
+    </ds-clarin-generic-item-field>
+    <ds-clarin-generic-item-field [item]="object"
                                   [fields]="['dc.identifier.doi']"
                                   [label]="'item.page.doi'"
                                   [iconName]="'fa-share'"
