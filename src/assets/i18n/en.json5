@@ -2745,6 +2745,8 @@
 
   "item.page.uri": "Item identifier",
 
+  "item.page.remote-url": "Remote dataset URL",
+
   "item.page.doi": "DOI",
 
   "item.page.bitstreams.view-more": "Show more",
