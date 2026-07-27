@@ -1,10 +1,33 @@
 html {
     position: relative;
     min-height: 100%;
+
+    // Always reserve the vertical scrollbar's width. While Angular boots it replaces the
+    // server-rendered DOM, so the page is briefly too short to scroll: the scrollbar disappears and
+    // then comes back, widening and re-narrowing the viewport and sliding every centred container
+    // sideways by half the scrollbar width (~7.5px right, then back). The anti-flicker overlay cannot
+    // hide that, because the overlay lives in the page and shifts with it.
+    scrollbar-gutter: stable;
+}
+
+// scrollbar-gutter is unsupported before Chrome 94 / Firefox 97 / Safari 16; keeping the scrollbar
+// track permanently visible reserves the same width there.
+@supports not (scrollbar-gutter: stable) {
+    html {
+        overflow-y: scroll;
+    }
 }
 
 body {
     overflow-x: hidden;
+}
+
+// ng-bootstrap pads the body by the scrollbar width when a modal opens, to compensate for the
+// scrollbar it is about to hide. With the gutter reserved above, that width is never actually freed,
+// so the compensation is pure surplus and shifts the page left by half of it -- the very thing the
+// reserved gutter exists to prevent. Cancel it; the gutter already keeps the width steady.
+body.modal-open {
+    padding-right: 0 !important;
 }
 
 // Sticky Footer
