@@ -2,20 +2,22 @@ html {
     position: relative;
     min-height: 100%;
 
-    // Always reserve the vertical scrollbar's width. While Angular boots it replaces the
+    // Keep the vertical scrollbar's width reserved at all times. While Angular boots it replaces the
     // server-rendered DOM, so the page is briefly too short to scroll: the scrollbar disappears and
-    // then comes back, widening and re-narrowing the viewport and sliding every centred container
-    // sideways by half the scrollbar width (~7.5px right, then back). The anti-flicker overlay cannot
-    // hide that, because the overlay lives in the page and shifts with it.
+    // then comes back, widening and re-narrowing the viewport and sliding centred content and every
+    // right-anchored element (search icon, login/user menu) sideways by the scrollbar width, then
+    // back. The anti-flicker overlay cannot hide that, because the overlay lives in the page and
+    // shifts with it.
+    //
+    // We force a permanent scrollbar with overflow-y: scroll. scrollbar-gutter: stable would be the
+    // tidier tool (it reserves the space without drawing a track on short pages), but it is IGNORED
+    // on this theme: `body { overflow-x: hidden }` below makes BODY the propagated viewport scroll
+    // container, so a gutter declared on `html` is never actually held -- verified on the live build,
+    // where clientWidth still toggled 1425<->1440 on every reload despite the stable gutter. Making
+    // `html` a definite scroll container is what pins the width. scrollbar-gutter is kept as a
+    // progressive enhancement for browsers/themes where it does take effect.
+    overflow-y: scroll;
     scrollbar-gutter: stable;
-}
-
-// scrollbar-gutter is unsupported before Chrome 94 / Firefox 97 / Safari 16; keeping the scrollbar
-// track permanently visible reserves the same width there.
-@supports not (scrollbar-gutter: stable) {
-    html {
-        overflow-y: scroll;
-    }
 }
 
 body {
