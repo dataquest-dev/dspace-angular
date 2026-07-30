@@ -7215,8 +7215,14 @@
   // "submission.sections.upload.upload-failed": "Upload failed",
   "submission.sections.upload.upload-failed": "Nahrání se nezdařilo",
 
+  // "submission.sections.upload.upload-failed-file": "Upload failed for file \"{{fileName}}\"",
+  "submission.sections.upload.upload-failed-file": "Nahrání souboru \"{{fileName}}\" se nezdařilo",
+
   // "submission.sections.upload.upload-successful": "Upload successful",
   "submission.sections.upload.upload-successful": "Úspěšně nahráno",
+
+  // "submission.sections.upload.upload-successful-file": "File \"{{fileName}}\" uploaded successfully",
+  "submission.sections.upload.upload-successful-file": "Soubor \"{{fileName}}\" byl úspěšně nahrán",
 
   // "submission.sections.accesses.form.discoverable-description": "When checked, this item will be discoverable in search/browse. When unchecked, the item will only be available via a direct link and will never appear in search/browse.",
   "submission.sections.accesses.form.discoverable-description": "Když je zaškrtnuto, bude tento záznam zjistitelný ve vyhledávání/prohlížení. Když není zaškrtnuto, záznam bude dostupný pouze prostřednictvím přímého odkazu a nikdy se nezobrazí ve vyhledávání/přehledu.",
