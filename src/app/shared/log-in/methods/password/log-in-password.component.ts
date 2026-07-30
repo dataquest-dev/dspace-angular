@@ -1,8 +1,14 @@
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  isPlatformBrowser,
+} from '@angular/common';
 import {
   Component,
   Inject,
+  NgZone,
+  OnDestroy,
   OnInit,
+  PLATFORM_ID,
 } from '@angular/core';
 import {
   FormsModule,
@@ -44,11 +50,17 @@ import {
 import { CoreState } from '../../../../core/core-state.model';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../../../core/data/feature-authorization/feature-id';
+import { CookieService } from '../../../../core/services/cookie.service';
 import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
 import { fadeOut } from '../../../animations/fade';
 import { BtnDisabledDirective } from '../../../btn-disabled.directive';
-import { isNotEmpty } from '../../../empty.util';
+import {
+  isEmpty,
+  isNotEmpty,
+} from '../../../empty.util';
 import { BrowserOnlyPipe } from '../../../utils/browser-only.pipe';
+
+export const SHOW_DISCOJUICE_POPUP_CACHE_NAME = 'SHOW_DISCOJUICE_POPUP';
 
 /**
  * /users/sign-in
@@ -69,7 +81,12 @@ import { BrowserOnlyPipe } from '../../../utils/browser-only.pipe';
     TranslateModule,
   ],
 })
-export class LogInPasswordComponent implements OnInit {
+export class LogInPasswordComponent implements OnInit, OnDestroy {
+
+  /**
+   * Handle of the pending DiscoJuice popup-open timer so it can be cancelled on destroy.
+   */
+  private discoJuiceTimer: ReturnType<typeof setTimeout> = null;
 
   /**
    * The authentication method data.
@@ -131,6 +148,9 @@ export class LogInPasswordComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     protected store: Store<CoreState>,
     protected authorizationService: AuthorizationDataService,
+    @Inject(PLATFORM_ID) protected platformId: object,
+    protected storage: CookieService,
+    protected zone: NgZone,
   ) {
     this.authMethod = injectedAuthMethodModel;
   }
@@ -140,6 +160,10 @@ export class LogInPasswordComponent implements OnInit {
    * @method ngOnInit
    */
   public ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.initializeDiscoJuiceCache();
+      this.toggleDiscojuiceLogin();
+    }
 
     // set formGroup
     this.form = this.formBuilder.group({
@@ -223,6 +247,61 @@ export class LogInPasswordComponent implements OnInit {
 
     // clear form
     this.form.reset();
+  }
+
+  /**
+   * Toggle Discojuice login. Show it every time except the case when the user click
+   * on the `local` button in the discojuice box.
+   * @private
+   */
+  private toggleDiscojuiceLogin() {
+    if (this.storage.get(SHOW_DISCOJUICE_POPUP_CACHE_NAME) === true) {
+      this.popUpDiscoJuiceLogin();
+    }
+    this.storage.set(SHOW_DISCOJUICE_POPUP_CACHE_NAME, true);
+  }
+
+  /**
+   * Show DiscoJuice login modal using javascript functions. The timeout must be set because of angular component
+   * lifecycle. Discojuice won't be showed up without timeout. Introducing a timer to check
+   * if the DiscoJuice login is loaded and then pop it up. The timer will be cleared on destroy.
+   * @private
+   */
+  private popUpDiscoJuiceLogin() {
+    const maxAttempts = 40; // ~10s at 250ms intervals
+    let attempts = 0;
+    this.zone.runOutsideAngular(() => {
+      const tryOpen = () => {
+        const signOnLink = document?.getElementById('clarin-signon-discojuice');
+        // `div.discojuice` is created (hidden) when DiscoJuice binds to the sign-on link, so its
+        // presence means the click handler is wired and a click will actually open the popup.
+        if (signOnLink && document?.querySelector('div.discojuice')) {
+          signOnLink.click();
+          return;
+        }
+        if (++attempts < maxAttempts) {
+          this.discoJuiceTimer = setTimeout(tryOpen, 250);
+        }
+      };
+      this.discoJuiceTimer = setTimeout(tryOpen, 250);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.discoJuiceTimer) {
+      clearTimeout(this.discoJuiceTimer);
+    }
+  }
+
+  /**
+   * Set SHOW_DISCOJUICE_POPUP_CACHE_NAME to true because the discojuice login must be popped up on init
+   * if it is loaded for the first time.
+   * @private
+   */
+  private initializeDiscoJuiceCache() {
+    if (isEmpty(this.storage.get(SHOW_DISCOJUICE_POPUP_CACHE_NAME))) {
+      this.storage.set(SHOW_DISCOJUICE_POPUP_CACHE_NAME, true);
+    }
   }
 
 }

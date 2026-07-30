@@ -24,13 +24,18 @@ import { AuthService } from '../../../../core/auth/auth.service';
 import { AuthMethod } from '../../../../core/auth/models/auth.method';
 import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
+import { CookieService } from '../../../../core/services/cookie.service';
 import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
+import { CookieServiceMock } from '../../../mocks/cookie.service.mock';
 import { getMockThemeService } from '../../../mocks/theme-service.mock';
 import { ActivatedRouteStub } from '../../../testing/active-router.stub';
 import { AuthServiceStub } from '../../../testing/auth-service.stub';
 import { AuthorizationDataServiceStub } from '../../../testing/authorization-service.stub';
 import { ThemeService } from '../../../theme-support/theme.service';
-import { LogInPasswordComponent } from './log-in-password.component';
+import {
+  LogInPasswordComponent,
+  SHOW_DISCOJUICE_POPUP_CACHE_NAME,
+} from './log-in-password.component';
 
 describe('LogInPasswordComponent', () => {
 
@@ -75,6 +80,7 @@ describe('LogInPasswordComponent', () => {
         { provide: 'authMethodProvider', useValue: new AuthMethod(AuthMethodType.Password, 0) },
         { provide: 'isStandalonePage', useValue: true },
         { provide: HardRedirectService, useValue: hardRedirectService },
+        { provide: CookieService, useValue: new CookieServiceMock() },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: ThemeService, useValue: themeService },
         provideMockStore({ initialState }),
@@ -119,6 +125,37 @@ describe('LogInPasswordComponent', () => {
 
     // verify Store.dispatch() is invoked
     expect(page.navigateSpy.calls.any()).toBe(true, 'Store.dispatch not invoked');
+  });
+
+  describe('DiscoJuice auto-popup (SHOW_DISCOJUICE_POPUP cookie)', () => {
+    let storage: any; // CookieServiceMock — typed as any so get() can return the stored boolean
+    let popUpSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      storage = TestBed.inject(CookieService) as unknown as CookieServiceMock;
+      // Spy so we assert the trigger *decision* without scheduling the real timer/DOM popup.
+      popUpSpy = spyOn(component as any, 'popUpDiscoJuiceLogin');
+    });
+
+    it('seeds the cookie to true on the first visit (cookie unset)', () => {
+      storage.remove(SHOW_DISCOJUICE_POPUP_CACHE_NAME);
+      (component as any).initializeDiscoJuiceCache();
+      expect(storage.get(SHOW_DISCOJUICE_POPUP_CACHE_NAME)).toBe(true);
+    });
+
+    it('opens the popup when the cookie is true and keeps it true for the next visit', () => {
+      storage.set(SHOW_DISCOJUICE_POPUP_CACHE_NAME, true);
+      (component as any).toggleDiscojuiceLogin();
+      expect(popUpSpy).toHaveBeenCalledTimes(1);
+      expect(storage.get(SHOW_DISCOJUICE_POPUP_CACHE_NAME)).toBe(true);
+    });
+
+    it('suppresses the popup once when the cookie is false (user chose local login), then resets it to true', () => {
+      storage.set(SHOW_DISCOJUICE_POPUP_CACHE_NAME, false);
+      (component as any).toggleDiscojuiceLogin();
+      expect(popUpSpy).not.toHaveBeenCalled();
+      expect(storage.get(SHOW_DISCOJUICE_POPUP_CACHE_NAME)).toBe(true);
+    });
   });
 
 });
