@@ -1,3 +1,10 @@
+# The public URL this UI answers on. DSpace 9.3 feeds its hostname into Angular's SSR
+# `allowedHosts`, so leaving it at the `http://localhost:4000` default makes the renderer
+# reject every real request and fall back to CSR - HTTP 200 with an empty 1113 B shell.
+# Only baseUrl is set here; ui.host/port stay on the defaults the container listens on.
+ui:
+  baseUrl: https://dspace-new.jcu.cz
+
 # NOTE: in the JCU Docker dev stack these REST values are overridden at runtime by the
 # DSPACE_REST_* environment variables set in docker-compose.yml (localhost:8080).
 rest:
