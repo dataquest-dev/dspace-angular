@@ -1,12 +1,12 @@
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { isEmpty, isNotEmpty, hasValue } from '../../shared/empty.util';
+import { isEmpty, isNotEmpty } from '../../shared/empty.util';
 import { CookieService } from '../services/cookie.service';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
-import { combineLatest, Observable, of as observableOf, Subscription } from 'rxjs';
+import { combineLatest, Observable, of as observableOf } from 'rxjs';
 import { map, mergeMap, take } from 'rxjs/operators';
 import { NativeWindowRef, NativeWindowService } from '../services/window.service';
 import { RouteService } from '../services/route.service';
@@ -28,14 +28,12 @@ export enum LANG_ORIGIN {
  * Service to provide localization handler
  */
 @Injectable()
-export class LocaleService implements OnDestroy {
+export class LocaleService {
 
   /**
    * Eperson language metadata
    */
   EPERSON_LANG_METADATA = 'eperson.language';
-
-  subs: Subscription[] = [];
 
   constructor(
     @Inject(NativeWindowService) protected _window: NativeWindowRef,
@@ -50,7 +48,7 @@ export class LocaleService implements OnDestroy {
   /**
    * Get the language currently used
    *
-   * @returns {Observable<string>} The language code
+   * @returns {string} The language code
    */
   getCurrentLanguageCode(): string {
     // Attempt to get the language from a cookie
@@ -195,12 +193,6 @@ export class LocaleService implements OnDestroy {
       this._window.nativeWindow.location.href = `reload/${new Date().getTime()}?redirect=` + encodeURIComponent(currentURL);
     });
 
-  }
-
-  ngOnDestroy(): void {
-    this.subs
-      .filter((sub) => hasValue(sub))
-      .forEach((sub) => sub.unsubscribe());
   }
 
 }
