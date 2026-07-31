@@ -1277,6 +1277,10 @@
 
   "collection.edit.tabs.roles.title": "Collection Edit - Roles",
 
+  "collection.edit.tabs.source.allow-external-urls": "Allow external URLs",
+
+  "collection.edit.tabs.source.allow-external-urls.warning": "When off, files are fetched only from the same scheme and host as the OAI provider above, and a record pointing elsewhere is skipped in full. When on, your server fetches from any address the provider names — that provider, not you, decides what is downloaded and republished here, so enable it only for providers you trust. Private and internal addresses stay blocked either way.",
+
   "collection.edit.tabs.source.external": "This collection harvests its content from an external source",
 
   "collection.edit.tabs.source.form.errors.oaiSource.required": "You must provide a set id of the target collection.",

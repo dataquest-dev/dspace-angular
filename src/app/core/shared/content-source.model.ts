@@ -74,6 +74,13 @@ export class ContentSource extends CacheableObject {
   harvestType = ContentSourceHarvestType.None;
 
   /**
+   * Whether bitstreams may be fetched from hosts other than the OAI provider
+   * Initialised to false on purpose: cerialize omits undefined values, so without it the key would never reach the backend
+   */
+  @autoserializeAs('allow_external_urls')
+  allowExternalUrls = false;
+
+  /**
    * The available metadata configurations
    */
   metadataConfigs: MetadataConfig[];
