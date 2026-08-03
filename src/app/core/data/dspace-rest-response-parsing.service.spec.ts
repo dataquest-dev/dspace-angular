@@ -93,6 +93,17 @@ describe('DspaceRestResponseParsingService', () => {
         expect(response.payload._links.self.href).toBe('https://rest.api/core/items/eba1c085/bundles?size=9999');
       });
 
+      it('should not warn when the self link only percent decoded a param value', () => {
+        // https://github.com/dataquest-dev/dspace-customers/issues/862
+        const request = requestFor('https://rest.api/statistics/usagereports/search/object?page=-1&size=10&uri=https%3A%2F%2Frest.api%2Fcore%2Fsites%2F8f842a80');
+        const response = service.callEnsureSelfLink(request, responseWithSelfLink(
+          'https://rest.api/statistics/usagereports/search/object?page=-1&size=10&uri=https://rest.api/core/sites/8f842a80'));
+
+        expect(console.warn).not.toHaveBeenCalled();
+        expect(response.payload._links.self.href)
+          .toBe('https://rest.api/statistics/usagereports/search/object?page=-1&size=10&uri=https%3A%2F%2Frest.api%2Fcore%2Fsites%2F8f842a80');
+      });
+
       it('should not warn or normalize when params are only in a different order', () => {
         const request = requestFor('https://rest.api/core/items/eba1c085/bundles?page=0&size=5');
         const response = service.callEnsureSelfLink(request,
@@ -141,6 +152,15 @@ describe('DspaceRestResponseParsingService', () => {
         service.callEnsureSelfLink(request, responseWithSelfLink(
           'https://rest.api/core/items/eba1c085/bundles?size=3',
           { number: 0, size: 3, totalPages: 1, totalElements: 2 }));
+
+        expect(console.warn).toHaveBeenCalledTimes(1);
+        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
+      });
+
+      it('should still warn when a param value differs beyond its encoding', () => {
+        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?uri=https%3A%2F%2Frest.api%2Fcore%2Fsites%2Faaa');
+        service.callEnsureSelfLink(request,
+          responseWithSelfLink('https://rest.api/core/items/eba1c085/bundles?uri=https://rest.api/core/sites/bbb'));
 
         expect(console.warn).toHaveBeenCalledTimes(1);
         expect(console.warn).toHaveBeenCalledWith(MISMATCH);

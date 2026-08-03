@@ -55,12 +55,7 @@ const splitUrlInParts = (url: string): string[] => {
 };
 
 /**
- * Return true if two lists of url parts don't hold the same set of parts. The comparison is order
- * insensitive, and — like {@link splitUrlInParts} — treats the part in front of the query string as
- * just another part.
- *
- * @param expected the parts of the url we expected
- * @param actual   the parts of the url we got
+ * Return true if two lists of url parts don't hold the same parts, ignoring their order
  */
 const urlPartsDiffer = (expected: string[], actual: string[]): boolean => {
   return expected.some((part: string) => !actual.includes(part))
@@ -73,10 +68,21 @@ const urlPartsDiffer = (expected: string[], actual: string[]): boolean => {
 const PAGE_SIZE_PARAM = /^size=(\d+)$/;
 
 /**
- * Return the page sizes among the given url parts. More than one means the url is ambiguous about
- * the page size, and no conclusion can be drawn from it.
- *
- * @param parts the url parts, as returned by {@link splitUrlInParts}
+ * Percent decode each url part, so `uri=http%3A%2F%2Fx` and `uri=http://x` compare equal. Parts are
+ * decoded one by one, after the url was split, so a decoded `&` can't merge two params.
+ */
+const decodeUrlParts = (parts: string[]): string[] => {
+  return parts.map((part: string) => {
+    try {
+      return decodeURIComponent(part);
+    } catch (e) {
+      return part;
+    }
+  });
+};
+
+/**
+ * Return the page sizes among the given url parts. More than one means the url is ambiguous
  */
 const getPageSizes = (parts: string[]): number[] => {
   return parts
@@ -86,53 +92,29 @@ const getPageSizes = (parts: string[]): number[] => {
 };
 
 /**
- * Return true if the requested url and the self link disagree about the page size only because the
- * REST API reduced a size it wasn't willing to serve.
+ * Return true if the self link only shrank the page size to a value the response confirms itself.
  *
- * The REST contract says a `size` over the configured maximum is "automatically reset to the
- * maximum allowed value, no error is thrown", and it is that effective size which ends up in the
- * self link. The frontend can't know the server's maximum, so it can't tell such a clamp apart from
- * any other reduction — but it can require the response to be consistent with itself: the `page`
- * block has to confirm the smaller size the self link advertises. A self link that contradicts the
- * payload it describes is still reported.
- *
- * @param expected the requested url parts, without embed params
- * @param actual   the self link parts, without embed params
- * @param payload  the response body the self link belongs to
+ * The REST API silently resets a `size` over its configured maximum. The frontend can't know that
+ * maximum, so it requires the `page` block to corroborate the smaller size, and reports a self link
+ * that contradicts the payload it describes. Zero is never a maximum, so an empty page isn't a
+ * clamp either.
  */
 const isReducedPageSize = (expected: string[], actual: string[], payload: any): boolean => {
   const requestedSizes = getPageSizes(expected);
   const effectiveSizes = getPageSizes(actual);
   return requestedSizes.length === 1 && effectiveSizes.length === 1
-    // a maximum page size is never zero, so an empty page isn't a clamp and stays reportable
     && effectiveSizes[0] > 0 && effectiveSizes[0] < requestedSizes[0]
     && hasValue(payload.page) && payload.page.size === effectiveSizes[0];
 };
 
 /**
- * Determine whether the difference between the url that was requested and the self link the REST
- * API returned for it points at an actual problem with the endpoint.
- *
- * Two kinds of difference are correct REST behaviour and are not reported:
- *
- * - The REST API echoes the request's `embed`/`embed.size` params in the self link, while the url
- *   we compare against has had them stripped by {@link getUrlWithoutEmbedParams}. Comparing the two
- *   as-is makes every request that embeds a subresource look broken, e.g.
- *   `…/bitstreams?page=0&size=5` vs `…/bitstreams?page=0&embed=accessStatus&size=5`. Stripping both
- *   sides also means a self link echoing embeds we never asked for goes unreported.
- * - The REST API reduced the requested page size, see {@link isReducedPageSize}.
- *
- * Note that {@link getUrlWithoutEmbedParams} rebuilds the url it is given, so running the self link
- * through it also drops a fragment and a trailing slash on the path. Differences limited to those
- * stop being reported too.
- *
- * @param requestedUrl the url that was requested, without embed params
- * @param selfLink     the self link as returned by the REST API
- * @param payload      the response body the self link belongs to
+ * Return true if the self link differs from the requested url in a way the REST API isn't expected
+ * to introduce by itself. Not reported: `embed` params the API echoes back (they are stripped from
+ * the requested url but not from the self link), percent encoding, and a confirmed page size clamp.
  */
 const isUnexpectedSelfLink = (requestedUrl: string, selfLink: string, payload: any): boolean => {
-  const expected = splitUrlInParts(requestedUrl);
-  const actual = splitUrlInParts(getUrlWithoutEmbedParams(selfLink));
+  const expected = decodeUrlParts(splitUrlInParts(requestedUrl));
+  const actual = decodeUrlParts(splitUrlInParts(getUrlWithoutEmbedParams(selfLink)));
 
   if (isReducedPageSize(expected, actual, payload)) {
     const withoutPageSize = (parts: string[]): string[] =>
@@ -248,8 +230,7 @@ export class DspaceRestResponseParsingService implements ResponseParsingService 
         const expected = splitUrlInParts(urlWithoutEmbedParams);
         const actual = splitUrlInParts(selfLink);
         if (expected[0] === actual[0] && urlPartsDiffer(expected, actual)) {
-          // Report only the differences the REST API isn't expected to introduce by itself. Which
-          // url the self link is normalized to is deliberately left unchanged by this check.
+          // the self link is normalized either way, only the warning is filtered
           if (isUnexpectedSelfLink(urlWithoutEmbedParams, selfLink, response.payload)) {
             console.warn(`The response for '${urlWithoutEmbedParams}' has the self link '${selfLink}'. These don't match. This could mean there's an issue with the REST endpoint`);
           }
