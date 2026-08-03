@@ -24,6 +24,7 @@ import { followLink, FollowLinkConfig } from '../../shared/utils/follow-link-con
 import { BrowseDefinitionDataService } from './browse-definition-data.service';
 import { SortDirection } from '../cache/models/sort-options.model';
 import { environment } from '../../../environments/environment';
+import { MAX_PAGE_SIZE } from '../data/find-list-options.model';
 
 
 export function getBrowseLinksToFollow(): FollowLinkConfig<BrowseEntry | Item>[] {
@@ -69,7 +70,7 @@ export class BrowseService {
    */
   getBrowseDefinitions(): Observable<RemoteData<PaginatedList<BrowseDefinition>>> {
     // TODO properly support pagination
-    return this.browseDefinitionDataService.findAll({ elementsPerPage: 9999 }).pipe(
+    return this.browseDefinitionDataService.findAll({ elementsPerPage: MAX_PAGE_SIZE }).pipe(
       getFirstSucceededRemoteData(),
     );
   }

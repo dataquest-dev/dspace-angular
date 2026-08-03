@@ -16,7 +16,7 @@ import { RequestService } from './request.service';
 import { PaginatedSearchOptions } from '../../shared/search/models/paginated-search-options.model';
 import { Bitstream } from '../shared/bitstream.model';
 import { RequestEntryState } from './request-entry-state.model';
-import { FindListOptions } from './find-list-options.model';
+import { FindListOptions, MAX_PAGE_SIZE } from './find-list-options.model';
 import { IdentifiableDataService } from './base/identifiable-data.service';
 import { PatchData, PatchDataImpl } from './base/patch-data';
 import { DSOChangeAnalyzer } from './dso-change-analyzer.service';
@@ -81,7 +81,7 @@ export class BundleDataService extends IdentifiableDataService<Bundle> implement
   findByItemAndName(item: Item, bundleName: string, useCachedVersionIfAvailable = true, reRequestOnStale = true, options?: FindListOptions, ...linksToFollow: FollowLinkConfig<Bundle>[]): Observable<RemoteData<Bundle>> {
     //Since we filter by bundleName where the pagination options are not indicated we need to load all the possible bundles.
     // This is a workaround, in substitution of the previously recursive call with expand
-    const paginationOptions = options ?? { elementsPerPage: 9999 };
+    const paginationOptions = options ?? { elementsPerPage: MAX_PAGE_SIZE };
     return this.findAllByItem(item, paginationOptions, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow).pipe(
       map((rd: RemoteData<PaginatedList<Bundle>>) => {
         if (hasValue(rd.payload) && hasValue(rd.payload.page)) {
