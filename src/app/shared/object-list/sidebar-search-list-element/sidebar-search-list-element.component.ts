@@ -113,7 +113,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
             !parentRD.hasSucceeded) {
           return observableOf(accumulatedNames);
         }
-        const parentName = this.dsoNameService.getName(parentRD.payload);
+        const parentName = this.dsoNameService.getName(parentRD.payload, true);
         const newAccumulatedNames = hasValue(parentName)
           ? [parentName, ...accumulatedNames]
           : accumulatedNames;

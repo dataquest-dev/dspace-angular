@@ -97,7 +97,7 @@ export class HtmlContentService {
   async getHmtlContentByPathAndLocale(fileName: string) {
     let url = '';
     // Get current language
-    let language = this.localeService.getCurrentLanguageCode();
+    let language = this.localeService.getCurrentLanguageCodeSync();
     // If language is default = `en` do not load static files from translated package e.g. `cs`.
     language = language === 'en' ? '' : language;
 
