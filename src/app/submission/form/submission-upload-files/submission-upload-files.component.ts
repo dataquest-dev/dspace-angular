@@ -9,6 +9,8 @@ import { hasValue, isEmpty, isNotEmpty } from '../../../shared/empty.util';
 import { normalizeSectionData } from '../../../core/submission/submission-response-parsing.service';
 import { SubmissionService } from '../../submission.service';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
+import { UploaderCompleteEvent } from '../../../shared/upload/uploader/uploader-complete-event.model';
+import { UploaderError } from '../../../shared/upload/uploader/uploader-error.model';
 import { UploaderOptions } from '../../../shared/upload/uploader/uploader-options.model';
 import parseSectionErrors from '../../utils/parseSectionErrors';
 import { SubmissionJsonPatchOperationsService } from '../../../core/submission/submission-json-patch-operations.service';
@@ -111,16 +113,19 @@ export class SubmissionUploadFilesComponent implements OnChanges {
   /**
    * Parse the submission object retrieved from REST after upload
    *
-   * @param workspaceitem
-   *    The submission object retrieved from REST
+   * @param event
+   *    The completed upload event, carrying the submission object retrieved from REST and the
+   *    client-side name of the file that completed
    */
-  public onCompleteItem(workspaceitem: WorkspaceItem) {
+  public onCompleteItem(event: UploaderCompleteEvent) {
+    const workspaceitem = event?.response as WorkspaceItem;
+    const fileName = event?.fileName;
     // Checks if upload section is enabled so do upload
     this.subs.push(
       this.uploadEnabled
         .pipe(first())
         .subscribe((isUploadEnabled) => {
-          if (isUploadEnabled) {
+          if (isUploadEnabled && hasValue(workspaceitem)) {
 
             const { sections } = workspaceitem;
             const { errors } = workspaceitem;
@@ -137,9 +142,9 @@ export class SubmissionUploadFilesComponent implements OnChanges {
                         if (isUpload) {
                           // Look for errors on upload
                           if ((isEmpty(sectionErrors))) {
-                            this.notificationsService.success(null, this.translate.get('submission.sections.upload.upload-successful'));
+                            this.notificationsService.success(null, this.getNotificationContent('upload-successful', fileName));
                           } else {
-                            this.notificationsService.error(null, this.translate.get('submission.sections.upload.upload-failed'));
+                            this.notificationsService.error(null, this.getNotificationContent('upload-failed', fileName));
                           }
                         }
                       });
@@ -153,14 +158,49 @@ export class SubmissionUploadFilesComponent implements OnChanges {
   }
 
   /**
-   * Show error notification on upload fails
+   * Show error notification on upload fails.
+   *
+   * The client-side size-limit rejection is discriminated FIRST, by comparing the emitted `response`
+   * against the size-limit message the uploader produced with the very same ONE-ARGUMENT
+   * `translate.instant(key)` call. Adding interpolation params to either side would make this `===`
+   * silently false, with no compile error, so the comparison and both `instant()` arities must stay
+   * exactly as they are. Only when that comparison fails is the default message built, and the
+   * default message is the only one that carries the file name.
+   *
+   * @param error
+   *    The upload error, carrying the file that failed to upload (when available)
    */
-  public onUploadError(event: any) {
+  public onUploadError(error?: UploaderError) {
     const errorMessageUploadLimit = this.translate.instant('submission.sections.upload.upload-failed.size-limit-exceeded');
-    const defaultErrorMessage = this.translate.instant('submission.sections.upload.upload-failed');
-    const errorMessage = event?.response === errorMessageUploadLimit ? errorMessageUploadLimit : defaultErrorMessage;
+    const isFileSizeLimitError = error?.response === errorMessageUploadLimit;
+    // `onErrorItem` emits a ng2-file-upload FileItem (name under `file`), `onWhenAddingFileFailed`
+    // emits a bare FileLikeObject (name at the top level), so both shapes have to be covered.
+    const fileName = error?.item?.file?.name ?? error?.item?.name;
 
-    this.notificationsService.error(null, errorMessage);
+    this.notificationsService.error(null, isFileSizeLimitError
+      ? errorMessageUploadLimit
+      : this.getNotificationContent('upload-failed', fileName));
+  }
+
+  /**
+   * Build the translated notification content for an upload outcome, including the file name when
+   * available. Falls back to the generic (file-name-less) message when the file name is missing.
+   * The `default` interpolate param is honoured by MissingTranslationHelper, so a locale that has not
+   * yet translated the `-file` key renders the generic message rather than a raw dotted key.
+   *
+   * @param suffix
+   *    The i18n key suffix within the upload section (e.g. `upload-successful`); the helper reads
+   *    `<suffix>-file` when a file name is known and plain `<suffix>` otherwise
+   * @param fileName
+   *    The name of the file the notification refers to, if known
+   */
+  private getNotificationContent(suffix: string, fileName?: string): Observable<string> {
+    return isNotEmpty(fileName)
+      ? this.translate.get(`submission.sections.upload.${suffix}-file`, {
+        fileName,
+        default: this.translate.instant(`submission.sections.upload.${suffix}`),
+      })
+      : this.translate.get(`submission.sections.upload.${suffix}`);
   }
 
   /**

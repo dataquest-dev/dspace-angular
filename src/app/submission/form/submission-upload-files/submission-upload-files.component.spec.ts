@@ -158,7 +158,10 @@ describe('SubmissionUploadFilesComponent Component', () => {
         const expectedErrors: any = mockUploadResponse1ParsedErrors;
         fixture.detectChanges();
 
-        comp.onCompleteItem(Object.assign({}, uploadRestResponse, { sections: mockSectionsData }));
+        comp.onCompleteItem({
+          response: Object.assign({}, uploadRestResponse, { sections: mockSectionsData }),
+          fileName: 'test.pdf',
+        });
 
         Object.keys(mockSectionsData).forEach((sectionId) => {
           expect(sectionsServiceStub.updateSectionData).toHaveBeenCalledWith(
@@ -179,10 +182,13 @@ describe('SubmissionUploadFilesComponent Component', () => {
         const expectedErrors: any = mockUploadResponse2ParsedErrors;
         fixture.detectChanges();
 
-        comp.onCompleteItem(Object.assign({}, uploadRestResponse, {
-          sections: mockSectionsData,
-          errors: responseErrors.errors
-        }));
+        comp.onCompleteItem({
+          response: Object.assign({}, uploadRestResponse, {
+            sections: mockSectionsData,
+            errors: responseErrors.errors
+          }),
+          fileName: 'test.pdf',
+        });
 
         Object.keys(mockSectionsData).forEach((sectionId) => {
           expect(sectionsServiceStub.updateSectionData).toHaveBeenCalledWith(
@@ -196,6 +202,213 @@ describe('SubmissionUploadFilesComponent Component', () => {
 
         expect(notificationsServiceStub.success).not.toHaveBeenCalled();
 
+      });
+
+      it('should include the file name in the success notification content', () => {
+        translateService.instant.and.callFake((key: string) => 'T:' + key);
+        fixture.detectChanges();
+
+        comp.onCompleteItem({
+          response: Object.assign({}, uploadRestResponse, { sections: mockSectionsData }),
+          fileName: 'test.pdf',
+        });
+
+        expect(translateService.get).toHaveBeenCalledWith(
+          'submission.sections.upload.upload-successful-file',
+          { fileName: 'test.pdf', default: 'T:submission.sections.upload.upload-successful' },
+        );
+        expect(translateService.get).not.toHaveBeenCalledWith('submission.sections.upload.upload-successful');
+        expect(notificationsServiceStub.success).toHaveBeenCalledTimes(1);
+      });
+
+      it('should fall back to the generic success key when no file name is available', () => {
+        translateService.instant.and.callFake((key: string) => 'T:' + key);
+        fixture.detectChanges();
+
+        comp.onCompleteItem({
+          response: Object.assign({}, uploadRestResponse, { sections: mockSectionsData }),
+        });
+
+        expect(translateService.get).toHaveBeenCalledWith('submission.sections.upload.upload-successful');
+        expect(translateService.get).not.toHaveBeenCalledWith(
+          'submission.sections.upload.upload-successful-file', jasmine.anything());
+        expect(notificationsServiceStub.success).toHaveBeenCalledTimes(1);
+      });
+
+      it('should fall back to the generic success key when the file name is an empty string', () => {
+        translateService.instant.and.callFake((key: string) => 'T:' + key);
+        fixture.detectChanges();
+
+        comp.onCompleteItem({
+          response: Object.assign({}, uploadRestResponse, { sections: mockSectionsData }),
+          fileName: '',
+        });
+
+        expect(translateService.get).toHaveBeenCalledWith('submission.sections.upload.upload-successful');
+        expect(translateService.get).not.toHaveBeenCalledWith(
+          'submission.sections.upload.upload-successful-file', jasmine.anything());
+      });
+
+      it('should include the file name in the error notification content when the upload section has errors', () => {
+        const responseErrors = mockUploadResponse2Errors;
+        translateService.instant.and.callFake((key: string) => 'T:' + key);
+        fixture.detectChanges();
+
+        comp.onCompleteItem({
+          response: Object.assign({}, uploadRestResponse, {
+            sections: mockSectionsData,
+            errors: responseErrors.errors
+          }),
+          fileName: 'test.pdf',
+        });
+
+        expect(translateService.get).toHaveBeenCalledWith(
+          'submission.sections.upload.upload-failed-file',
+          { fileName: 'test.pdf', default: 'T:submission.sections.upload.upload-failed' },
+        );
+        expect(translateService.get).not.toHaveBeenCalledWith('submission.sections.upload.upload-failed');
+        expect(notificationsServiceStub.error).toHaveBeenCalledTimes(1);
+        expect(notificationsServiceStub.success).not.toHaveBeenCalled();
+      });
+
+      it('should fall back to the generic error key when the upload section has errors and no file name is available', () => {
+        const responseErrors = mockUploadResponse2Errors;
+        translateService.instant.and.callFake((key: string) => 'T:' + key);
+        fixture.detectChanges();
+
+        comp.onCompleteItem({
+          response: Object.assign({}, uploadRestResponse, {
+            sections: mockSectionsData,
+            errors: responseErrors.errors
+          }),
+        });
+
+        expect(translateService.get).toHaveBeenCalledWith('submission.sections.upload.upload-failed');
+        expect(translateService.get).not.toHaveBeenCalledWith(
+          'submission.sections.upload.upload-failed-file', jasmine.anything());
+        expect(notificationsServiceStub.error).toHaveBeenCalledTimes(1);
+      });
+
+      it('should not notify when the completion response carries no sections', () => {
+        translateService.instant.and.callFake((key: string) => 'T:' + key);
+        fixture.detectChanges();
+
+        comp.onCompleteItem({ response: { message: 'forced' }, fileName: 'x.pdf' });
+
+        expect(notificationsServiceStub.success).not.toHaveBeenCalled();
+        expect(notificationsServiceStub.error).not.toHaveBeenCalled();
+      });
+
+      it('should not throw when the completion event is malformed', () => {
+        translateService.instant.and.callFake((key: string) => 'T:' + key);
+        fixture.detectChanges();
+
+        expect(() => comp.onCompleteItem(undefined as any)).not.toThrow();
+        expect(() => comp.onCompleteItem({ response: undefined })).not.toThrow();
+
+        expect(notificationsServiceStub.success).not.toHaveBeenCalled();
+        expect(notificationsServiceStub.error).not.toHaveBeenCalled();
+      });
+
+      it('should raise file-name notifications on the escaped rendering path', () => {
+        const hostileName = '<img src=x onerror=alert(1)>.pdf';
+        translateService.instant.and.callFake((key: string) => 'T:' + key);
+        fixture.detectChanges();
+
+        comp.onCompleteItem({
+          response: Object.assign({}, uploadRestResponse, { sections: mockSectionsData }),
+          fileName: hostileName,
+        });
+        comp.onUploadError({ item: { file: { name: hostileName } }, response: 'boom', status: 500, headers: {} });
+
+        // Two arguments only: NotificationsService.success/error(title, content, options?, html = false).
+        // A 4th positional `true` would move the content to the [innerHTML] branch of
+        // notification.component.html, where an attacker-controlled file name would be parsed as markup.
+        expect(notificationsServiceStub.success.calls.mostRecent().args.length).toBe(2);
+        expect(notificationsServiceStub.error.calls.mostRecent().args.length).toBe(2);
+        expect(translateService.get).toHaveBeenCalledWith(
+          'submission.sections.upload.upload-successful-file',
+          jasmine.objectContaining({ fileName: hostileName }));
+        expect(translateService.get).toHaveBeenCalledWith(
+          'submission.sections.upload.upload-failed-file',
+          jasmine.objectContaining({ fileName: hostileName }));
+      });
+    });
+
+    describe('on upload error', () => {
+      beforeEach(() => {
+        // The bare getMockTranslateService() spy returns undefined for every key, which would make the
+        // size-limit discriminator compare undefined === undefined and take the wrong branch. A real
+        // TranslateService never returns undefined from instant() - it returns the key when a
+        // translation is missing - so the callFake below is what makes this spec faithful.
+        translateService.instant.and.callFake((key: string) => 'T:' + key);
+        translateService.get.and.callFake((key: string, params?: any) =>
+          observableOf(params ? key + ':' + params.fileName : key));
+      });
+
+      it('should show an error notification including the file name when available', () => {
+        comp.onUploadError({ item: { file: { name: 'broken.zip' } }, response: 'boom', status: 500, headers: {} });
+
+        expect(translateService.get).toHaveBeenCalledWith(
+          'submission.sections.upload.upload-failed-file',
+          { fileName: 'broken.zip', default: 'T:submission.sections.upload.upload-failed' },
+        );
+        expect(translateService.get).not.toHaveBeenCalledWith('submission.sections.upload.upload-failed');
+        expect(notificationsServiceStub.error).toHaveBeenCalledTimes(1);
+      });
+
+      it('should read the file name from item.name when the failed item has no file wrapper', () => {
+        comp.onUploadError({ item: { name: 'big.zip', size: 9e9 }, response: 'boom', status: 400, headers: {} });
+
+        expect(translateService.get).toHaveBeenCalledWith(
+          'submission.sections.upload.upload-failed-file',
+          { fileName: 'big.zip', default: 'T:submission.sections.upload.upload-failed' },
+        );
+        expect(notificationsServiceStub.error).toHaveBeenCalledTimes(1);
+      });
+
+      it('should fall back to the generic error key when no file name is available', () => {
+        comp.onUploadError();
+        comp.onUploadError({});
+
+        expect(translateService.get).toHaveBeenCalledWith('submission.sections.upload.upload-failed');
+        expect(translateService.get).not.toHaveBeenCalledWith(
+          'submission.sections.upload.upload-failed-file', jasmine.anything());
+        expect(notificationsServiceStub.error).toHaveBeenCalledTimes(2);
+      });
+
+      it('should show the un-interpolated size-limit message when the upload failed because the file is too large', () => {
+        comp.onUploadError({
+          item: { name: 'big.zip', size: 9e9 },
+          response: 'T:submission.sections.upload.upload-failed.size-limit-exceeded',
+          status: 400,
+          headers: {},
+        });
+
+        expect(notificationsServiceStub.error).toHaveBeenCalledTimes(1);
+        expect(translateService.get).not.toHaveBeenCalled();
+        expect(translateService.instant.calls.mostRecent().args.length).toBe(1);
+        expect(translateService.instant.calls.mostRecent().args[0])
+          .toBe('submission.sections.upload.upload-failed.size-limit-exceeded');
+      });
+
+      it('should not add the file name to the size-limit message', () => {
+        comp.onUploadError({
+          item: { name: 'big.zip', size: 9e9 },
+          response: 'T:submission.sections.upload.upload-failed.size-limit-exceeded',
+          status: 400,
+          headers: {},
+        });
+
+        expect(translateService.get).not.toHaveBeenCalledWith(
+          'submission.sections.upload.upload-failed-file', jasmine.anything());
+        // getNotificationContent is the only other producer of notification content and it ALWAYS
+        // calls translate.get. `get` never being called therefore proves the ternary took the
+        // size-limit branch and that the raw, un-interpolated size-limit string is what reached
+        // NotificationsService - without asserting message identity through the notifications stub,
+        // which AC-T-05 forbids because the shared-spy mock makes such assertions unfalsifiable.
+        expect(translateService.get).not.toHaveBeenCalled();
+        expect(notificationsServiceStub.error.calls.mostRecent().args.length).toBe(2);
       });
     });
   });
