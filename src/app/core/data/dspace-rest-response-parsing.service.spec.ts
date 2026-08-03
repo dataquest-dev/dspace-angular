@@ -146,6 +146,16 @@ describe('DspaceRestResponseParsingService', () => {
         expect(console.warn).toHaveBeenCalledWith(MISMATCH);
       });
 
+      it('should warn when a reduced page size hides another param that differs', () => {
+        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?page=0&size=9999');
+        service.callEnsureSelfLink(request, responseWithSelfLink(
+          'https://rest.api/core/items/eba1c085/bundles?page=3&size=1000',
+          { number: 3, size: 1000, totalPages: 4, totalElements: 3200 }));
+
+        expect(console.warn).toHaveBeenCalledTimes(1);
+        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
+      });
+
       it('should warn when the self link claims an empty page', () => {
         const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=10');
         service.callEnsureSelfLink(request, responseWithSelfLink(
