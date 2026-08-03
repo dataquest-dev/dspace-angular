@@ -46,7 +46,8 @@ export class UsageReportDataService extends IdentifiableDataService<UsageReport>
   searchStatistics(uri: string, page: number, size: number): Observable<UsageReport[]> {
     return this.searchBy('object', {
       searchParams: [
-        new RequestParam('uri', uri),
+        // TODO fix encode the uri parameter in the self link in the backend and set encodeValue to true afterwards
+        new RequestParam('uri', uri, false),
       ],
       currentPage: page,
       elementsPerPage: size,
