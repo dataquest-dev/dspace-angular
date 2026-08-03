@@ -1,12 +1,12 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { isEmpty, isNotEmpty } from '../../shared/empty.util';
+import { isEmpty, isNotEmpty, hasValue } from '../../shared/empty.util';
 import { CookieService } from '../services/cookie.service';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
-import { combineLatest, Observable, of as observableOf } from 'rxjs';
+import { combineLatest, Observable, of as observableOf, Subscription } from 'rxjs';
 import { map, mergeMap, take } from 'rxjs/operators';
 import { NativeWindowRef, NativeWindowService } from '../services/window.service';
 import { RouteService } from '../services/route.service';
@@ -28,12 +28,14 @@ export enum LANG_ORIGIN {
  * Service to provide localization handler
  */
 @Injectable()
-export class LocaleService {
+export class LocaleService implements OnDestroy {
 
   /**
    * Eperson language metadata
    */
   EPERSON_LANG_METADATA = 'eperson.language';
+
+  subs: Subscription[] = [];
 
   constructor(
     @Inject(NativeWindowService) protected _window: NativeWindowRef,
@@ -48,20 +50,43 @@ export class LocaleService {
   /**
    * Get the language currently used
    *
-   * @returns {string} The language code
+   * @returns {Observable<string>} The language code
    */
-  getCurrentLanguageCode(): string {
+  getCurrentLanguageCode(): Observable<string> {
     // Attempt to get the language from a cookie
     let lang = this.getLanguageCodeFromCookie();
     if (isEmpty(lang) || environment.languages.find((langConfig: LangConfig) => langConfig.code === lang && langConfig.active) === undefined) {
       // Attempt to get the browser language from the user
-      if (this.translate.getLangs().includes(this.translate.getBrowserLang())) {
-        lang = this.translate.getBrowserLang();
-      } else {
-        lang = environment.defaultLanguage;
-      }
+      return this.getLanguageCodeList()
+        .pipe(
+          map(browserLangs => {
+            return browserLangs
+              .map(browserLang => browserLang.split(';')[0])
+              .find(browserLang =>
+                this.translate.getLangs().some(userLang => userLang.toLowerCase() === browserLang.toLowerCase())
+              ) || environment.defaultLanguage;
+          }),
+        );
     }
-    return lang;
+    return observableOf(lang);
+  }
+
+  /**
+   * CLARIN: the language the UI is currently rendering in, available synchronously.
+   *
+   * This is deliberately NOT a synchronous variant of {@link getCurrentLanguageCode}. That method
+   * *negotiates* the initial language against the authenticated user's profile and the browser's
+   * Accept-Language list, which requires the auth state and is therefore asynchronous.
+   *
+   * The fork's header and licence components need something different and much simpler: the
+   * language currently in effect, inside synchronous template getters. Once
+   * {@link setCurrentLanguageCode} has run, that is whatever `translate.use()` last applied.
+   *
+   * @returns {string} The active language code
+   */
+  getCurrentLanguageCodeSync(): string {
+    const lang = this.translate.currentLang || this.getLanguageCodeFromCookie();
+    return isNotEmpty(lang) ? lang : environment.defaultLanguage;
   }
 
   /**
@@ -145,11 +170,16 @@ export class LocaleService {
    */
   setCurrentLanguageCode(lang?: string): void {
     if (isEmpty(lang)) {
-      lang = this.getCurrentLanguageCode();
+      this.subs.push(this.getCurrentLanguageCode().subscribe(curLang => {
+        lang = curLang;
+        this.translate.use(lang);
+        this.document.documentElement.lang = lang;
+      }));
+    } else {
+      this.saveLanguageCodeToCookie(lang);
+      this.translate.use(lang);
+      this.document.documentElement.lang = lang;
     }
-    this.translate.use(lang);
-    this.saveLanguageCodeToCookie(lang);
-    this.document.documentElement.lang = lang;
   }
 
   /**
@@ -193,6 +223,12 @@ export class LocaleService {
       this._window.nativeWindow.location.href = `reload/${new Date().getTime()}?redirect=` + encodeURIComponent(currentURL);
     });
 
+  }
+
+  ngOnDestroy(): void {
+    this.subs
+      .filter((sub) => hasValue(sub))
+      .forEach((sub) => sub.unsubscribe());
   }
 
 }

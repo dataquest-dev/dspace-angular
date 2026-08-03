@@ -58,6 +58,12 @@ A default/demo version of this image is built *automatically*.
   - Docker compose file that will download and install data into a DSpace REST assetstore.  This script points to a default dataset that will be utilized for CI testing.
 
 
+> **Required since 7.6.7:** every recipe below that uses `docker/docker-compose.yml` needs the public UI URL.
+> Set `UI_URL` (or `DSPACE_UI_BASEURL`) in your env file - `build-scripts/run/envs/.default` and `.local`
+> already do. Without it compose refuses to start, because 7.6.7 no longer derives `ui.baseUrl` from
+> `DSPACE_UI_HOST`/`PORT`/`SSL` and would otherwise serve `http://localhost:4000` in redirects, `robots.txt`
+> and the Google Scholar citation meta tags. See `README-dtq.md` for the namespace caveat.
+
 ## To refresh / pull DSpace images from Dockerhub
 ```
 docker-compose -f docker/docker-compose.yml pull

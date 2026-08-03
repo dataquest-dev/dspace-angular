@@ -121,16 +121,33 @@ DSPACE_NAMESPACE # The namespace of the angular application
 DSPACE_SSL # Whether the angular application uses SSL [true/false]
 ```
 
-**Required since 7.6.7:**
+**Required since 7.6.7 - the public UI URL:**
 
 ```bash
-DSPACE_UI_BASEURL # Public URL this UI answers on, e.g. https://lindat.example.org/repository
+UI_URL            # Public URL this UI answers on, e.g. https://lindat.example.org/repository
+DSPACE_UI_BASEURL # Optional override; defaults to UI_URL
 ```
 
-`ui.baseUrl` used to be derived from `DSPACE_HOST`/`DSPACE_PORT`/`DSPACE_SSL`; 7.6.7 replaced that with a
-hardcoded `http://localhost:4000` default. It is used for legacy `/bitstream/handle/...` redirects and for
-the `robots.txt` Sitemap, so leaving it at the default silently breaks historical citation URLs.
-`docker/docker-compose.yml` therefore requires it - the stack refuses to start if it is missing from `.env`.
+`ui.baseUrl` used to be derived from `DSPACE_HOST`/`DSPACE_PORT`/`DSPACE_SSL`. 7.6.7 replaced that with a
+hardcoded `http://localhost:4000` default and dropped the Host-header trust, so those variables no longer
+affect it. Note this was never a *working* public URL in Docker either - the compose file pins
+`DSPACE_UI_HOST: dspace-angular`, so the derived value used to be `http://dspace-angular:4000/`. The change is
+that a wrong value is now the same wrong value everywhere instead of an internal hostname.
+
+It matters because `ui.baseUrl` feeds more than it looks: legacy `/bitstream/handle/...` 301 redirects, the
+`robots.txt` `Sitemap:` line, and the Google Scholar `citation_pdf_url` / `citation_abstract_html_url` meta
+tags on every item page. All of them fail silently, with no log line.
+
+`UI_URL` already existed in the env files and already feeds the backend's `dspace.ui.url`
+(`docker-compose-rest.yml`, `cli.yml`) - the two are meant to be the same value, which is exactly what
+`config.example.yml` says about `ui.baseUrl`. `docker/docker-compose.yml` therefore defaults
+`DSPACE_UI_BASEURL` to `UI_URL`, and refuses to start if neither is set.
+
+> **If the UI is served under a namespace** (e.g. `/repository`), set `DSPACE_UI_NAMESPACE` to the same path
+> that appears in `UI_URL`. They are independent settings with no cross-check, and the legacy-bitstream
+> redirect builds its target from `nameSpace + route` resolved against `baseUrl` - so a namespaced `UI_URL`
+> with `DSPACE_UI_NAMESPACE` left at `/` produces a URL without the prefix, i.e. a 404 on every legacy
+> citation link.
 
 All other settings can be set using the following convention for naming the environment variables:
 

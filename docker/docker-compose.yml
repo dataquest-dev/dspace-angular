@@ -23,10 +23,15 @@ services:
       DSPACE_UI_PORT: 4000
       DSPACE_UI_NAMESPACE: ${DSPACE_UI_NAMESPACE:-/}
       # Public URL this UI answers on. Since 7.6.7 `ui.baseUrl` is no longer derived from
-      # DSPACE_UI_HOST/PORT/SSL, so it MUST be set explicitly in `.env` - otherwise legacy
-      # /bitstream/handle/... redirects and robots.txt Sitemap point at localhost.
-      # Intentionally has no default: a missing value fails the stack instead of failing silently.
-      DSPACE_UI_BASEURL: ${DSPACE_UI_BASEURL:?set it in .env to the public UI URL, e.g. https://lindat.example.org/repository}
+      # DSPACE_UI_HOST/PORT/SSL, so it has to be set explicitly - otherwise legacy
+      # /bitstream/handle/... redirects, the robots.txt Sitemap and the Google Scholar
+      # citation_* meta tags all point at localhost, silently.
+      # Defaults to UI_URL, which the env files already define and which also feeds the backend's
+      # `dspace.ui.url` (see docker-compose-rest.yml) - the two are meant to be the same value.
+      # If neither is set the stack refuses to start rather than serving wrong URLs.
+      # NOTE: if the UI is served under a namespace, DSPACE_UI_NAMESPACE must match the path in
+      # this URL, otherwise the legacy-bitstream redirect drops the prefix and 404s.
+      DSPACE_UI_BASEURL: ${DSPACE_UI_BASEURL:-${UI_URL:?set UI_URL (or DSPACE_UI_BASEURL) in the env file to the public UI URL, e.g. https://lindat.example.org/repository}}
       DSPACE_REST_SSL: ${DSPACE_SSL:-false}
       DSPACE_REST_HOST: ${DSPACE_HOST:-localhost}
       DSPACE_REST_PORT: ${DSPACE_REST_PORT:-8080}
