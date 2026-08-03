@@ -72,27 +72,6 @@ describe('DspaceRestResponseParsingService', () => {
         expect(response.payload._links.self.href).toBe('https://rest.api/core/items/eba1c085/bundles');
       });
 
-      it('should not warn when the REST API reduced the requested page size', () => {
-        // https://github.com/dataquest-dev/dspace-customers/issues/862
-        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?embed=primaryBitstream&size=9999');
-        const response = service.callEnsureSelfLink(request, responseWithSelfLink(
-          'https://rest.api/core/items/eba1c085/bundles?embed=primaryBitstream&size=1000',
-          { number: 0, size: 1000, totalPages: 1, totalElements: 2 }));
-
-        expect(console.warn).not.toHaveBeenCalled();
-        expect(response.payload._links.self.href).toBe('https://rest.api/core/items/eba1c085/bundles?size=9999');
-      });
-
-      it('should not warn when the REST API reduced the page size and no embeds are involved', () => {
-        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=9999');
-        const response = service.callEnsureSelfLink(request, responseWithSelfLink(
-          'https://rest.api/core/items/eba1c085/bundles?size=1000',
-          { number: 0, size: 1000, totalPages: 1, totalElements: 2 }));
-
-        expect(console.warn).not.toHaveBeenCalled();
-        expect(response.payload._links.self.href).toBe('https://rest.api/core/items/eba1c085/bundles?size=9999');
-      });
-
       it('should not warn when the self link only percent decoded a param value', () => {
         // https://github.com/dataquest-dev/dspace-customers/issues/862
         const request = requestFor('https://rest.api/statistics/usagereports/search/object?page=-1&size=10&uri=https%3A%2F%2Frest.api%2Fcore%2Fsites%2F8f842a80');
@@ -118,20 +97,13 @@ describe('DspaceRestResponseParsingService', () => {
 
     describe('differences that point at a problem with the endpoint', () => {
 
-      it('should warn when the page size shrank but the page block contradicts the self link', () => {
-        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=100');
+      it('should warn when the REST API reduced the requested page size', () => {
+        // callers are expected to stay within MAX_PAGE_SIZE, so a reduced size means a caller asked
+        // for a page the API was never going to serve
+        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=9999');
         service.callEnsureSelfLink(request, responseWithSelfLink(
-          'https://rest.api/core/items/eba1c085/bundles?size=20',
-          { number: 0, size: 100, totalPages: 1, totalElements: 2 }));
-
-        expect(console.warn).toHaveBeenCalledTimes(1);
-        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
-      });
-
-      it('should warn when the page size shrank but the response has no page block to confirm it', () => {
-        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=100');
-        service.callEnsureSelfLink(request,
-          responseWithSelfLink('https://rest.api/core/items/eba1c085/bundles?size=20'));
+          'https://rest.api/core/items/eba1c085/bundles?size=1000',
+          { number: 0, size: 1000, totalPages: 1, totalElements: 2 }));
 
         expect(console.warn).toHaveBeenCalledTimes(1);
         expect(console.warn).toHaveBeenCalledWith(MISMATCH);
@@ -147,60 +119,10 @@ describe('DspaceRestResponseParsingService', () => {
         expect(console.warn).toHaveBeenCalledWith(MISMATCH);
       });
 
-      it('should warn when the url is ambiguous about the page size', () => {
-        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=5&size=10');
-        service.callEnsureSelfLink(request, responseWithSelfLink(
-          'https://rest.api/core/items/eba1c085/bundles?size=3',
-          { number: 0, size: 3, totalPages: 1, totalElements: 2 }));
-
-        expect(console.warn).toHaveBeenCalledTimes(1);
-        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
-      });
-
       it('should still warn when a param value differs beyond its encoding', () => {
         const request = requestFor('https://rest.api/core/items/eba1c085/bundles?uri=https%3A%2F%2Frest.api%2Fcore%2Fsites%2Faaa');
         service.callEnsureSelfLink(request,
           responseWithSelfLink('https://rest.api/core/items/eba1c085/bundles?uri=https://rest.api/core/sites/bbb'));
-
-        expect(console.warn).toHaveBeenCalledTimes(1);
-        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
-      });
-
-      it('should warn when a reduced page size hides another param that differs', () => {
-        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?page=0&size=9999');
-        service.callEnsureSelfLink(request, responseWithSelfLink(
-          'https://rest.api/core/items/eba1c085/bundles?page=3&size=1000',
-          { number: 3, size: 1000, totalPages: 4, totalElements: 3200 }));
-
-        expect(console.warn).toHaveBeenCalledTimes(1);
-        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
-      });
-
-      it('should warn when the self link claims an empty page', () => {
-        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=10');
-        service.callEnsureSelfLink(request, responseWithSelfLink(
-          'https://rest.api/core/items/eba1c085/bundles?size=0',
-          { number: 0, size: 0, totalPages: 0, totalElements: 0 }));
-
-        expect(console.warn).toHaveBeenCalledTimes(1);
-        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
-      });
-
-      it('should not treat a param that merely ends in `size` as the page size', () => {
-        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?pagesize=9999');
-        service.callEnsureSelfLink(request, responseWithSelfLink(
-          'https://rest.api/core/items/eba1c085/bundles?pagesize=1000',
-          { number: 0, size: 1000, totalPages: 1, totalElements: 2 }));
-
-        expect(console.warn).toHaveBeenCalledTimes(1);
-        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
-      });
-
-      it('should not accept a page block that confirms the reduced size only as a string', () => {
-        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=9999');
-        service.callEnsureSelfLink(request, responseWithSelfLink(
-          'https://rest.api/core/items/eba1c085/bundles?size=1000',
-          { number: 0, size: '1000', totalPages: 1, totalElements: 2 }));
 
         expect(console.warn).toHaveBeenCalledTimes(1);
         expect(console.warn).toHaveBeenCalledWith(MISMATCH);

@@ -63,11 +63,6 @@ const urlPartsDiffer = (expected: string[], actual: string[]): boolean => {
 };
 
 /**
- * Matches a page size query param, e.g. `size=100`
- */
-const PAGE_SIZE_PARAM = /^size=(\d+)$/;
-
-/**
  * Percent decode each url part, so `uri=http%3A%2F%2Fx` and `uri=http://x` compare equal. Parts are
  * decoded one by one, after the url was split, so a decoded `&` can't merge two params.
  */
@@ -82,46 +77,20 @@ const decodeUrlParts = (parts: string[]): string[] => {
 };
 
 /**
- * Return the page sizes among the given url parts. More than one means the url is ambiguous
- */
-const getPageSizes = (parts: string[]): number[] => {
-  return parts
-    .map((part: string) => part.match(PAGE_SIZE_PARAM))
-    .filter((matches) => hasValue(matches))
-    .map((matches) => Number(matches[1]));
-};
-
-/**
- * Return true if the self link only shrank the page size to a value the response confirms itself.
+ * Return true if the self link differs from the requested url in a way that isn't just a different
+ * way of writing the same request.
  *
- * The REST API silently resets a `size` over its configured maximum. The frontend can't know that
- * maximum, so it requires the `page` block to corroborate the smaller size, and reports a self link
- * that contradicts the payload it describes. Zero is never a maximum, so an empty page isn't a
- * clamp either.
+ * Both sides are brought to the same form first: `embed`/`embed.size` params are stripped, because
+ * the frontend treats them as not part of a resource's identity and indexes without them, and both
+ * are percent decoded. Anything still differing is a real difference between what was asked for and
+ * what came back, including a page size the API reduced — callers are expected to stay within
+ * `MAX_PAGE_SIZE` rather than have that reported difference filtered out here.
  */
-const isReducedPageSize = (expected: string[], actual: string[], payload: any): boolean => {
-  const requestedSizes = getPageSizes(expected);
-  const effectiveSizes = getPageSizes(actual);
-  return requestedSizes.length === 1 && effectiveSizes.length === 1
-    && effectiveSizes[0] > 0 && effectiveSizes[0] < requestedSizes[0]
-    && hasValue(payload.page) && payload.page.size === effectiveSizes[0];
-};
-
-/**
- * Return true if the self link differs from the requested url in a way the REST API isn't expected
- * to introduce by itself. Not reported: `embed` params the API echoes back (they are stripped from
- * the requested url but not from the self link), percent encoding, and a confirmed page size clamp.
- */
-const isUnexpectedSelfLink = (requestedUrl: string, selfLink: string, payload: any): boolean => {
-  const expected = decodeUrlParts(splitUrlInParts(requestedUrl));
-  const actual = decodeUrlParts(splitUrlInParts(getUrlWithoutEmbedParams(selfLink)));
-
-  if (isReducedPageSize(expected, actual, payload)) {
-    const withoutPageSize = (parts: string[]): string[] =>
-      parts.filter((part: string) => !PAGE_SIZE_PARAM.test(part));
-    return urlPartsDiffer(withoutPageSize(expected), withoutPageSize(actual));
-  }
-  return urlPartsDiffer(expected, actual);
+const isUnexpectedSelfLink = (requestedUrl: string, selfLink: string): boolean => {
+  return urlPartsDiffer(
+    decodeUrlParts(splitUrlInParts(requestedUrl)),
+    decodeUrlParts(splitUrlInParts(getUrlWithoutEmbedParams(selfLink))),
+  );
 };
 
 @Injectable({ providedIn: 'root' })
@@ -231,7 +200,7 @@ export class DspaceRestResponseParsingService implements ResponseParsingService 
         const actual = splitUrlInParts(selfLink);
         if (expected[0] === actual[0] && urlPartsDiffer(expected, actual)) {
           // the self link is normalized either way, only the warning is filtered
-          if (isUnexpectedSelfLink(urlWithoutEmbedParams, selfLink, response.payload)) {
+          if (isUnexpectedSelfLink(urlWithoutEmbedParams, selfLink)) {
             console.warn(`The response for '${urlWithoutEmbedParams}' has the self link '${selfLink}'. These don't match. This could mean there's an issue with the REST endpoint`);
           }
           response.payload._links = Object.assign({}, response.payload._links, {
