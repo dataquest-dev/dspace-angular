@@ -83,12 +83,24 @@ describe('DspaceRestResponseParsingService', () => {
         expect(response.payload._links.self.href).toBe('https://rest.api/core/items/eba1c085/bundles?size=9999');
       });
 
-      it('should not warn when params are only in a different order', () => {
+      it('should not warn when the REST API reduced the page size and no embeds are involved', () => {
+        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=9999');
+        const response = service.callEnsureSelfLink(request, responseWithSelfLink(
+          'https://rest.api/core/items/eba1c085/bundles?size=1000',
+          { number: 0, size: 1000, totalPages: 1, totalElements: 2 }));
+
+        expect(console.warn).not.toHaveBeenCalled();
+        expect(response.payload._links.self.href).toBe('https://rest.api/core/items/eba1c085/bundles?size=9999');
+      });
+
+      it('should not warn or normalize when params are only in a different order', () => {
         const request = requestFor('https://rest.api/core/items/eba1c085/bundles?page=0&size=5');
-        service.callEnsureSelfLink(request,
+        const response = service.callEnsureSelfLink(request,
           responseWithSelfLink('https://rest.api/core/items/eba1c085/bundles?size=5&page=0'));
 
         expect(console.warn).not.toHaveBeenCalled();
+        // the urls hold the same params, so nothing is rewritten here
+        expect(response.payload._links.self.href).toBe('https://rest.api/core/items/eba1c085/bundles?size=5&page=0');
       });
 
     });
@@ -134,6 +146,47 @@ describe('DspaceRestResponseParsingService', () => {
         expect(console.warn).toHaveBeenCalledWith(MISMATCH);
       });
 
+      it('should warn when the self link claims an empty page', () => {
+        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=10');
+        service.callEnsureSelfLink(request, responseWithSelfLink(
+          'https://rest.api/core/items/eba1c085/bundles?size=0',
+          { number: 0, size: 0, totalPages: 0, totalElements: 0 }));
+
+        expect(console.warn).toHaveBeenCalledTimes(1);
+        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
+      });
+
+      it('should not treat a param that merely ends in `size` as the page size', () => {
+        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?pagesize=9999');
+        service.callEnsureSelfLink(request, responseWithSelfLink(
+          'https://rest.api/core/items/eba1c085/bundles?pagesize=1000',
+          { number: 0, size: 1000, totalPages: 1, totalElements: 2 }));
+
+        expect(console.warn).toHaveBeenCalledTimes(1);
+        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
+      });
+
+      it('should not accept a page block that confirms the reduced size only as a string', () => {
+        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=9999');
+        service.callEnsureSelfLink(request, responseWithSelfLink(
+          'https://rest.api/core/items/eba1c085/bundles?size=1000',
+          { number: 0, size: '1000', totalPages: 1, totalElements: 2 }));
+
+        expect(console.warn).toHaveBeenCalledTimes(1);
+        expect(console.warn).toHaveBeenCalledWith(MISMATCH);
+      });
+
+      it('should report the normalized request url and the raw self link in the warning', () => {
+        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?page=0&embed=primaryBitstream&size=5');
+        service.callEnsureSelfLink(request,
+          responseWithSelfLink('https://rest.api/core/items/eba1c085/bundles?page=3&embed=primaryBitstream&size=5'));
+
+        expect(console.warn).toHaveBeenCalledWith(
+          'The response for \'https://rest.api/core/items/eba1c085/bundles?page=0&size=5\' has the self link ' +
+          '\'https://rest.api/core/items/eba1c085/bundles?page=3&embed=primaryBitstream&size=5\'. ' +
+          'These don\'t match. This could mean there\'s an issue with the REST endpoint');
+      });
+
       it('should warn when a non-embed param differs', () => {
         const request = requestFor('https://rest.api/core/items/eba1c085/bundles?page=0&embed=primaryBitstream&size=5');
         service.callEnsureSelfLink(request,
@@ -175,6 +228,32 @@ describe('DspaceRestResponseParsingService', () => {
           responseWithSelfLink('https://rest.api/core/items/eba1c085/bundles?page=3&embed=primaryBitstream&size=5'));
 
         expect(response.payload._links.self.href).toBe('https://rest.api/core/items/eba1c085/bundles?page=0&size=5');
+      });
+
+      it('should keep the other links when it normalizes the self link', () => {
+        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?page=0&size=5');
+        const response = service.callEnsureSelfLink(request, {
+          payload: {
+            _links: {
+              self: { href: 'https://rest.api/core/items/eba1c085/bundles?page=3&size=5' },
+              primaryBitstream: { href: 'https://rest.api/core/bitstreams/6a5f' },
+            },
+          },
+          statusCode: 200,
+          statusText: 'OK',
+        });
+
+        expect(response.payload._links.self.href).toBe('https://rest.api/core/items/eba1c085/bundles?page=0&size=5');
+        expect(response.payload._links.primaryBitstream.href).toBe('https://rest.api/core/bitstreams/6a5f');
+      });
+
+      it('should not touch a self link on a different host', () => {
+        const request = requestFor('https://rest.api/core/items/eba1c085/bundles?size=5');
+        const response = service.callEnsureSelfLink(request,
+          responseWithSelfLink('https://other.api/core/items/eba1c085/bundles?size=5'));
+
+        expect(console.warn).not.toHaveBeenCalled();
+        expect(response.payload._links.self.href).toBe('https://other.api/core/items/eba1c085/bundles?size=5');
       });
 
       it('should not touch a self link that points at a different path', () => {

@@ -104,8 +104,9 @@ const isReducedPageSize = (expected: string[], actual: string[], payload: any): 
   const requestedSizes = getPageSizes(expected);
   const effectiveSizes = getPageSizes(actual);
   return requestedSizes.length === 1 && effectiveSizes.length === 1
-    && effectiveSizes[0] < requestedSizes[0]
-    && hasValue(payload) && hasValue(payload.page) && payload.page.size === effectiveSizes[0];
+    // a maximum page size is never zero, so an empty page isn't a clamp and stays reportable
+    && effectiveSizes[0] > 0 && effectiveSizes[0] < requestedSizes[0]
+    && hasValue(payload.page) && payload.page.size === effectiveSizes[0];
 };
 
 /**
@@ -120,6 +121,10 @@ const isReducedPageSize = (expected: string[], actual: string[], payload: any): 
  *   `…/bitstreams?page=0&size=5` vs `…/bitstreams?page=0&embed=accessStatus&size=5`. Stripping both
  *   sides also means a self link echoing embeds we never asked for goes unreported.
  * - The REST API reduced the requested page size, see {@link isReducedPageSize}.
+ *
+ * Note that {@link getUrlWithoutEmbedParams} rebuilds the url it is given, so running the self link
+ * through it also drops a fragment and a trailing slash on the path. Differences limited to those
+ * stop being reported too.
  *
  * @param requestedUrl the url that was requested, without embed params
  * @param selfLink     the self link as returned by the REST API
