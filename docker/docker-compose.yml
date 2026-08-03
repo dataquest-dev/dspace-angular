@@ -22,6 +22,11 @@ services:
       # Use only `4000`, not the {UI_PORT} from the .env because in the container it is always `4000`
       DSPACE_UI_PORT: 4000
       DSPACE_UI_NAMESPACE: ${DSPACE_UI_NAMESPACE:-/}
+      # Public URL this UI answers on. Since 7.6.7 `ui.baseUrl` is no longer derived from
+      # DSPACE_UI_HOST/PORT/SSL, so it MUST be set explicitly in `.env` - otherwise legacy
+      # /bitstream/handle/... redirects and robots.txt Sitemap point at localhost.
+      # Intentionally has no default: a missing value fails the stack instead of failing silently.
+      DSPACE_UI_BASEURL: ${DSPACE_UI_BASEURL:?set it in .env to the public UI URL, e.g. https://lindat.example.org/repository}
       DSPACE_REST_SSL: ${DSPACE_SSL:-false}
       DSPACE_REST_HOST: ${DSPACE_HOST:-localhost}
       DSPACE_REST_PORT: ${DSPACE_REST_PORT:-8080}

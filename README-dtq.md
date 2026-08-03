@@ -121,6 +121,17 @@ DSPACE_NAMESPACE # The namespace of the angular application
 DSPACE_SSL # Whether the angular application uses SSL [true/false]
 ```
 
+**Required since 7.6.7:**
+
+```bash
+DSPACE_UI_BASEURL # Public URL this UI answers on, e.g. https://lindat.example.org/repository
+```
+
+`ui.baseUrl` used to be derived from `DSPACE_HOST`/`DSPACE_PORT`/`DSPACE_SSL`; 7.6.7 replaced that with a
+hardcoded `http://localhost:4000` default. It is used for legacy `/bitstream/handle/...` redirects and for
+the `robots.txt` Sitemap, so leaving it at the default silently breaks historical citation URLs.
+`docker/docker-compose.yml` therefore requires it - the stack refuses to start if it is missing from `.env`.
+
 All other settings can be set using the following convention for naming the environment variables:
 
 1. replace all `.` with `_`
