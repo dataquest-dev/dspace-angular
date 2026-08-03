@@ -4811,7 +4811,11 @@
 
   "submission.sections.upload.upload-failed": "Upload failed",
 
+  "submission.sections.upload.upload-failed-file": "Upload failed for file \"{{fileName}}\"",
+
   "submission.sections.upload.upload-successful": "Upload successful",
+
+  "submission.sections.upload.upload-successful-file": "File \"{{fileName}}\" uploaded successfully",
 
   "submission.sections.accesses.form.discoverable-description": "When checked, this item will be discoverable in search/browse. When unchecked, the item will only be available via a direct link and will never appear in search/browse.",
 
