@@ -25,7 +25,7 @@
       </div>
 
       @if ((isMobile$ | async)) {
-        <div id="mobile-navbar-toggler" class="d-block d-lg-none ms-3">
+        <div id="mobile-navbar-toggler" class="d-block d-lg-none ms-1 ms-sm-3">
           <button id="navbar-toggler" class="btn btn-transparent" type="button" (click)="toggleNavbar()"
             [attr.aria-label]="'nav.toggle' | translate" aria-controls="collapsible-mobile-navbar" [attr.aria-expanded]="(isNavBarCollapsed$ | async) !== true">
             <span class="fas fa-bars fa-fw fa-xl toggler-icon" aria-hidden="true"></span>
