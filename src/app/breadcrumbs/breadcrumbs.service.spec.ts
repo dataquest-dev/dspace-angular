@@ -54,14 +54,18 @@ describe('BreadcrumbsService', () => {
   /**
    * A breadcrumb provider that only resolves once you tell it to, so a test can inspect what
    * breadcrumbs$ holds while a page is still resolving.
+   *
+   * A factory rather than a class: this file already declares TestBreadcrumbsService, and
+   * max-classes-per-file allows one.
    */
-  class DeferredBreadcrumbsService implements BreadcrumbsProviderService<string> {
-    subject: Subject<Breadcrumb[]> = new Subject();
+  const deferredBreadcrumbsProvider = (): BreadcrumbsProviderService<string> & { subject: Subject<Breadcrumb[]> } => {
+    const subject: Subject<Breadcrumb[]> = new Subject();
 
-    getBreadcrumbs(): Observable<Breadcrumb[]> {
-      return this.subject;
-    }
-  }
+    return {
+      subject,
+      getBreadcrumbs: (): Observable<Breadcrumb[]> => subject,
+    };
+  };
 
   const routeWith = (config: BreadcrumbConfig<string>) => ({
     snapshot: {
@@ -148,11 +152,11 @@ describe('BreadcrumbsService', () => {
     });
 
     describe('while a newly opened page is still resolving its breadcrumbs', () => {
-      let deferred: DeferredBreadcrumbsService;
+      let deferred: ReturnType<typeof deferredBreadcrumbsProvider>;
       let emissions: Breadcrumb[][];
 
       beforeEach(() => {
-        deferred = new DeferredBreadcrumbsService();
+        deferred = deferredBreadcrumbsProvider();
         emissions = [];
         service.breadcrumbs$.subscribe((breadcrumbs: Breadcrumb[]) => emissions.push(breadcrumbs));
       });
