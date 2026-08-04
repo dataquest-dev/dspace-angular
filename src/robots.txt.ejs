@@ -21,8 +21,7 @@ Disallow: /entities/*?f
 # Scoped search inside a community or collection, and every facet link.
 # "Disallow: /search" above only matches paths that START with /search, so
 # /collections/<uuid>/search and /communities/<uuid>/search stay crawlable.
-# Crawlers enumerating those facet combinations can saturate SSR
-# (observed at MENDELU, see PR #1402).
+# Crawlers enumerating those facet combinations can saturate SSR.
 Disallow: /collections/*/search
 Disallow: /communities/*/search
 # The two rules below cover any URL carrying a Discovery facet filter
@@ -31,8 +30,8 @@ Disallow: /communities/*/search
 # one (&f.), and robots.txt has no way to express "either".
 Disallow: /*?f.
 Disallow: /*&f.
-# NOTE: robots.txt is advisory only. The SSR-side enforcement used at MENDELU
-# (ssr.excludePathPatterns in config/config.yml) is not applied on this branch.
+# NOTE: robots.txt is advisory only; it does not stop crawlers that ignore it.
+# The SSR-side enforcement (ssr.excludePathPatterns) is not configured here.
 
 # Heavy Discovery facet queries on browse pages
 Disallow: /collections/*?f
