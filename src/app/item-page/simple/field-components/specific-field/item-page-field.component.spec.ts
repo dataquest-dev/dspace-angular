@@ -18,12 +18,17 @@ import { APP_CONFIG } from '../../../../../config/app-config.interface';
 import { environment } from '../../../../../environments/environment';
 import { BrowseService } from '../../../../core/browse/browse.service';
 import { BrowseDefinitionDataService } from '../../../../core/browse/browse-definition-data.service';
+import { buildPaginatedList } from '../../../../core/data/paginated-list.model';
+import { BrowseDefinition } from '../../../../core/shared/browse-definition.model';
+import { HierarchicalBrowseDefinition } from '../../../../core/shared/hierarchical-browse-definition.model';
 import { Item } from '../../../../core/shared/item.model';
 import { MathService } from '../../../../core/shared/math.service';
 import {
   MetadataMap,
   MetadataValue,
 } from '../../../../core/shared/metadata.models';
+import { PageInfo } from '../../../../core/shared/page-info.model';
+import { ValueListBrowseDefinition } from '../../../../core/shared/value-list-browse-definition.model';
 import { TranslateLoaderMock } from '../../../../shared/mocks/translate-loader.mock';
 import { createSuccessfulRemoteDataObject$ } from '../../../../shared/remote-data.utils';
 import { BrowseDefinitionDataServiceStub } from '../../../../shared/testing/browse-definition-data-service.stub';
@@ -180,6 +185,71 @@ describe('ItemPageFieldComponent', () => {
 
     it('should NOT have a rendered (non-browse) link since the value matches ^test', () => {
       expect(fixture.debugElement.query(By.css('a.ds-simple-metadata-link'))).toBeNull();
+    });
+  });
+
+  describe('picking the browse definition to link a metadata value to', () => {
+    /**
+     * Stands in for the stock DSpace config: a `subject` metadata browse over `dc.subject.*`, plus
+     * the hierarchical browse DSpace auto-creates for the `srsc` vocabulary, whose metadata is the
+     * `dc.subject` field the vocabulary is bound to in submission-forms.xml. `srsc` comes second,
+     * as it does over REST.
+     */
+    const subjectBrowse = Object.assign(new ValueListBrowseDefinition(), {
+      id: 'subject',
+      metadataKeys: ['dc.subject.*'],
+    });
+    const srscBrowse = Object.assign(new HierarchicalBrowseDefinition(), {
+      id: 'srsc',
+      vocabulary: 'srsc',
+      metadataKeys: ['dc.subject'],
+    });
+
+    const withDefinitions = (definitions: BrowseDefinition[]) => {
+      (comp as any).browseService = {
+        getBrowseDefinitions: () =>
+          createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), definitions)),
+      };
+    };
+
+    const resolve = (): { value: BrowseDefinition, emitted: boolean } => {
+      const result = { value: undefined, emitted: false };
+      comp.browseDefinition.subscribe((def: BrowseDefinition) => {
+        result.value = def;
+        result.emitted = true;
+      });
+      return result;
+    };
+
+    it('should use the metadata browse for an unqualified field covered by a ".*" spec', () => {
+      comp.fields = ['dc.subject'];
+      withDefinitions([subjectBrowse, srscBrowse]);
+
+      const result = resolve();
+
+      expect(result.emitted).toBeTrue();
+      expect(result.value.id).toEqual('subject');
+    });
+
+    it('should not link to a hierarchical browse even when it is the only match', () => {
+      comp.fields = ['dc.subject'];
+      withDefinitions([srscBrowse]);
+
+      const result = resolve();
+
+      // nothing emitted -> the template falls back to plain text instead of linking into a
+      // vocabulary tree that ignores startsWith
+      expect(result.emitted).toBeFalse();
+    });
+
+    it('should still match a qualified field against a ".*" spec', () => {
+      comp.fields = ['dc.subject.lcsh'];
+      withDefinitions([subjectBrowse]);
+
+      const result = resolve();
+
+      expect(result.emitted).toBeTrue();
+      expect(result.value.id).toEqual('subject');
     });
   });
 });
