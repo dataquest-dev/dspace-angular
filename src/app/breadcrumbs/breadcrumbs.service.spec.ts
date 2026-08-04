@@ -41,14 +41,34 @@ describe('BreadcrumbsService', () => {
     breadcrumbConfigB = { provider: breadcrumbProvider, key: 'another.path', url: 'another.com' };
   };
 
-  const changeActivatedRoute = (newRootRoute: any) => {
+  const changeActivatedRoute = (newRootRoute: any, url = '') => {
     // update the ActivatedRoute that the service will receive
     currentRootRoute = newRootRoute;
 
-    // the pipeline of BreadcrumbsService#listenForRouteChanges needs a NavigationEnd event,
-    // but the actual payload does not matter, since ActivatedRoute is mocked too.
-    routerEventsObs.next(new NavigationEnd(0, '', ''));
+    // the pipeline of BreadcrumbsService#listenForRouteChanges needs a NavigationEnd event.
+    // Its url only matters for tests that care whether we moved to a different page, since
+    // ActivatedRoute is mocked too.
+    routerEventsObs.next(new NavigationEnd(0, url, url));
   };
+
+  /**
+   * A breadcrumb provider that only resolves once you tell it to, so a test can inspect what
+   * breadcrumbs$ holds while a page is still resolving.
+   */
+  class DeferredBreadcrumbsService implements BreadcrumbsProviderService<string> {
+    subject: Subject<Breadcrumb[]> = new Subject();
+
+    getBreadcrumbs(): Observable<Breadcrumb[]> {
+      return this.subject;
+    }
+  }
+
+  const routeWith = (config: BreadcrumbConfig<string>) => ({
+    snapshot: {
+      data: { breadcrumb: config },
+      routeConfig: { resolve: { breadcrumb: {} } },
+    },
+  });
 
   beforeEach(() => {
     initBreadcrumbs();
@@ -125,6 +145,43 @@ describe('BreadcrumbsService', () => {
 
       changeActivatedRoute(route2);
       expect(service.breadcrumbs$).toBeObservable(cold('a', { a: expectation2 }));
+    });
+
+    describe('while a newly opened page is still resolving its breadcrumbs', () => {
+      let deferred: DeferredBreadcrumbsService;
+      let emissions: Breadcrumb[][];
+
+      beforeEach(() => {
+        deferred = new DeferredBreadcrumbsService();
+        emissions = [];
+        service.breadcrumbs$.subscribe((breadcrumbs: Breadcrumb[]) => emissions.push(breadcrumbs));
+      });
+
+      it('should not keep showing the previous page\'s breadcrumbs', () => {
+        changeActivatedRoute(routeWith(breadcrumbConfigA), '/items/aaa');
+        expect(emissions[emissions.length - 1])
+          .toEqual([new Breadcrumb(breadcrumbConfigA.key, breadcrumbConfigA.url)]);
+
+        // navigate somewhere else; its provider has not resolved yet
+        changeActivatedRoute(routeWith({ provider: deferred, key: 'slow.path', url: 'slow.com' }), '/items/bbb');
+        expect(emissions[emissions.length - 1]).toEqual([]);
+
+        // once it resolves, the new page's breadcrumbs show up
+        deferred.subject.next([new Breadcrumb('slow.path', 'slow.com')]);
+        expect(emissions[emissions.length - 1]).toEqual([new Breadcrumb('slow.path', 'slow.com')]);
+      });
+
+      it('should keep the breadcrumbs when only the query params changed', () => {
+        changeActivatedRoute(routeWith(breadcrumbConfigA), '/search');
+        const resolved = [new Breadcrumb(breadcrumbConfigA.key, breadcrumbConfigA.url)];
+        expect(emissions[emissions.length - 1]).toEqual(resolved);
+        const emittedSoFar = emissions.length;
+
+        // paging/filtering on the same page must not blank the trail out
+        changeActivatedRoute(routeWith({ provider: deferred, key: 'slow.path', url: 'slow.com' }), '/search?page=2');
+        expect(emissions[emissions.length - 1]).toEqual(resolved);
+        expect(emissions.slice(emittedSoFar)).not.toContain([]);
+      });
     });
   });
 

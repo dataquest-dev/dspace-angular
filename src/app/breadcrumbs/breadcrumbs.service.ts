@@ -39,6 +39,11 @@ export class BreadcrumbsService {
    */
   showBreadcrumbs$: ReplaySubject<boolean> = new ReplaySubject(1);
 
+  /**
+   * Path (without query params) of the page the current breadcrumbs belong to
+   */
+  private currentPath: string;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -52,7 +57,7 @@ export class BreadcrumbsService {
     // supply events to this.breadcrumbs$
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-      tap(() => this.reset()),
+      tap((event: NavigationEnd) => this.reset(event)),
       switchMap(() => this.resolveBreadcrumbs(this.route.root)),
     ).subscribe(this.breadcrumbs$);
   }
@@ -91,9 +96,26 @@ export class BreadcrumbsService {
 
   /**
    * Resets the state of the breadcrumbs
+   *
+   * The breadcrumb providers resolved below are asynchronous, so between arriving on a page and
+   * its breadcrumbs being resolved there is a gap - on a cold cache, seconds. `breadcrumbs$` is a
+   * ReplaySubject, so for the whole of that gap it keeps replaying the *previous* page's trail,
+   * and the new page renders a breadcrumb belonging to somewhere else entirely.
+   *
+   * Clearing it here means the trail is empty until the new one arrives; the component still
+   * renders the "Home" crumb on its own, so the bar keeps its height and nothing jumps.
+   *
+   * Only done when the path actually changed: paging and filtering re-emit NavigationEnd for the
+   * same page, and dropping the trail on those would make it flicker on every click.
    */
-  private reset() {
+  private reset(event?: NavigationEnd) {
     this.showBreadcrumbs$.next(true);
+
+    const path = (event?.urlAfterRedirects ?? '').split('?')[0];
+    if (path !== this.currentPath) {
+      this.currentPath = path;
+      this.breadcrumbs$.next([]);
+    }
   }
 
 }
