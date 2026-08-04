@@ -7333,6 +7333,25 @@
   // "search.filters.namedresourcetype.Workspace": "Workspace",
   "search.filters.namedresourcetype.Workspace": "Workspace",
 
+  // Stejné hodnoty klíčované podle authority key - viz komentář v en.json5.
+  // Fasetový seznam používá zobrazovanou hodnotu ("Archived"), zatímco už
+  // aplikovaný filtr (odznak nad výsledky i zaškrtnuté políčko) přichází
+  // z REST API pod svým authority key ("item").
+  // "search.filters.namedresourcetype.item": "Archived",
+  "search.filters.namedresourcetype.item": "Archivováno",
+
+  // "search.filters.namedresourcetype.validation": "Validation",
+  "search.filters.namedresourcetype.validation": "Ověřování",
+
+  // "search.filters.namedresourcetype.waitingforcontroller": "Waiting for reviewer",
+  "search.filters.namedresourcetype.waitingforcontroller": "Čeká na kontrolu",
+
+  // "search.filters.namedresourcetype.workflow": "Workflow",
+  "search.filters.namedresourcetype.workflow": "Workflow",
+
+  // "search.filters.namedresourcetype.workspace": "Workspace",
+  "search.filters.namedresourcetype.workspace": "Workspace",
+
   // "search.filters.withdrawn.true": "Yes",
   "search.filters.withdrawn.true": "Ano",
 
