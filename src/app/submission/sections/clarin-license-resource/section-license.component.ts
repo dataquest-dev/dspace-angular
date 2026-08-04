@@ -35,6 +35,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FindListOptions } from 'src/app/core/data/find-list-options.model';
 import { hasFailed } from 'src/app/core/data/request-entry-state.model';
 import {RequestParam} from '../../../core/cache/models/request-param.model';
+import { MAX_PAGE_SIZE } from '../../../core/data/find-list-options.model';
 
 /**
  * This component render resource license step in the submission workflow.
@@ -551,7 +552,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     const options = new FindListOptions();
     options.currentPage = 0;
     // Load all licenses
-    options.elementsPerPage = 1000;
+    options.elementsPerPage = MAX_PAGE_SIZE;
     return this.clarinLicenseService.findAll(options, false)
       .pipe(getFirstSucceededRemoteListPayload())
       .toPromise();
