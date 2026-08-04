@@ -36,6 +36,7 @@ export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
     'linkType',
     'paginationId',
     'searchEnabled',
+    'headingLevel',
     'sideBarWidth',
     'searchFormPlaceholder',
     'selectable',
@@ -75,6 +76,8 @@ export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
   @Input() paginationId: string;
 
   @Input() searchEnabled: boolean;
+
+  @Input() headingLevel: 1 | 2;
 
   @Input() sideBarWidth: number;
 

@@ -127,6 +127,16 @@ export class SearchResultsComponent {
   @Input() disableHeader = false;
 
   /**
+   * Heading level to render the results header at.
+   *
+   * On a standalone search page the results header is the page's main heading, so it must stay an
+   * h1. When the search is embedded under a page that already has its own h1 - a community or
+   * collection page, whose h1 is the comcol name - it is a subordinate section heading and has to
+   * be an h2, otherwise the page ends up with two h1s.
+   */
+  @Input() headingLevel: 1 | 2 = 1;
+
+  /**
    * A boolean representing if result entries are selectable
    */
   @Input() selectable = false;

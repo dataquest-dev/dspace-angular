@@ -133,6 +133,36 @@ describe('SearchResultsComponent', () => {
     expect(routerLinkQuery[0].queryParams.query).toBe('"foobar"', 'query params should be "foobar"');
   });
 
+  describe('the results header', () => {
+    beforeEach(() => {
+      (comp as any).searchResults = { hasSucceeded: true, isLoading: false, payload: { page: { length: 2 } } };
+      (comp as any).searchConfig = {};
+    });
+
+    it('should be an h1 by default, as the main heading of a standalone search page', () => {
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('h1'))).not.toBeNull();
+      expect(fixture.debugElement.query(By.css('h2'))).toBeNull();
+    });
+
+    it('should be an h2 when embedded under a page that already owns the h1', () => {
+      comp.headingLevel = 2;
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('h1'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('h2'))).not.toBeNull();
+    });
+
+    it('should render no heading at all when the header is disabled', () => {
+      comp.disableHeader = true;
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('h1'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('h2'))).toBeNull();
+    });
+  });
+
   it('should add quotes around the given string', () => {
     expect(comp.surroundStringWithQuotes('teststring')).toEqual('"teststring"');
   });

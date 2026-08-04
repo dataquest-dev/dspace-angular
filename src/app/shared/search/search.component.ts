@@ -162,6 +162,12 @@ export class SearchComponent implements OnDestroy, OnInit {
   @Input() searchEnabled = true;
 
   /**
+   * Heading level for the results header, forwarded to {@link SearchResultsComponent}. Pass 2 when
+   * embedding this search under a page that already owns the h1.
+   */
+  @Input() headingLevel: 1 | 2 = 1;
+
+  /**
    * The width of the sidebar (bootstrap columns)
    */
   @Input() sideBarWidth = 3;
