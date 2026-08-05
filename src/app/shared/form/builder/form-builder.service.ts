@@ -443,8 +443,11 @@ export class FormBuilderService extends DynamicFormService {
     const ids = new Set<string>(this.typeFields.values());
     const collectFromRows = (formRows: FormRowModel[]): void => {
       (formRows || []).forEach((formRow: FormRowModel) => (formRow?.fields || []).forEach((field: FormFieldModel) => {
-        if (isNotEmpty(field?.typeBindField)) {
-          ids.add(field.typeBindField.replace(/\./g, '_'));
+        // trim exactly like FieldParser.getTypeBindFieldRef does, otherwise a padded value in the
+        // XML would register ' edm_type ' while the relations point at 'edm_type'
+        const typeBindField = field?.typeBindField?.trim();
+        if (isNotEmpty(typeBindField)) {
+          ids.add(typeBindField.replace(/\./g, '_'));
         }
         collectFromRows(field?.rows);
       }));

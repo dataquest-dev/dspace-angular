@@ -955,7 +955,8 @@ describe('FormBuilderService per-field type bind test suite', () => {
       } as FormFieldModel] } as FormRowModel,
       { fields: [{
         input: { type: 'onebox' }, label: 'Language', mandatory: 'false', repeatable: false,
-        hints: '', languageCodes: [], typeBind: ['TEXT'], typeBindField: 'edm.type',
+        // padded on purpose: the registration path and the relation ids must agree on trimming
+        hints: '', languageCodes: [], typeBind: ['TEXT'], typeBindField: ' edm.type ',
         selectableMetadata: [{ metadata: 'dc.language.iso' }],
       } as FormFieldModel] } as FormRowModel,
     ],
