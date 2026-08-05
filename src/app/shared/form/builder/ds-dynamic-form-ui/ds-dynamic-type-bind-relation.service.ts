@@ -112,9 +112,10 @@ export class DsDynamicTypeBindRelationService {
       // submission scope, form/section type and other high level properties
       const bindModel: any = this.formBuilderService.getTypeBindModel(condition?.id);
 
-      // The controlling model may not be part of this form at all (e.g. `dc.language.iso=>edm.type`
-      // is configured deployment-wide but this collection's form has no `edm.type` field), or it may
-      // not be registered yet. Keep MATCH_VISIBLE fields hidden until it becomes available.
+      // No model at all: getTypeBindModel falls back to the default controlling model, so this means
+      // neither the field's own controlling model nor the default one has been registered yet -
+      // typically because the section that holds them has not been parsed. Keep MATCH_VISIBLE fields
+      // hidden until one of them shows up.
       if (hasNoValue(bindModel)) {
         return relation.match === matcher.opposingMatch;
       }

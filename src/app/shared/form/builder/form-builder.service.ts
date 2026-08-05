@@ -110,8 +110,15 @@ export class FormBuilderService extends DynamicFormService {
   /**
    * The parsed rows of the current submission, kept so that controlling models can still be
    * registered when the `submit.type-bind.field` property arrives after the form was parsed.
+   * Dropped - and no longer filled - as soon as that property has been processed.
    */
   private typeBindParsedRows: DynamicFormControlModel[][];
+
+  /**
+   * Whether the `submit.type-bind.field` property has been processed (successfully or not), i.e.
+   * whether {@link typeFields} can still change
+   */
+  private typeBindConfigLoaded: boolean;
 
   /**
    * The fields to use for type binding: TYPE_BIND_DEFAULT_KEY -> the default controlling model id,
@@ -135,6 +142,8 @@ export class FormBuilderService extends DynamicFormService {
     this.typeBindModelUpdates = new Subject<string>();
 
     this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
+    // Without a config service the type field map can never change, so nothing has to be re-scanned
+    this.typeBindConfigLoaded = hasNoValue(this.configService);
     // If optional config service was passed, perform an initial set of type field (default dc_type) for type binds
     if (hasValue(this.configService)) {
       this.setTypeBindFieldFromConfig();
@@ -385,7 +394,12 @@ export class FormBuilderService extends DynamicFormService {
     if (hasValue(typeBindModel)) {
       this.setTypeBindModel(typeBindModel);
     } else {
-      this.typeBindParsedRows.push(rows);
+      if (!this.typeBindConfigLoaded) {
+        // Only needed until submit.type-bind.field has been processed; after that every controlling
+        // field id is known at parse time, so there is nothing left to re-scan and holding on to the
+        // model graphs of re-parsed sections would just grow without bound.
+        this.typeBindParsedRows.push(rows);
+      }
       this.registerTypeBindModels(this.getTypeBindModelIds(rawData), rows);
     }
     return rows;
@@ -642,9 +656,12 @@ export class FormBuilderService extends DynamicFormService {
     this.configService.findByPropertyName('submit.type-bind.field').pipe(
       getFirstCompletedRemoteData(),
     ).subscribe((remoteData: any) => {
+      // the type field map cannot change any more, whatever the outcome
+      this.typeBindConfigLoaded = true;
       // make sure we got a success response from the backend
       if (!remoteData.hasSucceeded) {
         this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
+        this.typeBindParsedRows = [];
         return;
       }
       const typeFieldConfigValues: string[] = remoteData.payload.values || [];
@@ -670,9 +687,10 @@ export class FormBuilderService extends DynamicFormService {
         this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
       }
       // Forms parsed before the property arrived could not know about the `A=>B` overrides yet, so
-      // give their controlling models a second chance to be registered.
+      // give their controlling models a second chance to be registered, then drop the cache.
       const typeBindModelIds = Array.from(this.typeFields.values());
       this.typeBindParsedRows.forEach((rows: DynamicFormControlModel[]) => this.registerTypeBindModels(typeBindModelIds, rows));
+      this.typeBindParsedRows = [];
     });
   }
 
