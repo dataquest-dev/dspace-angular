@@ -76,10 +76,8 @@ export class DsDynamicTypeBindRelationService {
       }
 
       if (bindModel.id === model.id) {
-        // A misconfigured <type-bind field="..."> pointing at the field itself. Skip the relation
-        // instead of throwing: this runs during form init and from the type bind model registration
-        // callback, so throwing would take down the whole submission section over one bad field.
-        console.warn(`FormControl ${model.id} cannot depend on itself, ignoring its type bind relation`);
+        // A misconfigured <type-bind field="..."> pointing at the field itself - see
+        // dependsOnItself(), which stops the relation from being evaluated at all.
         return;
       }
 
@@ -89,6 +87,15 @@ export class DsDynamicTypeBindRelationService {
     }));
 
     return models;
+  }
+
+  /**
+   * Whether any type bind relation of the given model resolves to the model itself, i.e. the field
+   * declares `<type-bind field="...">` pointing at its own metadata field.
+   */
+  private dependsOnItself(model: DynamicFormControlModel): boolean {
+    return ((model as any).typeBindRelations || []).some((relGroup) =>
+      (relGroup.when || []).some((rel) => this.formBuilderService.getTypeBindModel(rel?.id)?.id === model.id));
   }
 
   /**
@@ -203,6 +210,17 @@ export class DsDynamicTypeBindRelationService {
   subscribeRelations(model: DynamicFormControlModel, control: UntypedFormControl): Subscription[] {
 
     const subscriptions = new Subscription();
+
+    if (this.dependsOnItself(model)) {
+      // Misconfigured <type-bind field="..."> pointing at the field itself. Upstream throws here,
+      // which would take down the whole submission section over one bad field; and merely skipping
+      // the relation is not enough either - evaluating it would hide the field on the initial pass
+      // and nothing would ever re-evaluate it, making it permanently unreachable. Leave the field
+      // exactly as rendered and warn.
+      console.warn(`FormControl ${model.id} cannot depend on itself, ignoring its type bind relation`);
+      return [subscriptions];
+    }
+
     // keyed by model id, but compared by identity: re-parsing the section that holds the controlling
     // field produces a NEW model instance under the same id, and this field has to follow it
     const attachedModels = new Map<string, DynamicFormControlModel>();

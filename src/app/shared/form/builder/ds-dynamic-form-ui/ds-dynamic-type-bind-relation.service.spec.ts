@@ -174,6 +174,22 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       expect(testModel.hidden).toBeFalse();
     });
 
+    it('Should leave a self-bound field untouched instead of hiding it forever', () => {
+      const formBuilderServiceSpy: any = (service as any).formBuilderService;
+      const testModel = mockInputWithTypeBindModel;
+      // the field's own <type-bind field="..."> resolves back to the field itself
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], testModel.id);
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(testModel);
+      testModel.hidden = false;
+
+      const subscriptions = service.subscribeRelations(testModel, new UntypedFormControl());
+
+      expect(service.getRelatedFormModel(testModel)).toHaveSize(0);
+      // nothing is evaluated, so the misconfigured field stays usable instead of being hidden forever
+      expect(testModel.hidden).toBeFalse();
+      subscriptions.forEach((subscription) => subscription.unsubscribe());
+    });
+
     it('Should attach the real controlling model even when it was first bound to the default one', () => {
       // until edm_type is registered, getTypeBindModel falls back to the default dc_type model, so
       // a related model IS attached - the late registration must still be picked up
