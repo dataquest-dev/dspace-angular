@@ -7,7 +7,7 @@
   }
   @if ((mdRepresentation.representationType==='plain_text') && isLink()) {
     <a class="dont-break-out"
-      target="_blank" [href]="mdRepresentation.getValue()" role="link" tabindex="0">
+      target="_blank" rel="noopener noreferrer" [href]="mdRepresentation.getValue()" role="link" tabindex="0">
       {{mdRepresentation.getValue()}}
     </a>
   }

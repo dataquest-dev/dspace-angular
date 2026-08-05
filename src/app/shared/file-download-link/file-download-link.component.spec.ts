@@ -128,6 +128,19 @@ describe('FileDownloadLinkComponent', () => {
           const lock = fixture.debugElement.query(By.css('.fa-lock'));
           expect(lock).toBeNull();
         });
+
+        it('should set rel="noopener" only when opening in a new tab', () => {
+          scheduler.flush();
+          fixture.detectChanges();
+          // Default: same tab, so no rel at all. The target is our own bitstream route and DSpace
+          // records the Referer for download statistics, so noreferrer must not be added here.
+          expect(fixture.debugElement.query(By.css('a')).nativeElement.getAttribute('rel')).toBeFalsy();
+
+          component.isBlank = true;
+          fixture.detectChanges();
+
+          expect(fixture.debugElement.query(By.css('a')).nativeElement.getAttribute('rel')).toBe('noopener');
+        });
       });
 
       describe('when the user has no download rights but has the right to request a copy', () => {

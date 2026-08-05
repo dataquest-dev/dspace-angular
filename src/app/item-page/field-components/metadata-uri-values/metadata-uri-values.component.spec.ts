@@ -84,6 +84,26 @@ describe('MetadataUriValuesComponent', () => {
     expect(separators.length).toBe(mockMetadata.length - 1);
   });
 
+  it('should open external URIs in a new tab with rel="noopener noreferrer"', () => {
+    const links = fixture.debugElement.queryAll(By.css('a'));
+
+    expect(links.length).toBe(mockMetadata.length);
+    links.forEach((link) => {
+      expect(link.nativeElement.getAttribute('target')).toBe('_blank');
+      expect(link.nativeElement.getAttribute('rel')).toBe('noopener noreferrer');
+    });
+  });
+
+  it('should keep internal URIs in the same tab and not set rel', () => {
+    comp.mdValues = [{ language: 'en_US', value: environment.ui.baseUrl + '/handle/123456789/1' }] as MetadataValue[];
+    fixture.detectChanges();
+
+    const link = fixture.debugElement.query(By.css('a')).nativeElement;
+    expect(link.getAttribute('target')).toBe('_self');
+    // An internal target keeps its Referer: DSpace records it for usage statistics.
+    expect(link.getAttribute('rel')).toBeFalsy();
+  });
+
   describe('when linktext is defined', () => {
 
     beforeEach(() => {

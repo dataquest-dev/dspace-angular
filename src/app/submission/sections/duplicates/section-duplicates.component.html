@@ -10,7 +10,7 @@ Template for the detect duplicates submission section component
     <div class="alert alert-warning w-100">{{ 'submission.sections.duplicates.detected' | translate }}</div>
     @for (dupe of data?.potentialDuplicates; track dupe) {
       <div class="ds-duplicate">
-        <a target="_blank" [href]="getItemLink(dupe.uuid)">{{dupe.title}}</a>
+        <a target="_blank" rel="noopener" [href]="getItemLink(dupe.uuid)">{{dupe.title}}</a>
         @for (metadatum of Metadata.toViewModelList(dupe.metadata); track metadatum) {
           <div>
             {{('item.preview.' + metadatum.key) | translate}} {{metadatum.value}}

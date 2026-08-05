@@ -9,7 +9,7 @@
           <div [ngClass]="{'col-auto': variant === 'full', 'row': variant === 'small'}"
             style="align-content: center;"
             >
-            <a [href]="uri" target="_blank" class="link-anchor dont-break-out ds-simple-metadata-link">
+            <a [href]="uri" target="_blank" rel="noopener noreferrer" class="link-anchor dont-break-out ds-simple-metadata-link">
               <img (error)="showImage = false" [src]="imgSrc$ | async" [alt]="name" class="cc-image"
               [ngStyle]="{
                 'width': 'var(--ds-thumbnail-max-width)',
@@ -24,7 +24,7 @@
           <div [ngClass]="{ 'row': variant === 'small', 'col': variant === 'full' }">
             <span>
               {{ showDisclaimer ? ('item.page.cc.license.disclaimer' | translate) : '' }}
-              <a [href]="uri" target="_blank" id="cc-name">{{ name }}</a>
+              <a [href]="uri" target="_blank" rel="noopener noreferrer" id="cc-name">{{ name }}</a>
             </span>
           </div>
         }

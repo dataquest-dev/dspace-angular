@@ -35,7 +35,7 @@
                     @for (targetElement of (targets$ | async); track targetElement; let i = $index) {
                       <tr class="text-center">
                         <td>
-                          <a target="_blank" [routerLink]="['/entities/person/', getTargetUuid(targetElement)]">{{targetElement.display}}</a>
+                          <a target="_blank" rel="noopener" [routerLink]="['/entities/person/', getTargetUuid(targetElement)]">{{targetElement.display}}</a>
                         </td>
                         <td>
                           <div class="btn-group edit-field">

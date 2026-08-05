@@ -9,7 +9,7 @@
           <div>
             <h1>
               {{'suggestion.suggestionFor' | translate}}
-              <a target="_blank" [routerLink]="['/entities/person/', researcherUuid]">{{researcherName}}</a>
+              <a target="_blank" rel="noopener" [routerLink]="['/entities/person/', researcherUuid]">{{researcherName}}</a>
               {{'suggestion.from.source' | translate}} {{ translateSuggestionSource() | translate }}
             </h1>
             <div class="mb-3 mt-3">
