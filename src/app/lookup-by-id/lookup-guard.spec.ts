@@ -90,7 +90,7 @@ describe('lookupGuard', () => {
     expect(dsoService.findByIdAndIDType).toHaveBeenCalledWith('34cfed7c-f597-49ef-9cbe-ea351f0023c2', IdentifierType.UUID);
   });
 
-  it('should resolve its dependencies from the injector when they are not passed in', () => {
+  it('should resolve its dependencies from the injector when they are not passed in', (done) => {
     TestBed.configureTestingModule({
       providers: [
         { provide: DsoRedirectService, useValue: dsoService },
@@ -103,7 +103,10 @@ describe('lookupGuard', () => {
     const result = TestBed.runInInjectionContext(() => lookupGuard(handleRoute, state)) as Observable<boolean | UrlTree>;
 
     expect(dsoService.findByIdAndIDType).toHaveBeenCalledWith('hdl:123456789/1234', IdentifierType.HANDLE);
-    result.subscribe((activate) => expect(activate).toBeFalse());
+    result.subscribe((activate) => {
+      expect(activate).toBeFalse();
+      done();
+    });
   });
 
   describe('when the object was found', () => {
