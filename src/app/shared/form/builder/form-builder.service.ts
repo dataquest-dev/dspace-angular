@@ -76,6 +76,11 @@ export const TYPE_BIND_DEFAULT_KEY = 'default';
  */
 const TYPE_BIND_FIELD_SEPARATOR = '=>';
 
+/**
+ * Model id of the controlling field used when `submit.type-bind.field` declares no default
+ */
+const TYPE_BIND_DEFAULT_MODEL_ID = 'dc_type';
+
 @Injectable({ providedIn: 'root' })
 export class FormBuilderService extends DynamicFormService {
 
@@ -141,7 +146,7 @@ export class FormBuilderService extends DynamicFormService {
     this.typeBindParsedRows = [];
     this.typeBindModelUpdates = new Subject<string>();
 
-    this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
+    this.typeFields.set(TYPE_BIND_DEFAULT_KEY, TYPE_BIND_DEFAULT_MODEL_ID);
     // Without a config service the type field map can never change, so nothing has to be re-scanned
     this.typeBindConfigLoaded = hasNoValue(this.configService);
     // If optional config service was passed, perform an initial set of type field (default dc_type) for type binds
@@ -168,8 +173,8 @@ export class FormBuilderService extends DynamicFormService {
    *   to a model that is not part of the current form, the default (usually `dc_type`) model is returned.
    */
   getTypeBindModel(typeBindFieldRef?: string): DynamicFormControlModel | undefined {
-    const defaultModelId = this.typeFields.get(TYPE_BIND_DEFAULT_KEY);
-    return this.typeBindModel.get(this.resolveTypeBindModelId(typeBindFieldRef)) ?? this.typeBindModel.get(defaultModelId);
+    return this.typeBindModel.get(this.resolveTypeBindModelId(typeBindFieldRef))
+      ?? this.typeBindModel.get(this.getDefaultTypeBindModelId());
   }
 
   /**
@@ -178,7 +183,15 @@ export class FormBuilderService extends DynamicFormService {
    * (yet) part of the form, so the answer does not depend on parse order.
    */
   resolveTypeBindModelId(typeBindFieldRef?: string): string {
-    return this.typeFields.get(typeBindFieldRef) ?? typeBindFieldRef ?? this.typeFields.get(TYPE_BIND_DEFAULT_KEY);
+    return this.typeFields.get(typeBindFieldRef) ?? typeBindFieldRef ?? this.getDefaultTypeBindModelId();
+  }
+
+  /**
+   * The id of the model of the default controlling field. Never undefined: the constructor seeds the
+   * map and {@link setTypeBindFieldFromConfig} restores the entry whatever the configuration says.
+   */
+  private getDefaultTypeBindModelId(): string {
+    return this.typeFields.get(TYPE_BIND_DEFAULT_KEY) ?? TYPE_BIND_DEFAULT_MODEL_ID;
   }
 
   setTypeBindModel(model: DynamicFormControlModel) {
@@ -671,7 +684,7 @@ export class FormBuilderService extends DynamicFormService {
       this.typeBindConfigLoaded = true;
       // make sure we got a success response from the backend
       if (!remoteData.hasSucceeded) {
-        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
+        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, TYPE_BIND_DEFAULT_MODEL_ID);
         this.typeBindParsedRows = [];
         return;
       }
@@ -695,7 +708,7 @@ export class FormBuilderService extends DynamicFormService {
         this.typeFields.set(parts[0], parts[1].replace(/\./g, '_'));
       });
       if (hasNoValue(this.typeFields.get(TYPE_BIND_DEFAULT_KEY))) {
-        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
+        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, TYPE_BIND_DEFAULT_MODEL_ID);
       }
       // Forms parsed before the property arrived could not know about the `A=>B` overrides yet, so
       // give their controlling models a second chance to be registered, then drop the cache.
@@ -714,7 +727,7 @@ export class FormBuilderService extends DynamicFormService {
       if (hasValue(this.configService)) {
         this.setTypeBindFieldFromConfig();
       } else {
-        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
+        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, TYPE_BIND_DEFAULT_MODEL_ID);
       }
     }
     return this.typeFields.get(TYPE_BIND_DEFAULT_KEY);

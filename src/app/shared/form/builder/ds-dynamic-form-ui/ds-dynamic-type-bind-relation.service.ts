@@ -77,7 +77,7 @@ export class DsDynamicTypeBindRelationService {
 
       if (bindModel.id === model.id) {
         // A misconfigured <type-bind field="..."> pointing at the field itself - see
-        // dependsOnItself(), which stops the relation from being evaluated at all.
+        // isConfiguredToDependOnItself(), which stops the relation from being evaluated at all.
         return;
       }
 
