@@ -36,8 +36,9 @@ import { ThemedThumbnailComponent } from '../../../../../../../app/thumbnail/the
   styleUrls: [
     '../../../../../../../app/item-page/simple/item-types/untyped-item/untyped-item.component.scss',
   ],
-  // templateUrl: './untyped-item.component.html',
-  templateUrl: '../../../../../../../app/item-page/simple/item-types/untyped-item/untyped-item.component.html',
+  // The theme now owns this template: it adds the JCU thesis fields and the translated abstract
+  // on top of the upstream layout, so it can no longer reuse the base template.
+  templateUrl: './untyped-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,

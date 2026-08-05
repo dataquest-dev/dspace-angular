@@ -4383,6 +4383,24 @@
   // "item.page.abstract": "Abstract",
   "item.page.abstract": "Abstrakt",
 
+  // "item.page.abstract-translated": "Abstract (English)",
+  "item.page.abstract-translated": "Abstrakt (anglicky)",
+
+  // "item.page.type": "Document type",
+  "item.page.type": "Typ dokumentu",
+
+  // "item.page.thesis.degree-name": "Degree",
+  "item.page.thesis.degree-name": "Akademický titul",
+
+  // "item.page.thesis.degree-program": "Study programme",
+  "item.page.thesis.degree-program": "Studijní program",
+
+  // "item.page.thesis.degree-discipline": "Field of study",
+  "item.page.thesis.degree-discipline": "Studijní obor",
+
+  // "item.page.thesis.degree-grantor": "Awarding institution",
+  "item.page.thesis.degree-grantor": "Udělující instituce",
+
   // "item.page.author": "Author",
   "item.page.author": "Autor",
 

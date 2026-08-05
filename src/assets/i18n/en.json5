@@ -2909,6 +2909,21 @@
 
   "item.page.abstract": "Abstract",
 
+  // JCU: dc.description.abstract-translated is tagged eng throughout the repository, so the label
+  // names English rather than saying "translated". If a non-English translation ever appears, this
+  // should switch to reading the value's own language tag.
+  "item.page.abstract-translated": "Abstract (English)",
+
+  "item.page.type": "Document type",
+
+  "item.page.thesis.degree-name": "Degree",
+
+  "item.page.thesis.degree-program": "Study programme",
+
+  "item.page.thesis.degree-discipline": "Field of study",
+
+  "item.page.thesis.degree-grantor": "Awarding institution",
+
   "item.page.author": "Author",
 
   "item.page.authors": "Authors",
