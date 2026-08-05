@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   ComponentFixture,
@@ -7,7 +8,10 @@ import {
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -61,6 +65,7 @@ describe('ItemVersionsNoticeComponent', () => {
   const versionHistoryServiceSpy = jasmine.createSpyObj('versionHistoryService',
     ['getVersions', 'getLatestVersionFromHistory$', 'isLatest$' ],
   );
+  const locationStub = jasmine.createSpyObj('location', ['prepareExternalUrl']);
 
   beforeEach(waitForAsync(() => {
 
@@ -73,6 +78,7 @@ describe('ItemVersionsNoticeComponent', () => {
       ],
       providers: [
         { provide: VersionHistoryDataService, useValue: versionHistoryServiceSpy },
+        { provide: Location, useValue: locationStub },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -84,6 +90,8 @@ describe('ItemVersionsNoticeComponent', () => {
     versionHistoryServiceSpy.getVersions.and.returnValue(createSuccessfulRemoteDataObject$(createPaginatedList(versions)));
     versionHistoryServiceSpy.getLatestVersionFromHistory$.and.returnValue(of(latestVersion));
     versionHistoryServiceSpy.isLatest$.and.callFake(isLatestFcn);
+    // Simulate a UI deployed under a sub-path namespace, i.e. <base href="/repository/">
+    locationStub.prepareExternalUrl.and.callFake((url: string) => `/repository${url}`);
   }));
 
   describe('when the item is the latest version', () => {
@@ -118,6 +126,35 @@ describe('ItemVersionsNoticeComponent', () => {
       versionHistoryService.isLatest$(latestVersion).pipe(take(1)).subscribe((res) => {
         expect(res).toBeTrue();
       });
+    });
+  });
+
+  describe('getItemPage', () => {
+    beforeEach(() => {
+      initComponentWithItem(firstItem);
+    });
+
+    it('should resolve the latest version item page url against the base href', () => {
+      expect(component.getItemPage(latestItem)).toEqual('/repository/items/latest_item_id');
+      // The plain router path must be what is handed to Location, otherwise the prefix would be applied twice
+      expect(locationStub.prepareExternalUrl).toHaveBeenCalledWith('/items/latest_item_id');
+    });
+
+    it('should not resolve a url when no item is provided', () => {
+      expect(component.getItemPage(undefined)).toBeUndefined();
+    });
+
+    it('should render the notice anchor with the base href applied', () => {
+      const translate = TestBed.inject(TranslateService);
+      translate.setTranslation('en', {
+        'item.version.notice': 'The latest version can be found <a href=\'{{destination}}\'>here</a>.',
+      }, true);
+      translate.use('en');
+      fixture.detectChanges();
+
+      const anchor = fixture.debugElement.query(By.css('ds-alert a'));
+      expect(anchor).not.toBeNull();
+      expect(anchor.nativeElement.getAttribute('href')).toEqual('/repository/items/latest_item_id');
     });
   });
 

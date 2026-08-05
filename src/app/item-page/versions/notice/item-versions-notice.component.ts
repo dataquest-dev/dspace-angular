@@ -1,4 +1,7 @@
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  Location,
+} from '@angular/common';
 import {
   Component,
   Input,
@@ -84,7 +87,10 @@ export class ItemVersionsNoticeComponent implements OnInit {
    */
   public AlertTypeEnum = AlertType;
 
-  constructor(private versionHistoryService: VersionHistoryDataService) {
+  constructor(
+    private versionHistoryService: VersionHistoryDataService,
+    private location: Location,
+  ) {
   }
 
   /**
@@ -128,12 +134,21 @@ export class ItemVersionsNoticeComponent implements OnInit {
   }
 
   /**
-   * Get the item page url
+   * Get the item page url, resolved against the application's base href.
+   *
+   * The url is interpolated into the raw `<a href='{{destination}}'>` anchor of the
+   * `item.version.notice` translation, which the alert renders through `[innerHTML]`.
+   * It is therefore resolved by the browser and not by the Angular router, so a
+   * root-relative router path such as `/items/<uuid>` would ignore `<base href>` and
+   * break every deployment served from a sub-path (e.g. `<base href="/repository/">`).
+   * `Location.prepareExternalUrl` applies the exact same transformation `RouterLink`
+   * applies to its `href`, and is a no-op when the base href is `/`.
+   *
    * @param item The item for which the url is requested
    */
   getItemPage(item: Item): string {
     if (hasValue(item)) {
-      return getItemPageRoute(item);
+      return this.location.prepareExternalUrl(getItemPageRoute(item));
     }
   }
 }
