@@ -27,7 +27,12 @@ import {
 import isObject from 'lodash/isObject';
 import isString from 'lodash/isString';
 import mergeWith from 'lodash/mergeWith';
+import {
+  Observable,
+  Subject,
+} from 'rxjs';
 
+import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
 import { SubmissionFormsModel } from '../../../core/config/models/config-submission-forms.model';
 import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
 import { VIRTUAL_METADATA_PREFIX } from '../../../core/shared/metadata.models';
@@ -55,13 +60,34 @@ import { DynamicQualdropModel } from './ds-dynamic-form-ui/models/ds-dynamic-qua
 import { DynamicRowArrayModel } from './ds-dynamic-form-ui/models/ds-dynamic-row-array-model';
 import { DynamicRelationGroupModel } from './ds-dynamic-form-ui/models/relation-group/dynamic-relation-group.model';
 import { DYNAMIC_FORM_CONTROL_TYPE_TAG } from './ds-dynamic-form-ui/models/tag/dynamic-tag.model';
+import { FormFieldModel } from './models/form-field.model';
 import { FormFieldMetadataValueObject } from './models/form-field-metadata-value.model';
 import { RowParser } from './parsers/row-parser';
+
+/**
+ * The key under which the default type bind field is stored in the type field map, e.g.
+ * {'default' -> 'dc_type'}
+ */
+export const TYPE_BIND_DEFAULT_KEY = 'default';
+
+/**
+ * Separator used by the `submit.type-bind.field` property to bind one metadata field to a
+ * controlling field other than the default one, e.g. `dc.language.iso=>edm.type`
+ */
+const TYPE_BIND_FIELD_SEPARATOR = '=>';
 
 @Injectable({ providedIn: 'root' })
 export class FormBuilderService extends DynamicFormService {
 
-  private typeBindModel: DynamicFormControlModel;
+  /**
+   * This map contains the models that control type binding, keyed by model id (`dc_type`, `edm_type`)
+   */
+  private typeBindModel: Map<string, DynamicFormControlModel>;
+
+  /**
+   * Emits the id of a type bind model whenever one is registered
+   */
+  private typeBindModelUpdates: Subject<string>;
 
   /**
    * This map contains the active forms model
@@ -74,9 +100,11 @@ export class FormBuilderService extends DynamicFormService {
   private formGroups: Map<string, UntypedFormGroup>;
 
   /**
-   * This is the field to use for type binding
+   * The fields to use for type binding: TYPE_BIND_DEFAULT_KEY -> the default controlling model id,
+   * plus one entry per metadata field that is controlled by another field, e.g.
+   * `dc.language.iso` -> `edm_type`
    */
-  private typeField: string;
+  private typeFields: Map<string, string>;
 
   constructor(
     componentService: DynamicFormComponentService,
@@ -87,12 +115,15 @@ export class FormBuilderService extends DynamicFormService {
     super(componentService, validationService);
     this.formModels = new Map();
     this.formGroups = new Map();
+    this.typeFields = new Map();
+    this.typeBindModel = new Map();
+    this.typeBindModelUpdates = new Subject<string>();
+
+    this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
     // If optional config service was passed, perform an initial set of type field (default dc_type) for type binds
     if (hasValue(this.configService)) {
       this.setTypeBindFieldFromConfig();
     }
-
-
   }
 
   createDynamicFormControlEvent(control: UntypedFormControl, group: UntypedFormGroup, model: DynamicFormControlModel, type: string): DynamicFormControlEvent {
@@ -104,12 +135,32 @@ export class FormBuilderService extends DynamicFormService {
     return { $event, context, control: control, group: group, model: model, type };
   }
 
-  getTypeBindModel() {
-    return this.typeBindModel;
+  /**
+   * Get the model of the field that controls the type binding of a bound field.
+   *
+   * @param typeBindFieldRef either the metadata name of the bound field itself - resolved through the
+   *   `submit.type-bind.field` map, e.g. `dc.language.iso` -> `edm_type` - or, when the submission form
+   *   declares `<type-bind field="edm.type">`, the id of the controlling model itself. When it resolves
+   *   to a model that is not part of the current form, the default (usually `dc_type`) model is returned.
+   */
+  getTypeBindModel(typeBindFieldRef?: string): DynamicFormControlModel {
+    const defaultModelId = this.typeFields.get(TYPE_BIND_DEFAULT_KEY);
+    const modelId = this.typeFields.get(typeBindFieldRef) ?? typeBindFieldRef ?? defaultModelId;
+    return this.typeBindModel.get(modelId) ?? this.typeBindModel.get(defaultModelId);
   }
 
   setTypeBindModel(model: DynamicFormControlModel) {
-    this.typeBindModel = model;
+    this.typeBindModel.set(model.id, model);
+    this.typeBindModelUpdates.next(model.id);
+  }
+
+  /**
+   * Emits the id of every type bind model as soon as it is registered, so that fields whose
+   * controlling model is only parsed later - e.g. because it lives in another form section - can
+   * still attach to it.
+   */
+  getTypeBindModelUpdates(): Observable<string> {
+    return this.typeBindModelUpdates.asObservable();
   }
 
   findById(id: string, groupModel: DynamicFormControlModel[], arrayIndex = null): DynamicFormControlModel | null {
@@ -311,14 +362,38 @@ export class FormBuilderService extends DynamicFormService {
       });
     }
 
-    if (hasNoValue(typeBindModel)) {
-      typeBindModel = this.findById(this.typeField, rows);
-    }
-
     if (hasValue(typeBindModel)) {
       this.setTypeBindModel(typeBindModel);
+    } else {
+      this.getTypeBindModelIds(rawData).forEach((typeBindModelId: string) => {
+        const foundModel = this.findById(typeBindModelId, rows);
+        if (hasValue(foundModel)) {
+          this.setTypeBindModel(foundModel);
+        }
+      });
     }
     return rows;
+  }
+
+  /**
+   * Collect the ids of every model that can control type binding for the given form configuration:
+   * all values of the `submit.type-bind.field` map (the default field plus each `A=>B` override) and
+   * every `<type-bind field="...">` declared by a field of this configuration. The latter is read
+   * straight from the REST payload, so a controlling model is registered even when the configuration
+   * property has not been fetched yet.
+   */
+  private getTypeBindModelIds(rawData: any): string[] {
+    const ids = new Set<string>(this.typeFields.values());
+    const collectFromRows = (formRows: FormRowModel[]): void => {
+      (formRows || []).forEach((formRow: FormRowModel) => (formRow?.fields || []).forEach((field: FormFieldModel) => {
+        if (isNotEmpty(field?.typeBindField)) {
+          ids.add(field.typeBindField.replace(/\./g, '_'));
+        }
+        collectFromRows(field?.rows);
+      }));
+    };
+    collectFromRows(rawData?.rows);
+    return Array.from(ids);
   }
 
   isModelInCustomGroup(model: DynamicFormControlModel): boolean {
@@ -512,7 +587,13 @@ export class FormBuilderService extends DynamicFormService {
   }
 
   /**
-   * Get the type bind field from config
+   * Get the type bind field(s) from config.
+   *
+   * `submit.type-bind.field` holds the default controlling field and, optionally, one
+   * `<bound field>=><controlling field>` entry per field that is controlled by another field, e.g.
+   * `submit.type-bind.field = dc.type, dc.language.iso=>edm.type`. The property may legitimately be
+   * declared more than once (dspace.cfg + local.cfg), so duplicated values must be tolerated and the
+   * order of the values must not matter.
    */
   setTypeBindFieldFromConfig(): void {
     this.configService.findByPropertyName('submit.type-bind.field').pipe(
@@ -520,30 +601,41 @@ export class FormBuilderService extends DynamicFormService {
     ).subscribe((remoteData: any) => {
       // make sure we got a success response from the backend
       if (!remoteData.hasSucceeded) {
-        this.typeField = 'dc_type';
+        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
         return;
       }
-      // Read type bind value from response and set if non-empty
-      const typeFieldConfig = remoteData.payload.values[0];
-      if (isEmpty(typeFieldConfig)) {
-        this.typeField = 'dc_type';
-      } else {
-        this.typeField = typeFieldConfig.replace(/\./g, '_');
+      const typeFieldConfigValues: string[] = remoteData.payload.values || [];
+      typeFieldConfigValues.forEach((typeFieldConfig: string) => {
+        if (typeFieldConfig.includes(TYPE_BIND_FIELD_SEPARATOR)) {
+          // `dc.language.iso=>edm.type`: this metadata field is controlled by another field
+          const [boundField, controllingField] = typeFieldConfig.split(TYPE_BIND_FIELD_SEPARATOR);
+          if (isNotEmpty(boundField?.trim()) && isNotEmpty(controllingField?.trim())) {
+            this.typeFields.set(boundField.trim(), controllingField.trim().replace(/\./g, '_'));
+          }
+        } else if (isNotEmpty(typeFieldConfig?.trim())) {
+          // `dc.type`: the default controlling field. A duplicated value just overwrites itself.
+          this.typeFields.set(TYPE_BIND_DEFAULT_KEY, typeFieldConfig.trim().replace(/\./g, '_'));
+        }
+      });
+      if (hasNoValue(this.typeFields.get(TYPE_BIND_DEFAULT_KEY))) {
+        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
       }
     });
   }
 
   /**
-   * Get type field. If the type isn't already set, and a ConfigurationDataService is provided, set (with subscribe)
-   * from back end. Otherwise, get/set a default "dc_type" value
+   * Get the default type field. If it isn't already set, and a ConfigurationDataService is provided,
+   * set (with subscribe) from back end. Otherwise, get/set a default "dc_type" value
    */
   getTypeField(): string {
-    if (hasValue(this.configService) && hasNoValue(this.typeField)) {
-      this.setTypeBindFieldFromConfig();
-    } else if (hasNoValue(this.typeField)) {
-      this.typeField = 'dc_type';
+    if (hasNoValue(this.typeFields.get(TYPE_BIND_DEFAULT_KEY))) {
+      if (hasValue(this.configService)) {
+        this.setTypeBindFieldFromConfig();
+      } else {
+        this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
+      }
     }
-    return this.typeField;
+    return this.typeFields.get(TYPE_BIND_DEFAULT_KEY);
   }
 
 }

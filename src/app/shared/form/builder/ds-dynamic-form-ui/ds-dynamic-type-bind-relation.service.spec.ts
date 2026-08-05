@@ -14,15 +14,18 @@ import {
   HIDDEN_MATCHER_PROVIDER,
   REQUIRED_MATCHER_PROVIDER,
 } from '@ng-dynamic-forms/core';
+import { Subject } from 'rxjs';
 
 import { getMockFormBuilderService } from '../../../mocks/form-builder-service.mock';
 import {
+  dcTypeInputConfig,
   mockInputWithTypeBindModel,
   MockRelationModel,
 } from '../../../mocks/form-models.mock';
 import { FormBuilderService } from '../form-builder.service';
 import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
 import { DsDynamicTypeBindRelationService } from './ds-dynamic-type-bind-relation.service';
+import { DsDynamicInputModel } from './models/ds-dynamic-input.model';
 import { getTypeBindRelations } from './type-bind.utils';
 
 describe('DSDynamicTypeBindRelationService test suite', () => {
@@ -87,6 +90,12 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       const relatedModels = service.getRelatedFormModel(testModel);
       expect(relatedModels).toHaveSize(1);
     });
+    it('Should ask the form builder for the model that controls this field', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      service.getRelatedFormModel(testModel);
+      expect((service as any).formBuilderService.getTypeBindModel).toHaveBeenCalledWith('edm_type');
+    });
   });
 
   describe('Test matchesCondition method', () => {
@@ -127,6 +136,31 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
         matcher.onChange(hasMatch, testModel, dcTypeControl, injector);
         expect(hasMatch).toBeFalsy();
       }
+    });
+
+    it('Expect hasMatch to be true when the controlling model is not registered (field stays hidden)', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.returnValue(undefined);
+      const relation = dynamicFormRelationService.findRelationByMatcher((testModel as any).typeBindRelations, HIDDEN_MATCHER);
+      expect(service.matchesCondition(relation, HIDDEN_MATCHER)).toBeTruthy();
+    });
+
+    it('Should attach to the controlling model as soon as it is registered', () => {
+      const bindModelUpdates = new Subject<string>();
+      const formBuilderServiceSpy: any = (service as any).formBuilderService;
+      formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(undefined);
+
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      const subscriptions = service.subscribeRelations(testModel, new UntypedFormControl());
+      // only the registration listener so far
+      expect(subscriptions).toHaveSize(1);
+
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(new DsDynamicInputModel(dcTypeInputConfig));
+      bindModelUpdates.next('edm_type');
+      expect(subscriptions).toHaveSize(2);
     });
 
   });

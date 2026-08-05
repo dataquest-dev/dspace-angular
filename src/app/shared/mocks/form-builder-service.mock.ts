@@ -2,6 +2,7 @@ import {
   UntypedFormControl,
   UntypedFormGroup,
 } from '@angular/forms';
+import { EMPTY } from 'rxjs';
 
 import { DsDynamicInputModel } from '../form/builder/ds-dynamic-form-ui/models/ds-dynamic-input.model';
 import { FormBuilderService } from '../form/builder/form-builder.service';
@@ -45,5 +46,6 @@ export function getMockFormBuilderService(): FormBuilderService {
       ],
     },
     ),
+    getTypeBindModelUpdates: EMPTY,
   });
 }

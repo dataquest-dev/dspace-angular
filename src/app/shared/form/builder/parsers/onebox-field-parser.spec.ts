@@ -152,4 +152,25 @@ describe('OneboxFieldParser test suite', () => {
     });
   });
 
+  describe('type binding', () => {
+    it('should use the field named in <type-bind field="..."> as the type bind relation id', () => {
+      field1.typeBind = ['TEXT'];
+      field1.typeBindField = 'edm.type';
+      const parser = new OneboxFieldParser(submissionId, field1, initFormValues, parserOptions, translateService);
+
+      const fieldModel = parser.parse() as DsDynamicInputModel;
+
+      expect(fieldModel.typeBindRelations[0].when[0].id).toBe('edm_type');
+    });
+
+    it('should fall back to the field\'s own metadata name when no <type-bind field="..."> is configured', () => {
+      field1.typeBind = ['TEXT'];
+      const parser = new OneboxFieldParser(submissionId, field1, initFormValues, parserOptions, translateService);
+
+      const fieldModel = parser.parse() as DsDynamicInputModel;
+
+      expect(fieldModel.typeBindRelations[0].when[0].id).toBe('title');
+    });
+  });
+
 });

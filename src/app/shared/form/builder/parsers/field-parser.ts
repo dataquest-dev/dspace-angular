@@ -95,7 +95,7 @@ export abstract class FieldParser {
         hasSelectableMetadata: isNotEmpty(this.configData.selectableMetadata),
         isDraggable,
         typeBindRelations: isNotEmpty(this.configData.typeBind) ? getTypeBindRelations(this.configData.typeBind,
-          this.parserOptions.typeField) : null,
+          this.getTypeBindFieldRef()) : null,
         groupFactory: () => {
           let model;
           if ((arrayCounter === 0)) {
@@ -290,6 +290,24 @@ export abstract class FieldParser {
     }
   }
 
+  /**
+   * Resolve the field that controls the type binding of this field.
+   *
+   * When submission-forms.xml declares `<type-bind field="edm.type">` the controlling model is known
+   * up front, so its model id is returned directly. Otherwise this field's own metadata name is
+   * returned and {@link FormBuilderService#getTypeBindModel} resolves it against the
+   * `submit.type-bind.field` property (e.g. `dc.type, dc.language.iso=>edm.type`) at
+   * relation-evaluation time - that property is fetched asynchronously and may not have arrived yet
+   * while the form is being parsed.
+   */
+  protected getTypeBindFieldRef(): string {
+    if (isNotEmpty(this.configData.typeBindField)) {
+      // input ids don't allow dots, so replace them - this is already a model id
+      return this.configData.typeBindField.replace(/\./g, '_');
+    }
+    return this.getFieldId() || this.parserOptions.typeField;
+  }
+
   protected initModel(id?: string, label = true, labelEmpty = false, setErrors = true, hint = true) {
 
     const controlModel = Object.create(null);
@@ -338,7 +356,7 @@ export abstract class FieldParser {
     // If typeBind is configured
     if (isNotEmpty(this.configData.typeBind)) {
       (controlModel as DsDynamicInputModel).typeBindRelations = getTypeBindRelations(this.configData.typeBind,
-        this.parserOptions.typeField);
+        this.getTypeBindFieldRef());
     }
 
     return controlModel;

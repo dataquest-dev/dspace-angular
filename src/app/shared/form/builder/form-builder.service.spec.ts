@@ -58,32 +58,32 @@ import { FormBuilderService } from './form-builder.service';
 import { FormFieldModel } from './models/form-field.model';
 import { FormFieldMetadataValueObject } from './models/form-field-metadata-value.model';
 
+const typeFieldProp = 'submit.type-bind.field';
+const typeFieldTestValue = 'dc.type';
+const submissionId = '1234';
+
+function testValidator() {
+  return { testValidator: { valid: true } };
+}
+
+function testAsyncValidator() {
+  return new Promise<boolean>((resolve) => setTimeout(() => resolve(true), 0));
+}
+
+const createConfigSuccessSpy = (...values: string[]) => jasmine.createSpyObj('configurationDataService', {
+  findByPropertyName: createSuccessfulRemoteDataObject$({
+    ... new ConfigurationProperty(),
+    name: typeFieldProp,
+    values: values,
+  }),
+});
+
 describe('FormBuilderService test suite', () => {
 
   let testModel: DynamicFormControlModel[];
   let testFormConfiguration: SubmissionFormsModel;
   let service: FormBuilderService;
   let configSpy: ConfigurationDataService;
-  const typeFieldProp = 'submit.type-bind.field';
-  const typeFieldTestValue = 'dc.type';
-
-  const submissionId = '1234';
-
-  function testValidator() {
-    return { testValidator: { valid: true } };
-  }
-
-  function testAsyncValidator() {
-    return new Promise<boolean>((resolve) => setTimeout(() => resolve(true), 0));
-  }
-
-  const createConfigSuccessSpy = (...values: string[]) => jasmine.createSpyObj('configurationDataService', {
-    findByPropertyName: createSuccessfulRemoteDataObject$({
-      ... new ConfigurationProperty(),
-      name: typeFieldProp,
-      values: values,
-    }),
-  });
 
   beforeEach(() => {
     configSpy = createConfigSuccessSpy(typeFieldTestValue);
@@ -926,4 +926,93 @@ describe('FormBuilderService test suite', () => {
     expect(typeValue).toEqual('dc_type');
   });
 
+});
+
+describe('FormBuilderService per-field type bind test suite', () => {
+
+  let service: FormBuilderService;
+  let configSpy: ConfigurationDataService;
+
+  const dcTypeModel = new DsDynamicInputModel({
+    id: 'dc_type', name: 'dc.type', repeatable: false, metadataFields: [],
+    submissionId, hasSelectableMetadata: false,
+  });
+  const edmTypeModel = new DsDynamicInputModel({
+    id: 'edm_type', name: 'edm.type', repeatable: false, metadataFields: [],
+    submissionId, hasSelectableMetadata: false,
+  });
+
+  const typeBindFormConfiguration = {
+    name: 'typeBindFormConfiguration',
+    rows: [
+      { fields: [{
+        input: { type: 'onebox' }, label: 'Type', mandatory: 'false', repeatable: false,
+        hints: '', languageCodes: [], selectableMetadata: [{ metadata: 'edm.type' }],
+      } as FormFieldModel] } as FormRowModel,
+      { fields: [{
+        input: { type: 'onebox' }, label: 'Language', mandatory: 'false', repeatable: false,
+        hints: '', languageCodes: [], typeBind: ['TEXT'], typeBindField: 'edm.type',
+        selectableMetadata: [{ metadata: 'dc.language.iso' }],
+      } as FormFieldModel] } as FormRowModel,
+    ],
+    type: 'submissionform',
+    _links: { self: { href: 'typeBindFormConfiguration.url' } },
+  } as any;
+
+  beforeEach(() => {
+    // dspace.cfg declares the property twice, so the REST payload repeats the default value
+    configSpy = createConfigSuccessSpy('dc.type', 'dc.type', 'dc.language.iso=>edm.type');
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
+      providers: [
+        { provide: FormBuilderService, useClass: FormBuilderService },
+        { provide: DynamicFormValidationService, useValue: {} },
+        { provide: NG_VALIDATORS, useValue: testValidator, multi: true },
+        { provide: NG_ASYNC_VALIDATORS, useValue: testAsyncValidator, multi: true },
+        { provide: ConfigurationDataService, useValue: configSpy },
+        { provide: TranslateService, useValue: getMockTranslateService() },
+      ],
+    });
+    service = TestBed.inject(FormBuilderService);
+  });
+
+  it('should keep "dc_type" as the default type bind field even when the property is duplicated', () => {
+    expect(service.getTypeField()).toEqual('dc_type');
+  });
+
+  it('should resolve the controlling model per field', () => {
+    service.setTypeBindModel(dcTypeModel);
+    service.setTypeBindModel(edmTypeModel);
+
+    expect(service.getTypeBindModel('dc.language.iso')).toBe(edmTypeModel);
+    expect(service.getTypeBindModel('edm_type')).toBe(edmTypeModel);
+    expect(service.getTypeBindModel('dc.contributor.author')).toBe(dcTypeModel);
+    expect(service.getTypeBindModel()).toBe(dcTypeModel);
+  });
+
+  it('should fall back to the default model when the controlling model is not part of the form', () => {
+    service.setTypeBindModel(dcTypeModel);
+    expect(service.getTypeBindModel('dc.language.iso')).toBe(dcTypeModel);
+  });
+
+  it('should emit every registered type bind model id', (done) => {
+    const emitted: string[] = [];
+    service.getTypeBindModelUpdates().subscribe((id: string) => {
+      emitted.push(id);
+      if (emitted.length === 2) {
+        expect(emitted).toEqual(['dc_type', 'edm_type']);
+        done();
+      }
+    });
+    service.setTypeBindModel(dcTypeModel);
+    service.setTypeBindModel(edmTypeModel);
+  });
+
+  it('should bind dc.language.iso to edm.type when parsing the form configuration', () => {
+    const formModel = service.modelFromConfiguration(submissionId, typeBindFormConfiguration, 'testScopeUUID');
+    const languageModel = service.findById('dc_language_iso', formModel) as DsDynamicInputModel;
+
+    expect(languageModel.typeBindRelations[0].when[0].id).toEqual('edm_type');
+    expect(service.getTypeBindModel('dc.language.iso').id).toEqual('edm_type');
+  });
 });
