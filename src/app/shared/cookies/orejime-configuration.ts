@@ -29,6 +29,13 @@ export const CORRELATION_ID_OREJIME_KEY = 'correlation-id';
 export const CORRELATION_ID_COOKIE = 'CORRELATION-ID';
 
 /**
+ * Consent gate for the CitacePRO citation widget on the item page. The widget is a third-party
+ * iframe, so loading it transfers the visitor's IP address to citacepro.com (and, through the
+ * stylesheet that iframe pulls in, to Google Fonts). That may not happen before consent.
+ */
+export const CITACE_PRO_OREJIME_KEY = 'citace-pro';
+
+/**
  * Orejime configuration
  * For more information see https://github.com/empreinte-digitale/orejime
  */
@@ -228,6 +235,20 @@ export function getOrejimeConfiguration(_window: NativeWindowRef): any {
         purposes: ['functional'],
         required: false,
         cookies: [ACCESSIBILITY_COOKIE],
+        onlyOnce: false,
+      },
+      {
+        // No `cookies` to list: this app gates an embedded third-party iframe rather than a
+        // cookie of our own, and cookies set on citacepro.com cannot be removed from here
+        // anyway. Its own purpose category keeps the third-party transfer visible to the user
+        // instead of hiding it among the functional cookies the site needs to work.
+        name: CITACE_PRO_OREJIME_KEY,
+        purposes: ['third-party-content'],
+        required: false,
+        // Consent to a third-party transfer must be an affirmative act, so the toggle starts off
+        // rather than pre-ticked.
+        default: false,
+        cookies: [],
         onlyOnce: false,
       },
     ],

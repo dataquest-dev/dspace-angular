@@ -15,9 +15,16 @@ import {
   TranslateLoader,
   TranslateModule,
 } from '@ngx-translate/core';
+import {
+  BehaviorSubject,
+  of,
+} from 'rxjs';
 
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
+import { CookieService } from '../../../../../core/services/cookie.service';
 import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
+import { OrejimeService } from '../../../../../shared/cookies/orejime.service';
+import { CITACE_PRO_OREJIME_KEY } from '../../../../../shared/cookies/orejime-configuration';
 import { TranslateLoaderMock } from '../../../../../shared/mocks/translate-loader.mock';
 import { createSuccessfulRemoteDataObject$ } from '../../../../../shared/remote-data.utils';
 import { ItemPageCitationFieldComponent } from './item-page-citation.component';
@@ -25,9 +32,33 @@ import { ItemPageCitationFieldComponent } from './item-page-citation.component';
 const CITACE_PRO_URL = 'https://www.citacepro.com/api/dspace/citace/oai';
 const CITACE_PRO_UNIVERSITY = 'dspace.jcu.cz';
 
+/**
+ * Consent doubles that let a test flip the stored preference at runtime, the way accepting in the
+ * consent dialog does. Factories rather than classes: max-classes-per-file allows only one.
+ */
+const orejimeServiceStub = (consented: boolean) => {
+  const preferences = new BehaviorSubject<any>({ [CITACE_PRO_OREJIME_KEY]: consented });
+
+  return {
+    preferences,
+    initialize: () => undefined,
+    showSettings: jasmine.createSpy('showSettings'),
+    getSavedPreferences: () => preferences.asObservable(),
+  };
+};
+
+const cookieServiceStub = () => ({
+  cookies$: of({}),
+  get: () => undefined,
+  getAll: () => ({}),
+  set: () => undefined,
+  remove: () => undefined,
+});
+
 describe('ItemPageCitationFieldComponent', () => {
   let component: ItemPageCitationFieldComponent;
   let fixture: ComponentFixture<ItemPageCitationFieldComponent>;
+  let orejime: ReturnType<typeof orejimeServiceStub>;
   const mockHandle = '123456789/3';
 
   function mockConfigurationDataService(allowed: string) {
@@ -43,7 +74,9 @@ describe('ItemPageCitationFieldComponent', () => {
     };
   }
 
-  async function init(allowed: string): Promise<void> {
+  async function init(allowed: string, consented = true): Promise<void> {
+    orejime = orejimeServiceStub(consented);
+
     await TestBed.configureTestingModule({
       imports: [
         ItemPageCitationFieldComponent,
@@ -53,6 +86,8 @@ describe('ItemPageCitationFieldComponent', () => {
       ],
       providers: [
         { provide: ConfigurationDataService, useValue: mockConfigurationDataService(allowed) },
+        { provide: OrejimeService, useValue: orejime },
+        { provide: CookieService, useValue: cookieServiceStub() },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
@@ -99,6 +134,42 @@ describe('ItemPageCitationFieldComponent', () => {
     it('should keep the widget hidden', () => {
       expect(component.citaceProStatus$.getValue()).toBeFalse();
       expect(fixture.debugElement.query(By.css('iframe'))).toBeNull();
+    });
+  });
+
+  describe('cookie consent', () => {
+    it('should not put the third-party iframe in the DOM before consent', async () => {
+      await init('true', false);
+
+      expect(fixture.debugElement.query(By.css('iframe'))).toBeNull();
+    });
+
+    it('should offer the cookie settings instead of the widget before consent', async () => {
+      await init('true', false);
+
+      const button = fixture.debugElement.query(By.css('.citace-pro-consent button'));
+      expect(button).not.toBeNull();
+
+      button.nativeElement.click();
+      expect(orejime.showSettings).toHaveBeenCalled();
+    });
+
+    it('should reveal the iframe once consent is granted, without a reload', async () => {
+      await init('true', false);
+      expect(fixture.debugElement.query(By.css('iframe'))).toBeNull();
+
+      orejime.preferences.next({ [CITACE_PRO_OREJIME_KEY]: true });
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('iframe'))).not.toBeNull();
+    });
+
+    it('should sandbox the iframe and defer its load', async () => {
+      await init('true', true);
+
+      const iframe = fixture.debugElement.query(By.css('iframe')).nativeElement;
+      expect(iframe.getAttribute('loading')).toBe('lazy');
+      expect(iframe.getAttribute('sandbox')).toBe('allow-scripts allow-popups allow-popups-to-escape-sandbox');
     });
   });
 

@@ -1,12 +1,25 @@
 @if ((citaceProStatus$ | async) && (citaceProURL$ | async); as citaceProURL) {
   <div class="mb-2">
-    <iframe
-      class="d-block"
-      title="{{ 'item.page.citace-pro.title' | translate }}"
-      height="150px"
-      width="100%"
-      style="border: none;"
-      [src]="citaceProURL"
-    ></iframe>
+    @if (hasConsent$ | async) {
+      <iframe
+        class="d-block"
+        title="{{ 'item.page.citace-pro.title' | translate }}"
+        height="150px"
+        width="100%"
+        style="border: none;"
+        loading="lazy"
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+        [src]="citaceProURL"
+      ></iframe>
+    } @else {
+      <div class="citace-pro-consent alert alert-info d-flex flex-column flex-sm-row align-items-sm-center gap-2 mb-0"
+           role="region" [attr.aria-label]="'item.page.citace-pro.title' | translate">
+        <span class="flex-grow-1">{{ 'item.page.citace-pro.consent.required' | translate }}</span>
+        <button type="button" class="btn btn-sm btn-outline-primary text-nowrap"
+                (click)="showCookieSettings()">
+          {{ 'item.page.citace-pro.consent.button' | translate }}
+        </button>
+      </div>
+    }
   </div>
 }

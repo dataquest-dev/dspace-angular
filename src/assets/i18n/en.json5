@@ -1695,6 +1695,12 @@
 
   "cookies.consent.purpose.sharing": "Sharing",
 
+  "cookies.consent.purpose.third-party-content": "Third-party content",
+
+  "cookies.consent.app.title.citace-pro": "Citace PRO",
+
+  "cookies.consent.app.description.citace-pro": "Shows a ready-made citation of this record. The widget is loaded from citacepro.com, which receives your IP address.",
+
   "curation-task.task.citationpage.label": "Generate Citation Page",
 
   "curation-task.task.checklinks.label": "Check Links in Metadata",
@@ -2914,6 +2920,10 @@
   "item.page.authors": "Authors",
 
   "item.page.citace-pro.title": "Citace PRO",
+
+  "item.page.citace-pro.consent.required": "The Citace PRO citation is loaded from a third-party service. To display it, allow third-party content in your cookie preferences.",
+
+  "item.page.citace-pro.consent.button": "Cookie preferences",
 
   "item.page.citation": "Citation",
 
