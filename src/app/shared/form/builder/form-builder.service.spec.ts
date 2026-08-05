@@ -32,6 +32,7 @@ import {
   DynamicTimePickerModel,
 } from '@ng-dynamic-forms/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Subject } from 'rxjs';
 
 import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
 import { SubmissionFormsModel } from '../../../core/config/models/config-submission-forms.model';
@@ -39,7 +40,10 @@ import { ConfigurationDataService } from '../../../core/data/configuration-data.
 import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
 import { VocabularyOptions } from '../../../core/submission/vocabularies/models/vocabulary-options.model';
 import { getMockTranslateService } from '../../mocks/translate.service.mock';
-import { createSuccessfulRemoteDataObject$ } from '../../remote-data.utils';
+import {
+  createSuccessfulRemoteDataObject,
+  createSuccessfulRemoteDataObject$,
+} from '../../remote-data.utils';
 import { DynamicDsDatePickerModel } from './ds-dynamic-form-ui/models/date-picker/date-picker.model';
 import { DynamicConcatModel } from './ds-dynamic-form-ui/models/ds-dynamic-concat.model';
 import { DsDynamicInputModel } from './ds-dynamic-form-ui/models/ds-dynamic-input.model';
@@ -1014,5 +1018,98 @@ describe('FormBuilderService per-field type bind test suite', () => {
 
     expect(languageModel.typeBindRelations[0].when[0].id).toEqual('edm_type');
     expect(service.getTypeBindModel('dc.language.iso').id).toEqual('edm_type');
+  });
+
+  it('should not let a previous submission\'s controlling model answer lookups', () => {
+    service.modelFromConfiguration(submissionId, typeBindFormConfiguration, 'testScopeUUID');
+    expect(service.getTypeBindModel('dc.language.iso').id).toEqual('edm_type');
+
+    // another collection, whose form has no edm.type field at all
+    service.modelFromConfiguration('other-submission', {
+      name: 'plainFormConfiguration',
+      rows: [
+        { fields: [{
+          input: { type: 'onebox' }, label: 'Type', mandatory: 'false', repeatable: false,
+          hints: '', languageCodes: [], selectableMetadata: [{ metadata: 'dc.type' }],
+        } as FormFieldModel] } as FormRowModel,
+      ],
+      type: 'submissionform',
+      _links: { self: { href: 'plainFormConfiguration.url' } },
+    } as any, 'testScopeUUID');
+
+    expect(service.getTypeBindModel('dc.language.iso').id).toEqual('dc_type');
+  });
+});
+
+describe('FormBuilderService per-field type bind with a slow configuration response', () => {
+
+  let service: FormBuilderService;
+  let configResponse: Subject<any>;
+
+  const overrideOnlyFormConfiguration = {
+    name: 'overrideOnlyFormConfiguration',
+    rows: [
+      { fields: [{
+        input: { type: 'onebox' }, label: 'Type', mandatory: 'false', repeatable: false,
+        hints: '', languageCodes: [], selectableMetadata: [{ metadata: 'edm.type' }],
+      } as FormFieldModel] } as FormRowModel,
+      { fields: [{
+        // no <type-bind field="...">: the binding exists only in the submit.type-bind.field property
+        input: { type: 'onebox' }, label: 'Language', mandatory: 'false', repeatable: false,
+        hints: '', languageCodes: [], typeBind: ['TEXT'],
+        selectableMetadata: [{ metadata: 'dc.language.iso' }],
+      } as FormFieldModel] } as FormRowModel,
+    ],
+    type: 'submissionform',
+    _links: { self: { href: 'overrideOnlyFormConfiguration.url' } },
+  } as any;
+
+  beforeEach(() => {
+    configResponse = new Subject<any>();
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
+      providers: [
+        { provide: FormBuilderService, useClass: FormBuilderService },
+        { provide: DynamicFormValidationService, useValue: {} },
+        { provide: NG_VALIDATORS, useValue: testValidator, multi: true },
+        { provide: NG_ASYNC_VALIDATORS, useValue: testAsyncValidator, multi: true },
+        {
+          provide: ConfigurationDataService,
+          useValue: jasmine.createSpyObj('configurationDataService', {
+            findByPropertyName: configResponse.asObservable(),
+          }),
+        },
+        { provide: TranslateService, useValue: getMockTranslateService() },
+      ],
+    });
+    service = TestBed.inject(FormBuilderService);
+  });
+
+  it('should register the controlling model once the property arrives after the form was parsed', () => {
+    service.modelFromConfiguration(submissionId, overrideOnlyFormConfiguration, 'testScopeUUID');
+    // the property has not arrived yet, so edm.type is not known to be a controlling field
+    expect(service.getTypeBindModel('dc.language.iso')).toBeUndefined();
+
+    configResponse.next(createSuccessfulRemoteDataObject({
+      ... new ConfigurationProperty(),
+      name: 'submit.type-bind.field',
+      values: ['dc.language.iso=>edm.type', ' dc.type '],
+    }));
+    configResponse.complete();
+
+    expect(service.getTypeField()).toEqual('dc_type');
+    expect(service.getTypeBindModel('dc.language.iso').id).toEqual('edm_type');
+  });
+
+  it('should ignore blank and malformed values', () => {
+    configResponse.next(createSuccessfulRemoteDataObject({
+      ... new ConfigurationProperty(),
+      name: 'submit.type-bind.field',
+      values: ['', '  ', '=>', 'a=>b=>c', undefined, 'dc.type'],
+    }));
+    configResponse.complete();
+
+    expect(service.getTypeField()).toEqual('dc_type');
+    expect((service as any).typeFields.has('a')).toBeFalse();
   });
 });

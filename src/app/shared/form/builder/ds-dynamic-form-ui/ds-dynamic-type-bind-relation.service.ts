@@ -69,13 +69,21 @@ export class DsDynamicTypeBindRelationService {
 
     (model as any).typeBindRelations.forEach((relGroup) => relGroup.when.forEach((rel) => {
 
-      const bindModel: DynamicFormControlModel = this.formBuilderService.getTypeBindModel(rel?.id);
+      const bindModel: DynamicFormControlModel | undefined = this.formBuilderService.getTypeBindModel(rel?.id);
 
-      if (hasValue(bindModel) && bindModel.id === model.id) {
-        throw new Error(`FormControl ${model.id} cannot depend on itself`);
+      if (hasNoValue(bindModel)) {
+        return;
       }
 
-      if (hasValue(bindModel) && !models.some((modelElement) => modelElement === bindModel)) {
+      if (bindModel.id === model.id) {
+        // A misconfigured <type-bind field="..."> pointing at the field itself. Skip the relation
+        // instead of throwing: this runs during form init and from the type bind model registration
+        // callback, so throwing would take down the whole submission section over one bad field.
+        console.warn(`FormControl ${model.id} cannot depend on itself, ignoring its type bind relation`);
+        return;
+      }
+
+      if (!models.some((modelElement) => modelElement === bindModel)) {
         models.push(bindModel);
       }
     }));
@@ -181,13 +189,19 @@ export class DsDynamicTypeBindRelationService {
   }
 
   /**
-   * Return an array of subscriptions to a calling component
+   * Return an array of subscriptions to a calling component.
+   *
+   * A single owning {@link Subscription} is returned rather than the individual child
+   * subscriptions: the controlling model may only be registered after this method has returned (see
+   * below), and callers snapshot the returned array, so any later child has to hang off something
+   * they already hold in order to be torn down with the component.
+   *
    * @param model
    * @param control
    */
   subscribeRelations(model: DynamicFormControlModel, control: UntypedFormControl): Subscription[] {
 
-    const subscriptions: Subscription[] = [];
+    const subscriptions = new Subscription();
     const attachedModelIds = new Set<string>();
 
     const attachRelatedModels = (relatedModels: DynamicFormControlModel[]) => {
@@ -205,7 +219,7 @@ export class DsDynamicTypeBindRelationService {
           );
 
           // Build up the subscriptions to watch for changes;
-          subscriptions.push(valueChanges.subscribe(() => this.evaluateRelations(model, control)));
+          subscriptions.add(valueChanges.subscribe(() => this.evaluateRelations(model, control)));
         }
       });
     };
@@ -213,16 +227,21 @@ export class DsDynamicTypeBindRelationService {
     attachRelatedModels(this.getRelatedFormModel(model));
 
     if (attachedModelIds.size === 0) {
-      // The controlling model (e.g. `edm_type` for `dc.language.iso=>edm.type`) may only be registered
-      // by a later modelFromConfiguration() call. Evaluate once so the MATCH_VISIBLE fallback applies,
-      // then attach as soon as a type bind model shows up.
+      // Nothing to listen to yet: evaluate once so the "controlling model missing" fallback applies
+      // and the field does not stay in whatever state it was rendered in.
       this.evaluateRelations(model, control);
-      subscriptions.push(this.formBuilderService.getTypeBindModelUpdates().subscribe(() => {
-        attachRelatedModels(this.getRelatedFormModel(model));
-      }));
     }
 
-    return subscriptions;
+    // The controlling model (e.g. `edm_type` for `dc.language.iso=>edm.type`) may only be registered
+    // by a later modelFromConfiguration() call - a form section is parsed at a time, and the
+    // `submit.type-bind.field` property itself arrives asynchronously. Until then this field either
+    // has no controlling model at all or is temporarily attached to the default one, so keep
+    // listening and attach the real one as soon as it shows up.
+    subscriptions.add(this.formBuilderService.getTypeBindModelUpdates().subscribe(() => {
+      attachRelatedModels(this.getRelatedFormModel(model));
+    }));
+
+    return [subscriptions];
   }
 
   /**

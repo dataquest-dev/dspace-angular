@@ -301,9 +301,10 @@ export abstract class FieldParser {
    * while the form is being parsed.
    */
   protected getTypeBindFieldRef(): string {
-    if (isNotEmpty(this.configData.typeBindField)) {
+    const typeBindField = this.configData.typeBindField?.trim();
+    if (isNotEmpty(typeBindField)) {
       // input ids don't allow dots, so replace them - this is already a model id
-      return this.configData.typeBindField.replace(/\./g, '_');
+      return typeBindField.replace(/\./g, '_');
     }
     return this.getFieldId() || this.parserOptions.typeField;
   }

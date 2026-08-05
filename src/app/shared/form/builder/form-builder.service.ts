@@ -100,6 +100,20 @@ export class FormBuilderService extends DynamicFormService {
   private formGroups: Map<string, UntypedFormGroup>;
 
   /**
+   * The submission the registered type bind models belong to. A submission is parsed section by
+   * section and a controlling field may live in another section than the field it controls, so the
+   * registry survives across `modelFromConfiguration` calls - but only within one submission,
+   * otherwise a model of the previously opened collection's form would keep answering lookups.
+   */
+  private typeBindModelSubmissionId: string;
+
+  /**
+   * The parsed rows of the current submission, kept so that controlling models can still be
+   * registered when the `submit.type-bind.field` property arrives after the form was parsed.
+   */
+  private typeBindParsedRows: DynamicFormControlModel[][];
+
+  /**
    * The fields to use for type binding: TYPE_BIND_DEFAULT_KEY -> the default controlling model id,
    * plus one entry per metadata field that is controlled by another field, e.g.
    * `dc.language.iso` -> `edm_type`
@@ -117,6 +131,7 @@ export class FormBuilderService extends DynamicFormService {
     this.formGroups = new Map();
     this.typeFields = new Map();
     this.typeBindModel = new Map();
+    this.typeBindParsedRows = [];
     this.typeBindModelUpdates = new Subject<string>();
 
     this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
@@ -143,13 +158,16 @@ export class FormBuilderService extends DynamicFormService {
    *   declares `<type-bind field="edm.type">`, the id of the controlling model itself. When it resolves
    *   to a model that is not part of the current form, the default (usually `dc_type`) model is returned.
    */
-  getTypeBindModel(typeBindFieldRef?: string): DynamicFormControlModel {
+  getTypeBindModel(typeBindFieldRef?: string): DynamicFormControlModel | undefined {
     const defaultModelId = this.typeFields.get(TYPE_BIND_DEFAULT_KEY);
     const modelId = this.typeFields.get(typeBindFieldRef) ?? typeBindFieldRef ?? defaultModelId;
     return this.typeBindModel.get(modelId) ?? this.typeBindModel.get(defaultModelId);
   }
 
   setTypeBindModel(model: DynamicFormControlModel) {
+    if (this.typeBindModel.get(model.id) === model) {
+      return;
+    }
     this.typeBindModel.set(model.id, model);
     this.typeBindModelUpdates.next(model.id);
   }
@@ -362,17 +380,42 @@ export class FormBuilderService extends DynamicFormService {
       });
     }
 
+    this.resetTypeBindModelsOnSubmissionChange(submissionId);
+
     if (hasValue(typeBindModel)) {
       this.setTypeBindModel(typeBindModel);
     } else {
-      this.getTypeBindModelIds(rawData).forEach((typeBindModelId: string) => {
-        const foundModel = this.findById(typeBindModelId, rows);
-        if (hasValue(foundModel)) {
-          this.setTypeBindModel(foundModel);
-        }
-      });
+      this.typeBindParsedRows.push(rows);
+      this.registerTypeBindModels(this.getTypeBindModelIds(rawData), rows);
     }
     return rows;
+  }
+
+  /**
+   * Drop the type bind models registered by another submission. Sections of the same submission are
+   * parsed one by one and a field can be controlled by a field in a different section, so the
+   * registry must survive within a submission - but a model of the previously opened collection's
+   * form must not keep answering lookups, which would defeat the "controlling field is not part of
+   * this form, fall back to the default" behaviour for the rest of the session.
+   */
+  private resetTypeBindModelsOnSubmissionChange(submissionId: string): void {
+    if (this.typeBindModelSubmissionId !== submissionId) {
+      this.typeBindModelSubmissionId = submissionId;
+      this.typeBindModel.clear();
+      this.typeBindParsedRows = [];
+    }
+  }
+
+  /**
+   * Register every model of the given rows whose id is one of the given controlling field ids
+   */
+  private registerTypeBindModels(modelIds: string[], rows: DynamicFormControlModel[]): void {
+    modelIds.forEach((typeBindModelId: string) => {
+      const foundModel = this.findById(typeBindModelId, rows);
+      if (hasValue(foundModel)) {
+        this.setTypeBindModel(foundModel);
+      }
+    });
   }
 
   /**
@@ -605,21 +648,31 @@ export class FormBuilderService extends DynamicFormService {
         return;
       }
       const typeFieldConfigValues: string[] = remoteData.payload.values || [];
-      typeFieldConfigValues.forEach((typeFieldConfig: string) => {
-        if (typeFieldConfig.includes(TYPE_BIND_FIELD_SEPARATOR)) {
-          // `dc.language.iso=>edm.type`: this metadata field is controlled by another field
-          const [boundField, controllingField] = typeFieldConfig.split(TYPE_BIND_FIELD_SEPARATOR);
-          if (isNotEmpty(boundField?.trim()) && isNotEmpty(controllingField?.trim())) {
-            this.typeFields.set(boundField.trim(), controllingField.trim().replace(/\./g, '_'));
-          }
-        } else if (isNotEmpty(typeFieldConfig?.trim())) {
-          // `dc.type`: the default controlling field. A duplicated value just overwrites itself.
-          this.typeFields.set(TYPE_BIND_DEFAULT_KEY, typeFieldConfig.trim().replace(/\./g, '_'));
+      typeFieldConfigValues.forEach((rawValue: string) => {
+        const typeFieldConfig = rawValue?.trim();
+        if (isEmpty(typeFieldConfig)) {
+          return;
         }
+        if (!typeFieldConfig.includes(TYPE_BIND_FIELD_SEPARATOR)) {
+          // `dc.type`: the default controlling field. A duplicated value just overwrites itself.
+          this.typeFields.set(TYPE_BIND_DEFAULT_KEY, typeFieldConfig.replace(/\./g, '_'));
+          return;
+        }
+        // `dc.language.iso=>edm.type`: this metadata field is controlled by another field
+        const parts = typeFieldConfig.split(TYPE_BIND_FIELD_SEPARATOR).map((part: string) => part.trim());
+        if (parts.length !== 2 || parts.some((part: string) => isEmpty(part))) {
+          console.warn(`Ignoring malformed submit.type-bind.field value "${rawValue}", expected "<bound field>${TYPE_BIND_FIELD_SEPARATOR}<controlling field>"`);
+          return;
+        }
+        this.typeFields.set(parts[0], parts[1].replace(/\./g, '_'));
       });
       if (hasNoValue(this.typeFields.get(TYPE_BIND_DEFAULT_KEY))) {
         this.typeFields.set(TYPE_BIND_DEFAULT_KEY, 'dc_type');
       }
+      // Forms parsed before the property arrived could not know about the `A=>B` overrides yet, so
+      // give their controlling models a second chance to be registered.
+      const typeBindModelIds = Array.from(this.typeFields.values());
+      this.typeBindParsedRows.forEach((rows: DynamicFormControlModel[]) => this.registerTypeBindModels(typeBindModelIds, rows));
     });
   }
 

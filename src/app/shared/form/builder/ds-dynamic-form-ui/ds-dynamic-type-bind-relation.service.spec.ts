@@ -146,7 +146,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       expect(service.matchesCondition(relation, HIDDEN_MATCHER)).toBeTruthy();
     });
 
-    it('Should attach to the controlling model as soon as it is registered', () => {
+    it('Should attach to the controlling model as soon as it is registered, and stop when the caller unsubscribes', () => {
       const bindModelUpdates = new Subject<string>();
       const formBuilderServiceSpy: any = (service as any).formBuilderService;
       formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
@@ -154,13 +154,52 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
 
       const testModel = mockInputWithTypeBindModel;
       testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
-      const subscriptions = service.subscribeRelations(testModel, new UntypedFormControl());
-      // only the registration listener so far
-      expect(subscriptions).toHaveSize(1);
+      const dcTypeControl = new UntypedFormControl();
+      // the caller (ds-dynamic-form-control-container) spreads the result into its own array, so a
+      // subscription created later has to hang off something handed over now to ever be torn down
+      const [subscription] = service.subscribeRelations(testModel, dcTypeControl);
 
-      formBuilderServiceSpy.getTypeBindModel.and.returnValue(new DsDynamicInputModel(dcTypeInputConfig));
+      const controllingModel = new DsDynamicInputModel(dcTypeInputConfig);
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(controllingModel);
       bindModelUpdates.next('edm_type');
-      expect(subscriptions).toHaveSize(2);
+
+      controllingModel.value = 'anotherType';
+      expect(testModel.hidden).toBeTrue();
+      controllingModel.value = 'boundType';
+      expect(testModel.hidden).toBeFalse();
+
+      subscription.unsubscribe();
+
+      controllingModel.value = 'anotherType';
+      expect(testModel.hidden).toBeFalse();
+    });
+
+    it('Should attach the real controlling model even when it was first bound to the default one', () => {
+      // until edm_type is registered, getTypeBindModel falls back to the default dc_type model, so
+      // a related model IS attached - the late registration must still be picked up
+      const bindModelUpdates = new Subject<string>();
+      const formBuilderServiceSpy: any = (service as any).formBuilderService;
+      formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(new DsDynamicInputModel(dcTypeInputConfig));
+
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      const [subscription] = service.subscribeRelations(testModel, new UntypedFormControl());
+
+      const controllingModel = new DsDynamicInputModel({
+        ...dcTypeInputConfig,
+        id: 'edm_type',
+        name: 'edm.type',
+      });
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(controllingModel);
+      bindModelUpdates.next('edm_type');
+
+      controllingModel.value = 'anotherType';
+      expect(testModel.hidden).toBeTrue();
+      controllingModel.value = 'boundType';
+      expect(testModel.hidden).toBeFalse();
+
+      subscription.unsubscribe();
     });
 
   });
