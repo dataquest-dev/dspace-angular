@@ -38,3 +38,40 @@ themes:
         attributes:
           rel: manifest
           href: assets/custom/images/favicons/manifest.webmanifest
+
+ssr:
+  excludePathPatterns:
+    - pattern: "^/communities/[a-f0-9-]{36}/browse(/.*)?$"
+      flag: "i"
+    - pattern: "^/collections/[a-f0-9-]{36}/browse(/.*)?$"
+      flag: "i"
+    - pattern: "^/browse/"
+    - pattern: "^/search"
+    - pattern: "^/community-list$"
+    - pattern: "^/statistics/?"
+    - pattern: "^/admin/"
+    - pattern: "^/processes/?"
+    - pattern: "^/notifications/"
+    - pattern: "^/access-control/"
+    - pattern: "^/health$"
+    - pattern: "^/collections/[a-f0-9-]{36}/search"
+      flag: "i"
+    - pattern: "^/communities/[a-f0-9-]{36}/search"
+      flag: "i"
+    - pattern: "^/(items|entities/[^/]+)/[a-f0-9-]{36}/full/?$"
+      flag: "i"
+    - pattern: "^/(mydspace|submit|import-external|workspaceitems|workflowitems)(/|$)"
+    - pattern: "^/(profile|subscriptions|suggestions)(/|$)"
+    - pattern: "^/(items|collections|communities|entities/[^/]+)/[a-f0-9-]{36}/(edit|delete|bitstreams/new)(/|$)"
+      flag: "i"
+    - pattern: "^/(register|forgot)(/|$)"
+
+cache:
+  serverSide:
+    debug: false
+    botCache:
+      max: 512
+      timeToLive: 21600000
+      allowStale: true
+    anonymousCache:
+      max: 0
