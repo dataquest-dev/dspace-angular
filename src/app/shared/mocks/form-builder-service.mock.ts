@@ -9,7 +9,7 @@ import { FormBuilderService } from '../form/builder/form-builder.service';
 
 export function getMockFormBuilderService(): FormBuilderService {
 
-  return jasmine.createSpyObj('FormBuilderService', {
+  const formBuilderService = jasmine.createSpyObj('FormBuilderService', {
     modelFromConfiguration: [],
     createFormGroup: new UntypedFormGroup({}),
     getValueFromModel: {},
@@ -49,4 +49,9 @@ export function getMockFormBuilderService(): FormBuilderService {
     getTypeBindModelUpdates: EMPTY,
     resolveTypeBindModelId: undefined,
   });
+
+  // mirror the real implementation for a reference that the type field map does not remap
+  formBuilderService.resolveTypeBindModelId.and.callFake((typeBindFieldRef: string) => typeBindFieldRef ?? 'dc_type');
+
+  return formBuilderService;
 }
