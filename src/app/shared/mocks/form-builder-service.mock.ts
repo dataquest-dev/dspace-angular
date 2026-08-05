@@ -51,7 +51,7 @@ export function getMockFormBuilderService(): FormBuilderService {
   });
 
   // mirror the real implementation for a reference that the type field map does not remap
-  formBuilderService.resolveTypeBindModelId.and.callFake((typeBindFieldRef: string) => typeBindFieldRef ?? 'dc_type');
+  formBuilderService.resolveTypeBindModelId.and.callFake((typeBindFieldRef?: string) => typeBindFieldRef ?? 'dc_type');
 
   return formBuilderService;
 }
