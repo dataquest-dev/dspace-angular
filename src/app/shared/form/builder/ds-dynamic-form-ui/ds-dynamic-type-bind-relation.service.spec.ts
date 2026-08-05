@@ -202,6 +202,36 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       subscription.unsubscribe();
     });
 
+    it('Should follow a re-registered controlling model and drop the stale one', () => {
+      // re-parsing the section that holds the controlling field yields a new instance under the same id
+      const bindModelUpdates = new Subject<string>();
+      const formBuilderServiceSpy: any = (service as any).formBuilderService;
+      formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
+
+      const firstInstance = new DsDynamicInputModel({ ...dcTypeInputConfig, id: 'edm_type', name: 'edm.type' });
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(firstInstance);
+
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      const [subscription] = service.subscribeRelations(testModel, new UntypedFormControl());
+
+      const secondInstance = new DsDynamicInputModel({ ...dcTypeInputConfig, id: 'edm_type', name: 'edm.type' });
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(secondInstance);
+      bindModelUpdates.next('edm_type');
+
+      secondInstance.value = 'boundType';
+      expect(testModel.hidden).toBeFalse();
+
+      // the replaced instance must no longer drive the field
+      firstInstance.value = 'anotherType';
+      expect(testModel.hidden).toBeFalse();
+
+      secondInstance.value = 'anotherType';
+      expect(testModel.hidden).toBeTrue();
+
+      subscription.unsubscribe();
+    });
+
   });
 
 });

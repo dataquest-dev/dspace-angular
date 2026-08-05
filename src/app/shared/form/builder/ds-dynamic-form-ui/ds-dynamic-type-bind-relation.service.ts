@@ -203,13 +203,21 @@ export class DsDynamicTypeBindRelationService {
   subscribeRelations(model: DynamicFormControlModel, control: UntypedFormControl): Subscription[] {
 
     const subscriptions = new Subscription();
-    const attachedModelIds = new Set<string>();
+    // keyed by model id, but compared by identity: re-parsing the section that holds the controlling
+    // field produces a NEW model instance under the same id, and this field has to follow it
+    const attachedModels = new Map<string, DynamicFormControlModel>();
+    const attachedSubscriptions = new Map<string, Subscription>();
 
     const attachRelatedModels = (relatedModels: DynamicFormControlModel[]) => {
       relatedModels.forEach((relatedModel: any) => {
 
-        if (hasValue(relatedModel) && !attachedModelIds.has(relatedModel.id)) {
-          attachedModelIds.add(relatedModel.id);
+        if (hasValue(relatedModel) && attachedModels.get(relatedModel.id) !== relatedModel) {
+          const staleSubscription = attachedSubscriptions.get(relatedModel.id);
+          if (hasValue(staleSubscription)) {
+            subscriptions.remove(staleSubscription);
+            staleSubscription.unsubscribe();
+          }
+          attachedModels.set(relatedModel.id, relatedModel);
 
           const initValue = (hasNoValue(relatedModel.value) || typeof relatedModel.value === 'string') ? relatedModel.value :
             (Array.isArray(relatedModel.value) ? relatedModel.value : relatedModel.value.value);
@@ -220,14 +228,16 @@ export class DsDynamicTypeBindRelationService {
           );
 
           // Build up the subscriptions to watch for changes;
-          subscriptions.add(valueChanges.subscribe(() => this.evaluateRelations(model, control)));
+          const valueChangesSubscription = valueChanges.subscribe(() => this.evaluateRelations(model, control));
+          attachedSubscriptions.set(relatedModel.id, valueChangesSubscription);
+          subscriptions.add(valueChangesSubscription);
         }
       });
     };
 
     attachRelatedModels(this.getRelatedFormModel(model));
 
-    if (attachedModelIds.size === 0) {
+    if (attachedModels.size === 0) {
       // Nothing to listen to yet: evaluate once so the "controlling model missing" fallback applies
       // and the field does not stay in whatever state it was rendered in.
       this.evaluateRelations(model, control);
