@@ -730,7 +730,7 @@ export class FormBuilderService extends DynamicFormService {
         this.typeFields.set(TYPE_BIND_DEFAULT_KEY, TYPE_BIND_DEFAULT_MODEL_ID);
       }
     }
-    return this.typeFields.get(TYPE_BIND_DEFAULT_KEY);
+    return this.getDefaultTypeBindModelId();
   }
 
 }
