@@ -1540,9 +1540,6 @@
   "browse.comcol.by.subject": "Podle předmětu",
 
   // "browse.comcol.by.srsc": "By Subject Category",
-  // Must stay distinct from browse.comcol.by.subject ("Podle předmětu"): both links sit next to
-  // each other in the comcol sidebar, and srsc is a different index (the controlled category
-  // vocabulary), not a second copy of the free-text subject browse.
   "browse.comcol.by.srsc": "Podle předmětové kategorie",
 
   // "browse.comcol.by.nsi": "By Norwegian Science Index",
