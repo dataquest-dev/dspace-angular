@@ -144,9 +144,12 @@ export class ItemVersionsNoticeComponent implements OnInit {
    * `Location.prepareExternalUrl` applies the exact same transformation `RouterLink`
    * applies to its `href`, and is a no-op when the base href is `/`.
    *
+   * The template calls this while the latest version is still loading, so `item` - and therefore
+   * the returned url - may be undefined.
+   *
    * @param item The item for which the url is requested
    */
-  getItemPage(item: Item): string {
+  getItemPage(item: Item | undefined): string | undefined {
     if (hasValue(item)) {
       return this.location.prepareExternalUrl(getItemPageRoute(item));
     }
