@@ -2703,7 +2703,7 @@
   "dso-selector.set-scope.community.head": "Vyberte rozsah vyhledávání",
 
   // "dso-selector.set-scope.community.button": "Search all of DSpace",
-  "dso-selector.set-scope.community.button": "Hledat v celém DSpace",
+  "dso-selector.set-scope.community.button": "Hledat v celém repozitáři",
 
   // "dso-selector.set-scope.community.or-divider": "or",
   "dso-selector.set-scope.community.or-divider": "nebo",

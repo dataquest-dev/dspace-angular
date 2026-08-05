@@ -1797,7 +1797,7 @@
 
   "dso-selector.set-scope.community.head": "Select a search scope",
 
-  "dso-selector.set-scope.community.button": "Search all of DSpace",
+  "dso-selector.set-scope.community.button": "Search the entire repository",
 
   "dso-selector.set-scope.community.or-divider": "or",
 
@@ -2217,7 +2217,7 @@
 
   "home.title": "Home",
 
-  "home.top-level-communities.head": "Communities in DSpace",
+  "home.top-level-communities.head": "Communities",
 
   "home.top-level-communities.help": "Select a community to browse its collections.",
 
@@ -3481,7 +3481,7 @@
 
   "menu.section.browse_community_by_title": "By Title",
 
-  "menu.section.browse_global": "All of DSpace",
+  "menu.section.browse_global": "Browse by",
 
   "menu.section.browse_global_by_author": "By Author",
 
@@ -3717,7 +3717,7 @@
 
   "notification.suggestion.please": "Please",
 
-  "nav.browse.header": "All of DSpace",
+  "nav.browse.header": "Entire repository",
 
   "nav.community-browse.header": "By Community",
 
@@ -4455,9 +4455,12 @@
 
   "repository.image.logo": "Repository logo",
 
-  "repository.title": "DSpace Repository",
+  // The repository name, which also names the legal entity in the End User Agreement and the
+  // Privacy Policy. This is a translation of the Czech "Institucionalni digitalni repozitar"
+  // already in use; replace it if JCU has an official English name.
+  "repository.title": "Institutional Digital Repository",
 
-  "repository.title.prefix": "DSpace Repository :: ",
+  "repository.title.prefix": "IDR :: ",
 
   "resource-policies.add.button": "Add",
 
@@ -4898,7 +4901,7 @@
 
   "search.form.search_dspace": "All repository",
 
-  "search.form.scope.all": "All of DSpace",
+  "search.form.scope.all": "Entire repository",
 
   "search.results.head": "Search Results",
 
