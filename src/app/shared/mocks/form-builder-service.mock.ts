@@ -47,5 +47,6 @@ export function getMockFormBuilderService(): FormBuilderService {
     },
     ),
     getTypeBindModelUpdates: EMPTY,
+    resolveTypeBindModelId: undefined,
   });
 }

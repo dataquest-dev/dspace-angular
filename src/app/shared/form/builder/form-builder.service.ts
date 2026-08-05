@@ -169,8 +169,16 @@ export class FormBuilderService extends DynamicFormService {
    */
   getTypeBindModel(typeBindFieldRef?: string): DynamicFormControlModel | undefined {
     const defaultModelId = this.typeFields.get(TYPE_BIND_DEFAULT_KEY);
-    const modelId = this.typeFields.get(typeBindFieldRef) ?? typeBindFieldRef ?? defaultModelId;
-    return this.typeBindModel.get(modelId) ?? this.typeBindModel.get(defaultModelId);
+    return this.typeBindModel.get(this.resolveTypeBindModelId(typeBindFieldRef)) ?? this.typeBindModel.get(defaultModelId);
+  }
+
+  /**
+   * Resolve which model id a type bind reference points at, purely from configuration - unlike
+   * {@link getTypeBindModel} this does not fall back to the default model when the target is not
+   * (yet) part of the form, so the answer does not depend on parse order.
+   */
+  resolveTypeBindModelId(typeBindFieldRef?: string): string {
+    return this.typeFields.get(typeBindFieldRef) ?? typeBindFieldRef ?? this.typeFields.get(TYPE_BIND_DEFAULT_KEY);
   }
 
   setTypeBindModel(model: DynamicFormControlModel) {

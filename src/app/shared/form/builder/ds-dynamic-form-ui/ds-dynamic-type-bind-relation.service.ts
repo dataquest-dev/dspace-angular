@@ -90,10 +90,22 @@ export class DsDynamicTypeBindRelationService {
   }
 
   /**
-   * Whether any type bind relation of the given model resolves to the model itself, i.e. the field
-   * declares `<type-bind field="...">` pointing at its own metadata field.
+   * Whether the configuration itself binds the given model to its own metadata field, i.e. a
+   * misconfigured `<type-bind field="...">` pointing at the field it is declared on. Resolved from
+   * the configuration only, so it cannot be confused with a relation that merely *currently* falls
+   * back to the default model because its real target has not been parsed yet.
    */
-  private dependsOnItself(model: DynamicFormControlModel): boolean {
+  private isConfiguredToDependOnItself(model: DynamicFormControlModel): boolean {
+    return ((model as any).typeBindRelations || []).some((relGroup) =>
+      (relGroup.when || []).some((rel) => this.formBuilderService.resolveTypeBindModelId(rel?.id) === model.id));
+  }
+
+  /**
+   * Whether the model that a relation resolves to *right now* is the model itself - true either for
+   * the misconfiguration above or, transiently, when the real controlling model has not been
+   * registered yet and the default one happens to be this very field.
+   */
+  private currentlyResolvesToItself(model: DynamicFormControlModel): boolean {
     return ((model as any).typeBindRelations || []).some((relGroup) =>
       (relGroup.when || []).some((rel) => this.formBuilderService.getTypeBindModel(rel?.id)?.id === model.id));
   }
@@ -211,12 +223,12 @@ export class DsDynamicTypeBindRelationService {
 
     const subscriptions = new Subscription();
 
-    if (this.dependsOnItself(model)) {
+    if (this.isConfiguredToDependOnItself(model)) {
       // Misconfigured <type-bind field="..."> pointing at the field itself. Upstream throws here,
       // which would take down the whole submission section over one bad field; and merely skipping
       // the relation is not enough either - evaluating it would hide the field on the initial pass
-      // and nothing would ever re-evaluate it, making it permanently unreachable. Leave the field
-      // exactly as rendered and warn.
+      // and nothing would ever re-evaluate it, making it permanently unreachable. No later
+      // registration can change the configuration, so leave the field exactly as rendered and warn.
       console.warn(`FormControl ${model.id} cannot depend on itself, ignoring its type bind relation`);
       return [subscriptions];
     }
@@ -255,9 +267,11 @@ export class DsDynamicTypeBindRelationService {
 
     attachRelatedModels(this.getRelatedFormModel(model));
 
-    if (attachedModels.size === 0) {
+    if (attachedModels.size === 0 && !this.currentlyResolvesToItself(model)) {
       // Nothing to listen to yet: evaluate once so the "controlling model missing" fallback applies
-      // and the field does not stay in whatever state it was rendered in.
+      // and the field does not stay in whatever state it was rendered in. Skipped when the relation
+      // currently resolves to this field itself - the real controlling model simply has not been
+      // parsed yet, and evaluating against our own value would hide the field for no reason.
       this.evaluateRelations(model, control);
     }
 

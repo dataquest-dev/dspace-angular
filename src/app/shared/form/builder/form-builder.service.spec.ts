@@ -1102,6 +1102,32 @@ describe('FormBuilderService per-field type bind with a slow configuration respo
     expect(service.getTypeBindModel('dc.language.iso').id).toEqual('edm_type');
   });
 
+  it('should register a controlling model declared only by a padded <type-bind field="...">', () => {
+    // there is no A=>B entry for this field, so the whitespace-padded XML attribute is the ONLY
+    // source of the controlling model id - it has to be trimmed the same way the relation ids are
+    configResponse.next(createSuccessfulRemoteDataObject({
+      ... new ConfigurationProperty(),
+      name: 'submit.type-bind.field',
+      values: ['dc.type'],
+    }));
+    configResponse.complete();
+
+    const paddedConfiguration = {
+      ...overrideOnlyFormConfiguration,
+      rows: [
+        overrideOnlyFormConfiguration.rows[0],
+        { fields: [{
+          ...overrideOnlyFormConfiguration.rows[1].fields[0],
+          typeBindField: ' edm.type ',
+        } as FormFieldModel] } as FormRowModel,
+      ],
+    } as any;
+
+    service.modelFromConfiguration(submissionId, paddedConfiguration, 'testScopeUUID');
+
+    expect(service.getTypeBindModel('edm_type')?.id).toEqual('edm_type');
+  });
+
   it('should ignore blank and malformed values', () => {
     configResponse.next(createSuccessfulRemoteDataObject({
       ... new ConfigurationProperty(),

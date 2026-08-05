@@ -179,6 +179,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       const testModel = mockInputWithTypeBindModel;
       // the field's own <type-bind field="..."> resolves back to the field itself
       testModel.typeBindRelations = getTypeBindRelations(['boundType'], testModel.id);
+      formBuilderServiceSpy.resolveTypeBindModelId.and.returnValue(testModel.id);
       formBuilderServiceSpy.getTypeBindModel.and.returnValue(testModel);
       testModel.hidden = false;
 
@@ -188,6 +189,32 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       // nothing is evaluated, so the misconfigured field stays usable instead of being hidden forever
       expect(testModel.hidden).toBeFalse();
       subscriptions.forEach((subscription) => subscription.unsubscribe());
+    });
+
+    it('Should not hide a field whose controlling model has not been parsed yet, and attach when it is', () => {
+      // the real target (edm_type) is not registered, so getTypeBindModel falls back to the default
+      // model - which in this form happens to BE this field. That is not a misconfiguration.
+      const bindModelUpdates = new Subject<string>();
+      const formBuilderServiceSpy: any = (service as any).formBuilderService;
+      formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
+      formBuilderServiceSpy.resolveTypeBindModelId.and.returnValue('edm_type');
+
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(testModel);
+      testModel.hidden = false;
+
+      const [subscription] = service.subscribeRelations(testModel, new UntypedFormControl());
+      expect(testModel.hidden).toBeFalse();
+
+      const controllingModel = new DsDynamicInputModel({ ...dcTypeInputConfig, id: 'edm_type', name: 'edm.type' });
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(controllingModel);
+      bindModelUpdates.next('edm_type');
+
+      controllingModel.value = 'anotherType';
+      expect(testModel.hidden).toBeTrue();
+
+      subscription.unsubscribe();
     });
 
     it('Should attach the real controlling model even when it was first bound to the default one', () => {
