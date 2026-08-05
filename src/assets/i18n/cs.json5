@@ -1589,7 +1589,7 @@
   "browse.metadata.nsi.breadcrumbs": "Procházet podle Norwegian Science Index",
 
   // "browse.metadata.nsi.tree.description": "Select an index to add as search filter",
-  "browse.metadata.nsi.tree.description": "Vyberte index, který chcete přidat jako filtr hledání",
+  "browse.metadata.nsi.tree.description": "Vyberte index, který chcete přidat jako filtr vyhledávání",
 
   // "browse.metadata.title.breadcrumbs": "Browse by Title",
   "browse.metadata.title.breadcrumbs": "Procházet podle názvu",
