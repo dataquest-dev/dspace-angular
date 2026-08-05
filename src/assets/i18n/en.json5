@@ -4870,6 +4870,16 @@
 
   "search.filters.namedresourcetype.Workspace": "Workspace",
 
+  "search.filters.namedresourcetype.item": "Archived",
+
+  "search.filters.namedresourcetype.validation": "Validation",
+
+  "search.filters.namedresourcetype.waitingforcontroller": "Waiting for reviewer",
+
+  "search.filters.namedresourcetype.workflow": "Workflow",
+
+  "search.filters.namedresourcetype.workspace": "Workspace",
+
   "search.filters.withdrawn.true": "Yes",
 
   "search.filters.withdrawn.false": "No",
