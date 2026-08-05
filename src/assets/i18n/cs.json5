@@ -1540,7 +1540,7 @@
   "browse.comcol.by.subject": "Podle předmětu",
 
   // "browse.comcol.by.srsc": "By Subject Category",
-  "browse.comcol.by.srsc": "Podle předmětu",
+  "browse.comcol.by.srsc": "Podle předmětové kategorie",
 
   // "browse.comcol.by.nsi": "By Norwegian Science Index",
   "browse.comcol.by.nsi": "Podle Norwegian Science Index",
@@ -1567,8 +1567,7 @@
   "browse.metadata.title": "Název",
 
   // "browse.metadata.srsc": "Subject Category",
-  // TODO New key - Add a translation
-  "browse.metadata.srsc": "Subject Category",
+  "browse.metadata.srsc": "Předmětová kategorie",
 
   // "browse.metadata.author.breadcrumbs": "Browse by Author",
   "browse.metadata.author.breadcrumbs": "Procházet podle autora",
