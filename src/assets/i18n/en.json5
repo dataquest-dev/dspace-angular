@@ -4870,14 +4870,6 @@
 
   "search.filters.namedresourcetype.Workspace": "Workspace",
 
-  // The MyDSpace "Status" facet is an authority facet: the facet list is keyed by
-  // the Solr display value ("Archived"), but once the filter is applied the REST
-  // API reports it by its authority key ("item") instead - see
-  // discovery.cfg:discovery.facet.namedtype.* ("Archived###item") and
-  // SearchFilterToAppliedFilterConverter, which cannot resolve a label for a
-  // non-SOLRAuthority facet (upstream FIXME / DS-4209). The applied-filter chip
-  // and the checked checkbox therefore need the same labels keyed by authority
-  // key, otherwise they fall back to the raw value.
   "search.filters.namedresourcetype.item": "Archived",
 
   "search.filters.namedresourcetype.validation": "Validation",
