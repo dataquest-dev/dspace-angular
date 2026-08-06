@@ -9,10 +9,10 @@
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
-  combineLatest as observableCombineLatest,
   map,
   Observable,
   of,
+  switchMap,
 } from 'rxjs';
 
 import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
@@ -52,14 +52,17 @@ export class ImportMenuProvider extends AbstractExpandableMenuProvider {
   }
 
   public getSubSections(): Observable<PartialMenuSection[]> {
-    return observableCombineLatest([
-      this.authorizationService.isAuthorized(FeatureID.AdministratorOf),
-      this.scriptDataService.scriptWithNameExistsAndCanExecute(METADATA_IMPORT_SCRIPT_NAME),
-    ]).pipe(
-      map(([authorized, metadataImportScriptExists]) => {
+    return this.authorizationService.isAuthorized(FeatureID.AdministratorOf).pipe(
+      // Ask about the script only once we know the user may run it. /api/system/scripts/<name>
+      // answers 401 to anyone who cannot execute it, so for an anonymous visitor this request was
+      // a guaranteed error on every single page load.
+      switchMap((authorized: boolean) => authorized
+        ? this.scriptDataService.scriptWithNameExistsAndCanExecute(METADATA_IMPORT_SCRIPT_NAME)
+        : of(false)),
+      map((canImportMetadata: boolean) => {
         return [
           {
-            visible: authorized && metadataImportScriptExists,
+            visible: canImportMetadata,
             model: {
               type: MenuItemType.LINK,
               text: 'menu.section.import_metadata',
@@ -67,7 +70,7 @@ export class ImportMenuProvider extends AbstractExpandableMenuProvider {
             },
           },
           {
-            visible: authorized && metadataImportScriptExists,
+            visible: canImportMetadata,
             model: {
               type: MenuItemType.LINK,
               text: 'menu.section.import_batch',

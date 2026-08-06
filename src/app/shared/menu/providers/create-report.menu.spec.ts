@@ -97,4 +97,15 @@ describe('CreateReportMenuProvider', () => {
       done();
     });
   });
+
+  it('should not read contentreport.enable when the user is not a site administrator', (done) => {
+    (authorizationServiceStub.isAuthorized as jasmine.Spy).and.returnValue(of(false));
+    (configurationDataService.findByPropertyName as jasmine.Spy).calls.reset();
+
+    provider.getTopSection().subscribe((section) => {
+      expect(configurationDataService.findByPropertyName).not.toHaveBeenCalled();
+      expect(section.visible).toBeFalse();
+      done();
+    });
+  });
 });

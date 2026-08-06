@@ -49,17 +49,19 @@ describe('ExportMenuProvider', () => {
 
   let provider: ExportMenuProvider;
   let authorizationServiceStub = new AuthorizationDataServiceStub();
+  let scriptServiceStub: ScriptServiceStub;
 
   beforeEach(() => {
     spyOn(authorizationServiceStub, 'isAuthorized').and.returnValue(
       of(true),
     );
+    scriptServiceStub = new ScriptServiceStub();
 
     TestBed.configureTestingModule({
       providers: [
         ExportMenuProvider,
         { provide: AuthorizationDataService, useValue: authorizationServiceStub },
-        { provide: ScriptDataService, useClass: ScriptServiceStub },
+        { provide: ScriptDataService, useValue: scriptServiceStub },
       ],
     });
     provider = TestBed.inject(ExportMenuProvider);
@@ -79,6 +81,17 @@ describe('ExportMenuProvider', () => {
   it('getSubSections should return expected menu sections', (done) => {
     provider.getSubSections().subscribe((sections) => {
       expect(sections).toEqual(expectedSubSections);
+      done();
+    });
+  });
+
+  it('getSubSections should not query the script endpoint when the user is not an administrator', (done) => {
+    (authorizationServiceStub.isAuthorized as jasmine.Spy).and.returnValue(of(false));
+    spyOn(scriptServiceStub, 'scriptWithNameExistsAndCanExecute').and.callThrough();
+
+    provider.getSubSections().subscribe((sections) => {
+      expect(scriptServiceStub.scriptWithNameExistsAndCanExecute).not.toHaveBeenCalled();
+      expect(sections.every((section) => section.visible === false)).toBeTrue();
       done();
     });
   });

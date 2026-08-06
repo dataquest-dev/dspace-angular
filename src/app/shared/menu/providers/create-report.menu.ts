@@ -8,10 +8,13 @@
 
 import { Injectable } from '@angular/core';
 import {
-  combineLatest as observableCombineLatest,
   Observable,
+  of,
 } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  map,
+  switchMap,
+} from 'rxjs/operators';
 
 import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
 import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
@@ -37,19 +40,33 @@ export class CreateReportMenuProvider extends AbstractExpandableMenuProvider {
     super();
   }
 
+  /**
+   * Whether the Reports menu should be shown at all: the user is a site administrator *and* the
+   * content report feature is switched on in the backend.
+   *
+   * The order matters. The authorization is checked first and the configuration is only fetched for
+   * an administrator, because /api/config/properties/contentreport.enable answers 404 whenever the
+   * property is not set — which is the default — and that request used to be fired on every page
+   * load for every visitor, including anonymous ones who can never see this menu.
+   */
+  private isReportMenuAvailable(): Observable<boolean> {
+    return this.authorizationService.isAuthorized(FeatureID.AdministratorOf).pipe(
+      switchMap((isSiteAdmin: boolean) => isSiteAdmin
+        ? this.configurationDataService.findByPropertyName('contentreport.enable').pipe(
+          getFirstCompletedRemoteData(),
+          map((res: RemoteData<ConfigurationProperty>) => res.hasSucceeded && res.payload && res.payload.values[0] === 'true'),
+        )
+        : of(false)),
+    );
+  }
+
   getSubSections(): Observable<PartialMenuSection[]> {
-    return observableCombineLatest([
-      this.configurationDataService.findByPropertyName('contentreport.enable').pipe(
-        getFirstCompletedRemoteData(),
-        map((res: RemoteData<ConfigurationProperty>) => res.hasSucceeded && res.payload && res.payload.values[0] === 'true'),
-      ),
-      this.authorizationService.isAuthorized(FeatureID.AdministratorOf),
-    ]).pipe(
-      map(([reportEnabled, isSiteAdmin]: [boolean, boolean]) => {
+    return this.isReportMenuAvailable().pipe(
+      map((available: boolean) => {
         return [
           /* Collections Report */
           {
-            visible: isSiteAdmin && reportEnabled,
+            visible: available,
             model: {
               type: MenuItemType.LINK,
               text: 'menu.section.reports.collections',
@@ -59,7 +76,7 @@ export class CreateReportMenuProvider extends AbstractExpandableMenuProvider {
           },
           /* Queries Report */
           {
-            visible: isSiteAdmin && reportEnabled,
+            visible: available,
             model: {
               type: MenuItemType.LINK,
               text: 'menu.section.reports.queries',
@@ -72,16 +89,10 @@ export class CreateReportMenuProvider extends AbstractExpandableMenuProvider {
   }
 
   getTopSection(): Observable<PartialMenuSection> {
-    return observableCombineLatest([
-      this.configurationDataService.findByPropertyName('contentreport.enable').pipe(
-        getFirstCompletedRemoteData(),
-        map((res: RemoteData<ConfigurationProperty>) => res.hasSucceeded && res.payload && res.payload.values[0] === 'true'),
-      ),
-      this.authorizationService.isAuthorized(FeatureID.AdministratorOf),
-    ]).pipe(
-      map(([reportEnabled, isSiteAdmin]: [boolean, boolean]) => {
+    return this.isReportMenuAvailable().pipe(
+      map((available: boolean) => {
         return {
-          visible: isSiteAdmin && reportEnabled,
+          visible: available,
           model: {
             type: MenuItemType.TEXT,
             text: 'menu.section.reports',

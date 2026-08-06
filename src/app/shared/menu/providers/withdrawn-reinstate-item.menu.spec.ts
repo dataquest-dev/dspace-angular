@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
+import { AuthService } from '../../../core/auth/auth.service';
 import { Item } from '../../../core/shared/item.model';
 import { ITEM } from '../../../core/shared/item.resource-type';
 import { CorrectionTypeDataService } from '../../../core/submission/correctiontype-data.service';
@@ -56,6 +58,7 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
 
   let correctionTypeDataService;
   let dsoWithdrawnReinstateModalService;
+  let authService;
 
   beforeEach(() => {
     const correctionType = Object.assign(new CorrectionType(), {
@@ -69,6 +72,9 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
 
     dsoWithdrawnReinstateModalService = jasmine.createSpyObj('dsoWithdrawnReinstateModalService', ['openCreateWithdrawnReinstateModal']);
 
+    authService = jasmine.createSpyObj('authService', {
+      'isAuthenticated': of(true),
+    });
 
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot()],
@@ -76,6 +82,7 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
         WithdrawnReinstateItemMenuProvider,
         { provide: CorrectionTypeDataService, useValue: correctionTypeDataService },
         { provide: DsoWithdrawnReinstateModalService, useValue: dsoWithdrawnReinstateModalService },
+        { provide: AuthService, useValue: authService },
       ],
     });
     provider = TestBed.inject(WithdrawnReinstateItemMenuProvider);
@@ -89,6 +96,16 @@ describe('WithdrawnReinstateItemMenuProvider', () => {
     it('should return the expected sections', (done) => {
       provider.getSectionsForContext(item).subscribe((sections) => {
         expect(sections).toEqual(expectedSections);
+        done();
+      });
+    });
+
+    it('should not query the correction types for an anonymous user', (done) => {
+      authService.isAuthenticated.and.returnValue(of(false));
+
+      provider.getSectionsForContext(item).subscribe((sections) => {
+        expect(correctionTypeDataService.findByItem).not.toHaveBeenCalled();
+        expect(sections.every((section) => !section.visible)).toBeTrue();
         done();
       });
     });
