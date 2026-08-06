@@ -135,16 +135,22 @@ describe('lookupGuard', () => {
     });
   });
 
-  describe('when the lookup fails with a 500', () => {
-    beforeEach(() => {
-      dsoService.findByIdAndIDType.and.returnValue(of(createFailedRemoteDataObject('Server error', 500)));
-    });
+  // 501 is what the identifier endpoint answers for an unresolvable identifier type; 422 never
+  // reaches this guard, but the fallback must treat every non-401/403 status the same way
+  [501, 422, 500].forEach((statusCode: number) => {
+    describe(`when the lookup fails with a ${statusCode}`, () => {
+      beforeEach(() => {
+        dsoService.findByIdAndIDType.and.returnValue(of(createFailedRemoteDataObject('Failed', statusCode)));
+      });
 
-    it('should return true so the ObjectNotFound page is shown', (done) => {
-      guard(handleRoute, state).subscribe((result) => {
-        expect(result).toBeTrue();
-        expect(router.parseUrl).not.toHaveBeenCalled();
-        done();
+      it('should return true so the ObjectNotFound page is shown', (done) => {
+        guard(handleRoute, state).subscribe((result) => {
+          expect(result).toBeTrue();
+          expect(authService.setRedirectUrl).not.toHaveBeenCalled();
+          expect(router.parseUrl).not.toHaveBeenCalled();
+          expect(serverResponseService.setStatus).not.toHaveBeenCalled();
+          done();
+        });
       });
     });
   });
