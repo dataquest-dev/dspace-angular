@@ -1588,7 +1588,7 @@
   "browse.metadata.nsi.breadcrumbs": "Procházet podle Norwegian Science Index",
 
   // "browse.metadata.nsi.tree.description": "Select an index to add as search filter",
-  "browse.metadata.srsc.tree.description": "Vyberte předmět pro přidání jako filtr vyhledávání",
+  "browse.metadata.nsi.tree.description": "Vyberte index, který chcete přidat jako filtr vyhledávání",
 
   // "browse.metadata.title.breadcrumbs": "Browse by Title",
   "browse.metadata.title.breadcrumbs": "Procházet podle názvu",
@@ -1693,12 +1693,10 @@
   "browse.title": "Procházet podle {{ field }}{{ startsWith }} {{ value }}",
 
   // "browse.taxonomy.show_next_results": "Show next results",
-  // TODO New key - Add a translation
-  "browse.taxonomy.show_next_results": "Show next results",
+  "browse.taxonomy.show_next_results": "Zobrazit další výsledky",
 
   // "browse.taxonomy.show_previous_results": "Show previous results",
-  // TODO New key - Add a translation
-  "browse.taxonomy.show_previous_results": "Show previous results",
+  "browse.taxonomy.show_previous_results": "Zobrazit předchozí výsledky",
 
   // "browse.title.page": "Browsing by {{ field }} {{ value }}",
   "browse.title.page": "Procházet podle {{ field }} {{ value }}",
@@ -2502,7 +2500,7 @@
   "cookies.consent.app.title.correlation-id": "ID korelace",
 
   // "cookies.consent.app.description.correlation-id": "Allow us to track your session in backend logs for support/debugging purposes",
-  "cookies.consent.app.title.correlation-id": "ID korelace",
+  "cookies.consent.app.description.correlation-id": "Umožňuje nám sledovat vaši session v serverových logech pro účely podpory a diagnostiky",
 
   // "cookies.consent.app.title.preferences": "Preferences",
   "cookies.consent.app.title.preferences": "Preference",
@@ -2574,7 +2572,7 @@
   "curation.form.task-select.label": "Úloha:",
 
   // "curation.form.submit": "Start",
-  "curation.form.submit": "Start",
+  "curation.form.submit": "Spustit",
 
   // "curation.form.submit.success.head": "The curation task has been started successfully",
   "curation.form.submit.success.head": "Úloha správy byla úspěšně spuštěna",
@@ -2692,7 +2690,7 @@
   "dso-selector.placeholder.type.collection": "kolekce",
 
   // "dso-selector.placeholder.type.item": "item",
-  "dso-selector.placeholder.type.community": "záznam",
+  "dso-selector.placeholder.type.item": "záznam",
 
   // "dso-selector.select.collection.head": "Select a collection",
   "dso-selector.select.collection.head": "Vyberte kolekci",
@@ -3774,12 +3772,10 @@
   "item.edit.item-mapper.notifications.add.error.content": "Při mapování záznamu do {{amount}} kolekcí  došlo k chybám.",
 
   // "item.edit.item-mapper.notifications.add.error.forbidden.head": "Permission denied",
-  // TODO New key - Add a translation
-  "item.edit.item-mapper.notifications.add.error.forbidden.head": "Permission denied",
+  "item.edit.item-mapper.notifications.add.error.forbidden.head": "Přístup zamítnut",
 
   // "item.edit.item-mapper.notifications.add.error.forbidden.content": "You do not have permission to map this item to a collection.",
-  // TODO New key - Add a translation
-  "item.edit.item-mapper.notifications.add.error.forbidden.content": "You do not have permission to map this item to a collection.",
+  "item.edit.item-mapper.notifications.add.error.forbidden.content": "Nemáte oprávnění mapovat tento záznam do kolekce.",
 
   // "item.edit.item-mapper.notifications.add.error.head": "Mapping errors",
   "item.edit.item-mapper.notifications.add.error.head": "Chyby při mapování",
@@ -3794,12 +3790,10 @@
   "item.edit.item-mapper.notifications.remove.error.content": "Při odstraňování mapování do {{amount}} kolekcí došlo k chybám.",
 
   // "item.edit.item-mapper.notifications.remove.error.forbidden.head": "Permission denied",
-  // TODO New key - Add a translation
-  "item.edit.item-mapper.notifications.remove.error.forbidden.head": "Permission denied",
+  "item.edit.item-mapper.notifications.remove.error.forbidden.head": "Přístup zamítnut",
 
   // "item.edit.item-mapper.notifications.remove.error.forbidden.content": "You do not have permission to remove this item from a collection.",
-  // TODO New key - Add a translation
-  "item.edit.item-mapper.notifications.remove.error.forbidden.content": "You do not have permission to remove this item from a collection.",
+  "item.edit.item-mapper.notifications.remove.error.forbidden.content": "Nemáte oprávnění odstranit tento záznam z kolekce.",
 
   // "item.edit.item-mapper.notifications.remove.error.head": "Removal of mapping errors",
   "item.edit.item-mapper.notifications.remove.error.head": "Odstranění chyb při mapování",
@@ -4306,23 +4300,19 @@
   "item.truncatable-part.show-less": "Sbalit",
 
   // "item.qa-event-notification.check.notification-info.singular": "There is {{num}} pending suggestion related to your account",
-  // TODO New key - Add a translation
-  "item.qa-event-notification.check.notification-info.singular": "There is {{num}} pending suggestion related to your account",
+  "item.qa-event-notification.check.notification-info.singular": "K vašemu účtu se váže {{num}} nevyřízený návrh",
 
   // "item.qa-event-notification.check.notification-info.plural": "There are {{num}} pending suggestions related to your account",
-  // TODO New key - Add a translation
-  "item.qa-event-notification.check.notification-info.plural": "There are {{num}} pending suggestions related to your account",
+  "item.qa-event-notification.check.notification-info.plural": "K vašemu účtu se váže {{num}} nevyřízených návrhů",
 
   // "item.qa-event-notification-info.check.button": "View",
   "item.qa-event-notification-info.check.button": "Zobrazit",
 
   // "mydspace.qa-event-notification.check.notification-info.singular": "There is {{num}} pending suggestion related to your account",
-  // TODO New key - Add a translation
-  "mydspace.qa-event-notification.check.notification-info.singular": "There is {{num}} pending suggestion related to your account",
+  "mydspace.qa-event-notification.check.notification-info.singular": "K vašemu účtu se váže {{num}} nevyřízený návrh",
 
   // "mydspace.qa-event-notification.check.notification-info.plural": "There are {{num}} pending suggestions related to your account",
-  // TODO New key - Add a translation
-  "mydspace.qa-event-notification.check.notification-info.plural": "There are {{num}} pending suggestions related to your account",
+  "mydspace.qa-event-notification.check.notification-info.plural": "K vašemu účtu se váže {{num}} nevyřízených návrhů",
 
   // "mydspace.qa-event-notification-info.check.button": "View",
   "mydspace.qa-event-notification-info.check.button": "Zobrazit",
@@ -4445,12 +4435,10 @@
   "item.page.orcid.tooltip": "Otevřít stránku nastavení ORCID",
 
   // "item.page.orcid-ico": "ORCID icon",
-  // TODO New key - Add a translation
-  "item.page.orcid-ico": "ORCID icon",
+  "item.page.orcid-ico": "Ikona ORCID",
 
   // "item.page.orcid-profile": "ORCID Profile",
-  // TODO New key - Add a translation
-  "item.page.orcid-profile": "ORCID Profile",
+  "item.page.orcid-profile": "Profil ORCID",
 
   // "item.page.person.search.title": "Articles by this author",
   "item.page.person.search.title": "Články tohoto autora",
@@ -10961,11 +10949,9 @@
   "item.preview.organization.url": "URL",
 
   // "item.preview.organization.address.addressLocality": "City",
-  // TODO New key - Add a translation
-  "item.preview.organization.address.addressLocality": "City",
+  "item.preview.organization.address.addressLocality": "Město",
 
   // "item.preview.organization.alternateName": "Alternative name",
-  // TODO New key - Add a translation
-  "item.preview.organization.alternateName": "Alternative name",
+  "item.preview.organization.alternateName": "Alternativní název",
 
 }
