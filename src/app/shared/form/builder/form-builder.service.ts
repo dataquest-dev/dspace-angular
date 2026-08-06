@@ -65,19 +65,17 @@ import { FormFieldMetadataValueObject } from './models/form-field-metadata-value
 import { RowParser } from './parsers/row-parser';
 
 /**
- * The key under which the default type bind field is stored in the type field map, e.g.
- * {'default' -> 'dc_type'}
+ * Key of the default entry in the type field map, e.g. {'default' -> 'dc_type'}
  */
 export const TYPE_BIND_DEFAULT_KEY = 'default';
 
 /**
- * Separator used by the `submit.type-bind.field` property to bind one metadata field to a
- * controlling field other than the default one, e.g. `dc.language.iso=>edm.type`
+ * Separator in `submit.type-bind.field`, e.g. `dc.language.iso=>edm.type`
  */
 const TYPE_BIND_FIELD_SEPARATOR = '=>';
 
 /**
- * Model id of the controlling field used when `submit.type-bind.field` declares no default
+ * Controlling model id used when `submit.type-bind.field` declares no default
  */
 const TYPE_BIND_DEFAULT_MODEL_ID = 'dc_type';
 
@@ -85,7 +83,7 @@ const TYPE_BIND_DEFAULT_MODEL_ID = 'dc_type';
 export class FormBuilderService extends DynamicFormService {
 
   /**
-   * This map contains the models that control type binding, keyed by model id (`dc_type`, `edm_type`)
+   * The models that control type binding, keyed by model id (`dc_type`, `edm_type`)
    */
   private typeBindModel: Map<string, DynamicFormControlModel>;
 
@@ -105,30 +103,23 @@ export class FormBuilderService extends DynamicFormService {
   private formGroups: Map<string, UntypedFormGroup>;
 
   /**
-   * The submission the registered type bind models belong to. A submission is parsed section by
-   * section and a controlling field may live in another section than the field it controls, so the
-   * registry survives across `modelFromConfiguration` calls - but only within one submission,
-   * otherwise a model of the previously opened collection's form would keep answering lookups.
+   * The submission {@link typeBindModel} belongs to; the registry is scoped to it
    */
   private typeBindModelSubmissionId: string;
 
   /**
-   * The parsed rows of the current submission, kept so that controlling models can still be
-   * registered when the `submit.type-bind.field` property arrives after the form was parsed.
-   * Dropped - and no longer filled - as soon as that property has been processed.
+   * Rows parsed before `submit.type-bind.field` arrived, re-scanned once it does
    */
   private typeBindParsedRows: DynamicFormControlModel[][];
 
   /**
-   * Whether the `submit.type-bind.field` property has been processed (successfully or not), i.e.
-   * whether {@link typeFields} can still change
+   * Whether `submit.type-bind.field` has been processed, i.e. whether {@link typeFields} can still change
    */
   private typeBindConfigLoaded: boolean;
 
   /**
-   * The fields to use for type binding: TYPE_BIND_DEFAULT_KEY -> the default controlling model id,
-   * plus one entry per metadata field that is controlled by another field, e.g.
-   * `dc.language.iso` -> `edm_type`
+   * The fields to use for type binding: TYPE_BIND_DEFAULT_KEY -> default controlling model id, plus
+   * one entry per bound field, e.g. `dc.language.iso` -> `edm_type`
    */
   private typeFields: Map<string, string>;
 
@@ -147,7 +138,7 @@ export class FormBuilderService extends DynamicFormService {
     this.typeBindModelUpdates = new Subject<string>();
 
     this.typeFields.set(TYPE_BIND_DEFAULT_KEY, TYPE_BIND_DEFAULT_MODEL_ID);
-    // Without a config service the type field map can never change, so nothing has to be re-scanned
+    // without a config service the type field map can never change
     this.typeBindConfigLoaded = hasNoValue(this.configService);
     // If optional config service was passed, perform an initial set of type field (default dc_type) for type binds
     if (hasValue(this.configService)) {
@@ -165,12 +156,11 @@ export class FormBuilderService extends DynamicFormService {
   }
 
   /**
-   * Get the model of the field that controls the type binding of a bound field.
+   * Get the model of the field controlling the type binding of a bound field, falling back to the
+   * default one when the target isn't part of the current form.
    *
-   * @param typeBindFieldRef either the metadata name of the bound field itself - resolved through the
-   *   `submit.type-bind.field` map, e.g. `dc.language.iso` -> `edm_type` - or, when the submission form
-   *   declares `<type-bind field="edm.type">`, the id of the controlling model itself. When it resolves
-   *   to a model that is not part of the current form, the default (usually `dc_type`) model is returned.
+   * @param typeBindFieldRef the bound field's own metadata name (mapped through
+   *   `submit.type-bind.field`), or the controlling model id when `<type-bind field="...">` is set
    */
   getTypeBindModel(typeBindFieldRef?: string): DynamicFormControlModel | undefined {
     return this.typeBindModel.get(this.resolveTypeBindModelId(typeBindFieldRef))
@@ -178,17 +168,15 @@ export class FormBuilderService extends DynamicFormService {
   }
 
   /**
-   * Resolve which model id a type bind reference points at, purely from configuration - unlike
-   * {@link getTypeBindModel} this does not fall back to the default model when the target is not
-   * (yet) part of the form, so the answer does not depend on parse order.
+   * Which model id a type bind reference points at, from configuration only. Unlike
+   * {@link getTypeBindModel} the answer doesn't depend on what has been parsed so far.
    */
   resolveTypeBindModelId(typeBindFieldRef?: string): string {
     return this.typeFields.get(typeBindFieldRef) ?? typeBindFieldRef ?? this.getDefaultTypeBindModelId();
   }
 
   /**
-   * The id of the model of the default controlling field. Never undefined: the constructor seeds the
-   * map and {@link setTypeBindFieldFromConfig} restores the entry whatever the configuration says.
+   * Model id of the default controlling field
    */
   private getDefaultTypeBindModelId(): string {
     return this.typeFields.get(TYPE_BIND_DEFAULT_KEY) ?? TYPE_BIND_DEFAULT_MODEL_ID;
@@ -203,9 +191,8 @@ export class FormBuilderService extends DynamicFormService {
   }
 
   /**
-   * Emits the id of every type bind model as soon as it is registered, so that fields whose
-   * controlling model is only parsed later - e.g. because it lives in another form section - can
-   * still attach to it.
+   * Emits the id of every type bind model as it is registered, so fields whose controlling model is
+   * parsed later can still attach to it.
    */
   getTypeBindModelUpdates(): Observable<string> {
     return this.typeBindModelUpdates.asObservable();
@@ -416,9 +403,7 @@ export class FormBuilderService extends DynamicFormService {
       this.setTypeBindModel(typeBindModel);
     } else {
       if (!this.typeBindConfigLoaded) {
-        // Only needed until submit.type-bind.field has been processed; after that every controlling
-        // field id is known at parse time, so there is nothing left to re-scan and holding on to the
-        // model graphs of re-parsed sections would just grow without bound.
+        // bounded on purpose: once the property is in, every controlling id is known at parse time
         this.typeBindParsedRows.push(rows);
       }
       this.registerTypeBindModels(this.getTypeBindModelIds(rawData), rows);
@@ -427,11 +412,8 @@ export class FormBuilderService extends DynamicFormService {
   }
 
   /**
-   * Drop the type bind models registered by another submission. Sections of the same submission are
-   * parsed one by one and a field can be controlled by a field in a different section, so the
-   * registry must survive within a submission - but a model of the previously opened collection's
-   * form must not keep answering lookups, which would defeat the "controlling field is not part of
-   * this form, fall back to the default" behaviour for the rest of the session.
+   * Drop the models registered by another submission. The registry has to survive across sections of
+   * one submission (a controlling field may live in another section), but not across submissions.
    */
   private resetTypeBindModelsOnSubmissionChange(submissionId: string): void {
     if (this.typeBindModelSubmissionId !== submissionId) {
@@ -454,18 +436,15 @@ export class FormBuilderService extends DynamicFormService {
   }
 
   /**
-   * Collect the ids of every model that can control type binding for the given form configuration:
-   * all values of the `submit.type-bind.field` map (the default field plus each `A=>B` override) and
-   * every `<type-bind field="...">` declared by a field of this configuration. The latter is read
-   * straight from the REST payload, so a controlling model is registered even when the configuration
-   * property has not been fetched yet.
+   * Ids of every model that can control type binding here: the `submit.type-bind.field` values plus
+   * every `<type-bind field="...">` of this configuration, read straight from the REST payload so
+   * they are known even before that property arrives.
    */
   private getTypeBindModelIds(rawData: any): string[] {
     const ids = new Set<string>(this.typeFields.values());
     const collectFromRows = (formRows: FormRowModel[]): void => {
       (formRows || []).forEach((formRow: FormRowModel) => (formRow?.fields || []).forEach((field: FormFieldModel) => {
-        // trim exactly like FieldParser.getTypeBindFieldRef does, otherwise a padded value in the
-        // XML would register ' edm_type ' while the relations point at 'edm_type'
+        // trim like FieldParser.getTypeBindFieldRef, or a padded value registers ' edm_type '
         const typeBindField = field?.typeBindField?.trim();
         if (isNotEmpty(typeBindField)) {
           ids.add(typeBindField.replace(/\./g, '_'));
@@ -668,19 +647,16 @@ export class FormBuilderService extends DynamicFormService {
   }
 
   /**
-   * Get the type bind field(s) from config.
-   *
-   * `submit.type-bind.field` holds the default controlling field and, optionally, one
-   * `<bound field>=><controlling field>` entry per field that is controlled by another field, e.g.
-   * `submit.type-bind.field = dc.type, dc.language.iso=>edm.type`. The property may legitimately be
-   * declared more than once (dspace.cfg + local.cfg), so duplicated values must be tolerated and the
-   * order of the values must not matter.
+   * Get the type bind field(s) from config, e.g.
+   * `submit.type-bind.field = dc.type, dc.language.iso=>edm.type`: the default controlling field plus
+   * one `<bound field>=><controlling field>` entry per overridden field. The property may be declared
+   * in both dspace.cfg and local.cfg, so duplicates and order must not matter.
    */
   setTypeBindFieldFromConfig(): void {
     this.configService.findByPropertyName('submit.type-bind.field').pipe(
       getFirstCompletedRemoteData(),
     ).subscribe((remoteData: any) => {
-      // the type field map cannot change any more, whatever the outcome
+      // whatever the outcome, the type field map cannot change any more
       this.typeBindConfigLoaded = true;
       // make sure we got a success response from the backend
       if (!remoteData.hasSucceeded) {
@@ -695,11 +671,11 @@ export class FormBuilderService extends DynamicFormService {
           return;
         }
         if (!typeFieldConfig.includes(TYPE_BIND_FIELD_SEPARATOR)) {
-          // `dc.type`: the default controlling field. A duplicated value just overwrites itself.
+          // `dc.type`: the default controlling field
           this.typeFields.set(TYPE_BIND_DEFAULT_KEY, typeFieldConfig.replace(/\./g, '_'));
           return;
         }
-        // `dc.language.iso=>edm.type`: this metadata field is controlled by another field
+        // `dc.language.iso=>edm.type`: this field is controlled by another one
         const parts = typeFieldConfig.split(TYPE_BIND_FIELD_SEPARATOR).map((part: string) => part.trim());
         if (parts.length !== 2 || parts.some((part: string) => isEmpty(part))) {
           console.warn(`Ignoring malformed submit.type-bind.field value "${rawValue}", expected "<bound field>${TYPE_BIND_FIELD_SEPARATOR}<controlling field>"`);
@@ -710,8 +686,7 @@ export class FormBuilderService extends DynamicFormService {
       if (hasNoValue(this.typeFields.get(TYPE_BIND_DEFAULT_KEY))) {
         this.typeFields.set(TYPE_BIND_DEFAULT_KEY, TYPE_BIND_DEFAULT_MODEL_ID);
       }
-      // Forms parsed before the property arrived could not know about the `A=>B` overrides yet, so
-      // give their controlling models a second chance to be registered, then drop the cache.
+      // forms parsed before the property arrived didn't know the `A=>B` overrides yet
       const typeBindModelIds = Array.from(this.typeFields.values());
       this.typeBindParsedRows.forEach((rows: DynamicFormControlModel[]) => this.registerTypeBindModels(typeBindModelIds, rows));
       this.typeBindParsedRows = [];

@@ -291,19 +291,15 @@ export abstract class FieldParser {
   }
 
   /**
-   * Resolve the field that controls the type binding of this field.
-   *
-   * When submission-forms.xml declares `<type-bind field="edm.type">` the controlling model is known
-   * up front, so its model id is returned directly. Otherwise this field's own metadata name is
-   * returned and {@link FormBuilderService#getTypeBindModel} resolves it against the
-   * `submit.type-bind.field` property (e.g. `dc.type, dc.language.iso=>edm.type`) at
-   * relation-evaluation time - that property is fetched asynchronously and may not have arrived yet
-   * while the form is being parsed.
+   * The field controlling the type binding of this field: the model id when submission-forms.xml
+   * declares `<type-bind field="edm.type">`, otherwise this field's own metadata name, which
+   * {@link FormBuilderService#getTypeBindModel} maps through `submit.type-bind.field` later - that
+   * property is fetched asynchronously and may not have arrived while the form is parsed.
    */
   protected getTypeBindFieldRef(): string {
     const typeBindField = this.configData.typeBindField?.trim();
     if (isNotEmpty(typeBindField)) {
-      // input ids don't allow dots, so replace them - this is already a model id
+      // input ids don't allow dots
       return typeBindField.replace(/\./g, '_');
     }
     return this.getFieldId() || this.parserOptions.typeField;

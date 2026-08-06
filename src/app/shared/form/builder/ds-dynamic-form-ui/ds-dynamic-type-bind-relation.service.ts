@@ -76,8 +76,7 @@ export class DsDynamicTypeBindRelationService {
       }
 
       if (bindModel.id === model.id) {
-        // A misconfigured <type-bind field="..."> pointing at the field itself - see
-        // isConfiguredToDependOnItself(), which stops the relation from being evaluated at all.
+        // self-bound field, see isConfiguredToDependOnItself()
         return;
       }
 
@@ -90,10 +89,9 @@ export class DsDynamicTypeBindRelationService {
   }
 
   /**
-   * Whether the configuration itself binds the given model to its own metadata field, i.e. a
-   * misconfigured `<type-bind field="...">` pointing at the field it is declared on. Resolved from
-   * the configuration only, so it cannot be confused with a relation that merely *currently* falls
-   * back to the default model because its real target has not been parsed yet.
+   * Whether the configuration binds the model to its own metadata field, i.e. a `<type-bind field>`
+   * pointing at the field it is declared on. Config-only, so it can't be confused with a relation
+   * that merely falls back to the default model until its real target is parsed.
    */
   private isConfiguredToDependOnItself(model: DynamicFormControlModel): boolean {
     return ((model as any).typeBindRelations || []).some((relGroup) =>
@@ -101,9 +99,8 @@ export class DsDynamicTypeBindRelationService {
   }
 
   /**
-   * Whether the model that a relation resolves to *right now* is the model itself - true either for
-   * the misconfiguration above or, transiently, when the real controlling model has not been
-   * registered yet and the default one happens to be this very field.
+   * Whether a relation resolves to the model itself *right now* - the misconfiguration above, or
+   * transiently the default model standing in for a controlling model that isn't parsed yet.
    */
   private currentlyResolvesToItself(model: DynamicFormControlModel): boolean {
     return ((model as any).typeBindRelations || []).some((relGroup) =>
@@ -131,10 +128,8 @@ export class DsDynamicTypeBindRelationService {
       // submission scope, form/section type and other high level properties
       const bindModel: any = this.formBuilderService.getTypeBindModel(condition?.id);
 
-      // No model at all: getTypeBindModel falls back to the default controlling model, so this means
-      // neither the field's own controlling model nor the default one has been registered yet -
-      // typically because the section that holds them has not been parsed. Keep MATCH_VISIBLE fields
-      // hidden until one of them shows up.
+      // Nothing registered yet, not even the default fallback - the section holding the controlling
+      // field hasn't been parsed. Keep MATCH_VISIBLE fields hidden until one shows up.
       if (hasNoValue(bindModel)) {
         return relation.match === matcher.opposingMatch;
       }
@@ -211,10 +206,8 @@ export class DsDynamicTypeBindRelationService {
   /**
    * Return an array of subscriptions to a calling component.
    *
-   * A single owning {@link Subscription} is returned rather than the individual child
-   * subscriptions: the controlling model may only be registered after this method has returned (see
-   * below), and callers snapshot the returned array, so any later child has to hang off something
-   * they already hold in order to be torn down with the component.
+   * One owning {@link Subscription} rather than the individual children: callers snapshot the
+   * returned array, and children are still added afterwards when a controlling model shows up late.
    *
    * @param model
    * @param control
@@ -224,17 +217,13 @@ export class DsDynamicTypeBindRelationService {
     const subscriptions = new Subscription();
 
     if (this.isConfiguredToDependOnItself(model)) {
-      // Misconfigured <type-bind field="..."> pointing at the field itself. Upstream throws here,
-      // which would take down the whole submission section over one bad field; and merely skipping
-      // the relation is not enough either - evaluating it would hide the field on the initial pass
-      // and nothing would ever re-evaluate it, making it permanently unreachable. No later
-      // registration can change the configuration, so leave the field exactly as rendered and warn.
+      // Upstream throws here, taking down the whole section over one bad field. Evaluating the
+      // relation instead would hide the field forever, so leave it as rendered and warn.
       console.warn(`FormControl ${model.id} cannot depend on itself, ignoring its type bind relation`);
       return [subscriptions];
     }
 
-    // keyed by model id, but compared by identity: re-parsing the section that holds the controlling
-    // field produces a NEW model instance under the same id, and this field has to follow it
+    // keyed by id, compared by identity: re-parsing a section yields a new instance under the same id
     const attachedModels = new Map<string, DynamicFormControlModel>();
     const attachedSubscriptions = new Map<string, Subscription>();
 
@@ -268,18 +257,14 @@ export class DsDynamicTypeBindRelationService {
     attachRelatedModels(this.getRelatedFormModel(model));
 
     if (attachedModels.size === 0 && !this.currentlyResolvesToItself(model)) {
-      // Nothing to listen to yet: evaluate once so the "controlling model missing" fallback applies
-      // and the field does not stay in whatever state it was rendered in. Skipped when the relation
-      // currently resolves to this field itself - the real controlling model simply has not been
-      // parsed yet, and evaluating against our own value would hide the field for no reason.
+      // Nothing to listen to yet, so apply the "controlling model missing" fallback once. Skipped
+      // when the relation resolves to this field itself - matching against our own value would hide
+      // it while the real controlling model is still unparsed.
       this.evaluateRelations(model, control);
     }
 
-    // The controlling model (e.g. `edm_type` for `dc.language.iso=>edm.type`) may only be registered
-    // by a later modelFromConfiguration() call - a form section is parsed at a time, and the
-    // `submit.type-bind.field` property itself arrives asynchronously. Until then this field either
-    // has no controlling model at all or is temporarily attached to the default one, so keep
-    // listening and attach the real one as soon as it shows up.
+    // The controlling model (e.g. `edm_type`) may only be registered by a later
+    // modelFromConfiguration() call, so attach to it as soon as it shows up.
     subscriptions.add(this.formBuilderService.getTypeBindModelUpdates().subscribe(() => {
       attachRelatedModels(this.getRelatedFormModel(model));
     }));

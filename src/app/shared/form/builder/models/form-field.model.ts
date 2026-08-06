@@ -133,10 +133,8 @@ export class FormFieldModel {
   typeBind: string[];
 
   /**
-   * The metadata field that controls the type binding of this field, coming from the
-   * `<type-bind field="edm.type">` attribute in submission-forms.xml. Optional: when the attribute
-   * is absent this field is controlled by the default field configured in the
-   * `submit.type-bind.field` property, so readers have to handle `undefined`.
+   * The field controlling the type binding of this field, from `<type-bind field="edm.type">`.
+   * Undefined when the attribute is absent: the `submit.type-bind.field` default applies then.
    */
   @autoserialize
   typeBindField?: string;
