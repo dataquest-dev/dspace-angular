@@ -98,6 +98,11 @@ export function app() {
    */
   const server = express();
 
+  // Don't advertise the server stack to every client. "X-Powered-By: Express" is pure
+  // fingerprinting material: it tells an attacker which exploits are worth trying and is of
+  // no use to anyone else.
+  server.disable('x-powered-by');
+
   // Tell Express to trust X-FORWARDED-* headers from proxies
   // See https://expressjs.com/en/guide/behind-proxies.html
   server.set('trust proxy', environment.ui.useProxies);
