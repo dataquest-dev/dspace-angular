@@ -134,18 +134,11 @@ export class ItemVersionsNoticeComponent implements OnInit {
   }
 
   /**
-   * Get the item page url, resolved against the application's base href.
+   * Get the item page url, resolved against the base href. The url lands in the raw `<a href>` of the
+   * `item.version.notice` translation, so the browser resolves it and not the router - a plain
+   * `/items/<uuid>` would ignore `<base href="/repository/">`. No-op when the base href is `/`.
    *
-   * The url is interpolated into the raw `<a href='{{destination}}'>` anchor of the
-   * `item.version.notice` translation, which the alert renders through `[innerHTML]`.
-   * It is therefore resolved by the browser and not by the Angular router, so a
-   * root-relative router path such as `/items/<uuid>` would ignore `<base href>` and
-   * break every deployment served from a sub-path (e.g. `<base href="/repository/">`).
-   * `Location.prepareExternalUrl` applies the exact same transformation `RouterLink`
-   * applies to its `href`, and is a no-op when the base href is `/`.
-   *
-   * The template calls this while the latest version is still loading, so `item` - and therefore
-   * the returned url - may be undefined.
+   * Undefined while the latest version is still loading.
    *
    * @param item The item for which the url is requested
    */

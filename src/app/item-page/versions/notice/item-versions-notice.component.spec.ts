@@ -167,8 +167,7 @@ describe('ItemVersionsNoticeComponent', () => {
   });
 
   describe('getItemPage with the real Location', () => {
-    // Exercises the actual PathLocationStrategy instead of a stub, so the "no-op for the vanilla
-    // NAMESPACE=/ deployment" claim is covered rather than asserted only in a comment.
+    // the real PathLocationStrategy, so the "no-op for NAMESPACE=/" claim is actually covered
     [
       { baseHref: '/', expected: '/items/latest_item_id' },
       { baseHref: '/repository/', expected: '/repository/items/latest_item_id' },
@@ -194,8 +193,7 @@ describe('ItemVersionsNoticeComponent', () => {
     function createComponentWithBaseHref(baseHref: string): ItemVersionsNoticeComponent {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        // RouterTestingModule is deliberately left out: it contributes SpyLocation/MockLocationStrategy,
-        // which ignore APP_BASE_HREF. Without it the root-provided Location/PathLocationStrategy are used.
+        // no RouterTestingModule on purpose: its SpyLocation/MockLocationStrategy ignore APP_BASE_HREF
         imports: [
           TranslateModule.forRoot(),
           ItemVersionsNoticeComponent,
