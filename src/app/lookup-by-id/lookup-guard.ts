@@ -39,26 +39,18 @@ export const lookupGuard: CanActivateFn = (
   const params = getLookupParams(route);
   return dsoService.findByIdAndIDType(params.id, params.type).pipe(
     switchMap((response: RemoteData<DSpaceObject>) => {
+      // A restricted object, which REST reports as 401/403 rather than 404
       if (response.hasFailed && (response.statusCode === 401 || response.statusCode === 403)) {
-        // Keep the server-rendered response honest: without this the login page would be sent with
-        // HTTP 200 under the identifier's own URL and stored in the SSR bot cache. No-op in the browser.
+        // or SSR would cache the login page as HTTP 200 under the identifier's URL. No-op in the browser.
         serverResponseService.setStatus(response.statusCode);
-        // The identifier resolves to an object the current user isn't allowed to see, which the
-        // REST API reports as 401/403 rather than 404. Emitting `false` means "not authorized":
-        // the shared operator turns that into a UrlTree to the login page for an anonymous user
-        // (remembering state.url so they come back to this identifier afterwards), or to the
-        // forbidden page for an authenticated one - the same split /items/:id makes through
-        // itemPageResolver -> redirectOn4xx. `take(1)` is needed because the operator combines with
-        // `authService.isAuthenticated()`, a store selector that never completes.
+        // `false` = not authorized: login page for anonymous users, /403 for authenticated ones, the
+        // same split /items/:id makes. take(1) because isAuthenticated() never completes.
         return of(false).pipe(
           returnForbiddenUrlTreeOrLoginOnFalse(router, authService, state.url),
           take(1),
         );
       }
-      // Any other failure - 404, 501 (identifier not resolvable), 5xx, or no response at all -
-      // activates the route so ObjectNotFoundComponent renders, exactly as before. On success
-      // DsoRedirectService has already triggered a hard redirect to the object's own page, so the
-      // route must not be activated.
+      // Any other failure (404, 501, 5xx) activates the route so ObjectNotFoundComponent renders
       return of(response.hasFailed);
     }),
   );
