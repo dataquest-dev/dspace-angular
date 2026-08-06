@@ -1103,8 +1103,7 @@ describe('FormBuilderService per-field type bind with a slow configuration respo
   });
 
   it('should register a controlling model declared only by a padded <type-bind field="...">', () => {
-    // there is no A=>B entry for this field, so the whitespace-padded XML attribute is the ONLY
-    // source of the controlling model id - it has to be trimmed the same way the relation ids are
+    // no A=>B entry here, so the padded XML attribute is the only source of the controlling model id
     configResponse.next(createSuccessfulRemoteDataObject({
       ... new ConfigurationProperty(),
       name: 'submit.type-bind.field',

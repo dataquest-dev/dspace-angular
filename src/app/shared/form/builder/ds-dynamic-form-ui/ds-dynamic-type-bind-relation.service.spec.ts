@@ -155,8 +155,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       const testModel = mockInputWithTypeBindModel;
       testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
       const dcTypeControl = new UntypedFormControl();
-      // the caller (ds-dynamic-form-control-container) spreads the result into its own array, so a
-      // subscription created later has to hang off something handed over now to ever be torn down
+      // the caller spreads the result into its own array, so later children must hang off this one
       const [subscription] = service.subscribeRelations(testModel, dcTypeControl);
 
       const controllingModel = new DsDynamicInputModel(dcTypeInputConfig);
@@ -192,8 +191,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
     });
 
     it('Should not hide a field whose controlling model has not been parsed yet, and attach when it is', () => {
-      // the real target (edm_type) is not registered, so getTypeBindModel falls back to the default
-      // model - which in this form happens to BE this field. That is not a misconfiguration.
+      // edm_type is not registered yet, so the fallback default model happens to be this field itself
       const bindModelUpdates = new Subject<string>();
       const formBuilderServiceSpy: any = (service as any).formBuilderService;
       formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
@@ -218,8 +216,7 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
     });
 
     it('Should attach the real controlling model even when it was first bound to the default one', () => {
-      // until edm_type is registered, getTypeBindModel falls back to the default dc_type model, so
-      // a related model IS attached - the late registration must still be picked up
+      // dc_type is attached as the fallback, so the late edm_type registration must still be picked up
       const bindModelUpdates = new Subject<string>();
       const formBuilderServiceSpy: any = (service as any).formBuilderService;
       formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
