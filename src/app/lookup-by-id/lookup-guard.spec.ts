@@ -214,6 +214,13 @@ describe('lookupGuard', () => {
         done();
       });
     });
+
+    it('should set the server response status so the page is not cached as a 200', (done) => {
+      guard(handleRoute, state).subscribe(() => {
+        expect(serverResponseService.setStatus).toHaveBeenCalledWith(401);
+        done();
+      });
+    });
   });
 
   describe('when the lookup fails with a 403 and the user is not authenticated', () => {
@@ -227,6 +234,13 @@ describe('lookupGuard', () => {
         expect(authService.setRedirectUrl).toHaveBeenCalledWith(state.url);
         expect(router.parseUrl).toHaveBeenCalledWith('login');
         expect(result).toBe(loginUrlTree);
+        done();
+      });
+    });
+
+    it('should set the server response status so the page is not cached as a 200', (done) => {
+      guard(handleRoute, state).subscribe(() => {
+        expect(serverResponseService.setStatus).toHaveBeenCalledWith(403);
         done();
       });
     });
