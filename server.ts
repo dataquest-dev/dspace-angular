@@ -225,7 +225,12 @@ export function app() {
  * The callback function to serve server side angular
  */
 function ngApp(req, res, next) {
-  if (environment.ssr.enabled && req.method === 'GET' && (req.path === '/' || !isExcludedFromSsr(req.path, environment.ssr.excludePathPatterns))) {
+  // HEAD is handled exactly like GET: Express dispatches HEAD requests to GET handlers, and RFC 9110
+  // requires a HEAD response to carry the same status and headers as the equivalent GET. Since the
+  // status code of a page is only known once Angular has rendered it (ServerResponseService sets 404
+  // on the not-found page), skipping SSR for HEAD would answer every URL with 200 and the empty CSR
+  // shell. Express drops the body of a HEAD response for us, so nothing extra is sent to the client.
+  if (environment.ssr.enabled && (req.method === 'GET' || req.method === 'HEAD') && (req.path === '/' || !isExcludedFromSsr(req.path, environment.ssr.excludePathPatterns))) {
     // Render the page to user via SSR (server side rendering)
     serverSideRender(req, res, next);
   } else {
