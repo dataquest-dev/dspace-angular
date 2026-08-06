@@ -116,6 +116,9 @@ services:
     volumes:
     # Keep Solr data directory between reboots
     - solr_data:/var/solr/data
+    # Keep Solr's own logs between reboots. Solr rotates solr.log itself
+    # (size-based, bounded); this only stops them dying with the container.
+    - solr_logs:/var/solr/logs
     # NOTE: We are not running Solr as "root", but we need root permissions to copy our cores to the mounted
     # /var/solr/data directory. Then we start Solr as the "solr" user.
     user: root
@@ -150,3 +153,4 @@ volumes:
   dspacelogs:
   pgdata:
   solr_data:
+  solr_logs:
