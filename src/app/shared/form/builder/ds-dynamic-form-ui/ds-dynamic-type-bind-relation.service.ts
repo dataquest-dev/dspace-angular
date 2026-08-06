@@ -69,18 +69,42 @@ export class DsDynamicTypeBindRelationService {
 
     (model as any).typeBindRelations.forEach((relGroup) => relGroup.when.forEach((rel) => {
 
-      if (model.id === rel.id) {
-        throw new Error(`FormControl ${model.id} cannot depend on itself`);
+      const bindModel: DynamicFormControlModel | undefined = this.formBuilderService.getTypeBindModel(rel?.id);
+
+      if (hasNoValue(bindModel)) {
+        return;
       }
 
-      const bindModel: DynamicFormControlModel = this.formBuilderService.getTypeBindModel();
+      if (bindModel.id === model.id) {
+        // self-bound field, see isConfiguredToDependOnItself()
+        return;
+      }
 
-      if (model && !models.some((modelElement) => modelElement === bindModel)) {
+      if (!models.some((modelElement) => modelElement === bindModel)) {
         models.push(bindModel);
       }
     }));
 
     return models;
+  }
+
+  /**
+   * Whether the configuration binds the model to its own metadata field, i.e. a `<type-bind field>`
+   * pointing at the field it is declared on. Config-only, so it can't be confused with a relation
+   * that merely falls back to the default model until its real target is parsed.
+   */
+  private isConfiguredToDependOnItself(model: DynamicFormControlModel): boolean {
+    return ((model as any).typeBindRelations || []).some((relGroup) =>
+      (relGroup.when || []).some((rel) => this.formBuilderService.resolveTypeBindModelId(rel?.id) === model.id));
+  }
+
+  /**
+   * Whether a relation resolves to the model itself *right now* - the misconfiguration above, or
+   * transiently the default model standing in for a controlling model that isn't parsed yet.
+   */
+  private currentlyResolvesToItself(model: DynamicFormControlModel): boolean {
+    return ((model as any).typeBindRelations || []).some((relGroup) =>
+      (relGroup.when || []).some((rel) => this.formBuilderService.getTypeBindModel(rel?.id)?.id === model.id));
   }
 
   /**
@@ -102,7 +126,13 @@ export class DsDynamicTypeBindRelationService {
       // like relation group component and submission section form component).
       // This model (DynamicRelationGroupModel) contains eg. mandatory field, formConfiguration, relationFields,
       // submission scope, form/section type and other high level properties
-      const bindModel: any = this.formBuilderService.getTypeBindModel();
+      const bindModel: any = this.formBuilderService.getTypeBindModel(condition?.id);
+
+      // Nothing registered yet, not even the default fallback - the section holding the controlling
+      // field hasn't been parsed. Keep MATCH_VISIBLE fields hidden until one shows up.
+      if (hasNoValue(bindModel)) {
+        return relation.match === matcher.opposingMatch;
+      }
 
       let values: string[];
       let bindModelValue = bindModel.value;
@@ -174,45 +204,90 @@ export class DsDynamicTypeBindRelationService {
   }
 
   /**
-   * Return an array of subscriptions to a calling component
+   * Return an array of subscriptions to a calling component.
+   *
+   * One owning {@link Subscription} rather than the individual children: callers snapshot the
+   * returned array, and children are still added afterwards when a controlling model shows up late.
+   *
    * @param model
    * @param control
    */
   subscribeRelations(model: DynamicFormControlModel, control: UntypedFormControl): Subscription[] {
 
-    const relatedModels = this.getRelatedFormModel(model);
-    const subscriptions: Subscription[] = [];
+    const subscriptions = new Subscription();
 
-    Object.values(relatedModels).forEach((relatedModel: any) => {
+    if (this.isConfiguredToDependOnItself(model)) {
+      // Upstream throws here, taking down the whole section over one bad field. Evaluating the
+      // relation instead would hide the field forever, so leave it as rendered and warn.
+      console.warn(`FormControl ${model.id} cannot depend on itself, ignoring its type bind relation`);
+      return [subscriptions];
+    }
 
-      if (hasValue(relatedModel)) {
-        const initValue = (hasNoValue(relatedModel.value) || typeof relatedModel.value === 'string') ? relatedModel.value :
-          (Array.isArray(relatedModel.value) ? relatedModel.value : relatedModel.value.value);
+    // keyed by id, compared by identity: re-parsing a section yields a new instance under the same id
+    const attachedModels = new Map<string, DynamicFormControlModel>();
+    const attachedSubscriptions = new Map<string, Subscription>();
 
-        const updateSubject = (relatedModel.type === 'CHECKBOX_GROUP' ? relatedModel.valueUpdates : relatedModel.valueChanges);
-        const valueChanges = updateSubject.pipe(
-          startWith(initValue),
-        );
+    const attachRelatedModels = (relatedModels: DynamicFormControlModel[]) => {
+      relatedModels.forEach((relatedModel: any) => {
 
-        // Build up the subscriptions to watch for changes;
-        subscriptions.push(valueChanges.subscribe(() => {
-          // Iterate each matcher
-          if (hasValue(this.dynamicMatchers)) {
-            this.dynamicMatchers.forEach((matcher) => {
-              // Find the relation
-              const relation = this.dynamicFormRelationService.findRelationByMatcher((model as any).typeBindRelations, matcher);
-              // If the relation is defined, get matchesCondition result and pass it to the onChange event listener
-              if (relation !== undefined) {
-                const hasMatch = this.matchesCondition(relation, matcher);
-                matcher.onChange(hasMatch, model, control, this.injector);
-              }
-            });
+        if (hasValue(relatedModel) && attachedModels.get(relatedModel.id) !== relatedModel) {
+          const staleSubscription = attachedSubscriptions.get(relatedModel.id);
+          if (hasValue(staleSubscription)) {
+            subscriptions.remove(staleSubscription);
+            staleSubscription.unsubscribe();
           }
-        }));
-      }
-    });
+          attachedModels.set(relatedModel.id, relatedModel);
 
-    return subscriptions;
+          const initValue = (hasNoValue(relatedModel.value) || typeof relatedModel.value === 'string') ? relatedModel.value :
+            (Array.isArray(relatedModel.value) ? relatedModel.value : relatedModel.value.value);
+
+          const updateSubject = (relatedModel.type === 'CHECKBOX_GROUP' ? relatedModel.valueUpdates : relatedModel.valueChanges);
+          const valueChanges = updateSubject.pipe(
+            startWith(initValue),
+          );
+
+          // Build up the subscriptions to watch for changes;
+          const valueChangesSubscription = valueChanges.subscribe(() => this.evaluateRelations(model, control));
+          attachedSubscriptions.set(relatedModel.id, valueChangesSubscription);
+          subscriptions.add(valueChangesSubscription);
+        }
+      });
+    };
+
+    attachRelatedModels(this.getRelatedFormModel(model));
+
+    if (attachedModels.size === 0 && !this.currentlyResolvesToItself(model)) {
+      // Nothing to listen to yet, so apply the "controlling model missing" fallback once. Skipped
+      // when the relation resolves to this field itself - matching against our own value would hide
+      // it while the real controlling model is still unparsed.
+      this.evaluateRelations(model, control);
+    }
+
+    // The controlling model (e.g. `edm_type`) may only be registered by a later
+    // modelFromConfiguration() call, so attach to it as soon as it shows up.
+    subscriptions.add(this.formBuilderService.getTypeBindModelUpdates().subscribe(() => {
+      attachRelatedModels(this.getRelatedFormModel(model));
+    }));
+
+    return [subscriptions];
+  }
+
+  /**
+   * Re-evaluate every type bind relation of the given model and notify the matchers of the outcome
+   */
+  private evaluateRelations(model: DynamicFormControlModel, control: UntypedFormControl): void {
+    if (hasValue(this.dynamicMatchers)) {
+      // Iterate each matcher
+      this.dynamicMatchers.forEach((matcher) => {
+        // Find the relation
+        const relation = this.dynamicFormRelationService.findRelationByMatcher((model as any).typeBindRelations, matcher);
+        // If the relation is defined, get matchesCondition result and pass it to the onChange event listener
+        if (relation !== undefined) {
+          const hasMatch = this.matchesCondition(relation, matcher);
+          matcher.onChange(hasMatch, model, control, this.injector);
+        }
+      });
+    }
   }
 
 }

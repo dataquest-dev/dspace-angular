@@ -14,15 +14,18 @@ import {
   HIDDEN_MATCHER_PROVIDER,
   REQUIRED_MATCHER_PROVIDER,
 } from '@ng-dynamic-forms/core';
+import { Subject } from 'rxjs';
 
 import { getMockFormBuilderService } from '../../../mocks/form-builder-service.mock';
 import {
+  dcTypeInputConfig,
   mockInputWithTypeBindModel,
   MockRelationModel,
 } from '../../../mocks/form-models.mock';
 import { FormBuilderService } from '../form-builder.service';
 import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
 import { DsDynamicTypeBindRelationService } from './ds-dynamic-type-bind-relation.service';
+import { DsDynamicInputModel } from './models/ds-dynamic-input.model';
 import { getTypeBindRelations } from './type-bind.utils';
 
 describe('DSDynamicTypeBindRelationService test suite', () => {
@@ -87,6 +90,12 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       const relatedModels = service.getRelatedFormModel(testModel);
       expect(relatedModels).toHaveSize(1);
     });
+    it('Should ask the form builder for the model that controls this field', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      service.getRelatedFormModel(testModel);
+      expect((service as any).formBuilderService.getTypeBindModel).toHaveBeenCalledWith('edm_type');
+    });
   });
 
   describe('Test matchesCondition method', () => {
@@ -127,6 +136,140 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
         matcher.onChange(hasMatch, testModel, dcTypeControl, injector);
         expect(hasMatch).toBeFalsy();
       }
+    });
+
+    it('Expect hasMatch to be true when the controlling model is not registered (field stays hidden)', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      ((service as any).formBuilderService.getTypeBindModel as jasmine.Spy).and.returnValue(undefined);
+      const relation = dynamicFormRelationService.findRelationByMatcher((testModel as any).typeBindRelations, HIDDEN_MATCHER);
+      expect(service.matchesCondition(relation, HIDDEN_MATCHER)).toBeTruthy();
+    });
+
+    it('Should attach to the controlling model as soon as it is registered, and stop when the caller unsubscribes', () => {
+      const bindModelUpdates = new Subject<string>();
+      const formBuilderServiceSpy: any = (service as any).formBuilderService;
+      formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(undefined);
+
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      const dcTypeControl = new UntypedFormControl();
+      // the caller spreads the result into its own array, so later children must hang off this one
+      const [subscription] = service.subscribeRelations(testModel, dcTypeControl);
+
+      const controllingModel = new DsDynamicInputModel(dcTypeInputConfig);
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(controllingModel);
+      bindModelUpdates.next('edm_type');
+
+      controllingModel.value = 'anotherType';
+      expect(testModel.hidden).toBeTrue();
+      controllingModel.value = 'boundType';
+      expect(testModel.hidden).toBeFalse();
+
+      subscription.unsubscribe();
+
+      controllingModel.value = 'anotherType';
+      expect(testModel.hidden).toBeFalse();
+    });
+
+    it('Should leave a self-bound field untouched instead of hiding it forever', () => {
+      const formBuilderServiceSpy: any = (service as any).formBuilderService;
+      const testModel = mockInputWithTypeBindModel;
+      // the field's own <type-bind field="..."> resolves back to the field itself
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], testModel.id);
+      formBuilderServiceSpy.resolveTypeBindModelId.and.returnValue(testModel.id);
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(testModel);
+      testModel.hidden = false;
+
+      const subscriptions = service.subscribeRelations(testModel, new UntypedFormControl());
+
+      expect(service.getRelatedFormModel(testModel)).toHaveSize(0);
+      // nothing is evaluated, so the misconfigured field stays usable instead of being hidden forever
+      expect(testModel.hidden).toBeFalse();
+      subscriptions.forEach((subscription) => subscription.unsubscribe());
+    });
+
+    it('Should not hide a field whose controlling model has not been parsed yet, and attach when it is', () => {
+      // edm_type is not registered yet, so the fallback default model happens to be this field itself
+      const bindModelUpdates = new Subject<string>();
+      const formBuilderServiceSpy: any = (service as any).formBuilderService;
+      formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
+      formBuilderServiceSpy.resolveTypeBindModelId.and.returnValue('edm_type');
+
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(testModel);
+      testModel.hidden = false;
+
+      const [subscription] = service.subscribeRelations(testModel, new UntypedFormControl());
+      expect(testModel.hidden).toBeFalse();
+
+      const controllingModel = new DsDynamicInputModel({ ...dcTypeInputConfig, id: 'edm_type', name: 'edm.type' });
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(controllingModel);
+      bindModelUpdates.next('edm_type');
+
+      controllingModel.value = 'anotherType';
+      expect(testModel.hidden).toBeTrue();
+
+      subscription.unsubscribe();
+    });
+
+    it('Should attach the real controlling model even when it was first bound to the default one', () => {
+      // dc_type is attached as the fallback, so the late edm_type registration must still be picked up
+      const bindModelUpdates = new Subject<string>();
+      const formBuilderServiceSpy: any = (service as any).formBuilderService;
+      formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(new DsDynamicInputModel(dcTypeInputConfig));
+
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      const [subscription] = service.subscribeRelations(testModel, new UntypedFormControl());
+
+      const controllingModel = new DsDynamicInputModel({
+        ...dcTypeInputConfig,
+        id: 'edm_type',
+        name: 'edm.type',
+      });
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(controllingModel);
+      bindModelUpdates.next('edm_type');
+
+      controllingModel.value = 'anotherType';
+      expect(testModel.hidden).toBeTrue();
+      controllingModel.value = 'boundType';
+      expect(testModel.hidden).toBeFalse();
+
+      subscription.unsubscribe();
+    });
+
+    it('Should follow a re-registered controlling model and drop the stale one', () => {
+      // re-parsing the section that holds the controlling field yields a new instance under the same id
+      const bindModelUpdates = new Subject<string>();
+      const formBuilderServiceSpy: any = (service as any).formBuilderService;
+      formBuilderServiceSpy.getTypeBindModelUpdates.and.returnValue(bindModelUpdates.asObservable());
+
+      const firstInstance = new DsDynamicInputModel({ ...dcTypeInputConfig, id: 'edm_type', name: 'edm.type' });
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(firstInstance);
+
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType'], 'edm_type');
+      const [subscription] = service.subscribeRelations(testModel, new UntypedFormControl());
+
+      const secondInstance = new DsDynamicInputModel({ ...dcTypeInputConfig, id: 'edm_type', name: 'edm.type' });
+      formBuilderServiceSpy.getTypeBindModel.and.returnValue(secondInstance);
+      bindModelUpdates.next('edm_type');
+
+      secondInstance.value = 'boundType';
+      expect(testModel.hidden).toBeFalse();
+
+      // the replaced instance must no longer drive the field
+      firstInstance.value = 'anotherType';
+      expect(testModel.hidden).toBeFalse();
+
+      secondInstance.value = 'anotherType';
+      expect(testModel.hidden).toBeTrue();
+
+      subscription.unsubscribe();
     });
 
   });
