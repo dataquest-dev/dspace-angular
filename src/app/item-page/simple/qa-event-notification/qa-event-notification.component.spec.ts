@@ -13,6 +13,8 @@ import { SplitPipe } from 'src/app/shared/utils/split.pipe';
 import { APP_DATA_SERVICES_MAP } from '../../../../config/app-config.interface';
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
 import { ObjectCacheService } from '../../../core/cache/object-cache.service';
+import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
+import { FeatureID } from '../../../core/data/feature-authorization/feature-id';
 import { RequestService } from '../../../core/data/request.service';
 import { QualityAssuranceSourceObject } from '../../../core/notifications/qa/models/quality-assurance-source.model';
 import { QualityAssuranceSourceDataService } from '../../../core/notifications/qa/source/quality-assurance-source-data.service';
@@ -28,6 +30,7 @@ describe('QaEventNotificationComponent', () => {
   let component: QaEventNotificationComponent;
   let fixture: ComponentFixture<QaEventNotificationComponent>;
   let qualityAssuranceSourceDataServiceStub: any;
+  let authorizationServiceStub: any;
 
   const obj = Object.assign(new QualityAssuranceSourceObject(), {
     id: 'sourceName:target',
@@ -43,12 +46,16 @@ describe('QaEventNotificationComponent', () => {
     qualityAssuranceSourceDataServiceStub = {
       getSourcesByTarget: () => objPL,
     };
+    authorizationServiceStub = {
+      isAuthorized: () => of(true),
+    };
     await TestBed.configureTestingModule({
       imports: [CommonModule, TranslateModule.forRoot(), QaEventNotificationComponent, SplitPipe],
       providers: [
         { provide: APP_DATA_SERVICES_MAP, useValue: {} },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: QualityAssuranceSourceDataService, useValue: qualityAssuranceSourceDataServiceStub },
+        { provide: AuthorizationDataService, useValue: authorizationServiceStub },
         { provide: RequestService, useValue: {} },
         { provide: NotificationsService, useValue: {} },
         { provide: HALEndpointService, useValue: new HALEndpointServiceStub('test') },
@@ -77,5 +84,31 @@ describe('QaEventNotificationComponent', () => {
   it('should return the quality assurance route when getQualityAssuranceRoute is called', () => {
     const route = component.getQualityAssuranceRoute();
     expect(route).toBe('/notifications/quality-assurance');
+  });
+
+  it('should ask for the sources when the user is allowed to see QA events', (done) => {
+    // the data service is provided by the component itself, so spy on the instance it actually uses
+    const sourceService = fixture.debugElement.injector.get(QualityAssuranceSourceDataService);
+    spyOn(sourceService, 'getSourcesByTarget').and.returnValue(objPL);
+    spyOn(authorizationServiceStub, 'isAuthorized').and.returnValue(of(true));
+
+    component.getQualityAssuranceSources$().subscribe((sources) => {
+      expect(authorizationServiceStub.isAuthorized).toHaveBeenCalledWith(FeatureID.CanSeeQA);
+      expect(sourceService.getSourcesByTarget).toHaveBeenCalled();
+      expect(sources).toEqual([obj]);
+      done();
+    });
+  });
+
+  it('should not ask for the sources when the user cannot see QA events', (done) => {
+    const sourceService = fixture.debugElement.injector.get(QualityAssuranceSourceDataService);
+    spyOn(sourceService, 'getSourcesByTarget').and.returnValue(objPL);
+    spyOn(authorizationServiceStub, 'isAuthorized').and.returnValue(of(false));
+
+    component.getQualityAssuranceSources$().subscribe((sources) => {
+      expect(sourceService.getSourcesByTarget).not.toHaveBeenCalled();
+      expect(sources).toEqual([]);
+      done();
+    });
   });
 });

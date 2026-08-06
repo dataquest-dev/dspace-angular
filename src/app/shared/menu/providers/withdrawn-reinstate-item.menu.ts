@@ -7,17 +7,23 @@
  */
 import { Injectable } from '@angular/core';
 import {
-  combineLatest,
   Observable,
+  of,
 } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  map,
+  switchMap,
+} from 'rxjs/operators';
 
+import { AuthService } from '../../../core/auth/auth.service';
+import { PaginatedList } from '../../../core/data/paginated-list.model';
 import { Item } from '../../../core/shared/item.model';
 import {
   getFirstCompletedRemoteData,
   getRemoteDataPayload,
 } from '../../../core/shared/operators';
 import { CorrectionTypeDataService } from '../../../core/submission/correctiontype-data.service';
+import { CorrectionType } from '../../../core/submission/models/correctiontype.model';
 import {
   DsoWithdrawnReinstateModalService,
   REQUEST_REINSTATE,
@@ -36,17 +42,22 @@ export class WithdrawnReinstateItemMenuProvider extends DSpaceObjectPageMenuProv
   constructor(
     protected dsoWithdrawnReinstateModalService: DsoWithdrawnReinstateModalService,
     protected correctionTypeDataService: CorrectionTypeDataService,
+    protected authService: AuthService,
   ) {
     super();
   }
 
   public getSectionsForContext(item: Item): Observable<PartialMenuSection[]> {
-    return combineLatest([
-      this.correctionTypeDataService.findByItem(item.uuid, true).pipe(
-        getFirstCompletedRemoteData(),
-        getRemoteDataPayload()),
-    ]).pipe(
-      map(([correction]) => {
+    // /api/config/correctiontypes/search/findByItem answers 401 to anonymous users, so this was a
+    // guaranteed error on every item page. Requesting a withdrawal or a reinstatement is only
+    // possible while logged in, so there is nothing to ask about before then.
+    return this.authService.isAuthenticated().pipe(
+      switchMap((authenticated: boolean) => authenticated
+        ? this.correctionTypeDataService.findByItem(item.uuid, true).pipe(
+          getFirstCompletedRemoteData(),
+          getRemoteDataPayload())
+        : of(null as PaginatedList<CorrectionType>)),
+      map((correction: PaginatedList<CorrectionType>) => {
         return [
           {
             visible: item.isArchived && correction?.page.some((c) => c.topic === REQUEST_WITHDRAWN),

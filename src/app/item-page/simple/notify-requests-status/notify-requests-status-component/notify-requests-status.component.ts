@@ -9,11 +9,14 @@ import {
   OnInit,
 } from '@angular/core';
 import {
+  EMPTY,
   filter,
   map,
   Observable,
+  switchMap,
 } from 'rxjs';
 
+import { NotifyInfoService } from '../../../../core/coar-notify/notify-info/notify-info.service';
 import { NotifyRequestsStatusDataService } from '../../../../core/data/notify-services-status-data.service';
 import {
   getFirstCompletedRemoteData,
@@ -55,20 +58,30 @@ export class NotifyRequestsStatusComponent implements OnInit {
    */
   requestMap$: Observable<Map<RequestStatusEnum, NotifyStatuses[]>>;
 
-  constructor(private notifyInfoService: NotifyRequestsStatusDataService) { }
+  constructor(
+    private notifyRequestsStatusDataService: NotifyRequestsStatusDataService,
+    private notifyInfoService: NotifyInfoService,
+  ) { }
 
   ngOnInit(): void {
-    this.requestMap$ = this.notifyInfoService
-      .getNotifyRequestsStatus(this.itemUuid)
-      .pipe(
-        getFirstCompletedRemoteData(),
-        filter((data) => hasValue(data)),
-        getRemoteDataPayload(),
-        filter((data: NotifyRequestsStatus) => hasValue(data)),
-        map((data: NotifyRequestsStatus) => {
-          return this.groupDataByStatus(data);
-        }),
-      );
+    // /api/ldn/notifyrequests/<uuid> answers 401 unless COAR Notify is both enabled and visible to
+    // the current user, so this was a guaranteed error on every item page for anonymous visitors.
+    // The same feature flag already gates the COAR links built by ItemPageComponent.
+    this.requestMap$ = this.notifyInfoService.isCoarConfigEnabled().pipe(
+      switchMap((coarEnabled: boolean) => coarEnabled
+        ? this.notifyRequestsStatusDataService
+          .getNotifyRequestsStatus(this.itemUuid)
+          .pipe(
+            getFirstCompletedRemoteData(),
+            filter((data) => hasValue(data)),
+            getRemoteDataPayload(),
+            filter((data: NotifyRequestsStatus) => hasValue(data)),
+            map((data: NotifyRequestsStatus) => {
+              return this.groupDataByStatus(data);
+            }),
+          )
+        : EMPTY),
+    );
   }
 
   /**

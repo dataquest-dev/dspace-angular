@@ -9,10 +9,10 @@
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
-  combineLatest as observableCombineLatest,
   map,
   Observable,
   of,
+  switchMap,
 } from 'rxjs';
 
 import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
@@ -55,14 +55,17 @@ export class ExportMenuProvider extends AbstractExpandableMenuProvider {
   }
 
   public getSubSections(): Observable<PartialMenuSection[]> {
-    return observableCombineLatest([
-      this.authorizationService.isAuthorized(FeatureID.AdministratorOf),
-      this.scriptDataService.scriptWithNameExistsAndCanExecute(METADATA_EXPORT_SCRIPT_NAME),
-    ]).pipe(
-      map(([authorized, metadataExportScriptExists]: [boolean, boolean]) => {
+    return this.authorizationService.isAuthorized(FeatureID.AdministratorOf).pipe(
+      // Ask about the script only once we know the user may run it. /api/system/scripts/<name>
+      // answers 401 to anyone who cannot execute it, so for an anonymous visitor this request was
+      // a guaranteed error on every single page load.
+      switchMap((authorized: boolean) => authorized
+        ? this.scriptDataService.scriptWithNameExistsAndCanExecute(METADATA_EXPORT_SCRIPT_NAME)
+        : of(false)),
+      map((canExportMetadata: boolean) => {
         return [
           {
-            visible: authorized && metadataExportScriptExists,
+            visible: canExportMetadata,
             model: {
               type: MenuItemType.ONCLICK,
               text: 'menu.section.export_metadata',
@@ -72,7 +75,7 @@ export class ExportMenuProvider extends AbstractExpandableMenuProvider {
             },
           },
           {
-            visible: authorized && metadataExportScriptExists,
+            visible: canExportMetadata,
             model: {
               type: MenuItemType.ONCLICK,
               text: 'menu.section.export_batch',
