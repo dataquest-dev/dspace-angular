@@ -1,4 +1,7 @@
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  Location,
+} from '@angular/common';
 import {
   Component,
   Input,
@@ -84,7 +87,10 @@ export class ItemVersionsNoticeComponent implements OnInit {
    */
   public AlertTypeEnum = AlertType;
 
-  constructor(private versionHistoryService: VersionHistoryDataService) {
+  constructor(
+    private versionHistoryService: VersionHistoryDataService,
+    private location: Location,
+  ) {
   }
 
   /**
@@ -128,12 +134,17 @@ export class ItemVersionsNoticeComponent implements OnInit {
   }
 
   /**
-   * Get the item page url
+   * Get the item page url, resolved against the base href. The url lands in the raw `<a href>` of the
+   * `item.version.notice` translation, so the browser resolves it and not the router - a plain
+   * `/items/<uuid>` would ignore `<base href="/repository/">`. No-op when the base href is `/`.
+   *
+   * Undefined while the latest version is still loading.
+   *
    * @param item The item for which the url is requested
    */
-  getItemPage(item: Item): string {
+  getItemPage(item: Item | undefined): string | undefined {
     if (hasValue(item)) {
-      return getItemPageRoute(item);
+      return this.location.prepareExternalUrl(getItemPageRoute(item));
     }
   }
 }
