@@ -15,6 +15,17 @@ languages:
     label: Čeština
     active: true
 
+# Item configuration
+item:
+  # Access-status badge (Open Access / Embargo / Restricted / Metadata only) on each
+  # item in the result lists - search, browse and the recent-items list on the home page.
+  showAccessStatuses: true
+  bitstream:
+    # Per-file access-status label in the Item View ("Embargo until <date>").
+    # Both are off by default in default-app-config.ts; the backend serves the data at
+    # /server/api/core/{items,bitstreams}/<uuid>/accessStatus.
+    showAccessStatuses: true
+
 # Theme Config
 themes:
   # See src/themes/custom/ for the styles, header override, fonts and favicons.
