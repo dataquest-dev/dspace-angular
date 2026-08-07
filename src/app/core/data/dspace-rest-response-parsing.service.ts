@@ -78,7 +78,7 @@ const decodeUrlParts = (parts: string[]): string[] => {
 
 /**
  * Return true if the self link differs from the requested url in a way that isn't just a different
- * way of writing the same request.
+ * way of writing the same request. Takes the requested url already split, since the caller has it.
  *
  * Both sides are brought to the same form first: `embed`/`embed.size` params are stripped, because
  * the frontend treats them as not part of a resource's identity and indexes without them, and both
@@ -86,9 +86,9 @@ const decodeUrlParts = (parts: string[]): string[] => {
  * what came back, including a page size the API reduced — callers are expected to stay within
  * `MAX_PAGE_SIZE` rather than have that reported difference filtered out here.
  */
-const isUnexpectedSelfLink = (requestedUrl: string, selfLink: string): boolean => {
+const isUnexpectedSelfLink = (requestedUrlParts: string[], selfLink: string): boolean => {
   return urlPartsDiffer(
-    decodeUrlParts(splitUrlInParts(requestedUrl)),
+    decodeUrlParts(requestedUrlParts),
     decodeUrlParts(splitUrlInParts(getUrlWithoutEmbedParams(selfLink))),
   );
 };
@@ -200,7 +200,7 @@ export class DspaceRestResponseParsingService implements ResponseParsingService 
         const actual = splitUrlInParts(selfLink);
         if (expected[0] === actual[0] && urlPartsDiffer(expected, actual)) {
           // the self link is normalized either way, only the warning is filtered
-          if (isUnexpectedSelfLink(urlWithoutEmbedParams, selfLink)) {
+          if (isUnexpectedSelfLink(expected, selfLink)) {
             console.warn(`The response for '${urlWithoutEmbedParams}' has the self link '${selfLink}'. These don't match. This could mean there's an issue with the REST endpoint`);
           }
           response.payload._links = Object.assign({}, response.payload._links, {
