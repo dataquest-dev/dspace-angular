@@ -42,6 +42,7 @@ import { isEmpty } from 'src/app/shared/empty.util';
 import { ThemedLoadingComponent } from 'src/app/shared/loading/themed-loading.component';
 import { environment } from 'src/environments/environment';
 
+import { MAX_PAGE_SIZE } from '../../../core/data/find-list-options.model';
 import { BtnDisabledDirective } from '../../../shared/btn-disabled.directive';
 import { FiltersComponent } from '../filters-section/filters-section.component';
 import { FilteredItemsExportCsvComponent } from './filtered-items-export-csv/filtered-items-export-csv.component';
@@ -135,7 +136,7 @@ export class FilteredItemsComponent implements OnInit {
     const wholeRepo$ = this.translateService.stream('admin.reports.items.wholeRepo');
     this.collections.push(OptionVO.collectionLoc('', wholeRepo$));
 
-    this.communityService.findAll({ elementsPerPage: 10000, currentPage: 1 }).pipe(
+    this.communityService.findAll({ elementsPerPage: MAX_PAGE_SIZE, currentPage: 1 }).pipe(
       getFirstSucceededRemoteListPayload(),
     ).subscribe(
       (communitiesRest: Community[]) => {
@@ -143,7 +144,7 @@ export class FilteredItemsComponent implements OnInit {
           const commVO = OptionVO.collection(community.uuid, community.name, true);
           this.collections.push(commVO);
 
-          this.collectionService.findByParent(community.uuid, { elementsPerPage: 10000, currentPage: 1 }).pipe(
+          this.collectionService.findByParent(community.uuid, { elementsPerPage: MAX_PAGE_SIZE, currentPage: 1 }).pipe(
             getFirstSucceededRemoteListPayload(),
           ).subscribe(
             (collectionsRest: Collection[]) => {
@@ -207,12 +208,12 @@ export class FilteredItemsComponent implements OnInit {
     this.metadataFieldsWithAny = [];
     const anyField$ = this.translateService.stream('admin.reports.items.anyField');
     this.metadataFieldsWithAny.push(OptionVO.itemLoc('*', anyField$));
-    this.metadataSchemaService.findAll({ elementsPerPage: 10000, currentPage: 1 }).pipe(
+    this.metadataSchemaService.findAll({ elementsPerPage: MAX_PAGE_SIZE, currentPage: 1 }).pipe(
       getFirstSucceededRemoteListPayload(),
     ).subscribe(
       (schemasRest: MetadataSchema[]) => {
         schemasRest.forEach(schema => {
-          this.metadataFieldService.findBySchema(schema, { elementsPerPage: 10000, currentPage: 1 }).pipe(
+          this.metadataFieldService.findBySchema(schema, { elementsPerPage: MAX_PAGE_SIZE, currentPage: 1 }).pipe(
             getFirstSucceededRemoteListPayload(),
           ).subscribe(
             (fieldsRest: MetadataField[]) => {
