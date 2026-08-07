@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
 import { getFirstSucceededRemoteListPayload } from '../../core/shared/operators';
-import { FindListOptions } from '../../core/data/find-list-options.model';
+import { FindListOptions, MAX_PAGE_SIZE } from '../../core/data/find-list-options.model';
 import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
 import { ClarinLicenseRequiredInfoSerializer } from '../../core/shared/clarin/clarin-license-required-info-serializer';
 
@@ -36,7 +36,7 @@ export class ClarinAllLicensesPageComponent implements OnInit {
     const options = new FindListOptions();
     options.currentPage = 0;
     // Load all licenses
-    options.elementsPerPage = 1000;
+    options.elementsPerPage = MAX_PAGE_SIZE;
     return this.clarinLicenseService.findAll(options, false)
       .pipe(getFirstSucceededRemoteListPayload())
       .subscribe(res => {

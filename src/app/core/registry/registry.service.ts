@@ -30,7 +30,7 @@ import { MetadataBitstreamDataService } from '../data/metadata-bitstream-data.se
 import { FollowLinkConfig } from '../../shared/utils/follow-link-config.model';
 import { RequestParam } from '../cache/models/request-param.model';
 import { NoContent } from '../shared/NoContent.model';
-import { FindListOptions } from '../data/find-list-options.model';
+import { FindListOptions, MAX_PAGE_SIZE } from '../data/find-list-options.model';
 import { MetadataBitstream } from '../metadata/metadata-bitstream.model';
 
 const metadataRegistryStateSelector = (state: AppState) => state.metadataRegistry;
@@ -81,7 +81,7 @@ export class RegistryService {
   public getMetadataSchemaByPrefix(prefix: string, useCachedVersionIfAvailable = true, reRequestOnStale = true, ...linksToFollow: FollowLinkConfig<MetadataSchema>[]): Observable<RemoteData<MetadataSchema>> {
     // Temporary options to get ALL metadataschemas until there's a rest api endpoint for fetching a specific schema
     const options: FindListOptions = Object.assign(new FindListOptions(), {
-      elementsPerPage: 10000
+      elementsPerPage: MAX_PAGE_SIZE
     });
     return this.getMetadataSchemas(options).pipe(
       getFirstSucceededRemoteDataPayload(),
