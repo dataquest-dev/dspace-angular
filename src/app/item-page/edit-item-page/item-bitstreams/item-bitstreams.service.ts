@@ -24,6 +24,7 @@ import { MoveOperation } from 'fast-json-patch';
 import { BundleDataService } from '../../../core/data/bundle-data.service';
 import { RequestService } from '../../../core/data/request.service';
 import { LiveRegionService } from '../../../shared/live-region/live-region.service';
+import { MAX_PAGE_SIZE } from '../../../core/data/find-list-options.model';
 
 export const MOVE_KEY = 'item.edit.bitstreams.notifications.move';
 
@@ -344,7 +345,7 @@ export class ItemBitstreamsService {
     return Object.assign(new PaginationComponentOptions(), {
       id: 'bundles-pagination-options',
       currentPage: 1,
-      pageSize: 9999
+      pageSize: MAX_PAGE_SIZE
     });
   }
 

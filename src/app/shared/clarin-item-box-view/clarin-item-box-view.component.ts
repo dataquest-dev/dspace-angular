@@ -29,7 +29,7 @@ import { ListableObject } from '../object-collection/shared/listable-object.mode
 import { ItemSearchResult } from '../object-collection/shared/item-search-result.model';
 import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
 import { metadataLangToBcp47 } from '../utils/metadata-language.util';
-import { FindListOptions } from '../../core/data/find-list-options.model';
+import { FindListOptions, MAX_PAGE_SIZE } from '../../core/data/find-list-options.model';
 import { ClarinDateService } from '../clarin-date.service';
 import { AUTHOR_METADATA_FIELDS } from '../../core/shared/clarin/constants';
 import {RequestParam} from '../../core/cache/models/request-param.model';
@@ -181,7 +181,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
       return;
     }
     const configAllElements: FindListOptions = Object.assign(new FindListOptions(), {
-      elementsPerPage: 9999
+      elementsPerPage: MAX_PAGE_SIZE
     });
 
     this.bundleService.findByItemAndName(this.item, 'ORIGINAL', true, true,
