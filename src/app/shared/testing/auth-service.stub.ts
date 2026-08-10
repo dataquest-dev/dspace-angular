@@ -60,6 +60,10 @@ export class AuthServiceStub {
     return of(EPersonMock);
   }
 
+  getAuthenticatedUserFromStore(): Observable<EPerson> {
+    return of(EPersonMock);
+  }
+
   getAuthenticatedUserFromStoreIfAuthenticated(): Observable<EPerson> {
     return of(EPersonMock);
   }
