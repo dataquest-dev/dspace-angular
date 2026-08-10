@@ -37,6 +37,7 @@ import { ValidateEmailNotTaken } from './validators/email-taken.validator';
 import { Registration } from '../../../core/shared/registration.model';
 import { EpersonRegistrationService } from '../../../core/data/eperson-registration.service';
 import { TYPE_REQUEST_FORGOT } from '../../../register-email-form/register-email-form.component';
+import { EPersonDeleteGuardService, SELF_DELETE_WARNING_LABEL } from '../eperson-delete-guard.service';
 
 @Component({
   selector: 'ds-eperson-form',
@@ -48,6 +49,9 @@ import { TYPE_REQUEST_FORGOT } from '../../../register-email-form/register-email
 export class EPersonFormComponent implements OnInit, OnDestroy {
 
   labelPrefix = 'admin.access-control.epeople.form.';
+  selfDeleteWarningLabel = SELF_DELETE_WARNING_LABEL;
+
+  currentAuthenticatedUserId: string;
 
   /**
    * A unique id used for ds-form
@@ -161,6 +165,11 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
   epersonInitial: EPerson;
 
   /**
+   * The EPerson this form is currently showing
+   */
+  activeEPerson$: Observable<EPerson>;
+
+  /**
    * Whether or not this EPerson is currently being impersonated
    */
   isImpersonated = false;
@@ -183,6 +192,7 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
     private paginationService: PaginationService,
     public requestService: RequestService,
     private epersonRegistrationService: EpersonRegistrationService,
+    private deleteGuard: EPersonDeleteGuardService,
   ) {
     this.subs.push(this.epersonService.getActiveEPerson().subscribe((eperson: EPerson) => {
       this.epersonInitial = eperson;
@@ -193,6 +203,10 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.activeEPerson$ = this.epersonService.getActiveEPerson();
+    this.subs.push(this.authService.getAuthenticatedUserFromStore().subscribe((currentUser: EPerson) => {
+      this.currentAuthenticatedUserId = currentUser?.id;
+    }));
     this.initialisePage();
   }
 
@@ -452,30 +466,46 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
    */
   delete() {
     this.epersonService.getActiveEPerson().pipe(take(1)).subscribe((eperson: EPerson) => {
-      const modalRef = this.modalService.open(ConfirmationModalComponent);
-      modalRef.componentInstance.dso = eperson;
-      modalRef.componentInstance.headerLabel = 'confirmation-modal.delete-eperson.header';
-      modalRef.componentInstance.infoLabel = 'confirmation-modal.delete-eperson.info';
-      modalRef.componentInstance.cancelLabel = 'confirmation-modal.delete-eperson.cancel';
-      modalRef.componentInstance.confirmLabel = 'confirmation-modal.delete-eperson.confirm';
-      modalRef.componentInstance.brandColor = 'danger';
-      modalRef.componentInstance.confirmIcon = 'fas fa-trash';
-      modalRef.componentInstance.response.pipe(take(1)).subscribe((confirm: boolean) => {
-        if (confirm) {
-          if (hasValue(eperson.id)) {
+      if (!hasValue(eperson?.id) || !hasValue(this.currentAuthenticatedUserId)) {
+        return;
+      }
+
+      if (this.isCurrentUser(eperson)) {
+        this.deleteGuard.showSelfDeleteNotification();
+        return;
+      }
+
+      this.deleteGuard.getDeleteWarningLabel(eperson).pipe(take(1)).subscribe((warningLabel: string | undefined) => {
+        const modalRef = this.modalService.open(ConfirmationModalComponent);
+        modalRef.componentInstance.dso = eperson;
+        modalRef.componentInstance.headerLabel = 'confirmation-modal.delete-eperson.header';
+        modalRef.componentInstance.infoLabel = 'confirmation-modal.delete-eperson.info';
+        modalRef.componentInstance.warningLabel = warningLabel;
+        modalRef.componentInstance.cancelLabel = 'confirmation-modal.delete-eperson.cancel';
+        modalRef.componentInstance.confirmLabel = 'confirmation-modal.delete-eperson.confirm';
+        modalRef.componentInstance.brandColor = 'danger';
+        modalRef.componentInstance.confirmIcon = 'fas fa-trash';
+        modalRef.componentInstance.response.pipe(take(1)).subscribe((confirm: boolean) => {
+          if (confirm) {
             this.epersonService.deleteEPerson(eperson).pipe(getFirstCompletedRemoteData()).subscribe((restResponse: RemoteData<NoContent>) => {
               if (restResponse.hasSucceeded) {
                 this.notificationsService.success(this.translateService.get(this.labelPrefix + 'notification.deleted.success', { name: eperson.name }));
                 this.submitForm.emit();
+              } else if (this.isCurrentUser(eperson) || this.deleteGuard.isSelfDeletionError(restResponse)) {
+                this.deleteGuard.showSelfDeleteNotification();
               } else {
                 this.notificationsService.error('Error occured when trying to delete EPerson with id: ' + eperson.id + ' with code: ' + restResponse.statusCode + ' and message: ' + restResponse.errorMessage);
               }
               this.cancelForm.emit();
             });
           }
-        }
+        });
       });
     });
+  }
+
+  isCurrentUser(ePerson: EPerson): boolean {
+    return this.deleteGuard.isCurrentUser(ePerson, this.currentAuthenticatedUserId);
   }
 
   /**

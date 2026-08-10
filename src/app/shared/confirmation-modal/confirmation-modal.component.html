@@ -6,6 +6,7 @@
   </div>
   <div class="modal-body">
     <p>{{ infoLabel | translate:{dsoName: dso?.name} }}</p>
+    <p *ngIf="warningLabel" class="text-warning mb-0">{{ warningLabel | translate:{dsoName: dso?.name} }}</p>
   </div>
   <div class="modal-footer">
     <button type="button" class="cancel btn btn-outline-secondary" (click)="cancelPressed()" aria-label="Cancel">

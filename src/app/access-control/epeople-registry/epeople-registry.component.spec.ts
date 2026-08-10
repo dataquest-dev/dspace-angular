@@ -23,6 +23,8 @@ import { TranslateLoaderMock } from '../../shared/mocks/translate-loader.mock';
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 import { RouterStub } from '../../shared/testing/router.stub';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+import { AuthService } from '../../core/auth/auth.service';
+import { EPersonDeleteGuardService } from './eperson-delete-guard.service';
 import { RequestService } from '../../core/data/request.service';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { PaginationServiceStub } from '../../shared/testing/pagination-service.stub';
@@ -37,6 +39,8 @@ describe('EPeopleRegistryComponent', () => {
   let mockEPeople;
   let ePersonDataServiceStub: any;
   let authorizationService: AuthorizationDataService;
+  let authService: jasmine.SpyObj<AuthService>;
+  let deleteGuard: jasmine.SpyObj<EPersonDeleteGuardService>;
   let modalService;
 
   let paginationService;
@@ -117,6 +121,12 @@ describe('EPeopleRegistryComponent', () => {
     authorizationService = jasmine.createSpyObj('authorizationService', {
       isAuthorized: observableOf(true)
     });
+    authService = jasmine.createSpyObj('authService', ['getAuthenticatedUserFromStore']);
+    authService.getAuthenticatedUserFromStore.and.returnValue(observableOf(Object.assign(new EPerson(), { id: 'different-user-id' })));
+    deleteGuard = jasmine.createSpyObj('deleteGuard', ['isCurrentUser', 'getDeleteWarningLabel', 'isSelfDeletionError', 'showSelfDeleteNotification']);
+    deleteGuard.isCurrentUser.and.callFake((ePerson: EPerson, currentId: string) => !!ePerson?.id && ePerson.id === currentId);
+    deleteGuard.getDeleteWarningLabel.and.returnValue(observableOf(undefined));
+    deleteGuard.isSelfDeletionError.and.returnValue(false);
     builderService = getMockFormBuilderService();
     translateService = getMockTranslateService();
 
@@ -135,6 +145,8 @@ describe('EPeopleRegistryComponent', () => {
         { provide: EPersonDataService, useValue: ePersonDataServiceStub },
         { provide: NotificationsService, useValue: new NotificationsServiceStub() },
         { provide: AuthorizationDataService, useValue: authorizationService },
+        { provide: AuthService, useValue: authService },
+        { provide: EPersonDeleteGuardService, useValue: deleteGuard },
         { provide: FormBuilderService, useValue: builderService },
         { provide: Router, useValue: new RouterStub() },
         { provide: RequestService, useValue: jasmine.createSpyObj('requestService', ['removeByHrefSubstring']) },
@@ -254,6 +266,25 @@ describe('EPeopleRegistryComponent', () => {
           expect(epersonElement !== ePeopleIdsFoundBeforeDelete[0].nativeElement.textContent).toBeTrue();
         });
       });
+    });
+  });
+
+  describe('when an EPerson is the currently authenticated user', () => {
+    beforeEach(() => {
+      component.currentAuthenticatedUserId = EPersonMock.id;
+      fixture.detectChanges();
+    });
+
+    it('renders the delete button for that row as disabled', () => {
+      const deleteButtons = fixture.debugElement.queryAll(By.css('.access-control-deleteEPersonButton'));
+      const disabled = deleteButtons.filter((button) => button.nativeElement.disabled);
+      expect(disabled.length).toBe(1);
+    });
+
+    it('notifies instead of opening the confirmation modal', () => {
+      component.deleteEPerson(EPersonMock);
+      expect(deleteGuard.showSelfDeleteNotification).toHaveBeenCalled();
+      expect(modalService.open).not.toHaveBeenCalled();
     });
   });
 

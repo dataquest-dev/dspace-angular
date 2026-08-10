@@ -9,6 +9,7 @@ import { DSpaceObject } from '../../core/shared/dspace-object.model';
 export class ConfirmationModalComponent {
   @Input() headerLabel: string;
   @Input() infoLabel: string;
+  @Input() warningLabel?: string;
   @Input() cancelLabel: string;
   @Input() confirmLabel: string;
   @Input() confirmIcon: string;
