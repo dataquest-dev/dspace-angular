@@ -37,7 +37,6 @@ import { FollowLinkConfig } from '../../../shared/utils/follow-link-config.model
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterStub } from '../../../shared/testing/router.stub';
 import { ActivatedRouteStub } from '../../../shared/testing/active-router.stub';
-import { RouterTestingModule } from '@angular/router/testing';
 import { WorkspaceitemDataService } from '../../../core/submission/workspaceitem-data.service';
 import { WorkflowItemDataService } from '../../../core/submission/workflowitem-data.service';
 import { SearchService } from '../../../core/shared/search/search.service';
@@ -664,8 +663,7 @@ describe('EPersonFormComponent', () => {
     it('should render the delete button as disabled for the current user', () => {
       const deleteButton = fixture.debugElement.query(By.css('.delete-button'));
       expect(deleteButton).not.toBeNull();
-      expect(deleteButton.nativeElement.getAttribute('aria-disabled')).toBe('true');
-      expect(deleteButton.nativeElement.classList.contains('disabled')).toBeTrue();
+      expect(deleteButton.nativeElement.disabled).toBeTrue();
     });
   });
 

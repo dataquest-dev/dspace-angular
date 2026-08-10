@@ -283,9 +283,8 @@ describe('EPeopleRegistryComponent', () => {
       const deleteButtons = fixture.debugElement.queryAll(By.css('.access-control-deleteEPersonButton'));
 
       expect(deleteButtons.length).toBe(2);
-      expect(deleteButtons[0].nativeElement.getAttribute('aria-disabled')).toBeNull();
-      expect(deleteButtons[1].nativeElement.getAttribute('aria-disabled')).toBe('true');
-      expect(deleteButtons[1].nativeElement.classList.contains('disabled')).toBeTrue();
+      expect(deleteButtons[0].nativeElement.disabled).toBeFalse();
+      expect(deleteButtons[1].nativeElement.disabled).toBeTrue();
     });
 
     it('should call submitter checks and compose the combined warning label', fakeAsync(() => {
