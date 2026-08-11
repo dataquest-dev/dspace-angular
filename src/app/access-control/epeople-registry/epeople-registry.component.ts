@@ -279,7 +279,13 @@ export class EPeopleRegistryComponent implements OnInit, OnDestroy {
               } else if (this.isCurrentUser(ePerson) || this.deleteGuard.isSelfDeletionError(restResponse)) {
                 this.deleteGuard.showSelfDeleteNotification();
               } else {
-                this.notificationsService.error(this.translateService.get(this.labelPrefix + 'notification.deleted.success', { id: ePerson.id, statusCode: restResponse.statusCode, errorMessage: restResponse.errorMessage }));
+                this.notificationsService.error(this.translateService.get(this.labelPrefix + 'notification.deleted.failure', {
+                  name: this.dsoNameService.getName(ePerson),
+                  id: ePerson.id,
+                  statusCode: restResponse.statusCode,
+                  errorMessage: restResponse.errorMessage,
+                  restResponse,
+                }));
               }
             });
           }
