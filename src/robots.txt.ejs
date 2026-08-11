@@ -18,6 +18,27 @@ Disallow: /profile
 Disallow: /workflowitems
 # Crawlers should be able to access entity pages, but not the facet search links present on entity pages
 Disallow: /entities/*?f
+# "Disallow: /search" above only matches paths that START with /search, so scoped
+# search inside a community or collection stayed crawlable. Enumerating its facet
+# links saturated SSR in production (HTTP 504); block it and every facet URL.
+Disallow: /collections/*/search
+Disallow: /communities/*/search
+# Any URL carrying a Discovery facet filter (f.author, f.subject, ...). Two rules
+# because the facet can be the first query parameter (?f.) or a later one (&f.),
+# and robots.txt cannot express "either".
+Disallow: /*?f.
+Disallow: /*&f.
+<% if (disallowBrowse) { -%>
+Disallow: /browse
+<% } -%>
+<% if (disallowHandle) { -%>
+Disallow: /handle
+<% } -%>
+<% if (disallowBitstreams) { -%>
+# Bitstream content is reachable by handle path and by UUID; block both.
+Disallow: /bitstream/
+Disallow: /bitstreams/
+<% } -%>
 
 # Optionally uncomment the following line ONLY if sitemaps are working
 # and you have verified that your site is being indexed correctly.

@@ -162,12 +162,16 @@ export function app() {
   server.set('view engine', 'ejs');
 
   /**
-   * Serve the robots.txt ejs template, filling in the origin variable
+   * Serve the robots.txt ejs template, filling in the origin variable and the
+   * per-instance optional-block toggles (see config `robots`).
    */
   server.get('/robots.txt', (req, res) => {
     res.setHeader('content-type', 'text/plain');
     res.render('assets/robots.txt.ejs', {
-      'origin': req.protocol + '://' + req.headers.host
+      'origin': req.protocol + '://' + req.headers.host,
+      'disallowHandle': environment.robots.disallowHandle,
+      'disallowBrowse': environment.robots.disallowBrowse,
+      'disallowBitstreams': environment.robots.disallowBitstreams
     });
   });
 

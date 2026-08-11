@@ -23,6 +23,15 @@ export const environment: BuildConfig = {
         pattern: '^/collections/[a-f0-9-]{36}/browse(/.*)?$',
         flag: 'i',
       },
+      // Scoped search + its facet links: the crawler trap that saturated SSR in production.
+      {
+        pattern: '^/communities/[a-f0-9-]{36}/search(/.*)?$',
+        flag: 'i',
+      },
+      {
+        pattern: '^/collections/[a-f0-9-]{36}/search(/.*)?$',
+        flag: 'i',
+      },
       { pattern: '^/browse/' },
       { pattern: '^/search' },
       { pattern: '^/community-list$' },
@@ -326,6 +335,11 @@ export const environment: BuildConfig = {
   markdown: {
     enabled: false,
     mathjax: false,
+  },
+  robots: {
+    disallowHandle: false,
+    disallowBrowse: false,
+    disallowBitstreams: false,
   },
   comcolSelectionSort: {
     sortField:'dc.title',

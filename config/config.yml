@@ -19,6 +19,14 @@ universal:
       flag: "i"
     - pattern: "^/collections/[a-f0-9-]{36}/browse(/.*)?$"
       flag: "i"
+    # Scoped search inside a community/collection is the most expensive route, and its facet
+    # links are effectively unbounded; crawlers walking them saturated SSR in production
+    # (HTTP 504). Serve these as a plain CSR shell. src/robots.txt.ejs asks well-behaved
+    # crawlers to stay out of the same paths; this handles the ones that ignore robots.txt.
+    - pattern: "^/communities/[a-f0-9-]{36}/search(/.*)?$"
+      flag: "i"
+    - pattern: "^/collections/[a-f0-9-]{36}/search(/.*)?$"
+      flag: "i"
     - pattern: "^/browse/"
     - pattern: "^/search$"
     - pattern: "^/community-list$"
@@ -37,6 +45,15 @@ universal:
   # If set to true the component will be included in the HTML returned from the server side rendering.
   # If set to false the component will not be included in the HTML returned from the server side rendering.
   enableBrowseComponent: false
+
+# Optional per-instance blocks of the served /robots.txt (src/robots.txt.ejs).
+# The Discovery facet-trap rules are always emitted; these switch the extra blocks.
+# All default false because each de-indexes content some instances intentionally
+# expose (a blanket /handle block breaks instances relying on handle redirects).
+robots:
+  disallowHandle: false
+  disallowBrowse: false
+  disallowBitstreams: false
 
 # Caching settings
 cache:

@@ -26,6 +26,7 @@ import { LiveRegionConfig } from '../app/shared/live-region/live-region.config';
 import { SearchConfig } from './search-page-config.interface';
 import { AccessibilitySettingsConfig } from '../app/accessibility/accessibility-settings.config';
 import { MatomoConfig } from './matomo-config';
+import { RobotsConfig } from './robots-config.interface';
 
 export class DefaultAppConfig implements AppConfig {
   production = false;
@@ -413,6 +414,15 @@ export class DefaultAppConfig implements AppConfig {
   markdown: MarkdownConfig = {
     enabled: false,
     mathjax: false,
+  };
+
+  // Optional per-instance blocks of the served robots.txt. The facet-trap rules
+  // that protect SSR are always emitted; these switch the extra blocks that
+  // de-index content some instances intentionally expose.
+  robots: RobotsConfig = {
+    disallowHandle: false,
+    disallowBrowse: false,
+    disallowBitstreams: false,
   };
 
   // Which vocabularies should be used for which search filters

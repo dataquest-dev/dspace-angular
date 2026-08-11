@@ -31,6 +31,14 @@ universal:
       flag: "i"
     - pattern: "^/collections/[a-f0-9-]{36}/browse(/.*)?$"
       flag: "i"
+    # Scoped search inside a community/collection is the most expensive route, and its facet
+    # links are effectively unbounded; crawlers walking them saturated SSR in production
+    # (HTTP 504). Serve these as a plain CSR shell. src/robots.txt.ejs asks well-behaved
+    # crawlers to stay out of the same paths; this handles the ones that ignore robots.txt.
+    - pattern: "^/communities/[a-f0-9-]{36}/search(/.*)?$"
+      flag: "i"
+    - pattern: "^/collections/[a-f0-9-]{36}/search(/.*)?$"
+      flag: "i"
     - pattern: "^/browse/"
     - pattern: "^/search$"
     - pattern: "^/community-list$"
@@ -59,6 +67,18 @@ universal:
   # REST resources with the internal URL configured. By default, these internal URLs are replaced with public URLs.
   # Disable this setting to avoid URL replacement during SSR. In this the state is not transferred to avoid security issues.
   replaceRestUrl: true
+
+# Optional per-instance blocks of the served /robots.txt (src/robots.txt.ejs).
+# The Discovery facet-trap rules are always emitted; these switch the extra blocks.
+# All default false because each de-indexes content some instances intentionally
+# expose (a blanket /handle block breaks instances relying on handle redirects).
+robots:
+  # Disallow: /handle
+  disallowHandle: false
+  # Disallow: /browse
+  disallowBrowse: false
+  # Disallow: /bitstream/ and /bitstreams/
+  disallowBitstreams: false
 
 # The REST API server settings
 # NOTE: these settings define which (publicly available) REST API to use. They are usually
