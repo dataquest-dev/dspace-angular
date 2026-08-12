@@ -19,14 +19,6 @@ universal:
       flag: "i"
     - pattern: "^/collections/[a-f0-9-]{36}/browse(/.*)?$"
       flag: "i"
-    # Scoped search inside a community/collection is the most expensive route, and its facet
-    # links are effectively unbounded; crawlers walking them saturated SSR in production
-    # (HTTP 504). Serve these as a plain CSR shell. src/robots.txt.ejs asks well-behaved
-    # crawlers to stay out of the same paths; this handles the ones that ignore robots.txt.
-    - pattern: "^/communities/[a-f0-9-]{36}/search(/.*)?$"
-      flag: "i"
-    - pattern: "^/collections/[a-f0-9-]{36}/search(/.*)?$"
-      flag: "i"
     - pattern: "^/browse/"
     - pattern: "^/search$"
     - pattern: "^/community-list$"

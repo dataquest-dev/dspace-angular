@@ -56,6 +56,7 @@ import { extendEnvironmentWithAppConfig } from './src/config/config.util';
 import { logStartupMessage } from './startup-message';
 import { TOKENITEM } from './src/app/core/auth/models/auth-token-info.model';
 import { SsrExcludePatterns } from './src/config/universal-config.interface';
+import { buildOptionalRobotsDisallows } from './src/config/robots.util';
 
 
 /*
@@ -163,15 +164,13 @@ export function app() {
 
   /**
    * Serve the robots.txt ejs template, filling in the origin variable and the
-   * per-instance optional-block toggles (see config `robots`).
+   * per-instance optional Disallow blocks (see config `robots`).
    */
   server.get('/robots.txt', (req, res) => {
     res.setHeader('content-type', 'text/plain');
     res.render('assets/robots.txt.ejs', {
       'origin': req.protocol + '://' + req.headers.host,
-      'disallowHandle': environment.robots.disallowHandle,
-      'disallowBrowse': environment.robots.disallowBrowse,
-      'disallowBitstreams': environment.robots.disallowBitstreams
+      'optionalDisallows': buildOptionalRobotsDisallows(environment.robots)
     });
   });
 
