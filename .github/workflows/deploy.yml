@@ -24,6 +24,10 @@ on:
         required: false
         type: string
         default: '/opt/dspace-envs/8603/dump/dspace_dev5_dump_26.07.16.sql'
+      ASSETSTORE_PATH:
+        required: false
+        type: string
+        default: '/opt/dspace-envs/8603/assetstore'
 
   workflow_dispatch:
     inputs:
@@ -50,6 +54,11 @@ on:
         required: false
         type: string
         default: '/opt/dspace-envs/8603/dump/dspace_dev5_dump_26.07.16.sql'
+      ASSETSTORE_PATH:
+        description: 'Absolute path of the assetstore directory ON THE DEV MACHINE (used only when IMPORT is checked). Leave empty to import without bitstream files.'
+        required: false
+        type: string
+        default: '/opt/dspace-envs/8603/assetstore'
       PROBE_ONLY:
         description: 'Only report the state of the target machine; deploy and import nothing'
         required: false
@@ -195,6 +204,7 @@ jobs:
       INSTANCE: ${{inputs.INSTANCE}}
       CONFIG_PATH: /opt/dspace-envs/${{inputs.INSTANCE}}
       DUMP_PATH: ${{inputs.DUMP_PATH}}
+      ASSETSTORE_PATH: ${{inputs.ASSETSTORE_PATH}}
       ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
     steps:
       - uses: actions/checkout@v6
@@ -273,6 +283,62 @@ jobs:
           echo "Restarting DSpace container..."
           docker restart $DNAME
           sleep 60
+
+      - name: copy assetstore
+        run: |
+          export DNAME=dspace${INSTANCE}
+
+          # ---------------------------------------------------------------
+          # The dump restores the bitstream ROWS (internal_id, size_bytes, checksum) but not
+          # the FILES, so without this step /dspace/assetstore stays empty and every download
+          # returns 500 -- including tiny licence files. It is not route-specific.
+          #
+          # It also breaks OAI silently: SpecialItemService.getUploadedMetadata() reads the
+          # authored CMDI out of the METADATA bundle, and its catch block returns an empty
+          # Document, so an unreadable file degrades to the GENERATED CMDI profile instead of
+          # failing loudly. That cost several days of investigation before it was attributed.
+          #
+          # dev-5 does the same copy in the import-db composite action; the v9 stack had no
+          # equivalent. This step MUST run before `dspace oai import -c` below, because the
+          # records stay wrong until that cache is cleared -- copying the files and restarting
+          # the container is NOT enough.
+          # ---------------------------------------------------------------
+          if [ -z "$ASSETSTORE_PATH" ]; then
+            echo "::warning::ASSETSTORE_PATH is empty - skipping. Bitstream downloads will return 500 and OAI will serve generated CMDI."
+            exit 0
+          fi
+
+          if [ ! -d "$ASSETSTORE_PATH" ]; then
+            echo "::error::Assetstore not found on ${{inputs.DEV_MACHINE}}: $ASSETSTORE_PATH"
+            echo "Set the ASSETSTORE_PATH input to an empty string to import without bitstream files."
+            exit 1
+          fi
+
+          # `docker cp SRC DEST:/dspace/` places SRC under its own basename, so the source
+          # directory has to be called "assetstore" for it to land on the mounted volume.
+          if [ "$(basename "$ASSETSTORE_PATH")" != "assetstore" ]; then
+            echo "::error::ASSETSTORE_PATH must point at a directory named 'assetstore', got '$(basename "$ASSETSTORE_PATH")'."
+            exit 1
+          fi
+
+          echo "Copying $ASSETSTORE_PATH ($(du -sh "$ASSETSTORE_PATH" | cut -f1), $(find "$ASSETSTORE_PATH" -type f | wc -l) files)"
+
+          # Target is the named volume dspace-${INSTANCE}_assetstore mounted at /dspace/assetstore
+          # (docker/docker-compose-rest.yml). An existing directory is merged, not replaced.
+          docker cp "$ASSETSTORE_PATH" $DNAME:/dspace/
+
+          # No chown, unlike dev-5's `chown -R dspace:dspace`: the v9 runtime stage is
+          # FROM eclipse-temurin with no USER directive, so there is no `dspace` user (the one
+          # in the Dockerfile exists only in the build stage) and the webapp runs as root --
+          # root-owned files are both readable and writable by it. Running dev-5's version here
+          # fails outright with "chown: invalid user: 'dspace:dspace'".
+
+          COPIED=$(docker exec $DNAME sh -c 'find /dspace/assetstore -type f | wc -l')
+          echo "Files in $DNAME:/dspace/assetstore -> $COPIED"
+          if [ "$COPIED" -eq 0 ]; then
+            echo "::error::Assetstore is still empty inside $DNAME after the copy."
+            exit 1
+          fi
 
       - name: create administrator
         run: |
