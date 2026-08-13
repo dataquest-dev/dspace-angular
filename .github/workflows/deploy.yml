@@ -24,6 +24,10 @@ on:
         required: false
         type: string
         default: '/opt/dspace-envs/8603/dump/dspace_dev5_dump_26.07.16.sql'
+      ASSETSTORE_PATH:
+        required: false
+        type: string
+        default: '/opt/dspace-envs/8603/assetstore'
 
   workflow_dispatch:
     inputs:
@@ -50,6 +54,11 @@ on:
         required: false
         type: string
         default: '/opt/dspace-envs/8603/dump/dspace_dev5_dump_26.07.16.sql'
+      ASSETSTORE_PATH:
+        description: 'Absolute path of the assetstore directory ON THE DEV MACHINE'
+        required: false
+        type: string
+        default: '/opt/dspace-envs/8603/assetstore'
       PROBE_ONLY:
         description: 'Only report the state of the target machine; deploy and import nothing'
         required: false
@@ -195,6 +204,7 @@ jobs:
       INSTANCE: ${{inputs.INSTANCE}}
       CONFIG_PATH: /opt/dspace-envs/${{inputs.INSTANCE}}
       DUMP_PATH: ${{inputs.DUMP_PATH}}
+      ASSETSTORE_PATH: ${{inputs.ASSETSTORE_PATH}}
       ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
     steps:
       - uses: actions/checkout@v6
@@ -273,6 +283,19 @@ jobs:
           echo "Restarting DSpace container..."
           docker restart $DNAME
           sleep 60
+
+      - name: copy assetstore
+        run: |
+          export DNAME=dspace${INSTANCE}
+
+          # No `chown -R dspace:dspace` (unlike v7): the v9 runtime image has no `dspace`
+          # user, the webapp runs as root, and that chown fails with "invalid user".
+          echo "Preparing assetstore"
+          if [ -z "$ASSETSTORE_PATH" ]; then
+            echo "Assetstore path is empty. Not copying assetstore."
+          else
+            docker cp "$ASSETSTORE_PATH" $DNAME:/dspace/
+          fi
 
       - name: create administrator
         run: |
