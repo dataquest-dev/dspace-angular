@@ -5,6 +5,7 @@ import { SharedModule } from '../shared/shared.module';
 import { AccessControlRoutingModule } from './access-control-routing.module';
 import { EPeopleRegistryComponent } from './epeople-registry/epeople-registry.component';
 import { EPersonFormComponent } from './epeople-registry/eperson-form/eperson-form.component';
+import { EPersonDeleteGuardService } from './epeople-registry/eperson-delete-guard.service';
 import { GroupFormComponent } from './group-registry/group-form/group-form.component';
 import { MembersListComponent } from './group-registry/group-form/members-list/members-list.component';
 import { SubgroupsListComponent } from './group-registry/group-form/subgroup-list/subgroups-list.component';
@@ -57,6 +58,7 @@ export const ValidateEmailErrorStateMatcher: DynamicErrorMessagesMatcher =
       provide: DYNAMIC_ERROR_MESSAGES_MATCHER,
       useValue: ValidateEmailErrorStateMatcher
     },
+    EPersonDeleteGuardService,
   ]
 })
 /**
