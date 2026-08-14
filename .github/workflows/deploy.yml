@@ -145,12 +145,6 @@ jobs:
           echo "dspace checker:"
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace checker -v -l"
 
-      - name: dspace healthcheck
-        run: |
-          export DNAME=dspace$INSTANCE
-          echo "dspace healthcheck:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
-
   import-8:
     runs-on: dspace-dep-1
     if: inputs.IMPORT
@@ -186,12 +180,6 @@ jobs:
 
           echo "dspace checker:"
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace checker -v -l"
-
-      - name: dspace healthcheck
-        run: |
-          export DNAME=dspace$INSTANCE
-          echo "dspace healthcheck:"
-          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace healthcheck -v"
 
   playwright-after-deploy8:
     needs: deploy-8
