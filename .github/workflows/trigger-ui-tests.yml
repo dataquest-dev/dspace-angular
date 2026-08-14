@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   workflow_call:
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '15 2 * * *'
 
 permissions:
   actions: write # Grants permission to trigger workflows
