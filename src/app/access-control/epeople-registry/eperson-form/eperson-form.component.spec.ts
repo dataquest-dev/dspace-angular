@@ -64,6 +64,7 @@ import { createPaginatedList } from '../../../shared/testing/utils.test';
 import { FollowLinkConfig } from '../../../shared/utils/follow-link-config.model';
 import { HasNoValuePipe } from '../../../shared/utils/has-no-value.pipe';
 import { EPeopleRegistryComponent } from '../epeople-registry.component';
+import { EPersonDeleteGuardService } from '../eperson-delete-guard.service';
 import { EPersonFormComponent } from './eperson-form.component';
 import { ValidateEmailNotTaken } from './validators/email-taken.validator';
 
@@ -75,6 +76,7 @@ describe('EPersonFormComponent', () => {
   let mockEPeople;
   let ePersonDataServiceStub: any;
   let authService: AuthServiceStub;
+  let deleteGuard: jasmine.SpyObj<EPersonDeleteGuardService>;
   let authorizationService: AuthorizationDataService;
   let groupsDataService: GroupDataService;
   let epersonRegistrationService: EpersonRegistrationService;
@@ -209,6 +211,10 @@ describe('EPersonFormComponent', () => {
       },
     });
     authService = new AuthServiceStub();
+    deleteGuard = jasmine.createSpyObj('deleteGuard', ['isCurrentUser', 'getDeleteWarningLabel', 'isSelfDeletionError', 'showSelfDeleteNotification']);
+    deleteGuard.isCurrentUser.and.callFake((ePerson: EPerson, currentId: string) => !!ePerson?.id && ePerson.id === currentId);
+    deleteGuard.getDeleteWarningLabel.and.returnValue(of(undefined));
+    deleteGuard.isSelfDeletionError.and.returnValue(false);
     authorizationService = jasmine.createSpyObj('authorizationService', {
       isAuthorized: of(true),
 
@@ -238,6 +244,7 @@ describe('EPersonFormComponent', () => {
         { provide: PaginationService, useValue: paginationService },
         { provide: RequestService, useValue: jasmine.createSpyObj('requestService', ['removeByHrefSubstring']) },
         { provide: EpersonRegistrationService, useValue: epersonRegistrationService },
+        { provide: EPersonDeleteGuardService, useValue: deleteGuard },
         { provide: ActivatedRoute, useValue: route },
         { provide: Router, useValue: router },
         EPeopleRegistryComponent,
@@ -503,6 +510,7 @@ describe('EPersonFormComponent', () => {
       modalService = (component as any).modalService;
       spyOn(modalService, 'open').and.returnValue(Object.assign({ componentInstance: Object.assign({ response: of(true) }) }));
       component.ngOnInit();
+      component.currentAuthenticatedUserId = 'different-user-id';
       fixture.detectChanges();
     });
 
@@ -535,6 +543,26 @@ describe('EPersonFormComponent', () => {
       deleteButton.triggerEventHandler('click', null);
       fixture.detectChanges();
       expect(component.epersonService.deleteEPerson).toHaveBeenCalledWith(eperson);
+    });
+
+    describe('when the EPerson is the currently authenticated user', () => {
+      beforeEach(() => {
+        component.currentAuthenticatedUserId = eperson.id;
+        fixture.detectChanges();
+      });
+
+      it('should render the delete button as disabled', () => {
+        const deleteButton = fixture.debugElement.query(By.css('.delete-button'));
+        expect(deleteButton.nativeElement.getAttribute('aria-disabled')).toBe('true');
+      });
+
+      it('should notify instead of opening the confirmation modal', () => {
+        spyOn(component.epersonService, 'deleteEPerson').and.returnValue(createSuccessfulRemoteDataObject$('No Content', 204));
+        component.delete();
+        expect(deleteGuard.showSelfDeleteNotification).toHaveBeenCalled();
+        expect(modalService.open).not.toHaveBeenCalled();
+        expect(component.epersonService.deleteEPerson).not.toHaveBeenCalled();
+      });
     });
   });
 
