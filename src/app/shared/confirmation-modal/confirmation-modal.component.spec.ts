@@ -35,6 +35,19 @@ describe('ConfirmationModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should not render a warning message by default', () => {
+    expect(debugElement.query(By.css('.modal-body .text-warning'))).toBeNull();
+  });
+
+  it('should render the warning message when warningLabel is set', () => {
+    component.warningLabel = 'confirmation-modal.warning';
+    fixture.detectChanges();
+
+    const warningMessage = debugElement.query(By.css('.modal-body .text-warning'));
+    expect(warningMessage).not.toBeNull();
+    expect(warningMessage.nativeElement.textContent).toContain('confirmation-modal.warning');
+  });
+
   describe('close', () => {
     beforeEach(() => {
       component.close();
