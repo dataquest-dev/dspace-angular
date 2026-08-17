@@ -1,6 +1,8 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TruncatePipe } from '../../utils/truncate.pipe';
 import { BrowseEntryListElementComponent } from './browse-entry-list-element.component';
 import { BrowseEntry } from '../../../core/shared/browse-entry.model';
@@ -93,13 +95,46 @@ describe('BrowseEntryListElementComponent', () => {
       expect(emitted['bbm.sd']).toBe('DESC');
     });
 
-    it('should drop parameters it does not recognise', () => {
-      queryParamsInUrl['amp;value'] = 'Some Author';
-      queryParamsInUrl.utm_source = 'newsletter';
-      buildQueryParams();
+  });
 
-      expect(Object.keys(emitted)).not.toContain('amp;value');
-      expect(Object.keys(emitted)).not.toContain('utm_source');
-    });
+  describe('the rendered link', () => {
+    const scopeUUID = 'a2f2d0a1-3f0e-4d3a-9c1b-5f7e8a9b0c1d';
+
+    beforeEach(waitForAsync(() => {
+      // the suite above already instantiated the TestBed, and this block needs a real Router in it
+      TestBed.resetTestingModule();
+      init();
+      queryParamsInUrl.scope = scopeUUID;
+      TestBed.configureTestingModule({
+        imports: [
+          RouterTestingModule.withRoutes([
+            { path: 'browse/author', component: BrowseEntryListElementComponent }
+          ])
+        ],
+        declarations: [BrowseEntryListElementComponent, TruncatePipe],
+        providers: [
+          { provide: 'objectElementProvider', useValue: { mockValue } },
+          {provide: PaginationService, useValue: paginationService},
+          {provide: RouteService, useValue: routeService},
+        ],
+        schemas: [NO_ERRORS_SCHEMA]
+      }).compileComponents();
+    }));
+
+    it('should keep the scope but not a parameter the page never asked for', fakeAsync(() => {
+      const router = TestBed.inject(Router);
+      router.navigate(['/browse/author'], {
+        queryParams: { scope: scopeUUID, 'amp;value': 'Some Author' }
+      });
+      tick();
+
+      fixture = TestBed.createComponent(BrowseEntryListElementComponent);
+      fixture.componentInstance.object = mockValue;
+      fixture.detectChanges();
+
+      const href = fixture.debugElement.query(By.css('a.lead')).nativeElement.getAttribute('href');
+      expect(href).toContain(`scope=${scopeUUID}`);
+      expect(href).not.toContain('amp');
+    }));
   });
 });
