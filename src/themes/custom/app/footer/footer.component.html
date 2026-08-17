@@ -104,10 +104,11 @@
 
         <!-- Right Column - Theme Sign -->
         <div class="col-12 col-md-2 text-center">
-          <p class="footer-sign"><a class="dtq-sign"
-            *ngVar="(themedByCompanyName$ | async)?.payload?.values[0] as companyName"
-            [href]="(themedByUrl$ | async)?.payload?.values[0]"
-            rel="noopener">{{ companyName }}</a><span class="footer-sign__mark">&#169;</span></p>
+          @if ((themedByCompanyName$ | async)?.payload?.values?.[0]; as companyName) {
+            <p class="footer-sign"><a class="dtq-sign"
+              [href]="(themedByUrl$ | async)?.payload?.values?.[0]"
+              rel="noopener">{{ companyName }}</a><span class="footer-sign__mark">&#169;</span></p>
+          }
         </div>
       </div>
     </div>
