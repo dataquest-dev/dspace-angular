@@ -75,6 +75,46 @@
     .btn {
       box-shadow: none;
     }
+
+    // Vendor credit at the right end of the bar. White to match the nav links
+    // beside it — note that #fff on this green measures 2.29:1 and is below the
+    // WCAG AA threshold, same as those links already are. Kept on a single
+    // non-breaking line so the © can never strand itself above the name.
+    .footer-sign {
+      font-size: 1.0625rem;
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: 0.012em;
+      white-space: nowrap;
+      color: #fff;
+
+      // The © is set as a superscript of the company name, the way a trademark
+      // mark rides a wordmark. line-height: 0 keeps it from adding to the line box.
+      &__mark {
+        font-size: 0.68em;
+        font-weight: 400;
+        vertical-align: super;
+        line-height: 0;
+        margin-left: 0.12em;
+      }
+
+      .dtq-sign {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+          text-decoration: underline;
+          text-underline-offset: 0.18em;
+        }
+
+        &:focus-visible {
+          outline: 2px solid #fff;
+          outline-offset: 3px;
+          border-radius: 2px;
+        }
+      }
+    }
   }
 
   .footer-logo {
