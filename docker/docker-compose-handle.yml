@@ -23,9 +23,6 @@
 #     -f docker/docker-compose-rest.yml \
 #     -f docker/docker-compose-handle.yml up -d
 #
-networks:
-  dspacenet:
-
 services:
   # Backend: enable the remote-resolver endpoints and STOP starting the embedded
   # Handle server. This entrypoint is identical to docker-compose-rest.yml with
@@ -33,6 +30,18 @@ services:
   dspace:
     environment:
       handle__P__remote__D__resolver__P__enabled: 'true'
+    # The backend no longer runs a Handle server, so drop the (now unused) Handle
+    # ports it publishes in docker-compose-rest.yml (native 264${INSTANCE} and
+    # HTTP 801${INSTANCE}). `!override` REPLACES the ports list instead of the
+    # default append-merge, which is what lets us remove them; this also avoids a
+    # "port is already allocated" clash with dspace-handle-server. Keep REST + debug.
+    ports: !override
+      - published: 808${INSTANCE}
+        target: 8080
+        host_ip: ${HOST_IP:-127.0.0.1}
+      - published: 800${INSTANCE}
+        target: 8000
+        host_ip: ${HOST_IP:-127.0.0.1}
     entrypoint:
       - /bin/bash
       - '-c'
@@ -55,7 +64,9 @@ services:
       # Backend REST base the resolver plugin talks to.
       DSPACE_HANDLE_ENDPOINT: ${DSPACE_HANDLE_ENDPOINT:-http://dspace:8080/server}
     ports:
-      - published: ${HANDLE_HTTP_PORT:-8000}
+      # HTTP resolver. Default 8010 matches the Handle HTTP port the embedded
+      # server used to expose, and avoids the backend debug port (800${INSTANCE}).
+      - published: ${HANDLE_HTTP_PORT:-8010}
         target: 8000
         host_ip: ${HOST_IP:-127.0.0.1}
       - published: ${HANDLE_NATIVE_PORT:-2641}
