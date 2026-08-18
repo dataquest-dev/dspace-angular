@@ -11,7 +11,6 @@ import { ClarinNavbarTopComponent } from 'src/app/clarin-navbar-top/clarin-navba
 
 import { HeaderComponent as BaseComponent } from '../../../../app/header/header.component';
 import { ImpersonateNavbarComponent } from '../../../../app/shared/impersonate-navbar/impersonate-navbar.component';
-import { environment } from '../../../../environments/environment';
 
 /**
  * Represents the LINDAT/CLARIAH-CZ header: the CLARIN top bar (language flags + AAI/DiscoJuice
@@ -35,12 +34,15 @@ export class HeaderComponent extends BaseComponent {
   private readonly translate = inject(TranslateService);
 
   /**
-   * Returns the language code currently in use. Read synchronously from TranslateService so it can
-   * be used directly in the template href bindings (in v9 LocaleService#getCurrentLanguageCode is
-   * asynchronous). Falls back to the configured fallback language before the app sets a language.
+   * The UI language normalized to the two languages the LINDAT/CLARIAH-CZ portal supports:
+   * 'cs' for Czech, 'en' for anything else. Read synchronously from TranslateService so it can be
+   * used directly in the template href bindings (in v9 LocaleService#getCurrentLanguageCode is
+   * asynchronous). Normalizing keeps the portal links well-formed even when the UI is shown in
+   * another active language (e.g. a browser-negotiated 'de'/'fr'), which would otherwise produce
+   * broken targets such as '/de/sluzby'; it also guarantees a non-empty value before a language is set.
    */
   getLangCode(): string {
-    return this.translate.currentLang || environment.fallbackLanguage;
+    return this.translate.currentLang === 'cs' ? 'cs' : 'en';
   }
 
   /**
