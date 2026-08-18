@@ -75,6 +75,35 @@
     .btn {
       box-shadow: none;
     }
+
+    // Vendor credit at the right end of the bar: the company name on its own,
+    // no wording and no symbol. White to match the nav links beside it. Kept on
+    // a single non-breaking line so it never splits across the narrow column.
+    .footer-sign {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: 0.012em;
+      white-space: nowrap;
+      color: #fff;
+
+      .dtq-sign {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+          text-decoration: underline;
+          text-underline-offset: 0.18em;
+        }
+
+        &:focus-visible {
+          outline: 2px solid #fff;
+          outline-offset: 3px;
+          border-radius: 2px;
+        }
+      }
+    }
   }
 
   .footer-logo {
