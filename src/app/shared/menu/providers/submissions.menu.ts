@@ -12,6 +12,7 @@ import {
   of,
 } from 'rxjs';
 
+import { MYDSPACE_ROUTE } from '../../../my-dspace-page/my-dspace-page.component';
 import { MenuItemType } from '../menu-item-type.model';
 import {
   AbstractMenuProvider,
@@ -32,7 +33,7 @@ export class SubmissionsMenuProvider extends AbstractMenuProvider {
         model: {
           type: MenuItemType.LINK,
           text: 'menu.section.submissions',
-          link: '/mydspace',
+          link: MYDSPACE_ROUTE,
         },
         icon: 'upload',
       },
