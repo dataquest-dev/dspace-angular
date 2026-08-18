@@ -151,7 +151,8 @@ describe('legacyBitstreamURLRedirectGuard', () => {
         }));
         resolver(route, state, bitstreamDataService, hardRedirectService, router).subscribe(() => {
           expect(bitstreamDataService.findByItemHandle).toHaveBeenCalled();
-          expect(hardRedirectService.redirect).toHaveBeenCalledWith(new URL(`/bitstreams/${bitstream.uuid}/download`, environment.ui.baseUrl).href, 301);
+          const nameSpace = environment.ui.nameSpace?.replace(/\/$/, '') || '';
+          expect(hardRedirectService.redirect).toHaveBeenCalledWith(nameSpace + `/bitstreams/${bitstream.uuid}/download`, 301);
         });
       });
     });

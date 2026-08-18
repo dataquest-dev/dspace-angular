@@ -9,6 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { environment } from '../../environments/environment';
 import {
   getBitstreamDownloadRoute,
   PAGE_NOT_FOUND_PATH,
@@ -50,7 +51,13 @@ export const legacyBitstreamURLRedirectGuard: CanActivateFn = (
     getFirstCompletedRemoteData(),
     map((rd: RemoteData<Bitstream>) => {
       if (rd.hasSucceeded && !rd.hasNoContent) {
-        serverHardRedirectService.redirect(new URL(getBitstreamDownloadRoute(rd.payload), serverHardRedirectService.getBaseUrl()).href, 301);
+        // Redirect to a namespace-prefixed, root-relative path so the target stays inside the app
+        // when it is mounted under a sub-path (e.g. '/repository'). Building an absolute URL from
+        // HardRedirectService.getBaseUrl() (environment.ui.baseUrl) dropped that namespace - a
+        // leading-slash path resolves against the origin only - and could even point at the
+        // internal SSR host, landing the user on a broken URL.
+        const nameSpace = environment.ui.nameSpace?.replace(/\/$/, '') || '';
+        serverHardRedirectService.redirect(nameSpace + getBitstreamDownloadRoute(rd.payload), 301);
         return false;
       } else {
         return router.createUrlTree([PAGE_NOT_FOUND_PATH]);
