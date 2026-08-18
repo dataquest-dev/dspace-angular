@@ -1,15 +1,16 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ChangeDetectionStrategy, Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Params, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Store } from '@ngrx/store';
 import { TruncatePipe } from '../../utils/truncate.pipe';
 import { BrowseEntryListElementComponent } from './browse-entry-list-element.component';
 import { BrowseEntry } from '../../../core/shared/browse-entry.model';
 import { PaginationService } from '../../../core/pagination/pagination.service';
 import { RouteService } from '../../../core/services/route.service';
 import { of as observableOf } from 'rxjs';
-import { take } from 'rxjs/operators';
+
 let browseEntryListElementComponent: BrowseEntryListElementComponent;
 let fixture: ComponentFixture<BrowseEntryListElementComponent>;
 
@@ -18,25 +19,21 @@ const mockValue: BrowseEntry = Object.assign(new BrowseEntry(), {
   value: 'De Langhe Kristof'
 });
 
-let paginationService;
-let routeService;
 const pageParam = 'bbm.page';
-let queryParamsInUrl: { [name: string]: string };
 
-function init() {
-  paginationService = jasmine.createSpyObj('paginationService', {
-    getPageParam: pageParam
-  });
-
-  queryParamsInUrl = { [pageParam]: '1' };
-  routeService = jasmine.createSpyObj('routeService', ['getQueryParameterValue']);
-  routeService.getQueryParameterValue.and.callFake(
-    (name: string) => observableOf(queryParamsInUrl[name])
-  );
+@Component({ template: '' })
+class DummyComponent {
 }
+
 describe('BrowseEntryListElementComponent', () => {
   beforeEach(waitForAsync(() => {
-    init();
+    const paginationService = jasmine.createSpyObj('paginationService', {
+      getPageParam: pageParam
+    });
+    const routeService = jasmine.createSpyObj('routeService', {
+      getQueryParameterValue: observableOf(undefined)
+    });
+
     TestBed.configureTestingModule({
       declarations: [BrowseEntryListElementComponent, TruncatePipe],
       providers: [
@@ -67,74 +64,86 @@ describe('BrowseEntryListElementComponent', () => {
       expect(browseEntryLink.nativeElement.textContent.trim()).toBe(mockValue.value);
     });
   });
+});
 
-  describe('queryParams', () => {
-    let emitted;
+describe('BrowseEntryListElementComponent link', () => {
+  // The real RouteService is used here on purpose: every parameter below reaches the component
+  // through the router, the way it does in the browser, so the assertions are on what the URL
+  // actually produces rather than on what a stub was told to answer.
+  const scopeUUID = 'a2f2d0a1-3f0e-4d3a-9c1b-5f7e8a9b0c1d';
+  let router: Router;
 
-    const buildQueryParams = () => {
-      browseEntryListElementComponent.object = mockValue;
-      fixture.detectChanges();
-      browseEntryListElementComponent.queryParams$.pipe(take(1)).subscribe((p) => emitted = p);
-    };
+  const hrefFor = (queryParams: Params): string => {
+    void router.navigate(['/browse/author'], { queryParams });
+    tick();
 
-    it('should keep the scope of the community or collection being browsed', () => {
-      queryParamsInUrl.scope = '0eb1f4d0-fd7c-4c2c-b0d9-32ee18f5e1c1';
-      buildQueryParams();
+    fixture = TestBed.createComponent(BrowseEntryListElementComponent);
+    fixture.componentInstance.object = mockValue;
+    fixture.detectChanges();
 
-      expect(emitted.scope).toBe('0eb1f4d0-fd7c-4c2c-b0d9-32ee18f5e1c1');
+    return fixture.debugElement.query(By.css('a.lead')).nativeElement.getAttribute('href');
+  };
+
+  beforeEach(waitForAsync(() => {
+    const paginationService = jasmine.createSpyObj('paginationService', {
+      getPageParam: pageParam
     });
 
-    it('should keep the page size and sort chosen by the user', () => {
-      queryParamsInUrl['bbm.rpp'] = '40';
-      queryParamsInUrl['bbm.sf'] = 'title';
-      queryParamsInUrl['bbm.sd'] = 'DESC';
-      buildQueryParams();
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule.withRoutes([
+          { path: 'browse/author', component: DummyComponent }
+        ])
+      ],
+      declarations: [BrowseEntryListElementComponent, DummyComponent, TruncatePipe],
+      providers: [
+        { provide: 'objectElementProvider', useValue: { mockValue } },
+        {provide: PaginationService, useValue: paginationService},
+        {provide: Store, useValue: jasmine.createSpyObj('store', ['dispatch'])},
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
+  }));
 
-      expect(emitted['bbm.rpp']).toBe('40');
-      expect(emitted['bbm.sf']).toBe('title');
-      expect(emitted['bbm.sd']).toBe('DESC');
+  beforeEach(() => {
+    router = TestBed.inject(Router);
+  });
+
+  it('should read its parameters through the real RouteService', () => {
+    expect(TestBed.inject(RouteService) instanceof RouteService).toBeTruthy();
+  });
+
+  it('should carry over the scope and the pagination settings', fakeAsync(() => {
+    const href = hrefFor({
+      scope: scopeUUID,
+      'bbm.rpp': '40',
+      'bbm.sf': 'title',
+      'bbm.sd': 'DESC'
     });
 
-  });
+    expect(href).toContain(`scope=${scopeUUID}`);
+    expect(href).toContain('bbm.rpp=40');
+    expect(href).toContain('bbm.sf=title');
+    expect(href).toContain('bbm.sd=DESC');
+  }));
 
-  describe('the rendered link', () => {
-    const scopeUUID = 'a2f2d0a1-3f0e-4d3a-9c1b-5f7e8a9b0c1d';
+  it('should replace the current page with the page to return to', fakeAsync(() => {
+    const href = hrefFor({ 'bbm.page': '3' });
 
-    beforeEach(waitForAsync(() => {
-      // the suite above already instantiated the TestBed, and this block needs a real Router in it
-      TestBed.resetTestingModule();
-      init();
-      queryParamsInUrl.scope = scopeUUID;
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule.withRoutes([
-            { path: 'browse/author', component: BrowseEntryListElementComponent }
-          ])
-        ],
-        declarations: [BrowseEntryListElementComponent, TruncatePipe],
-        providers: [
-          { provide: 'objectElementProvider', useValue: { mockValue } },
-          {provide: PaginationService, useValue: paginationService},
-          {provide: RouteService, useValue: routeService},
-        ],
-        schemas: [NO_ERRORS_SCHEMA]
-      }).compileComponents();
-    }));
+    expect(href).toContain('bbm.return=3');
+    expect(href).not.toContain('bbm.page=');
+  }));
 
-    it('should keep the scope but not a parameter the page never asked for', fakeAsync(() => {
-      const router = TestBed.inject(Router);
-      router.navigate(['/browse/author'], {
-        queryParams: { scope: scopeUUID, 'amp;value': 'Some Author' }
-      });
-      tick();
+  it('should drop a parameter the browse page never asked for', fakeAsync(() => {
+    const href = hrefFor({ scope: scopeUUID, 'amp;value': 'Some Author' });
 
-      fixture = TestBed.createComponent(BrowseEntryListElementComponent);
-      fixture.componentInstance.object = mockValue;
-      fixture.detectChanges();
+    expect(href).toContain(`scope=${scopeUUID}`);
+    expect(href).not.toContain('amp');
+  }));
 
-      const href = fixture.debugElement.query(By.css('a.lead')).nativeElement.getAttribute('href');
-      expect(href).toContain(`scope=${scopeUUID}`);
-      expect(href).not.toContain('amp');
-    }));
-  });
+  it('should not pass on a scope that is present but empty', fakeAsync(() => {
+    const href = hrefFor({ scope: '' });
+
+    expect(href).not.toContain('scope=');
+  }));
 });
