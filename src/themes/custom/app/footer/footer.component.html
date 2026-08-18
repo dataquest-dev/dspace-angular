@@ -105,9 +105,13 @@
         <!-- Right Column - Theme Sign -->
         <div class="col-12 col-md-2 text-center">
           @if ((themedByCompanyName$ | async)?.payload?.values?.[0]; as companyName) {
-            <p class="footer-sign"><a class="dtq-sign"
-              [href]="(themedByUrl$ | async)?.payload?.values?.[0]"
-              rel="noopener">{{ companyName }}</a></p>
+            <p class="footer-sign">
+              @if ((themedByUrl$ | async)?.payload?.values?.[0]; as companyUrl) {
+                <a class="dtq-sign" [href]="companyUrl" rel="noopener">{{ companyName }}</a>
+              } @else {
+                {{ companyName }}
+              }
+            </p>
           }
         </div>
       </div>

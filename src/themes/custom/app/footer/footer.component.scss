@@ -80,6 +80,10 @@
     // no wording and no symbol. White to match the nav links beside it. Kept on
     // a single non-breaking line so it never splits across the narrow column.
     .footer-sign {
+      // Explicit even though `footer p { margin: 0 }` above already covers it —
+      // this keeps the credit independent of that rule and of Bootstrap Reboot's
+      // `p { margin-bottom: 1rem }`, either of which could change the bar height.
+      margin: 0;
       font-size: 1.0625rem;
       font-weight: 600;
       line-height: 1.2;
