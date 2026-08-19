@@ -9,6 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { environment } from '../../environments/environment';
 import {
   getBitstreamDownloadRoute,
   PAGE_NOT_FOUND_PATH,
@@ -50,7 +51,10 @@ export const legacyBitstreamURLRedirectGuard: CanActivateFn = (
     getFirstCompletedRemoteData(),
     map((rd: RemoteData<Bitstream>) => {
       if (rd.hasSucceeded && !rd.hasNoContent) {
-        serverHardRedirectService.redirect(new URL(getBitstreamDownloadRoute(rd.payload), serverHardRedirectService.getBaseUrl()).href, 301);
+        // Prefix the UI namespace and redirect to a root-relative path so the target keeps the
+        // '/repository' base path when the app is mounted under a sub-path.
+        const nameSpace = environment.ui.nameSpace?.replace(/\/$/, '') || '';
+        serverHardRedirectService.redirect(nameSpace + getBitstreamDownloadRoute(rd.payload), 301);
         return false;
       } else {
         return router.createUrlTree([PAGE_NOT_FOUND_PATH]);
