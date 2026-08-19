@@ -1,13 +1,18 @@
 import { AsyncPipe } from '@angular/common';
 import {
   Component,
+  inject,
   OnInit,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { ThemedSearchNavbarComponent } from '../search-navbar/themed-search-navbar.component';
 import { ThemedAuthNavMenuComponent } from '../shared/auth-nav-menu/themed-auth-nav-menu.component';
 import {
@@ -50,6 +55,8 @@ export class HeaderComponent implements OnInit {
   menuID = MenuID.PUBLIC;
   maxMobileWidth = WidthCategory.SM;
 
+  private readonly translate = inject(TranslateService);
+
   constructor(
     protected menuService: MenuService,
     protected windowService: HostWindowService,
@@ -62,5 +69,29 @@ export class HeaderComponent implements OnInit {
 
   public toggleNavbar(): void {
     this.menuService.toggleMenu(this.menuID);
+  }
+
+  // Current UI language, read synchronously for the themed LINDAT portal links (in v9 LocaleService is async).
+  getLangCode(): string {
+    return this.translate.currentLang || environment.fallbackLanguage;
+  }
+
+  // Locale segment for the portal links: 'cs' in Czech, '' otherwise.
+  getLangCodeIfCzech(): string {
+    return this.getLangCode() === 'cs' ? 'cs' : '';
+  }
+
+  // Czech portal slug for an English slug; English keeps the original.
+  translateSlug(slug: string): string {
+    if (this.getLangCode() === 'en') {
+      return slug;
+    }
+    const translations = {
+      'partners': this.getLangCodeIfCzech() + '/' + 'partneri',
+      'integration': this.getLangCodeIfCzech() + '/' + 'integrace',
+      'partnership': this.getLangCodeIfCzech() + '/' + 'partnerstvi',
+      'services': 'sluzby',
+    };
+    return translations[slug] || '';
   }
 }
