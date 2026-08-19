@@ -92,7 +92,7 @@
     </div>
     @if ((themedByCompanyName$ | async)?.payload?.values?.[0]; as themedByCompany) {
       <div class="footer-sign">
-        <a class="text-white text-decoration-underline"
+        <a class="text-white"
           [href]="((themedByUrl$ | async)?.payload?.values)?.[0] || '#'" target="_blank" rel="noopener noreferrer" role="link">{{ themedByCompany }}</a>
       </div>
     }

@@ -22,18 +22,13 @@
     }
 
     .bottom-footer {
-      // Anchor for the vendor credit below. No COAR block renders on this
-      // instance, so this does not change .notify-enabled's positioning.
-      position: relative;
-
-      // Vendor credit sits on its own at the right end of the bar, clear of the
-      // centred copyright block, the same way .notify-enabled pins itself.
+      // Vendor credit stands on its own to the right of the centred copyright
+      // block, as it does on the ZCU and VSB-TUO instances. A plain flex item
+      // with a wide gap rather than absolute positioning, so it never overlaps
+      // the .notify-enabled block that pins itself bottom-right.
       .footer-sign {
         @media screen and (min-width: map-get($grid-breakpoints, md)) {
-          position: absolute;
-          right: 0;
-          top: 50%;
-          transform: translateY(-50%);
+          margin-left: 16rem;
         }
       }
 
