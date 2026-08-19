@@ -57,11 +57,6 @@
         {{ 'footer.copyright' | translate:{year: dateObj | date:'y'} }}
         <a class="text-white"
         href="https://www.lyrasis.org/" role="link" tabindex="0">{{ 'footer.link.lyrasis' | translate}}</a>
-        @if ((themedByCompanyName$ | async)?.payload?.values?.[0]; as themedByCompany) {
-          <span class="ms-2">&middot;&nbsp;<a class="text-white text-decoration-underline"
-            [href]="((themedByUrl$ | async)?.payload?.values)?.[0] || '#'" target="_blank" rel="noopener noreferrer" role="link">{{ themedByCompany }}</a>
-          </span>
-        }
       </p>
       <ul class="footer-info list-unstyled d-flex flex-wrap justify-content-center mb-0">
         @if (showCookieSettings) {
@@ -95,6 +90,12 @@
         }
       </ul>
     </div>
+    @if ((themedByCompanyName$ | async)?.payload?.values?.[0]; as themedByCompany) {
+      <div class="footer-sign">
+        <a class="text-white text-decoration-underline"
+          [href]="((themedByUrl$ | async)?.payload?.values)?.[0] || '#'" target="_blank" rel="noopener noreferrer" role="link">{{ themedByCompany }}</a>
+      </div>
+    }
     @if (coarLdnEnabled$ | async) {
       <div class="notify-enabled text-white align-self-end">
         <a class="coar-notify-support-route" routerLink="info/coar-notify-support" role="link" tabindex="0">
