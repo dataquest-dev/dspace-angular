@@ -31,6 +31,7 @@ import { NotificationsMenuProvider } from './shared/menu/providers/notifications
 import { ProcessesMenuProvider } from './shared/menu/providers/processes.menu';
 import { RegistriesMenuProvider } from './shared/menu/providers/registries.menu';
 import { StatisticsMenuProvider } from './shared/menu/providers/statistics.menu';
+import { SubmissionsMenuProvider } from './shared/menu/providers/submissions.menu';
 import { SystemWideAlertMenuProvider } from './shared/menu/providers/system-wide-alert.menu';
 import { WithdrawnReinstateItemMenuProvider } from './shared/menu/providers/withdrawn-reinstate-item.menu';
 import { WorkflowMenuProvider } from './shared/menu/providers/workflow.menu';
@@ -60,6 +61,8 @@ export const MENUS = buildMenuStructure({
   [MenuID.ADMIN]: [
     NewMenuProvider,
     EditMenuProvider,
+    // CLARIN/LINDAT: "Submissions" link to MyDSpace
+    SubmissionsMenuProvider,
     ImportMenuProvider,
     ExportMenuProvider,
     NotificationsMenuProvider,
