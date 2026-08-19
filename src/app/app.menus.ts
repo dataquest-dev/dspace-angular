@@ -61,7 +61,7 @@ export const MENUS = buildMenuStructure({
   [MenuID.ADMIN]: [
     NewMenuProvider,
     EditMenuProvider,
-    // CLARIN/LINDAT: "Submissions" link to MyDSpace (ported from the v7 fork)
+    // CLARIN/LINDAT: "Submissions" link to MyDSpace
     SubmissionsMenuProvider,
     ImportMenuProvider,
     ExportMenuProvider,

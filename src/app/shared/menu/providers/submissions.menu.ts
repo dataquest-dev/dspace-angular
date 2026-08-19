@@ -20,8 +20,8 @@ import {
 } from '../menu-provider.model';
 
 /**
- * CLARIN/LINDAT: "Submissions" entry in the admin sidebar (ported from the v7 fork's menu.resolver.ts).
- * Links to the user's MyDSpace page and is always visible, matching the original fork behaviour.
+ * CLARIN/LINDAT: "Submissions" entry in the admin sidebar.
+ * Links to the user's MyDSpace page and is always visible.
  */
 @Injectable()
 export class SubmissionsMenuProvider extends AbstractMenuProvider {
