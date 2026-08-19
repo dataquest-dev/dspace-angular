@@ -23,9 +23,9 @@
 
     .bottom-footer {
       // Vendor credit stands on its own to the right of the centred copyright
-      // block, as it does on the ZCU and VSB-TUO instances. A plain flex item
-      // with a wide gap rather than absolute positioning, so it never overlaps
-      // the .notify-enabled block that pins itself bottom-right.
+      // block. A plain flex item with a wide gap rather than absolute
+      // positioning, so it never overlaps the .notify-enabled block that pins
+      // itself bottom-right.
       .footer-sign {
         @media screen and (min-width: map-get($grid-breakpoints, md)) {
           margin-left: 16rem;
