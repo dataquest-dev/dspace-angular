@@ -33,30 +33,17 @@ export class HeaderComponent extends BaseComponent {
 
   private readonly translate = inject(TranslateService);
 
-  /**
-   * The UI language normalized to the two languages the LINDAT/CLARIAH-CZ portal supports:
-   * 'cs' for Czech, 'en' for anything else. Read synchronously from TranslateService so it can be
-   * used directly in the template href bindings (in v9 LocaleService#getCurrentLanguageCode is
-   * asynchronous). Normalizing keeps the portal links well-formed even when the UI is shown in
-   * another active language (e.g. a browser-negotiated 'de'/'fr'), which would otherwise produce
-   * broken targets such as '/de/sluzby'; it also guarantees a non-empty value before a language is set.
-   */
+  // UI language for the LINDAT portal links, normalized to the two it supports: 'cs' for Czech, 'en' otherwise.
   getLangCode(): string {
     return this.translate.currentLang === 'cs' ? 'cs' : 'en';
   }
 
-  /**
-   * Returns the current language code only if it's Czech ('cs'), otherwise an empty string.
-   * Used to prefix the LINDAT portal links with the locale segment ('' for English, 'cs' for Czech).
-   */
+  // Locale segment for portal links: 'cs' in Czech, '' in English.
   getLangCodeIfCzech(): string {
     return this.getLangCode() === 'cs' ? 'cs' : '';
   }
 
-  /**
-   * Translates the English portal slug to its Czech equivalent when the current language is Czech.
-   * Returns the original slug in English, or an empty string when no translation is known.
-   */
+  // Czech portal slug for an English slug; English keeps the original.
   translateSlug(slug: string): string {
     if (this.getLangCode() === 'en') {
       return slug;
