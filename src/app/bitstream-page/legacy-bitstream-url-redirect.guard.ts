@@ -51,11 +51,8 @@ export const legacyBitstreamURLRedirectGuard: CanActivateFn = (
     getFirstCompletedRemoteData(),
     map((rd: RemoteData<Bitstream>) => {
       if (rd.hasSucceeded && !rd.hasNoContent) {
-        // Redirect to a namespace-prefixed, root-relative path so the target stays inside the app
-        // when it is mounted under a sub-path (e.g. '/repository'). Building an absolute URL from
-        // HardRedirectService.getBaseUrl() (environment.ui.baseUrl) dropped that namespace - a
-        // leading-slash path resolves against the origin only - and could even point at the
-        // internal SSR host, landing the user on a broken URL.
+        // Prefix the UI namespace and redirect to a root-relative path so the target keeps the
+        // '/repository' base path when the app is mounted under a sub-path.
         const nameSpace = environment.ui.nameSpace?.replace(/\/$/, '') || '';
         serverHardRedirectService.redirect(nameSpace + getBitstreamDownloadRoute(rd.payload), 301);
         return false;
