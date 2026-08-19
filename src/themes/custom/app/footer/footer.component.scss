@@ -84,10 +84,9 @@
       // this keeps the credit independent of that rule and of Bootstrap Reboot's
       // `p { margin-bottom: 1rem }`, either of which could change the bar height.
       margin: 0;
-      font-size: 1.0625rem;
-      font-weight: 600;
-      line-height: 1.2;
-      letter-spacing: 0.012em;
+      // Deliberately no font-size / font-weight / letter-spacing here: the
+      // credit must keep rendering exactly as it does in production (16px,
+      // weight 400). This issue only removes the wording, not the look.
       white-space: nowrap;
       color: #fff;
 
