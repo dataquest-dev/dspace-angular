@@ -75,6 +75,38 @@
     .btn {
       box-shadow: none;
     }
+
+    // Vendor credit at the right end of the bar: the company name on its own,
+    // no wording and no symbol. White to match the nav links beside it. Kept on
+    // a single non-breaking line so it never splits across the narrow column.
+    .footer-sign {
+      // Explicit even though `footer p { margin: 0 }` above already covers it —
+      // this keeps the credit independent of that rule and of Bootstrap Reboot's
+      // `p { margin-bottom: 1rem }`, either of which could change the bar height.
+      margin: 0;
+      // Deliberately no font-size / font-weight / letter-spacing here: the
+      // credit must keep rendering exactly as it does in production (16px,
+      // weight 400). This issue only removes the wording, not the look.
+      white-space: nowrap;
+      color: #fff;
+
+      .dtq-sign {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+          text-decoration: underline;
+          text-underline-offset: 0.18em;
+        }
+
+        &:focus-visible {
+          outline: 2px solid #fff;
+          outline-offset: 3px;
+          border-radius: 2px;
+        }
+      }
+    }
   }
 
   .footer-logo {
