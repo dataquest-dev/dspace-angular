@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { StaticPageComponent } from './static-page.component';
 import { HtmlContentService } from '../shared/html-content.service';
@@ -9,12 +11,14 @@ import { of } from 'rxjs';
 import { APP_CONFIG } from '../../config/app-config.interface';
 import { environment } from '../../environments/environment';
 import { ClarinSafeHtmlPipe } from '../shared/utils/clarin-safehtml.pipe';
+import { ServerResponseService } from '../core/services/server-response.service';
 
 describe('StaticPageComponent', () => {
   let component: StaticPageComponent;
   let fixture: ComponentFixture<StaticPageComponent>;
 
-  let htmlContentService: HtmlContentService;
+  let htmlContentService: jasmine.SpyObj<HtmlContentService>;
+  let responseService: jasmine.SpyObj<ServerResponseService>;
   let appConfig: any;
 
   const htmlContent = '<div id="idShouldNotBeRemoved">TEST MESSAGE</div>';
@@ -25,6 +29,8 @@ describe('StaticPageComponent', () => {
       getHmtlContentByPathAndLocale: Promise.resolve(htmlContent)
     });
 
+    responseService = jasmine.createSpyObj('responseService', ['setNotFound']);
+
     appConfig = Object.assign(environment, {
       ui: {
         namespace: 'testNamespace'
@@ -34,13 +40,16 @@ describe('StaticPageComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ StaticPageComponent, ClarinSafeHtmlPipe ],
       imports: [
+        CommonModule,
         TranslateModule.forRoot()
       ],
       providers: [
         { provide: HtmlContentService, useValue: htmlContentService },
         { provide: Router, useValue: new RouterMock() },
+        { provide: ServerResponseService, useValue: responseService },
         { provide: APP_CONFIG, useValue: appConfig }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
 
   });
@@ -58,5 +67,14 @@ describe('StaticPageComponent', () => {
   it('should load html file content', async () => {
     await component.ngOnInit();
     expect(component.htmlContent.value).toBe('<div id="idShouldNotBeRemoved">TEST MESSAGE</div>');
+    expect(component.contentState).toBe('found');
+  });
+
+  // When the file is missing, set a 404 status for SSR and switch to the not-found state
+  it('should set 404 status when content is not found', async () => {
+    htmlContentService.getHmtlContentByPathAndLocale.and.returnValue(Promise.resolve(undefined));
+    await component.ngOnInit();
+    expect(responseService.setNotFound).toHaveBeenCalled();
+    expect(component.contentState).toBe('not-found');
   });
 });
