@@ -17,7 +17,7 @@ describe('StaticPageComponent', () => {
   let component: StaticPageComponent;
   let fixture: ComponentFixture<StaticPageComponent>;
 
-  let htmlContentService: any;
+  let htmlContentService: jasmine.SpyObj<HtmlContentService>;
   let responseService: jasmine.SpyObj<ServerResponseService>;
   let appConfig: any;
 
