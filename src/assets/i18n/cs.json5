@@ -7204,6 +7204,15 @@
   // "sorting.lastModified.DESC" : "Last modified Descending"
   "sorting.lastModified.DESC" : "Poslední změna sestupně",
 
+  // "static-page.404.help" : "The static page you requested does not exist. It may have been moved or deleted. You can use the button below to get back to the home page."
+  "static-page.404.help" : "Požadovaná statická stránka neexistuje. Mohla být přesunuta nebo smazána. Pomocí níže uvedeného tlačítka se můžete vrátit na domovskou stránku.",
+
+  // "static-page.404.link.home-page" : "Take me to the home page"
+  "static-page.404.link.home-page" : "Návrat na domovskou stránku",
+
+  // "static-page.404.page-not-found" : "page not found"
+  "static-page.404.page-not-found" : "stránka nebyla nalezena",
+
   // "statistics.title" : "Statistics"
   "statistics.title" : "Statistiky",
 
