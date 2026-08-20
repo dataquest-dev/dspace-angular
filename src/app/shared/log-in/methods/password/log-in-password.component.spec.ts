@@ -158,6 +158,67 @@ describe('LogInPasswordComponent', () => {
     });
   });
 
+  // On the standalone login page (isStandalonePage === true) the redirect target comes from the
+  // `redirectUrl` query param that the DiscoJuice local-auth flow (aai.js) appends as the absolute
+  // page URL. Reduce it to an app-relative path so the user returns to where they logged in from.
+  describe('standalone login redirect (redirectUrl query param)', () => {
+    let authService: AuthServiceStub;
+    let setRedirectUrlSpy: jasmine.Spy;
+    let setRedirectUrlIfNotSetSpy: jasmine.Spy;
+
+    const setQueryParams = (queryParams: Record<string, string>) => {
+      (component as any).route = { snapshot: { queryParams } };
+    };
+
+    beforeEach(() => {
+      authService = TestBed.inject(AuthService) as unknown as AuthServiceStub;
+      setRedirectUrlSpy = spyOn(authService, 'setRedirectUrl').and.callThrough();
+      setRedirectUrlIfNotSetSpy = spyOn(authService, 'setRedirectUrlIfNotSet').and.callThrough();
+      // Avoid scheduling the real DiscoJuice popup timer during ngOnInit.
+      spyOn(component as any, 'popUpDiscoJuiceLogin');
+
+      fixture.detectChanges();
+      component.form.controls.email.setValue('user');
+      component.form.controls.password.setValue('password');
+    });
+
+    it('redirects back to the redirectUrl page, reduced to an app-relative path', () => {
+      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/search' });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/search');
+      expect(setRedirectUrlIfNotSetSpy).not.toHaveBeenCalled();
+    });
+
+    it('keeps the query string of the originating page', () => {
+      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/search?query=test' });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/search?query=test');
+    });
+
+    it('prefers a nested redirectUrl so the login page is not the redirect target', () => {
+      setQueryParams({
+        redirectUrl: 'http://dev-6.pc:8603/repository/login?redirectUrl=http://dev-6.pc:8603/repository/items/1',
+      });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/items/1');
+    });
+
+    it('falls back to setRedirectUrlIfNotSet("/") when no redirectUrl query param is present', () => {
+      setQueryParams({});
+
+      component.submit();
+
+      expect(setRedirectUrlIfNotSetSpy).toHaveBeenCalledWith('/');
+      expect(setRedirectUrlSpy).not.toHaveBeenCalled();
+    });
+  });
+
 });
 
 /**

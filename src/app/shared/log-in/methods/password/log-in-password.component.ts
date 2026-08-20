@@ -17,7 +17,10 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import {
+  ActivatedRoute,
+  RouterLink,
+} from '@angular/router';
 import {
   select,
   Store,
@@ -145,6 +148,7 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
     @Inject('isStandalonePage') public isStandalonePage: boolean,
     private authService: AuthService,
     private hardRedirectService: HardRedirectService,
+    private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder,
     protected store: Store<CoreState>,
     protected authorizationService: AuthorizationDataService,
@@ -239,7 +243,15 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
     if (!this.isStandalonePage) {
       this.authService.setRedirectUrl(this.hardRedirectService.getCurrentRoute());
     } else {
-      this.authService.setRedirectUrlIfNotSet('/');
+      // On the standalone login page, honor the `redirectUrl` query param set by the DiscoJuice
+      // local-auth flow (src/aai/aai.js) so the user returns to the page they logged in from
+      // (e.g. the search page) instead of being sent to the home page.
+      const redirectUrl = this.getRedirectUrlFromQueryParams();
+      if (isNotEmpty(redirectUrl)) {
+        this.authService.setRedirectUrl(redirectUrl);
+      } else {
+        this.authService.setRedirectUrlIfNotSet('/');
+      }
     }
 
     // dispatch AuthenticationAction
@@ -247,6 +259,44 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
 
     // clear form
     this.form.reset();
+  }
+
+  /**
+   * Resolve the post-login redirect target from the `redirectUrl` query param on the standalone
+   * login page.
+   *
+   * The DiscoJuice local-auth flow (src/aai/aai.js) sends the user to
+   * `/login?redirectUrl=<absolute page URL>` so that after signing in they return to the page the
+   * login was initiated from. The value is lost from the auth store while passing through
+   * DiscoJuice, so it has to be read back from the URL here.
+   *
+   * @returns an app-relative path (same format as {@link HardRedirectService#getCurrentRoute}), or
+   *          `null` when there is no usable redirect target.
+   */
+  private getRedirectUrlFromQueryParams(): string {
+    const rawRedirectUrl: string = this.route.snapshot.queryParams?.redirectUrl;
+    if (isEmpty(rawRedirectUrl)) {
+      return null;
+    }
+
+    // When the value itself carries a nested `redirectUrl` (login initiated while already on the
+    // login page), prefer that inner target so we don't redirect back to the login page.
+    const nestedRedirectUrl = new URLSearchParams(rawRedirectUrl.split('?')[1] ?? '').get('redirectUrl');
+    const redirectUrl = isNotEmpty(nestedRedirectUrl) ? nestedRedirectUrl : rawRedirectUrl;
+
+    return this.toRelativePath(redirectUrl);
+  }
+
+  /**
+   * Reduce a possibly-absolute URL to an app-relative path (`/path?query#hash`) by dropping the
+   * origin. Values that are already relative are returned unchanged.
+   */
+  private toRelativePath(url: string): string {
+    if (/^https?:\/\//i.test(url)) {
+      const parsed = new URL(url);
+      return parsed.pathname + parsed.search + parsed.hash;
+    }
+    return url;
   }
 
   /**
