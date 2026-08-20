@@ -49,6 +49,18 @@ export interface SSRConfig extends Config {
   excludePathPatterns:  SsrExcludePatterns[];
 
   /**
+   * Extra hostnames that are allowed to be server-side rendered, in addition to the hostname of
+   * {@link UIServerConfig#baseUrl} (which is always allowed).
+   *
+   * Angular's SSR engine only renders a request when its `Host` header matches one of the allowed
+   * hosts; any other host silently falls back to client-side rendering (which always answers 200,
+   * so "not found" pages can never return a 404). When the app is reached through a reverse proxy
+   * on a hostname that differs from `ui.baseUrl` (e.g. a shared test box), list that hostname here
+   * so SSR keeps working. Compared by hostname only, the port is ignored. Defaults to none.
+   */
+  allowedHosts?: string[];
+
+  /**
    * Whether to enable rendering of search component on SSR
    */
   enableSearchComponent: boolean;

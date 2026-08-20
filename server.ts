@@ -247,9 +247,16 @@ function ngApp(req, res, next) {
 function serverSideRender(req, res, next, sendToUser: boolean = true) {
   const { protocol, originalUrl, baseUrl, headers } = req;
   // "allowedHosts" specifies which hosts are allowed to be rendered via SSR.
-  // By default, this is set to the host of the UI's baseUrl.
+  // The host of the UI's baseUrl is always allowed; any extra hosts configured via
+  // ssr.allowedHosts are added so SSR keeps working when the app is reached through a
+  // reverse proxy on a hostname that differs from baseUrl (otherwise those requests
+  // silently fall back to CSR, which always answers 200 and can never return a 404).
+  const allowedHosts = [ ...new Set([
+    new URL(environment.ui.baseUrl).hostname,
+    ...(environment.ssr.allowedHosts ?? []),
+  ]) ];
   const commonEngine = new CommonEngine({ enablePerformanceProfiler: environment.ssr.enablePerformanceProfiler,
-                                          allowedHosts: [ new URL(environment.ui.baseUrl).hostname ],
+                                          allowedHosts,
                                         });
   // Render the page via SSR (server side rendering)
   commonEngine

@@ -44,6 +44,15 @@ ssr:
     - pattern: "^/access-control/"
     - pattern: "^/health$"
 
+  # Extra hostnames allowed to be server-side rendered, on top of the hostname of ui.baseUrl
+  # (which is always allowed). Angular's SSR only renders when the request "Host" header matches
+  # an allowed host; any other host silently falls back to CSR (which always answers 200, so a
+  # "not found" page can never return a 404). When the app is served behind a reverse proxy on a
+  # hostname different from ui.baseUrl, list that hostname here. Compared by hostname only (the
+  # port is ignored). Defaults to none.
+  # allowedHosts:
+  #   - my-repository.example.com
+
   # Whether to enable rendering of Search component on SSR.
   # If set to true the component will be included in the HTML returned from the server side rendering.
   # If set to false the component will not be included in the HTML returned from the server side rendering.
