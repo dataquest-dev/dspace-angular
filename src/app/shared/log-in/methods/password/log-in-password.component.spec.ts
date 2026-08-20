@@ -158,9 +158,7 @@ describe('LogInPasswordComponent', () => {
     });
   });
 
-  // On the standalone login page (isStandalonePage === true) the redirect target comes from the
-  // `redirectUrl` query param that the DiscoJuice local-auth flow (aai.js) appends as the absolute
-  // page URL. Reduce it to an app-relative path so the user returns to where they logged in from.
+  // Standalone login reads the redirect target from the `redirectUrl` query param (set by aai.js).
   describe('standalone login redirect (redirectUrl query param)', () => {
     let authService: AuthServiceStub;
     let setRedirectUrlSpy: jasmine.Spy;
