@@ -44,6 +44,7 @@ import { PROCESS_MODULE_PATH } from './process-page/process-page-routing.paths';
 import { viewTrackerResolver } from './statistics/angulartics/dspace/view-tracker.resolver';
 import { provideSubmissionState } from './submission/provide-submission-state';
 import { SUGGESTION_MODULE_PATH } from './suggestions-page/suggestions-page-routing-paths';
+import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
 
 export const APP_ROUTES: Route[] = [
   { path: INTERNAL_SERVER_ERROR, component: ThemedPageInternalServerErrorComponent, data: { title: '500.page-internal-server-error' } },
@@ -288,6 +289,11 @@ export const APP_ROUTES: Route[] = [
         loadChildren: () => import('./external-login-email-confirmation-page/external-login-email-confirmation-page-routes')
           .then((m) => m.ROUTES),
         canActivate: [notAuthenticatedGuard],
+      },
+      {
+        path: STATIC_PAGE_PATH,
+        loadChildren: () => import('./static-page/static-page-routes')
+          .then((m) => m.ROUTES),
       },
       { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent, data: { title: '404.page-not-found' } },
     ],

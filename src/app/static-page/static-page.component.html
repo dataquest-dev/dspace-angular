@@ -1,0 +1,28 @@
+@if (contentState === 'loading') {
+  <div class="container text-center my-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">{{ 'loading.default' | translate }}</span>
+    </div>
+  </div>
+}
+
+<!-- Show static page content when found -->
+@if (contentState === 'found') {
+  <div class="container">
+    <div [innerHTML]="htmlContent | dsSafeHtml"></div>
+  </div>
+}
+
+<!-- Show 404 error when content not found -->
+@if (contentState === 'not-found') {
+  <div class="container page-not-found">
+    <h1>404</h1>
+    <h2><small>{{ 'static-page.404.page-not-found' | translate }}</small></h2>
+    <br/>
+    <p>{{ 'static-page.404.help' | translate }}</p>
+    <br/>
+    <p class="text-center">
+      <a routerLink="/home" class="btn btn-primary">{{ 'static-page.404.link.home-page' | translate }}</a>
+    </p>
+  </div>
+}

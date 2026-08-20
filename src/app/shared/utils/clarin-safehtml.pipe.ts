@@ -1,0 +1,23 @@
+import {
+  Pipe,
+  PipeTransform,
+} from '@angular/core';
+import {
+  DomSanitizer,
+  SafeHtml,
+} from '@angular/platform-browser';
+
+/**
+ * Pipe to keep html tags (e.g. `id`) when rendering a string via `[innerHTML]`.
+ */
+@Pipe({
+  name: 'dsSafeHtml',
+  standalone: true,
+})
+export class ClarinSafeHtmlPipe implements PipeTransform {
+  constructor(private sanitized: DomSanitizer) {}
+
+  transform(htmlString: string): SafeHtml {
+    return this.sanitized.bypassSecurityTrustHtml(htmlString ?? '');
+  }
+}
