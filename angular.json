@@ -41,7 +41,11 @@
             "aot": true,
             "assets": [
               "src/assets",
-              "src/static-files",
+              {
+                "glob": "VERSION_D.html",
+                "input": "src/static-files",
+                "output": "static-files"
+              },
               "src/robots.txt"
             ],
             "styles": [
