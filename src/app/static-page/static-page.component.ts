@@ -23,9 +23,9 @@ import { ClarinSafeHtmlPipe } from '../shared/utils/clarin-safehtml.pipe';
   templateUrl: './static-page.component.html',
   styleUrls: ['./static-page.component.scss'],
   imports: [
+    ClarinSafeHtmlPipe,
     RouterLink,
     TranslateModule,
-    ClarinSafeHtmlPipe,
   ],
 })
 export class StaticPageComponent implements OnInit {

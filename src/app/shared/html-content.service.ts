@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import {
   firstValueFrom,
-  of as observableOf,
+  of,
 } from 'rxjs';
 import {
   catchError,
@@ -47,7 +47,7 @@ export class HtmlContentService {
   private fetch(url: string) {
     return this.http.get(url, { responseType: 'text' }).pipe(
       map((body): HtmlContentResult => ({ found: true, body })),
-      catchError(() => observableOf<HtmlContentResult>({ found: false, body: '' })),
+      catchError(() => of<HtmlContentResult>({ found: false, body: '' })),
     );
   }
 
