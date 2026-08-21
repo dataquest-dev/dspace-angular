@@ -164,7 +164,7 @@ describe('LogInPasswordComponent', () => {
     let setRedirectUrlSpy: jasmine.Spy;
     let setRedirectUrlIfNotSetSpy: jasmine.Spy;
 
-    const setQueryParams = (queryParams: Record<string, string>) => {
+    const setQueryParams = (queryParams: Record<string, unknown>) => {
       (component as any).route = { snapshot: { queryParams } };
     };
 
@@ -207,8 +207,25 @@ describe('LogInPasswordComponent', () => {
       expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/items/1');
     });
 
+    it('passes through an already-relative redirectUrl unchanged', () => {
+      setQueryParams({ redirectUrl: '/repository/search' });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/search');
+    });
+
     it('falls back to setRedirectUrlIfNotSet("/") when no redirectUrl query param is present', () => {
       setQueryParams({});
+
+      component.submit();
+
+      expect(setRedirectUrlIfNotSetSpy).toHaveBeenCalledWith('/');
+      expect(setRedirectUrlSpy).not.toHaveBeenCalled();
+    });
+
+    it('falls back cleanly when redirectUrl is not a string (repeated query param)', () => {
+      setQueryParams({ redirectUrl: ['/repository/a', '/repository/b'] });
 
       component.submit();
 

@@ -260,9 +260,10 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
   }
 
   /** Post-login redirect target from the `redirectUrl` query param (aai.js), as an app-relative path or null. */
-  private getRedirectUrlFromQueryParams(): string {
-    const rawRedirectUrl: string = this.route.snapshot.queryParams?.redirectUrl;
-    if (isEmpty(rawRedirectUrl)) {
+  private getRedirectUrlFromQueryParams(): string | null {
+    // Query params are untyped (can be a string[]); only a non-empty string is usable here.
+    const rawRedirectUrl = this.route.snapshot.queryParams?.redirectUrl;
+    if (typeof rawRedirectUrl !== 'string' || isEmpty(rawRedirectUrl)) {
       return null;
     }
 
@@ -273,13 +274,9 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
     return this.toRelativePath(redirectUrl);
   }
 
-  /** Reduce a possibly-absolute URL to an app-relative path (drops origin); relative values pass through. */
+  /** Reduce a possibly-absolute URL to an app-relative path by dropping the scheme+host; relative values pass through. */
   private toRelativePath(url: string): string {
-    if (/^https?:\/\//i.test(url)) {
-      const parsed = new URL(url);
-      return parsed.pathname + parsed.search + parsed.hash;
-    }
-    return url;
+    return url.replace(/^https?:\/\/[^/]+/i, '');
   }
 
   /**
