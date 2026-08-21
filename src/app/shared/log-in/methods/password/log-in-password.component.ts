@@ -17,7 +17,10 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import {
+  ActivatedRoute,
+  RouterLink,
+} from '@angular/router';
 import {
   select,
   Store,
@@ -145,6 +148,7 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
     @Inject('isStandalonePage') public isStandalonePage: boolean,
     private authService: AuthService,
     private hardRedirectService: HardRedirectService,
+    private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder,
     protected store: Store<CoreState>,
     protected authorizationService: AuthorizationDataService,
@@ -239,7 +243,13 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
     if (!this.isStandalonePage) {
       this.authService.setRedirectUrl(this.hardRedirectService.getCurrentRoute());
     } else {
-      this.authService.setRedirectUrlIfNotSet('/');
+      // Standalone login: return to the `redirectUrl` query param set by the aai.js local-auth flow.
+      const redirectUrl = this.getRedirectUrlFromQueryParams();
+      if (isNotEmpty(redirectUrl)) {
+        this.authService.setRedirectUrl(redirectUrl);
+      } else {
+        this.authService.setRedirectUrlIfNotSet('/');
+      }
     }
 
     // dispatch AuthenticationAction
@@ -247,6 +257,26 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
 
     // clear form
     this.form.reset();
+  }
+
+  /** Post-login redirect target from the `redirectUrl` query param (aai.js), as an app-relative path or null. */
+  private getRedirectUrlFromQueryParams(): string | null {
+    // Query params are untyped (can be a string[]); only a non-empty string is usable here.
+    const rawRedirectUrl = this.route.snapshot.queryParams?.redirectUrl;
+    if (typeof rawRedirectUrl !== 'string' || isEmpty(rawRedirectUrl)) {
+      return null;
+    }
+
+    // Prefer a nested `redirectUrl` so login is never the redirect target.
+    const nestedRedirectUrl = new URLSearchParams(rawRedirectUrl.split('?')[1] ?? '').get('redirectUrl');
+    const redirectUrl = isNotEmpty(nestedRedirectUrl) ? nestedRedirectUrl : rawRedirectUrl;
+
+    return this.toRelativePath(redirectUrl);
+  }
+
+  /** Reduce a possibly-absolute URL to an app-relative path by dropping the scheme+host; relative values pass through. */
+  private toRelativePath(url: string): string {
+    return url.replace(/^https?:\/\/[^/]+/i, '');
   }
 
   /**
