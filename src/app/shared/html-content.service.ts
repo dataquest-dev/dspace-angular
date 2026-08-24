@@ -26,9 +26,7 @@ interface HtmlContentResult {
 }
 
 /**
- * Service for loading static `.html` files stored in the `src/static-files` folder
- * (registered as a build asset in `angular.json`). Used e.g. to render the
- * deployed-version info at `/static/VERSION_D` (issue #813).
+ * Service for loading static `.html` files stored in the `/static-files` folder.
  */
 @Injectable({
   providedIn: 'root',

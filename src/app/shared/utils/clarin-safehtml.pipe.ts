@@ -12,7 +12,6 @@ import {
  */
 @Pipe({
   name: 'dsSafeHtml',
-  standalone: true,
 })
 export class ClarinSafeHtmlPipe implements PipeTransform {
   constructor(private sanitized: DomSanitizer) {}

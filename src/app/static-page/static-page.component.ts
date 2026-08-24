@@ -14,9 +14,8 @@ import { HtmlContentService } from '../shared/html-content.service';
 import { ClarinSafeHtmlPipe } from '../shared/utils/clarin-safehtml.pipe';
 
 /**
- * Component which loads and shows static files from the `src/static-files` folder.
- * E.g. `<UI_URL>/static/VERSION_D` renders `static-files/VERSION_D.html`
- * (the deployed-version info, issue #813).
+ * Component which load and show static files from the `static-files` folder.
+ * E.g., `<UI_URL>/static/some_file` loads the content from `static-files/some_file.html`.
  */
 @Component({
   selector: 'ds-static-page',

@@ -34,7 +34,6 @@ jobs:
       tags_flavor: suffix=-dev
       # As this is a "dev" image, its tags are all suffixed with "-dev". Otherwise, it uses the same
       # tagging logic as the primary 'dspace/dspace-angular' image above.
-      # Generate deployed-version info served at /static/VERSION_D (issue #813)
       run_python_version_script: true
       python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
@@ -53,7 +52,6 @@ jobs:
       build_id: dspace-angular
       image_name: dataquest/dspace-angular
       dockerfile_path: ./Dockerfile.dist
-      # Generate deployed-version info served at /static/VERSION_D (issue #813)
       run_python_version_script: true
       python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
