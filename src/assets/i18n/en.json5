@@ -5012,6 +5012,13 @@
 
   "sorting.person.birthDate.DESC": "Birth Date Descending",
 
+  "static-page.404.help": "The static page you requested does not exist. It may have been moved or deleted. You can use the button below to get back to the home page.",
+
+  "static-page.404.link.home-page": "Take me to the home page",
+
+  "static-page.404.page-not-found": "page not found",
+
+
   "statistics.title": "Statistics",
 
   "statistics.header": "Statistics for {{ scope }}",
