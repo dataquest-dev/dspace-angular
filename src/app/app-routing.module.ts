@@ -43,6 +43,7 @@ import { ServerCheckGuard } from './core/server-check/server-check.guard';
 import { MenuResolver } from './menu.resolver';
 import { ThemedPageErrorComponent } from './page-error/themed-page-error.component';
 import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
+import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
 
 @NgModule({
   imports: [
@@ -259,6 +260,10 @@ import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-path
             path: HANDLE_TABLE_MODULE_PATH,
             loadChildren: () => import('./handle-page/handle-page.module').then((m) => m.HandlePageModule),
             canActivate: [SiteAdministratorGuard],
+          },
+          {
+            path: STATIC_PAGE_PATH,
+            loadChildren: () => import('./static-page/static-page.module').then((m) => m.StaticPageModule),
           },
           { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent }
         ]

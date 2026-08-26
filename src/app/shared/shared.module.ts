@@ -250,6 +250,7 @@ import {
   ItemPageTitleFieldComponent
 } from '../item-page/simple/field-components/specific-field/title/item-page-title-field.component';
 import { MarkdownPipe } from './utils/markdown.pipe';
+import { ClarinSafeHtmlPipe } from './utils/clarin-safehtml.pipe';
 import { GoogleRecaptchaModule } from '../core/google-recaptcha/google-recaptcha.module';
 import { MenuModule } from './menu/menu.module';
 import {
@@ -318,7 +319,8 @@ const PIPES = [
   ClarinLicenseCheckedPipe,
   ClarinLicenseLabelRadioValuePipe,
   ClarinLicenseRequiredInfoPipe,
-  CharToEndPipe
+  CharToEndPipe,
+  ClarinSafeHtmlPipe
 ];
 
 const COMPONENTS = [
