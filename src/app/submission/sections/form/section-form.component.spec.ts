@@ -608,6 +608,36 @@ describe('SubmissionSectionFormComponent test suite', () => {
 
     });
 
+    it('should call dispatchSaveSection on form change when a type-bind field (e.g. dc.type) changes', () => {
+      spyOn(comp, 'hasStoredValue').and.returnValue(false);
+      formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('dc.type');
+      formOperationsService.getFieldValueFromChangeEvent.and.returnValue({ value: 'Corpus' });
+
+      comp.onChange(dynamicFormControlEvent);
+
+      expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalledWith(submissionId, sectionObject.id);
+    });
+
+    it('should call dispatchSaveSection on form change when a sponsor value changes', () => {
+      spyOn(comp, 'hasStoredValue').and.returnValue(false);
+      formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('local.sponsor');
+      formOperationsService.getFieldValueFromChangeEvent.and.returnValue({ value: 'EU' });
+
+      comp.onChange(dynamicFormControlEvent);
+
+      expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalledWith(submissionId, sectionObject.id);
+    });
+
+    it('should not call dispatchSaveSection on form change for a regular field', () => {
+      spyOn(comp, 'hasStoredValue').and.returnValue(false);
+      formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('dc.description');
+      formOperationsService.getFieldValueFromChangeEvent.and.returnValue('some text');
+
+      comp.onChange(dynamicFormControlEvent);
+
+      expect(submissionServiceStub.dispatchSaveSection).not.toHaveBeenCalled();
+    });
+
     it('should set previousValue on form focus event', () => {
       formBuilderService.hasMappedGroupValue.and.returnValue(false);
       formOperationsService.getFieldValueFromChangeEvent.and.returnValue('test');
