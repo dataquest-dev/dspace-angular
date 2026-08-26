@@ -39,6 +39,7 @@ import { CommunityDataService } from '../../core/data/community-data.service';
 import { RemoteData } from '../../core/data/remote-data';
 import { RouteService } from '../../core/services/route.service';
 import { DSpaceObject } from '../../core/shared/dspace-object.model';
+import { DSpaceObjectType } from '../../core/shared/dspace-object-type.model';
 import { Item } from '../../core/shared/item.model';
 import { SearchService } from '../../core/shared/search/search.service';
 import { SearchConfigurationService } from '../../core/shared/search/search-configuration.service';
@@ -314,6 +315,16 @@ describe('SearchComponent', () => {
       b: expectedSearchOptions,
     }));
     expect((comp as any).retrieveSearchResults).toHaveBeenCalledWith(expectedSearchOptions);
+  }));
+
+  it('should force the configured dsoTypes onto the search options when forcedDsoTypes is set', fakeAsync(() => {
+    const retrieveSpy = spyOn((comp as any), 'retrieveSearchResults').and.callThrough();
+    comp.forcedDsoTypes = [DSpaceObjectType.ITEM];
+    fixture.detectChanges();
+    tick(100);
+
+    const usedOptions = retrieveSpy.calls.mostRecent().args[0] as PaginatedSearchOptions;
+    expect(usedOptions.dsoTypes).toEqual([DSpaceObjectType.ITEM]);
   }));
 
   it('should retrieve SearchResults', fakeAsync(() => {

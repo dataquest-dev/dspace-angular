@@ -47,6 +47,7 @@ import { RemoteData } from '../../core/data/remote-data';
 import { RouteService } from '../../core/services/route.service';
 import { Context } from '../../core/shared/context.model';
 import { DSpaceObject } from '../../core/shared/dspace-object.model';
+import { DSpaceObjectType } from '../../core/shared/dspace-object-type.model';
 import { Item } from '../../core/shared/item.model';
 import { getFirstCompletedRemoteData } from '../../core/shared/operators';
 import { SearchService } from '../../core/shared/search/search.service';
@@ -242,6 +243,9 @@ export class SearchComponent implements OnDestroy, OnInit {
    */
   @Input() renderOnServerSide: boolean;
 
+  /** Restrict results to these DSpaceObject types (e.g. items only); empty = all types. */
+  @Input() forcedDsoTypes: DSpaceObjectType[] = [];
+
   /**
    * The current configuration used during the search
    */
@@ -430,6 +434,10 @@ export class SearchComponent implements OnDestroy, OnInit {
       }
       if (isEmpty(combinedOptions.scope)) {
         combinedOptions.scope = scope;
+      }
+      // Force the configured result types (e.g. items only) when no explicit dsoTypes are set.
+      if (isNotEmpty(this.forcedDsoTypes) && isEmpty(combinedOptions.dsoTypes)) {
+        combinedOptions.dsoTypes = [...this.forcedDsoTypes];
       }
       const newSearchOptions = new PaginatedSearchOptions(combinedOptions);
       // check if search options are changed
