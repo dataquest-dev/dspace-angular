@@ -63,6 +63,9 @@ const tagsInUseSelector =
     (state: MetaTagState) => state.tagsInUse,
   );
 
+// No `nofollow`: crawlers should still follow the bitstream links to pick up their own noindex.
+export const NO_INDEX_META_CONTENT = 'noindex, noarchive';
+
 @Injectable()
 export class MetadataService {
 
@@ -147,6 +150,8 @@ export class MetadataService {
 
   private setDSOMetaTags(): void {
 
+    this.setNoIndexTag();
+
     this.setTitleTag();
     this.setDescriptionTag();
 
@@ -192,6 +197,46 @@ export class MetadataService {
     // this.setCitationPatentCountryTag();
     // this.setCitationPatentNumberTag();
 
+  }
+
+  /**
+   * Add <meta name="robots"> for Items that must not be indexed by search engines.
+   *
+   * Uses addMetaTag() so the tag is registered in the meta tag store and cleared on the next route
+   * change; this.meta.addTag() would leak it onto every page visited afterwards.
+   */
+  protected setNoIndexTag(): void {
+    if (this.isNoIndex()) {
+      this.addMetaTag('robots', NO_INDEX_META_CONTENT);
+    }
+  }
+
+  private isNoIndex(): boolean {
+    if (!(this.currentObject.value instanceof Item)) {
+      return false;
+    }
+    const item = this.currentObject.value as Item;
+    if (item.isDiscoverable === false) {
+      return true;
+    }
+    // Array.isArray, not hasNoValue: a misconfigured scalar also has a length, and throwing here
+    // would strip the meta tags off every page.
+    const configured = this.appConfig?.item?.noIndex;
+    if (!Array.isArray(configured) || configured.length === 0) {
+      return false;
+    }
+    const itemIds = [item.uuid, item.handle]
+      .filter((id) => isNotEmpty(id))
+      .map((id) => this.normalizeNoIndexId(id));
+    return configured.some((id: any) => typeof id === 'string' && isNotEmpty(id)
+      && itemIds.includes(this.normalizeNoIndexId(id)));
+  }
+
+  // Accepts a bare handle, a hdl.handle.net URL or a uuid, in any casing.
+  private normalizeNoIndexId(id: string): string {
+    return id.trim().toLowerCase()
+      .replace(/^https?:\/\/hdl\.handle\.net\//, '')
+      .replace(/^\/+/, '');
   }
 
   /**
@@ -349,6 +394,10 @@ export class MetadataService {
    * Add <meta name="citation_pdf_url" ... >  to the <head>
    */
   private setCitationPdfUrlTag(): void {
+    // Google Scholar keys off this tag and does not reliably honour the landing page robots tag.
+    if (this.isNoIndex()) {
+      return;
+    }
     if (this.currentObject.value instanceof Item) {
       const item = this.currentObject.value as Item;
 
