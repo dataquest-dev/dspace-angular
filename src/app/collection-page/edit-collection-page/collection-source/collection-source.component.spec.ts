@@ -214,6 +214,72 @@ describe('CollectionSourceComponent', () => {
     });
   });
 
+  describe('when selecting the allow external URLs checkbox', () => {
+    let input;
+
+    beforeEach(() => {
+      comp.contentSource.harvestType = ContentSourceHarvestType.MetadataAndBitstreams;
+      fixture.detectChanges();
+      input = fixture.debugElement.query(By.css('#allowExternalUrlsCheck')).nativeElement;
+      input.click();
+      fixture.detectChanges();
+    });
+
+    it('should enable allowExternalUrls', () => {
+      expect(comp.contentSource.allowExternalUrls).toBeTrue();
+    });
+
+    it('should send a field update', () => {
+      expect(objectUpdatesService.saveAddFieldUpdate).toHaveBeenCalledWith(router.url, comp.contentSource);
+    });
+  });
+
+  describe('the allow external URLs checkbox and warning', () => {
+    it('should be hidden when only metadata is harvested', () => {
+      comp.contentSource.harvestType = ContentSourceHarvestType.Metadata;
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('#allowExternalUrlsCheck'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('#allowExternalUrlsWarning'))).toBeNull();
+    });
+
+    it('should be hidden when only references to bitstreams are harvested', () => {
+      comp.contentSource.harvestType = ContentSourceHarvestType.MetadataAndRef;
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('#allowExternalUrlsCheck'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('#allowExternalUrlsWarning'))).toBeNull();
+    });
+
+    it('should be shown when bitstreams are harvested', () => {
+      comp.contentSource.harvestType = ContentSourceHarvestType.MetadataAndBitstreams;
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('#allowExternalUrlsCheck'))).not.toBeNull();
+      expect(fixture.debugElement.query(By.css('#allowExternalUrlsWarning'))).not.toBeNull();
+    });
+
+    it('should describe the checkbox with the warning, so screen readers announce the risk', () => {
+      comp.contentSource.harvestType = ContentSourceHarvestType.MetadataAndBitstreams;
+      fixture.detectChanges();
+      const checkbox = fixture.debugElement.query(By.css('#allowExternalUrlsCheck')).nativeElement;
+      expect(checkbox.getAttribute('aria-describedby')).toEqual('allowExternalUrlsWarning');
+    });
+
+    it('should show the text unstyled before the checkbox is ticked', () => {
+      comp.contentSource.harvestType = ContentSourceHarvestType.MetadataAndBitstreams;
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('#allowExternalUrlsCheck')).nativeElement.checked).toBeFalse();
+      const warning = fixture.debugElement.query(By.css('#allowExternalUrlsWarning')).nativeElement;
+      expect(warning.classList.contains('alert-warning')).toBeFalse();
+    });
+
+    it('should style the text as a warning once the checkbox is ticked', () => {
+      comp.contentSource.harvestType = ContentSourceHarvestType.MetadataAndBitstreams;
+      comp.contentSource.allowExternalUrls = true;
+      fixture.detectChanges();
+      const warning = fixture.debugElement.query(By.css('#allowExternalUrlsWarning')).nativeElement;
+      expect(warning.classList.contains('alert-warning')).toBeTrue();
+    });
+  });
+
   describe('isValid', () => {
     it('should return true when ContentSource is disabled but the form invalid', () => {
       spyOnProperty(comp.formGroup, 'valid').and.returnValue(false);
