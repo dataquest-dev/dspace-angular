@@ -18,6 +18,12 @@ Disallow: /profile
 Disallow: /workflowitems
 # Crawlers should be able to access entity pages, but not the facet search links present on entity pages
 Disallow: /entities/*?f
+# Discovery facet links (f.author, f.subject, ...) multiply into an effectively
+# unbounded set of crawlable URLs; enumerating them saturated SSR in production
+# (HTTP 504). Two rules because the facet can be the first query parameter (?f.)
+# or a later one (&f.), and robots.txt cannot express "either".
+Disallow: /*?f.
+Disallow: /*&f.<%- optionalDisallows %>
 
 # Optionally uncomment the following line ONLY if sitemaps are working
 # and you have verified that your site is being indexed correctly.

@@ -60,6 +60,18 @@ universal:
   # Disable this setting to avoid URL replacement during SSR. In this the state is not transferred to avoid security issues.
   replaceRestUrl: true
 
+# Optional per-instance blocks of the served /robots.txt (src/robots.txt.ejs).
+# The Discovery facet-trap rules are always emitted; these switch the extra blocks.
+# All default false because each de-indexes content some instances intentionally
+# expose (a blanket /handle block breaks instances relying on handle redirects).
+robots:
+  # Disallow: /handle
+  disallowHandle: false
+  # Disallow: /browse
+  disallowBrowse: false
+  # Disallow: /bitstream/ and /bitstreams/
+  disallowBitstreams: false
+
 # The REST API server settings
 # NOTE: these settings define which (publicly available) REST API to use. They are usually
 # 'synced' with the 'dspace.server.url' setting in your backend's local.cfg.

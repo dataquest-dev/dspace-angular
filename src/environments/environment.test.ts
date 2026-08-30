@@ -327,6 +327,11 @@ export const environment: BuildConfig = {
     enabled: false,
     mathjax: false,
   },
+  robots: {
+    disallowHandle: false,
+    disallowBrowse: false,
+    disallowBitstreams: false,
+  },
   comcolSelectionSort: {
     sortField:'dc.title',
     sortDirection:'ASC',

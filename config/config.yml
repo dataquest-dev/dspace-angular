@@ -38,6 +38,15 @@ universal:
   # If set to false the component will not be included in the HTML returned from the server side rendering.
   enableBrowseComponent: false
 
+# Optional per-instance blocks of the served /robots.txt (src/robots.txt.ejs).
+# The Discovery facet-trap rules are always emitted; these switch the extra blocks.
+# All default false because each de-indexes content some instances intentionally
+# expose (a blanket /handle block breaks instances relying on handle redirects).
+robots:
+  disallowHandle: false
+  disallowBrowse: false
+  disallowBitstreams: false
+
 # Caching settings
 cache:
   # NOTE: how long should objects be cached for by default
