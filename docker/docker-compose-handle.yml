@@ -1,0 +1,98 @@
+#
+# The contents of this file are subject to the license and copyright
+# detailed in the LICENSE and NOTICE files at the root of the source
+# tree and available online at
+#
+# http://www.dspace.org/license/
+#
+
+# Overlay that runs the Handle server as a SEPARATE service instead of the one
+# embedded in the backend. The backend stops starting its own Handle server and
+# the standalone service resolves via the backend's remote-resolver REST API:
+#
+#   client -> dspace-handle-server(:8000) --HTTP /server/resolve--> dspace (backend) -> dspacedb
+#
+# The Handle server never connects to the database itself.
+#
+# This overlay MUST be listed LAST so its backend `entrypoint` override wins over
+# docker-compose-rest.yml (entrypoint is replaced, not merged). The network ipam
+# from docker-compose-rest.yml is preserved (this file only references dspacenet):
+#
+#   docker compose -p d7 \
+#     -f docker/docker-compose.yml \
+#     -f docker/docker-compose-rest.yml \
+#     -f docker/docker-compose-handle.yml up -d
+#
+services:
+  # Backend: enable the remote-resolver endpoints and STOP starting the embedded
+  # Handle server. This entrypoint is identical to docker-compose-rest.yml with
+  # the `/dspace/bin/start-handle-server` line removed.
+  dspace:
+    environment:
+      handle__P__remote__D__resolver__P__enabled: 'true'
+    # The backend no longer runs a Handle server, so drop the (now unused) Handle
+    # ports it publishes in docker-compose-rest.yml (native 264${INSTANCE} and
+    # HTTP 801${INSTANCE}). `!override` REPLACES the ports list instead of the
+    # default append-merge, which is what lets us remove them; this also avoids a
+    # "port is already allocated" clash with dspace-handle-server. Keep REST + debug.
+    ports: !override
+      - published: 808${INSTANCE}
+        target: 8080
+        host_ip: ${HOST_IP:-127.0.0.1}
+      - published: 800${INSTANCE}
+        target: 8000
+        host_ip: ${HOST_IP:-127.0.0.1}
+    entrypoint:
+      - /bin/bash
+      - '-c'
+      - |
+        while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
+        pushd /usr/local/tomcat/webapps && (unlink server || true) && (ln -s /dspace/webapps/server/ `echo -n "${DSPACE_REST_NAMESPACE}" | sed -e 's#^/##' -e 'sx/x#x'` || true) && popd
+        /dspace/bin/dspace database migrate force
+        ./custom_run.sh
+
+  # Standalone CNRI Handle server (image built from dataquest-dev/docker-handle-server).
+  dspace-handle-server:
+    image: ${DSPACE_HANDLE_IMAGE:-ghcr.io/dataquest-dev/docker-handle-server:latest}
+    container_name: dspace-handle-server${INSTANCE}
+    restart: unless-stopped
+    depends_on:
+      - dspace
+    networks:
+      - dspacenet
+    environment:
+      # Backend REST base the resolver plugin talks to.
+      DSPACE_HANDLE_ENDPOINT: ${DSPACE_HANDLE_ENDPOINT:-http://dspace:8080/server}
+    ports:
+      # HTTP resolver. Default 8010 matches the Handle HTTP port the embedded
+      # server used to expose, and avoids the backend debug port (800${INSTANCE}).
+      - published: ${HANDLE_HTTP_PORT:-8010}
+        target: 8000
+        host_ip: ${HOST_IP:-127.0.0.1}
+      - published: ${HANDLE_NATIVE_PORT:-2641}
+        target: 2641
+        protocol: tcp
+        host_ip: ${HOST_IP:-127.0.0.1}
+      - published: ${HANDLE_NATIVE_PORT:-2641}
+        target: 2641
+        protocol: udp
+        host_ip: ${HOST_IP:-127.0.0.1}
+    # Configure the plugin at runtime (works with the current published image):
+    #  1) switch config.dct to the remote-resolver storage plugin (if not already),
+    #  2) point the plugin at the backend,
+    #  3) wait for the backend (the plugin loads the prefix list on startup and
+    #     aborts if the backend is unreachable), then start the Handle server.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        grep -q MultiRemoteDSpaceRepositoryHandlePlugin /app/config/config.dct || \
+          sed -i 's#"server_config" = {#"server_config" = {\n    "storage_type" = "CUSTOM"\n    "storage_class" = "org.dspace.handle.MultiRemoteDSpaceRepositoryHandlePlugin"#' /app/config/config.dct
+        echo "dspace.handle.endpoint1 = $$DSPACE_HANDLE_ENDPOINT" > /app/config/handle-dspace-plugin.cfg
+        echo "Backend endpoint: $$DSPACE_HANDLE_ENDPOINT"
+        until wget -q -O- "$$DSPACE_HANDLE_ENDPOINT/listprefixes" >/dev/null 2>&1; do
+          echo "  waiting for backend $$DSPACE_HANDLE_ENDPOINT ...";
+          sleep 5;
+        done
+        echo "Backend is up. Starting Handle server."
+        exec /app/hs/bin/hdl-server /app/config/
