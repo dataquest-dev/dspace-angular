@@ -19,6 +19,7 @@ services:
       DSPACE_UI_HOST: dspace-angular
       DSPACE_UI_PORT: 4000
       DSPACE_UI_NAMESPACE: /
+      DSPACE_UI_BASEURL: ${UI_URL:-http://127.0.0.1:4000}
       DSPACE_REST_SSL: ${DSPACE_SSL:-false}
       DSPACE_REST_HOST: ${DSPACE_HOST:-localhost}
       DSPACE_REST_PORT: ${DSPACE_REST_PORT}
