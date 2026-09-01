@@ -451,7 +451,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
 
     // Save immediately when a type-bind field (values like `dc_type`, `edm_type`) or a sponsor/author value changes.
     const isTypeBindField = this.formBuilderService.getTypeFieldValues()
-      .some((typeValue) => typeValue.replace('_', '.') === metadata);
+      .some((typeValue) => typeValue === metadata.replace(/\./g, '_'));
     if (isTypeBindField || [SPONSOR_METADATA_NAME, AUTHOR_METADATA_FIELD_NAME].includes(metadata)) {
       this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
     }
