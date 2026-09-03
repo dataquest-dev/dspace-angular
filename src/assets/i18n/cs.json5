@@ -3548,11 +3548,17 @@
   // "form.other-information.last-name": "Last Name",
   "form.other-information.last-name": "Příjmení",
 
+  // "form.other-information.location": "Location",
+  "form.other-information.location": "Místo",
+
   // "form.other-information.orcid": "ORCID",
   "form.other-information.orcid": "ORCID",
 
   // "form.other-information.other-names": "Other Names",
   "form.other-information.other-names": "Další jména",
+
+  // "form.other-information.ror-id": "ROR ID",
+  "form.other-information.ror-id": "ROR ID",
 
   // "form.remove": "Remove",
   "form.remove": "Odstranit",

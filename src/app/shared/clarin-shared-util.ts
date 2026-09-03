@@ -5,6 +5,7 @@ import { MetadataValue } from '../core/shared/metadata.models';
 import { getFirstSucceededRemoteDataPayload } from '../core/shared/operators';
 import { AuthorNameLink } from './clarin-item-box-view/clarin-author-name-link.model';
 import {
+  isEmpty,
   isNull,
   isUndefined,
 } from './empty.util';
@@ -56,6 +57,23 @@ export function convertMetadataFieldIntoSearchType(field: string[]) {
  * @param baseUrl e.g. localhost:8080
  * @param fields metadata fields where authors are stored
  */
+/**
+ * Build the discovery search filter fragment for a metadata value's search link.
+ * When the value carries an authority (e.g. a ROR ID for a publisher or an ORCID for an author),
+ * the `authority` operator is used with the authority key; otherwise the plain `equals` operator is
+ * used with the text value.
+ *
+ * @param searchType discovery filter name (e.g. `author`, `publisher`), see {@link convertMetadataFieldIntoSearchType}
+ * @param mdValue metadata value providing the `authority` (preferred) or text `value`
+ * @returns query fragment, e.g. `f.publisher=02mhbdp94,authority` or `f.publisher=ACME,equals`
+ */
+export function buildAuthoritySearchFilter(searchType: string, mdValue: { authority?: string | null; value?: string }): string {
+  const hasAuthority = !isEmpty(mdValue?.authority);
+  const filterValue = hasAuthority ? mdValue.authority : mdValue?.value;
+  const operator = hasAuthority ? 'authority' : 'equals';
+  return 'f.' + encodeURIComponent(searchType) + '=' + encodeURIComponent(filterValue ?? '') + ',' + operator;
+}
+
 export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
   if (isNull(item) || isNull(itemAuthors) || isNull(baseUrl)) {
     return;
@@ -67,15 +85,7 @@ export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
   }
   const itemAuthorsLocal = [];
   authorsMV.forEach((authorMV: MetadataValue) => {
-    let value: string, operator: string;
-    if (authorMV.authority) {
-      value = encodeURIComponent(authorMV.authority);
-      operator = 'authority';
-    } else {
-      value = encodeURIComponent(authorMV.value);
-      operator = 'equals';
-    }
-    const authorSearchLink = baseUrl + '/search?f.author=' + value + ',' + operator;
+    const authorSearchLink = baseUrl + '/search?' + buildAuthoritySearchFilter('author', authorMV);
     const authorNameLink = Object.assign(new AuthorNameLink(), {
       name: authorMV.value,
       url: authorSearchLink,
