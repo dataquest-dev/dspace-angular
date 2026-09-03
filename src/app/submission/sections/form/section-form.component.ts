@@ -52,6 +52,8 @@ import {
   isNotEmpty,
   isUndefined,
 } from '../../../shared/empty.util';
+import { AUTHOR_METADATA_FIELD_NAME } from '../../../shared/form/builder/ds-dynamic-form-ui/models/clarin-name.model';
+import { SPONSOR_METADATA_NAME } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
 import { FormFieldPreviousValueObject } from '../../../shared/form/builder/models/form-field-previous-value-object';
 import { FormComponent } from '../../../shared/form/form.component';
@@ -445,6 +447,13 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
 
     if ((environment.submission.autosave.metadata.indexOf(metadata) !== -1 && isNotEmpty(value)) || this.hasRelatedCustomError(metadata)) {
       this.submissionService.dispatchSave(this.submissionId);
+    }
+
+    // Save immediately when a type-bind field (values like `dc_type`, `edm_type`) or a sponsor/author value changes.
+    const isTypeBindField = this.formBuilderService.getTypeFieldValues()
+      .some((typeValue) => typeValue === metadata.replace(/\./g, '_'));
+    if (isTypeBindField || [SPONSOR_METADATA_NAME, AUTHOR_METADATA_FIELD_NAME].includes(metadata)) {
+      this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
     }
   }
 

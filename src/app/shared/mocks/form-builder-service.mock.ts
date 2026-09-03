@@ -48,6 +48,7 @@ export function getMockFormBuilderService(): FormBuilderService {
     ),
     getTypeBindModelUpdates: EMPTY,
     resolveTypeBindModelId: undefined,
+    getTypeFieldValues: ['dc_type'],
   });
 
   // as the real implementation behaves for a reference the type field map does not remap

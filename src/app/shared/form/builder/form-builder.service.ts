@@ -708,4 +708,9 @@ export class FormBuilderService extends DynamicFormService {
     return this.getDefaultTypeBindModelId();
   }
 
+  /** Type-bind controlling fields (underscore notation, e.g. `dc_type`, `edm_type`) from `submit.type-bind.field`. */
+  getTypeFieldValues(): string[] {
+    return Array.from(this.typeFields.values());
+  }
+
 }
