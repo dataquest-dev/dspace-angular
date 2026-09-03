@@ -25,6 +25,7 @@ import { ShowMoreFlatNode } from './show-more-flat-node.model';
 import { FindListOptions } from '../core/data/find-list-options.model';
 import { AppConfig, APP_CONFIG } from 'src/config/app-config.interface';
 import { v4 as uuidv4 } from 'uuid';
+import { reorderZcuPublicationCollections } from '../shared/zcu-collection-order';
 
 // Helper method to combine and flatten an array of observables of flatNode arrays
 export const combineAndFlatten = (obsList: Observable<FlatNode[]>[]): Observable<FlatNode[]> =>
@@ -255,7 +256,8 @@ export class CommunityListService {
             getFirstCompletedRemoteData(),
             map((rd: RemoteData<PaginatedList<Collection>>) => {
               if (hasValue(rd) && hasValue(rd.payload)) {
-                let nodes = rd.payload.page
+                // issue #953: apply the ZCU collection display order in the community browse tree
+                let nodes = reorderZcuPublicationCollections(rd.payload.page)
                   .map((collection: Collection) => toFlatNode(collection, observableOf(false), level + 1, false, communityFlatNode));
                 if (currentCollectionPage < rd.payload.totalPages && currentCollectionPage === rd.payload.currentPage) {
                   nodes = [...nodes, showMoreFlatNode(`collection-${uuidv4()}`, level + 1, communityFlatNode)];
