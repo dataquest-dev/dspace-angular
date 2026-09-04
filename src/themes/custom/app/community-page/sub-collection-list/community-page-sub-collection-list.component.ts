@@ -17,8 +17,7 @@ export class CommunityPageSubCollectionListComponent extends BaseComponent {
 
   /**
    * Reorders the current page of collections so that "Články" is shown directly after
-   * "Kapitoly v knihách" (issue #953), while every other collection — book parts included —
-   * keeps its existing alphabetical position.
+   * "Kapitoly v knihách", while every other collection keeps its existing alphabetical position.
    *
    * @param rd the RemoteData holding the current page of collections
    * @returns the RemoteData with a reordered page, or unchanged when the page is empty
@@ -32,7 +31,7 @@ export class CommunityPageSubCollectionListComponent extends BaseComponent {
   }
 
   /**
-   * Reorders the current page of collections using the shared ZCU ordering rule (issue #953),
+   * Reorders the current page of collections using the shared ZCU ordering rule,
    * moving "Články" to sit directly after "Kapitoly v knihách".
    *
    * @param collections the collections of the current page (alphabetical by dc.title)

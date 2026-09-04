@@ -256,7 +256,7 @@ export class CommunityListService {
             getFirstCompletedRemoteData(),
             map((rd: RemoteData<PaginatedList<Collection>>) => {
               if (hasValue(rd) && hasValue(rd.payload)) {
-                // issue #953: apply the ZCU collection display order in the community browse tree
+                // apply the ZCU collection display order in the community browse tree
                 let nodes = reorderZcuPublicationCollections(rd.payload.page)
                   .map((collection: Collection) => toFlatNode(collection, observableOf(false), level + 1, false, communityFlatNode));
                 if (currentCollectionPage < rd.payload.totalPages && currentCollectionPage === rd.payload.currentPage) {

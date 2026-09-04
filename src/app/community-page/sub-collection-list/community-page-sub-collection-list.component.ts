@@ -95,10 +95,6 @@ export class CommunityPageSubCollectionListComponent implements OnInit, OnDestro
   /**
    * Extension point for theme/customer-specific ordering of the current page of collections.
    *
-   * The default implementation is a no-op that returns the RemoteData unchanged, so behavior
-   * stays identical for every theme and customer. Themes that need a bespoke display order
-   * (e.g. a hardcoded pinned position for a specific collection) override this method.
-   *
    * @param rd the RemoteData holding the current page of collections
    * @returns the RemoteData to emit, potentially with a reordered page
    */

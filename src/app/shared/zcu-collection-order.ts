@@ -1,33 +1,19 @@
 import { Collection } from '../core/shared/collection.model';
 
 /**
- * Name of the "book parts" collection that anchors the ordering for the ZCU publications
- * community (issue #953). "Články" is always shown directly after this collection.
+ * Name of the collection that anchors the ordering for the ZCU publications community.
  */
 export const ZCU_BOOKPARTS_COLLECTION_NAME = 'Kapitoly v knihách';
 
 /**
- * Name of the "articles" collection that is pinned directly after "Kapitoly v knihách"
- * for the ZCU publications community (issue #953).
+ * Name of the collection that is pinned directly after "Kapitoly v knihách".
  */
 export const ZCU_ARTICLES_COLLECTION_NAME = 'Články';
 
 /**
  * Reorders a list of collections so that "Články" (articles) is shown immediately after
  * "Kapitoly v knihách" (book parts), while every other collection — including "Kapitoly v
- * knihách" itself — keeps its original (alphabetical) position. This is the ZCU-specific
- * hardcode for issue #953, shared by every place that lists a community's collections (the
- * community page and the community browse tree).
- *
- * The articles collection tracks the book-parts collection wherever it naturally sits:
- * - book parts 1st  -> articles 2nd
- * - book parts 2nd  -> articles 3rd
- * and so on. The rule only applies when BOTH collections are present in the given list;
- * otherwise (or if they are already adjacent in the right order) the list is returned
- * unchanged. Nothing but the position of "Články" is ever moved.
- *
- * Note: ordering is applied per fetched page. In the ZCU publications community a department
- * has only a handful of collections, so both always land on the same page.
+ * knihách" itself — keeps its original position. This is the ZCU-specific hardcode.
  *
  * @param collections the collections to reorder (as fetched, alphabetical by dc.title)
  * @returns a new, reordered array, or the original array when the rule does not apply
