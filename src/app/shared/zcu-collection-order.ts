@@ -1,46 +1,47 @@
 import { Collection } from '../core/shared/collection.model';
 
 /**
- * Name of the collection that anchors the ordering for the ZCU publications community.
+ * Title prefix of the "book parts" collection that anchors the ordering.
+ * Departments name it "Kapitoly v knihách", "Kapitoly v knihách / Bookparts" or
+ * "Kapitoly v knihách / Bookparts (KAE)", so we match on the common Czech prefix.
  */
-export const ZCU_BOOKPARTS_COLLECTION_NAME = 'Kapitoly v knihách';
+export const ZCU_BOOKPARTS_COLLECTION_PREFIX = 'Kapitoly v knihách';
 
 /**
- * Name of the collection that is pinned directly after "Kapitoly v knihách".
+ * Title prefix of the "articles" collection pinned directly after book parts.
+ * Departments name it "Články", "Články / Articles" or "Články / Articles (KAE)".
  */
-export const ZCU_ARTICLES_COLLECTION_NAME = 'Články';
+export const ZCU_ARTICLES_COLLECTION_PREFIX = 'Články';
+
+function nameStartsWith(collection: Collection, prefix: string): boolean {
+  const name = collection?.name;
+  return typeof name === 'string' && name.trim().toLocaleLowerCase().startsWith(prefix.toLocaleLowerCase());
+}
 
 /**
- * Reorders a list of collections so that "Články" (articles) is shown immediately after
- * "Kapitoly v knihách" (book parts), while every other collection — including "Kapitoly v
- * knihách" itself — keeps its original position. This is the ZCU-specific hardcode.
- *
- * @param collections the collections to reorder (as fetched, alphabetical by dc.title)
- * @returns a new, reordered array, or the original array when the rule does not apply
+ * Reorders a list of collections so that the articles collection is shown immediately after
+ * the book parts collection, while every other collection — book parts included — keeps its
+ * original position. Both are matched by title prefix, so the bilingual and department-suffixed
+ * variants ("Články / Articles (KAE)", ...) are handled regardless of the UI language.
  */
 export function reorderZcuPublicationCollections(collections: Collection[]): Collection[] {
   if (!Array.isArray(collections) || collections.length < 2) {
     return collections;
   }
 
-  const bookPartsIndex = collections.findIndex((collection: Collection) => collection.name === ZCU_BOOKPARTS_COLLECTION_NAME);
-  const articlesIndex = collections.findIndex((collection: Collection) => collection.name === ZCU_ARTICLES_COLLECTION_NAME);
+  const bookPartsIndex = collections.findIndex((collection: Collection) => nameStartsWith(collection, ZCU_BOOKPARTS_COLLECTION_PREFIX));
+  const articlesIndex = collections.findIndex((collection: Collection) => nameStartsWith(collection, ZCU_ARTICLES_COLLECTION_PREFIX));
 
-  // Both anchor collections must be present for the rule to apply.
   if (bookPartsIndex === -1 || articlesIndex === -1) {
     return collections;
   }
-
-  // Already directly after book parts -> nothing to do.
   if (articlesIndex === bookPartsIndex + 1) {
     return collections;
   }
 
   const articles = collections[articlesIndex];
-  // Remove "Články" while preserving every other collection's relative order (incl. book parts).
   const withoutArticles = collections.filter((_: Collection, index: number) => index !== articlesIndex);
-  // Re-locate book parts in the reduced list and insert "Články" right after it.
-  const insertAt = withoutArticles.findIndex((collection: Collection) => collection.name === ZCU_BOOKPARTS_COLLECTION_NAME) + 1;
+  const insertAt = withoutArticles.findIndex((collection: Collection) => nameStartsWith(collection, ZCU_BOOKPARTS_COLLECTION_PREFIX)) + 1;
 
   return [...withoutArticles.slice(0, insertAt), articles, ...withoutArticles.slice(insertAt)];
 }
