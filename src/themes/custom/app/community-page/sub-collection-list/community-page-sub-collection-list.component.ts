@@ -16,8 +16,9 @@ import { reorderZcuPublicationCollections } from '../../../../../app/shared/zcu-
 export class CommunityPageSubCollectionListComponent extends BaseComponent {
 
   /**
-   * Reorders the current page of collections so that "Kapitoly v knihách" is shown 2nd and
-   * "Články" 3rd, while all other collections keep their existing alphabetical order.
+   * Reorders the current page of collections so that "Články" is shown directly after
+   * "Kapitoly v knihách" (issue #953), while every other collection — book parts included —
+   * keeps its existing alphabetical position.
    *
    * @param rd the RemoteData holding the current page of collections
    * @returns the RemoteData with a reordered page, or unchanged when the page is empty
@@ -32,7 +33,7 @@ export class CommunityPageSubCollectionListComponent extends BaseComponent {
 
   /**
    * Reorders the current page of collections using the shared ZCU ordering rule (issue #953),
-   * pinning "Kapitoly v knihách" to the 2nd position and "Články" to the 3rd.
+   * moving "Články" to sit directly after "Kapitoly v knihách".
    *
    * @param collections the collections of the current page (alphabetical by dc.title)
    * @returns a new, reordered array, or the original array when the rule does not apply

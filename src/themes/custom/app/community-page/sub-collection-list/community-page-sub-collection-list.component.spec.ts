@@ -22,8 +22,8 @@ function names(collections: Collection[]): string[] {
   return collections.map((collection: Collection) => collection.name);
 }
 
-const SECOND_COLLECTION_NAME = 'Kapitoly v knihách';
-const THIRD_COLLECTION_NAME = 'Články';
+const BOOKPARTS_COLLECTION_NAME = 'Kapitoly v knihách';
+const ARTICLES_COLLECTION_NAME = 'Články';
 
 describe('CommunityPageSubCollectionListComponent (custom theme) reorderCollections', () => {
   let component: CommunityPageSubCollectionListComponent;
@@ -35,55 +35,54 @@ describe('CommunityPageSubCollectionListComponent (custom theme) reorderCollecti
     component = new CommunityPageSubCollectionListComponent(null, null, null);
   });
 
-  it('pins "Články" to the 3rd position, directly after "Kapitoly v knihách"', () => {
+  it('shows "Články" directly after "Kapitoly v knihách" (book parts 2nd -> articles 3rd)', () => {
     const input = [
       fakeCollection('Alfa'),
-      fakeCollection(SECOND_COLLECTION_NAME),
-      fakeCollection(THIRD_COLLECTION_NAME),
-      fakeCollection('Zeta'),
+      fakeCollection(BOOKPARTS_COLLECTION_NAME),
+      fakeCollection('Sborníky'),
+      fakeCollection(ARTICLES_COLLECTION_NAME),
     ];
 
     const result = reorder(input);
 
-    expect(names(result)).toEqual(['Alfa', SECOND_COLLECTION_NAME, THIRD_COLLECTION_NAME, 'Zeta']);
-    expect(result[2].name).toBe(THIRD_COLLECTION_NAME);
-    expect(result[1].name).toBe(SECOND_COLLECTION_NAME);
-    expect(names(result).indexOf(THIRD_COLLECTION_NAME))
-      .toBe(names(result).indexOf(SECOND_COLLECTION_NAME) + 1);
+    expect(names(result)).toEqual(['Alfa', BOOKPARTS_COLLECTION_NAME, ARTICLES_COLLECTION_NAME, 'Sborníky']);
+    expect(names(result).indexOf(ARTICLES_COLLECTION_NAME))
+      .toBe(names(result).indexOf(BOOKPARTS_COLLECTION_NAME) + 1);
+  });
+
+  it('shows "Články" 2nd when "Kapitoly v knihách" is 1st', () => {
+    const input = [
+      fakeCollection(BOOKPARTS_COLLECTION_NAME),
+      fakeCollection('Sborníky'),
+      fakeCollection(ARTICLES_COLLECTION_NAME),
+    ];
+
+    expect(names(reorder(input))).toEqual([BOOKPARTS_COLLECTION_NAME, ARTICLES_COLLECTION_NAME, 'Sborníky']);
   });
 
   it('leaves the list unchanged when "Kapitoly v knihách" is missing', () => {
     const input = [
       fakeCollection('Alfa'),
-      fakeCollection(THIRD_COLLECTION_NAME),
+      fakeCollection(ARTICLES_COLLECTION_NAME),
       fakeCollection('Zeta'),
     ];
 
-    expect(names(reorder(input))).toEqual(['Alfa', THIRD_COLLECTION_NAME, 'Zeta']);
+    expect(names(reorder(input))).toEqual(['Alfa', ARTICLES_COLLECTION_NAME, 'Zeta']);
   });
 
   it('leaves the list unchanged when "Články" is missing', () => {
     const input = [
       fakeCollection('Alfa'),
-      fakeCollection(SECOND_COLLECTION_NAME),
+      fakeCollection(BOOKPARTS_COLLECTION_NAME),
       fakeCollection('Zeta'),
     ];
 
-    expect(names(reorder(input))).toEqual(['Alfa', SECOND_COLLECTION_NAME, 'Zeta']);
-  });
-
-  it('leaves the list unchanged when there are no other collections', () => {
-    const input = [
-      fakeCollection(SECOND_COLLECTION_NAME),
-      fakeCollection(THIRD_COLLECTION_NAME),
-    ];
-
-    expect(names(reorder(input))).toEqual([SECOND_COLLECTION_NAME, THIRD_COLLECTION_NAME]);
+    expect(names(reorder(input))).toEqual(['Alfa', BOOKPARTS_COLLECTION_NAME, 'Zeta']);
   });
 
   it('uses the exact diacritic collection names', () => {
-    expect(SECOND_COLLECTION_NAME).toBe('Kapitoly v knihách');
-    expect(THIRD_COLLECTION_NAME).toBe('Články');
+    expect(BOOKPARTS_COLLECTION_NAME).toBe('Kapitoly v knihách');
+    expect(ARTICLES_COLLECTION_NAME).toBe('Články');
 
     const input = [
       fakeCollection('Alfa'),
