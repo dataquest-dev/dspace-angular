@@ -1,15 +1,12 @@
 import { Collection } from '../core/shared/collection.model';
 
 /**
- * Title prefix of the "book parts" collection that anchors the ordering.
- * Departments name it "Kapitoly v knihách", "Kapitoly v knihách / Bookparts" or
- * "Kapitoly v knihách / Bookparts (KAE)", so we match on the common Czech prefix.
+ * Title prefix of the collection that anchors the ordering.
  */
 export const ZCU_BOOKPARTS_COLLECTION_PREFIX = 'Kapitoly v knihách';
 
 /**
- * Title prefix of the "articles" collection pinned directly after book parts.
- * Departments name it "Články", "Články / Articles" or "Články / Articles (KAE)".
+ * Title prefix of the collection pinned directly after book parts.
  */
 export const ZCU_ARTICLES_COLLECTION_PREFIX = 'Články';
 
@@ -20,9 +17,7 @@ function nameStartsWith(collection: Collection, prefix: string): boolean {
 
 /**
  * Reorders a list of collections so that the articles collection is shown immediately after
- * the book parts collection, while every other collection — book parts included — keeps its
- * original position. Both are matched by title prefix, so the bilingual and department-suffixed
- * variants ("Články / Articles (KAE)", ...) are handled regardless of the UI language.
+ * the book parts collection, while every other collection keeps its original position.
  */
 export function reorderZcuPublicationCollections(collections: Collection[]): Collection[] {
   if (!Array.isArray(collections) || collections.length < 2) {
