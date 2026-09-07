@@ -88,8 +88,18 @@ export class CommunityPageSubCollectionListComponent implements OnInit, OnDestro
         });
       })
     ).subscribe((results) => {
-      this.subCollectionsRDObs.next(results);
+      this.subCollectionsRDObs.next(this.applyCustomCollectionOrder(results));
     }));
+  }
+
+  /**
+   * Extension point for theme/customer-specific ordering of the current page of collections.
+   *
+   * @param rd the RemoteData holding the current page of collections
+   * @returns the RemoteData to emit, potentially with a reordered page
+   */
+  protected applyCustomCollectionOrder(rd: RemoteData<PaginatedList<Collection>>): RemoteData<PaginatedList<Collection>> {
+    return rd;
   }
 
   ngOnDestroy(): void {
