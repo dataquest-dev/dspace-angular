@@ -21,7 +21,6 @@ import {
 import {
   distinctUntilChanged,
   filter,
-  find,
 } from 'rxjs/operators';
 import { FindListOptions } from 'src/app/core/data/find-list-options.model';
 import { hasFailed } from 'src/app/core/data/request-entry-state.model';
@@ -39,16 +38,14 @@ import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder
 import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
 import { ClarinLicense } from '../../../core/shared/clarin/clarin-license.model';
 import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
-import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { Item } from '../../../core/shared/item.model';
 import { MetadataValue } from '../../../core/shared/metadata.models';
 import {
   getFirstCompletedRemoteData,
   getFirstSucceededRemoteListPayload,
 } from '../../../core/shared/operators';
-import { WorkspaceItem } from '../../../core/submission/models/workspaceitem.model';
+import { SubmissionObject } from '../../../core/submission/models/submission-object.model';
 import { normalizeSectionData } from '../../../core/submission/submission-response-parsing.service';
-import { WorkspaceitemDataService } from '../../../core/submission/workspaceitem-data.service';
 import { HELP_DESK_PROPERTY } from '../../../item-page/tombstone/tombstone.constants';
 import {
   hasValue,
@@ -59,6 +56,7 @@ import {
   isUndefined,
 } from '../../../shared/empty.util';
 import { FormService } from '../../../shared/form/form.service';
+import { SubmissionService } from '../../submission.service';
 import parseSectionErrors from '../../utils/parseSectionErrors';
 import { SectionModelComponent } from '../models/section.model';
 import { SectionDataObject } from '../models/section-data.model';
@@ -166,8 +164,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * @param clarinLicenseService
    * @param translateService
    * @param itemService
-   * @param workspaceItemService
-   * @param halService
+   * @param submissionService
    * @param rdbService
    * @param configurationDataService
    * @param requestService
@@ -182,8 +179,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
               protected clarinLicenseService: ClarinLicenseDataService,
               protected translateService: TranslateService,
               protected itemService: ItemDataService,
-              protected workspaceItemService: WorkspaceitemDataService,
-              protected halService: HALEndpointService,
+              protected submissionService: SubmissionService,
               protected rdbService: RemoteDataBuildService,
               private configurationDataService: ConfigurationDataService,
               protected requestService: RequestService,
@@ -227,11 +223,17 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     this.formId = this.formService.getUniqueId(this.sectionData.id);
 
     // Load the accepted license of the item
-    this.getActualWorkspaceItem()
-      .then((workspaceItemRD: RemoteData<WorkspaceItem>) => {
-        this.itemService.findByHref(workspaceItemRD.payload._links.item.href)
+    this.getActualSubmissionItem()
+      .then((submissionItemRD: RemoteData<SubmissionObject>) => {
+        if (!submissionItemRD?.hasSucceeded || !submissionItemRD.payload?._links?.item?.href) {
+          return;
+        }
+        this.itemService.findByHref(submissionItemRD.payload._links.item.href)
           .pipe(getFirstCompletedRemoteData())
           .subscribe((itemRD: RemoteData<Item>) => {
+            if (!itemRD?.hasSucceeded || !itemRD.payload) {
+              return;
+            }
             // Load the metadata where is store clarin license name (`dc.rights`).
             const item = itemRD.payload;
             const dcRightsMetadata = item.metadata['dc.rights'];
@@ -304,29 +306,25 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     }
 
     this.updateSectionStatus();
-    await this.getActualWorkspaceItem()
-      .then(workspaceItemRD => {
+    await this.getActualSubmissionItem()
+      .then(submissionItemRD => {
+        if (!submissionItemRD?.hasSucceeded || !submissionItemRD.payload?._links?.self?.href) {
+          return;
+        }
         const requestId = this.requestService.generateRequestId();
-        const hrefObs = this.halService.getEndpoint(this.workspaceItemService.getLinkPath());
-
         // Route the PATCH through the `clarin-license` submission step so it
         // works for workflow items too and keeps `sections.license` (CC) and
         // `sections.clarin-license` payloads separate on subsequent GETs.
         const patchOperation2 = {
           op: 'replace', path: this.pathCombiner.getPath('select').path, value: licenseNameRest,
         } as Operation;
-
-        hrefObs.pipe(
-          find((href: string) => hasValue(href)),
-        ).subscribe((href: string) => {
-          const request = new PatchRequest(requestId, href + '/' + workspaceItemRD.payload.id, [patchOperation2]);
-          this.requestService.send(request);
-        });
+        const request = new PatchRequest(requestId, submissionItemRD.payload._links.self.href, [patchOperation2]);
+        this.requestService.send(request);
 
         // process the response
         this.rdbService.buildFromRequestUUID(requestId)
           .pipe(getFirstCompletedRemoteData())
-          .subscribe((response: RemoteData<WorkspaceItem>) => {
+          .subscribe((response: RemoteData<SubmissionObject>) => {
 
             // show validation errors in every section
             const workspaceitem = response.payload;
@@ -496,10 +494,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
   }
 
   /**
-   * Get the current workspace item by the submissionId.
+   * Get the current submission item (workspace or workflow) by the submissionId.
+   * This method is route-aware and retrieves from the appropriate endpoint based on the current URL.
    */
-  private async getActualWorkspaceItem(): Promise<RemoteData<WorkspaceItem>> {
-    return this.workspaceItemService.findById(this.submissionId)
+  private async getActualSubmissionItem(): Promise<RemoteData<SubmissionObject>> {
+    return this.submissionService.retrieveSubmission(this.submissionId)
       .pipe(getFirstCompletedRemoteData()).toPromise();
   }
 
