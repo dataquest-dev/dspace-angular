@@ -42,7 +42,7 @@
             }
             @if (type === 'search') {
               <span class="d-inline-flex pe-1">
-                <a [href]="getLinkToSearch(i)">{{mdValue.value | dsReplace: this.replaceCharacter}}</a>
+                <a [href]="getLinkToSearch(i)">{{mdValue.value | dsReplace: this.replaceCharacter}} @if (mdValue.authority && (fields?.includes('dc.publisher') || fields?.includes('creativework.publisher'))) {<img src="assets/images/ror-icon.svg" alt="ROR ID" height="16" class="ror-icon ms-1 align-middle">}</a>
                 @if (!last) {
                   <span [innerHTML]="separator"></span>
                 }

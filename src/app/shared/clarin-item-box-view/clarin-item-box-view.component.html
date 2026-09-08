@@ -22,7 +22,7 @@
                   <!-- truthiness check: a missing dc.publisher is undefined, and an empty <a>
                        has no accessible name (axe link-name) -->
                   <span>(@if (itemPublisher) {
-                    <span><a [href]="publisherRedirectLink">{{itemPublisher}}</a> / </span>
+                    <span><a [attr.href]="publisherRedirectLink">{{itemPublisher}} @if (hasPublisherRorAuthority) {<img src="assets/images/ror-icon.svg" alt="ROR ID" height="16" class="ror-icon ms-1 align-middle">}</a> / </span>
                   }{{itemDate}})</span>
                 </div>
               }
