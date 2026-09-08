@@ -22,7 +22,10 @@ import {
   distinctUntilChanged,
   filter,
 } from 'rxjs/operators';
-import { FindListOptions } from 'src/app/core/data/find-list-options.model';
+import {
+  FindListOptions,
+  MAX_PAGE_SIZE,
+} from 'src/app/core/data/find-list-options.model';
 import { hasFailed } from 'src/app/core/data/request-entry-state.model';
 
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
@@ -580,7 +583,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     const options = new FindListOptions();
     options.currentPage = 0;
     // Load all licenses
-    options.elementsPerPage = 1000;
+    options.elementsPerPage = MAX_PAGE_SIZE;
     return this.clarinLicenseService.findAll(options, false)
       .pipe(getFirstSucceededRemoteListPayload())
       .toPromise();

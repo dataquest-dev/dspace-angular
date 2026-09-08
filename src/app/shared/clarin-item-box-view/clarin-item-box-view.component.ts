@@ -21,7 +21,10 @@ import { BundleDataService } from '../../core/data/bundle-data.service';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
 import { CollectionDataService } from '../../core/data/collection-data.service';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
-import { FindListOptions } from '../../core/data/find-list-options.model';
+import {
+  FindListOptions,
+  MAX_PAGE_SIZE,
+} from '../../core/data/find-list-options.model';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { RemoteData } from '../../core/data/remote-data';
 import { Bitstream } from '../../core/shared/bitstream.model';
@@ -207,7 +210,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
       return;
     }
     const configAllElements: FindListOptions = Object.assign(new FindListOptions(), {
-      elementsPerPage: 9999,
+      elementsPerPage: MAX_PAGE_SIZE,
     });
 
     this.bundleService.findByItemAndName(this.item, 'ORIGINAL', true, true,
