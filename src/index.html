@@ -7,10 +7,181 @@
   <title>DSpace</title>
   <meta name="viewport" content="width=device-width,minimum-scale=1">
   <meta http-equiv="cache-control" content="no-store">
+  <style id="__dspace-ssr-overlay-style">
+    #__dspace_ssr_overlay {
+      /* absolute, not fixed: the copy has to scroll with the document, and holding the page's height
+         while <ds-app> is empty keeps the scrollbar and the restored scroll position intact */
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      min-height: 100vh;
+      z-index: 10000;
+      background: #fff;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    #__dspace_ssr_overlay.__dspace_ssr_booting {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #__dspace_ssr_overlay .__dspace_ssr_spinner {
+      width: 3rem;
+      height: 3rem;
+      border: .25rem solid rgba(0, 0, 0, .1);
+      border-top-color: rgba(0, 0, 0, .35);
+      border-radius: 50%;
+      /* held back, so a bootstrap that finishes quickly never shows a spinner at all */
+      opacity: 0;
+      animation: __dspace_ssr_spin .8s linear infinite, __dspace_ssr_fade .2s ease-in .4s forwards;
+    }
+    @keyframes __dspace_ssr_spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes __dspace_ssr_fade {
+      to { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #__dspace_ssr_overlay .__dspace_ssr_spinner {
+        animation: __dspace_ssr_fade .2s ease-in .4s forwards;
+      }
+    }
+  </style>
 </head>
 
 <body>
   <ds-app></ds-app>
+<script>
+/*
+  The browser paints the SSR page, then Angular clears <ds-app> and renders it again, because
+  provideClientHydration() is registered in the browser config only. Upstream: DSpace/dspace-angular#3867.
+  A detached clone of that paint covers the rebuild; on an SSR-excluded route there is nothing to
+  clone, so a spinner stands in. Self-contained because AppComponent is constructed far too late to
+  drive it.
+*/
+(function () {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  // Cypress and Playwright drive the real app; a cloned copy breaks element-uniqueness selectors.
+  if (typeof window.Cypress !== 'undefined') return;
+  if (typeof navigator !== 'undefined' && navigator.webdriver) return;
+
+  var QUIET_MS = 600;      // the rebuild is done after this long with no element added or removed
+  var BACKSTOP_MS = 15000; // reveal regardless, so a page that never goes quiet is not held hostage
+  var MIN_HEIGHT_PX = 200; // proves <ds-app> is no longer the empty shell
+
+  // After the first paint: cloning the server-rendered tree is not free, and the wipe it guards
+  // against is seconds away.
+  if (typeof window.requestAnimationFrame === 'function') {
+    window.requestAnimationFrame(function () { setTimeout(start, 0); });
+  } else {
+    setTimeout(start, 0);
+  }
+
+  function start() {
+  try {
+    var app = document.querySelector('ds-app');
+    if (!app) return;
+    if (document.getElementById('__dspace_ssr_overlay')) return;
+
+    var overlay = document.createElement('div');
+    overlay.id = '__dspace_ssr_overlay';
+    // A duplicate of content the live app still exposes: keep it out of the a11y tree and tab order.
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.setAttribute('inert', '');
+
+    // The node Angular throws away. While it is attached, the rebuild has not started.
+    var ssrRoot = app.firstElementChild;
+
+    if (ssrRoot) {
+      // Clone, never move: the copy keeps its _nghost/_ngcontent attributes, so it still has styles.
+      overlay.appendChild(app.cloneNode(true));
+    } else {
+      // Nothing to hold: stand in for the loader the app shows once it is up.
+      overlay.className = '__dspace_ssr_booting';
+      var spinner = document.createElement('div');
+      spinner.className = '__dspace_ssr_spinner';
+      overlay.appendChild(spinner);
+    }
+    document.body.appendChild(overlay);
+
+    var quietTimer = null;
+    var observer = null;
+
+    var remove = function () {
+      if (!overlay) return;
+      var el = overlay;
+      overlay = null;
+      if (observer) observer.disconnect();
+      if (quietTimer) clearTimeout(quietTimer);
+      window.__dspaceRemoveSsrOverlay = null;
+      el.style.transition = 'opacity 150ms ease-out';
+      el.style.opacity = '0';
+      setTimeout(function () {
+        if (el.parentNode) el.parentNode.removeChild(el);
+      }, 200);
+    };
+    window.__dspaceRemoveSsrOverlay = remove;  // so an e2e run can drop it on demand
+
+    // root.component hides .outer-wrapper behind its loader, so a visible #main-content means the
+    // routed page is on screen.
+    var contentIsVisible = function () {
+      var main = app.querySelector('#main-content');
+      return !!main && main.offsetParent !== null &&
+        app.getBoundingClientRect().height >= MIN_HEIGHT_PX;
+    };
+
+    var maybeRemove = function () {
+      // Without the first half the clone leaves during the quiet stretch before Angular starts, and
+      // the wipe it exists to cover happens in plain sight.
+      if (ssrRoot && app.contains(ssrRoot)) return;
+      if (!contentIsVisible()) return;
+      // one frame, so the new content is painted before the overlay fades out
+      if (typeof window.requestAnimationFrame === 'function') {
+        window.requestAnimationFrame(remove);
+      } else {
+        remove();
+      }
+    };
+
+    var restartQuietTimer = function () {
+      if (quietTimer) clearTimeout(quietTimer);
+      quietTimer = setTimeout(maybeRemove, QUIET_MS);
+    };
+
+    // The clone has to outlast the whole rebuild, so it waits for the DOM to go quiet. The spinner
+    // is only filling a void, so it leaves as soon as there is something behind it.
+    var onMutation = ssrRoot ? restartQuietTimer : maybeRemove;
+
+    observer = new MutationObserver(function (records) {
+      for (var i = 0; i < records.length; i++) {
+        var r = records[i];
+        if (r.type !== 'childList') continue;
+        var nodes = [].slice.call(r.addedNodes).concat([].slice.call(r.removedNodes));
+        for (var j = 0; j < nodes.length; j++) {
+          if (nodes[j].nodeType === 1) { onMutation(); return; }
+        }
+      }
+    });
+    observer.observe(app, { childList: true, subtree: true });
+    onMutation();
+
+    setTimeout(remove, BACKSTOP_MS);
+  } catch (e) {
+    // A throw between appending the overlay and arming the backstop would otherwise leave it up.
+    try {
+      if (observer) observer.disconnect();
+      if (quietTimer) clearTimeout(quietTimer);
+      if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      window.__dspaceRemoveSsrOverlay = null;
+    } catch (ignored) { /* nothing left to do */ }
+    if (window.console && typeof console.warn === 'function') {
+      console.warn('[dspace-ssr-overlay] disabled due to error:', e);
+    }
+  }
+  }
+})();
+</script>
 </body>
 
 <!-- do not include client bundle, it is injected with Zone already loaded -->
