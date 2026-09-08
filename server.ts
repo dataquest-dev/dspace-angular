@@ -221,10 +221,45 @@ export function app() {
   return server;
 }
 
+/**
+ * The comcol page moves the address bar to its /search tab, which ssr.excludePathPatterns skips, so
+ * a reload there returned the CSR shell. Both URLs render ComcolSearchSectionComponent, so the bare
+ * URL goes back to the page. A query is left alone: those are the facet URLs the exclusion is for.
+ *
+ * @param req current request
+ * @returns the path to redirect to, or null to handle the request normally
+ */
+function comcolSearchTabRedirect(req): string {
+  if (!environment.ssr.enabled || (req.method !== 'GET' && req.method !== 'HEAD') || req.originalUrl.includes('?')) {
+    return null;
+  }
+  const match = /^(\/(collections|communities)\/[0-9a-f-]{36})\/search\/?$/i.exec(req.path);
+  if (match === null) {
+    return null;
+  }
+  // Only holds while search is the default tab; with another one the comcol page is a different
+  // view and the redirect would move the visitor off the tab they reloaded.
+  const page = match[2].toLowerCase() === 'collections' ? environment.collection : environment.community;
+  if (page.defaultBrowseTab !== 'search') {
+    return null;
+  }
+  const patterns = environment.ssr.excludePathPatterns;
+  // Nothing to gain when the tab is server-rendered anyway, or when the page itself is not.
+  if (!isExcludedFromSsr(req.path, patterns) || isExcludedFromSsr(match[1], patterns)) {
+    return null;
+  }
+  return req.baseUrl + match[1];
+}
+
 /*
  * The callback function to serve server side angular
  */
 function ngApp(req, res, next) {
+  const comcolPath = comcolSearchTabRedirect(req);
+  if (comcolPath !== null) {
+    res.redirect(302, comcolPath);
+    return;
+  }
   if (environment.ssr.enabled && req.method === 'GET' && (req.path === '/' || !isExcludedFromSsr(req.path, environment.ssr.excludePathPatterns))) {
     // Render the page to user via SSR (server side rendering)
     serverSideRender(req, res, next);
