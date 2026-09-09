@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   Component,
   Injector,
@@ -13,12 +14,22 @@ import {
   TranslateModule,
   TranslateService,
 } from '@ngx-translate/core';
+import {
+  Observable,
+  of,
+} from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
+import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
+import { FeatureID } from '../../../core/data/feature-authorization/feature-id';
 import { ItemDataService } from '../../../core/data/item-data.service';
 import { RequestService } from '../../../core/data/request.service';
 import { Item } from '../../../core/shared/item.model';
 import { SearchService } from '../../../core/shared/search/search.service';
 import { getItemPageRoute } from '../../../item-page/item-page-routing-paths';
+import { BtnDisabledDirective } from '../../btn-disabled.directive';
+import { DsoVersioningModalService } from '../../dso-page/dso-versioning-modal-service/dso-versioning-modal.service';
+import { hasValue } from '../../empty.util';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { MyDSpaceActionsComponent } from '../mydspace-actions';
 
@@ -30,6 +41,8 @@ import { MyDSpaceActionsComponent } from '../mydspace-actions';
   styleUrls: ['./item-actions.component.scss'],
   templateUrl: './item-actions.component.html',
   imports: [
+    AsyncPipe,
+    BtnDisabledDirective,
     NgbTooltip,
     RouterLink,
     TranslateModule,
@@ -49,6 +62,21 @@ export class ItemActionsComponent extends MyDSpaceActionsComponent<Item, ItemDat
   itemPageRoute: string;
 
   /**
+   * Whether the current user can create a new version for this item.
+   */
+  canCreateVersion$: Observable<boolean>;
+
+  /**
+   * Whether the New version button should be disabled.
+   */
+  disableNewVersion$: Observable<boolean>;
+
+  /**
+   * Tooltip key for the New version button.
+   */
+  newVersionTooltip$: Observable<string>;
+
+  /**
    * Initialize instance variables
    *
    * @param {Injector} injector
@@ -63,12 +91,15 @@ export class ItemActionsComponent extends MyDSpaceActionsComponent<Item, ItemDat
               protected notificationsService: NotificationsService,
               protected translate: TranslateService,
               protected searchService: SearchService,
-              protected requestService: RequestService) {
+              protected requestService: RequestService,
+              protected authorizationService: AuthorizationDataService,
+              protected dsoVersioningModalService: DsoVersioningModalService) {
     super(Item.type, injector, router, notificationsService, translate, searchService, requestService);
   }
 
   ngOnInit(): void {
     this.initPageRoute();
+    this.initVersioningControls();
   }
 
   /**
@@ -79,6 +110,7 @@ export class ItemActionsComponent extends MyDSpaceActionsComponent<Item, ItemDat
   initObjects(object: Item) {
     this.object = object;
     this.initPageRoute();
+    this.initVersioningControls();
   }
 
   /**
@@ -86,6 +118,37 @@ export class ItemActionsComponent extends MyDSpaceActionsComponent<Item, ItemDat
    */
   initPageRoute() {
     this.itemPageRoute = getItemPageRoute(this.object);
+  }
+
+  /**
+   * Initialize authorization and button state for version creation.
+   */
+  initVersioningControls(): void {
+    this.canCreateVersion$ = of(false);
+    this.disableNewVersion$ = of(false);
+    this.newVersionTooltip$ = of('item.page.version.create');
+
+    if (!hasValue(this.object?.self) || !hasValue(this.object?._links?.version?.href)) {
+      return;
+    }
+
+    this.canCreateVersion$ = this.authorizationService.isAuthorized(
+      FeatureID.CanCreateVersion,
+      this.object.self,
+    );
+    this.disableNewVersion$ = this.dsoVersioningModalService.isNewVersionButtonDisabled(this.object).pipe(shareReplay({ bufferSize: 1, refCount: false }));
+    this.newVersionTooltip$ = this.dsoVersioningModalService.getVersioningTooltipMessage(
+      this.object,
+      'item.page.version.hasDraft',
+      'item.page.version.create',
+    );
+  }
+
+  /**
+   * Open the existing Create version modal for the current item.
+   */
+  openCreateVersionModal(): void {
+    this.dsoVersioningModalService.openCreateVersionModal(this.object);
   }
 
 }
