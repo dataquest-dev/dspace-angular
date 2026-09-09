@@ -30,7 +30,10 @@ import {
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
 import { RequestParam } from '../../../core/cache/models/request-param.model';
 import { ClarinLicenseDataService } from '../../../core/data/clarin/clarin-license-data.service';
-import { FindListOptions } from '../../../core/data/find-list-options.model';
+import {
+  FindListOptions,
+  MAX_PAGE_SIZE,
+} from '../../../core/data/find-list-options.model';
 import { PaginatedList } from '../../../core/data/paginated-list.model';
 import { RemoteData } from '../../../core/data/remote-data';
 import { PutRequest } from '../../../core/data/request.models';
@@ -122,7 +125,7 @@ export class ItemLicenseMapperComponent implements OnInit {
     const options = new FindListOptions();
     options.currentPage = 0;
     // Load all licenses
-    options.elementsPerPage = 1000;
+    options.elementsPerPage = MAX_PAGE_SIZE;
 
     this.clarinLicenseService.findAll(options, false)
       .pipe(

@@ -18,6 +18,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
 import { BitstreamDataService } from '../../core/data/bitstream-data.service';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+import { MAX_PAGE_SIZE } from '../../core/data/find-list-options.model';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { RemoteData } from '../../core/data/remote-data';
 import { RequestService } from '../../core/data/request.service';
@@ -83,7 +84,7 @@ export class ClarinZipDownloadPageComponent extends ClarinBitstreamDownloadPageC
     this.itemRD$.subscribe((itemRD: RemoteData<Item>)  => {
       this.bitstreamDataService.findAllByItemAndBundleName(itemRD?.payload, 'ORIGINAL', {
         currentPage: 1,
-        elementsPerPage: 9999,
+        elementsPerPage: MAX_PAGE_SIZE,
       }).pipe(
         getFirstCompletedRemoteData(),
       ).subscribe((bitstreamsRD: RemoteData<PaginatedList<Bitstream>>) => {
