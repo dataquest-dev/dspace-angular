@@ -31,7 +31,7 @@ Disallow: /communities/*/search
 Disallow: /*?f.
 Disallow: /*&f.
 # NOTE: robots.txt is advisory only; it does not stop crawlers that ignore it.
-# The SSR-side enforcement (ssr.excludePathPatterns) is not configured here.
+# ssr.excludePathPatterns in config.yml enforces the facet part server-side, for any user agent.
 
 # Heavy Discovery facet queries on browse pages
 Disallow: /collections/*?f
