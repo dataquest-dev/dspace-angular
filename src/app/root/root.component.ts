@@ -3,6 +3,7 @@ import {
   NgClass,
 } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   Inject,
   Input,
@@ -38,7 +39,6 @@ import {
 } from '../core/services/window.service';
 import { ThemedFooterComponent } from '../footer/themed-footer.component';
 import { ThemedHeaderNavbarWrapperComponent } from '../header-nav-wrapper/themed-header-navbar-wrapper.component';
-import { slideSidebarPadding } from '../shared/animations/slide';
 import { HostWindowService } from '../shared/host-window.service';
 import { LiveRegionComponent } from '../shared/live-region/live-region.component';
 import { ThemedLoadingComponent } from '../shared/loading/themed-loading.component';
@@ -52,7 +52,6 @@ import { SystemWideAlertBannerComponent } from '../system-wide-alert/alert-banne
   selector: 'ds-base-root',
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss'],
-  animations: [slideSidebarPadding],
   imports: [
     AsyncPipe,
     LiveRegionComponent,
@@ -68,12 +67,25 @@ import { SystemWideAlertBannerComponent } from '../system-wide-alert/alert-banne
     TranslateModule,
   ],
 })
-export class RootComponent implements OnInit {
+export class RootComponent implements OnInit, AfterViewInit {
   theme: Observable<ThemeConfig> = of({} as any);
   isSidebarVisible$: Observable<boolean>;
   slideSidebarOver$: Observable<boolean>;
   collapsedSidebarWidth$: Observable<string>;
   expandedSidebarWidth$: Observable<string>;
+
+  /**
+   * Which admin-sidebar gutter the outer wrapper should carry: 'hidden', 'unpinned' or 'pinned'.
+   * The width itself comes from CSS (see root.component.scss), so the server and the browser
+   * resolve it the same way.
+   */
+  sidebarPaddingState$: Observable<string>;
+
+  /**
+   * Lets the gutter transition run only after the first paint, so the initial resolution does not
+   * animate. Off on the server and on the first render; only pin/unpin toggles slide.
+   */
+  gutterTransitionEnabled = false;
   notificationOptions: INotificationBoardOptions;
   models: any;
 
@@ -129,8 +141,24 @@ export class RootComponent implements OnInit {
         startWith(true),
       );
 
+    // A CSS class instead of the @slideSidebarPadding animation: that animation needed a concrete
+    // width from the browser-only CSS-variable store, so the server rendered `padding-left: *` and
+    // the page moved sideways once the browser resolved the real width.
+    this.sidebarPaddingState$ = combineLatestObservable([this.isSidebarVisible$, this.slideSidebarOver$]).pipe(
+      map(([visible, over]: [boolean, boolean]) => !visible ? 'hidden' : over ? 'unpinned' : 'pinned'),
+    );
+
     if (this.router.url === getPageInternalServerErrorRoute()) {
       this.shouldShowRouteLoader = false;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    // Browser only; requestAnimationFrame does not exist under SSR.
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(() => {
+        this.gutterTransitionEnabled = true;
+      });
     }
   }
 
