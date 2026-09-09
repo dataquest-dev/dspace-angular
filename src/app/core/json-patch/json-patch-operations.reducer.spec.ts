@@ -341,7 +341,7 @@ describe('jsonPatchOperationsReducer test suite', () => {
   });
 
   describe('dedupeOperationEntries', () => {
-    it('should not remove duplicated keys if operations are not sequential', () => {
+    it('should keep only the latest duplicated key even when operations are not sequential', () => {
       initState = {
         sections: {
           children: {
@@ -410,24 +410,6 @@ describe('jsonPatchOperationsReducer test suite', () => {
       const expectedBody: any =  [
         {
           'operation': {
-            'op': 'add',
-            'path': '/sections/publicationStep/dc.date.issued',
-            'value': [
-              {
-                'value': '2024-06',
-                'language': null,
-                'authority': null,
-                'display': '2024-06',
-                'confidence': -1,
-                'place': 0,
-                'otherInformation': null,
-              },
-            ],
-          },
-          'timeCompleted': timestampBeforeStart,
-        },
-        {
-          'operation': {
             'op': 'replace',
             'path': '/sections/publicationStep/dc.date.issued/0',
             'value': {
@@ -466,7 +448,7 @@ describe('jsonPatchOperationsReducer test suite', () => {
 
     });
 
-    it('should remove duplicated keys if operations are sequential', () => {
+    it('should keep only the latest duplicated key when operations are sequential', () => {
       initState = {
         sections: {
           children: {
@@ -551,24 +533,6 @@ describe('jsonPatchOperationsReducer test suite', () => {
       const newState = jsonPatchOperationsReducer(initState, action);
 
       const expectedBody: any =  [
-        {
-          'operation': {
-            'op': 'add',
-            'path': '/sections/publicationStep/dc.date.issued',
-            'value': [
-              {
-                'value': '2024-06',
-                'language': null,
-                'authority': null,
-                'display': '2024-06',
-                'confidence': -1,
-                'place': 0,
-                'otherInformation': null,
-              },
-            ],
-          },
-          'timeCompleted': timestampBeforeStart,
-        },
         {
           'operation': {
             'op': 'replace',
