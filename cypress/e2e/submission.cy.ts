@@ -46,6 +46,42 @@ describe('New Submission page', () => {
             } as Options,
     );
 
+    // CLARIN: the CLARIN licence section (section_clarin-license) only exists when the backend
+    // ships the clarin-license submission step, which the vanilla backend used by CI e2e does not,
+    // so this step is conditional (decision D-03). No file has been uploaded in this test, which
+    // makes the section valid straight away: its card header must show the green status icon
+    // without a reload, and neither the warning nor the error icon may be present.
+    // Adapted from cypress/e2e/submission-ui.cy.ts on dtq-dev (PR #1292).
+    cy.get('body').then((body) => {
+      if (body.find('div[id="section_clarin-license"]').length === 0) {
+        cy.log('CLARIN licence section not configured on this backend - skipping status icon check');
+        return;
+      }
+
+      // Allow frontend to propagate the initial section status (no file => valid)
+      // before asserting the header icon.
+      cy.wait(1000);
+      cy.get('div[id="section_clarin-license"]').find('.card-header').should('be.visible');
+
+      // Verify warning and error icons do NOT exist
+      cy.get('div[id="section_clarin-license"]')
+        .find('.card-header')
+        .find('.fa-exclamation-circle.text-warning')
+        .should('not.exist');
+
+      cy.get('div[id="section_clarin-license"]')
+        .find('.card-header')
+        .find('.fa-exclamation-circle.text-danger')
+        .should('not.exist');
+
+      // Green check must eventually appear (retry-ability with a longer timeout
+      // handles any remaining async settle of the section status observable).
+      cy.get('div[id="section_clarin-license"]')
+        .find('.card-header')
+        .find('.fa-check-circle.text-success', { timeout: 15000 })
+        .should('be.visible');
+    });
+
     // Discard button should work
     // Clicking it will display a confirmation, which we will confirm with another click
     cy.get('button#discard').click();
