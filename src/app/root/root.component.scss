@@ -14,3 +14,27 @@
     top: 0;
   }
 }
+
+// Admin-sidebar left gutter, driven by the ds-admin-sidebar-* class from sidebarPaddingState$ rather
+// than the @slideSidebarPadding animation. The animation read the width from a browser-only store, so
+// the server emitted `padding-left: *` and the page moved sideways once the browser resolved it.
+// Resolving from the custom properties in CSS renders the same on both sides, with no hardcoded px.
+.outer-wrapper {
+  &.ds-admin-sidebar-hidden {
+    padding-left: 0;
+  }
+
+  &.ds-admin-sidebar-unpinned {
+    padding-left: var(--ds-admin-sidebar-fixed-element-width);
+  }
+
+  &.ds-admin-sidebar-pinned {
+    padding-left: var(--ds-admin-sidebar-total-width);
+  }
+
+  // Only genuine pin/unpin toggles slide: the class is added after the first paint, so the initial
+  // gutter never animates behind the anti-flicker overlay.
+  &.ds-admin-sidebar-animate {
+    transition: padding-left 300ms ease-in-out;
+  }
+}
