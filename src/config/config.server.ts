@@ -264,7 +264,11 @@ export const buildAppConfig = (destConfigPath?: string, mapping?: ServerHashedFi
     writeFileSync(destConfigPath, content);
     if (mapping !== undefined) {
       mapping.add(destConfigPath, content);
-      if (!(appConfig as BuildConfig).ssr?.enabled) {
+      // Only worth doing when we serve CSR: with SSR the configuration reaches the browser in the
+      // transfer state and the file is never fetched, so the preload is spent on nothing. Note that
+      // DefaultAppConfig carries no `ssr` block, so `enabled` is undefined unless config.yml sets
+      // it; testing for `false` is what keeps the link out of an SSR deployment.
+      if ((appConfig as BuildConfig).ssr?.enabled === false) {
         // If we're serving for CSR we can retrieve the configuration before JS is loaded/executed
         mapping.addHeadLink({
           path: destConfigPath,
