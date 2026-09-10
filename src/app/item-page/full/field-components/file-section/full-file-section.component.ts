@@ -36,6 +36,7 @@ import { MetadataFieldWrapperComponent } from '../../../../shared/metadata-field
 import { NotificationsService } from '../../../../shared/notifications/notifications.service';
 import { PaginationComponent } from '../../../../shared/pagination/pagination.component';
 import { PaginationComponentOptions } from '../../../../shared/pagination/pagination-component-options.model';
+import { DsLangPipe } from '../../../../shared/utils/ds-lang.pipe';
 import { FileSizePipe } from '../../../../shared/utils/file-size-pipe';
 import { followLink } from '../../../../shared/utils/follow-link-config.model';
 import { VarDirective } from '../../../../shared/utils/var.directive';
@@ -53,6 +54,7 @@ import { FileSectionComponent } from '../../../simple/field-components/file-sect
   templateUrl: './full-file-section.component.html',
   imports: [
     AsyncPipe,
+    DsLangPipe,
     FileSizePipe,
     MetadataFieldWrapperComponent,
     PaginationComponent,

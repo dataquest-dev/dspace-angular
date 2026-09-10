@@ -11,6 +11,7 @@
   <ds-truncatable-part [maxLines]="1" [background]="isCurrent() ? 'primary' : 'default'" [showToggle]="false">
     <div class="text-secondary"
       [ngClass]="isCurrent() ? 'text-light' : 'text-secondary'"
+      [attr.lang]="descriptionLang || null"
     [innerHTML]="description"></div>
   </ds-truncatable-part>
 }

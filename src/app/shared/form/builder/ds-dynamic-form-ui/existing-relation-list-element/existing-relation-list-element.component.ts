@@ -10,6 +10,7 @@ import {
   Output,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   BehaviorSubject,
   Observable,
@@ -80,6 +81,7 @@ export abstract class Reorderable {
     AsyncPipe,
     ListableObjectComponentLoaderComponent,
     ThemedLoadingComponent,
+    TranslateModule,
   ],
 })
 export class ExistingRelationListElementComponent implements OnInit, OnChanges, OnDestroy {

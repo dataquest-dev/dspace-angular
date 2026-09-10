@@ -12,6 +12,7 @@ import { listableObjectComponent } from '../../../../../shared/object-collection
 import { ItemSearchResultListElementComponent } from '../../../../../shared/object-list/search-result-list-element/item-search-result/item-types/item/item-search-result-list-element.component';
 import { TruncatableComponent } from '../../../../../shared/truncatable/truncatable.component';
 import { TruncatablePartComponent } from '../../../../../shared/truncatable/truncatable-part/truncatable-part.component';
+import { DsLangPipe } from '../../../../../shared/utils/ds-lang.pipe';
 import { ThemedThumbnailComponent } from '../../../../../thumbnail/themed-thumbnail.component';
 
 @listableObjectComponent('OrgUnitSearchResult', ViewMode.ListElement)
@@ -21,6 +22,7 @@ import { ThemedThumbnailComponent } from '../../../../../thumbnail/themed-thumbn
   templateUrl: './org-unit-search-result-list-element.component.html',
   imports: [
     AsyncPipe,
+    DsLangPipe,
     NgClass,
     RouterLink,
     ThemedBadgesComponent,

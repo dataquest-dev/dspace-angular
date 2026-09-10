@@ -4,7 +4,7 @@
       <div class="pagination-masked clearfix top">
         <div class="row">
           @if (!hidePaginationDetail && collectionSize > 0) {
-            <div class="col-auto pagination-info">
+            <div class="col-auto pagination-info" aria-live="polite" aria-atomic="true">
               <span class="align-middle hidden-xs-down">{{ 'pagination.showing.label' | translate }}</span>
               <span class="align-middle">{{ 'pagination.showing.detail' | translate:(showingDetails$ | async)}}</span>
             </div>

@@ -57,6 +57,7 @@ import { ItemSearchResult } from '../object-collection/shared/item-search-result
 import { ListableObject } from '../object-collection/shared/listable-object.model';
 import { FileSizePipe } from '../utils/file-size-pipe';
 import { followLink } from '../utils/follow-link-config.model';
+import { metadataLangToBcp47 } from '../utils/metadata-language.util';
 import { VarDirective } from '../utils/var.directive';
 
 /**
@@ -103,6 +104,10 @@ export class ClarinItemBoxViewComponent implements OnInit {
    * Item's description text.
    */
   itemDescription = '';
+  /**
+   * Language of the item's description metadata value.
+   */
+  itemDescriptionLang: string | null = null;
   /**
    * Items's handle redirection URI.
    */
@@ -185,7 +190,9 @@ export class ClarinItemBoxViewComponent implements OnInit {
     this.itemType = this.item?.firstMetadataValue('dc.type');
     this.itemName = this.item?.firstMetadataValue('dc.title');
     this.itemUri = getItemPageRoute(this.item);
-    this.itemDescription = this.item?.firstMetadataValue('dc.description');
+    const descMeta = this.item?.firstMetadata('dc.description');
+    this.itemDescription = descMeta?.value || null;
+    this.itemDescriptionLang = metadataLangToBcp47(descMeta?.language);
     const publisherMd = this.item?.allMetadata(['dc.publisher', 'creativework.publisher'])?.[0];
     this.hasPublisherRorAuthority = !!publisherMd?.authority;
     this.itemPublisher = publisherMd?.value;

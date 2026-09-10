@@ -6,6 +6,7 @@ import { FullFileSectionComponent as BaseComponent } from '../../../../../../../
 import { ThemedFileDownloadLinkComponent } from '../../../../../../../app/shared/file-download-link/themed-file-download-link.component';
 import { MetadataFieldWrapperComponent } from '../../../../../../../app/shared/metadata-field-wrapper/metadata-field-wrapper.component';
 import { PaginationComponent } from '../../../../../../../app/shared/pagination/pagination.component';
+import { DsLangPipe } from '../../../../../../../app/shared/utils/ds-lang.pipe';
 import { FileSizePipe } from '../../../../../../../app/shared/utils/file-size-pipe';
 import { VarDirective } from '../../../../../../../app/shared/utils/var.directive';
 import { ThemedThumbnailComponent } from '../../../../../../../app/thumbnail/themed-thumbnail.component';
@@ -18,6 +19,7 @@ import { ThemedThumbnailComponent } from '../../../../../../../app/thumbnail/the
   templateUrl: '../../../../../../../app/item-page/full/field-components/file-section/full-file-section.component.html',
   imports: [
     AsyncPipe,
+    DsLangPipe,
     FileSizePipe,
     MetadataFieldWrapperComponent,
     PaginationComponent,

@@ -6,6 +6,7 @@ import {
 
 import { Item } from '../../../../core/shared/item.model';
 import { makeLinks } from '../../../../shared/clarin-shared-util';
+import { metadataLangToBcp47 } from '../../../../shared/utils/metadata-language.util';
 
 @Component({
   imports: [],
@@ -26,19 +27,15 @@ export class ClarinDescriptionItemFieldComponent implements OnInit {
   @Input() fields: string[];
 
   /**
-   * The valid text metadata to display - updated with links
+   * Description entries with processed value and language, built from metadata.
    */
-  validTextMetadata: string;
+  descriptionEntries: { value: string, language: string | null }[] = [];
 
   ngOnInit(): void {
-    // Store all description metadata values
-    const updatedMVs = [];
-    this.item.allMetadataValues(this.fields).forEach((value) => {
-      updatedMVs.push(makeLinks(value));
-    });
-
-    // Join the metadata values with a line break
-    this.validTextMetadata = updatedMVs.join('<br>');
+    this.descriptionEntries = this.item.allMetadata(this.fields).map((md) => ({
+      value: makeLinks(md.value),
+      language: metadataLangToBcp47(md.language),
+    }));
   }
 
 }
