@@ -7,6 +7,9 @@ export interface ItemConfig extends Config {
   // This is used to show the access status label of items in results lists
   showAccessStatuses: boolean;
 
+  // Item uuids or handles to exclude from search engine indexes. Empty = off.
+  noIndex: string[];
+
   bitstream: {
     // Number of entries in the bitstream list in the item view page.
     // Rounded to the nearest size in the list of selectable sizes on the
