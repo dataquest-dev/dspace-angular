@@ -548,7 +548,10 @@ describe('ClarinLicenseTableComponent', () => {
       linkedDeleteButton.nativeElement.click();
       fixture.detectChanges();
 
-      expect(modalServiceStub.open).not.toHaveBeenCalledWith(ConfirmationModalComponent);
+      // the v7 original asserted not.toHaveBeenCalledWith(ConfirmationModalComponent) with a
+      // single argument; every real call passes two, so that assertion could never fail. Match
+      // the real call signature so the guard is actually exercised.
+      expect(modalServiceStub.open).not.toHaveBeenCalledWith(ConfirmationModalComponent, { centered: true });
       expect((clarinLicenseLabelDataService.delete as jasmine.Spy)).not.toHaveBeenCalled();
     });
 
