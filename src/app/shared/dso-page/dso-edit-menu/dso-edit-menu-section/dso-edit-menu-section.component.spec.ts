@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
 import {
   ActivatedRoute,
   Router,
+  RouterLink,
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -73,6 +74,9 @@ describe('DsoEditMenuSectionComponent', () => {
       disabled: false,
       text: 'text',
       link: 'link',
+      queryParams: {
+        scope: 'test-scope-id',
+      },
     },
     icon: iconString,
   };
@@ -171,6 +175,15 @@ describe('DsoEditMenuSectionComponent', () => {
 
     it('should show the link element', () => {
       expect(fixture.debugElement.query(By.css('a'))).not.toBeNull();
+    });
+
+    it('should bind queryParams on the link element', () => {
+      const link = fixture.debugElement.query(By.css('a'));
+
+      // v9: RouterLink is a standalone directive, so its inputs are no longer mirrored into
+      // DebugElement.properties (that map is the raw DOM element on Angular 20) - read the
+      // directive instance instead, which is what the 7.x `link.properties.queryParams` meant.
+      expect(link.injector.get(RouterLink).queryParams).toEqual({ scope: 'test-scope-id' });
     });
 
   });
