@@ -360,7 +360,7 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
 
     if (init && !this.useFindAllService) {
       result = this.getInitValueFromModel().pipe(
-        map((formValue: FormFieldMetadataValueObject) => formValue.display),
+        map((formValue: FormFieldMetadataValueObject) => formValue.display || formValue.value),
       );
     } else {
       if (isEmpty(value)) {
@@ -370,7 +370,7 @@ export class DsDynamicScrollableDropdownComponent extends DsDynamicVocabularyCom
       } else if (this.useFindAllService) {
         result = of(value[this.model.displayKey]);
       } else {
-        result = of(value.display);
+        result = of(value.display || value.value);
       }
     }
 
