@@ -26,6 +26,7 @@ import { of } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
 import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
+import { ScriptDataService } from '../../../core/data/processes/script-data.service';
 import { RequestService } from '../../../core/data/request.service';
 import { EPerson } from '../../../core/eperson/models/eperson.model';
 import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
@@ -33,6 +34,7 @@ import { Item } from '../../../core/shared/item.model';
 import { SearchService } from '../../../core/shared/search/search.service';
 import { WorkspaceItem } from '../../../core/submission/models/workspaceitem.model';
 import { WorkspaceitemDataService } from '../../../core/submission/workspaceitem-data.service';
+import { getProcessDetailRoute } from '../../../process-page/process-page-routing.paths';
 import { getMockRemoteDataBuildService } from '../../mocks/remote-data-build.service.mock';
 import { getMockRequestService } from '../../mocks/request.service.mock';
 import { getMockSearchService } from '../../mocks/search-service.mock';
@@ -56,6 +58,7 @@ let mockObject: WorkspaceItem;
 let notificationsServiceStub: NotificationsServiceStub;
 let authorizationService;
 let authService;
+let scriptDataService;
 
 const mockDataService = jasmine.createSpyObj('WorkspaceitemDataService', {
   delete: jasmine.createSpy('delete'),
@@ -176,6 +179,11 @@ authService = jasmine.createSpyObj('authService', {
   getAuthenticatedUserFromStore: jasmine.createSpy('getAuthenticatedUserFromStore'),
 });
 
+scriptDataService = jasmine.createSpyObj('scriptDataService', {
+  scriptWithNameExistsAndCanExecute: jasmine.createSpy('scriptWithNameExistsAndCanExecute'),
+  invoke: jasmine.createSpy('invoke'),
+});
+
 describe('WorkspaceitemActionsComponent', () => {
   beforeEach(waitForAsync(async () => {
     authorizationService = jasmine.createSpyObj('authorizationService', {
@@ -204,6 +212,7 @@ describe('WorkspaceitemActionsComponent', () => {
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: HALEndpointService, useValue: new HALEndpointServiceStub('https://rest.api/server/api') },
         { provide: RemoteDataBuildService, useValue: getMockRemoteDataBuildService() },
+        { provide: ScriptDataService, useValue: scriptDataService },
         NgbModal,
       ],
       schemas: [NO_ERRORS_SCHEMA],
@@ -218,6 +227,7 @@ describe('WorkspaceitemActionsComponent', () => {
     component.object = mockObject;
     notificationsServiceStub = TestBed.inject(NotificationsService as any);
     (authService.getAuthenticatedUserFromStore as jasmine.Spy).and.returnValue(of(ePersonMock));
+    (scriptDataService.scriptWithNameExistsAndCanExecute as jasmine.Spy).and.returnValue(of(true));
     fixture.detectChanges();
   });
 
@@ -249,6 +259,61 @@ describe('WorkspaceitemActionsComponent', () => {
     const btn = fixture.debugElement.query(By.css('button[data-test="view-btn"]'));
 
     expect(btn).not.toBeNull();
+  });
+
+  it('should display add URL bitstream button when script is executable', () => {
+    const btn = fixture.debugElement.query(By.css('#add_url_bitstream_1234'));
+
+    expect(btn).not.toBeNull();
+  });
+
+  it('should not display add URL bitstream button when script is not executable', () => {
+    component.canUseFileDownloader$ = of(false);
+    fixture.detectChanges();
+
+    const btn = fixture.debugElement.query(By.css('#add_url_bitstream_1234'));
+    expect(btn).toBeNull();
+  });
+
+  it('should invoke file-downloader with -u and -w and optional -n', () => {
+    const closeModal = jasmine.createSpy('closeModal');
+    const process = { processId: 101 } as any;
+    (scriptDataService.invoke as jasmine.Spy).and.returnValue(createSuccessfulRemoteDataObject$(process));
+
+    component.bitstreamFromUrl = ' https://example.org/file.pdf ';
+    component.bitstreamName = ' downloaded.pdf ';
+    component.addBitstreamFromUrl(closeModal);
+
+    expect(scriptDataService.invoke).toHaveBeenCalledWith('file-downloader', [
+      { name: '-u', value: 'https://example.org/file.pdf' },
+      { name: '-w', value: '1234' },
+      { name: '-n', value: 'downloaded.pdf' },
+    ], []);
+  });
+
+  it('should navigate to process detail and close modal on add from URL success', () => {
+    const closeModal = jasmine.createSpy('closeModal');
+    const router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl').and.callThrough();
+    (scriptDataService.invoke as jasmine.Spy).and.returnValue(createSuccessfulRemoteDataObject$({ processId: 202 } as any));
+
+    component.bitstreamFromUrl = 'https://example.org/file.pdf';
+    component.addBitstreamFromUrl(closeModal);
+
+    expect(notificationsServiceStub.success).toHaveBeenCalled();
+    expect(closeModal).toHaveBeenCalledWith('ok');
+    expect(router.navigateByUrl).toHaveBeenCalledWith(getProcessDetailRoute('202'));
+  });
+
+  it('should show error notification on add from URL failure', () => {
+    const closeModal = jasmine.createSpy('closeModal');
+    (scriptDataService.invoke as jasmine.Spy).and.returnValue(createFailedRemoteDataObject$('Error', 500));
+
+    component.bitstreamFromUrl = 'https://example.org/file.pdf';
+    component.addBitstreamFromUrl(closeModal);
+
+    expect(notificationsServiceStub.error).toHaveBeenCalled();
+    expect(closeModal).not.toHaveBeenCalled();
   });
 
   describe('on discard confirmation', () => {
