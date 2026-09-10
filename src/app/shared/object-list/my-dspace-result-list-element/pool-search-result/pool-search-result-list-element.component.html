@@ -19,7 +19,7 @@
   </ng-container>
   <div class="row">
     <div [ngClass]="showThumbnails ? 'offset-3 offset-md-2 col-9 col-md-10 ps-3' : ''">
-      <ds-pool-task-actions id="actions"
+      <ds-pool-task-actions id="actions-{{ dso?.id }}"
         [item]="item$.value"
         [object]="dso"
         [workflowitem]="workflowitem$.value"

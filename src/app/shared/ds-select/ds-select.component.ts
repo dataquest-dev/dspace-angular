@@ -10,6 +10,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { BtnDisabledDirective } from '../btn-disabled.directive';
 
+let nextDsSelectId = 0;
+
 /**
  * Component which represent a DSpace dropdown selector.
  */
@@ -24,6 +26,13 @@ import { BtnDisabledDirective } from '../btn-disabled.directive';
   ],
 })
 export class DsSelectComponent {
+
+  /**
+   * Unique identifier for the component instance. Several ds-select instances are rendered on the
+   * same page (browse toolbars, MyDSpace), so the dropdown's DOM ids have to be per-instance or the
+   * document carries duplicate ids and every aria reference resolves to the first instance.
+   */
+  uniqueId = `ds-select-${nextDsSelectId++}`;
 
   /**
    * An optional label for the dropdown selector.
