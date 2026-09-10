@@ -8,83 +8,172 @@
     <span class="input-group-append" (click)="searchLicenses()">
       <button type="submit" class="btn btn-primary search-button">
         <i class="fas fa-search"></i>{{'clarin-license.button.search' | translate}}</button>
-      </span>
-    </div>
-    <!-- The table with pagination -->
-    <div *ngVar="(licensesRD$ | async)?.payload as cLicenses">
-      <div class="mb-2">
-        <ds-pagination (paginationChange)="onPageChange()"
-          [hideGear]="true"
-          [hidePagerWhenSinglePage]="true"
-          [paginationOptions]="options"
-          [collectionSize]="cLicenses?.totalElements"
-          [retainScrollPosition]="true">
-          <table class="table table-striped table-bordered align-middle my-2">
-            <thead>
-              <tr>
-                <th class="wm-3p5"></th>
-                <th class="w-25">{{"clarin-license.table.name" | translate}}</th>
-                <th class="w-20">{{"clarin-license.table.definition" | translate}}</th>
-                <th>{{"clarin-license.table.confirmation" | translate}}</th>
-                <th class="w-12">{{"clarin-license.table.required-user-info" | translate}}</th>
-                <th>{{"clarin-license.table.label" | translate}}</th>
-                <th>{{"clarin-license.table.extended-labels" | translate}}</th>
-                <th>{{"clarin-license.table.bitstreams" | translate}}</th>
+    </span>
+  </div>
+  <!-- The table with pagination -->
+  <div *ngVar="(licensesRD$ | async)?.payload as cLicenses">
+    <div class="mb-2">
+      <ds-pagination (paginationChange)="onPageChange()"
+        [hideGear]="true"
+        [hidePagerWhenSinglePage]="true"
+        [paginationOptions]="options"
+        [collectionSize]="cLicenses?.totalElements"
+        [retainScrollPosition]="true">
+        <table class="table table-striped table-bordered align-middle my-2">
+          <thead>
+            <tr>
+              <th class="wm-3p5"></th>
+              <th class="w-25">{{"clarin-license.table.name" | translate}}</th>
+              <th class="w-20">{{"clarin-license.table.definition" | translate}}</th>
+              <th>{{"clarin-license.table.confirmation" | translate}}</th>
+              <th class="w-12">{{"clarin-license.table.required-user-info" | translate}}</th>
+              <th>{{"clarin-license.table.label" | translate}}</th>
+              <th>{{"clarin-license.table.extended-labels" | translate}}</th>
+              <th>{{"clarin-license.table.bitstreams" | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (cLicense of cLicenses?.page; track cLicense) {
+              <tr [id]="'clarin-license-row-' + cLicense.id">
+                <td class="wm-3p5">
+                  <input class="collection-checkbox"
+                    [ngModel]="selectedLicense?.id === cLicense.id"
+                    (change)="switchSelectedLicense(cLicense)"
+                    type="checkbox"
+                    name="{{cLicense.id}}">
+                </td>
+                <td class="w-25">{{cLicense?.name}}</td>
+                <td class="w-20">{{cLicense?.definition}}</td>
+                <td>{{cLicense?.confirmation}}</td>
+                <td class="w-12">{{cLicense?.requiredInfo | dsCLicenseRequiredInfo}}</td>
+                <td>{{cLicense?.clarinLicenseLabel?.label}}</td>
+                <td>{{cLicense?.extendedClarinLicenseLabels | dsExtendedCLicense}}</td>
+                <td>{{cLicense?.bitstreams}}</td>
               </tr>
-            </thead>
-            <tbody>
-              @for (cLicense of cLicenses?.page; track cLicense) {
-                <tr [id]="'clarin-license-row-' + cLicense.id">
-                  <td class="wm-3p5">
-                    <input class="collection-checkbox"
-                      [ngModel]="selectedLicense?.id === cLicense.id"
-                      (change)="switchSelectedLicense(cLicense)"
-                      type="checkbox"
-                      name="{{cLicense.id}}">
-                  </td>
-                  <td class="w-25">{{cLicense?.name}}</td>
-                  <td class="w-20">{{cLicense?.definition}}</td>
-                  <td>{{cLicense?.confirmation}}</td>
-                  <td class="w-12">{{cLicense?.requiredInfo | dsCLicenseRequiredInfo}}</td>
-                  <td>{{cLicense?.clarinLicenseLabel?.label}}</td>
-                  <td>{{cLicense?.extendedClarinLicenseLabels | dsExtendedCLicense}}</td>
-                  <td>{{cLicense?.bitstreams}}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-          @if (isLoading) {
-            <ds-loading class="text-center"></ds-loading>
-          }
-        </ds-pagination>
+            }
+          </tbody>
+        </table>
+        @if (isLoading) {
+          <ds-loading class="text-center"></ds-loading>
+        }
+      </ds-pagination>
 
-        <div class="mt-2">
-          <div class="btn-group pe-1">
-            <div ngbDropdown class="input-group-prepend">
-              <button id="resultdropdown" type="button"
-                ngbDropdownToggle
-                class="btn btn-success dropdown-toggle"
-                data-bs-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                {{"clarin-license.button.define" | translate}}
-              </button>
-              <div ngbDropdownMenu aria-labelledby="resultdropdown">
-                <button class="dropdown-item" (click)="openDefineLicenseForm()">{{"clarin-license.button.define-license" | translate}}</button>
-                <button class="dropdown-item" (click)="openDefineLicenseLabelForm()">{{"clarin-license.button.define-license-label" | translate}}</button>
-              </div>
+      <div class="mt-2">
+        <div class="btn-group pe-1">
+          <div ngbDropdown class="input-group-prepend">
+            <button id="resultdropdown" type="button"
+              ngbDropdownToggle
+              class="btn btn-success dropdown-toggle"
+              data-bs-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              {{"clarin-license.button.define" | translate}}
+            </button>
+            <div ngbDropdownMenu aria-labelledby="resultdropdown">
+              <button class="dropdown-item" (click)="openDefineLicenseForm()">{{"clarin-license.button.define-license" | translate}}</button>
+              <button class="dropdown-item" (click)="openDefineLicenseLabelForm()">{{"clarin-license.button.define-license-label" | translate}}</button>
             </div>
           </div>
-          <div class="btn-group pe-1">
-            <button type="button" class="btn btn-warning" [dsBtnDisabled]="!selectedLicense" (click)="openEditLicenseForm()">
-              {{'clarin-license.button.edit-license' | translate}}
+        </div>
+        <div class="btn-group pe-1">
+          <button type="button" class="btn btn-warning" [dsBtnDisabled]="!selectedLicense" (click)="openEditLicenseForm()">
+            {{'clarin-license.button.edit-license' | translate}}
+          </button>
+        </div>
+        <div class="btn-group pe-1">
+          <span
+            [ngbTooltip]="isSelectedLicenseInUse() ? ('clarin-license.button.delete-license.disabled-tooltip' | translate:{name: selectedLicense?.name}) : null"
+            container="body"
+            placement="top"
+            [attr.tabindex]="isSelectedLicenseInUse() ? 0 : null">
+            <button
+              type="button"
+              class="btn btn-danger"
+              [dsBtnDisabled]="!selectedLicense || isSelectedLicenseInUse()"
+              (click)="selectedLicense && !isSelectedLicenseInUse() && deleteLicense()"
+              [attr.aria-label]="'clarin-license.button.delete-license' | translate">
+              <i class="fas fa-trash" aria-hidden="true"></i>
+              {{ 'clarin-license.button.delete-license' | translate }}
             </button>
-          </div>
-          <div class="btn-group pe-1">
-            <button type="button" class="btn btn-danger" [dsBtnDisabled]="!selectedLicense" (click)="deleteLicense()">
-              {{'clarin-license.button.delete-license' | translate}}
-            </button>
-          </div>
+          </span>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="labels-section mt-4">
+    <h3 class="border-bottom pb-2">{{'clarin.license.label.section.title' | translate}}</h3>
+
+    <div *ngVar="(labelsRD$ | async)?.payload as cLicenseLabels">
+      <ds-pagination
+        [paginationOptions]="labelPaginationOptions"
+        [collectionSize]="cLicenseLabels?.totalElements"
+        [hideGear]="true"
+        [hidePagerWhenSinglePage]="true"
+        [retainScrollPosition]="true">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered align-middle my-2">
+            <thead>
+              <tr>
+                <th>{{'clarin.license.label.table.header.label' | translate}}</th>
+                <th>{{'clarin.license.label.table.header.title' | translate}}</th>
+                <th>{{'clarin.license.label.table.header.extended' | translate}}</th>
+                <th>{{'clarin.license.label.table.header.icon' | translate}}</th>
+                <th class="labels-actions-column">{{'clarin.license.label.table.header.actions' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (label of cLicenseLabels?.page; track label) {
+                <tr>
+                  <td>{{label?.label}}</td>
+                  <td>{{label?.title}}</td>
+                  <td>{{label?.extended ? ('clarin.license.label.table.boolean.yes' | translate) : ('clarin.license.label.table.boolean.no' | translate)}}</td>
+                  <td>
+                    <i class="fas" [ngClass]="label?.icon?.length > 0 ? 'fa-check text-success' : 'fa-times text-muted'" aria-hidden="true"></i>
+                    <span class="sr-only">{{label?.icon?.length > 0 ? ('clarin.license.label.table.icon.available' | translate) : ('clarin.license.label.table.icon.none' | translate)}}</span>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-warning btn-sm me-1"
+                      (click)="editLabel(label)"
+                      [attr.aria-label]="('clarin.license.label.table.edit.aria' | translate:{label: (label?.label || '')})">
+                      <i class="fas fa-pen" aria-hidden="true"></i>
+                      {{'clarin.license.label.table.edit' | translate}}
+                    </button>
+                    <ng-container *ngVar="(labelUsageReady$ | async) as usageReady">
+                      <span [ngbTooltip]="!usageReady
+                              ? ('clarin.license.label.table.delete.checking-tooltip' | translate)
+                              : (isLabelInUse(label) ? ('clarin.license.label.table.delete.disabled-tooltip' | translate:{ label: label.label }) : null)"
+                        [attr.tabindex]="(!usageReady || isLabelInUse(label)) ? 0 : null">
+                        <button class="btn btn-danger btn-sm"
+                          type="button"
+                          [dsBtnDisabled]="!usageReady || isLabelInUse(label)"
+                          [attr.aria-label]="('clarin.license.label.table.delete.aria' | translate:{label: (label?.label || '')})"
+                          (click)="usageReady && !isLabelInUse(label) && confirmDeleteLabel(label)">
+                          <i class="fas fa-trash" aria-hidden="true"></i>
+                          {{ 'clarin.license.label.table.delete' | translate }}
+                        </button>
+                      </span>
+                    </ng-container>
+                  </td>
+                </tr>
+              }
+              @if ((loading$ | async) === false && (labelsRD$ | async)?.hasSucceeded && !(cLicenseLabels?.page?.length > 0)) {
+                <tr>
+                  <td colspan="5" class="text-center text-muted">{{'clarin.license.label.table.empty' | translate}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (loading$ | async) {
+          <ds-loading class="text-center"></ds-loading>
+        }
+        @if (loading$ | async) {
+          <span class="sr-only">{{'clarin.license.label.table.loading' | translate}}</span>
+        }
+      </ds-pagination>
+    </div>
+  </div>
+</div>
