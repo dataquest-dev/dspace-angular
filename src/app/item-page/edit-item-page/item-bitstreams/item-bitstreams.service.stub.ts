@@ -44,10 +44,11 @@ export class ItemBitstreamsServiceStub {
   getColumnSizes = jasmine.createSpy('getColumnSizes').and
     .returnValue(
       new ResponsiveTableSizes([
-        new ResponsiveColumnSizes(2, 2, 3, 4, 4),
-        new ResponsiveColumnSizes(2, 3, 3, 3, 3),
+        new ResponsiveColumnSizes(3, 3, 3, 3, 3),
+        new ResponsiveColumnSizes(3, 3, 3, 3, 3),
         new ResponsiveColumnSizes(2, 2, 2, 2, 2),
-        new ResponsiveColumnSizes(6, 5, 4, 3, 3),
+        new ResponsiveColumnSizes(2, 2, 2, 2, 2),
+        new ResponsiveColumnSizes(2, 2, 2, 2, 2),
       ]),
     );
 

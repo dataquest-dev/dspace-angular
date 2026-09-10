@@ -13,6 +13,8 @@ import {
 } from '../cache/builders/build-decorators';
 import { RemoteData } from '../data/remote-data';
 import { BITSTREAM } from './bitstream.resource-type';
+import { BitstreamChecksum } from './bitstream-checksum.model';
+import { BITSTREAM_CHECKSUM } from './bitstream-checksum.resource';
 import { BitstreamFormat } from './bitstream-format.model';
 import { BITSTREAM_FORMAT } from './bitstream-format.resource-type';
 import { Bundle } from './bundle.model';
@@ -20,6 +22,9 @@ import { BUNDLE } from './bundle.resource-type';
 import { ChildHALResource } from './child-hal-resource.model';
 import { DSpaceObject } from './dspace-object.model';
 import { HALLink } from './hal-link.model';
+
+// Store number if the bitstream is stored in the both stores (S3 and local)
+export const SYNCHRONIZED_STORES_NUMBER = 77;
 
 @typedObject
 @inheritSerialization(DSpaceObject)
@@ -45,6 +50,12 @@ export class Bitstream extends DSpaceObject implements ChildHALResource {
   bundleName: string;
 
   /**
+   * The number of the store where the bitstream is store, it could be S3, local or both.
+   */
+  @autoserialize
+  storeNumber: number;
+
+  /**
    * The {@link HALLink}s for this Bitstream
    */
   @deserialize
@@ -54,6 +65,10 @@ export class Bitstream extends DSpaceObject implements ChildHALResource {
     format: HALLink;
     content: HALLink;
     thumbnail: HALLink;
+    /**
+     * Optional: only the CLARIN backend exposes this link.
+     */
+    checksum?: HALLink;
     accessStatus: HALLink;
   };
 
@@ -77,6 +92,12 @@ export class Bitstream extends DSpaceObject implements ChildHALResource {
    */
   @link(BUNDLE)
   bundle?: Observable<RemoteData<Bundle>>;
+
+  /**
+   * The checksum values fetched from the DB, local and S3 store.
+   */
+  @link(BITSTREAM_CHECKSUM)
+  checksum?: Observable<RemoteData<BitstreamChecksum>>;
 
   /**
    * The access status for this Bitstream

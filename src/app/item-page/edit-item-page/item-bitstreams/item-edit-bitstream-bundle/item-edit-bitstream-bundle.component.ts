@@ -15,6 +15,7 @@ import {
 import { RouterLink } from '@angular/router';
 import {
   NgbDropdownModule,
+  NgbPopover,
   NgbTooltip,
 } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
@@ -33,8 +34,12 @@ import {
 } from 'rxjs/operators';
 import { PaginatedList } from 'src/app/core/data/paginated-list.model';
 import { RemoteData } from 'src/app/core/data/remote-data';
-import { Bitstream } from 'src/app/core/shared/bitstream.model';
+import {
+  Bitstream,
+  SYNCHRONIZED_STORES_NUMBER,
+} from 'src/app/core/shared/bitstream.model';
 
+import { BitstreamChecksumDataService } from '../../../../core/bitstream-checksum-data.service';
 import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
 import { BundleDataService } from '../../../../core/data/bundle-data.service';
 import { FieldChangeType } from '../../../../core/data/object-updates/field-change-type.model';
@@ -43,10 +48,16 @@ import { FieldUpdates } from '../../../../core/data/object-updates/field-updates
 import { ObjectUpdatesService } from '../../../../core/data/object-updates/object-updates.service';
 import { RequestService } from '../../../../core/data/request.service';
 import { PaginationService } from '../../../../core/pagination/pagination.service';
+import {
+  BitstreamChecksum,
+  CheckSum,
+} from '../../../../core/shared/bitstream-checksum.model';
 import { Bundle } from '../../../../core/shared/bundle.model';
 import { Item } from '../../../../core/shared/item.model';
 import {
   getAllSucceededRemoteData,
+  getFirstSucceededRemoteData,
+  getRemoteDataPayload,
   paginatedListToArray,
 } from '../../../../core/shared/operators';
 import { BtnDisabledDirective } from '../../../../shared/btn-disabled.directive';
@@ -61,6 +72,7 @@ import { ResponsiveTableSizes } from '../../../../shared/responsive-table-sizes/
 import { PaginatedSearchOptions } from '../../../../shared/search/models/paginated-search-options.model';
 import { BrowserOnlyPipe } from '../../../../shared/utils/browser-only.pipe';
 import { followLink } from '../../../../shared/utils/follow-link-config.model';
+import { VarDirective } from '../../../../shared/utils/var.directive';
 import { getItemPageRoute } from '../../../item-page-routing-paths';
 import {
   BitstreamTableEntry,
@@ -81,10 +93,12 @@ import {
     CdkDropList,
     CommonModule,
     NgbDropdownModule,
+    NgbPopover,
     NgbTooltip,
     PaginationComponent,
     RouterLink,
     TranslateModule,
+    VarDirective,
   ],
 })
 /**
@@ -147,6 +161,12 @@ export class ItemEditBitstreamBundleComponent implements OnInit, OnDestroy {
   bundleName: string;
 
   /**
+   * Sanitized bundle name (whitespace removed) for use in HTML element IDs.
+   * HTML IDs cannot contain spaces, so this ensures valid id/headers/aria-labelledby tokens.
+   */
+  sanitizedBundleName: string;
+
+  /**
    * The number of bitstreams in the bundle
    */
   bundleSize: number;
@@ -191,6 +211,25 @@ export class ItemEditBitstreamBundleComponent implements OnInit, OnDestroy {
    */
   subscriptions: Subscription[] = [];
 
+  /**
+   * True on mouseover, false otherwise
+   */
+  showChecksumValues = false;
+
+  /**
+   * Object containing all checksums
+   */
+  checkSum$: Observable<BitstreamChecksum>;
+
+  /**
+   * Compute checksum - the whole file must be downloaded to compute the checksum
+   */
+  computedChecksum = false;
+
+  /**
+   * True if the bitstream is being downloaded and the checksum is being computed
+   */
+  loading = false;
 
   constructor(
     protected viewContainerRef: ViewContainerRef,
@@ -200,6 +239,7 @@ export class ItemEditBitstreamBundleComponent implements OnInit, OnDestroy {
     protected paginationService: PaginationService,
     protected requestService: RequestService,
     protected itemBitstreamsService: ItemBitstreamsService,
+    protected bitstreamChecksumDataService: BitstreamChecksumDataService,
   ) {
   }
 
@@ -208,6 +248,7 @@ export class ItemEditBitstreamBundleComponent implements OnInit, OnDestroy {
     this.viewContainerRef.createEmbeddedView(this.bundleView);
     this.itemPageRoute = getItemPageRoute(this.item);
     this.bundleName = this.dsoNameService.getName(this.bundle);
+    this.sanitizedBundleName = (this.bundleName ?? '').replace(/\s+/g, '');
     this.bundleUrl = this.bundle.self;
 
     this.initializePagination();
@@ -585,6 +626,72 @@ export class ItemEditBitstreamBundleComponent implements OnInit, OnDestroy {
     // Increments page by one because zero-indexing is way easier for calculations but the pagination component
     // uses one-indexing.
     this.paginationComponent.doPageChange(page + 1);
+  }
+
+  /**
+   * Compare if two checksums are equal
+   *
+   * @param checksum1 e.g. DB checksum
+   * @param checksum2 e.g. Active store checksum (local or S3)
+   */
+  compareChecksums(checksum1: CheckSum, checksum2: CheckSum): boolean {
+    return checksum1?.value === checksum2?.value && checksum1?.checkSumAlgorithm === checksum2?.checkSumAlgorithm;
+  }
+
+  /**
+   * Compare if all checksums are equal (DB, Active store, Synchronized store)
+   *
+   * @param bitstreamChecksum which contains all checksums
+   * @param entry the table row the checksum belongs to
+   */
+  checksumsAreEqual(bitstreamChecksum: BitstreamChecksum, entry: BitstreamTableEntry): boolean {
+    if (hasNoValue(bitstreamChecksum)) {
+      return false;
+    }
+
+    if (this.isBitstreamSynchronized(entry)) {
+      // Compare DB and Active store checksums
+      // Compare DB and Synchronized and Active store checksums
+      return this.compareChecksums(bitstreamChecksum.databaseChecksum, bitstreamChecksum.activeStore) &&
+        this.compareChecksums(bitstreamChecksum.synchronizedStore, bitstreamChecksum.activeStore);
+    }
+    // Compare DB and Active store checksums
+    return this.compareChecksums(bitstreamChecksum.databaseChecksum, bitstreamChecksum.activeStore);
+  }
+
+  /**
+   * Check if the bitstream of this row is stored in both stores (S3 and local)
+   *
+   * @param entry the table row to evaluate
+   */
+  isBitstreamSynchronized(entry: BitstreamTableEntry): boolean {
+    return entry?.bitstream?.storeNumber === SYNCHRONIZED_STORES_NUMBER;
+  }
+
+  /**
+   * Fetch the checksums of the bitstream in the provided row. The backend downloads the whole file to
+   * compute the store checksums, so this only runs when the admin asks for it.
+   *
+   * @param entry the table row whose checksum should be computed
+   */
+  computeChecksum(entry: BitstreamTableEntry) {
+    const href = entry?.bitstream?._links?.checksum?.href;
+    if (hasNoValue(href)) {
+      return;
+    }
+
+    this.loading = true;
+    // Send request to get bitstream checksum
+    this.checkSum$ = this.bitstreamChecksumDataService.findByHref(href)
+      .pipe(
+        getFirstSucceededRemoteData(),
+        getRemoteDataPayload(),
+        map(value => {
+          this.computedChecksum = true;
+          this.loading = false;
+          return value;
+        }),
+      );
   }
 
 }
