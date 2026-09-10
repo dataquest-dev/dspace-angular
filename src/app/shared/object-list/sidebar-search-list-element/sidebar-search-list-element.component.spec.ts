@@ -1,7 +1,12 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  NO_ERRORS_SCHEMA,
+  QueryList,
+} from '@angular/core';
 import {
   ComponentFixture,
+  fakeAsync,
   TestBed,
+  tick,
   waitForAsync,
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -16,6 +21,7 @@ import { mockTruncatableService } from '../../mocks/mock-trucatable.service';
 import { createSuccessfulRemoteDataObject$ } from '../../remote-data.utils';
 import { SearchResult } from '../../search/models/search-result.model';
 import { TruncatableService } from '../../truncatable/truncatable.service';
+import { TruncatablePartComponent } from '../../truncatable/truncatable-part/truncatable-part.component';
 import { VarDirective } from '../../utils/var.directive';
 
 export function createSidebarSearchListElementTests(
@@ -73,5 +79,42 @@ export function createSidebarSearchListElementTests(
     it('should contain the correct description', () => {
       expect(component.description).toEqual(expectedDescription);
     });
+
+    it('should expand every truncatable part at once and not open the item itself', () => {
+      const parts = [1, 2, 3].map(() => new TruncatablePartComponent(mockTruncatableService as any));
+      const queryList = new QueryList<TruncatablePartComponent>();
+      queryList.reset(parts);
+      component.truncatableComponents = queryList;
+      const event = jasmine.createSpyObj('event', ['stopPropagation']);
+
+      component.toggleView(event, true);
+
+      expect(event.stopPropagation).toHaveBeenCalled();
+      expect(component.expanded).toBeTrue();
+      parts.forEach((part) => expect(part.lines).toEqual('none'));
+    });
+
+    it('should collapse every truncatable part again', () => {
+      const parts = [1, 2, 3].map(() => new TruncatablePartComponent(mockTruncatableService as any));
+      parts.forEach((part) => part.toggleWithoutId(true));
+      const queryList = new QueryList<TruncatablePartComponent>();
+      queryList.reset(parts);
+      component.truncatableComponents = queryList;
+
+      component.toggleView(jasmine.createSpyObj('event', ['stopPropagation']), false);
+
+      expect(component.expanded).toBeFalse();
+      parts.forEach((part) => expect(part.lines).toEqual('1'));
+    });
+
+    it('should only offer the expand-all control once a part reports itself truncated', fakeAsync(() => {
+      component.onTruncatedStateChange(1, false);
+      tick();
+      expect(component.expandable).toBeFalse();
+
+      component.onTruncatedStateChange(2, true);
+      tick();
+      expect(component.expandable).toBeTrue();
+    }));
   };
 }
