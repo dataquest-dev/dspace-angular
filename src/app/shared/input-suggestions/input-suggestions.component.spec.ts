@@ -55,6 +55,39 @@ describe('InputSuggestionsComponent', () => {
     expect(comp).toBeTruthy();
   });
 
+  describe('the accessible name of the suggestion input', () => {
+    beforeEach(() => {
+      comp.name = 'author';
+      comp.placeholder = 'Search for an author';
+      fixture.detectChanges();
+    });
+
+    it('should label the input with a label that resolves to it', () => {
+      const input: HTMLInputElement = el.querySelector('input.suggestion_input');
+      const label: HTMLLabelElement = el.querySelector('label');
+
+      expect(input.id).toBeTruthy();
+      expect(label).toBeTruthy();
+      // a placeholder is not a label: the association has to be real
+      expect(label.htmlFor).toEqual(input.id);
+      expect(label.textContent.trim()).toEqual('Search for an author');
+      // and the label must not be rendered visibly (Bootstrap 5 dropped the old screen-reader class)
+      expect(Array.from(label.classList)).toContain('visually-hidden');
+    });
+
+    it('should derive the id from the name input so two instances do not collide', () => {
+      const input: HTMLInputElement = el.querySelector('input.suggestion_input');
+      const firstId: string = input.id;
+
+      comp.name = 'subject';
+      fixture.detectChanges();
+      const label: HTMLLabelElement = el.querySelector('label');
+
+      expect(input.id).not.toEqual(firstId);
+      expect(label.htmlFor).toEqual(input.id);
+    });
+  });
+
   describe('when the input field is in focus', () => {
 
     beforeEach(() => {
