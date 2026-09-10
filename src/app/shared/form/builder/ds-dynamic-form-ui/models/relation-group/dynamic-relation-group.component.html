@@ -35,6 +35,7 @@
         <div class="col p-0 m-0 d-flex justify-content-center align-items-center">
           <button type="button"
             class="btn btn-link"
+            [attr.aria-label]="'form.relation-group.save' | translate"
             [dsBtnDisabled]="isMandatoryFieldEmpty()"
             (click)="save()">
             <i class="fas fa-save link-primary fa-2x"
@@ -42,6 +43,7 @@
           </button>
           <button type="button"
             class="btn btn-link"
+            [attr.aria-label]="'form.relation-group.delete' | translate"
             [dsBtnDisabled]="!editMode"
             (click)="delete()">
             <i class="fas fa-trash link-danger fa-2x"
@@ -49,6 +51,7 @@
           </button>
           <button type="button"
             class="btn btn-link"
+            [attr.aria-label]="'form.relation-group.clear' | translate"
             [dsBtnDisabled]="isMandatoryFieldEmpty()"
             (click)="clear()">
             <i class="fas fa-undo fa-2x"

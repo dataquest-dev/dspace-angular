@@ -20,6 +20,7 @@ import { VALUE_LIST_BROWSE_DEFINITION } from '../../../core/shared/value-list-br
 import { hasValue } from '../../../shared/empty.util';
 import { MetadataFieldWrapperComponent } from '../../../shared/metadata-field-wrapper/metadata-field-wrapper.component';
 import { MarkdownDirective } from '../../../shared/utils/markdown.directive';
+import { metadataLangToBcp47 } from '../../../shared/utils/metadata-language.util';
 import { ImageField } from '../../simple/field-components/specific-field/image-field';
 
 /**
@@ -145,5 +146,14 @@ export class MetadataValuesComponent implements OnChanges {
     } else {
       return { target: '_blank', rel: 'noopener noreferrer' };
     }
+  }
+
+  /**
+   * Normalize a metadata value's language into a valid BCP 47 tag for the HTML
+   * `lang` attribute, or null when none applies.
+   * @param value A MetadataValue being displayed
+   */
+  getLang(value: MetadataValue): string | null {
+    return metadataLangToBcp47(value.language);
   }
 }
