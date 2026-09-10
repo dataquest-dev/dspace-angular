@@ -3,9 +3,11 @@ import {
   AfterViewChecked,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -33,6 +35,13 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    * Number of lines shown when the part is collapsed
    */
   @Input() minLines: number;
+
+  /**
+   * A boolean value for external control of the icon toggle state
+   * if true, the component will emit truncated state via an EventEmitter
+   * and will not show the toggle button internally if showToggle is true
+   */
+  @Input() externalToggle = false;
 
   /**
    * Number of lines shown when the part is expanded. -1 indicates no limit
@@ -63,6 +72,12 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
   @Input() showToggle = true;
 
   /**
+   * Emits the truncated state of the content whenever it changes. Only emitted while
+   * externalToggle is on, because that is the only mode in which a parent renders the control.
+   */
+  @Output() truncated: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
    * The view on the truncatable part
    */
   @ViewChild('content', { static: true }) content: ElementRef;
@@ -84,6 +99,13 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    * variable to check if expandable
    */
   expandable = false;
+
+  /**
+   * The last truncated state emitted. truncateElement() runs on every ngAfterViewChecked, so the
+   * emitter must only fire on an actual change - an unconditional emit re-triggers change
+   * detection in the parent on every cycle.
+   */
+  private lastTruncated: boolean;
 
   public constructor(private service: TruncatableService) {}
 
@@ -114,18 +136,36 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
   }
 
   /**
-   * Expands the truncatable when it's collapsed, collapses it when it's expanded
+   * Expands the truncatable when it's collapsed, collapses it when it's expanded.
+   * If no id is provided, it falls back to local expand/collapse.
+   * @param event - The DOM event that triggered the toggle
+   * @param expand - Whether to expand (true) or collapse (false) the truncatable part
    */
-  public toggle() {
-    this.service.toggle(this.id);
-    this.expandable = !this.expandable;
+  public toggle(event?: Event, expand?: boolean) {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (this.id) {
+      this.service.toggle(this.id);
+    } else {
+      this.toggleWithoutId(expand);
+    }
+  }
+
+  /**
+   * Expand or collapse using the external icons when no id is available
+   * @param expand - Whether to expand (true) or collapse (false) the truncatable part
+   */
+  public toggleWithoutId(expand: boolean) {
+    this.expand = expand;
+    this.lines = expand ? 'none' : (this.minLines ? this.minLines.toString() : '1');
   }
 
   /**
    * check for the truncate element
    */
   public truncateElement() {
-    if (this.showToggle) {
+    if (this.showToggle || this.externalToggle) {
       const entry = this.content.nativeElement;
       const isOverflowing = entry.scrollHeight > entry.clientHeight;
       if (isOverflowing) {
@@ -135,6 +175,17 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
         entry.classList.remove('truncated');
         entry.classList.add('removeFaded');
       }
+      this.emitTruncated(isOverflowing);
+    }
+  }
+
+  /**
+   * Emit the truncated state, but only when it actually changed.
+   */
+  private emitTruncated(isTruncated: boolean) {
+    if (this.externalToggle && this.lastTruncated !== isTruncated) {
+      this.lastTruncated = isTruncated;
+      this.truncated.emit(isTruncated);
     }
   }
 
@@ -142,7 +193,7 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    * Indicates if the content is expanded, button state is 'Collapse'
    */
   public get isExpanded() {
-    return this.expand && this.expandable;
+    return this.expand;
   }
 
   /**

@@ -179,4 +179,145 @@ describe('TruncatablePartComponent', () => {
     });
   });
 
+  describe('externalToggle property', () => {
+    it('should have default value of false', () => {
+      expect(comp.externalToggle).toBe(false);
+    });
+  });
+
+  describe('toggleWithoutId method', () => {
+    it('should set expand to true and lines to none when expand parameter is true', () => {
+      comp.expand = false;
+      comp.expandable = false;
+      comp.toggleWithoutId(true);
+      expect(comp.expand).toBe(true);
+      expect(comp.lines).toBe('none');
+    });
+
+    it('should set expand to false and lines to 1 when expand parameter is false', () => {
+      comp.expand = true;
+      comp.expandable = true;
+      comp.toggleWithoutId(false);
+      expect(comp.expand).toBe(false);
+      expect(comp.lines).toBe('1');
+    });
+
+    it('should fall back to minLines when collapsing a part that has one', () => {
+      comp.minLines = 3;
+      comp.toggleWithoutId(false);
+      expect(comp.lines).toBe('3');
+    });
+
+    it('should route through toggleWithoutId when the part has no id', () => {
+      comp.id = undefined;
+      spyOn(truncatableService, 'toggle');
+
+      comp.toggle(undefined, true);
+
+      expect(truncatableService.toggle).not.toHaveBeenCalled();
+      expect(comp.expand).toBe(true);
+      expect(comp.lines).toBe('none');
+    });
+
+    it('should stop the event from reaching the surrounding element', () => {
+      const event = jasmine.createSpyObj('event', ['stopPropagation']);
+
+      comp.toggle(event, true);
+
+      expect(event.stopPropagation).toHaveBeenCalled();
+    });
+  });
+
+  describe('truncated output', () => {
+    const fakeContent = (scrollHeight: number, clientHeight: number) => ({
+      nativeElement: {
+        scrollHeight,
+        clientHeight,
+        classList: { add: () => undefined, remove: () => undefined },
+      },
+    });
+
+    it('should emit true when the content overflows and false when it does not', () => {
+      const emitted: boolean[] = [];
+      comp.externalToggle = true;
+      comp.truncated.subscribe((value: boolean) => emitted.push(value));
+
+      (comp as any).content = fakeContent(100, 20);
+      comp.truncateElement();
+      (comp as any).content = fakeContent(20, 20);
+      comp.truncateElement();
+
+      expect(emitted).toEqual([true, false]);
+    });
+
+    it('should not re-emit while the truncated state is unchanged', () => {
+      const emitted: boolean[] = [];
+      comp.externalToggle = true;
+      comp.truncated.subscribe((value: boolean) => emitted.push(value));
+
+      (comp as any).content = fakeContent(100, 20);
+      comp.truncateElement();
+      comp.truncateElement();
+      comp.truncateElement();
+
+      expect(emitted).toEqual([true]);
+    });
+
+    it('should not emit at all while externalToggle is off', () => {
+      const emitted: boolean[] = [];
+      comp.externalToggle = false;
+      comp.truncated.subscribe((value: boolean) => emitted.push(value));
+
+      (comp as any).content = fakeContent(100, 20);
+      comp.truncateElement();
+
+      expect(emitted).toEqual([]);
+    });
+  });
+
+  describe('When externalToggle is false (default behavior)', () => {
+    beforeEach(() => {
+      comp.externalToggle = false;
+      // use id '1' to simulate collapsed state from mock service
+      comp.id = '1';
+      comp.minLines = 3;
+      // re-evaluate lines after changing id
+      (comp as any).setLines();
+      fixture.detectChanges();
+    });
+
+    it('should display the traditional expand button', () => {
+      const expandButton = fixture.debugElement.query(By.css('.expandButton'));
+      expect(expandButton).not.toBeNull();
+    });
+  });
+
+  describe('When externalToggle is true', () => {
+    beforeEach(() => {
+      comp.externalToggle = true;
+      comp.minLines = 3;
+      comp.expandable = false;
+    });
+
+    // NOTE: both assertions query `button`, not `.expandButton` / `.collapseButton`. The single
+    // button in this template carries whichever of those two classes matches the current state, so
+    // a class-specific query is satisfied by the *other* state and passes even when the button is
+    // still rendered - which is how the fork's own version of these two tests is vacuous.
+    it('should hide the traditional expand button', () => {
+      comp.expand = false;
+      fixture.detectChanges();
+
+      expect(comp.isExpanded).toBeFalse();
+      expect(fixture.debugElement.query(By.css('button'))).toBeNull();
+    });
+
+    it('should hide the traditional collapse button', () => {
+      comp.expand = true;
+      fixture.detectChanges();
+
+      expect(comp.isExpanded).toBeTrue();
+      expect(fixture.debugElement.query(By.css('button'))).toBeNull();
+    });
+  });
+
 });

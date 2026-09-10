@@ -3,8 +3,11 @@ import {
   NgClass,
 } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   OnInit,
+  QueryList,
+  ViewChildren,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -47,7 +50,7 @@ import { SearchResultListElementComponent } from '../search-result-list-element/
  * It displays the name of the parent, title and description of the object. All of which are customizable in the child
  * component by overriding the relevant methods of this component
  */
-export class SidebarSearchListElementComponent<T extends SearchResult<K>, K extends DSpaceObject> extends SearchResultListElementComponent<T, K> implements OnInit {
+export class SidebarSearchListElementComponent<T extends SearchResult<K>, K extends DSpaceObject> extends SearchResultListElementComponent<T, K> implements OnInit, AfterViewInit {
   /**
    * Observable for the title of the parent object (displayed above the object's title)
    */
@@ -62,6 +65,30 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
    * Language of the description metadata value, used for the lang attribute.
    */
   descriptionLang: string | null = null;
+
+  /**
+   * True when at least one of the three truncatable parts is actually clipped, i.e. when the
+   * expand-all control is worth rendering.
+   */
+  expandable = false;
+
+  /**
+   * True while the card is expanded by the expand-all control.
+   */
+  expanded = false;
+
+  /**
+   * Truncated state reported by each child truncatable part, keyed by its index.
+   */
+  private truncatedStates: Map<number, boolean> = new Map();
+
+  /**
+   * Remembers whether any child was ever truncated, so the collapse control stays available
+   * once the card has been expanded (an expanded part no longer reports itself as truncated).
+   */
+  private initialTruncated = false;
+
+  @ViewChildren(TruncatablePartComponent) truncatableComponents: QueryList<TruncatablePartComponent>;
 
   public constructor(protected truncatableService: TruncatableService,
                      protected linkService: LinkService,
@@ -80,6 +107,10 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
       this.description = this.getDescription();
       this.descriptionLang = this.getDescriptionLang();
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.checkExpandableState();
   }
 
   /**
@@ -177,5 +208,52 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
     } else {
       return def;
     }
+  }
+
+  /**
+   * Expand or collapse every truncatable part of this card at once.
+   * @param event        the click that triggered it; stopped so the card itself is not opened
+   * @param shouldExpand true to expand, false to collapse
+   */
+  toggleView(event: Event, shouldExpand: boolean) {
+    event.stopPropagation();
+    this.expanded = shouldExpand;
+    if (this.truncatableComponents) {
+      this.truncatableComponents.forEach(cmp => {
+        cmp.toggle(event, shouldExpand);
+      });
+    }
+  }
+
+  /**
+   * Handle truncated state change from a specific child component
+   * @param index - The index of the truncatable component (1, 2, or 3)
+   * @param isTruncated - Whether the component is truncated
+   */
+  onTruncatedStateChange(index: number, isTruncated: boolean): void {
+    this.truncatedStates.set(index, isTruncated);
+    if (isTruncated) {
+      this.initialTruncated = true;
+    }
+    this.updateExpandableState();
+  }
+
+  /**
+   * Update the expandable state based on truncated states
+   */
+  private updateExpandableState(): void {
+    const anyTruncated = Array.from(this.truncatedStates.values()).some(state => state === true);
+    const effectiveTruncated = (this.expanded && this.initialTruncated) ? true : anyTruncated;
+    if (this.expandable !== effectiveTruncated) {
+      setTimeout(() => this.expandable = effectiveTruncated, 0);
+    }
+  }
+
+  /**
+   * Force check of expandable state (used on initial load)
+   */
+  private checkExpandableState(): void {
+    this.truncatedStates.clear();
+    this.updateExpandableState();
   }
 }
