@@ -199,6 +199,19 @@ describe('MembersListComponent', () => {
     expect(comp).toBeDefined();
   }));
 
+  it('should label its search input with an id of its own, not the generic one', () => {
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('input[name="query"]');
+    const label: HTMLLabelElement = fixture.nativeElement.querySelector('label[for="' + input.id + '"]');
+
+    expect(input.id).toBeTruthy();
+    // ds-members-list and ds-subgroups-list render side by side on the group edit page,
+    // so a shared generic id makes one label point at the other component's input
+    expect(input.id).not.toEqual('query');
+    expect(label).toBeTruthy();
+    expect(label.htmlFor).toEqual(input.id);
+    expect(Array.from(label.classList)).toContain('visually-hidden');
+  });
+
   describe('current members list', () => {
     it('should show list of eperson members of current active group', () => {
       const epersonIdsFound = fixture.debugElement.queryAll(By.css('#ePeopleMembersOfGroup tr td:first-child'));
