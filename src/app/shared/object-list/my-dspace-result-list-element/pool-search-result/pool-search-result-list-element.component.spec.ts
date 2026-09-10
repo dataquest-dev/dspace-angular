@@ -102,7 +102,7 @@ const environmentUseThumbs = {
 const rdItem = createSuccessfulRemoteDataObject(item);
 const workflowitem = Object.assign(new WorkflowItem(), { item: of(rdItem) });
 const rdWorkflowitem = createSuccessfulRemoteDataObject(workflowitem);
-mockResultObject.indexableObject = Object.assign(new PoolTask(), { workflowitem: of(rdWorkflowitem) });
+mockResultObject.indexableObject = Object.assign(new PoolTask(), { id: 'pool-task-1', workflowitem: of(rdWorkflowitem) });
 const linkService = getMockLinkService();
 const objectCacheServiceMock = jasmine.createSpyObj('ObjectCacheService', {
   remove: jasmine.createSpy('remove'),
@@ -170,5 +170,14 @@ describe('PoolSearchResultListElementComponent', () => {
   it('should add an offset to the actions element', () => {
     const thumbnail = fixture.debugElement.query(By.css('.offset-3'));
     expect(thumbnail).toBeTruthy();
+  });
+
+  it('should give the pool task actions a row-specific id', () => {
+    const actions = fixture.debugElement.query(By.css('ds-pool-task-actions'));
+
+    expect(actions).toBeTruthy();
+    // /mydspace renders one of these per pool task, so a constant id duplicates across rows
+    expect(actions.nativeElement.id).not.toEqual('actions');
+    expect(actions.nativeElement.id).toContain(component.dso.id);
   });
 });
