@@ -338,9 +338,16 @@ describe('ItemPageComponent tombstone', () => {
     fixture.detectChanges();
   };
 
+  const showTombstone = (): boolean => {
+    let shown: boolean;
+    comp.showTombstone$.subscribe((value: boolean) => shown = value);
+    return shown;
+  };
+
   it('should show the tombstone instead of a withdrawn item', () => {
     init(mockWithdrawnItem, false);
 
+    expect(showTombstone()).toBeTrue();
     expect(fixture.debugElement.query(By.css('ds-tombstone'))).not.toBeNull();
     expect(fixture.debugElement.query(By.css('ds-listable-object-component-loader'))).toBeNull();
   });
@@ -348,6 +355,7 @@ describe('ItemPageComponent tombstone', () => {
   it('should keep showing a withdrawn item to an admin', () => {
     init(mockWithdrawnItem, true);
 
+    expect(showTombstone()).toBeFalse();
     expect(fixture.debugElement.query(By.css('ds-tombstone'))).toBeNull();
     expect(fixture.debugElement.query(By.css('ds-listable-object-component-loader'))).not.toBeNull();
   });
@@ -355,7 +363,8 @@ describe('ItemPageComponent tombstone', () => {
   it('should not show the tombstone for an item that is not withdrawn', () => {
     init(mockItem, false);
 
-    expect(comp.showTombstone$).toBeDefined();
+    expect(showTombstone()).toBeFalse();
     expect(fixture.debugElement.query(By.css('ds-tombstone'))).toBeNull();
+    expect(fixture.debugElement.query(By.css('ds-listable-object-component-loader'))).not.toBeNull();
   });
 });
