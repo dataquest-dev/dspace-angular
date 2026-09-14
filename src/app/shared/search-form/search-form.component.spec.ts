@@ -92,6 +92,24 @@ describe('SearchFormComponent', () => {
     expect(queryInput.value).toBe(testString);
   }));
 
+  it('should label its search input with an id of its own, not the generic one', fakeAsync(() => {
+    comp.searchPlaceholder = 'Search the repository';
+
+    fixture.detectChanges();
+    tick();
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('input[name="query"]');
+    const label: HTMLLabelElement = fixture.nativeElement.querySelector('label[for="' + input.id + '"]');
+
+    expect(input.id).toBeTruthy();
+    // ds-search-form is reused on the home page, /search and both item mappers, so a generic
+    // id makes one label point at another component's input
+    expect(input.id).not.toEqual('query');
+    expect(label).toBeTruthy();
+    expect(label.htmlFor).toEqual(input.id);
+    expect(label.textContent.trim()).toEqual('Search the repository');
+    expect(Array.from(label.classList)).toContain('visually-hidden');
+  }));
+
   it('should select correct scope option in scope select', fakeAsync(() => {
 
     fixture.detectChanges();

@@ -249,6 +249,34 @@ describe('EPeopleRegistryComponent', () => {
     });
   });
 
+  it('should render the last active column from the existing translation key', () => {
+    const headers: DebugElement[] = fixture.debugElement.queryAll(By.css('#epeople thead th'));
+    // TranslateModule.forRoot() with no catalogue echoes the key back
+    expect(headers.map((header: DebugElement) => header.nativeElement.textContent.trim()))
+      .toContain('admin.access-control.epeople.table.lastActive');
+
+    const cells: DebugElement[] = fixture.debugElement.queryAll(By.css('#epeople tbody tr td:nth-child(4)'));
+    expect(cells.length).toEqual(mockEPeople.length);
+    expect(cells[0].nativeElement.textContent.trim()).toEqual('2018-05-14 12:25:42');
+  });
+
+  it('should label the scope select and the query input, each with an id of its own', () => {
+    const element: HTMLElement = fixture.nativeElement;
+    const input: HTMLInputElement = element.querySelector('input[name="query"]');
+    const select: HTMLSelectElement = element.querySelector('select[name="scope"]');
+
+    [input, select].forEach((control: HTMLElement) => {
+      expect(control.id).toBeTruthy();
+      // the generic ids are shared with other search boxes on this base
+      expect(control.id).not.toEqual('query');
+      expect(control.id).not.toEqual('scope');
+      const label: HTMLLabelElement = element.querySelector('label[for="' + control.id + '"]');
+      expect(label).toBeTruthy();
+      expect(label.htmlFor).toEqual(control.id);
+      expect(Array.from(label.classList)).toContain('visually-hidden');
+    });
+  });
+
   describe('search', () => {
     describe('when searching with scope/query (scope metadata)', () => {
       let ePeopleIdsFound: DebugElement[];
