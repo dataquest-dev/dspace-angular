@@ -46,6 +46,7 @@ import { createPaginatedList } from '../../shared/testing/utils.test';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
 import { ClarinFilesSectionComponent } from '../clarin-files-section/clarin-files-section.component';
+import { TombstoneComponent } from '../tombstone/tombstone.component';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
 import { ItemPageComponent } from './item-page.component';
@@ -269,4 +270,92 @@ describe('ItemPageComponent', () => {
     });
   });
 
+});
+
+/**
+ * CLARIN: a withdrawn item is served as a tombstone page instead of the item itself, so the route
+ * data has to carry the withdrawn item before the component is created.
+ */
+describe('ItemPageComponent tombstone', () => {
+  let comp: ItemPageComponent;
+  let fixture: ComponentFixture<ItemPageComponent>;
+
+  const init = (item: Item, isAdmin: boolean) => {
+    TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useClass: TranslateLoaderMock,
+        },
+      }), BrowserAnimationsModule, ItemPageComponent, VarDirective],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: Object.assign(new ActivatedRouteStub(), {
+            data: of({ dso: createSuccessfulRemoteDataObject(item) }),
+          }),
+        },
+        { provide: ItemDataService, useValue: {} },
+        { provide: Router, useValue: {} },
+        {
+          provide: AuthorizationDataService,
+          useValue: jasmine.createSpyObj('authorizationDataService', { isAuthorized: of(isAdmin) }),
+        },
+        { provide: ServerResponseService, useValue: jasmine.createSpyObj('ServerResponseService', ['setHeader']) },
+        {
+          provide: SignpostingDataService,
+          useValue: jasmine.createSpyObj('SignpostingDataService', { getLinks: of([]) }),
+        },
+        { provide: LinkHeadService, useValue: jasmine.createSpyObj('LinkHeadService', ['addTag', 'removeTag']) },
+        {
+          provide: NotifyInfoService,
+          useValue: jasmine.createSpyObj('NotifyInfoService', {
+            getInboxRelationLink: 'http://www.w3.org/ns/ldp#inbox',
+            isCoarConfigEnabled: of(false),
+            getCoarLdnLocalInboxUrls: of([]),
+          }),
+        },
+        { provide: PLATFORM_ID, useValue: 'server' },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).overrideComponent(ItemPageComponent, {
+      add: { changeDetection: ChangeDetectionStrategy.Default },
+      remove: { imports: [
+        ClarinFilesSectionComponent,
+        ThemedItemAlertsComponent,
+        ItemVersionsNoticeComponent,
+        ListableObjectComponentLoaderComponent,
+        ItemVersionsComponent,
+        ErrorComponent,
+        ThemedLoadingComponent,
+        NotifyRequestsStatusComponent,
+        QaEventNotificationComponent,
+        TombstoneComponent,
+      ] },
+    });
+    fixture = TestBed.createComponent(ItemPageComponent);
+    comp = fixture.componentInstance;
+    fixture.detectChanges();
+  };
+
+  it('should show the tombstone instead of a withdrawn item', () => {
+    init(mockWithdrawnItem, false);
+
+    expect(fixture.debugElement.query(By.css('ds-tombstone'))).not.toBeNull();
+    expect(fixture.debugElement.query(By.css('ds-listable-object-component-loader'))).toBeNull();
+  });
+
+  it('should keep showing a withdrawn item to an admin', () => {
+    init(mockWithdrawnItem, true);
+
+    expect(fixture.debugElement.query(By.css('ds-tombstone'))).toBeNull();
+    expect(fixture.debugElement.query(By.css('ds-listable-object-component-loader'))).not.toBeNull();
+  });
+
+  it('should not show the tombstone for an item that is not withdrawn', () => {
+    init(mockItem, false);
+
+    expect(comp.showTombstone$).toBeDefined();
+    expect(fixture.debugElement.query(By.css('ds-tombstone'))).toBeNull();
+  });
 });

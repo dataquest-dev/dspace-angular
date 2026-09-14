@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 
 import { REQUEST_COPY_MODULE_PATH } from '../app-routing-paths';
+import { ClarinZipDownloadPageComponent } from '../bitstream-page/clarin-zip-download-page/clarin-zip-download-page.component';
 import { accessTokenResolver } from '../core/auth/access-token.resolver';
 import { authenticatedGuard } from '../core/auth/authenticated.guard';
 import { itemBreadcrumbResolver } from '../core/breadcrumbs/item-breadcrumb.resolver';
@@ -14,12 +15,14 @@ import {
   ITEM_ACCESS_BY_TOKEN_PATH,
   ITEM_EDIT_PATH,
   ORCID_PATH,
+  TOMBSTONE_ITEM_PATH,
   UPLOAD_BITSTREAM_PATH,
   VIEWS_DOWNLOADS_STATISTICS_PATH,
 } from './item-page-routing-paths';
 import { OrcidPageComponent } from './orcid-page/orcid-page.component';
 import { orcidPageGuard } from './orcid-page/orcid-page.guard';
 import { ThemedItemPageComponent } from './simple/themed-item-page.component';
+import { TombstoneComponent } from './tombstone/tombstone.component';
 import { versionResolver } from './version-page/version.resolver';
 import { VersionPageComponent } from './version-page/version-page/version-page.component';
 import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/views-downloads-statistics.component';
@@ -82,9 +85,44 @@ export const ROUTES: Route[] = [
         },
       },
       {
-        // CLARIN: per-item views/downloads statistics page
+        // CLARIN: per-item views/downloads statistics page, for logged-in users only
         path: VIEWS_DOWNLOADS_STATISTICS_PATH,
         component: ViewsDownloadsStatisticsComponent,
+        canActivate: [authenticatedGuard],
+        resolve: {
+          dso: itemPageResolver,
+        },
+      },
+      {
+        // CLARIN: tombstone page for withdrawn / replaced items
+        path: TOMBSTONE_ITEM_PATH,
+        component: TombstoneComponent,
+      },
+      {
+        // CLARIN: "download all files as ZIP" page, linked from the item page file section
+        path: 'download',
+        children: [
+          {
+            path: '',
+            component: ClarinZipDownloadPageComponent,
+            resolve: {
+              dso: itemPageResolver,
+            },
+            data: {
+              zipDownloadLink: 'This is download link',
+            },
+          },
+          {
+            path: 'zip',
+            component: ClarinZipDownloadPageComponent,
+            resolve: {
+              dso: itemPageResolver,
+            },
+            data: {
+              zipDownloadLink: 'This is download link',
+            },
+          },
+        ],
       },
     ],
   },
