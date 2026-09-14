@@ -16,7 +16,8 @@
       <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" class="d-flex justify-content-between">
         <div class="flex-grow-1 me-3">
           <div class="mb-3 input-group">
-            <input type="text" name="query" id="query" formControlName="query"
+            <label for="groups-registry-query" class="visually-hidden">{{messagePrefix + 'search.placeholder' | translate}}</label>
+            <input type="text" name="query" id="groups-registry-query" formControlName="query"
               class="form-control" [attr.aria-label]="messagePrefix + 'search.placeholder' | translate"
               [placeholder]="(messagePrefix + 'search.placeholder' | translate)" >
             <span class="input-group-append">

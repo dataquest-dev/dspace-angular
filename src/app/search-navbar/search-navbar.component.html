@@ -1,7 +1,8 @@
 <div [title]="'nav.search' | translate" (dsClickOutside)="collapse()">
   <div class="d-inline-block position-relative">
     <form [formGroup]="searchForm" (ngSubmit)="onSubmit(searchForm.value)" autocomplete="on" class="d-flex">
-      <input #searchInput [@toggleAnimation]="isExpanded" [attr.aria-label]="('nav.search' | translate)" name="query"
+      <label for="search-navbar-query" class="visually-hidden">{{ 'nav.search' | translate }}</label>
+      <input #searchInput id="search-navbar-query" [@toggleAnimation]="isExpanded" [attr.aria-label]="('nav.search' | translate)" name="query"
              formControlName="query" type="text" placeholder="{{searchExpanded ? ('nav.search' | translate) : ''}}"
              class="d-inline-block bg-transparent position-absolute form-control dropdown-menu-end p1"
              [class.display]="searchExpanded ? 'inline-block' : 'none'"
