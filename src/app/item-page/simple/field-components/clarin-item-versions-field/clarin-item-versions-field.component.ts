@@ -1,11 +1,18 @@
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  NgClass,
+} from '@angular/common';
 import {
   Component,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import {
   combineLatest,
   Observable,
@@ -20,7 +27,16 @@ import {
 import { MAX_PAGE_SIZE } from '../../../../core/data/find-list-options.model';
 import { RemoteData } from '../../../../core/data/remote-data';
 import { Item } from '../../../../core/shared/item.model';
+import {
+  getFirstCompletedRemoteData,
+  getFirstSucceededRemoteDataPayload,
+} from '../../../../core/shared/operators';
 import { Version } from '../../../../core/shared/version.model';
+import { WorkflowItem } from '../../../../core/submission/models/workflowitem.model';
+import { WorkspaceItem } from '../../../../core/submission/models/workspaceitem.model';
+import { WorkflowItemDataService } from '../../../../core/submission/workflowitem-data.service';
+import { WorkspaceitemDataService } from '../../../../core/submission/workspaceitem-data.service';
+import { getItemVersionRoute } from '../../../item-page-routing-paths';
 import { ItemVersionsComponent } from '../../../versions/item-versions.component';
 
 /**
@@ -53,6 +69,7 @@ interface EnhancedVersionDTO extends VersionDTO {
 @Component({
   imports: [
     AsyncPipe,
+    NgClass,
     RouterLink,
     TranslateModule,
   ],
@@ -61,6 +78,12 @@ interface EnhancedVersionDTO extends VersionDTO {
   styleUrls: ['./clarin-item-versions-field.component.scss'],
 })
 export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent implements OnInit {
+
+  private readonly workspaceItemDataService = inject(WorkspaceitemDataService);
+
+  private readonly workflowItemDataService = inject(WorkflowItemDataService);
+
+  private readonly translate = inject(TranslateService);
 
   /**
    * Maximum number of versions to fetch at once for the dropdown display.
@@ -134,8 +157,8 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
         shareReplay({ bufferSize: 1, refCount: true }), // Cache the result to prevent duplicate requests
       );
     } else {
-      // Fallback: check if isAdmin$ is available, otherwise hide the component
-      this.showMetadataValue = this.isAdmin$ ? this.isAdmin$ : of(false);
+      // The item has no version, so there is no history to show
+      this.showMetadataValue = of(false);
     }
   }
 
@@ -160,10 +183,46 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
    */
   getToggleAriaLabel(): string {
     const action = this.showVersionHistory
-      ? this.translateService.instant('item.version.history.collapse')
-      : this.translateService.instant('item.version.history.expand');
-    const history = this.translateService.instant('item.version.history.label');
+      ? this.translate.instant('item.version.history.collapse')
+      : this.translate.instant('item.version.history.expand');
+    const history = this.translate.instant('item.version.history.label');
     return `${action} ${history}`;
+  }
+
+  /**
+   * Get the route to the item page of the given version
+   * @param versionId the ID of the version for which the route will be retrieved
+   */
+  getVersionRoute(versionId: string): string {
+    return getItemVersionRoute(versionId);
+  }
+
+  /**
+   * Get the ID of the workspace item the version item belongs to, or undefined when it is not in submission
+   * @param versionItem the version item's observable
+   */
+  getWorkspaceId(versionItem: Observable<RemoteData<Item>>): Observable<string> {
+    return versionItem.pipe(
+      getFirstSucceededRemoteDataPayload(),
+      map((item: Item) => item.uuid),
+      switchMap((itemUuid: string) => this.workspaceItemDataService.findByItem(itemUuid, true)),
+      getFirstCompletedRemoteData<WorkspaceItem>(),
+      map((res: RemoteData<WorkspaceItem>) => res?.payload?.id),
+    );
+  }
+
+  /**
+   * Get the ID of the workflow item the version item belongs to, or undefined when it is not in workflow
+   * @param versionItem the version item's observable
+   */
+  getWorkflowId(versionItem: Observable<RemoteData<Item>>): Observable<string> {
+    return versionItem.pipe(
+      getFirstSucceededRemoteDataPayload(),
+      map((item: Item) => item.uuid),
+      switchMap((itemUuid: string) => this.workflowItemDataService.findByItem(itemUuid, true)),
+      getFirstCompletedRemoteData<WorkflowItem>(),
+      map((res: RemoteData<WorkflowItem>) => res?.payload?.id),
+    );
   }
 
   /**
@@ -171,7 +230,7 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
    * This method optimizes the template logic by pre-computing the conditional check
    * @param versionItem the version item's observable
    */
-  getVersionWorkspaceId(versionItem: Observable<Item>): Observable<string | undefined> {
+  getVersionWorkspaceId(versionItem: Observable<RemoteData<Item>>): Observable<string | undefined> {
     return (this.hasDraftVersion$ ?? of(false)).pipe(
       switchMap(hasDraftVersion =>
         hasDraftVersion ? this.getWorkspaceId(versionItem) : of(undefined),
@@ -185,7 +244,7 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
    * @param versionItem the version item's observable
    * @param workspaceId$ the workspace ID observable
    */
-  getVersionWorkflowId(versionItem: Observable<Item>, workspaceId$: Observable<string | undefined>): Observable<string | undefined> {
+  getVersionWorkflowId(versionItem: Observable<RemoteData<Item>>, workspaceId$: Observable<string | undefined>): Observable<string | undefined> {
     return workspaceId$.pipe(
       switchMap((workspaceId) =>
         workspaceId ? of(undefined) : this.getWorkflowId(versionItem),

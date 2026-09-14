@@ -14,6 +14,7 @@ import { ThemedMediaViewerComponent } from '../../../../../../../app/item-page/m
 import { MiradorViewerComponent } from '../../../../../../../app/item-page/mirador-viewer/mirador-viewer.component';
 import { ClarinCollectionsItemFieldComponent } from '../../../../../../../app/item-page/simple/field-components/clarin-collections-item-field/clarin-collections-item-field.component';
 import { ClarinGenericItemFieldComponent } from '../../../../../../../app/item-page/simple/field-components/clarin-generic-item-field/clarin-generic-item-field.component';
+import { ClarinItemVersionsFieldComponent } from '../../../../../../../app/item-page/simple/field-components/clarin-item-versions-field/clarin-item-versions-field.component';
 import { ThemedItemPageTitleFieldComponent } from '../../../../../../../app/item-page/simple/field-components/specific-field/title/themed-item-page-field.component';
 import { UntypedItemComponent as BaseComponent } from '../../../../../../../app/item-page/simple/item-types/untyped-item/untyped-item.component';
 import { ViewsDownloadsStatisticsButtonComponent } from '../../../../../../../app/item-page/views-downloads-statistics-button/views-downloads-statistics-button.component';
@@ -37,6 +38,7 @@ import { ThemedResultsBackButtonComponent } from '../../../../../../../app/share
     AsyncPipe,
     ClarinCollectionsItemFieldComponent,
     ClarinGenericItemFieldComponent,
+    ClarinItemVersionsFieldComponent,
     ClarinRefBoxComponent,
     DsoEditMenuComponent,
     MiradorViewerComponent,

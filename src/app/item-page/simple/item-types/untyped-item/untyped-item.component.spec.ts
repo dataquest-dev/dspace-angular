@@ -63,6 +63,7 @@ import { ItemVersionsSharedService } from '../../../versions/item-versions-share
 import { ViewsDownloadsStatisticsButtonComponent } from '../../../views-downloads-statistics-button/views-downloads-statistics-button.component';
 import { ClarinCollectionsItemFieldComponent } from '../../field-components/clarin-collections-item-field/clarin-collections-item-field.component';
 import { ClarinGenericItemFieldComponent } from '../../field-components/clarin-generic-item-field/clarin-generic-item-field.component';
+import { ClarinItemVersionsFieldComponent } from '../../field-components/clarin-item-versions-field/clarin-item-versions-field.component';
 import { GenericItemPageFieldComponent } from '../../field-components/specific-field/generic/generic-item-page-field.component';
 import { ThemedItemPageTitleFieldComponent } from '../../field-components/specific-field/title/themed-item-page-field.component';
 import {
@@ -145,6 +146,7 @@ describe('UntypedItemComponent', () => {
           ClarinRefBoxComponent,
           ClarinGenericItemFieldComponent,
           ClarinCollectionsItemFieldComponent,
+          ClarinItemVersionsFieldComponent,
           ViewsDownloadsStatisticsButtonComponent,
         ],
       },
@@ -178,6 +180,11 @@ describe('UntypedItemComponent', () => {
     it('should contain a component to display the collections', () => {
       const fields = fixture.debugElement.queryAll(By.css('ds-clarin-collections-item-field'));
       expect(fields.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('should contain a component to display the version history', () => {
+      const fields = fixture.debugElement.queryAll(By.css('ds-clarin-item-versions-field'));
+      expect(fields.length).toBe(1);
     });
 
     it('should not contain an iiif viewer component', () => {
