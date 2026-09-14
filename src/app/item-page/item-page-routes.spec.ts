@@ -16,7 +16,10 @@ import { TombstoneComponent } from './tombstone/tombstone.component';
  */
 describe('item page ROUTES', () => {
   const itemRoute: Route = ROUTES.find((route: Route) => route.path === ':id');
-  const childOf = (path: string): Route => itemRoute.children.find((route: Route) => route.path === path);
+  const childOf = (path: string): Route => {
+    expect(itemRoute).withContext('the item :id route').toBeTruthy();
+    return itemRoute.children.find((route: Route) => route.path === path);
+  };
 
   it('should mount the ZIP download page on both download and download/zip', () => {
     const download: Route = childOf('download');
@@ -35,6 +38,8 @@ describe('item page ROUTES', () => {
   });
 
   it('should keep the per-item statistics page behind a login', () => {
-    expect(childOf(VIEWS_DOWNLOADS_STATISTICS_PATH).canActivate).toContain(authenticatedGuard);
+    const statistics: Route = childOf(VIEWS_DOWNLOADS_STATISTICS_PATH);
+    expect(statistics.canActivate).toContain(authenticatedGuard);
+    expect(statistics.resolve.dso).toBe(itemPageResolver);
   });
 });

@@ -176,7 +176,7 @@ export class ItemPageComponent implements OnInit, OnDestroy {
       this.itemRD$.pipe(getAllSucceededRemoteDataPayload()),
       this.isAdmin$,
     ]).pipe(
-      map(([item, isAdmin]: [Item, boolean]) => item.isWithdrawn === true && !isAdmin),
+      map(([item, isAdmin]: [Item, boolean]) => !!item.isWithdrawn && !isAdmin),
     );
   }
 
