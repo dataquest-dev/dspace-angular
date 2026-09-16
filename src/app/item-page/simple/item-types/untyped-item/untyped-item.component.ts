@@ -17,6 +17,7 @@ import { MiradorViewerComponent } from '../../../mirador-viewer/mirador-viewer.c
 import { ViewsDownloadsStatisticsButtonComponent } from '../../../views-downloads-statistics-button/views-downloads-statistics-button.component';
 import { ClarinCollectionsItemFieldComponent } from '../../field-components/clarin-collections-item-field/clarin-collections-item-field.component';
 import { ClarinGenericItemFieldComponent } from '../../field-components/clarin-generic-item-field/clarin-generic-item-field.component';
+import { ClarinItemVersionsFieldComponent } from '../../field-components/clarin-item-versions-field/clarin-item-versions-field.component';
 import { ThemedItemPageTitleFieldComponent } from '../../field-components/specific-field/title/themed-item-page-field.component';
 import { ItemComponent } from '../shared/item.component';
 
@@ -35,6 +36,7 @@ import { ItemComponent } from '../shared/item.component';
     AsyncPipe,
     ClarinCollectionsItemFieldComponent,
     ClarinGenericItemFieldComponent,
+    ClarinItemVersionsFieldComponent,
     ClarinRefBoxComponent,
     DsoEditMenuComponent,
     MiradorViewerComponent,

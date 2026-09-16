@@ -15,6 +15,7 @@ import { ThemedThumbnailComponent } from '../../../../thumbnail/themed-thumbnail
 import { CollectionsComponent } from '../../../field-components/collections/collections.component';
 import { ThemedMediaViewerComponent } from '../../../media-viewer/themed-media-viewer.component';
 import { MiradorViewerComponent } from '../../../mirador-viewer/mirador-viewer.component';
+import { ClarinItemVersionsFieldComponent } from '../../field-components/clarin-item-versions-field/clarin-item-versions-field.component';
 import { ThemedFileSectionComponent } from '../../field-components/file-section/themed-file-section.component';
 import { ItemPageAbstractFieldComponent } from '../../field-components/specific-field/abstract/item-page-abstract-field.component';
 import { ItemPageDateFieldComponent } from '../../field-components/specific-field/date/item-page-date-field.component';
@@ -38,6 +39,7 @@ import { ItemComponent } from '../shared/item.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
+    ClarinItemVersionsFieldComponent,
     CollectionsComponent,
     DsoEditMenuComponent,
     GenericItemPageFieldComponent,

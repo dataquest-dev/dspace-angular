@@ -62,6 +62,7 @@ import { ThemedThumbnailComponent } from '../../../../thumbnail/themed-thumbnail
 import { CollectionsComponent } from '../../../field-components/collections/collections.component';
 import { ThemedMediaViewerComponent } from '../../../media-viewer/themed-media-viewer.component';
 import { MiradorViewerComponent } from '../../../mirador-viewer/mirador-viewer.component';
+import { ClarinItemVersionsFieldComponent } from '../../field-components/clarin-item-versions-field/clarin-item-versions-field.component';
 import { ThemedFileSectionComponent } from '../../field-components/file-section/themed-file-section.component';
 import { ItemPageAbstractFieldComponent } from '../../field-components/specific-field/abstract/item-page-abstract-field.component';
 import { ItemPageDateFieldComponent } from '../../field-components/specific-field/date/item-page-date-field.component';
@@ -138,7 +139,7 @@ describe('PublicationComponent', () => {
     }).overrideComponent(PublicationComponent, {
       add: { changeDetection: ChangeDetectionStrategy.Default },
       remove: {
-        imports: [ThemedResultsBackButtonComponent, MiradorViewerComponent, ThemedItemPageTitleFieldComponent, DsoEditMenuComponent, MetadataFieldWrapperComponent, ThemedThumbnailComponent, ThemedMediaViewerComponent, ThemedFileSectionComponent, ItemPageDateFieldComponent, ThemedMetadataRepresentationListComponent, GenericItemPageFieldComponent, RelatedItemsComponent, ItemPageAbstractFieldComponent, ItemPageUriFieldComponent, CollectionsComponent,
+        imports: [ThemedResultsBackButtonComponent, MiradorViewerComponent, ThemedItemPageTitleFieldComponent, DsoEditMenuComponent, MetadataFieldWrapperComponent, ThemedThumbnailComponent, ThemedMediaViewerComponent, ThemedFileSectionComponent, ItemPageDateFieldComponent, ThemedMetadataRepresentationListComponent, GenericItemPageFieldComponent, RelatedItemsComponent, ItemPageAbstractFieldComponent, ItemPageUriFieldComponent, CollectionsComponent, ClarinItemVersionsFieldComponent,
         ],
       },
     });
@@ -181,6 +182,11 @@ describe('PublicationComponent', () => {
     it('should contain a component to display the collections', () => {
       const fields = fixture.debugElement.queryAll(By.css('ds-item-page-collections'));
       expect(fields.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('should contain a component to display the version history', () => {
+      const fields = fixture.debugElement.queryAll(By.css('ds-clarin-item-versions-field'));
+      expect(fields.length).toBe(1);
     });
   });
 
