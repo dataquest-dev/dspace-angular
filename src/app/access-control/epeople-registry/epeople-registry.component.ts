@@ -1,5 +1,6 @@
 import {
   AsyncPipe,
+  DatePipe,
   NgClass,
 } from '@angular/common';
 import {
@@ -78,6 +79,7 @@ import {
   imports: [
     AsyncPipe,
     BtnDisabledDirective,
+    DatePipe,
     NgbTooltipModule,
     NgClass,
     PaginationComponent,
@@ -95,6 +97,8 @@ export class EPeopleRegistryComponent implements OnInit, OnDestroy {
 
   labelPrefix = 'admin.access-control.epeople.';
   selfDeleteWarningLabel = SELF_DELETE_WARNING_LABEL;
+
+  dateFormat = 'yyyy-MM-dd HH:mm:ss';
 
   currentAuthenticatedUserId: string;
 
