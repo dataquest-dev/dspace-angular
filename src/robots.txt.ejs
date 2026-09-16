@@ -18,10 +18,19 @@ Disallow: /profile
 Disallow: /workflowitems
 # Crawlers should be able to access entity pages, but not the facet search links present on entity pages
 Disallow: /entities/*?f
-
-# Heavy Discovery facet queries on browse pages
-Disallow: /collections/*?f
-Disallow: /communities/*?spc.page
+# Scoped search inside a community or collection, and every facet link.
+# "Disallow: /search" above only matches paths that START with /search, so
+# /collections/<uuid>/search and /communities/<uuid>/search stayed crawlable.
+# Crawlers enumerating those facet combinations saturated SSR on 2026-07-22
+# (HTTP 504 for everyone); see dspace-customers#902 (mendelu 29b88bf36b).
+Disallow: /collections/*/search
+Disallow: /communities/*/search
+# The two rules below cover any URL carrying a Discovery facet filter
+# (f.author, f.subject, f.dateIssued.min, ...), wherever it appears. Two of
+# them because the facet can be the first query parameter (?f.) or a later
+# one (&f.), and robots.txt has no way to express "either".
+Disallow: /*?f.
+Disallow: /*&f.
 
 # Optionally uncomment the following line ONLY if sitemaps are working
 # and you have verified that your site is being indexed correctly.
