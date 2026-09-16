@@ -11,6 +11,7 @@ import { AccessByTokenNotificationComponent } from '../../../../../app/item-page
 import { ItemPageComponent as BaseComponent } from '../../../../../app/item-page/simple/item-page.component';
 import { NotifyRequestsStatusComponent } from '../../../../../app/item-page/simple/notify-requests-status/notify-requests-status-component/notify-requests-status.component';
 import { QaEventNotificationComponent } from '../../../../../app/item-page/simple/qa-event-notification/qa-event-notification.component';
+import { TombstoneComponent } from '../../../../../app/item-page/tombstone/tombstone.component';
 import { ItemVersionsComponent } from '../../../../../app/item-page/versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../../../../../app/item-page/versions/notice/item-versions-notice.component';
 import { fadeInOut } from '../../../../../app/shared/animations/fade';
@@ -39,6 +40,7 @@ import { VarDirective } from '../../../../../app/shared/utils/var.directive';
     QaEventNotificationComponent,
     ThemedItemAlertsComponent,
     ThemedLoadingComponent,
+    TombstoneComponent,
     TranslateModule,
     VarDirective,
   ],

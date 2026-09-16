@@ -54,6 +54,9 @@ export const ITEM_VERSION_PATH = 'version';
 export const UPLOAD_BITSTREAM_PATH = 'bitstreams/new';
 export const ORCID_PATH = 'orcid';
 
+// CLARIN: tombstone page for withdrawn / replaced items
+export const TOMBSTONE_ITEM_PATH = 'tombstone';
+
 export const ITEM_ACCESS_BY_TOKEN_PATH = 'access-by-token';
 
 // CLARIN: per-item views/downloads statistics page

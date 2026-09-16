@@ -3,17 +3,21 @@
     <div class="item-page" @fadeInOut>
       @if (itemRD?.payload; as item) {
         <div>
-
-          <ds-item-alerts [item]="item"></ds-item-alerts>
-          <ds-access-by-token-notification></ds-access-by-token-notification>
-          <ds-qa-event-notification [item]="item"></ds-qa-event-notification>
-          <ds-notify-requests-status [itemUuid]="item.uuid"></ds-notify-requests-status>
-          <ds-item-versions-notice [item]="item"></ds-item-versions-notice>
-          @if (!item.isWithdrawn || (isAdmin$|async)) {
-            <ds-listable-object-component-loader [object]="item" [viewMode]="viewMode"></ds-listable-object-component-loader>
-          <ds-clarin-files-section [item]="item" [itemHandle]="item.handle"></ds-clarin-files-section>
+          @if (showTombstone$ | async) {
+            <!-- CLARIN: a withdrawn item is replaced by the tombstone for everyone but admins -->
+            <ds-tombstone [item]="item"></ds-tombstone>
+          } @else {
+            <ds-item-alerts [item]="item"></ds-item-alerts>
+            <ds-access-by-token-notification></ds-access-by-token-notification>
+            <ds-qa-event-notification [item]="item"></ds-qa-event-notification>
+            <ds-notify-requests-status [itemUuid]="item.uuid"></ds-notify-requests-status>
+            <ds-item-versions-notice [item]="item"></ds-item-versions-notice>
+            @if (!item.isWithdrawn || (isAdmin$|async)) {
+              <ds-listable-object-component-loader [object]="item" [viewMode]="viewMode"></ds-listable-object-component-loader>
+              <ds-clarin-files-section [item]="item" [itemHandle]="item.handle"></ds-clarin-files-section>
+            }
+            <ds-item-versions class="mt-2" [item]="item" [displayActions]="false"></ds-item-versions>
           }
-          <ds-item-versions class="mt-2" [item]="item" [displayActions]="false"></ds-item-versions>
         </div>
       }
     </div>
