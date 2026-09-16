@@ -23,6 +23,7 @@ import { BuildConfig } from './build-config.interface';
 import { Config } from './config.interface';
 import { mergeConfig } from './config.util';
 import { DefaultAppConfig } from './default-app-config';
+import { buildPublicConfig } from './public-config';
 import { ServerConfig } from './server-config.interface';
 
 const CONFIG_PATH = join(process.cwd(), 'config');
@@ -259,7 +260,7 @@ export const buildAppConfig = (destConfigPath?: string, mapping?: ServerHashedFi
   buildBaseUrl(appConfig.rest);
 
   if (isNotEmpty(destConfigPath)) {
-    const content = JSON.stringify(appConfig, null, 2);
+    const content = JSON.stringify(buildPublicConfig(appConfig), null, 2);
 
     writeFileSync(destConfigPath, content);
     if (mapping !== undefined) {
