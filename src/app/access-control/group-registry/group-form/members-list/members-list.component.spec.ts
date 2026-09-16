@@ -212,6 +212,17 @@ describe('MembersListComponent', () => {
     expect(Array.from(label.classList)).toContain('visually-hidden');
   });
 
+  it('should render the search label outside the input group', () => {
+    const group: HTMLElement = fixture.nativeElement.querySelector('.input-group');
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('input[name="query"]');
+    const label: HTMLLabelElement = fixture.nativeElement.querySelector('label[for="' + input.id + '"]');
+
+    // Bootstrap 5 squares off any .input-group child that is not the first one
+    expect(label).toBeTruthy();
+    expect(group.contains(label)).toBeFalse();
+    expect(group.firstElementChild).toBe(input);
+  });
+
   describe('current members list', () => {
     it('should show list of eperson members of current active group', () => {
       const epersonIdsFound = fixture.debugElement.queryAll(By.css('#ePeopleMembersOfGroup tr td:first-child'));

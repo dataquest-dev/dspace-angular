@@ -31,8 +31,8 @@
       </select>
     </div>
     <div class="col-12 col-md-6">
+      <label for="startsWith-input" class="visually-hidden">{{ 'browse.startsWith.type_date.label' | translate }}</label>
       <div class="mb-3 input-group pt-1 pt-md-0">
-        <label for="startsWith-input" class="visually-hidden">{{ 'browse.startsWith.type_date.label' | translate }}</label>
         <input id="startsWith-input" class="form-control" placeholder="{{'browse.startsWith.type_date' | translate}}" [attr.aria-label]="'browse.startsWith.type_date.label' |translate" type="text" name="startsWith"
           formControlName="startsWith" [value]="getStartsWith() ? getStartsWith() : ''"/>
         <button class="btn btn-primary" type="submit" role="button" tabindex="0"><i class="fas fa-book-open"></i> {{ 'browse.startsWith.submit' | translate }}</button>

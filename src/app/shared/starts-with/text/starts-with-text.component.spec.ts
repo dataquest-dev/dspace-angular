@@ -59,6 +59,20 @@ describe('StartsWithTextComponent', () => {
     expect(comp.formData.value.startsWith).toBeDefined();
   });
 
+  it('should label the input with a for/id pair that resolves, outside the input group', () => {
+    const group: HTMLElement = fixture.nativeElement.querySelector('.input-group');
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('input[name="startsWith"]');
+    const label: HTMLLabelElement = fixture.nativeElement.querySelector('label');
+
+    expect(input.id).toBeTruthy();
+    expect(label).toBeTruthy();
+    expect(label.htmlFor).toEqual(input.id);
+    expect(Array.from(label.classList)).toContain('visually-hidden');
+    // Bootstrap 5 squares off any .input-group child that is not the first one
+    expect(group.contains(label)).toBeFalse();
+    expect(group.firstElementChild).toBe(input);
+  });
+
   describe('when filling in the input form', () => {
     let form;
     const expectedValue = 'A';
