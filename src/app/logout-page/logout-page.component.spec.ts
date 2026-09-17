@@ -4,6 +4,7 @@ import {
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -35,6 +36,12 @@ describe('LogoutPageComponent', () => {
 
   it('should create instance', () => {
     expect(comp).toBeDefined();
+  });
+
+  it('should show the CLARIN logo linking to clarin.eu', () => {
+    const logo = fixture.debugElement.query(By.css('img.clarin-logo'));
+    expect(logo?.nativeElement.getAttribute('src')).toBe('assets/images/clarin-logo.svg');
+    expect(logo?.parent.nativeElement.getAttribute('href')).toBe('https://www.clarin.eu/');
   });
 
 });
