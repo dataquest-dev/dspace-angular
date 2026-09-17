@@ -5,6 +5,7 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 import {
   ActivatedRoute,
   Router,
@@ -118,6 +119,40 @@ describe('ProcessFormComponent', () => {
     it('should invoke the script with an empty array of parameters', () => {
       component.submitForm({ controls: {} } as any);
       expect(scriptService.invoke).toHaveBeenCalledWith(script.id, [], jasmine.anything());
+    });
+  });
+
+  describe('when a script is selected', () => {
+    let otherScript: Script;
+
+    function emitSelect(): void {
+      fixture.debugElement.query(By.css('ds-scripts-select')).triggerEventHandler('select', otherScript);
+    }
+
+    beforeEach(() => {
+      otherScript = Object.assign(new Script(), { id: 'other-script', parameters: [new ScriptParameter()] });
+    });
+
+    it('should keep prefilled parameters when ds-scripts-select emits select', () => {
+      emitSelect();
+
+      expect(component.parameters).toEqual(parameterValues);
+      expect(component.selectedScript).toBe(otherScript);
+    });
+
+    it('should clear an empty parameters array so the mandatory parameters get seeded', () => {
+      component.parameters = [];
+
+      emitSelect();
+
+      expect(component.parameters).toBeUndefined();
+    });
+
+    it('should not wipe prefilled parameters through updateScript', () => {
+      component.updateScript(otherScript);
+
+      expect(component.parameters).toEqual(parameterValues);
+      expect(component.selectedScript).toBe(otherScript);
     });
   });
 });

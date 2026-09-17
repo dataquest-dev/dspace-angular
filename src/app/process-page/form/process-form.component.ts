@@ -91,6 +91,17 @@ export class ProcessFormComponent implements OnInit {
   }
 
   /**
+   * Selects a script, keeping parameters prefilled from an existing process.
+   * @param script The selected script
+   */
+  onScriptSelect(script: Script): void {
+    this.selectedScript = script;
+    if (isEmpty(this.parameters)) {
+      this.parameters = undefined;
+    }
+  }
+
+  /**
    * Validates the form, sets the parameters to correct values and invokes the script with the correct parameters
    * @param form
    */
@@ -182,8 +193,7 @@ export class ProcessFormComponent implements OnInit {
   }
 
   updateScript($event: Script) {
-    this.selectedScript = $event;
-    this.parameters = undefined;
+    this.onScriptSelect($event);
   }
 
   get generatedProcessName() {

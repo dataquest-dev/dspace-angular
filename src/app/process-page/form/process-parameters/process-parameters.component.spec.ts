@@ -1,4 +1,7 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  NO_ERRORS_SCHEMA,
+  SimpleChange,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -83,6 +86,43 @@ describe('ProcessParametersComponent', () => {
 
       const formGroupComponent = fixture.debugElement.query(By.css('[data-testID=parameters-select-container]'));
       expect(formGroupComponent).toBeFalsy();
+    });
+  });
+
+  describe('when initial parameters are supplied by the caller', () => {
+
+    beforeEach(() => {
+      initParametersAndScriptMockValues();
+    });
+
+    it('should not mutate the array passed as initialParams', () => {
+      component.initialParams = mockParameterValues;
+
+      component.ngOnInit();
+      component.parameterValues[0].value = 'edited';
+
+      expect(mockParameterValues[0].value).toEqual('bla');
+      expect(component.parameterValues).not.toBe(mockParameterValues);
+    });
+
+    it('should keep the initial parameters when the script changes', () => {
+      component.initialParams = mockParameterValues;
+      component.script = mockScript;
+
+      component.ngOnChanges({ script: new SimpleChange(undefined, mockScript, true) });
+
+      expect(component.parameterValues.map((param: ProcessParameter) => param.name)).toEqual(['-a', '-b', '-c', undefined]);
+    });
+
+    it('should still seed the mandatory script parameters when initialParams is an empty array', () => {
+      const mandatoryParam = Object.assign(new ScriptParameter(), { name: '-x', mandatory: true });
+      const scriptWithMandatoryParam = Object.assign(new Script(), { parameters: [mandatoryParam] });
+      component.initialParams = [];
+      component.script = scriptWithMandatoryParam;
+
+      component.ngOnChanges({ script: new SimpleChange(undefined, scriptWithMandatoryParam, true) });
+
+      expect(component.parameterValues.map((param: ProcessParameter) => param.name)).toEqual(['-x', undefined]);
     });
   });
 });
