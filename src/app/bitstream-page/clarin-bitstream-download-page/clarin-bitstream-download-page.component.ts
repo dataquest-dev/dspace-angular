@@ -177,9 +177,10 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
       } else if ((isAuthorized || isAuthorizedByClarin) && !isLoggedIn) {
         this.downloadStatus.next(RequestEntryState.Success);
         window.location.replace(bitstreamURL);
-      } else if (!(isAuthorized || isAuthorizedByClarin) && isNotEmpty(this.accessToken)) {
-        // Request-a-copy grantee. Only the backend can honour the token, and it runs the same CLARIN
-        // licence check a download without a token goes through, so the token is passed on unchanged.
+      } else if (!(isAuthorized || isAuthorizedByClarin) && isNotEmpty(this.accessToken) &&
+        this.downloadStatus.value === AUTHORIZATION_DENIED_EXCEPTION) {
+        // Only the policy refused, which a request-a-copy token can answer. A missing licence or an
+        // expired dtoken keeps its own page, because the user can still act on those here.
         const separator = bitstreamURL.includes('?') ? '&' : '?';
         this.downloadStatus.next(RequestEntryState.Success);
         this.hardRedirectService.redirect(bitstreamURL + separator + 'accessToken=' + encodeURIComponent(this.accessToken));

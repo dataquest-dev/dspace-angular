@@ -20,6 +20,7 @@ import { Bitstream } from '../../core/shared/bitstream.model';
 import {
   AUTHORIZATION_DENIED_EXCEPTION,
   HTTP_STATUS_UNAUTHORIZED,
+  MISSING_LICENSE_AGREEMENT_EXCEPTION,
 } from '../../core/shared/clarin/constants';
 import { FileService } from '../../core/shared/file.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
@@ -121,6 +122,17 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
 
     expect(hardRedirectService.redirect).toHaveBeenCalledWith(contentHref + '?accessToken=' + accessToken);
     expect(component.downloadStatus.value).toEqual('Success');
+  });
+
+  it('should still show the licence agreement when the licence is what is missing', () => {
+    rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
+      MISSING_LICENSE_AGREEMENT_EXCEPTION, HTTP_STATUS_UNAUTHORIZED)));
+    activatedRoute.snapshot.queryParams = { accessToken: accessToken };
+
+    component.ngOnInit();
+
+    expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+    expect(component.downloadStatus.value).toEqual(MISSING_LICENSE_AGREEMENT_EXCEPTION);
   });
 
   it('should keep refusing the download when no access token is in the URL', () => {
