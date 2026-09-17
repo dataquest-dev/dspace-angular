@@ -14,5 +14,7 @@ export interface ItemConfig extends Config {
     pageSize: number;
     // Show the bitstream access status label
     showAccessStatuses: boolean;
+    // Link a restricted bitstream to the vanilla request-a-copy form instead of the CLARIN licence gate
+    enableRequestACopyLink: boolean;
   }
 }
