@@ -16,21 +16,30 @@ import {
   StoreModule,
 } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 
 import { storeModuleConfig } from '../../../../app.reducer';
 import { authReducer } from '../../../../core/auth/auth.reducer';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { AuthMethod } from '../../../../core/auth/models/auth.method';
 import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
+import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
 import { CookieService } from '../../../../core/services/cookie.service';
 import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
+import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
+import { HELP_DESK_PROPERTY } from '../../../../item-page/tombstone/tombstone.constants';
 import { CookieServiceMock } from '../../../mocks/cookie.service.mock';
 import { getMockThemeService } from '../../../mocks/theme-service.mock';
+import { NotificationsService } from '../../../notifications/notifications.service';
+import { createSuccessfulRemoteDataObject$ } from '../../../remote-data.utils';
 import { ActivatedRouteStub } from '../../../testing/active-router.stub';
 import { AuthServiceStub } from '../../../testing/auth-service.stub';
 import { AuthorizationDataServiceStub } from '../../../testing/authorization-service.stub';
+import { NotificationsServiceStub } from '../../../testing/notifications-service.stub';
 import { ThemeService } from '../../../theme-support/theme.service';
 import {
   LogInPasswordComponent,
@@ -44,11 +53,21 @@ describe('LogInPasswordComponent', () => {
   let page: Page;
   let initialState: any;
   let hardRedirectService: HardRedirectService;
+  let configurationServiceSpy: jasmine.SpyObj<ConfigurationDataService>;
   let themeService = getMockThemeService();
+
+  const HELP_DESK_EMAIL = 'help@example.org';
 
   beforeEach(() => {
     hardRedirectService = jasmine.createSpyObj('hardRedirectService', {
       getCurrentRoute: {},
+    });
+
+    configurationServiceSpy = jasmine.createSpyObj('configurationService', {
+      findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
+        name: HELP_DESK_PROPERTY,
+        values: [HELP_DESK_EMAIL],
+      })),
     });
 
     initialState = {
@@ -81,6 +100,8 @@ describe('LogInPasswordComponent', () => {
         { provide: 'isStandalonePage', useValue: true },
         { provide: HardRedirectService, useValue: hardRedirectService },
         { provide: CookieService, useValue: new CookieServiceMock() },
+        { provide: ConfigurationDataService, useValue: configurationServiceSpy },
+        { provide: NotificationsService, useClass: NotificationsServiceStub },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: ThemeService, useValue: themeService },
         provideMockStore({ initialState }),
@@ -231,6 +252,62 @@ describe('LogInPasswordComponent', () => {
 
       expect(setRedirectUrlIfNotSetSpy).toHaveBeenCalledWith('/');
       expect(setRedirectUrlSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  // The backend redirects a failed Shibboleth login to /login?error=shibboleth-authentication-failed.
+  describe('failed Shibboleth login (error query param)', () => {
+    let notificationsService: NotificationsServiceStub;
+
+    const initWithQueryParams = (queryParams: Record<string, unknown>) => {
+      (component as any).route = { snapshot: { queryParams } };
+      component.ngOnInit();
+    };
+
+    beforeEach(() => {
+      notificationsService = TestBed.inject(NotificationsService) as unknown as NotificationsServiceStub;
+
+      // The real en.json5 strings, so the message below is genuinely interpolated rather than a key.
+      const translateService = TestBed.inject(TranslateService);
+      translateService.setTranslation('en', {
+        'login.auth.failed.shibboleth.title': 'Shibboleth authentication failed',
+        'login.auth.failed.shibboleth.message': 'Authentication failed because your IDP did not send the ' +
+          'required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .',
+      }, true);
+      translateService.use('en');
+
+      // Avoid scheduling the real DiscoJuice popup timer during ngOnInit.
+      spyOn(component as any, 'popUpDiscoJuiceLogin');
+    });
+
+    it('asks the server for the configured help desk address', () => {
+      initWithQueryParams({ error: 'shibboleth-authentication-failed' });
+
+      expect(configurationServiceSpy.findByPropertyName).toHaveBeenCalledWith(HELP_DESK_PROPERTY);
+    });
+
+    it('raises a persistent error notification carrying the help desk address', () => {
+      initWithQueryParams({ error: 'shibboleth-authentication-failed' });
+
+      expect(notificationsService.error).toHaveBeenCalledTimes(1);
+      const [title, message, options] = notificationsService.error.calls.mostRecent().args;
+      expect(title).toBe('Shibboleth authentication failed');
+      expect(message).toContain(HELP_DESK_EMAIL);
+      expect(message).not.toContain('{{');
+      expect(options.timeOut).toBe(-1);
+      expect(options.clickToClose).toBe(true);
+    });
+
+    it('stays silent for an unrelated error value', () => {
+      initWithQueryParams({ error: 'something-else' });
+
+      expect(notificationsService.error).not.toHaveBeenCalled();
+    });
+
+    it('stays silent on an ordinary login page with no error param', () => {
+      initWithQueryParams({});
+
+      expect(notificationsService.error).not.toHaveBeenCalled();
     });
   });
 
