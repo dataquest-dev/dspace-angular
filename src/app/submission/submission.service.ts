@@ -241,13 +241,40 @@ export class SubmissionService {
   }
 
   /**
-   * Dispatch a new [SaveAndDepositSubmissionAction]
+   * Dispatch a new [SaveAndDepositSubmissionAction].
+   * A submission whose CLARIN notice has not been confirmed is not deposited, the submitter is
+   * warned instead.
    *
    * @param submissionId
    *    The submission id
    */
   dispatchDeposit(submissionId) {
-    this.store.dispatch(new SaveAndDepositSubmissionAction(submissionId));
+    this.clarinNoticeApproved(submissionId).subscribe((approved: boolean) => {
+      if (approved) {
+        this.store.dispatch(new SaveAndDepositSubmissionAction(submissionId));
+      } else {
+        this.notificationsService.warning(this.translate.instant('submission.sections.clarin-notice.error'));
+      }
+    });
+  }
+
+  /**
+   * Whether the CLARIN notice section of the given submission has been confirmed.
+   * Only some submission forms carry that section, so a submission without it is approved.
+   *
+   * @param submissionId
+   *    The submission id
+   * @return Observable<boolean>
+   *    observable emitting once whether the notice is approved
+   */
+  clarinNoticeApproved(submissionId): Observable<boolean> {
+    return this.store.select(submissionObjectFromIdSelector(submissionId)).pipe(
+      take(1),
+      map((submission: SubmissionObjectEntry) => {
+        const clarinNotice: SubmissionSectionObject = submission?.sections?.[SectionsType.clarinNotice];
+        return !hasValue(clarinNotice) || clarinNotice.isValid;
+      }),
+    );
   }
 
   /**
