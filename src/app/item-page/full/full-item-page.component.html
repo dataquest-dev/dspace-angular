@@ -4,7 +4,7 @@
       @if (itemRD?.payload; as item) {
         <div>
           @if (fromSubmissionObject && item?.firstMetadataValue('local.submission.note')) {
-            <div class="card alert-info mb-3">
+            <div class="card bg-info-subtle border-info-subtle text-info-emphasis mb-3">
               <div class="card-header fw-bold">
                 {{'item.page.users.note' | translate}}
               </div>

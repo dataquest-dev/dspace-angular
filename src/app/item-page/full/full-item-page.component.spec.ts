@@ -280,9 +280,13 @@ describe('FullItemPageComponent', () => {
       comp.fromSubmissionObject = true;
       fixture.detectChanges();
 
-      const card = fixture.debugElement.query(By.css('.card.alert-info'));
+      const card = fixture.debugElement.query(By.css('.card.bg-info-subtle'));
       expect(card).toBeTruthy();
       expect(card.nativeElement.textContent).toContain(NOTE_TEXT);
+      // Bootstrap 5 paints the tint through these three utilities; alert-info alone sets only
+      // custom properties that .alert reads, so a card without them renders plain white.
+      expect(card.nativeElement.classList).toContain('border-info-subtle');
+      expect(card.nativeElement.classList).toContain('text-info-emphasis');
     });
 
     it('should render the note card above the item alerts', () => {
@@ -290,7 +294,7 @@ describe('FullItemPageComponent', () => {
       fixture.detectChanges();
 
       const siblings = Array.from(fixture.debugElement.query(By.css('.item-page > div')).nativeElement.children);
-      const cardIndex = siblings.findIndex((el: Element) => el.classList.contains('alert-info'));
+      const cardIndex = siblings.findIndex((el: Element) => el.classList.contains('bg-info-subtle'));
       const alertsIndex = siblings.findIndex((el: Element) => el.tagName.toLowerCase() === 'ds-item-alerts');
       expect(cardIndex).toBe(0);
       expect(alertsIndex).toBeGreaterThan(cardIndex);
@@ -300,7 +304,7 @@ describe('FullItemPageComponent', () => {
       comp.fromSubmissionObject = true;
       fixture.detectChanges();
 
-      const header = fixture.debugElement.query(By.css('.card.alert-info .card-header'));
+      const header = fixture.debugElement.query(By.css('.card.bg-info-subtle .card-header'));
       expect(header).toBeTruthy();
       expect(header.nativeElement.textContent).toContain('item.page.users.note');
     });
@@ -309,7 +313,7 @@ describe('FullItemPageComponent', () => {
       comp.fromSubmissionObject = false;
       fixture.detectChanges();
 
-      expect(fixture.debugElement.query(By.css('.card.alert-info'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('.card.bg-info-subtle'))).toBeNull();
     });
   });
 
@@ -322,7 +326,7 @@ describe('FullItemPageComponent', () => {
 
     it('should not render an empty note card', () => {
       expect(mockItem.firstMetadataValue('local.submission.note')).toBeUndefined();
-      expect(fixture.debugElement.query(By.css('.card.alert-info'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('.card.bg-info-subtle'))).toBeNull();
     });
   });
 
