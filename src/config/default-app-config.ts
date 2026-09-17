@@ -650,4 +650,7 @@ export class DefaultAppConfig implements AppConfig {
   accessibility: AccessibilitySettingsConfig = {
     cookieExpirationDuration: 7,
   };
+
+  // CLARIN: signposting is opt-in; when off, the UI makes no /signposting/linksets request at all
+  signpostingEnabled = false;
 }

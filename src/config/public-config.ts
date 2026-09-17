@@ -97,5 +97,6 @@ export const buildPublicConfig = (appConfig: AppConfig): PublicAppConfig => {
     geospatialMapViewer: config.geospatialMapViewer,
     accessibility: config.accessibility,
     statistics: config.statistics,
+    signpostingEnabled: config.signpostingEnabled,
   };
 };

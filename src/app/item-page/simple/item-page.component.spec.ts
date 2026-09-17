@@ -20,6 +20,7 @@ import {
 } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
 import { NotifyInfoService } from '../../core/coar-notify/notify-info/notify-info.service';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { ItemDataService } from '../../core/data/item-data.service';
@@ -366,5 +367,85 @@ describe('ItemPageComponent tombstone', () => {
     expect(showTombstone()).toBeFalse();
     expect(fixture.debugElement.query(By.css('ds-tombstone'))).toBeNull();
     expect(fixture.debugElement.query(By.css('ds-listable-object-component-loader'))).not.toBeNull();
+  });
+});
+
+/**
+ * CLARIN: with signpostingEnabled off the page must not reach the signposting endpoint at all.
+ */
+describe('ItemPageComponent with signposting disabled', () => {
+  let signpostingDataService: jasmine.SpyObj<SignpostingDataService>;
+  let serverResponseService: jasmine.SpyObj<ServerResponseService>;
+
+  beforeEach(waitForAsync(() => {
+    environment.signpostingEnabled = false;
+
+    signpostingDataService = jasmine.createSpyObj('SignpostingDataService', {
+      getLinks: of([mocklink, mocklink2]),
+    });
+    serverResponseService = jasmine.createSpyObj('ServerResponseService', {
+      setHeader: jasmine.createSpy('setHeader'),
+    });
+
+    TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useClass: TranslateLoaderMock,
+        },
+      }), BrowserAnimationsModule, ItemPageComponent, VarDirective],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: Object.assign(new ActivatedRouteStub(), {
+            data: of({ dso: createSuccessfulRemoteDataObject(mockItem) }),
+          }),
+        },
+        { provide: ItemDataService, useValue: {} },
+        { provide: Router, useValue: {} },
+        {
+          provide: AuthorizationDataService,
+          useValue: jasmine.createSpyObj('authorizationDataService', { isAuthorized: of(false) }),
+        },
+        { provide: ServerResponseService, useValue: serverResponseService },
+        { provide: SignpostingDataService, useValue: signpostingDataService },
+        { provide: LinkHeadService, useValue: jasmine.createSpyObj('LinkHeadService', ['addTag', 'removeTag']) },
+        {
+          provide: NotifyInfoService,
+          useValue: jasmine.createSpyObj('NotifyInfoService', {
+            getInboxRelationLink: 'http://www.w3.org/ns/ldp#inbox',
+            isCoarConfigEnabled: of(false),
+            getCoarLdnLocalInboxUrls: of([]),
+          }),
+        },
+        { provide: PLATFORM_ID, useValue: 'server' },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).overrideComponent(ItemPageComponent, {
+      add: { changeDetection: ChangeDetectionStrategy.Default },
+      remove: { imports: [
+        ClarinFilesSectionComponent,
+        ThemedItemAlertsComponent,
+        ItemVersionsNoticeComponent,
+        ListableObjectComponentLoaderComponent,
+        ItemVersionsComponent,
+        ErrorComponent,
+        ThemedLoadingComponent,
+        NotifyRequestsStatusComponent,
+        QaEventNotificationComponent,
+        TombstoneComponent,
+      ] },
+    }).compileComponents();
+  }));
+
+  afterEach(() => {
+    environment.signpostingEnabled = true;
+  });
+
+  it('should not request the signposting links', () => {
+    TestBed.createComponent(ItemPageComponent).detectChanges();
+
+    expect(signpostingDataService.getLinks).not.toHaveBeenCalled();
+    expect(serverResponseService.setHeader).not.toHaveBeenCalled();
   });
 });
