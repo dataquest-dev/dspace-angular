@@ -14,6 +14,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -24,12 +25,14 @@ import { ClarinLicenseDataService } from '../../../core/data/clarin/clarin-licen
 import { CollectionDataService } from '../../../core/data/collection-data.service';
 import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
 import { ItemDataService } from '../../../core/data/item-data.service';
+import { buildPaginatedList } from '../../../core/data/paginated-list.model';
 import { PatchRequest } from '../../../core/data/request.models';
 import { RequestService } from '../../../core/data/request.service';
 import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
 import { Collection } from '../../../core/shared/collection.model';
 import { License } from '../../../core/shared/license.model';
+import { PageInfo } from '../../../core/shared/page-info.model';
 import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
 import { FormComponent } from '../../../shared/form/form.component';
 import { FormService } from '../../../shared/form/form.service';
@@ -103,6 +106,7 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
 
   const mockClarinDataService = jasmine.createSpyObj('ClarinDataService', {
     searchBy: jasmine.createSpy('searchBy'),
+    findAll: jasmine.createSpy('findAll'),
   });
 
   const mockItemDataService = jasmine.createSpyObj('ItemDataService', {
@@ -292,6 +296,48 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
       expect(isVisible(details()))
         .withContext('Enter on the more-details control did not open the list')
         .toBeTrue();
+    });
+  });
+
+  describe('license selector button', () => {
+    const triggerId = 'license-text';
+
+    afterEach(() => {
+      document.getElementById(triggerId)?.remove();
+    });
+
+    it('opens the license selector by clicking the trigger the license-selector script appends to the body',
+      inject([SubmissionSectionClarinLicenseComponent], (app: SubmissionSectionClarinLicenseComponent) => {
+        const trigger = document.createElement('a');
+        trigger.id = triggerId;
+        document.body.appendChild(trigger);
+        const triggerClick = spyOn(trigger, 'click');
+
+        app.clickLicense();
+
+        expect(triggerClick).toHaveBeenCalledTimes(1);
+      }));
+
+    it('does not throw when the license selector trigger is not in the DOM',
+      inject([SubmissionSectionClarinLicenseComponent], (app: SubmissionSectionClarinLicenseComponent) => {
+        document.getElementById(triggerId)?.remove();
+
+        expect(() => app.clickLicense()).not.toThrow();
+      }));
+
+    it('calls clickLicense from the license selector button in the template', () => {
+      mockClarinDataService.findAll.and.returnValue(
+        createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [])));
+      sectionsServiceStub.isSectionReadOnly.and.returnValue(of(false));
+      sectionsServiceStub.getSectionErrors.and.returnValue(of([]));
+
+      const fixture = TestBed.createComponent(SubmissionSectionClarinLicenseComponent);
+      fixture.detectChanges();
+      const clickLicense = spyOn(fixture.componentInstance, 'clickLicense');
+
+      fixture.debugElement.query(By.css('#button-holder')).nativeElement.click();
+
+      expect(clickLicense).toHaveBeenCalledTimes(1);
     });
   });
 });
