@@ -66,6 +66,26 @@ const mockItem: Item = Object.assign(new Item(), {
   },
 });
 
+const NOTE_TEXT = 'note-check-2026-09-17';
+
+const mockNotedItem: Item = Object.assign(new Item(), {
+  bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
+  metadata: {
+    'dc.title': [
+      {
+        language: 'en_US',
+        value: 'test item',
+      },
+    ],
+    'local.submission.note': [
+      {
+        language: null,
+        value: NOTE_TEXT,
+      },
+    ],
+  },
+});
+
 const mockWithdrawnItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
   metadata: [],
@@ -248,6 +268,52 @@ describe('FullItemPageComponent', () => {
     it('should add the signposting links', () => {
       expect(serverResponseService.setHeader).toHaveBeenCalled();
       expect(linkHeadService.addTag).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe('when the item carries a submitter note', () => {
+    beforeEach(() => {
+      comp.itemRD$ = new BehaviorSubject<RemoteData<Item>>(createSuccessfulRemoteDataObject(mockNotedItem));
+    });
+
+    it('should render the note card when the page was opened from a submission object', () => {
+      comp.fromSubmissionObject = true;
+      fixture.detectChanges();
+
+      const card = fixture.debugElement.query(By.css('.card.alert-info'));
+      expect(card).toBeTruthy();
+      expect(card.nativeElement.textContent).toContain(NOTE_TEXT);
+    });
+
+    it('should render the note card above the item alerts', () => {
+      comp.fromSubmissionObject = true;
+      fixture.detectChanges();
+
+      const siblings = Array.from(fixture.debugElement.query(By.css('.item-page > div')).nativeElement.children);
+      const cardIndex = siblings.findIndex((el: Element) => el.classList.contains('alert-info'));
+      const alertsIndex = siblings.findIndex((el: Element) => el.tagName.toLowerCase() === 'ds-item-alerts');
+      expect(cardIndex).toBeGreaterThanOrEqual(0);
+      expect(alertsIndex).toBeGreaterThan(cardIndex);
+    });
+
+    it('should not render the note card on the archived item view', () => {
+      comp.fromSubmissionObject = false;
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('.card.alert-info'))).toBeNull();
+    });
+  });
+
+  describe('when the submission object carries no submitter note', () => {
+    beforeEach(() => {
+      comp.itemRD$ = new BehaviorSubject<RemoteData<Item>>(createSuccessfulRemoteDataObject(mockItem));
+      comp.fromSubmissionObject = true;
+      fixture.detectChanges();
+    });
+
+    it('should not render an empty note card', () => {
+      expect(mockItem.firstMetadataValue('local.submission.note')).toBeUndefined();
+      expect(fixture.debugElement.query(By.css('.card.alert-info'))).toBeNull();
     });
   });
 
