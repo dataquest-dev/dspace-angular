@@ -25,7 +25,7 @@ const resolvedConfig = (): AppConfig => {
   config.rest.ssrBaseUrl = 'http://dspace-internal:8080/server';
   config.rest.hasSsrBaseUrl = true;
   config.auth.target = { host: 'https://idp.example.org', page: '/login' };
-  config.matomo = { trackerUrl: 'https://matomo.example.org/' };
+  config.matomo = { trackerUrl: 'https://matomo.example.org/', dimensionId: 7 };
   config.statistics = { baseUrl: 'https://stats.example.org', endpoint: '/api/views' };
   config.ssr = { transferState: true, replaceRestUrl: true, enabled: true } as BuildConfig['ssr'];
   return config as unknown as AppConfig;
@@ -139,8 +139,8 @@ describe('buildPublicConfig', () => {
       expect(publicConfig.statistics).toEqual({ baseUrl: 'https://stats.example.org', endpoint: '/api/views' });
     });
 
-    it('should expose the matomo tracker url and nothing else of matomo', () => {
-      expect(publicConfig.matomo).toEqual({ trackerUrl: 'https://matomo.example.org/' });
+    it('should expose the matomo tracker url and dimension id and nothing else of matomo', () => {
+      expect(publicConfig.matomo).toEqual({ trackerUrl: 'https://matomo.example.org/', dimensionId: 7 });
     });
 
     it('should expose ssr.transferState and nothing else of ssr', () => {

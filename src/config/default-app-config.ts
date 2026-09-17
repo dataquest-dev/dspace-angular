@@ -623,7 +623,11 @@ export class DefaultAppConfig implements AppConfig {
     isVisible: false,
   };
 
-  matomo: MatomoConfig = {};
+  // 0 means no custom dimension is reported; set it to the dimension created in Matomo, either
+  // here, in config.*.yml, or through DSPACE_MATOMO_DIMENSIONID
+  matomo: MatomoConfig = {
+    dimensionId: 0,
+  };
 
   // Leaflet tile providers and other configurable attributes
   geospatialMapViewer: GeospatialMapConfig = {
