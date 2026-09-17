@@ -203,6 +203,36 @@ describe('ItemVersionsComponent', () => {
     expect(rows.length).toBe(versions.length);
   });
 
+  it('should reverse the order of the versions returned by the REST API', () => {
+    const rows = fixture.debugElement.queryAll(By.css('tbody tr'));
+    expect(rows.map((row: DebugElement) => row.nativeElement.getAttribute('id')))
+      .toEqual(['version-row-2', 'version-row-1']);
+  });
+
+  describe('when the user is not an administrator', () => {
+    beforeEach(() => {
+      authorizationServiceSpy.isAuthorized.and.callFake((featureID: FeatureID) => of(featureID !== FeatureID.AdministratorOf));
+      component.ngOnInit();
+      fixture.detectChanges();
+    });
+    afterEach(() => {
+      authorizationServiceSpy.isAuthorized.and.returnValue(of(true));
+    });
+    it('should hide the whole version history', () => {
+      expect(fixture.debugElement.queryAll(By.css('tbody tr')).length).toBe(0);
+    });
+  });
+
+  describe('when an administrator goes through the same re-initialisation', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      fixture.detectChanges();
+    });
+    it('should still show the version history', () => {
+      expect(fixture.debugElement.queryAll(By.css('tbody tr')).length).toBe(versions.length);
+    });
+  });
+
   versions.forEach((version: Version, index: number) => {
     const versionItem = items[index];
 
@@ -226,9 +256,9 @@ describe('ItemVersionsComponent', () => {
     });
   });
 
-  describe('when the user can only delete a version', () => {
+  describe('when an administrator can only delete a version', () => {
     beforeAll(waitForAsync(() => {
-      const canDelete = (featureID: FeatureID, url: string ) => of(featureID === FeatureID.CanDeleteVersion);
+      const canDelete = (featureID: FeatureID, url: string ) => of(featureID === FeatureID.CanDeleteVersion || featureID === FeatureID.AdministratorOf);
       authorizationServiceSpy.isAuthorized.and.callFake(canDelete);
     }));
     it('should not disable the delete button', () => {

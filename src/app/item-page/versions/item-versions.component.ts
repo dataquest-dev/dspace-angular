@@ -153,6 +153,12 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
   showSubmitter$: Observable<boolean> = this.showSubmitter();
 
   /**
+   * Check if the current user is an admin
+   * Used to control component visibility
+   */
+  isAdmin$: Observable<boolean>;
+
+  /**
    * The amount of versions to display per page
    */
   pageSize = 10;
@@ -307,7 +313,7 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
       getRemoteDataPayload(),
       map((versions: PaginatedList<Version>) => ({
         totalElements: versions.totalElements,
-        versionDTOs: (versions?.page ?? []).map((version: Version) => ({
+        versionDTOs: [...(versions?.page ?? [])].reverse().map((version: Version) => ({
           version: version,
           canEditVersion: this.canEditVersion$(version),
         })),
@@ -338,6 +344,8 @@ export class ItemVersionsComponent implements OnDestroy, OnInit {
         getFirstSucceededRemoteDataPayload(),
         hasValueOperator(),
       );
+
+      this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
 
       // If there is a draft item in the version history the 'Create version' button is disabled and a different tooltip message is shown
       this.hasDraftVersion$ = this.versionHistoryRD$.pipe(
