@@ -347,6 +347,8 @@ export class DefaultAppConfig implements AppConfig {
       pageSize: 5,
       // Show the bitstream access status label
       showAccessStatuses: false,
+      // Link a restricted bitstream to the vanilla request-a-copy form instead of the CLARIN licence gate
+      enableRequestACopyLink: false,
     },
   };
 

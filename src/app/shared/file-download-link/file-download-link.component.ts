@@ -26,6 +26,7 @@ import {
   switchMap,
 } from 'rxjs/operators';
 
+import { environment } from '../../../environments/environment';
 import {
   getBitstreamDownloadRoute,
   getBitstreamDownloadWithAccessTokenRoute,
@@ -151,8 +152,8 @@ export class FileDownloadLinkComponent implements OnInit {
     if (canDownloadWithToken) {
       return this.getAccessByTokenBitstreamPath(this.itemRequest);
     }
-    // If the user can't download, but can request a copy, show the request a copy link
-    if (canRequestACopy && hasValue(this.item)) {
+    // Request-a-copy is opt-in; by default a restricted file links to the CLARIN licence gate
+    if (environment.item.bitstream.enableRequestACopyLink && canRequestACopy && hasValue(this.item)) {
       return getBitstreamRequestACopyRoute(this.item, this.bitstream);
     }
     // By default, return the plain path
@@ -177,8 +178,14 @@ export class FileDownloadLinkComponent implements OnInit {
     };
   }
 
+  /** Title and aria-label of the link: download, request a copy or restricted, followed by the file name. */
   getDownloadLinkTitle(canDownload: boolean,canDownloadWithToken: boolean, bitstreamName: string): string {
-    return (canDownload || canDownloadWithToken ? this.translateService.instant('file-download-link.download') :
-      this.translateService.instant('file-download-link.request-copy')) + bitstreamName;
+    if (canDownload || canDownloadWithToken) {
+      return this.translateService.instant('file-download-link.download') + bitstreamName;
+    }
+    if (environment.item.bitstream.enableRequestACopyLink) {
+      return this.translateService.instant('file-download-link.request-copy') + bitstreamName;
+    }
+    return this.translateService.instant('file-download-link.restricted') + ' ' + bitstreamName;
   }
 }
