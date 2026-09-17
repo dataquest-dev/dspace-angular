@@ -40,6 +40,10 @@ export default defineConfig({
     DSPACE_ADMINISTRATOR_GROUP: 'e59f5659-bff9-451e-b28f-439e7bd467e4',
     //Collection to send and test workflow item
     DSPACE_TEST_SUBMIT_WORKFLOW_COLLECTION_NAME: '1-step Workflow collection',
+    // Withdrawn items used by the CLARIN tombstone tests. Not part of the demo entities data set,
+    // so these must be overridden for any backend that does not carry the CLARIN test data.
+    CLARIN_TEST_WITHDRAWN_ITEM: '7282fc76-0941-4055-a5a3-1f582c638050',
+    CLARIN_TEST_WITHDRAWN_REPLACED_ITEM: '566b1b8b-840d-476c-9fb0-b92fb92d4aad',
   },
   e2e: {
     // Setup our plugins for e2e tests
