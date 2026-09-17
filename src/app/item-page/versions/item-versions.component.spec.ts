@@ -223,6 +223,16 @@ describe('ItemVersionsComponent', () => {
     });
   });
 
+  describe('when an administrator goes through the same re-initialisation', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      fixture.detectChanges();
+    });
+    it('should still show the version history', () => {
+      expect(fixture.debugElement.queryAll(By.css('tbody tr')).length).toBe(versions.length);
+    });
+  });
+
   versions.forEach((version: Version, index: number) => {
     const versionItem = items[index];
 
