@@ -28,7 +28,8 @@ import {
 
 /**
  * CLARIN/LINDAT admin sidebar entries (ported from the v7 fork's menu.resolver.ts):
- * the handle table, the ePIC handle table and the license administration.
+ * the handle table, the ePIC handle table, the license administration and the
+ * configuration file editor.
  */
 @Injectable()
 export class ClarinAdminMenuProvider extends AbstractMenuProvider {
@@ -70,6 +71,15 @@ export class ClarinAdminMenuProvider extends AbstractMenuProvider {
               link: getLicensesModulePath() + getLicensesManageTablePath(),
             },
             icon: 'scroll',
+          },
+          {
+            visible: isSiteAdmin,
+            model: {
+              type: MenuItemType.LINK,
+              text: 'menu.section.update-config',
+              link: '/admin/update-config',
+            },
+            icon: 'cogs',
           },
         ] as PartialMenuSection[];
       }),

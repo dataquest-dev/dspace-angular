@@ -77,7 +77,7 @@ export const MENUS = buildMenuStructure({
     HealthMenuProvider,
     SystemWideAlertMenuProvider,
     CoarNotifyMenuProvider,
-    // CLARIN/LINDAT: handle table, ePIC handles, license administration
+    // CLARIN/LINDAT: handle table, ePIC handles, license administration, config editor
     ClarinAdminMenuProvider,
   ],
   [MenuID.DSO_EDIT]: [
