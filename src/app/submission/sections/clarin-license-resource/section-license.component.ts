@@ -354,7 +354,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Pop up the License Selector.
    */
   clickLicense() {
-    document.getElementById('license-text').click();
+    document.getElementById('license-text')?.click();
   }
 
   /**
