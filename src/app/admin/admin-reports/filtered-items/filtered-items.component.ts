@@ -351,8 +351,7 @@ export class FilteredItemsComponent implements OnInit {
     if (params.length > 0) {
       params = `?${params}`;
     }
-    const scheme = environment.rest.ssl ? 'https' : 'http';
-    const urlRestApp = `${scheme}://${environment.rest.host}:${environment.rest.port}${environment.rest.nameSpace}`;
+    const urlRestApp = environment.rest.baseUrl;
     return this.restService.request(RestRequestMethod.GET, `${urlRestApp}/api/contentreport/filtereditems${params}`);
   }
 

@@ -21,10 +21,7 @@ import { LocaleService } from '../../app/core/locale/locale.service';
 import { HeadTagService } from '../../app/core/metadata/head-tag.service';
 import { CorrelationIdService } from '../../app/correlation-id/correlation-id.service';
 import { InitService } from '../../app/init.service';
-import {
-  isEmpty,
-  isNotEmpty,
-} from '../../app/shared/empty.util';
+import { isEmpty } from '../../app/shared/empty.util';
 import { MenuService } from '../../app/shared/menu/menu.service';
 import { MenuProviderService } from '../../app/shared/menu/menu-provider.service';
 import { ThemeService } from '../../app/shared/theme-support/theme.service';
@@ -35,6 +32,7 @@ import {
   AppConfig,
 } from '../../config/app-config.interface';
 import { BuildConfig } from '../../config/build-config.interface';
+import { buildPublicConfig } from '../../config/public-config';
 import { environment } from '../../environments/environment';
 
 /**
@@ -117,14 +115,6 @@ export class ServerInitService extends InitService {
   }
 
   private saveAppConfigForCSR(): void {
-    if (isNotEmpty(environment.rest.ssrBaseUrl) && environment.rest.baseUrl !== environment.rest.ssrBaseUrl) {
-      // Avoid to transfer ssrBaseUrl in order to prevent security issues
-      const config: AppConfig = Object.assign({}, environment as AppConfig, {
-        rest: Object.assign({}, environment.rest, { ssrBaseUrl: '', hasSsrBaseUrl: true }),
-      });
-      this.transferState.set<AppConfig>(APP_CONFIG_STATE, config);
-    } else {
-      this.transferState.set<AppConfig>(APP_CONFIG_STATE, environment as AppConfig);
-    }
+    this.transferState.set<AppConfig>(APP_CONFIG_STATE, buildPublicConfig(environment as AppConfig) as AppConfig);
   }
 }

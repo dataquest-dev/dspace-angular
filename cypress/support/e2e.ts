@@ -42,10 +42,10 @@ before(() => {
 
     // Find domain of our REST API & save to global variable via task.
     let baseDomain = FALLBACK_TEST_REST_DOMAIN;
-    if (!config.rest.host) {
-      console.warn("Could not load 'rest.host' from config.json. Falling back to " + FALLBACK_TEST_REST_DOMAIN);
+    if (!config.rest.baseUrl) {
+      console.warn("Could not load 'rest.baseUrl' from config.json. Falling back to " + FALLBACK_TEST_REST_DOMAIN);
     } else {
-      baseDomain = config.rest.host;
+      baseDomain = new URL(config.rest.baseUrl).hostname;
     }
     cy.task('saveRestBaseDomain', baseDomain);
 
