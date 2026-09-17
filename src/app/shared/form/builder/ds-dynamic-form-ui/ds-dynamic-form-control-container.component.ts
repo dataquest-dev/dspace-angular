@@ -157,6 +157,9 @@ import { DsDynamicLookupRelationModalComponent } from './relation-lookup-modal/d
 })
 export class DsDynamicFormControlContainerComponent extends DynamicFormControlContainerComponent
   implements OnInit, OnChanges, OnDestroy, AfterViewInit, DoCheck {
+
+  private static _idState = new Map<string, { nextSuffix: number; activeCount: number }>();
+
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('templates') inputTemplateList: QueryList<DynamicTemplateDirective>;
@@ -203,11 +206,39 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    */
   fetchThumbnail: boolean;
 
+  private _cachedId: string;
+
+  private _baseId: string;
+
+  /** The first instance of a base id keeps it, later instances get a numeric suffix (_1, _2, ...). */
+  get id(): string {
+    const elementId = this.layoutService.getElementId(this.model);
+    // a form array already disambiguates by row index, and that index changes on reorder
+    if (elementId !== this.model.id) {
+      return elementId;
+    }
+    if (!this._cachedId) {
+      this._baseId = elementId;
+      const state = DsDynamicFormControlContainerComponent._idState.get(this._baseId)
+        || { nextSuffix: 0, activeCount: 0 };
+      this._cachedId = state.nextSuffix === 0 ? this._baseId : `${this._baseId}_${state.nextSuffix}`;
+      state.nextSuffix++;
+      state.activeCount++;
+      DsDynamicFormControlContainerComponent._idState.set(this._baseId, state);
+    }
+    return this._cachedId;
+  }
+
   get componentType(): Type<DynamicFormControl> | null {
     return this.dynamicFormControlFn(this.model);
   }
 
   private readonly liveRegionService = inject(LiveRegionService);
+
+  /** Clears the id state so it does not leak between test cases. */
+  static resetIdCounters(): void {
+    DsDynamicFormControlContainerComponent._idState.clear();
+  }
 
   constructor(
     protected componentFactoryResolver: ComponentFactoryResolver,
@@ -373,6 +404,15 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
         (instance as any).formModel = this.formModel;
         (instance as any).formGroup = this.formGroup;
       }
+
+      // the child inherits `id` as a prototype getter, so it needs an own property to match label[for]
+      if (this.componentRef?.instance && this.id !== this.layoutService.getElementId(this.model)) {
+        const uniqueId = this.id;
+        Object.defineProperty(this.componentRef.instance, 'id', {
+          get: () => uniqueId,
+          configurable: true,
+        });
+      }
     }
   }
 
@@ -499,9 +539,18 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   }
 
   /**
-   * Unsubscribe from all subscriptions
+   * Unsubscribe from all subscriptions and release this instance's base id.
    */
   ngOnDestroy(): void {
+    if (this._baseId) {
+      const state = DsDynamicFormControlContainerComponent._idState.get(this._baseId);
+      if (state) {
+        state.activeCount--;
+        if (state.activeCount <= 0) {
+          DsDynamicFormControlContainerComponent._idState.delete(this._baseId);
+        }
+      }
+    }
     super.ngOnDestroy();
     this.subs
       .filter((sub) => hasValue(sub))

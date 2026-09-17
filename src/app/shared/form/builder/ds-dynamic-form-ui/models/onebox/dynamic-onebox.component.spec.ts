@@ -91,6 +91,12 @@ function init() {
 
 describe('DsDynamicOneboxComponent test suite', () => {
 
+  afterEach(() => {
+    // the layout service mock is a module-level singleton shared with nine other specs
+    mockDynamicFormLayoutService.getElementId.and.returnValue(undefined);
+  });
+
+
   let scheduler: TestScheduler;
   let testComp: TestComponent;
   let oneboxComponent: DsDynamicOneboxComponent;
@@ -219,6 +225,16 @@ describe('DsDynamicOneboxComponent test suite', () => {
 
       it('should init component properly', () => {
         expect(oneboxComponent.currentValue).not.toBeDefined();
+      });
+
+      it('should take the rendered id and aria-labelledby from the container-assigned id', () => {
+        mockDynamicFormLayoutService.getElementId.and.returnValue('onebox_1');
+
+        oneboxCompFixture.detectChanges();
+        const inputElement = oneboxCompFixture.debugElement.query(By.css('input.form-control')).nativeElement;
+
+        expect(inputElement.id).toBe('onebox_1');
+        expect(inputElement.getAttribute('aria-labelledby')).toBe('label_onebox_1');
       });
 
       it('should search when 3+ characters typed', fakeAsync(() => {

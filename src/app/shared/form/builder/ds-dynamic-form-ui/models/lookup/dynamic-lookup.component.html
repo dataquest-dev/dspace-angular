@@ -11,10 +11,10 @@
         [authorityValue]="model.value"
       (whenClickOnConfidenceNotAccepted)="whenClickOnConfidenceNotAccepted(sdRef, $event)"></i>
       <input class="form-control"
-        [attr.aria-labelledby]="'label_' + model.id"
+        [attr.aria-labelledby]="'label_' + id"
         [attr.autoComplete]="model.autoComplete"
         [class.is-invalid]="showErrorMessages"
-        [id]="model.id"
+        [id]="id"
         [name]="model.name"
         [type]="model.inputType"
         [(ngModel)]="firstInputValue"
@@ -32,10 +32,10 @@
       <div class="col" >
         <input  class="form-control"
           [ngClass]="{}"
-          [attr.aria-labelledby]="'label_' + model.id"
+          [attr.aria-labelledby]="'label_' + id"
           [attr.autoComplete]="model.autoComplete"
           [class.is-invalid]="showErrorMessages"
-          [id]="id"
+          [id]="id + '_2'"
           [name]="model.name + '_2'"
           [type]="model.inputType"
           [(ngModel)]="secondInputValue"
@@ -94,7 +94,7 @@
     class="dropdown-menu scrollable-dropdown-menu w-100"
     aria-haspopup="true"
     aria-expanded="false"
-    [attr.aria-labelledby]="'label_' + model.id">
+    [attr.aria-labelledby]="'label_' + id">
     <div class="scrollable-menu"
       infiniteScroll
       [infiniteScrollDistance]="2"
@@ -126,7 +126,7 @@
 </div>
 
 <ng-template #hasInfo let-entry="entry">
-  <ul class="list-unstyled mb-0" [attr.aria-labelledby]="'label_' + model.id">
+  <ul class="list-unstyled mb-0" [attr.aria-labelledby]="'label_' + id">
     <li class="list-item text-truncate text-primary fw-bold">{{entry.value}}</li>
     @for (item of entry.otherInformation | dsObjNgFor; track item) {
       <li class="list-item text-truncate text-secondary" >
@@ -137,7 +137,7 @@
 </ng-template>
 
 <ng-template #noInfo let-entry="entry">
-  <ul class="list-unstyled mb-0" [attr.aria-labelledby]="'label_' + model.id">
+  <ul class="list-unstyled mb-0" [attr.aria-labelledby]="'label_' + id">
     <li class="list-item text-truncate text-primary fw-bold">{{entry.value}}</li>
   </ul>
 </ng-template>

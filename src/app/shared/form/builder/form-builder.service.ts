@@ -52,6 +52,10 @@ import {
 } from '../../empty.util';
 import { DYNAMIC_FORM_CONTROL_TYPE_RELATION_GROUP } from './ds-dynamic-form-ui/ds-dynamic-form-constants';
 import {
+  COMPLEX_GROUP_SUFFIX,
+  DynamicComplexModel,
+} from './ds-dynamic-form-ui/models/ds-dynamic-complex.model';
+import {
   CONCAT_GROUP_SUFFIX,
   DynamicConcatModel,
 } from './ds-dynamic-form-ui/models/ds-dynamic-concat.model';
@@ -218,6 +222,13 @@ export class FormBuilderService extends DynamicFormService {
         if (this.isConcatGroup(controlModel)) {
           if (controlModel.id.match(new RegExp(findId + CONCAT_GROUP_SUFFIX))) {
             result = (controlModel as DynamicConcatModel);
+            break;
+          }
+        }
+
+        if (this.isComplexGroup(controlModel)) {
+          if (controlModel.id.match(new RegExp(findId + COMPLEX_GROUP_SUFFIX))) {
+            result = (controlModel as DynamicComplexModel);
             break;
           }
         }
@@ -484,6 +495,13 @@ export class FormBuilderService extends DynamicFormService {
 
   isConcatGroup(model: DynamicFormControlModel): boolean {
     return this.isCustomGroup(model) && (model.id.indexOf(CONCAT_GROUP_SUFFIX) !== -1);
+  }
+
+  /**
+   * Whether the model is a custom group holding the sub-fields of a CLARIN complex input.
+   */
+  public isComplexGroup(model: DynamicFormControlModel): boolean {
+    return this.isCustomGroup(model) && (model.id.indexOf(COMPLEX_GROUP_SUFFIX) !== -1);
   }
 
   isRowGroup(model: DynamicFormControlModel): boolean {
