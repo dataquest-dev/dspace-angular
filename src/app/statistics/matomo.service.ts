@@ -153,14 +153,17 @@ export class MatomoService {
     this.itemHandle = undefined;
 
     const dimensionId = environment.matomo?.dimensionId;
-    if (!dimensionId || !this.matomoTracker) {
+    if (!dimensionId) {
       return;
     }
 
+    // the tracker queues commands until the script is initialised, so the first page view of a
+    // session keeps its dimension even though init() has not run yet
+    const tracker = this.matomoTracker ?? runInInjectionContext(this.injector, () => inject(MatomoTracker));
     if (isNotEmpty(handle)) {
-      this.matomoTracker.setCustomDimension(dimensionId, handle);
+      tracker.setCustomDimension(dimensionId, handle);
     } else {
-      this.matomoTracker.deleteCustomDimension(dimensionId);
+      tracker.deleteCustomDimension(dimensionId);
     }
   }
 

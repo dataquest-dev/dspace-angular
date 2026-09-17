@@ -177,6 +177,15 @@ describe('MatomoService', () => {
       expect(matomoTracker.setCustomDimension).toHaveBeenCalledWith(7, handle);
     });
 
+    it('should report the item handle before the tracker has been initialised', () => {
+      service.matomoTracker = undefined;
+      service.setItemHandle(handle);
+
+      service.applyItemCustomDimension();
+
+      expect(matomoTracker.setCustomDimension).toHaveBeenCalledWith(7, handle);
+    });
+
     it('should clear the dimension on a page that has no item handle', () => {
       service.applyItemCustomDimension();
 
