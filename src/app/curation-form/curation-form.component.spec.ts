@@ -11,7 +11,11 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Params,
+  Router,
+} from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
@@ -27,6 +31,7 @@ import {
   createFailedRemoteDataObject$,
   createSuccessfulRemoteDataObject$,
 } from '../shared/remote-data.utils';
+import { ActivatedRouteStub } from '../shared/testing/active-router.stub';
 import { NotificationsServiceStub } from '../shared/testing/notifications-service.stub';
 import { RouterStub } from '../shared/testing/router.stub';
 import { CurationFormComponent } from './curation-form.component';
@@ -41,8 +46,19 @@ describe('CurationFormComponent', () => {
   let handleService: HandleService;
   let notificationsService;
   let router;
+  let routeStub: ActivatedRouteStub;
 
   const process = Object.assign(new Process(), { processId: 'process-id' });
+
+  function recreateComponent(queryParams: Params, dsoHandle?: string): void {
+    routeStub.testParams = queryParams;
+    fixture = TestBed.createComponent(CurationFormComponent);
+    comp = fixture.componentInstance;
+    if (dsoHandle) {
+      comp.dsoHandle = dsoHandle;
+    }
+    fixture.detectChanges();
+  }
 
   beforeEach(waitForAsync(() => {
 
@@ -73,6 +89,7 @@ describe('CurationFormComponent', () => {
 
     notificationsService = new NotificationsServiceStub();
     router = new RouterStub();
+    routeStub = new ActivatedRouteStub();
 
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot(), FormsModule, ReactiveFormsModule, CurationFormComponent],
@@ -83,6 +100,7 @@ describe('CurationFormComponent', () => {
         { provide: HandleService, useValue: handleService },
         { provide: Router, useValue: router },
         { provide: ConfigurationDataService, useValue: configurationDataService },
+        { provide: ActivatedRoute, useValue: routeStub },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
@@ -173,4 +191,36 @@ describe('CurationFormComponent', () => {
     expect(notificationsService.error).toHaveBeenCalled();
     expect(scriptDataService.invoke).not.toHaveBeenCalled();
   }));
+
+  describe('when an item_id query parameter is present', () => {
+    it('should prefill the handle from the item_id query parameter', () => {
+      recreateComponent({ item_id: '123456789/2' });
+
+      expect(comp.form.get('handle').value).toEqual('123456789/2');
+    });
+
+    it('should curate the item from the item_id query parameter', () => {
+      recreateComponent({ item_id: '123456789/2' });
+
+      comp.submit();
+
+      expect(scriptDataService.invoke).toHaveBeenCalledWith('curate', [
+        { name: '-t', value: 'profileformats' },
+        { name: '-i', value: '123456789/2' },
+      ], []);
+    });
+
+    it('should let a dsoHandle input win over item_id', () => {
+      recreateComponent({ item_id: '123456789/2' }, '123456789/9');
+
+      expect(comp.form.get('handle').value).toEqual('');
+
+      comp.submit();
+
+      expect(scriptDataService.invoke).toHaveBeenCalledWith('curate', [
+        { name: '-t', value: 'profileformats' },
+        { name: '-i', value: '123456789/9' },
+      ], []);
+    });
+  });
 });
