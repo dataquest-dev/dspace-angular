@@ -623,10 +623,10 @@ export class DefaultAppConfig implements AppConfig {
     isVisible: false,
   };
 
-  // dimensionId stays unset on purpose: only a deployment that created the custom dimension in
-  // Matomo should report the item handle into it
+  // 0 means no custom dimension is reported; set it to the dimension created in Matomo, either
+  // here, in config.*.yml, or through DSPACE_MATOMO_DIMENSIONID
   matomo: MatomoConfig = {
-    dimensionId: undefined,
+    dimensionId: 0,
   };
 
   // Leaflet tile providers and other configurable attributes

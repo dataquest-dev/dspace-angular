@@ -27,6 +27,7 @@ import {
   MATOMO_ENABLED,
   MATOMO_SITE_ID,
   MATOMO_TRACKER_URL,
+  matomoItemDimensionInterceptor,
   MatomoService,
 } from './matomo.service';
 
@@ -200,6 +201,14 @@ describe('MatomoService', () => {
       service.applyItemCustomDimension();
 
       expect(matomoTracker.deleteCustomDimension).toHaveBeenCalledWith(7);
+    });
+
+    it('should be applied by the router interceptor on the same service instance', () => {
+      spyOn(service, 'applyItemCustomDimension');
+
+      TestBed.runInInjectionContext(() => matomoItemDimensionInterceptor());
+
+      expect(service.applyItemCustomDimension).toHaveBeenCalled();
     });
 
     it('should send nothing when dimensionId is not configured', () => {
