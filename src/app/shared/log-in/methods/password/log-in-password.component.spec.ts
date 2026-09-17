@@ -1,4 +1,7 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  PLATFORM_ID,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -308,6 +311,20 @@ describe('LogInPasswordComponent', () => {
       initWithQueryParams({});
 
       expect(notificationsService.error).not.toHaveBeenCalled();
+    });
+
+    // The handler sits inside the isPlatformBrowser guard: the server serialises the whole store and
+    // the browser rehydrates it, so raising the notification on both passes would show it twice.
+    it('raises nothing on the server pass, and the same input still raises it in the browser', () => {
+      (component as any).platformId = 'server';
+      initWithQueryParams({ error: 'shibboleth-authentication-failed' });
+
+      expect(notificationsService.error).not.toHaveBeenCalled();
+
+      (component as any).platformId = TestBed.inject(PLATFORM_ID);
+      component.ngOnInit();
+
+      expect(notificationsService.error).toHaveBeenCalledTimes(1);
     });
   });
 
