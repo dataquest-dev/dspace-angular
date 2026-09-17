@@ -4,6 +4,7 @@ import {
   EventTrack,
 } from 'angulartics2';
 
+import { MatomoService } from '../matomo.service';
 import { StatisticsService } from '../statistics.service';
 
 /**
@@ -15,6 +16,7 @@ export class Angulartics2DSpace {
   constructor(
     private angulartics2: Angulartics2,
     private statisticsService: StatisticsService,
+    private matomoService: MatomoService,
   ) {
   }
 
@@ -29,6 +31,7 @@ export class Angulartics2DSpace {
 
   private eventTrack(event: Partial<EventTrack>): void {
     if (event.action === 'page_view') {
+      this.matomoService.setItemHandle(event.properties.dc_identifier);
       this.statisticsService.trackViewEvent(event.properties.object, event.properties.referrer);
     } else if (event.action === 'search') {
       this.statisticsService.trackSearchEvent(

@@ -623,7 +623,11 @@ export class DefaultAppConfig implements AppConfig {
     isVisible: false,
   };
 
-  matomo: MatomoConfig = {};
+  // dimensionId stays unset on purpose: only a deployment that created the custom dimension in
+  // Matomo should report the item handle into it
+  matomo: MatomoConfig = {
+    dimensionId: undefined,
+  };
 
   // Leaflet tile providers and other configurable attributes
   geospatialMapViewer: GeospatialMapConfig = {

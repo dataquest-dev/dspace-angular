@@ -9,7 +9,7 @@ export interface PublicAppConfig extends Partial<Omit<BuildConfig, 'actuators' |
   rest?: Pick<AppConfig['rest'], 'baseUrl' | 'nameSpace'>;
   auth?: Pick<NonNullable<AppConfig['auth']>, 'rest' | 'ui'>;
   cache?: Pick<AppConfig['cache'], 'autoSync' | 'control' | 'msToLive'>;
-  matomo?: Pick<NonNullable<AppConfig['matomo']>, 'trackerUrl'>;
+  matomo?: Pick<NonNullable<AppConfig['matomo']>, 'trackerUrl' | 'dimensionId'>;
   ssr?: Pick<BuildConfig['ssr'], 'transferState'>;
 }
 
@@ -70,6 +70,7 @@ export const buildPublicConfig = (appConfig: AppConfig): PublicAppConfig => {
     },
     matomo: {
       trackerUrl: config.matomo?.trackerUrl,
+      dimensionId: config.matomo?.dimensionId,
     },
     fallbackLanguage: config.fallbackLanguage,
     languages: config.languages,

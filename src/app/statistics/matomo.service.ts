@@ -61,6 +61,9 @@ export class MatomoService {
   /** Injects the ConfigurationService. */
   configService = inject(ConfigurationDataService);
 
+  /** Handle of the item whose page view is about to be tracked, when the current page has one. */
+  private itemHandle: string;
+
   private statusSubject = new ReplaySubject<'loading' | 'loaded' | 'error'>(1);
   private status$ = this.statusSubject.asObservable();
 
@@ -135,6 +138,33 @@ export class MatomoService {
   }
 
   /**
+   * Remembers the item handle the view tracker reported for the page view that follows.
+   */
+  setItemHandle(handle: string) {
+    this.itemHandle = handle;
+  }
+
+  /**
+   * Reports the remembered handle in the configured custom dimension and forgets it, so the next
+   * page view is not attributed to the previous item. No dimension id configured, nothing is sent.
+   */
+  applyItemCustomDimension() {
+    const handle = this.itemHandle;
+    this.itemHandle = undefined;
+
+    const dimensionId = environment.matomo?.dimensionId;
+    if (!dimensionId || !this.matomoTracker) {
+      return;
+    }
+
+    if (isNotEmpty(handle)) {
+      this.matomoTracker.setCustomDimension(dimensionId, handle);
+    } else {
+      this.matomoTracker.deleteCustomDimension(dimensionId);
+    }
+  }
+
+  /**
    * Retrieves the Matomo tracker URL from the configuration service.
    * @returns An Observable that emits the Matomo tracker URL if available.
    */
@@ -205,4 +235,11 @@ export class MatomoService {
     }
     return updatedURL.toString();
   }
+}
+
+/**
+ * Matomo router interceptor, run by ngx-matomo right before it sends a page view.
+ */
+export function matomoItemDimensionInterceptor(): void {
+  inject(MatomoService).applyItemCustomDimension();
 }

@@ -37,11 +37,13 @@ export class ViewTrackerResolverService {
       switchMap(() =>
         this.referrerService.getReferrer().pipe(take(1))))
       .subscribe((referrer: string) => {
+        const object = this.getNestedProperty(routeSnapshot.data, dsoPath);
         this.angulartics2.eventTrack.next({
           action: 'page_view',
           properties: {
-            object: this.getNestedProperty(routeSnapshot.data, dsoPath),
+            object,
             referrer,
+            dc_identifier: object?.firstMetadataValue?.('dc.identifier.uri'),
           },
         });
       });
