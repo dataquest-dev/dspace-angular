@@ -2,8 +2,8 @@
       [formGroup]="searchForm"
       (ngSubmit)="submit(searchForm.value); $event.stopImmediatePropagation();" >
   <div class="flex-grow-1 me-3">
+    <label for="group-search-query" class="visually-hidden">{{labelPrefix + 'search.input' | translate}}</label>
     <div class="mb-3 input-group">
-      <label for="group-search-query" class="visually-hidden">{{labelPrefix + 'search.input' | translate}}</label>
       <input type="text" name="query" id="group-search-query" formControlName="query"
              class="form-control" [attr.aria-label]="labelPrefix + 'search.input' | translate">
         <button type="submit" class="search-button btn btn-primary">

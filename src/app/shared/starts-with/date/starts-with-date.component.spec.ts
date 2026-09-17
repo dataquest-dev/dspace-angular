@@ -59,6 +59,17 @@ describe('StartsWithDateComponent', () => {
     expect(comp.formData.value.startsWith).toBeDefined();
   });
 
+  it('should render the date label outside the input group', () => {
+    const group: HTMLElement = fixture.nativeElement.querySelector('.input-group');
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('input[name="startsWith"]');
+    const label: HTMLLabelElement = fixture.nativeElement.querySelector('label[for="' + input.id + '"]');
+
+    // Bootstrap 5 squares off any .input-group child that is not the first one
+    expect(label).toBeTruthy();
+    expect(group.contains(label)).toBeFalse();
+    expect(group.firstElementChild).toBe(input);
+  });
+
   describe('when selecting the first option in the year dropdown', () => {
     let select;
 

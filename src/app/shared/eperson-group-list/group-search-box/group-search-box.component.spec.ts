@@ -95,6 +95,18 @@ describe('GroupSearchBoxComponent test suite', () => {
       expect(comp.searchForm.controls.query.value).toBe('');
     });
 
+    it('should render the query label outside the input group', () => {
+      fixture.detectChanges();
+      const group: HTMLElement = fixture.nativeElement.querySelector('.input-group');
+      const input: HTMLInputElement = fixture.nativeElement.querySelector('input[name="query"]');
+      const label: HTMLLabelElement = fixture.nativeElement.querySelector('label[for="' + input.id + '"]');
+
+      // Bootstrap 5 squares off any .input-group child that is not the first one
+      expect(label).toBeTruthy();
+      expect(group.contains(label)).toBeFalse();
+      expect(group.firstElementChild).toBe(input);
+    });
+
     it('should emit new search event', () => {
       const data = {
         query: 'test',

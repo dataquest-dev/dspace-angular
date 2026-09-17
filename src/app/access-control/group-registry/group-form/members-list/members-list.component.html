@@ -83,8 +83,8 @@
 
   <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" class="d-flex justify-content-between">
     <div class="flex-grow-1 me-3">
+      <label for="members-list-query" class="visually-hidden">{{messagePrefix + '.search.input' | translate}}</label>
       <div class="mb-3 input-group me-3">
-        <label for="members-list-query" class="visually-hidden">{{messagePrefix + '.search.input' | translate}}</label>
         <input type="text" name="query" id="members-list-query" formControlName="query"
           class="form-control" [attr.aria-label]="messagePrefix + '.search.input' | translate">
         <span class="input-group-append">

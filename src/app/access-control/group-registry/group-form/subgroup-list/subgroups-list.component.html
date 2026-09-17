@@ -68,8 +68,8 @@
   </h4>
   <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" class="d-flex justify-content-between">
     <div class="flex-grow-1 me-3">
+      <label for="subgroups-list-query" class="visually-hidden">{{messagePrefix + '.search.input' | translate}}</label>
       <div class="mb-3 input-group me-3">
-        <label for="subgroups-list-query" class="visually-hidden">{{messagePrefix + '.search.input' | translate}}</label>
         <input type="text" name="query" id="subgroups-list-query" formControlName="query"
           class="form-control" [attr.aria-label]="messagePrefix + '.search.input' | translate">
         <span class="input-group-append">

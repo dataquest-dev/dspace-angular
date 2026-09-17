@@ -15,8 +15,8 @@
       <h2 id="search" class="border-bottom pb-2">{{messagePrefix + 'search.head' | translate}}</h2>
       <form [formGroup]="searchForm" (ngSubmit)="search(searchForm.value)" class="d-flex justify-content-between">
         <div class="flex-grow-1 me-3">
+          <label for="groups-registry-query" class="visually-hidden">{{messagePrefix + 'search.placeholder' | translate}}</label>
           <div class="mb-3 input-group">
-            <label for="groups-registry-query" class="visually-hidden">{{messagePrefix + 'search.placeholder' | translate}}</label>
             <input type="text" name="query" id="groups-registry-query" formControlName="query"
               class="form-control" [attr.aria-label]="messagePrefix + 'search.placeholder' | translate"
               [placeholder]="(messagePrefix + 'search.placeholder' | translate)" >
