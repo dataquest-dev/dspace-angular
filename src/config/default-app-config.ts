@@ -651,6 +651,6 @@ export class DefaultAppConfig implements AppConfig {
     cookieExpirationDuration: 7,
   };
 
-  // CLARIN: signposting is opt-in; when off, the UI makes no /signposting/linksets request at all
+  // CLARIN: signposting is opt-in; when off, the UI makes no /signposting/links request at all
   signpostingEnabled = false;
 }
