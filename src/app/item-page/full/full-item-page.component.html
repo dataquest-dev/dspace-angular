@@ -3,6 +3,16 @@
     <div class="item-page" @fadeInOut>
       @if (itemRD?.payload; as item) {
         <div>
+          @if (fromSubmissionObject && item?.firstMetadataValue('local.submission.note')) {
+            <div class="card bg-info-subtle border-info-subtle text-info-emphasis mb-3">
+              <div class="card-header fw-bold">
+                {{'item.page.users.note' | translate}}
+              </div>
+              <div class="card-body">
+                {{ item?.firstMetadataValue('local.submission.note') }}
+              </div>
+            </div>
+          }
           <ds-item-alerts [item]="item"></ds-item-alerts>
           <ds-item-versions-notice [item]="item"></ds-item-versions-notice>
           @if (!item.isWithdrawn || (isAdmin$|async)) {
