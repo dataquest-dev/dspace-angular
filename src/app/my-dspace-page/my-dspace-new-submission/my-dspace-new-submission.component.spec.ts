@@ -10,6 +10,7 @@ import {
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
   NgbModal,
@@ -20,6 +21,7 @@ import {
   TranslateModule,
 } from '@ngx-translate/core';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
+import { Subject } from 'rxjs';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { EntityTypeDataService } from '../../core/data/entity-type-data.service';
@@ -40,7 +42,9 @@ import { HostWindowServiceStub } from '../../shared/testing/host-window-service.
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 import { createTestComponent } from '../../shared/testing/utils.test';
 import { UploaderComponent } from '../../shared/upload/uploader/uploader.component';
+import { MyDSpaceNewExternalDropdownComponent } from './my-dspace-new-external-dropdown/my-dspace-new-external-dropdown.component';
 import { MyDSpaceNewSubmissionComponent } from './my-dspace-new-submission.component';
+import { MyDSpaceNewSubmissionDropdownComponent } from './my-dspace-new-submission-dropdown/my-dspace-new-submission-dropdown.component';
 import { getMockEntityTypeService } from './my-dspace-new-submission-dropdown/my-dspace-new-submission-dropdown.component.spec';
 
 describe('MyDSpaceNewSubmissionComponent test', () => {
@@ -126,6 +130,36 @@ describe('MyDSpaceNewSubmissionComponent test', () => {
       comp.afterFileLoaded(['']);
       expect((comp as any).modalService.open).toHaveBeenCalled();
       done();
+    });
+  });
+
+  describe('while the upload endpoint has not been resolved', () => {
+    let fixture: ComponentFixture<MyDSpaceNewSubmissionComponent>;
+    let comp: MyDSpaceNewSubmissionComponent;
+    let endpoint$: Subject<string>;
+
+    beforeEach(() => {
+      endpoint$ = new Subject<string>();
+      TestBed.overrideProvider(HALEndpointService, { useValue: { getEndpoint: () => endpoint$ } });
+      TestBed.overrideComponent(MyDSpaceNewSubmissionComponent, {
+        remove: { imports: [MyDSpaceNewExternalDropdownComponent, MyDSpaceNewSubmissionDropdownComponent] },
+      });
+      fixture = TestBed.createComponent(MyDSpaceNewSubmissionComponent);
+      comp = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+
+    it('should not render ds-uploader while the endpoint url is undefined', () => {
+      expect(comp.uploadFilesOptions.url).toBeUndefined();
+      expect(fixture.debugElement.query(By.css('ds-uploader'))).toBeNull();
+    });
+
+    it('should render ds-uploader once the endpoint url is known', () => {
+      endpoint$.next('https://fake.upload-api.url/workspaceitems');
+      fixture.detectChanges();
+
+      expect(comp.uploadFilesOptions.url).toEqual('https://fake.upload-api.url/workspaceitems');
+      expect(fixture.debugElement.query(By.css('ds-uploader'))).not.toBeNull();
     });
   });
 });

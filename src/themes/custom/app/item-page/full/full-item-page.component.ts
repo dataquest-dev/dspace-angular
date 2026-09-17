@@ -1,6 +1,7 @@
 import {
   AsyncPipe,
   KeyValuePipe,
+  NgTemplateOutlet,
 } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -21,6 +22,7 @@ import { fadeInOut } from '../../../../../app/shared/animations/fade';
 import { DsoEditMenuComponent } from '../../../../../app/shared/dso-page/dso-edit-menu/dso-edit-menu.component';
 import { ErrorComponent } from '../../../../../app/shared/error/error.component';
 import { ThemedLoadingComponent } from '../../../../../app/shared/loading/themed-loading.component';
+import { ClaimedTaskActionsComponent } from '../../../../../app/shared/mydspace-actions/claimed-task/claimed-task-actions.component';
 import { ReplacePipe } from '../../../../../app/shared/utils/replace.pipe';
 import { VarDirective } from '../../../../../app/shared/utils/var.directive';
 
@@ -34,6 +36,7 @@ import { VarDirective } from '../../../../../app/shared/utils/var.directive';
   animations: [fadeInOut],
   imports: [
     AsyncPipe,
+    ClaimedTaskActionsComponent,
     ClarinFilesSectionComponent,
     ClarinRefBoxComponent,
     CollectionsComponent,
@@ -42,6 +45,7 @@ import { VarDirective } from '../../../../../app/shared/utils/var.directive';
     ItemVersionsComponent,
     ItemVersionsNoticeComponent,
     KeyValuePipe,
+    NgTemplateOutlet,
     ReplacePipe,
     RouterLink,
     ThemedItemAlertsComponent,
