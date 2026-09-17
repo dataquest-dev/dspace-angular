@@ -292,8 +292,17 @@ describe('FullItemPageComponent', () => {
       const siblings = Array.from(fixture.debugElement.query(By.css('.item-page > div')).nativeElement.children);
       const cardIndex = siblings.findIndex((el: Element) => el.classList.contains('alert-info'));
       const alertsIndex = siblings.findIndex((el: Element) => el.tagName.toLowerCase() === 'ds-item-alerts');
-      expect(cardIndex).toBeGreaterThanOrEqual(0);
+      expect(cardIndex).toBe(0);
       expect(alertsIndex).toBeGreaterThan(cardIndex);
+    });
+
+    it('should label the card with the item.page.users.note key', () => {
+      comp.fromSubmissionObject = true;
+      fixture.detectChanges();
+
+      const header = fixture.debugElement.query(By.css('.card.alert-info .card-header'));
+      expect(header).toBeTruthy();
+      expect(header.nativeElement.textContent).toContain('item.page.users.note');
     });
 
     it('should not render the note card on the archived item view', () => {
