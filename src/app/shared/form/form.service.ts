@@ -187,8 +187,8 @@ export class FormService {
       field.setErrors(error);
     }
 
-    // if the field in question is a concat group, pass down the error to its fields
-    if (field instanceof UntypedFormGroup && model instanceof DynamicFormGroupModel && this.formBuilderService.isConcatGroup(model)) {
+    // if the field in question is a concat or complex group, pass down the error to its fields
+    if (field instanceof UntypedFormGroup && model instanceof DynamicFormGroupModel && (this.formBuilderService.isConcatGroup(model) || this.formBuilderService.isComplexGroup(model))) {
       model.group.forEach((subModel) => {
         const subField = field.controls[subModel.id];
 
@@ -208,8 +208,8 @@ export class FormService {
       field.setErrors(error);
     }
 
-    // if the field in question is a concat group, clear the error from its fields
-    if (field instanceof UntypedFormGroup && model instanceof DynamicFormGroupModel && this.formBuilderService.isConcatGroup(model)) {
+    // if the field in question is a concat or complex group, clear the error from its fields
+    if (field instanceof UntypedFormGroup && model instanceof DynamicFormGroupModel && (this.formBuilderService.isConcatGroup(model) || this.formBuilderService.isComplexGroup(model))) {
       model.group.forEach((subModel) => {
         const subField = field.controls[subModel.id];
 

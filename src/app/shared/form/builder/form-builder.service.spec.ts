@@ -45,6 +45,7 @@ import {
   createSuccessfulRemoteDataObject$,
 } from '../../remote-data.utils';
 import { DynamicDsDatePickerModel } from './ds-dynamic-form-ui/models/date-picker/date-picker.model';
+import { DynamicComplexModel } from './ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 import { DynamicConcatModel } from './ds-dynamic-form-ui/models/ds-dynamic-concat.model';
 import { DsDynamicInputModel } from './ds-dynamic-form-ui/models/ds-dynamic-input.model';
 import { DynamicQualdropModel } from './ds-dynamic-form-ui/models/ds-dynamic-qualdrop.model';
@@ -490,6 +491,18 @@ describe('FormBuilderService test suite', () => {
     expect(service.findById('testRating', testModel) instanceof DynamicRatingModel).toBe(true);
     expect(service.findById('testColorPicker', testModel) instanceof DynamicColorPickerModel).toBe(true);
     expect(service.findById('testConcatGroup', testModel) instanceof DynamicConcatModel).toBe(true);
+  });
+
+  it('should find a complex group model by its base id', () => {
+    const complexModel = new DynamicComplexModel({
+      id: 'local_sponsor_COMPLEX_GROUP',
+      group: [
+        new DynamicInputModel({ id: 'local_sponsor_COMPLEX_INPUT_0' }),
+        new DynamicInputModel({ id: 'local_sponsor_COMPLEX_INPUT_1' }),
+      ],
+    } as any);
+
+    expect(service.findById('local_sponsor', [complexModel]) instanceof DynamicComplexModel).toBe(true);
   });
 
   it('should find a nested dynamic form control model by id', () => {

@@ -4,7 +4,7 @@
      [ngClass]="[getClass('element', 'container'), getClass('grid', 'container')]">
   @if (!isCheckbox && hasLabel && !isDateField) {
     <label
-      [id]="'label_' + model.id"
+      [id]="'label_' + id"
       [for]="id"
       class="form-label"
       [innerHTML]="(model.required && model.label) ? (model.label | translate) + ' *' : (model.label | translate)"
@@ -34,7 +34,7 @@
             <small class="invalid-feedback d-block"
                aria-required="true"
                aria-invalid="true"
-               [attr.aria-describedby]="'label_' + model.id"
+               [attr.aria-describedby]="'label_' + id"
                aria-live="assertive"
           >{{ message | translate: model.validators }}</small>
           }

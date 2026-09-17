@@ -99,6 +99,12 @@ let LOOKUP_TEST_GROUP = new UntypedFormGroup({
 });
 
 describe('Dynamic Lookup component', () => {
+
+  afterEach(() => {
+    // the layout service mock is a module-level singleton shared with nine other specs
+    mockDynamicFormLayoutService.getElementId.and.returnValue(undefined);
+  });
+
   function init() {
     LOOKUP_TEST_MODEL_CONFIG = {
       vocabularyOptions: {
@@ -232,6 +238,16 @@ describe('Dynamic Lookup component', () => {
         it('should render only an input element', () => {
           const de = lookupFixture.debugElement.queryAll(By.css('input.form-control'));
           expect(de.length).toBe(1);
+        });
+
+        it('should take the rendered id and aria-labelledby from the container-assigned id', () => {
+          mockDynamicFormLayoutService.getElementId.and.returnValue('lookup_1');
+
+          lookupFixture.detectChanges();
+          const inputElement = lookupFixture.debugElement.query(By.css('input.form-control')).nativeElement;
+
+          expect(inputElement.id).toBe('lookup_1');
+          expect(inputElement.getAttribute('aria-labelledby')).toBe('label_lookup_1');
         });
 
       });
@@ -426,6 +442,16 @@ describe('Dynamic Lookup component', () => {
           lookupFixture.destroy();
           lookupComp = null;
         });
+        it('should give the two name inputs distinct ids', () => {
+          mockDynamicFormLayoutService.getElementId.and.returnValue('lookup_name');
+          lookupFixture.detectChanges();
+          const inputs = lookupFixture.debugElement.queryAll(By.css('input.form-control'));
+
+          expect(inputs.length).toBe(2);
+          expect(inputs[0].nativeElement.id).not.toEqual(inputs[1].nativeElement.id);
+          expect(inputs[1].nativeElement.id).toBe(inputs[0].nativeElement.id + '_2');
+        });
+
         it('should render two input element', () => {
           const de = lookupFixture.debugElement.queryAll(By.css('input.form-control'));
           const deBtn = lookupFixture.debugElement.queryAll(By.css('button'));
