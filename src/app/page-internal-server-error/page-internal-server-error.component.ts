@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ServerResponseService } from '../core/services/server-response.service';
@@ -15,6 +16,7 @@ import { ServerResponseService } from '../core/services/server-response.service'
   templateUrl: './page-internal-server-error.component.html',
   changeDetection: ChangeDetectionStrategy.Default,
   imports: [
+    RouterLink,
     TranslateModule,
   ],
 })

@@ -27,6 +27,7 @@ import {
 } from 'rxjs/operators';
 import { NotifyInfoService } from 'src/app/core/coar-notify/notify-info/notify-info.service';
 
+import { environment } from '../../../environments/environment';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
 import { ItemDataService } from '../../core/data/item-data.service';
@@ -186,6 +187,9 @@ export class ItemPageComponent implements OnInit, OnDestroy {
    * @private
    */
   private initPageLinks(): void {
+    if (!environment.signpostingEnabled) {
+      return;
+    }
     this.route.params.subscribe(params => {
       combineLatest([this.signpostingDataService.getLinks(params.id).pipe(take(1)), this.getCoarLdnLocalInboxUrls()])
         .subscribe(([signpostingLinks, coarRestApiUrls]) => {

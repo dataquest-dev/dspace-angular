@@ -28,6 +28,7 @@ import {
   take,
 } from 'rxjs/operators';
 
+import { environment } from '../../../environments/environment';
 import { getForbiddenRoute } from '../../app-routing-paths';
 import { AuthService } from '../../core/auth/auth.service';
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
@@ -160,6 +161,9 @@ export class BitstreamDownloadPageComponent implements OnInit {
    * @private
    */
   private initPageLinks(): void {
+    if (!environment.signpostingEnabled) {
+      return;
+    }
     if (isPlatformServer(this.platformId)) {
       this.route.params.subscribe(params => {
         this.signpostingDataService.getLinks(params.id).pipe(take(1)).subscribe((signpostingLinks: SignpostingLink[]) => {
