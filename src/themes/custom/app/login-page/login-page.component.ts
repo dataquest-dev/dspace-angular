@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ThemedLogInComponent } from 'src/app/shared/log-in/themed-log-in.component';
 
@@ -11,6 +12,7 @@ import { LoginPageComponent as BaseComponent } from '../../../../app/login-page/
   // templateUrl: './login-page.component.html'
   templateUrl: '../../../../app/login-page/login-page.component.html',
   imports: [
+    RouterLink,
     ThemedLogInComponent,
     TranslateModule,
   ],
