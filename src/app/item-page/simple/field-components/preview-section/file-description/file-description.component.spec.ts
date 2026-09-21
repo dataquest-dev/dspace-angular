@@ -4,6 +4,7 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -150,6 +151,65 @@ describe('FileDescriptionComponent', () => {
       By.css('.file-content dd'),
     ).nativeElement;
     expect(fileNameElement.textContent).toContain('testFile');
+  });
+
+  describe('the download control', () => {
+    const downloadButton = (): HTMLElement => fixture.nativeElement.querySelector('a.download-btn');
+    let navigateByUrl: jasmine.Spy;
+
+    beforeEach(() => {
+      navigateByUrl = spyOn(TestBed.inject(Router), 'navigateByUrl').and.returnValue(Promise.resolve(true));
+    });
+
+    it('is in the tab order', () => {
+      const control = downloadButton();
+      expect(control).withContext('the Download control did not render').not.toBeNull();
+
+      // Chrome reports tabIndex 0 even for an anchor that has no href, so read the attributes.
+      expect(control.matches('[href], [tabindex]:not([tabindex^="-"])'))
+        .withContext(`the Download control has neither href nor tabindex: ${control.outerHTML.slice(0, 120)}`)
+        .toBeTrue();
+
+      expect(control.getAttribute('role'))
+        .withContext('a screen reader announces the Download control as a link that leads nowhere')
+        .toEqual('button');
+
+      control.focus();
+      expect(document.activeElement)
+        .withContext('Tab cannot land on the Download control - focus() left it unfocused')
+        .toBe(control);
+    });
+
+    it('starts the download from Enter and from Space', () => {
+      const target = `bitstreams/${component.fileInput.id}/download`;
+      // bubbles stays false on purpose: a handler moved to an ancestor must not satisfy this.
+      const press = (key: string) =>
+        downloadButton().dispatchEvent(new KeyboardEvent('keyup', { key, bubbles: false }));
+
+      press('Enter');
+      expect(navigateByUrl)
+        .withContext('Enter on the Download control did not start the download')
+        .toHaveBeenCalledWith(target);
+
+      navigateByUrl.calls.reset();
+
+      press(' ');
+      expect(navigateByUrl)
+        .withContext('Space on the Download control did not start the download')
+        .toHaveBeenCalledWith(target);
+
+      navigateByUrl.calls.reset();
+
+      press('a');
+      expect(navigateByUrl)
+        .withContext('a key that is neither Enter nor Space started the download')
+        .not.toHaveBeenCalled();
+
+      downloadButton().click();
+      expect(navigateByUrl)
+        .withContext('clicking the Download control did not start the download')
+        .toHaveBeenCalledWith(target);
+    });
   });
 
   describe('file preview panel', () => {
