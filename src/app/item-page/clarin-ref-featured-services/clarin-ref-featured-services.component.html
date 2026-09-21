@@ -27,7 +27,8 @@
               ngbDropdownToggle
               data-bs-toggle="dropdown"
               aria-haspopup="true"
-              aria-expanded="false">
+              aria-expanded="false"
+              [attr.aria-label]="'item.refbox.featured-service.links.dropdown' | translate: { name: featuredService.name }">
             </button>
             <div ngbDropdownMenu [attr.aria-labelledby]="'resultdropdown-' + i" class="lindat-dropdown-menu">
               @for (featuredServiceLink of featuredService.featuredServiceLinks; track featuredServiceLink) {
@@ -49,8 +50,10 @@
         <span class="ps-2">{{'item.refbox.featured-service.share.message' | translate}}</span>
       </div>
       <div class="ps-2">
-        <a class="fab fa-facebook-square clarin-share-buttons clarin-share-facebook" [href]="fbRedirectURL | async"></a>
-        <a class="fab fa-twitter-square clarin-share-buttons clarin-share-twitter" [href]="twitterRedirectURL | async"></a>
+        <a class="fab fa-facebook-square clarin-share-buttons clarin-share-facebook" [attr.aria-label]="'item.refbox.featured-service.share.facebook' | translate"
+           [href]="fbRedirectURL | async"></a>
+        <a class="fab fa-twitter-square clarin-share-buttons clarin-share-twitter" [attr.aria-label]="'item.refbox.featured-service.share.twitter' | translate"
+           [href]="twitterRedirectURL | async"></a>
       </div>
     </div>
   </div>
