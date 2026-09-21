@@ -88,15 +88,17 @@ const isExposedToAssistiveTech = (element: Element, view: Window): boolean => {
   return true;
 };
 
-// Page-level guard: every link rendered inside `context` must have a non-empty accessible name.
-// axe's own "link-name" rule has the selector a[href], so it never even looks at an anchor whose
-// href arrives through an async binding and is therefore absent from the DOM. This walks the
-// anchors instead of the rule, so a nameless link is caught with or without an href.
+// Every link rendered inside `context` must have a non-empty accessible name. Walks the anchors
+// rather than the axe rule, whose a[href] selector skips an anchor whose href arrives async.
 export const testLinkNamesOnPage = (context: string) => {
   cy.window().then((view) => {
     cy.get(context).then(($page) => {
-      const nameless = Array.from($page[0].querySelectorAll('a'))
-        .filter((element) => isExposedToAssistiveTech(element, view))
+      const anchors = Array.from($page[0].querySelectorAll('a'))
+        .filter((element) => isExposedToAssistiveTech(element, view));
+      // Without this the check passes on an empty subtree, which is the way the run it replaces
+      // was green in the first place.
+      expect(anchors.length, 'links exposed in ' + context).to.be.greaterThan(0);
+      const nameless = anchors
         .filter((element) => accessibleNameOf(element) === '')
         .map((element) => element.outerHTML);
       expect(nameless, 'links rendered in ' + context + ' with no accessible name').to.deep.equal([]);

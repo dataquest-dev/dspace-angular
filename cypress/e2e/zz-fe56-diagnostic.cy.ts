@@ -1,3 +1,5 @@
+import { testLinkNamesOnPage } from 'cypress/support/utils';
+
 // TEMPORARY DIAGNOSTIC SPEC - not part of any deliverable.
 // It answers, with a run in the real CI, why the existing item-page a11y spec is green on a base
 // that carries two live link-name violations. It never fails; it only prints facts.
@@ -155,6 +157,14 @@ describe('FE-56 diagnostic', () => {
         }));
       });
     });
+  });
+
+  // Coherent mutation for the lower bound in testLinkNamesOnPage: <head> is a real element that is
+  // really in the document and really holds no anchors, so only the lower bound can fail here.
+  it('lower bound fires on a subtree with no links', () => {
+    cy.visit(ENTITYPAGE);
+    cy.get('ds-item-page').should('be.visible');
+    testLinkNamesOnPage('head');
   });
 
   it('prints the untyped item page', () => {

@@ -19,6 +19,9 @@ describe('Item  Page', () => {
 
     // <ds-item-page> tag must be loaded
     cy.get('ds-item-page').should('be.visible');
+    // ds-item-page is the themed wrapper and is visible while it is still empty, so axe would
+    // otherwise scan a page that has not rendered the item yet.
+    cy.get('ds-item-page ds-item-page-title-field').should('exist');
 
     // Analyze <ds-item-page> for accessibility issues
     testA11y('ds-item-page');
@@ -29,6 +32,7 @@ describe('Item  Page', () => {
 
     // <ds-full-item-page> tag must be loaded
     cy.get('ds-full-item-page').should('be.visible');
+    cy.get('ds-full-item-page a.clarin-share-buttons').should('have.length', 2);
 
     // Analyze <ds-full-item-page> for accessibility issues
     testA11y('ds-full-item-page');
@@ -38,6 +42,7 @@ describe('Item  Page', () => {
     cy.visit(ENTITYPAGE);
 
     cy.get('ds-item-page').should('be.visible');
+    cy.get('ds-item-page ds-item-page-title-field').should('exist');
 
     testLinkNamesOnPage('ds-item-page');
   });
@@ -46,9 +51,9 @@ describe('Item  Page', () => {
     cy.visit(ENTITYPAGE + '/full');
 
     cy.get('ds-full-item-page').should('be.visible');
-    // The CLARIN reference box carries the share links; without it the guard would pass on a page
-    // that simply had not finished rendering.
-    cy.get('ds-full-item-page ds-clarin-ref-box').should('exist');
+    // Name the nodes the guard has to have in scope. A link check that stops seeing the share links
+    // goes green by measuring less, which is the failure this spec exists to prevent.
+    cy.get('ds-full-item-page a.clarin-share-buttons').should('have.length', 2);
 
     testLinkNamesOnPage('ds-full-item-page');
   });
@@ -60,7 +65,7 @@ describe('Item  Page', () => {
 
     cy.get('ds-item-page').should('be.visible');
     cy.get('ds-item-page ds-untyped-item').should('exist');
-    cy.get('ds-item-page ds-clarin-ref-box').should('exist');
+    cy.get('ds-item-page a.clarin-share-buttons').should('have.length', 2);
 
     testLinkNamesOnPage('ds-item-page');
   });
@@ -69,6 +74,7 @@ describe('Item  Page', () => {
     cy.visit(UNTYPEDITEMPAGE);
 
     cy.get('ds-item-page ds-untyped-item').should('exist');
+    cy.get('ds-item-page a.clarin-share-buttons').should('have.length', 2);
 
     testA11y('ds-item-page');
   });
