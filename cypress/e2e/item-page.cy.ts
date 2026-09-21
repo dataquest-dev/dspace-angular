@@ -6,6 +6,7 @@ import {
 describe('Item  Page', () => {
   const ITEMPAGE = '/items/'.concat(Cypress.env('DSPACE_TEST_ENTITY_PUBLICATION'));
   const ENTITYPAGE = '/entities/publication/'.concat(Cypress.env('DSPACE_TEST_ENTITY_PUBLICATION'));
+  const UNTYPEDITEMPAGE = '/items/'.concat(Cypress.env('DSPACE_TEST_UNTYPED_ITEM'));
 
   // Test that entities will redirect to /entities/[type]/[uuid] when accessed via /items/[uuid]
   it('should redirect to the entity page when navigating to an item page', () => {
@@ -50,5 +51,25 @@ describe('Item  Page', () => {
     cy.get('ds-full-item-page ds-clarin-ref-box').should('exist');
 
     testLinkNamesOnPage('ds-full-item-page');
+  });
+
+  // An item without dspace.entity.type renders through <ds-untyped-item>, which is the layout the
+  // CLARIN repositories actually serve. The entity page above never reaches that branch.
+  it('should give every link on the untyped item page an accessible name', () => {
+    cy.visit(UNTYPEDITEMPAGE);
+
+    cy.get('ds-item-page').should('be.visible');
+    cy.get('ds-item-page ds-untyped-item').should('exist');
+    cy.get('ds-item-page ds-clarin-ref-box').should('exist');
+
+    testLinkNamesOnPage('ds-item-page');
+  });
+
+  it('should pass accessibility tests on the untyped item page', () => {
+    cy.visit(UNTYPEDITEMPAGE);
+
+    cy.get('ds-item-page ds-untyped-item').should('exist');
+
+    testA11y('ds-item-page');
   });
 });

@@ -114,4 +114,14 @@ describe('FE-56 diagnostic', () => {
     dumpDom('entity-full-after-refbox-exists');
     dumpAxeLinkName('entity-full', 'ds-full-item-page');
   });
+
+  it('prints the untyped item page', () => {
+    cy.visit('/items/'.concat(Cypress.env('DSPACE_TEST_UNTYPED_ITEM')));
+    cy.get('ds-item-page').should('be.visible');
+    dumpDom('untyped-immediately-after-visible');
+    cy.get('ds-untyped-item', { timeout: 20000 }).should('exist');
+    cy.get('ds-clarin-ref-box', { timeout: 20000 }).should('exist');
+    dumpDom('untyped-after-refbox-exists');
+    dumpAxeLinkName('untyped', 'ds-item-page');
+  });
 });

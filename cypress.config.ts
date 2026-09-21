@@ -25,6 +25,8 @@ export default defineConfig({
     DSPACE_TEST_COMMUNITY: '0958c910-2037-42a9-81c7-dca80e3892b4',
     DSPACE_TEST_COLLECTION: '282164f5-d325-4740-8dd1-fa4d6d3e7200',
     DSPACE_TEST_ENTITY_PUBLICATION: '6160810f-1e53-40db-81ef-f6621a727398',
+    // Archived item with no dspace.entity.type, so it renders through the untyped item page
+    DSPACE_TEST_UNTYPED_ITEM: '961e137c-d815-4ade-aff1-0bb12f1fe965',
     // Search term (should return results) used in search tests
     DSPACE_TEST_SEARCH_TERM: 'test',
     // Main Collection used for submission tests. Should be able to accept normal Item objects
