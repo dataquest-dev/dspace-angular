@@ -49,7 +49,8 @@ describe('ClarinRefFeaturedServicesComponent', () => {
   let en: Record<string, any>;
 
   // The real catalogue, not a stub. A stub stays green after someone drops the keys from en.json5,
-  // while production renders the bare key as the accessible name.
+  // while production renders the bare key as the accessible name. It is fetched rather than imported
+  // because the karma target serves src/assets (see the test target in angular.json).
   beforeAll(async () => {
     const response = await fetch('assets/i18n/en.json5');
     if (!response.ok) {
@@ -74,6 +75,9 @@ describe('ClarinRefFeaturedServicesComponent', () => {
   }));
 
   beforeEach(() => {
+    if (en === undefined) {
+      throw new Error('en.json5 was not loaded; the real failure is in beforeAll, not here');
+    }
     const translate = TestBed.inject(TranslateService);
     translate.setTranslation('en', en);
     translate.use('en');
@@ -120,8 +124,11 @@ describe('ClarinRefFeaturedServicesComponent', () => {
   it('names each share link after the network it shares to', () => {
     const names = shareAnchors().map((a: HTMLAnchorElement) => a.getAttribute('aria-label'));
     expect(names).toEqual([en[FACEBOOK_KEY], en[TWITTER_KEY]]);
+    // The name has to say what the link DOES, not only where it goes, so a bare "Facebook" fails.
     expect(names[0]).toMatch(/facebook/i);
+    expect(names[0]).toMatch(/shar/i);
     expect(names[1]).toMatch(/twitter/i);
+    expect(names[1]).toMatch(/shar/i);
   });
 
   it('gives the featured-service dropdown toggle an accessible name', () => {
