@@ -17,6 +17,7 @@ jobs:
           token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
       - name: test
+        id: test
         working-directory: dspace-ui-tests/scripts
         env:
           HOME_URL: http://dev-6.pc:8603/repository/
@@ -29,3 +30,24 @@ jobs:
         with:
           CHOWN_DIR: ./
         if: ${{ always() }}
+
+      # Runs after the chown, the results are written by root inside the container.
+      - name: Keep the partial results
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        continue-on-error: true
+        with:
+          name: playwright-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            dspace-ui-tests/test-results
+            dspace-ui-tests/playwright-report
+          if-no-files-found: ignore
+          retention-days: 14
+
+      # timeout-minutes cancels the job, and cancelled is neither success nor failure.
+      # Without this the run looks the same as a healthy one on every dashboard.
+      - name: Report that the gate produced no result
+        if: ${{ always() && steps.test.outcome != 'success' && steps.test.outcome != 'failure' }}
+        run: |
+          echo "::error title=End-to-end gate produced no result::The Playwright step ended as '${{ steps.test.outcome }}', so the suite never finished - most likely on the job time limit. Neither a pass nor a failure: this run says nothing about the instance. What did run is in the step log and in the playwright-evidence artifact."
+          exit 1
