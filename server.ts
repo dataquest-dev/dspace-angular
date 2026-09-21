@@ -58,6 +58,7 @@ import {
   RESPONSE,
 } from './src/express.tokens';
 import { SsrExcludePatterns } from "./src/config/ssr-config.interface";
+import { registerNamespacedRoutes } from './src/server-routes';
 
 /*
  * Set path for the browser application's dist folder
@@ -145,14 +146,10 @@ export function app() {
   server.set('view engine', 'ejs');
 
   /**
-   * Serve the robots.txt ejs template, filling in the origin variable
+   * Serve the robots.txt ejs template and the health check. Both go on the namespace router so
+   * they follow ui.nameSpace; see registerNamespacedRoutes.
    */
-  server.get('/robots.txt', (req, res) => {
-    res.setHeader('content-type', 'text/plain');
-    res.render('assets/robots.txt.ejs', {
-      'origin': environment.ui.baseUrl,
-    });
-  });
+  registerNamespacedRoutes(router, healthCheck);
 
   /*
    * Set views folder path to directory where template files are stored
@@ -206,11 +203,6 @@ export function app() {
   * Fallthrough to the IIIF viewer (must be included in the build).
   */
   router.use('/iiif', express.static(IIIF_VIEWER, { index: false }));
-
-  /**
-   * Checking server status
-   */
-  server.get('/app/health', healthCheck);
 
   /**
    * Default sending all incoming requests to ngApp() function, after first checking for a cached
