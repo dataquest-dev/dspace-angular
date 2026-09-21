@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicFormControlModel } from '@ng-dynamic-forms/core';
 import {
   TranslateModule,
@@ -75,6 +76,7 @@ import { License4Selector } from './license-4-selector.model';
   templateUrl: './section-license.component.html',
   imports: [
     CommonModule,
+    NgbCollapseModule,
     TranslateModule,
   ],
 })
@@ -129,6 +131,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * `Select a License` placeholder for the license dropdown button.
    */
   licenseSelectorDefaultValue = '';
+
+  /**
+   * Whether the `license more details` list is collapsed.
+   */
+  licenseDetailsCollapsed = true;
 
   /**
    * The form id
@@ -348,6 +355,13 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
             }
           });
       });
+  }
+
+  /**
+   * Show or hide the `license more details` list.
+   */
+  toggleLicenseDetails() {
+    this.licenseDetailsCollapsed = !this.licenseDetailsCollapsed;
   }
 
   /**

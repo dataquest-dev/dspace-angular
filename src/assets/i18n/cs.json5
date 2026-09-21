@@ -5114,6 +5114,9 @@
   // "item.file.description.preview": "Preview",
   "item.file.description.preview": "Náhled",
 
+  // "item.file.description.preview.close": "Hide the file preview",
+  "item.file.description.preview.close": "Skrýt náhled souboru",
+
   // "item.file.description.size": "Size",
   "item.file.description.size": "Velikost",
 

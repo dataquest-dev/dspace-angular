@@ -14,6 +14,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { SubmissionFormsConfigDataService } from 'src/app/core/config/submission-forms-config-data.service';
@@ -43,7 +44,10 @@ import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.u
 import { NotificationsServiceStub } from '../../../shared/testing/notifications-service.stub';
 import { SectionsServiceStub } from '../../../shared/testing/sections-service.stub';
 import { SubmissionServiceStub } from '../../../shared/testing/submission-service.stub';
-import { createTestComponent } from '../../../shared/testing/utils.test';
+import {
+  createPaginatedList,
+  createTestComponent,
+} from '../../../shared/testing/utils.test';
 import { SubmissionService } from '../../submission.service';
 import { SectionFormOperationsService } from '../form/section-form-operations.service';
 import { SectionDataObject } from '../models/section-data.model';
@@ -219,6 +223,63 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
           expect(body[0].value).toBe('My CLARIN License');
         });
       }));
+  });
+
+  describe('license more details', () => {
+    let fixture: ComponentFixture<SubmissionSectionClarinLicenseComponent>;
+    let style: HTMLStyleElement;
+
+    const details = (): HTMLElement =>
+      fixture.nativeElement.querySelector('#aspect_submission_StepTransformer_list_accordion-body_lic_1');
+    const toggle = (): HTMLElement => fixture.nativeElement.querySelector('.accordion-heading a');
+    const isVisible = (el: HTMLElement): boolean => getComputedStyle(el).display !== 'none';
+
+    beforeEach(() => {
+      // Verbatim from node_modules/bootstrap/dist/css/bootstrap.css; the karma target lists the theme
+      // with `inject: false`, so without it everything measures as visible.
+      style = document.createElement('style');
+      style.textContent = '.collapse:not(.show) { display: none; }';
+      document.head.appendChild(style);
+
+      TestBed.inject(NgbCollapseConfig).animation = false;
+
+      mockClarinDataService.findAll = jasmine.createSpy('findAll')
+        .and.returnValue(createSuccessfulRemoteDataObject$(createPaginatedList([])));
+      sectionsServiceStub.isSectionReadOnly.and.returnValue(of(false));
+      sectionsServiceStub.getSectionErrors.and.returnValue(of([]));
+      // an unstubbed retrieveSubmission returns undefined, and the .pipe() on it rejects inside the
+      // component's async ngOnInit, which wedges the whole karma run rather than failing a spec
+      (TestBed.inject(SubmissionService) as any).retrieveSubmission.and.returnValue(
+        createSuccessfulRemoteDataObject$({ _links: { self: { href: 'self' } } }),
+      );
+
+      fixture = TestBed.createComponent(SubmissionSectionClarinLicenseComponent);
+      fixture.detectChanges();
+    });
+
+    afterEach(() => {
+      style.remove();
+      fixture.destroy();
+    });
+
+    // One spec, not two: a second TestBed.createComponent of this component in the same run never
+    // settles (the browser disconnects after 30 s), so the whole open/close path is asserted here.
+    it('keeps the details list hidden and opens it when the heading is clicked', () => {
+      expect(toggle()).withContext('the more-details control did not render').not.toBeNull();
+      expect(details()).withContext('the more-details list did not render').not.toBeNull();
+      expect(isVisible(details()))
+        .withContext('details list is visible before any click')
+        .toBeFalse();
+      expect(toggle().getAttribute('aria-expanded')).toEqual('false');
+
+      toggle().click();
+      fixture.detectChanges();
+
+      expect(isVisible(details()))
+        .withContext(`details list stayed hidden: display=${getComputedStyle(details()).display}`)
+        .toBeTrue();
+      expect(toggle().getAttribute('aria-expanded')).toEqual('true');
+    });
   });
 });
 
