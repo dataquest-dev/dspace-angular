@@ -42,3 +42,66 @@ export const testA11y = (context?: any, options?: Options) => {
   });
   cy.checkA11y(context, options, terminalLog);
 };
+
+// Accessible name of a link, following the checks axe runs for "link-name":
+// aria-label, aria-labelledby, visible text, alt text of a contained image, title.
+const accessibleNameOf = (element: Element): string => {
+  const ariaLabel = (element.getAttribute('aria-label') || '').trim();
+  if (ariaLabel !== '') {
+    return ariaLabel;
+  }
+  const labelledBy = element.getAttribute('aria-labelledby');
+  if (labelledBy !== null) {
+    const labelled = labelledBy.split(/\s+/)
+      .map((id) => element.ownerDocument.getElementById(id))
+      .map((target) => (target === null ? '' : (target.textContent || '').trim()))
+      .join(' ')
+      .trim();
+    if (labelled !== '') {
+      return labelled;
+    }
+  }
+  const text = (element.textContent || '').trim();
+  if (text !== '') {
+    return text;
+  }
+  const alt = Array.from(element.querySelectorAll('img[alt], area[alt]'))
+    .map((image) => (image.getAttribute('alt') || '').trim())
+    .join(' ')
+    .trim();
+  if (alt !== '') {
+    return alt;
+  }
+  return (element.getAttribute('title') || '').trim();
+};
+
+const isExposedToAssistiveTech = (element: Element, view: Window): boolean => {
+  if (element.closest('[aria-hidden="true"]') !== null) {
+    return false;
+  }
+  for (let node: Element | null = element; node !== null; node = node.parentElement) {
+    const style = view.getComputedStyle(node);
+    if (style.display === 'none' || style.visibility === 'hidden') {
+      return false;
+    }
+  }
+  return true;
+};
+
+// Every link rendered inside `context` must have a non-empty accessible name. Walks the anchors
+// rather than the axe rule, whose a[href] selector skips an anchor whose href arrives async.
+export const testLinkNamesOnPage = (context: string) => {
+  cy.window().then((view) => {
+    cy.get(context).then(($page) => {
+      const anchors = Array.from($page[0].querySelectorAll('a'))
+        .filter((element) => isExposedToAssistiveTech(element, view));
+      // Without this the check passes on an empty subtree, which is the way the run it replaces
+      // was green in the first place.
+      expect(anchors.length, 'links exposed in ' + context).to.be.greaterThan(0);
+      const nameless = anchors
+        .filter((element) => accessibleNameOf(element) === '')
+        .map((element) => element.outerHTML);
+      expect(nameless, 'links rendered in ' + context + ' with no accessible name').to.deep.equal([]);
+    });
+  });
+};

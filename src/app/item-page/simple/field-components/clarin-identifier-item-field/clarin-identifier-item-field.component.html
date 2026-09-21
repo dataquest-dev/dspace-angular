@@ -1,6 +1,9 @@
-<div class="justify-content-between d-flex">
-  <a [href]="identifier">{{ prettifiedIdentifier | async }}</a>
-  <i class="far fa-copy cursor-pointer"
-     (click)="copyToClipboard(identifier)"
-     [ngbTooltip]="'Copied!'" #copyButton="ngbTooltip"></i>
-</div>
+<!-- Render nothing until there is a label for the link: an anchor with no text is a nameless link. -->
+@if (prettifiedIdentifier | async; as identifierLabel) {
+  <div class="justify-content-between d-flex">
+    <a [href]="identifier">{{ identifierLabel }}</a>
+    <i class="far fa-copy cursor-pointer"
+       (click)="copyToClipboard(identifier)"
+       [ngbTooltip]="'Copied!'" #copyButton="ngbTooltip"></i>
+  </div>
+}
