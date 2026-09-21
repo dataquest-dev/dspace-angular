@@ -27,6 +27,7 @@ import { HandleTableComponent } from './handle-table.component';
 import { defaultPagination } from './handle-table-pagination';
 
 const selectedHandleId = 1;
+const otherHandleId = 47;
 
 const successfulResponse = {
   response: {
@@ -47,7 +48,22 @@ const mockHandle = Object.assign(new Handle(), {
   },
 });
 
-const mockHandleRD$ = createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [mockHandle]));
+// A second row on the same page: the delete and edit paths must leave this handle alone.
+const otherMockHandle = Object.assign(new Handle(), {
+  id: otherHandleId,
+  handle: '654321',
+  resourceTypeID: 0,
+  url: 'other.handle.url',
+  resourceId: 'd6d5e2b4-6f1a-4a4c-93b1-2f0a2ee8c8b1',
+  _links: {
+    self: {
+      href: 'url.654321',
+    },
+  },
+});
+
+const mockHandleRD$ = createSuccessfulRemoteDataObject$(
+  buildPaginatedList(new PageInfo(), [mockHandle, otherMockHandle]));
 
 /**
  * The test for testing HandleTableComponent.
@@ -180,5 +196,55 @@ describe('HandleTableComponent', () => {
 
     expect((component as any).requestService.send).toHaveBeenCalled();
     expect((component as HandleTableComponent).refreshTableAfterDelete).toHaveBeenCalled();
+  });
+
+  it('should delete only the selected handle and no other handle on the page', () => {
+    spyOn((component as HandleTableComponent), 'refreshTableAfterDelete');
+
+    (component as HandleTableComponent).ngOnInit();
+    (component as HandleTableComponent).switchSelectedHandle(selectedHandleId);
+    (component as HandleTableComponent).deleteHandles();
+
+    const sendSpy = (component as any).requestService.send;
+    expect(sendSpy).toHaveBeenCalledTimes(1);
+    expect(sendSpy.calls.mostRecent().args[0].href).toBe(mockHandle._links.self.href);
+    expect((component as HandleTableComponent).refreshTableAfterDelete).toHaveBeenCalledTimes(1);
+    expect((component as HandleTableComponent).refreshTableAfterDelete).toHaveBeenCalledWith(selectedHandleId);
+  });
+
+  it('should delete the selected handle when it is not the first row on the page', () => {
+    spyOn((component as HandleTableComponent), 'refreshTableAfterDelete');
+
+    (component as HandleTableComponent).ngOnInit();
+    (component as HandleTableComponent).switchSelectedHandle(otherHandleId);
+    (component as HandleTableComponent).deleteHandles();
+
+    const sendSpy = (component as any).requestService.send;
+    expect(sendSpy).toHaveBeenCalledTimes(1);
+    expect(sendSpy.calls.mostRecent().args[0].href).toBe(otherMockHandle._links.self.href);
+    expect((component as HandleTableComponent).refreshTableAfterDelete).toHaveBeenCalledTimes(1);
+    expect((component as HandleTableComponent).refreshTableAfterDelete).toHaveBeenCalledWith(otherHandleId);
+  });
+
+  it('should redirect only for the selected handle and no other handle on the page', () => {
+    (component as HandleTableComponent).ngOnInit();
+    (component as HandleTableComponent).switchSelectedHandle(selectedHandleId);
+    (component as HandleTableComponent).redirectWithHandleParams();
+
+    const navigateSpy = (component as any).router.navigate;
+    expect(navigateSpy).toHaveBeenCalledTimes(1);
+    expect(navigateSpy.calls.mostRecent().args[1].queryParams.id).toBe(selectedHandleId);
+    expect(navigateSpy.calls.mostRecent().args[1].queryParams._selflink).toBe(mockHandle._links.self.href);
+  });
+
+  it('should redirect for the selected handle when it is not the first row on the page', () => {
+    (component as HandleTableComponent).ngOnInit();
+    (component as HandleTableComponent).switchSelectedHandle(otherHandleId);
+    (component as HandleTableComponent).redirectWithHandleParams();
+
+    const navigateSpy = (component as any).router.navigate;
+    expect(navigateSpy).toHaveBeenCalledTimes(1);
+    expect(navigateSpy.calls.mostRecent().args[1].queryParams.id).toBe(otherHandleId);
+    expect(navigateSpy.calls.mostRecent().args[1].queryParams._selflink).toBe(otherMockHandle._links.self.href);
   });
 });
