@@ -1,8 +1,10 @@
 @if (node.isDirectory) {
   <span>
     <i class="fas fa-folder fa-sm" style="color: #a0a0a0"></i>
-    <a role="button"
+    <a role="button" tabindex="0"
       (click)="isCollapsed = !isCollapsed"
+      (keyup.enter)="isCollapsed = !isCollapsed"
+      (keyup.space)="isCollapsed = !isCollapsed"
       [attr.aria-expanded]="!isCollapsed"
       attr.aria-controls="folder_{{ node.name }}">
       {{ node.name }}
@@ -16,8 +18,7 @@
 
 
 @if (node.isDirectory && node.sub) {
-  <ul id="folder_{{ node.name }}" [ngbCollapse]="isCollapsed" class="in" style="height: auto"
-    >
+  <ul id="folder_{{ node.name }}" [ngbCollapse]="isCollapsed">
     @for (subNodeKey of getKeys(node.sub); track subNodeKey) {
       <ds-file-tree-view role="listitem"
         [node]="node.sub[subNodeKey]">

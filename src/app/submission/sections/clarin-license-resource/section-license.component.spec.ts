@@ -280,6 +280,19 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
         .toBeTrue();
       expect(toggle().getAttribute('aria-expanded')).toEqual('true');
     });
+
+    it('opens the details list from the keyboard', () => {
+      expect(toggle().getAttribute('tabindex'))
+        .withContext('the more-details control is not reachable with Tab')
+        .toEqual('0');
+
+      toggle().dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
+      fixture.detectChanges();
+
+      expect(isVisible(details()))
+        .withContext('Enter on the more-details control did not open the list')
+        .toBeTrue();
+    });
   });
 });
 

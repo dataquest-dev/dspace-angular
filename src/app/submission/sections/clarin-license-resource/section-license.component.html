@@ -82,8 +82,10 @@
         <div id="aspect_submission_StepTransformer_list_accordion-group_lic_1"
           class="accordion-group hidden">
           <div class="accordion-heading">
-            <a role="button"
+            <a role="button" tabindex="0"
               (click)="toggleLicenseDetails()"
+              (keyup.enter)="toggleLicenseDetails()"
+              (keyup.space)="toggleLicenseDetails()"
               [attr.aria-expanded]="!licenseDetailsCollapsed"
               aria-controls="aspect_submission_StepTransformer_list_accordion-body_lic_1">
               <span class="bold">{{'submission.sections.clarin-license.head.license-more-details' | translate}}</span>

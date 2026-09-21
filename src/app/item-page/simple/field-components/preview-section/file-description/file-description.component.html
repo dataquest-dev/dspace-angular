@@ -50,8 +50,10 @@
     </span>
     <span class="ps-1">
       @if (couldPreview()) {
-        <a class="preview-btn" role="button"
+        <a class="preview-btn" role="button" tabindex="0"
           (click)="togglePreview()"
+          (keyup.enter)="togglePreview()"
+          (keyup.space)="togglePreview()"
           [attr.aria-expanded]="!previewCollapsed"
           attr.aria-controls="file_file_{{ fileInput.id }}">
           <i class="fa fa-eye">&nbsp;</i>
@@ -65,7 +67,10 @@
       <div style="height: auto; padding: 0px" class="bold panel-heading text-center">
         <i class="fa fa-eye">&nbsp;</i>
         {{'item.file.description.file.preview' | translate}}
-        <a class="pull-right cursor-pointer" role="button" (click)="togglePreview()"
+        <a class="pull-right cursor-pointer" role="button" tabindex="0"
+          (click)="togglePreview()"
+          (keyup.enter)="togglePreview()"
+          (keyup.space)="togglePreview()"
           [attr.aria-expanded]="!previewCollapsed"
           attr.aria-controls="file_file_{{ fileInput.id }}"
           [attr.aria-label]="'item.file.description.preview.close' | translate">

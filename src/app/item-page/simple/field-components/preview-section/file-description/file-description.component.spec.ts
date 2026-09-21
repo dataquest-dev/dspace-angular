@@ -113,6 +113,10 @@ describe('FileDescriptionComponent', () => {
   });
 
   beforeEach(() => {
+    // NgbCollapse copies config.animation in its constructor, so this has to happen before the
+    // component is created or the directive runs animated and the assertions read a transient state.
+    TestBed.inject(NgbCollapseConfig).animation = false;
+
     fixture = TestBed.createComponent(FileDescriptionComponent);
     component = fixture.componentInstance;
 
@@ -162,8 +166,6 @@ describe('FileDescriptionComponent', () => {
       style.textContent = BOOTSTRAP_COLLAPSE_RULE;
       document.head.appendChild(style);
 
-      TestBed.inject(NgbCollapseConfig).animation = false;
-
       component.fileInput.canPreview = true;
       component.fileInput.format = 'text/plain';
       fixture.detectChanges();
@@ -194,6 +196,35 @@ describe('FileDescriptionComponent', () => {
         .withContext(`panel stayed hidden after clicking Preview: display=${getComputedStyle(panel()).display} height=${panel().getBoundingClientRect().height}`)
         .toBeTrue();
       expect(previewButton().getAttribute('aria-expanded')).toEqual('true');
+      // the settled state Bootstrap renders, not a half-finished transition
+      expect(panel().classList.contains('collapsing'))
+        .withContext(`panel is still transitioning: ${panel().className}`)
+        .toBeFalse();
+      expect(panel().classList.contains('show')).toBeTrue();
+    });
+
+    it('opens the preview panel from the keyboard', () => {
+      expect(previewButton().getAttribute('tabindex'))
+        .withContext('the Preview control is not reachable with Tab')
+        .toEqual('0');
+
+      previewButton().dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
+      fixture.detectChanges();
+
+      expect(isVisible(panel()))
+        .withContext('Enter on the Preview control did not open the panel')
+        .toBeTrue();
+
+      expect(closeButton().getAttribute('tabindex'))
+        .withContext('the close control is not reachable with Tab')
+        .toEqual('0');
+
+      closeButton().dispatchEvent(new KeyboardEvent('keyup', { key: ' ', bubbles: true }));
+      fixture.detectChanges();
+
+      expect(isVisible(panel()))
+        .withContext('Space on the close control did not collapse the panel')
+        .toBeFalse();
     });
 
     it('closes the preview panel again from the close control', () => {
@@ -233,7 +264,6 @@ describe('FileDescriptionComponent', () => {
       const translate = TestBed.inject(TranslateService);
       translate.setTranslation('en', en);
       translate.use('en');
-      TestBed.inject(NgbCollapseConfig).animation = false;
       component.fileInput.canPreview = true;
       component.fileInput.format = 'application/zip';
       fixture.detectChanges();
