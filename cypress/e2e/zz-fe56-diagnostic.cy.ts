@@ -115,6 +115,48 @@ describe('FE-56 diagnostic', () => {
     dumpAxeLinkName('entity-full', 'ds-full-item-page');
   });
 
+  const snapshot = (win: Window) => {
+    const doc = win.document;
+    const page = doc.querySelector('ds-full-item-page');
+    return {
+      t: Math.round(win.performance.now()),
+      refBox: doc.querySelectorAll('ds-clarin-ref-box').length,
+      featuredServices: doc.querySelectorAll('ds-clarin-ref-featured-services').length,
+      shareAnchors: doc.querySelectorAll('a.clarin-share-buttons').length,
+      anchors: doc.querySelectorAll('a').length,
+      fullItemPageInnerLength: page === null ? -1 : page.innerHTML.length,
+    };
+  };
+
+  it('replicates the existing gate and records what axe sees at that exact moment', () => {
+    cy.visit(ENTITYPAGE + '/full');
+    cy.get('ds-full-item-page').should('be.visible');
+    cy.injectAxe();
+    cy.configureAxe({ rules: [{ id: 'color-contrast', enabled: false }] });
+    cy.window().then((win) => {
+      const axe = (win as unknown as { axe: { run: (ctx: unknown, opts: unknown) => Promise<{ violations: { id: string; nodes: unknown[] }[] }> } }).axe;
+      const before = snapshot(win);
+      return axe.run(win.document.querySelector('ds-full-item-page'), {}).then((results) => {
+        cy.task('log', 'FE56-RACE ' + JSON.stringify({
+          before,
+          after: snapshot(win),
+          violations: results.violations.map((violation) => ({ id: violation.id, nodes: violation.nodes.length })),
+        }));
+      });
+    });
+    cy.get('ds-clarin-ref-box', { timeout: 20000 }).should('exist');
+    cy.window().then((win) => {
+      const axe = (win as unknown as { axe: { run: (ctx: unknown, opts: unknown) => Promise<{ violations: { id: string; nodes: unknown[] }[] }> } }).axe;
+      const before = snapshot(win);
+      return axe.run(win.document.querySelector('ds-full-item-page'), {}).then((results) => {
+        cy.task('log', 'FE56-RACE-AFTERWAIT ' + JSON.stringify({
+          before,
+          violations: results.violations.map((violation) => ({ id: violation.id, nodes: violation.nodes.length })),
+        }));
+      });
+    });
+  });
+
   it('prints the untyped item page', () => {
     cy.visit('/items/'.concat(Cypress.env('DSPACE_TEST_UNTYPED_ITEM')));
     cy.get('ds-item-page').should('be.visible');
