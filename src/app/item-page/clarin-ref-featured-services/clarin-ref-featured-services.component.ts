@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -29,6 +30,7 @@ import {
 @Component({
   imports: [
     AsyncPipe,
+    NgbDropdownModule,
     TranslateModule,
   ],
   selector: 'ds-clarin-ref-featured-services',
