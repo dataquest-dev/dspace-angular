@@ -1,4 +1,7 @@
-import { testA11y } from 'cypress/support/utils';
+import {
+  testA11y,
+  testLinkNamesOnPage,
+} from 'cypress/support/utils';
 
 describe('Item  Page', () => {
   const ITEMPAGE = '/items/'.concat(Cypress.env('DSPACE_TEST_ENTITY_PUBLICATION'));
@@ -28,5 +31,24 @@ describe('Item  Page', () => {
 
     // Analyze <ds-full-item-page> for accessibility issues
     testA11y('ds-full-item-page');
+  });
+
+  it('should give every link on the item page an accessible name', () => {
+    cy.visit(ENTITYPAGE);
+
+    cy.get('ds-item-page').should('be.visible');
+
+    testLinkNamesOnPage('ds-item-page');
+  });
+
+  it('should give every link on the full item page an accessible name', () => {
+    cy.visit(ENTITYPAGE + '/full');
+
+    cy.get('ds-full-item-page').should('be.visible');
+    // The CLARIN reference box carries the share links; without it the guard would pass on a page
+    // that simply had not finished rendering.
+    cy.get('ds-full-item-page ds-clarin-ref-box').should('exist');
+
+    testLinkNamesOnPage('ds-full-item-page');
   });
 });
