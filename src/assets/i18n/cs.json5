@@ -5863,8 +5863,17 @@
   // "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
   "item.refbox.featured-service.heading": "Tento zdroj je také integrován do následujících služeb:",
 
+  // "item.refbox.featured-service.links.dropdown": "More links for {{name}}",
+  "item.refbox.featured-service.links.dropdown": "Další odkazy pro {{name}}",
+
+  // "item.refbox.featured-service.share.facebook": "Share this item on Facebook",
+  "item.refbox.featured-service.share.facebook": "Sdílet tuto položku na Facebooku",
+
   // "item.refbox.featured-service.share.message": "Share",
   "item.refbox.featured-service.share.message": "Sdílet",
+
+  // "item.refbox.featured-service.share.twitter": "Share this item on Twitter",
+  "item.refbox.featured-service.share.twitter": "Sdílet tuto položku na Twitteru",
 
   // "item.refbox.modal.copy.instruction": ["Press", "ctrl + c", "to copy"],
   "item.refbox.modal.copy.instruction": ["Stiskněte", "ctrl + c", "pro kopírování"],
