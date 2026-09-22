@@ -1,0 +1,41 @@
+name: probe-timeout-precedence
+
+on:
+  push:
+    branches:
+      - 'ufal/probe-timeout-precedence-9-base'
+
+jobs:
+  # Q1: does a non-zero always() step flip a job that timeout-minutes cancelled?
+  job-timeout-always-nonzero:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: long
+        run: sleep 300
+      - name: always-nonzero
+        if: ${{ always() }}
+        run: |
+          echo "always step ran"
+          exit 1
+
+  # Q2: does a failed needs-job flip the RUN conclusion when the needed job was cancelled?
+  gate:
+    needs: job-timeout-always-nonzero
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: show needs result
+        run: |
+          echo "needs result = ${{ needs.job-timeout-always-nonzero.result }}"
+          exit 1
+
+  # Q3: does a step-level timeout-minutes end the job as failure instead of cancelled?
+  step-timeout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: long-step
+        timeout-minutes: 1
+        run: sleep 300
+      - name: after
+        run: echo "this must not run"
