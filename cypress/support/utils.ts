@@ -9,7 +9,6 @@ function terminalLog(violations: Result[]) {
     'log',
     `${violations.length} accessibility violation${violations.length === 1 ? '' : 's'} ${violations.length === 1 ? 'was' : 'were'} detected`,
   );
-  // pluck specific keys to keep the table readable
   const violationData = violations.map(
     ({ id, impact, description, helpUrl, nodes }) => ({
       id,
@@ -20,25 +19,124 @@ function terminalLog(violations: Result[]) {
       html: nodes.map(node => node.html),
     }),
   );
-
-  // Print violations as an array, since 'node.html' above often breaks table alignment
   cy.task('log', violationData);
-  // Optionally, uncomment to print as a table
-  // cy.task('table', violationData);
-
 }
 
-// Custom "testA11y()" method which checks accessibility using cypress-axe
-// while also ensuring any violations are logged to the terminal (see terminalLog above)
-// This method MUST be called after cy.visit(), as cy.injectAxe() must be called after page load
+// ---------------------------------------------------------------------------
+// FE-58 DIAGNOSTIC BUILD #2 - NOT FOR MERGE
+// Same predicate as the delivered fix, used as the measuring instrument.
+// ---------------------------------------------------------------------------
+
+const CLIENT_RENDER_QUIET_PERIOD = 750;
+const CLIENT_RENDER_TIMEOUT = 30000;
+
+const scannedSubtree = (context?: any): string => {
+  if (typeof context === 'string') {
+    return context;
+  }
+  const included = Array.isArray(context?.include) ? context.include : [];
+  const selectors = included.filter((entry: any) => typeof entry === 'string');
+  return selectors.length > 0 ? selectors.join(', ') : 'ds-app';
+};
+
+const renderedMarkup = ($subtree: JQuery<HTMLElement>): string =>
+  $subtree.toArray().map((element: HTMLElement) => element.innerHTML).join('');
+
+const loadingPlaceholders = ($subtree: JQuery<HTMLElement>): number =>
+  $subtree.toArray().reduce((total: number, element: HTMLElement) =>
+    total + element.querySelectorAll('ds-loading, ds-themed-loading').length, 0);
+
+const fe58Log = (payload: any) => {
+  cy.task('log', 'FE58D2 ' + JSON.stringify(payload), { log: false });
+};
+
+const fe58Snapshot = (win: any, context: any, phase: string): any => {
+  const doc = win.document;
+  const selector = scannedSubtree(context);
+  const matched: any[] = Array.prototype.slice.call(doc.querySelectorAll(selector));
+  let text = '';
+  let markup = '';
+  let loading = 0;
+  matched.forEach((element: any) => {
+    text += element.innerText || '';
+    markup += element.innerHTML || '';
+    loading += element.querySelectorAll('ds-loading, ds-themed-loading').length;
+  });
+  return {
+    phase,
+    spec: Cypress.spec.relative,
+    test: Cypress.currentTest ? Cypress.currentTest.title : '?',
+    ctx: typeof context === 'string' ? context : 'OBJECT',
+    selector,
+    matched: matched.length,
+    t: Math.round(win.performance.now()),
+    len: text.length,
+    htmlLen: markup.length,
+    loading,
+  };
+};
+
+const fe58Violations = (phase: string, context: any, options: Options) => {
+  cy.checkA11y(context, options, (violations: Result[]) => {
+    fe58Log({
+      phase: phase + '-VIOL',
+      spec: Cypress.spec.relative,
+      test: Cypress.currentTest ? Cypress.currentTest.title : '?',
+      ctx: typeof context === 'string' ? context : 'OBJECT',
+      total: violations.length,
+      rules: violations.map((v: Result) => v.id + ':' + v.nodes.length).join(','),
+    });
+  }, true);
+};
+
+// The delivered predicate, plus counters for how much work it actually did.
+const waitForClientRender = (context?: any) => {
+  const selector = scannedSubtree(context);
+  let settledMarkup: string = null;
+  let lastChangeAt = Date.now();
+  const startedAt = Date.now();
+  let changes = -1;
+  let polls = 0;
+  cy.get(selector, { timeout: CLIENT_RENDER_TIMEOUT }).should(($subtree: JQuery<HTMLElement>) => {
+    polls++;
+    const markup = renderedMarkup($subtree);
+    const now = Date.now();
+    if (markup !== settledMarkup) {
+      settledMarkup = markup;
+      lastChangeAt = now;
+      changes++;
+    }
+    expect(loadingPlaceholders($subtree), `loading placeholders left in ${selector}`).to.equal(0);
+    expect(markup.length, `markup rendered in ${selector}`).to.be.greaterThan(0);
+    expect(now - lastChangeAt, `ms since ${selector} last changed`).to.be.at.least(CLIENT_RENDER_QUIET_PERIOD);
+  });
+  cy.then(() => fe58Log({
+    phase: 'WAIT',
+    spec: Cypress.spec.relative,
+    test: Cypress.currentTest ? Cypress.currentTest.title : '?',
+    ctx: typeof context === 'string' ? context : 'OBJECT',
+    selector,
+    waitedMs: Date.now() - startedAt,
+    markupChanges: changes,
+    polls,
+  }));
+};
+
 export const testA11y = (context?: any, options?: Options) => {
   cy.injectAxe();
   cy.configureAxe({
     rules: [
-      // Disable color contrast checks as they are inaccurate / result in a lot of false positives
-      // See also open issues in axe-core: https://github.com/dequelabs/axe-core/labels/color%20contrast
       { id: 'color-contrast', enabled: false },
     ],
   });
-  cy.checkA11y(context, options, terminalLog);
+
+  cy.window({ log: false }).then((win: any) => fe58Log(fe58Snapshot(win, context, 'T0')));
+  fe58Violations('T0', context, options);
+
+  waitForClientRender(context);
+
+  cy.window({ log: false }).then((win: any) => fe58Log(fe58Snapshot(win, context, 'T2')));
+  fe58Violations('T2', context, options);
+
+  cy.checkA11y(context, options, terminalLog, true);
 };
