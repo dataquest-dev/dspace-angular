@@ -293,6 +293,14 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
         .withContext('Enter on the more-details control did not open the list')
         .toBeTrue();
     });
+
+    it('still renders as a control and not as plain text', () => {
+      // Bootstrap's reboot greys out a:not([href]):not([class]) and leaves it no pointer cursor,
+      // so the toggle has to keep one of the two.
+      expect(toggle().matches('a:not([href]):not([class])'))
+        .withContext(`the more-details control falls under Bootstrap's reboot: ${toggle().outerHTML.slice(0, 120)}`)
+        .toBeFalse();
+    });
   });
 });
 
