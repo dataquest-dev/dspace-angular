@@ -30,7 +30,7 @@ jobs:
       - name: Report that the gate produced no result
         if: ${{ always() && steps.test.outcome != 'success' && steps.test.outcome != 'failure' }}
         run: |
-          echo "::error title=End-to-end gate produced no result::The Playwright step ended as '${{ steps.test.outcome }}', which is neither success nor failure, so the suite produced no verdict and this run says nothing about the instance. 'cancelled' is the job time limit or an abort; 'skipped' means an earlier step failed and the suite never started; empty means the job was cancelled before it started. Whatever did run is in the step log, and anything the suite wrote is in the playwright-evidence artifact."
+          echo "::error title=End-to-end gate produced no result::The Playwright step ended as '${{ steps.test.outcome }}', which is neither success nor failure, so the suite produced no verdict and this run says nothing about the instance. 'cancelled' is the job time limit or an abort; 'skipped' means an earlier step failed and the suite never started; empty means the job was cancelled before it started. Whatever did run is in the step log; anything the suite wrote should be in the playwright-evidence artifact, if the upload after this step finished."
           exit 1
 
       - uses: mazoea/ga-maz/end@master
