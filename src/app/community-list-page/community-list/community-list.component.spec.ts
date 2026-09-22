@@ -134,6 +134,8 @@ describe('CommunityListComponent', () => {
   let communityListServiceStub;
 
   beforeEach(waitForAsync(() => {
+    // the flat nodes are shared between specs and toggleExpanded() mutates them in place
+    mockTopFlatnodesUnexpanded.forEach((node: FlatNode) => node.isExpanded = false);
     communityListServiceStub = {
       pageSize: 2,
       expandedNodes: [],
@@ -365,6 +367,65 @@ describe('CommunityListComponent', () => {
         expect(showMoreEl.length).toEqual(2);
       });
     });
+  });
+
+  describe('keyboard activation of the expand toggle', () => {
+    // Replays what a browser does for a key press on a native button: keydown on the button,
+    // keyup on whatever holds focus by then, and a click only if the keydown was not cancelled.
+    const pressKey = (button: HTMLElement, key: string): void => {
+      button.focus();
+      const proceed = button.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+      (document.activeElement as HTMLElement).dispatchEvent(new KeyboardEvent('keyup', { key, bubbles: true }));
+      if (proceed) {
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      }
+    };
+
+    // The second node on purpose: the tree key manager starts out on the first one, and a toggle
+    // directive only pulls focus away from a node that is not already the active one.
+    const toggleButton = (): HTMLElement =>
+      fixture.debugElement.queryAll(By.css('.expandable-node button[data-test="expand-button"]'))[1].nativeElement;
+
+    const chevron = (): string => toggleButton().querySelector('span[aria-hidden]').className;
+
+    const ariaExpanded = (): string => toggleButton().closest('cdk-tree-node').getAttribute('aria-expanded');
+
+    const nodeNames = (): string[] => [
+      ...fixture.debugElement.queryAll(By.css('.expandable-node a')),
+      ...fixture.debugElement.queryAll(By.css('.childless-node a')),
+    ].map((el: DebugElement) => el.nativeElement.textContent.trim());
+
+    const press = (key: string): void => {
+      pressKey(toggleButton(), key);
+      tick();
+      fixture.detectChanges();
+    };
+
+    const togglesTheNodeWith = (key: string) => fakeAsync(() => {
+      expect(toggleButton().closest('cdk-tree-node').getAttribute('tabindex')).toEqual('-1');
+      expect(nodeNames()).not.toContain('collection1');
+      expect(chevron()).toContain('fa-chevron-right');
+      expect(ariaExpanded()).toEqual('false');
+
+      press(key);
+
+      expect(nodeNames()).toContain('collection1');
+      expect(nodeNames()).toContain('collection2');
+      expect(chevron()).toContain('fa-chevron-down');
+      expect(ariaExpanded()).toEqual('true');
+      expect(document.activeElement).toBe(toggleButton());
+
+      press(key);
+
+      expect(nodeNames()).not.toContain('collection1');
+      expect(chevron()).toContain('fa-chevron-right');
+      expect(ariaExpanded()).toEqual('false');
+      expect(document.activeElement).toBe(toggleButton());
+    });
+
+    it('expands the node on Space and collapses it on the next Space', togglesTheNodeWith(' '));
+
+    it('expands the node on Enter and collapses it on the next Enter', togglesTheNodeWith('Enter'));
   });
 
 });
