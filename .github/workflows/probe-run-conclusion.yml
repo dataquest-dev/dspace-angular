@@ -1,0 +1,24 @@
+name: probe-run-conclusion
+
+on:
+  push:
+    branches:
+      - 'ufal/probe-timeout-precedence-9-base'
+
+# Exactly two jobs: one cancelled by its own timeout, one failing gate.
+# Nothing else can contribute to the run conclusion.
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: sleep 300
+
+  gate:
+    needs: suite
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "needs.suite.result = ${{ needs.suite.result }}"
+          exit 1
