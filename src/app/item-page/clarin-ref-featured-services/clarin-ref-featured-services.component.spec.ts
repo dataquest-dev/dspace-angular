@@ -25,21 +25,21 @@ const DROPDOWN_KEY = 'item.refbox.featured-service.links.dropdown';
 const FEATURED_SERVICES = {
   content: [
     {
-      name: 'Kontext',
-      url: 'https://lindat.mff.cuni.cz/services/kontext',
-      description: 'Concordancer',
+      name: 'Test Service',
+      url: 'http://test.service',
+      description: 'Test service',
       featuredServiceLinks: [
-        { key: 'Czech', value: 'https://lindat.mff.cuni.cz/services/kontext/cs' },
+        { key: 'Test link', value: 'http://test.service/link' },
       ],
     },
   ],
 };
 
 const ITEM = Object.assign(new Item(), {
-  id: 'b8a9aad4-916d-4521-bed2-ac8da7bb6845',
+  id: 'test-item-uuid',
   metadata: {
-    'dc.identifier.uri': [{ value: 'http://hdl.handle.net/11234/1-5787' }],
-    'dc.title': [{ value: 'Universal Dependencies 2.15' }],
+    'dc.identifier.uri': [{ value: 'http://hdl.handle.net/123456789/1' }],
+    'dc.title': [{ value: 'Test Item' }],
   },
 });
 
@@ -165,7 +165,7 @@ describe('ClarinRefFeaturedServicesComponent', () => {
     const name = (toggle.getAttribute('aria-label') || toggle.textContent || '').trim();
     expect(name).not.toEqual('');
     expect(name).not.toMatch(/^item\./);
-    expect(name).toContain('Kontext');
+    expect(name).toContain('Test Service');
   });
 
   it('serves the stylesheet the visibility assertions depend on', () => {
