@@ -52,6 +52,21 @@ Of the 949: 12 carry at least one shape, 937 carry none. A second, independent p
 `it()` that delivers an event and then asserts something did **not** happen — the whole damage
 class — and finds 11 such blocks in 8 files. Every one of them is listed below.
 
+## The answer, including where it is a negative result
+
+Shape A is a population of one: the founding instance, and nothing else. Two files in the suite
+call `addEventListener` on a fixture element, and the second is the legitimate counterexample.
+
+Shape B produced nine candidates and **no confirmed finding attributable to `triggerEventHandler`
+itself** — each candidate either goes red under mutation or is blind for a different reason. That
+is a negative result, not a clean bill of health.
+
+Shape C diverges in six specs and matters in one, the same founding instance, where the missing
+`(click)` is exactly what coalesces.
+
+The blind blocks the survey *added* come from a mechanism the shapes did not name and the mutation
+runs found: asserting an absence that is also the state before the feature runs. Five of those.
+
 ## Verdicts
 
 Blind means: shown green while the thing it guards is gone or already broken.
@@ -73,6 +88,10 @@ The last five are a second mechanism the survey turned up: the assertion is that
 substring is **absent**, which is also the state before the feature runs at all. They are covered
 in practice by a positive sibling in the same file, which is why the suite still notices the
 breakage — but the block itself guards nothing.
+
+The four value-input blocks are listed under shape B because that is what flagged them. The
+blindness actually *demonstrated* for them is the absence assertion: neutralising the whole `@if`
+does not isolate `triggerEventHandler` as a cause, and claiming it did would overstate the control.
 
 ### Fine
 
