@@ -1,0 +1,29 @@
+name: probe-gate-wiring
+
+on:
+  push:
+    branches:
+      - 'ufal/probe-timeout-precedence-9-base'
+
+jobs:
+  gate-red-on-real-cancelled-run:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: .github/scripts/nightly-result-gate.sh 35554827617
+
+  gate-green-on-real-successful-run:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: .github/scripts/nightly-result-gate.sh 35174939746
