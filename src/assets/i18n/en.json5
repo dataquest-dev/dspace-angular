@@ -7631,6 +7631,7 @@
   "item.file.description.checksum": "MD5",
   "item.file.description.download.file": "Download file",
   "item.file.description.preview": "Preview",
+  "item.file.description.preview.close": "Hide the file preview",
   "item.file.description.file.preview": "File Preview",
   "item.page.files.head": "Files in this item",
   "item.page.download.button.command.line": "Download instructions for command line",

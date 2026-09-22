@@ -28,14 +28,12 @@
   </cdk-tree-node>
   <!-- This is the tree node template for expandable nodes (coms and subcoms with children) -->
   <cdk-tree-node *cdkTreeNodeDef="let node; when: hasChild" cdkTreeNodePadding
-    class="example-tree-node expandable-node">
+    class="example-tree-node expandable-node" [isExpanded]="node.isExpanded">
     <div class="btn-group">
       @if (hasChild(null, node) | async) {
-        <button type="button" class="btn btn-default btn-transparent" cdkTreeNodeToggle
+        <button type="button" class="btn btn-default btn-transparent"
           [attr.aria-label]="(node.isExpanded ? 'communityList.collapse' : 'communityList.expand') | translate:{ name: dsoNameService.getName(node.payload) }"
           (click)="toggleExpanded(node)"
-          (keyup.enter)="toggleExpanded(node)"
-          (keyup.space)="toggleExpanded(node)"
           data-test="expand-button"
           role="button"
           tabindex="0">

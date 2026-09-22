@@ -70,7 +70,10 @@
               "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
               "node_modules/leaflet.markercluster/dist/MarkerCluster.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "src/license-selector.js",
+              "src/license-selector-creation.js"
+            ],
             "baseHref": "/"
           },
           "configurations": {

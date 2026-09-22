@@ -25,23 +25,25 @@ const DROPDOWN_KEY = 'item.refbox.featured-service.links.dropdown';
 const FEATURED_SERVICES = {
   content: [
     {
-      name: 'Kontext',
-      url: 'https://lindat.mff.cuni.cz/services/kontext',
-      description: 'Concordancer',
+      name: 'Test Service',
+      url: 'http://test.service',
+      description: 'Test service',
       featuredServiceLinks: [
-        { key: 'Czech', value: 'https://lindat.mff.cuni.cz/services/kontext/cs' },
+        { key: 'Test link', value: 'http://test.service/link' },
       ],
     },
   ],
 };
 
 const ITEM = Object.assign(new Item(), {
-  id: 'b8a9aad4-916d-4521-bed2-ac8da7bb6845',
+  id: 'test-item-uuid',
   metadata: {
-    'dc.identifier.uri': [{ value: 'http://hdl.handle.net/11234/1-5787' }],
-    'dc.title': [{ value: 'Universal Dependencies 2.15' }],
+    'dc.identifier.uri': [{ value: 'http://hdl.handle.net/123456789/1' }],
+    'dc.title': [{ value: 'Test Item' }],
   },
 });
+
+const STYLE_ID = 'clarin-ref-featured-services-spec-stylesheet';
 
 describe('ClarinRefFeaturedServicesComponent', () => {
   let component: ClarinRefFeaturedServicesComponent;
@@ -57,6 +59,21 @@ describe('ClarinRefFeaturedServicesComponent', () => {
       throw new Error(`cannot read assets/i18n/en.json5 from the karma server: ${response.status}`);
     }
     en = JSON5.parse(await response.text());
+
+    // The application's own compiled stylesheet, because `.dropdown-menu`/`.dropdown-menu.show` is what
+    // actually decides whether the menu is on screen. angular.json injects no styles into the karma page.
+    const styles = await fetch('base-theme.css');
+    if (!styles.ok) {
+      throw new Error(`cannot read base-theme.css from the karma server: ${styles.status}`);
+    }
+    const element = document.createElement('style');
+    element.id = STYLE_ID;
+    element.textContent = await styles.text();
+    document.head.appendChild(element);
+  });
+
+  afterAll(() => {
+    document.getElementById(STYLE_ID)?.remove();
   });
 
   beforeEach(waitForAsync(() => {
@@ -89,6 +106,17 @@ describe('ClarinRefFeaturedServicesComponent', () => {
 
   const shareAnchors = (): HTMLAnchorElement[] =>
     Array.from(fixture.nativeElement.querySelectorAll('a.clarin-share-buttons'));
+
+  const dropdownToggle = (): HTMLButtonElement =>
+    fixture.nativeElement.querySelector('button.dropdown-toggle-split');
+
+  const dropdownMenu = (): HTMLElement =>
+    fixture.nativeElement.querySelector('.lindat-dropdown-menu');
+
+  const clickToggle = (): void => {
+    dropdownToggle().click();
+    fixture.detectChanges();
+  };
 
   it('renders both share links', () => {
     expect(shareAnchors().length).toEqual(2);
@@ -137,7 +165,63 @@ describe('ClarinRefFeaturedServicesComponent', () => {
     const name = (toggle.getAttribute('aria-label') || toggle.textContent || '').trim();
     expect(name).not.toEqual('');
     expect(name).not.toMatch(/^item\./);
-    expect(name).toContain('Kontext');
+    expect(name).toContain('Test Service');
+  });
+
+  it('serves the stylesheet the visibility assertions depend on', () => {
+    const element = document.getElementById(STYLE_ID);
+    expect(element).withContext('base-theme.css was not injected; the failures below are the harness').not.toBeNull();
+    expect(element.textContent).toContain('.dropdown-menu');
+    expect(element.textContent.length).toBeGreaterThan(100000);
+  });
+
+  it('keeps the featured-service menu off screen until the toggle is clicked', () => {
+    const menu = dropdownMenu();
+    expect(menu).withContext('the featured-service menu did not render at all').not.toBeNull();
+    expect(getComputedStyle(menu).display)
+      .withContext(`the menu is on screen before any click: ${menu.outerHTML}`)
+      .toEqual('none');
+  });
+
+  // The assertion is the TRANSITION, not the end state. "display is not none after the click" is
+  // satisfied by a menu that was never hidden in the first place, which is exactly the broken state.
+  it('opens the featured-service menu when the toggle is clicked', () => {
+    const menu = dropdownMenu();
+    expect(getComputedStyle(menu).display)
+      .withContext(`the menu is already on screen before the click: ${menu.outerHTML}`)
+      .toEqual('none');
+    clickToggle();
+    expect(getComputedStyle(menu).display)
+      .withContext(`the menu is still display:none after clicking the toggle: ${menu.outerHTML}`)
+      .not.toEqual('none');
+    expect(menu.offsetParent)
+      .withContext('the menu has no layout box after the click, so nothing is on screen')
+      .not.toBeNull();
+    expect(menu.querySelectorAll('a.dropdown-item').length)
+      .withContext('the open menu lists no featured-service links')
+      .toEqual(1);
+  });
+
+  it('closes the featured-service menu again on a second click', () => {
+    const menu = dropdownMenu();
+    expect(getComputedStyle(menu).display).toEqual('none');
+    clickToggle();
+    expect(getComputedStyle(menu).display)
+      .withContext(`the menu did not open on the first click: ${menu.outerHTML}`)
+      .not.toEqual('none');
+    clickToggle();
+    expect(getComputedStyle(menu).display)
+      .withContext(`the menu stayed open after a second click: ${menu.outerHTML}`)
+      .toEqual('none');
+  });
+
+  it('tells assistive technology that the featured-service menu is expanded', () => {
+    const toggle = dropdownToggle();
+    expect(toggle.getAttribute('aria-expanded')).toEqual('false');
+    clickToggle();
+    expect(toggle.getAttribute('aria-expanded'))
+      .withContext('the toggle never reports the menu as expanded')
+      .toEqual('true');
   });
 
   it('reports no axe link-name or button-name violations', async () => {
