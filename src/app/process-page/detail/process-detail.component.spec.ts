@@ -266,6 +266,8 @@ describe('ProcessDetailComponent', () => {
       fixture.detectChanges();
     }));
     it('should not display the process\'s output logs', () => {
+      expect(fixture.debugElement.query(By.css('#process-output pre'))).toBeNull();
+
       component.outputLogs$.next(processOutput);
       fixture.detectChanges();
 
