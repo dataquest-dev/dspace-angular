@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import {
   Component,
   DebugElement,
@@ -77,13 +78,15 @@ describe('DisabledDirective', () => {
     let keydownHandled = false;
     button.nativeElement.addEventListener('keydown', () => keydownHandled = true);
 
-    const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
-    const spaceEvent = new KeyboardEvent('keydown', { key: ' ' });
+    const enterEvent = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true });
+    const spaceEvent = new KeyboardEvent('keydown', { key: ' ', cancelable: true });
 
     button.nativeElement.dispatchEvent(enterEvent);
     button.nativeElement.dispatchEvent(spaceEvent);
 
     expect(keydownHandled).toBeFalse();
+    expect(enterEvent.defaultPrevented).toBeTrue();
+    expect(spaceEvent.defaultPrevented).toBeTrue();
   });
 
   it('should allow click and keydown events when not disabled', () => {
@@ -103,5 +106,45 @@ describe('DisabledDirective', () => {
 
     expect(clickHandled).toBeTrue();
     expect(keydownHandled).toBeTrue();
+  });
+});
+
+@Component({
+  template: `
+    <!-- eslint-disable-next-line dspace-angular-html/no-keydown-on-btn-disabled -->
+    <button [dsBtnDisabled]="true" (keydown)="keydownHandled = true">Test Button</button>
+  `,
+  imports: [
+    BtnDisabledDirective,
+  ],
+})
+class TemplateKeydownComponent {
+  keydownHandled = false;
+}
+
+describe('DisabledDirective with a (keydown) handler on the same element', () => {
+  let component: TemplateKeydownComponent;
+  let fixture: ComponentFixture<TemplateKeydownComponent>;
+  let button: DebugElement;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [BtnDisabledDirective, TemplateKeydownComponent],
+    });
+    fixture = TestBed.createComponent(TemplateKeydownComponent);
+    component = fixture.componentInstance;
+    button = fixture.debugElement.query(By.css('button'));
+    fixture.detectChanges();
+  });
+
+  /**
+   * Angular chains this listener onto the directive's host listener for the same event instead of
+   * adding a second DOM listener, so stopImmediatePropagation() cannot reach it. The lint rule
+   * dspace-angular-html/no-keydown-on-btn-disabled exists to keep this combination out of templates.
+   */
+  it('runs the handler anyway, which is why the combination is not allowed', () => {
+    button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true }));
+
+    expect(component.keydownHandled).toBeTrue();
   });
 });

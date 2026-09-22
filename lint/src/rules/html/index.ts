@@ -11,11 +11,13 @@ import {
   RuleExports,
 } from '../../util/structure';
 import * as noDisabledAttributeOnButton from './no-disabled-attribute-on-button';
+import * as noKeydownOnBtnDisabled from './no-keydown-on-btn-disabled';
 import * as themedComponentUsages from './themed-component-usages';
 
 const index = [
   themedComponentUsages,
   noDisabledAttributeOnButton,
+  noKeydownOnBtnDisabled,
 
 ] as unknown as RuleExports[];
 
