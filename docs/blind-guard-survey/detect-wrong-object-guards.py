@@ -3,7 +3,7 @@
 Survey the Karma spec suite for guards that assert over an object the running
 application never builds.
 
-Three shapes are measured independently; a spec can carry more than one.
+Three shapes are measured; a spec can carry more than one.
 
   A  a DOM probe attached with addEventListener to a fixture element AFTER the
      component exists, whose non-firing is the proof that production code
@@ -11,16 +11,21 @@ Three shapes are measured independently; a spec can carry more than one.
      native listener, so a listener added afterwards is a second native listener
      -- the only kind stopImmediatePropagation() can reach.
 
-  B  an it() block whose only event delivery is triggerEventHandler() and whose
-     claim is a negative assertion.  triggerEventHandler invokes the bindings
-     recorded on the DebugElement directly; it never enters the DOM event
-     system, and it is a no-op when the binding is absent.
+  B  an it() whose only event delivery is triggerEventHandler() and whose claim
+     is a negative assertion.  triggerEventHandler invokes the bindings recorded
+     on the DebugElement directly; it never enters the DOM event system, and it
+     is a no-op when the binding is absent.
 
   C  an inline test-host template that applies a directive under test in a shape
      no real template in src/ uses.
 
+Every pass runs over the same unit: an it() plus the beforeEach bodies of the
+describes that enclose it.  An earlier version scoped shape A, shape B and the
+suppression census differently, which hid claims whose event is delivered in a
+beforeEach; see SURVEY.md.
+
 The detector reports candidates.  A candidate is only called blind after a
-negative control (see SURVEY.md); the script does not decide that.
+negative control; the script does not decide that.
 
 usage:  python detect-wrong-object-guards.py <src-root> [out.json]
 """
@@ -29,7 +34,9 @@ import os
 import re
 import sys
 
-IT_START = re.compile(r"\b(?:it|fit|xit)\s*\(\s*(['\"`])(.*?)\1", re.S)
+IT_START = re.compile(r"\b(?:it|fit|xit)\s*\(\s*(['\"`])((?:\\.|(?!\1).)*)\1", re.S)
+DESCRIBE_START = re.compile(r"\bdescribe\s*\(\s*(['\"`])((?:\\.|(?!\1).)*)\1", re.S)
+BEFORE_EACH = re.compile(r"\bbeforeEach\s*\(")
 IMPORT = re.compile(r"from\s+'(\.[^']*)'")
 MECHCALL = re.compile(r"\b(preventDefault|stopPropagation|stopImmediatePropagation)\s*\(")
 PROBE = re.compile(
@@ -44,16 +51,18 @@ NEG_ASSERT = re.compile(r"\.not\s*\.\s*toHaveBeenCalled|\.toBeFalse\s*\(|"
                         r"\.toBeFalsy\s*\(|\.toBe\s*\(\s*false\s*\)|"
                         r"\.toHaveBeenCalledTimes\s*\(\s*0\s*\)|\.toBeNull\s*\(|"
                         r"\.toBeUndefined\s*\(")
-DESCRIBE = re.compile(r"\bdescribe\s*\(\s*(['\"`])(.*?)\1", re.S)
-BEFORE_EACH = re.compile(r"\bbeforeEach\s*\(")
-DELIVERY = re.compile(r"\.click\s*\(\s*\)|\.dispatchEvent\s*\(|\.triggerEventHandler\s*\(|"
-                      r"\.addEventListener\s*\(")
 NOT_CALLED = re.compile(r"\.not\s*\.\s*toHaveBeenCalled|\.toHaveBeenCalledTimes\s*\(\s*0\s*\)")
+DELIVERIES = (("native .click()", re.compile(r"\.click\s*\(\s*\)")),
+              ("dispatchEvent", re.compile(r"\.dispatchEvent\s*\(")),
+              ("triggerEventHandler", re.compile(r"\.triggerEventHandler\s*\(")),
+              ("addEventListener probe", re.compile(r"\.addEventListener\s*\(")))
 INLINE_TEMPLATE = re.compile(r"template\s*:\s*`(.*?)`", re.S)
 TAG = re.compile(r"<([A-Za-z][\w-]*)((?:[^<>'\"]|'[^']*'|\"[^\"]*\")*?)/?>", re.S)
+ATTR_VALUE = re.compile(r"=\s*('[^']*'|\"[^\"]*\")")
 ATTR_NAME = re.compile(r"(\[\([\w.$-]+\)\]|\[[\w.$-]+\]|\([\w.$-]+\)|[*#]?[\w.$-]+)\s*(?==|\s|$)")
 DIR_SELECTOR = re.compile(r"@Directive\s*\(\s*\{(.*?)\}\s*\)", re.S)
 SELECTOR_FIELD = re.compile(r"selector\s*:\s*['\"`]([^'\"`]+)['\"`]")
+BRACKETED = re.compile(r"\[([^\[\]]+)\]")
 
 
 def strip_comments(text):
@@ -87,8 +96,8 @@ def strip_comments(text):
     return "".join(out)
 
 
-def balanced_block(text, start):
-    """text[start] begins an it( call; return the source of the whole call."""
+def balanced_span(text, start):
+    """text[start] begins a call; return (start, end) of the whole call."""
     i = text.index("(", start)
     depth, j, in_s, esc = 0, i, None, False
     while j < len(text):
@@ -107,14 +116,45 @@ def balanced_block(text, start):
         elif c == ")":
             depth -= 1
             if depth == 0:
-                return text[start:j + 1]
+                return start, j + 1
         j += 1
-    return text[start:]
+    return start, len(text)
 
 
-def it_blocks(text):
+def balanced_block(text, start):
+    a, b = balanced_span(text, start)
+    return text[a:b]
+
+
+def units(text):
+    """Yield one record per it(): its title, its own body, and the concatenated
+    bodies of the beforeEach calls of every describe that encloses it.
+
+    The setup is what makes the three passes agree: an event delivered in a
+    describe's beforeEach belongs to every it() inside that describe."""
     clean = strip_comments(text)
-    return [(m.group(2), balanced_block(clean, m.start())) for m in IT_START.finditer(clean)]
+    describes = [balanced_span(clean, m.start()) for m in DESCRIBE_START.finditer(clean)]
+
+    def direct_before_each(a, b):
+        """beforeEach bodies inside [a,b) that are not inside a nested describe."""
+        nested = [(x, y) for (x, y) in describes if a < x and y <= b]
+        out = []
+        for m in BEFORE_EACH.finditer(clean, a, b):
+            if any(x <= m.start() < y for (x, y) in nested):
+                continue
+            out.append(balanced_block(clean, m.start()))
+        return out
+
+    setups = {(a, b): direct_before_each(a, b) for (a, b) in describes}
+    top = direct_before_each(0, len(clean))
+
+    for m in IT_START.finditer(clean):
+        a, b = balanced_span(clean, m.start())
+        enclosing = [(x, y) for (x, y) in describes if x <= a and b <= y]
+        setup = list(top)
+        for span in sorted(enclosing, key=lambda s: s[0]):
+            setup.extend(setups[span])
+        yield {"it": m.group(2), "body": clean[a:b], "setup": "\n".join(setup)}
 
 
 def read(path):
@@ -135,7 +175,10 @@ def units_under_test(spec, text):
 
 
 def tag_attrs(tag_body):
-    return {m.group(1) for m in ATTR_NAME.finditer(tag_body) if m.group(1).strip()}
+    """Attribute names on a tag. Quoted values are blanked first: without that,
+    class="btn btn-danger" contributes 'btn' and 'btn-danger' as attributes."""
+    body = ATTR_VALUE.sub("=", tag_body)
+    return {m.group(1) for m in ATTR_NAME.finditer(body) if m.group(1).strip()}
 
 
 def bare(name):
@@ -143,6 +186,8 @@ def bare(name):
 
 
 def collect_directive_selectors(root):
+    """selector string -> set of attribute names a tag must carry to match it.
+    A compound selector such as [ngModel][dsDebounce] needs both."""
     sel = {}
     for dp, _dn, fn in os.walk(root):
         for f in fn:
@@ -155,8 +200,10 @@ def collect_directive_selectors(root):
                     continue
                 for part in sm.group(1).split(","):
                     part = part.strip()
-                    if part.startswith("[") and part.endswith("]"):
-                        sel.setdefault(part[1:-1], set()).add(p)
+                    required = set(BRACKETED.findall(part))
+                    if not required or not part.startswith("["):
+                        continue
+                    sel[part] = required
     return sel
 
 
@@ -170,10 +217,30 @@ def collect_app_usages(root, selectors):
             for m in TAG.finditer(read(p)):
                 names = tag_attrs(m.group(2))
                 flat = {bare(n) for n in names}
-                for s in selectors:
-                    if s in flat:
+                for s, required in selectors.items():
+                    if required <= flat:
                         usages[s].append((p, names))
     return usages
+
+
+def deliveries(blob):
+    return [name for name, rx in DELIVERIES if rx.search(blob)]
+
+
+def claim_kinds(body, whole):
+    kinds = []
+    if NOT_CALLED.search(body):
+        kinds.append("S1 a call did not happen")
+    for mm in re.finditer(r"expect\s*\(\s*(\w+)\s*\)\s*\.(?:toBeFalse|toBeFalsy)\s*\(", body):
+        v = re.escape(mm.group(1))
+        if re.search(r"addEventListener[^;]*%s\s*=\s*true" % v, whole):
+            kinds.append("S2 my own probe flag stayed false")
+    for mm in re.finditer(
+            r"expect\s*\(\s*(\w+)\s*\)\s*\.(?:toBeFalsy|toBeNull|toBeUndefined)\s*\(", body):
+        v = re.escape(mm.group(1))
+        if re.search(r"%s\s*=\s*[^;]*\.query\s*\(" % v, whole):
+            kinds.append("S3 the element is absent")
+    return sorted(set(kinds))
 
 
 def main():
@@ -191,83 +258,43 @@ def main():
     rows = []
     for spec in specs:
         text = read(spec)
-        blocks = it_blocks(text)
-        units = units_under_test(spec, text)
-        mech = sorted(os.path.basename(u) for u in units if MECHCALL.search(read(u)))
+        unit_list = list(units(text))
+        srcs = units_under_test(spec, text)
+        mech = sorted(os.path.basename(u) for u in srcs if MECHCALL.search(read(u)))
 
-        a_hits = []
-        for title, body in blocks:
-            for m in PROBE.finditer(body):
+        a_hits, b_hits, claims = [], [], []
+        for u in unit_list:
+            whole = u["setup"] + "\n" + u["body"]
+
+            for m in PROBE.finditer(whole):
                 recv, evt, flag = m.groups()
                 if not FIXTURE_RECV.search(recv):
                     continue
                 if re.search(r"expect\s*\(\s*%s\s*\)\s*\.(?:toBeFalse|toBeFalsy|toBe\(\s*false)"
-                             % re.escape(flag), body):
-                    a_hits.append({"it": title,
+                             % re.escape(flag), u["body"]):
+                    a_hits.append({"it": u["it"],
                                    "probe": "%s.addEventListener('%s')" % (recv, evt),
                                    "flag": flag})
+
+            if TRIGGER.search(whole) and not REAL_EVENT.search(whole) \
+                    and NEG_ASSERT.search(u["body"]):
+                b_hits.append(u["it"])
+
+            dl = deliveries(whole)
+            kinds = claim_kinds(u["body"], whole)
+            if dl and kinds:
+                claims.append({"it": u["it"], "claim": kinds, "delivery": dl})
+
         a_other = sorted({m.group(1) for m in ANY_ADD.finditer(text)
                           if FIXTURE_RECV.search(m.group(1))}) if not a_hits else []
-
-        b_hits = [title for title, body in blocks
-                  if TRIGGER.search(body) and not REAL_EVENT.search(body)
-                  and NEG_ASSERT.search(body)]
-
-        claims = []
-        for title, body in blocks:
-            delivery = [n for n, p in (("native .click()", r"\.click\s*\(\s*\)"),
-                                       ("dispatchEvent", r"\.dispatchEvent\s*\("),
-                                       ("triggerEventHandler", r"\.triggerEventHandler\s*\("),
-                                       ("addEventListener probe", r"\.addEventListener\s*\("))
-                        if re.search(p, body)]
-            if not delivery:
-                continue
-            kinds = []
-            if re.search(r"\.not\s*\.\s*toHaveBeenCalled|\.toHaveBeenCalledTimes\s*\(\s*0\s*\)", body):
-                kinds.append("S1 a call did not happen")
-            for mm in re.finditer(r"expect\s*\(\s*(\w+)\s*\)\s*\.(?:toBeFalse|toBeFalsy)\s*\(", body):
-                v = re.escape(mm.group(1))
-                if re.search(r"addEventListener[^;]*%s\s*=\s*true" % v, body):
-                    kinds.append("S2 my own probe flag stayed false")
-            for mm in re.finditer(r"expect\s*\(\s*(\w+)\s*\)\s*\.(?:toBeFalsy|toBeNull|toBeUndefined)\s*\(", body):
-                v = re.escape(mm.group(1))
-                if re.search(r"%s\s*=\s*[^;]*\.query\s*\(" % v, body):
-                    kinds.append("S3 the element is absent")
-            if kinds:
-                claims.append({"it": title, "claim": sorted(set(kinds)),
-                               "delivery": delivery, "scope": "it"})
-
-        # a suppression claim whose event is delivered in the describe's beforeEach is invisible
-        # to the block-scoped pass above, so sweep describes too
-        clean = strip_comments(text)
-        seen = {c["it"] for c in claims}
-        for dm in DESCRIBE.finditer(clean):
-            dbody = balanced_block(clean, dm.start())
-            bm = BEFORE_EACH.search(dbody)
-            if not bm:
-                continue
-            bbody = balanced_block(dbody, bm.start())
-            dl = DELIVERY.search(bbody)
-            if not dl:
-                continue
-            for im in IT_START.finditer(dbody):
-                ibody = balanced_block(dbody, im.start())
-                if DELIVERY.search(ibody) or not NOT_CALLED.search(ibody):
-                    continue
-                if im.group(2) in seen:
-                    continue
-                seen.add(im.group(2))
-                claims.append({"it": im.group(2), "claim": ["S1 a call did not happen"],
-                               "delivery": [dl.group(0).strip() + " in beforeEach"],
-                               "scope": "describe"})
 
         c_hits = []
         for tm in INLINE_TEMPLATE.finditer(text):
             for m in TAG.finditer(tm.group(1)):
                 names = tag_attrs(m.group(2))
                 flat = {bare(n) for n in names}
-                for s in selectors:
-                    if s not in flat:
+                for s, required in selectors.items():
+                    if not required <= flat:
                         continue
                     real = usages.get(s, [])
                     if not real:
@@ -275,7 +302,7 @@ def main():
                     common = {}
                     for _p, rn in real:
                         for n in rn:
-                            if bare(n) == s:
+                            if bare(n) in required:
                                 continue
                             common[bare(n)] = common.get(bare(n), 0) + 1
                     missing = sorted(k for k, v in common.items()
@@ -288,23 +315,34 @@ def main():
         rows.append({"spec": spec, "A": a_hits, "A_other": a_other, "B": b_hits, "C": c_hits,
                      "claims": claims, "mech_units": mech})
 
-    flagged = [r for r in rows if r["A"] or r["B"] or any(c["missing_in_spec_host"] for c in r["C"])]
+    shaped = [r for r in rows if r["A"] or r["B"]
+              or any(c["missing_in_spec_host"] for c in r["C"])]
+    claim_rows = [r for r in rows if r["claims"]]
+    judged = {r["spec"] for r in rows
+              if r["A"] or r["A_other"] or r["B"] or r["C"] or r["claims"]}
+
     print("spec files scanned                                       : %d" % len(rows))
-    print("directive attribute selectors known                      : %d" % len(selectors))
-    print("A  probe added after creation, negative assertion         : %d" % sum(1 for r in rows if r["A"]))
-    print("A- addEventListener on a fixture element, other use       : %d" % sum(1 for r in rows if r["A_other"]))
-    print("B  triggerEventHandler-only block with negative assertion : %d" % sum(1 for r in rows if r["B"]))
+    print("directive selectors known                                : %d" % len(selectors))
+    print("A  probe added after creation, negative assertion         : %d"
+          % sum(1 for r in rows if r["A"]))
+    print("A- addEventListener on a fixture element, other use       : %d"
+          % sum(1 for r in rows if r["A_other"]))
+    print("B  triggerEventHandler-only unit with negative assertion  : %d"
+          % sum(1 for r in rows if r["B"]))
     print("C  inline host applies a directive in a non-app shape     : %d"
           % sum(1 for r in rows if any(c["missing_in_spec_host"] for c in r["C"])))
     print("C- inline host applies a directive, shape matches app     : %d"
           % sum(1 for r in rows if r["C"] and not any(c["missing_in_spec_host"] for c in r["C"])))
-    print("flagged by at least one shape                             : %d" % len(flagged))
-    print("no shape detected                                         : %d" % (len(rows) - len(flagged)))
-    claim_rows = [r for r in rows if r["claims"]]
+    print("flagged by at least one shape                             : %d" % len(shaped))
+    print("no shape detected                                         : %d"
+          % (len(rows) - len(shaped)))
     print("---- suppression claims (an event is delivered, then absence is asserted) ----")
     print("spec files carrying at least one suppression claim        : %d" % len(claim_rows))
     print("suppression claim it() blocks                             : %d"
           % sum(len(r["claims"]) for r in claim_rows))
+    print("---- population bookkeeping ----")
+    print("spec files flagged by any pass (read and judged by hand)  : %d" % len(judged))
+    print("spec files no pass flagged at all                         : %d" % (len(rows) - len(judged)))
     for r in claim_rows:
         for c in r["claims"]:
             print("  %-100s %-28s %s" % (r["spec"], "+".join(c["delivery"]), c["it"]))
