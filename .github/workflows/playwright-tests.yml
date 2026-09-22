@@ -39,10 +39,13 @@ jobs:
         if: ${{ always() }}
 
       # Runs after the chown, the results are written by root inside the container.
+      # Capped at 3 min. The suite gives up 5 min before the job limit and this step
+      # has to fit in what is left, or the job is cancelled on the limit again.
       - name: Keep the partial results
         uses: actions/upload-artifact@v4
         if: ${{ always() }}
         continue-on-error: true
+        timeout-minutes: 3
         with:
           name: playwright-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           path: dspace-ui-tests/test-results
