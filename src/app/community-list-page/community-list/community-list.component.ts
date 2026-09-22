@@ -1,7 +1,4 @@
-import {
-  CdkTreeModule,
-  FlatTreeControl,
-} from '@angular/cdk/tree';
+import { CdkTreeModule } from '@angular/cdk/tree';
 import { AsyncPipe } from '@angular/common';
 import {
   Component,
@@ -18,13 +15,13 @@ import {
   SortOptions,
 } from '../../core/cache/models/sort-options.model';
 import { FindListOptions } from '../../core/data/find-list-options.model';
-import { Community } from '../../core/shared/community.model';
 import { isEmpty } from '../../shared/empty.util';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
 import { TruncatableComponent } from '../../shared/truncatable/truncatable.component';
 import { TruncatablePartComponent } from '../../shared/truncatable/truncatable-part/truncatable-part.component';
 import { CommunityListDatasource } from '../community-list-datasource';
 import { CommunityListService } from '../community-list-service';
+import { CommunityListTreeControl } from '../community-list-tree-control';
 import { FlatNode } from '../flat-node.model';
 
 /**
@@ -53,10 +50,7 @@ export class CommunityListComponent implements OnInit, OnDestroy {
   private expandedNodes: FlatNode[] = [];
   public loadingNode: FlatNode;
 
-  // Only community rows can be expanded, so only they get an aria-expanded attribute.
-  treeControl = new FlatTreeControl<FlatNode>(
-    (node: FlatNode) => node.level, (node: FlatNode) => node.payload instanceof Community,
-  );
+  treeControl = new CommunityListTreeControl();
   dataSource: CommunityListDatasource;
   paginationConfig: FindListOptions;
   trackBy = (index, node: FlatNode) => node.id;
