@@ -12,7 +12,7 @@ import { BtnDisabledDirective } from './btn-disabled.directive';
 
 @Component({
   template: `
-    <button [dsBtnDisabled]="isDisabled">Test Button</button>
+    <button [dsBtnDisabled]="isDisabled" (click)="onClick()" (keydown)="onKeydown()">Test Button</button>
   `,
   imports: [
     BtnDisabledDirective,
@@ -20,6 +20,14 @@ import { BtnDisabledDirective } from './btn-disabled.directive';
 })
 class TestComponent {
   isDisabled = false;
+
+  onClick(): void {
+    // spied on by the tests
+  }
+
+  onKeydown(): void {
+    // spied on by the tests
+  }
 }
 
 describe('DisabledDirective', () => {
@@ -103,5 +111,49 @@ describe('DisabledDirective', () => {
 
     expect(clickHandled).toBeTrue();
     expect(keydownHandled).toBeTrue();
+  });
+
+  it('should prevent a click from reaching a (click) handler on the same element when disabled', () => {
+    component.isDisabled = true;
+    fixture.detectChanges();
+    const onClick = spyOn(component, 'onClick');
+
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+    button.nativeElement.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBeTrue();
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('should prevent Enter from reaching a (keydown) handler on the same element when disabled', () => {
+    component.isDisabled = true;
+    fixture.detectChanges();
+    const onKeydown = spyOn(component, 'onKeydown');
+
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    button.nativeElement.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBeTrue();
+    expect(onKeydown).not.toHaveBeenCalled();
+  });
+
+  it('should let a click reach a (click) handler on the same element when not disabled', () => {
+    const onClick = spyOn(component, 'onClick');
+
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+    button.nativeElement.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBeFalse();
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('should let Enter reach a (keydown) handler on the same element when not disabled', () => {
+    const onKeydown = spyOn(component, 'onKeydown');
+
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    button.nativeElement.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBeFalse();
+    expect(onKeydown).toHaveBeenCalledTimes(1);
   });
 });
