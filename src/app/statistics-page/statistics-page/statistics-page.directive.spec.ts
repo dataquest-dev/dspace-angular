@@ -10,6 +10,7 @@ import {
 } from '@angular/router';
 import { of } from 'rxjs';
 
+import { getPageNotFoundRoute } from '../../app-routing-paths';
 import { AuthService } from '../../core/auth/auth.service';
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 import { RemoteData } from '../../core/data/remote-data';
@@ -134,7 +135,8 @@ describe('StatisticsPageDirective', () => {
     let emitted: DSpaceObject;
     component.scope$.subscribe((s) => emitted = s);
 
-    expect(router.navigateByUrl).toHaveBeenCalled();
+    expect(router.navigateByUrl)
+      .toHaveBeenCalledWith(getPageNotFoundRoute(), { skipLocationChange: true });
     expect(emitted).toBeUndefined();
   });
 });

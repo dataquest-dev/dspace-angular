@@ -97,7 +97,9 @@ describe('NgForTrackByIdDirective', () => {
 
     const after = spans(fixture);
     expect(after[0]).toBe(before[1]);
-    expect(after).not.toContain(before[0]);
+    // indexOf, not toContain: Jasmine compares DOM nodes with isEqualNode, so a recreated span
+    // holding the same text would count as contained.
+    expect(after.indexOf(before[0])).toBe(-1);
   });
 
   it('should be the directive that causes the reuse, not NgForOf itself', () => {
