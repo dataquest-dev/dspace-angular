@@ -402,6 +402,7 @@ describe('CommunityListComponent', () => {
     };
 
     const togglesTheNodeWith = (key: string) => fakeAsync(() => {
+      expect(toggleButton().closest('cdk-tree-node').getAttribute('tabindex')).toEqual('-1');
       expect(nodeNames()).not.toContain('collection1');
       expect(chevron()).toContain('fa-chevron-right');
       expect(ariaExpanded()).toEqual('false');
