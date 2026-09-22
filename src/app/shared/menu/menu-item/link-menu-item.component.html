@@ -5,6 +5,7 @@
    [routerLink]="getRouterLink()"
    [queryParams]="item.queryParams"
    (click)="$event.stopPropagation()"
+   (keydown.space)="$event.preventDefault()"
    (keyup.space)="navigate($event)"
    (keydown.enter)="navigate($event)"
    href="javascript:void(0);"

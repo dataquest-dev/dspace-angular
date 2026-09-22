@@ -39,6 +39,7 @@
         [attr.data-test]="'sidebar-collapse-toggle' | dsBrowserOnly"
         href="javascript:void(0);"
         (click)="toggle($event)"
+        (keydown.space)="$event.preventDefault()"
         (keyup.space)="toggle($event)"
         >
         <div class="sidebar-fixed-element-wrapper">

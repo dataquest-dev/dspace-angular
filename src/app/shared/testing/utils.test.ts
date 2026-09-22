@@ -122,3 +122,12 @@ export function createRequestEntry$(unCacheableObject?: UnCacheableObject, statu
 export function getFirstUsedArgumentOfSpyMethod(spyMethod: jasmine.Spy, argumentIndex: number = 0): any {
   return spyMethod.calls.argsFor(0)[argumentIndex];
 }
+
+/**
+ * Dispatches a cancelable Space key event that does not bubble, so only a listener bound to this element sees it.
+ */
+export function dispatchSpaceKey(element: HTMLElement, type: 'keydown' | 'keyup'): KeyboardEvent {
+  const event = new KeyboardEvent(type, { code: 'Space', key: ' ', bubbles: false, cancelable: true });
+  element.dispatchEvent(event);
+  return event;
+}

@@ -10,6 +10,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { dispatchSpaceKey } from '../../testing/utils.test';
 import { OnClickMenuItemModel } from './models/onclick.model';
 import { OnClickMenuItemComponent } from './onclick-menu-item.component';
 
@@ -53,6 +54,21 @@ describe('OnClickMenuItemComponent', () => {
 
   it('should call the function on the item when clicked', () => {
     debugElement.query(By.css('a.ds-menu-item')).triggerEventHandler('click', new Event(('click')));
+    expect(item.function).toHaveBeenCalled();
+  });
+
+  it('should prevent the page from scrolling when space is pressed', () => {
+    const control = fixture.debugElement.query(By.css('a.ds-menu-item')).nativeElement;
+
+    expect(dispatchSpaceKey(control, 'keydown').defaultPrevented).toBeTrue();
+  });
+
+  it('should still call the function on the item when space is released', () => {
+    const control = fixture.debugElement.query(By.css('a.ds-menu-item')).nativeElement;
+
+    dispatchSpaceKey(control, 'keydown');
+    dispatchSpaceKey(control, 'keyup');
+
     expect(item.function).toHaveBeenCalled();
   });
 });
