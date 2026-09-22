@@ -44,6 +44,11 @@ NEG_ASSERT = re.compile(r"\.not\s*\.\s*toHaveBeenCalled|\.toBeFalse\s*\(|"
                         r"\.toBeFalsy\s*\(|\.toBe\s*\(\s*false\s*\)|"
                         r"\.toHaveBeenCalledTimes\s*\(\s*0\s*\)|\.toBeNull\s*\(|"
                         r"\.toBeUndefined\s*\(")
+DESCRIBE = re.compile(r"\bdescribe\s*\(\s*(['\"`])(.*?)\1", re.S)
+BEFORE_EACH = re.compile(r"\bbeforeEach\s*\(")
+DELIVERY = re.compile(r"\.click\s*\(\s*\)|\.dispatchEvent\s*\(|\.triggerEventHandler\s*\(|"
+                      r"\.addEventListener\s*\(")
+NOT_CALLED = re.compile(r"\.not\s*\.\s*toHaveBeenCalled|\.toHaveBeenCalledTimes\s*\(\s*0\s*\)")
 INLINE_TEMPLATE = re.compile(r"template\s*:\s*`(.*?)`", re.S)
 TAG = re.compile(r"<([A-Za-z][\w-]*)((?:[^<>'\"]|'[^']*'|\"[^\"]*\")*?)/?>", re.S)
 ATTR_NAME = re.compile(r"(\[\([\w.$-]+\)\]|\[[\w.$-]+\]|\([\w.$-]+\)|[*#]?[\w.$-]+)\s*(?==|\s|$)")
@@ -230,7 +235,31 @@ def main():
                     kinds.append("S3 the element is absent")
             if kinds:
                 claims.append({"it": title, "claim": sorted(set(kinds)),
-                               "delivery": delivery})
+                               "delivery": delivery, "scope": "it"})
+
+        # a suppression claim whose event is delivered in the describe's beforeEach is invisible
+        # to the block-scoped pass above, so sweep describes too
+        clean = strip_comments(text)
+        seen = {c["it"] for c in claims}
+        for dm in DESCRIBE.finditer(clean):
+            dbody = balanced_block(clean, dm.start())
+            bm = BEFORE_EACH.search(dbody)
+            if not bm:
+                continue
+            bbody = balanced_block(dbody, bm.start())
+            dl = DELIVERY.search(bbody)
+            if not dl:
+                continue
+            for im in IT_START.finditer(dbody):
+                ibody = balanced_block(dbody, im.start())
+                if DELIVERY.search(ibody) or not NOT_CALLED.search(ibody):
+                    continue
+                if im.group(2) in seen:
+                    continue
+                seen.add(im.group(2))
+                claims.append({"it": im.group(2), "claim": ["S1 a call did not happen"],
+                               "delivery": [dl.group(0).strip() + " in beforeEach"],
+                               "scope": "describe"})
 
         c_hits = []
         for tm in INLINE_TEMPLATE.finditer(text):

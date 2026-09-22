@@ -50,7 +50,9 @@ no component and dispatch no event, so no shape applies to them.
 
 Of the 949: 12 carry at least one shape, 937 carry none. A second, independent pass counts every
 `it()` that delivers an event and then asserts something did **not** happen — the whole damage
-class — and finds 11 such blocks in 8 files. Every one of them is listed below.
+class. It runs at two scopes, because a claim whose event is delivered in the enclosing
+`describe`'s `beforeEach` is invisible to a block-scoped rule: 11 blocks at `it()` scope, 6 more at
+`describe` scope, **17 blocks in 13 files** once the overlap is removed. Every one is listed below.
 
 ## The answer, including where it is a negative result
 
@@ -107,11 +109,16 @@ does not isolate `triggerEventHandler` as a cause, and claiming it did would ove
 | `thumbnail/thumbnail.component.spec.ts` : `should set isLoading$ to false once an image is successfully loaded` | red when `successHandler()` no longer clears the flag |
 | `shared/hover-class.directive.spec.ts` : `should add the class on mouseenter and remove on mouseleave` | red when `onMouseEnter` no longer adds the class; the shape-C divergence is real but the directive suppresses nothing, so it is not load-bearing |
 | `shared/utils/markdown.directive.spec.ts` : both `should sanitize the script element out of innerHTML` | red when `render()` produces nothing |
+| `access-control/group-registry/group-form/group-form.component.spec.ts` : `should not call GroupDataService.delete` | red when the `if (confirm)` around the delete is neutralised |
+| `item-page/versions/…/item-versions-row-element-version.component.spec.ts` : `should not call ItemService.delete` | red when the `if (ok)` around the delete is neutralised |
+| `shared/comcol/comcol-forms/comcol-form/comcol-form.component.spec.ts` : `should not call handleLogoDeletion and dsoService.deleteLogo methods when deletion is refused` | red when the `if (confirmed)` in `subscribeToConfirmationResponse` is neutralised |
 
 Detector hits that are not guard claims at all, and why: `eperson-form.component.spec.ts` (two
 blocks) and `file-section.component.spec.ts` assert `toHaveBeenCalled` and carry an incidental
 `toBeFalse()` on a CSS class or a page flag; `item-page-cc-license-field.component.spec.ts` uses
-its listener to await an image. `browse-by-page`, `comcol-browse-by` and `context-help.directive`
+its listener to await an image; `context-help-wrapper.component.spec.ts` : `should display the
+tooltip` is a positive claim with four `toHaveBeenCalled` assertions and one incidental
+`toHaveBeenCalledTimes(0)`. `browse-by-page`, `comcol-browse-by` and `context-help.directive`
 declare inline hosts whose shape matches every real usage (`<ng-template dsDynamicComponentLoader>`
 in 4 product templates, `*dsContextHelp` in 6).
 
@@ -125,7 +132,8 @@ in 4 product templates, `*dsContextHelp` in 6).
 
 ## Also found, not part of this class
 
-Eight attribute directives have no spec that imports them at all: `ngForTrackById`, `dsAutoFocus`,
-`dsRenderOnlyForBrowser`, `dsDragClick`, `dsInListValidator`, `dsMetadataFieldValidator`, the
-abstract `statistics-page.directive`, and the `ngComponentOutlet` test stub. That is a missing
-guard rather than a blind one.
+Eight of the 27 `@Directive` files have no spec that imports them at all: `ngForTrackById`,
+`dsAutoFocus`, `dsRenderOnlyForBrowser`, `dsDragClick`, `dsInListValidator`,
+`dsMetadataFieldValidator`, the selector-less `statistics-page.directive`, and the
+`ngComponentOutlet` test stub — seven of the 25 attribute selectors, plus one abstract directive.
+That is a missing guard rather than a blind one.
