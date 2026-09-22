@@ -126,4 +126,37 @@ describe('ViewTrackerResolverService', () => {
     expect(emittedEvent.properties.object).toBe(mockDsoCustom);
     expect(emittedEvent.properties.dc_identifier).toBe('http://hdl.handle.net/custom/42');
   });
+
+  it('should send exactly the object, the referrer and dc_identifier', () => {
+    const emittedEvent = track({
+      data: {
+        dso: {
+          payload: mockDso,
+        },
+      },
+    } as any as ActivatedRouteSnapshot);
+
+    expect(emittedEvent).toEqual({
+      action: 'page_view',
+      properties: {
+        object: mockDso,
+        referrer: mockReferrer,
+        dc_identifier: 'http://hdl.handle.net/123456789/1',
+      },
+    });
+  });
+
+  it('should set dc_identifier to undefined for an object that has no firstMetadataValue', () => {
+    const emittedEvent = track({
+      data: {
+        dso: {
+          payload: {},
+        },
+      },
+    } as any as ActivatedRouteSnapshot);
+
+    expect(emittedEvent).toBeDefined();
+    expect(emittedEvent.properties.object).toEqual({});
+    expect(emittedEvent.properties.dc_identifier).toBeUndefined();
+  });
 });
