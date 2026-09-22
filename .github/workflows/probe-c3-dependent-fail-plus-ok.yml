@@ -1,0 +1,25 @@
+name: probe-c3-dependent-fail-plus-ok
+
+on:
+  push:
+    branches:
+      - 'ufal/probe-timeout-precedence-9-base'
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: sleep 300
+
+  gate:
+    needs: suite
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1
+
+  bystander:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ok

@@ -1,0 +1,20 @@
+name: probe-c2-independent-fail-late
+
+on:
+  push:
+    branches:
+      - 'ufal/probe-timeout-precedence-9-base'
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: sleep 300
+
+  independent-fail:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          sleep 120
+          exit 1
