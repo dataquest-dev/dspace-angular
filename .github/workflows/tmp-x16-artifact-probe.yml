@@ -1,0 +1,85 @@
+# TEMPORARY. Measures the artifact upload on the self-hosted runner for card X-16.
+# Deleted again in the next commit.
+name: TEMP artifact upload probe
+
+on:
+  push:
+    branches:
+      - ufal/report-nightly-gate-when-it-does-not-run-9-base
+
+jobs:
+  probe:
+    runs-on: dspace-test-1
+    timeout-minutes: 20
+    steps:
+      - name: Inventory
+        id: inv
+        run: |
+          echo "workspace=$GITHUB_WORKSPACE"
+          RUNNER_ROOT="$(cd "$GITHUB_WORKSPACE/../../.." && pwd)"
+          echo "runner_root=$RUNNER_ROOT"
+          echo "--- node runtimes shipped with the runner ---"
+          ls -1 "$RUNNER_ROOT/externals" || true
+          for n in "$RUNNER_ROOT"/externals/node*/bin/node; do
+            [ -x "$n" ] && echo "$n -> $($n --version)"
+          done
+          echo "--- workspace ---"
+          ls -la "$GITHUB_WORKSPACE" | head -30
+          echo "--- leftover playwright results ---"
+          TR="$GITHUB_WORKSPACE/dspace-ui-tests/test-results"
+          if [ -d "$TR" ]; then
+            echo "files: $(find "$TR" -type f | wc -l)"
+            du -sb "$TR"
+            du -sh "$TR"
+            find "$TR" -maxdepth 2 | head -40
+          else
+            echo "no test-results directory"
+          fi
+          echo "--- synthetic 200 MB worst case ---"
+          rm -rf "$GITHUB_WORKSPACE/x16-probe-payload"
+          mkdir -p "$GITHUB_WORKSPACE/x16-probe-payload"
+          for i in $(seq 1 40); do
+            head -c 5000000 /dev/urandom > "$GITHUB_WORKSPACE/x16-probe-payload/f$i.bin"
+          done
+          du -sh "$GITHUB_WORKSPACE/x16-probe-payload"
+
+      - name: Upload real results with v7
+        id: real_v7
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: tmp-x16-real-v7-${{ github.run_id }}
+          path: dspace-ui-tests/test-results
+          if-no-files-found: warn
+          retention-days: 1
+
+      - name: Upload real results with v4
+        id: real_v4
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: tmp-x16-real-v4-${{ github.run_id }}
+          path: dspace-ui-tests/test-results
+          if-no-files-found: warn
+          retention-days: 1
+
+      - name: Upload synthetic 200 MB with v7
+        id: synth_v7
+        uses: actions/upload-artifact@v7
+        continue-on-error: true
+        with:
+          name: tmp-x16-synth-v7-${{ github.run_id }}
+          path: x16-probe-payload
+          if-no-files-found: warn
+          retention-days: 1
+
+      - name: Outcomes
+        if: ${{ always() }}
+        run: |
+          echo "real_v7=${{ steps.real_v7.outcome }}"
+          echo "real_v4=${{ steps.real_v4.outcome }}"
+          echo "synth_v7=${{ steps.synth_v7.outcome }}"
+
+      - name: Remove synthetic payload
+        if: ${{ always() }}
+        run: rm -rf "$GITHUB_WORKSPACE/x16-probe-payload"
