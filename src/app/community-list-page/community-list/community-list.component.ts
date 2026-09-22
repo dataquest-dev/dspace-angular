@@ -18,6 +18,7 @@ import {
   SortOptions,
 } from '../../core/cache/models/sort-options.model';
 import { FindListOptions } from '../../core/data/find-list-options.model';
+import { Community } from '../../core/shared/community.model';
 import { isEmpty } from '../../shared/empty.util';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
 import { TruncatableComponent } from '../../shared/truncatable/truncatable.component';
@@ -52,8 +53,9 @@ export class CommunityListComponent implements OnInit, OnDestroy {
   private expandedNodes: FlatNode[] = [];
   public loadingNode: FlatNode;
 
+  // Only community rows can be expanded, so only they get an aria-expanded attribute.
   treeControl = new FlatTreeControl<FlatNode>(
-    (node: FlatNode) => node.level, (node: FlatNode) => true,
+    (node: FlatNode) => node.level, (node: FlatNode) => node.payload instanceof Community,
   );
   dataSource: CommunityListDatasource;
   paginationConfig: FindListOptions;

@@ -18,7 +18,10 @@ import {
   TranslateLoader,
   TranslateModule,
 } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import {
+  NEVER,
+  of,
+} from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { buildPaginatedList } from '../../core/data/paginated-list.model';
@@ -428,4 +431,55 @@ describe('CommunityListComponent', () => {
     it('expands the node on Enter and collapses it on the next Enter', togglesTheNodeWith('Enter'));
   });
 
+  describe('aria-expanded on tree rows', () => {
+    describe('in the rendered tree', () => {
+      const rowFor = (name: string): HTMLElement => {
+        const row: DebugElement = fixture.debugElement.queryAll(By.css('cdk-tree-node'))
+          .find((node: DebugElement) => node.query(By.css('a.lead'))?.nativeElement.textContent.trim() === name);
+        expect(row).toBeTruthy();
+        return row.nativeElement;
+      };
+
+      beforeEach(fakeAsync(() => {
+        const toggleButtons: DebugElement[] = fixture.debugElement.queryAll(By.css('.expandable-node button'));
+        toggleButtons[1].nativeElement.click();
+        tick();
+        fixture.detectChanges();
+      }));
+
+      it('is absent on a collection row, which has no children to expand', () => {
+        expect(rowFor('collection1').hasAttribute('aria-expanded')).toBe(false);
+        expect(rowFor('collection2').hasAttribute('aria-expanded')).toBe(false);
+      });
+
+      it('is present on a community row, which can be expanded', () => {
+        expect(rowFor('community1').hasAttribute('aria-expanded')).toBe(true);
+        expect(rowFor('community2').hasAttribute('aria-expanded')).toBe(true);
+      });
+
+      it('is absent on a show more row', () => {
+        const showMoreRows: DebugElement[] = fixture.debugElement.queryAll(By.css('.show-more-node'));
+        expect(showMoreRows.length).toEqual(2);
+        showMoreRows.forEach((row: DebugElement) => expect(row.nativeElement.hasAttribute('aria-expanded')).toBe(false));
+      });
+    });
+
+    describe('when a node has not loaded its children yet', () => {
+      it('a community whose child counts never arrive stays expandable', () => {
+        const community: FlatNode = toFlatNode(
+          Object.assign(new Community(), { id: 'pending-com', uuid: 'pending-com', name: 'pending community' }),
+          NEVER, 0, false, null,
+        );
+        expect(component.treeControl.isExpandable(community)).toBe(true);
+      });
+
+      it('a collection stays a leaf whatever its children observable does', () => {
+        const collection: FlatNode = toFlatNode(
+          Object.assign(new Collection(), { id: 'pending-coll', uuid: 'pending-coll', name: 'pending collection' }),
+          NEVER, 1, false, null,
+        );
+        expect(component.treeControl.isExpandable(collection)).toBe(false);
+      });
+    });
+  });
 });
