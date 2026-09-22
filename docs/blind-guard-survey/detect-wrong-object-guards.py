@@ -96,6 +96,13 @@ def strip_comments(text):
     return "".join(out)
 
 
+def unescape(title):
+    """A title is printed as the spec spells it: it('…the process\\'s output logs') is
+    `the process's output logs`, not `the process\\'s output logs`. The list of names is
+    the deliverable, so a name that is not the spec's name is a defect."""
+    return re.sub(r"\\(['\"`\\])", r"\1", title)
+
+
 def balanced_span(text, start):
     """text[start] begins a call; return (start, end) of the whole call."""
     i = text.index("(", start)
@@ -154,7 +161,7 @@ def units(text):
         setup = list(top)
         for span in sorted(enclosing, key=lambda s: s[0]):
             setup.extend(setups[span])
-        yield {"it": m.group(2), "body": clean[a:b], "setup": "\n".join(setup)}
+        yield {"it": unescape(m.group(2)), "body": clean[a:b], "setup": "\n".join(setup)}
 
 
 def read(path):
@@ -285,6 +292,18 @@ def main():
             if dl and kinds:
                 claims.append({"it": u["it"], "claim": kinds, "delivery": dl})
 
+        # End-state-only blocks: assert a queried element is absent, with or without an event.
+        # Counted, not adjudicated -- this is the bound on a class the survey does not close.
+        end_state = []
+        for u in unit_list:
+            whole = u["setup"] + "\n" + u["body"]
+            for mm in re.finditer(
+                    r"expect\s*\(\s*(\w+)\s*\)\s*\.(?:toBeFalsy|toBeNull|toBeUndefined)\s*\(",
+                    u["body"]):
+                if re.search(r"%s\s*=\s*[^;]*\.query\s*\(" % re.escape(mm.group(1)), whole):
+                    end_state.append({"it": u["it"], "delivery": deliveries(whole)})
+                    break
+
         a_other = sorted({m.group(1) for m in ANY_ADD.finditer(text)
                           if FIXTURE_RECV.search(m.group(1))}) if not a_hits else []
 
@@ -313,7 +332,7 @@ def main():
                                    "missing_in_spec_host": missing})
 
         rows.append({"spec": spec, "A": a_hits, "A_other": a_other, "B": b_hits, "C": c_hits,
-                     "claims": claims, "mech_units": mech})
+                     "claims": claims, "end_state": end_state, "mech_units": mech})
 
     shaped = [r for r in rows if r["A"] or r["B"]
               or any(c["missing_in_spec_host"] for c in r["C"])]
@@ -340,6 +359,14 @@ def main():
     print("spec files carrying at least one suppression claim        : %d" % len(claim_rows))
     print("suppression claim it() blocks                             : %d"
           % sum(len(r["claims"]) for r in claim_rows))
+    es_rows = [r for r in rows if r["end_state"]]
+    es_all = sum(len(r["end_state"]) for r in es_rows)
+    es_del = sum(1 for r in es_rows for e in r["end_state"] if e["delivery"])
+    print("---- end-state-only blocks (assert a queried element is absent) ----")
+    print("blocks asserting an absent queried element                : %d in %d files"
+          % (es_all, len(es_rows)))
+    print("   ... with an event delivered in the unit (the census)   : %d" % es_del)
+    print("   ... with no event at all (never read by this survey)   : %d" % (es_all - es_del))
     print("---- population bookkeeping ----")
     print("spec files flagged by any pass (read and judged by hand)  : %d" % len(judged))
     print("spec files no pass flagged at all                         : %d" % (len(rows) - len(judged)))
