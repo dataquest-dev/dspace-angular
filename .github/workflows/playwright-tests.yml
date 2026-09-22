@@ -5,24 +5,6 @@ on:
   workflow_call:
 
 jobs:
-  # timeout-minutes cancels the suite job below, and a cancelled job concludes
-  # 'cancelled' whatever its always() steps exit with. Nothing inside that job can
-  # turn the run red, so the check runs from a job of its own.
-  nightly-result-gate:
-    needs: playwright-tests
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Fail when the suite produced no verdict
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: .github/scripts/nightly-result-gate.sh
-
   playwright-tests:
     runs-on: dspace-test-1
     timeout-minutes: 60
@@ -40,6 +22,10 @@ jobs:
           HOME_URL: http://dev-6.pc:8603/repository/
           NAME: LINDAT-9
           PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+        # Five minutes under the job limit, so the suite gives up on its own.
+        # A job that the limit cancels concludes 'cancelled' whatever its steps do,
+        # and a cancelled run reads as 'nothing is red' although nothing was measured.
+        timeout-minutes: 55
         run: |
           ./test.sh
 
