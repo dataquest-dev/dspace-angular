@@ -9,6 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   fromEvent,
@@ -60,6 +61,7 @@ const allowedPreviewFormats = archiveFormats.concat(['text/plain',  'text/html']
     CommonModule,
     FileSizePipe,
     FileTreeViewComponent,
+    NgbCollapseModule,
     TranslateModule,
   ],
   templateUrl: './file-description.component.html',
@@ -73,6 +75,8 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
   fileInput: MetadataBitstream;
 
   @ViewChild('videoPreview') videoElement: ElementRef;
+
+  previewCollapsed = true;
 
   emailToContact: string;
   content_url$: Observable<string>;
@@ -218,6 +222,10 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
 
   public downloadFile() {
     void this.router.navigateByUrl('bitstreams/' + this.fileInput.id + '/download');
+  }
+
+  public togglePreview() {
+    this.previewCollapsed = !this.previewCollapsed;
   }
 
   public isTxt() {

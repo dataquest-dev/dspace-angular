@@ -82,14 +82,18 @@
         <div id="aspect_submission_StepTransformer_list_accordion-group_lic_1"
           class="accordion-group hidden">
           <div class="accordion-heading">
-            <a href="#aspect_submission_StepTransformer_list_accordion-body_lic_1"
-              data-toggle="collapse"
-              data-parent="#aspect_submission_StepTransformer_list_accordion_lic">
+            <a role="button" tabindex="0"
+              (click)="toggleLicenseDetails()"
+              (keyup.enter)="toggleLicenseDetails()"
+              (keyup.space)="toggleLicenseDetails()"
+              [attr.aria-expanded]="!licenseDetailsCollapsed"
+              aria-controls="aspect_submission_StepTransformer_list_accordion-body_lic_1">
               <span class="bold">{{'submission.sections.clarin-license.head.license-more-details' | translate}}</span>
             </a>
           </div>
           <div id="aspect_submission_StepTransformer_list_accordion-body_lic_1"
-            class="accordion-body collapse">
+            [ngbCollapse]="licenseDetailsCollapsed"
+            class="accordion-body">
             <div class="accordion-inner">
               <ul id="aspect_submission_StepTransformer_list_license-list" class="">
                 @for (license of licenses4Selector; track license) {
