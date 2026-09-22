@@ -72,7 +72,11 @@ describe('NgForTrackByIdDirective', () => {
     component.objects = [dso('a'), dso('b')];
     fixture.detectChanges();
 
-    expect(spans(fixture)).toEqual(before);
+    // toBe, not toEqual: two freshly created spans hold the same text and are deeply equal.
+    const after = spans(fixture);
+    expect(after.length).toBe(before.length);
+    expect(after[0]).toBe(before[0]);
+    expect(after[1]).toBe(before[1]);
   });
 
   it('should replace the rendered elements when the ids change', () => {
