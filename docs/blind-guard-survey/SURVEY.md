@@ -154,7 +154,8 @@ its own, and the spec does not notice.
 | `item-page/versions/…/item-versions-row-element-version.component.spec.ts` : `should not call ItemService.delete` | red when the `if (ok)` around the delete is neutralised |
 | `shared/comcol/comcol-forms/comcol-form/comcol-form.component.spec.ts` : `should not call handleLogoDeletion and dsoService.deleteLogo methods when deletion is refused` | red when the `if (confirmed)` in `subscribeToConfirmationResponse` is neutralised |
 
-Fourteen blocks, each shown red by its own mutation.
+Fourteen blocks in thirteen rows — the `markdown.directive.spec.ts` row covers two — each shown red
+by its own mutation. With the eight blind ones above, that is 22 blocks carrying a verdict.
 
 Detector hits that are not guard claims at all, and why: `eperson-form.component.spec.ts` (two
 blocks) and `file-section.component.spec.ts` assert `toHaveBeenCalled` and carry an incidental
