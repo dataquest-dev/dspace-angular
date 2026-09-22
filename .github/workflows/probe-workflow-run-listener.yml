@@ -1,0 +1,12 @@
+name: probe-workflow-run-listener
+
+on:
+  workflow_run:
+    workflows: ["probe-timeout-precedence"]
+    types: [completed]
+
+jobs:
+  listen:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "listener fired for ${{ github.event.workflow_run.id }} conclusion=${{ github.event.workflow_run.conclusion }}"
