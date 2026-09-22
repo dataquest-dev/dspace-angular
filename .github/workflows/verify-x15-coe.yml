@@ -1,0 +1,23 @@
+name: verify-x15-coe
+
+on:
+  push:
+    branches:
+      - 'verify/x15-latch-attack'
+
+# Attack 1: does continue-on-error on the CANCELLED job stop it latching the run?
+# Two jobs only. suite is cancelled by its own limit at ~70s, late-fail fails at ~155s.
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    continue-on-error: true
+    steps:
+      - run: sleep 300
+
+  late-fail:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          sleep 150
+          exit 1

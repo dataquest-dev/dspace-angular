@@ -1,0 +1,20 @@
+name: verify-x15-nested
+
+on:
+  push:
+    branches:
+      - 'verify/x15-latch-attack'
+
+# Attack 2: the cancelled job sits one level down, in a called workflow - the shape
+# playwright-tests.yml actually has, because deploy.yml calls it. Does a cancel one
+# level down still latch the caller's run when a caller job fails afterwards?
+jobs:
+  nested:
+    uses: ./.github/workflows/verify-x15-called.yml
+
+  late-fail:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          sleep 150
+          exit 1

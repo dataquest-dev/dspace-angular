@@ -1,0 +1,11 @@
+name: verify-x15-called
+
+on:
+  workflow_call:
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: sleep 300
