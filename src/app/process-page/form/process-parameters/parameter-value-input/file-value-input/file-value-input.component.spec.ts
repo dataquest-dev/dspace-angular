@@ -48,8 +48,13 @@ describe('FileValueInputComponent', () => {
   });
 
   it('should not show a validation error if the input field was left untouched but left empty', () => {
-    const validationError = fixture.debugElement.query(By.css('.validation-error'));
-    expect(validationError).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('.validation-error'))).toBeFalsy();
+
+    const input = fixture.debugElement.query(By.css('input'));
+    input.triggerEventHandler('blur', null);
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('.validation-error'))).toBeTruthy();
   });
 
   it('should show a validation error if the input field was touched but left empty',  () => {

@@ -47,8 +47,13 @@ describe('StringValueInputComponent', () => {
   });
 
   it('should not show a validation error if the input field was left untouched but left empty', () => {
-    const validationError = fixture.debugElement.query(By.css('.validation-error'));
-    expect(validationError).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('.validation-error'))).toBeFalsy();
+
+    const input = fixture.debugElement.query(By.css('input'));
+    input.triggerEventHandler('blur', null);
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('.validation-error'))).toBeTruthy();
   });
 
   it('should show a validation error if the input field was touched but left empty', fakeAsync(() => {
@@ -66,7 +71,7 @@ describe('StringValueInputComponent', () => {
   }));
 
   it('should not show a validation error if the input field was touched but not left empty', fakeAsync(() => {
-    component.value = 'testValue';
+    component.value = '';
     fixture.detectChanges();
     tick();
 
@@ -75,7 +80,13 @@ describe('StringValueInputComponent', () => {
 
     fixture.detectChanges();
 
-    const validationError = fixture.debugElement.query(By.css('.validation-error'));
-    expect(validationError).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('.validation-error'))).toBeTruthy();
+
+    component.value = 'testValue';
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('.validation-error'))).toBeFalsy();
   }));
 });

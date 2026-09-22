@@ -118,6 +118,16 @@ describe('MarkdownDirective linkify with markdown enabled', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     divEl = fixture.debugElement.query(By.css('div'));
+    const directive = divEl.injector.get(MarkdownDirective);
+
+    // forcePreview, because the directive reads its own copy of environment and never sees
+    // the markdown.enabled flip made above
+    await directive.render('Les informations https://demandes.es ne sont pas disponibles.', true);
+    await fixture.whenStable();
+    expect(divEl.nativeElement.innerHTML).toContain('<a href');
+
+    await directive.render('Les informations demandés.es ne sont pas disponibles.', true);
+    await fixture.whenStable();
     expect(divEl.nativeElement.innerHTML).not.toContain('<a href');
   });
 

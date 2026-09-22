@@ -266,8 +266,15 @@ describe('ProcessDetailComponent', () => {
       fixture.detectChanges();
     }));
     it('should not display the process\'s output logs', () => {
-      const outputProcess = fixture.debugElement.query(By.css('#process-output pre'));
-      expect(outputProcess).toBeNull();
+      component.outputLogs$.next(processOutput);
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('#process-output pre'))).not.toBeNull();
+
+      component.outputLogs$.next(null);
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('#process-output pre'))).toBeNull();
     });
     it('should display message saying there are no output logs', () => {
       const noOutputProcess = fixture.debugElement.query(By.css('#no-output-logs-message')).nativeElement;

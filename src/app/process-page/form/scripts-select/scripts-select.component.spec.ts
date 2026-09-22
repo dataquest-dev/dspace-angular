@@ -78,8 +78,13 @@ describe('ScriptsSelectComponent', () => {
   });
 
   it('should not show a validation error if the input field was left untouched but left empty', () => {
-    const validationError = fixture.debugElement.query(By.css('.validation-error'));
-    expect(validationError).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('.validation-error'))).toBeFalsy();
+
+    const select = fixture.debugElement.query(By.css('#process-script'));
+    select.triggerEventHandler('blur', null);
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('.validation-error'))).toBeTruthy();
   });
 
   it('should show a validation error if the input field was touched but left empty', fakeAsync(() => {
@@ -97,7 +102,7 @@ describe('ScriptsSelectComponent', () => {
   }));
 
   it('should not show a validation error if the input field was touched but not left empty', fakeAsync(() => {
-    (component as any)._selectedScript.id = 'testValue';
+    (component as any)._selectedScript.id = '';
     fixture.detectChanges();
     tick();
 
@@ -106,8 +111,14 @@ describe('ScriptsSelectComponent', () => {
 
     fixture.detectChanges();
 
-    const validationError = fixture.debugElement.query(By.css('.validation-error'));
-    expect(validationError).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('.validation-error'))).toBeTruthy();
+
+    (component as any)._selectedScript.id = 'testValue';
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('.validation-error'))).toBeFalsy();
   }));
 
   it('should load more scripts when scrolled to the bottom', fakeAsync(() => {
