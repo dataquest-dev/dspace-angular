@@ -4,7 +4,7 @@ _______
 An element with `dsBtnDisabled` must not carry its own `(keydown)` handler.
       Angular chains a template listener onto the directive's host listener for the same event instead of adding a second DOM listener, so the `stopImmediatePropagation()` in `BtnDisabledDirective` never reaches it and the handler runs even while the element is disabled.
       Put the handler on a wrapper element, or read the disabled state inside the handler.
-      Key pseudo-events such as `(keydown.enter)` register under their own event name, are not chained, and are stopped as expected.
+      Key pseudo-events such as `(keydown.enter)` and global-target listeners such as `(document:keydown)` are not chained onto the host listener, so they are left alone.
 
 _______
 
@@ -42,6 +42,13 @@ _______
         
 ```html
 <button [dsBtnDisabled]="isDisabled" (keydown.enter)="onEnter($event)">Submit</button>
+```
+        
+    
+##### a global-target keydown listener attaches to document, so it is never chained
+        
+```html
+<button [dsBtnDisabled]="isDisabled" (document:keydown)="onKeydown($event)">Submit</button>
 ```
         
     

@@ -143,6 +143,8 @@ describe('DisabledDirective with a (keydown) handler on the same element', () =>
    * dspace-angular-html/no-keydown-on-btn-disabled exists to keep this combination out of templates.
    */
   it('runs the handler anyway, which is why the combination is not allowed', () => {
+    expect(button.nativeElement.getAttribute('aria-disabled')).toBe('true');
+
     button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true }));
 
     expect(component.keydownHandled).toBeTrue();
