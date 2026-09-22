@@ -25,7 +25,11 @@ the application builds.
 |---|---|---|
 | **A** probe attached after creation | `X.addEventListener('e', () => flag = true)` on a fixture element inside an `it()`, plus `expect(flag).toBeFalse()` in the same block | the probe is a second native listener; the application never has one |
 | **B** `triggerEventHandler` standing in for a real DOM event | an `it()` that delivers its event only through `.triggerEventHandler(` and contains a negative assertion | it calls the recorded bindings directly, never enters the DOM event system, and is a silent no-op when the binding is absent |
-| **C** host template diverging from the product | an inline `@Component({ template })` whose tag carries a repo directive selector and omits an attribute present in at least half of that selector's real usages in `src/**/*.html` | the directive is measured in a shape no product template uses |
+| **C** host template diverging from the product | an inline `@Component({ template })` whose tag carries a repo directive selector and omits an attribute that co-occurs with that selector in at least `max(1, n // 2)` of its `n` real usages in `src/**/*.html` | the directive is measured in a shape no product template uses |
+
+The `max(1, n // 2)` threshold is meaningful where `n` is large (`dsBtnDisabled`, 175 usages,
+threshold 87) and is arithmetic noise where `n` is 1 or 3. Selectors in that range were decided by
+mutation instead, never by the threshold.
 
 The same APIs used legitimately fail one of the clauses. `item-page-cc-license-field.component.spec.ts`
 adds `load`/`error` listeners to *wait* for an image and then asserts on component state — nothing
