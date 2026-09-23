@@ -35,6 +35,10 @@ jobs:
           HOME_URL: http://dev-6.pc:8603/repository/
           NAME: LINDAT-9
           PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+        # Five minutes under the job limit, so the suite gives up on its own.
+        # A job that the limit cancels concludes 'cancelled' whatever its steps do,
+        # and a cancelled run reads as 'nothing is red' although nothing was measured.
+        timeout-minutes: 55
         run: |
           ./test.sh
 
