@@ -15,6 +15,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
 import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -30,6 +31,7 @@ import { PatchRequest } from '../../../core/data/request.models';
 import { RequestService } from '../../../core/data/request.service';
 import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
 import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
+import { ClarinLicense } from '../../../core/shared/clarin/clarin-license.model';
 import { Collection } from '../../../core/shared/collection.model';
 import { License } from '../../../core/shared/license.model';
 import { PageInfo } from '../../../core/shared/page-info.model';
@@ -50,6 +52,7 @@ import { SubmissionServiceStub } from '../../../shared/testing/submission-servic
 import {
   createPaginatedList,
   createTestComponent,
+  dispatchSpaceKey,
 } from '../../../shared/testing/utils.test';
 import { SubmissionService } from '../../submission.service';
 import { SectionFormOperationsService } from '../form/section-form-operations.service';
@@ -159,6 +162,7 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
         { provide: 'collectionIdProvider', useValue: collectionId },
         { provide: 'sectionDataProvider', useValue: Object.assign({}, sectionObject) },
         { provide: 'submissionIdProvider', useValue: submissionId },
+        provideRouter([]),
         ChangeDetectorRef,
         FormBuilderService,
         SubmissionSectionClarinLicenseComponent,
@@ -304,6 +308,69 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
       expect(toggle().matches('a:not([href]):not([class])'))
         .withContext(`the more-details control falls under Bootstrap's reboot: ${toggle().outerHTML.slice(0, 120)}`)
         .toBeFalse();
+    });
+
+    it('should prevent the page from scrolling when space is pressed', () => {
+      expect(dispatchSpaceKey(toggle(), 'keydown').defaultPrevented).toBeTrue();
+    });
+  });
+
+  describe('license selection', () => {
+    let fixture: ComponentFixture<SubmissionSectionClarinLicenseComponent>;
+    let style: HTMLStyleElement;
+
+    const toggle = (): HTMLElement =>
+      fixture.nativeElement.querySelector('#aspect_submission_StepTransformer_field_license');
+    const menu = (): HTMLElement => fixture.nativeElement.querySelector('ul.dropdown-menu');
+    const isVisible = (el: HTMLElement): boolean => getComputedStyle(el).display !== 'none';
+
+    beforeEach(async () => {
+      // The .dropdown-menu display rules of node_modules/bootstrap/dist/css/bootstrap.css.
+      style = document.createElement('style');
+      style.textContent = '.dropdown-menu { display: none; } .dropdown-menu.show { display: block; }';
+      document.head.appendChild(style);
+
+      mockClarinDataService.findAll = jasmine.createSpy('findAll')
+        .and.returnValue(createSuccessfulRemoteDataObject$(createPaginatedList([
+          Object.assign(new ClarinLicense(), { id: 7, name: 'Test Licence', clarinLicenseLabel: { label: 'PUB' } }),
+        ])));
+      sectionsServiceStub.isSectionReadOnly.and.returnValue(of(false));
+      sectionsServiceStub.getSectionErrors.and.returnValue(of([]));
+      (TestBed.inject(SubmissionService) as any).retrieveSubmission.and.returnValue(
+        createSuccessfulRemoteDataObject$({ _links: { self: { href: 'self' } } }),
+      );
+
+      fixture = TestBed.createComponent(SubmissionSectionClarinLicenseComponent);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+    });
+
+    afterEach(() => {
+      style.remove();
+      fixture.destroy();
+    });
+
+    it('opens the license menu when the toggle is clicked', () => {
+      expect(isVisible(menu()))
+        .withContext('the license menu is visible before any click')
+        .toBeFalse();
+
+      toggle().click();
+      fixture.detectChanges();
+
+      expect(isVisible(menu()))
+        .withContext(`the license menu stayed hidden: display=${getComputedStyle(menu()).display}`)
+        .toBeTrue();
+      expect(menu().querySelector('#license_option_7'))
+        .withContext('the license is not listed in the menu')
+        .not.toBeNull();
+    });
+
+    it('links to the license list page', () => {
+      const link: HTMLElement = fixture.nativeElement.querySelector('a.alert-link');
+
+      expect(link.getAttribute('href')).toMatch(/\/licenses$/);
     });
   });
 

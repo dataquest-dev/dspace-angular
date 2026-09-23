@@ -44,15 +44,14 @@
     </div>
     <div class="col-md-12">
       <div class="form-group mb-0">
-        <div class="input-group">
+        <div class="input-group" ngbDropdown>
           <input type="button"
             class="custom-select clarin-select-input btn text-left"
             id="aspect_submission_StepTransformer_field_license"
-            data-toggle="dropdown"
+            ngbDropdownToggle
             aria-haspopup="true"
-            aria-expanded="false"
             [value]="this.selectedLicenseName"/>
-          <ul class="dropdown-menu scrollable-menu"
+          <ul ngbDropdownMenu class="dropdown-menu scrollable-menu"
             aria-labelledby="aspect_submission_StepTransformer_field_license">
             <div class="form-group has-search mb-0">
               <span class="fa fa-search form-control-feedback"></span>
@@ -85,6 +84,7 @@
             <a class="cursor-pointer" role="button" tabindex="0"
               (click)="toggleLicenseDetails()"
               (keyup.enter)="toggleLicenseDetails()"
+              (keydown.space)="$event.preventDefault()"
               (keyup.space)="toggleLicenseDetails()"
               [attr.aria-expanded]="!licenseDetailsCollapsed"
               aria-controls="aspect_submission_StepTransformer_list_accordion-body_lic_1">
