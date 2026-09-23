@@ -125,6 +125,7 @@ describe('ClarinItemVersionsFieldComponent', () => {
     })
       .overrideComponent(ItemVersionsComponent, {
         remove: { imports: [AlertComponent, PaginationComponent] },
+        add: { schemas: [NO_ERRORS_SCHEMA] },
       })
       .compileComponents();
   }));
