@@ -29,6 +29,7 @@ import {
   DynamicFormArrayModel,
   DynamicFormControlModel,
   DynamicFormGroupModel,
+  DynamicFormLayoutService,
   DynamicFormsCoreModule,
   DynamicFormService,
   DynamicInputModel,
@@ -474,6 +475,118 @@ describe('DsDynamicFormControlContainerComponent test suite', () => {
     fixture.detectChanges();
     (component as any).handleAriaLabelForLibraryComponents();
     expect(renderer.setAttribute).toHaveBeenCalledWith(inputEl, 'aria-label', 'Accessible Label');
+  });
+
+  describe('unique id generation', () => {
+    afterEach(() => {
+      DsDynamicFormControlContainerComponent.resetIdCounters();
+    });
+
+    it('should return the base element ID for the first instance of a given id', () => {
+      expect(component.id).toBe(component.model.id);
+    });
+
+    it('should return a suffixed ID for the second instance of the same base id', () => {
+      expect(component.id).toBe('input');
+
+      const secondComponent = Object.create(component);
+      secondComponent._cachedId = undefined;
+      secondComponent._baseId = undefined;
+      secondComponent.model = new DynamicInputModel({ id: 'input' });
+      expect(secondComponent.id).toBe('input_1');
+    });
+
+    it('should not interfere between different base ids', () => {
+      expect(component.id).toBe('input');
+
+      const otherComponent = Object.create(component);
+      otherComponent._cachedId = undefined;
+      otherComponent._baseId = undefined;
+      otherComponent.model = new DynamicInputModel({ id: 'email' });
+      expect(otherComponent.id).toBe('email');
+    });
+
+    it('should return the same id on repeated access (idempotent)', () => {
+      const first = component.id;
+      const second = component.id;
+      expect(first).toBe(second);
+    });
+
+    it('should remove the id state entry so the next instance reuses the base id', () => {
+      expect(component.id).toBe('input');
+
+      component.ngOnDestroy();
+
+      const newComponent = Object.create(component);
+      newComponent._cachedId = undefined;
+      newComponent._baseId = undefined;
+      newComponent.model = new DynamicInputModel({ id: 'input' });
+      expect(newComponent.id).toBe('input');
+    });
+
+    it('should keep the id state entry when other instances with the same base id are still active', () => {
+      expect(component.id).toBe('input');
+
+      const secondComponent = Object.create(component);
+      secondComponent._cachedId = undefined;
+      secondComponent._baseId = undefined;
+      secondComponent.model = new DynamicInputModel({ id: 'input' });
+      expect(secondComponent.id).toBe('input_1');
+
+      component.ngOnDestroy();
+
+      const thirdComponent = Object.create(component);
+      thirdComponent._cachedId = undefined;
+      thirdComponent._baseId = undefined;
+      thirdComponent.model = new DynamicInputModel({ id: 'input' });
+      expect(thirdComponent.id).toBe('input_2');
+    });
+
+    it('should render distinct input ids and a matching label[for] for two containers sharing a base id',
+      inject([DynamicFormService], (service: DynamicFormService) => {
+        const render = (): ComponentFixture<DsDynamicFormControlContainerComponent> => {
+          const duplicatedModel = new DynamicInputModel({ id: 'duplicated', label: 'Duplicated' });
+          const duplicatedFixture = TestBed.createComponent(DsDynamicFormControlContainerComponent);
+          const duplicatedComponent = duplicatedFixture.componentInstance;
+          duplicatedComponent.group = service.createFormGroup([duplicatedModel]);
+          duplicatedComponent.model = duplicatedModel;
+          duplicatedComponent.ngOnChanges({
+            group: new SimpleChange(null, duplicatedComponent.group, true),
+            model: new SimpleChange(null, duplicatedComponent.model, true),
+          });
+          duplicatedFixture.detectChanges();
+          return duplicatedFixture;
+        };
+
+        const firstFixture = render();
+        const secondFixture = render();
+
+        const firstInput = firstFixture.debugElement.query(By.css('input')).nativeElement;
+        const secondInput = secondFixture.debugElement.query(By.css('input')).nativeElement;
+        const firstLabel = firstFixture.debugElement.query(By.css('label')).nativeElement;
+        const secondLabel = secondFixture.debugElement.query(By.css('label')).nativeElement;
+
+        expect(firstInput.id).not.toEqual(secondInput.id);
+        expect(firstLabel.id).not.toEqual(secondLabel.id);
+        expect(firstLabel.htmlFor).toEqual(firstInput.id);
+        expect(secondLabel.htmlFor).toEqual(secondInput.id);
+      }));
+
+    it('should keep an id that already carries a form-array row index live instead of caching it',
+      inject([DynamicFormLayoutService], (layoutService: DynamicFormLayoutService) => {
+        const getElementId = spyOn(layoutService, 'getElementId').and.returnValue('array-0-input');
+
+        expect(component.id).toBe('array-0-input');
+
+        getElementId.and.returnValue('array-1-input');
+
+        expect(component.id).toBe('array-1-input');
+
+        // the child must not get a frozen own id either, or it would stop following the row index
+        (component as any).createFormControlComponent();
+
+        expect(Object.getOwnPropertyDescriptor((component as any).componentRef.instance, 'id')).toBeUndefined();
+      }));
   });
 
 });

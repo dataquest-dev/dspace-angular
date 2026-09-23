@@ -9,7 +9,7 @@
     }
     <input class="form-control"
       type="text"
-      [attr.aria-labelledby]="'label_' + model.id"
+      [attr.aria-labelledby]="'label_' + id"
       [(ngModel)]="currentValue"
       [attr.autoComplete]="model.autoComplete"
       [class.is-invalid]="showErrorMessages"

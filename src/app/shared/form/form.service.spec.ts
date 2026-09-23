@@ -227,6 +227,32 @@ describe('FormService test suite', () => {
 
   });
 
+  it('should add errors to fields of complex group', () => {
+    (builderService as any).isComplexGroup.and.returnValue(true);
+
+    const control = controls.addressLocation;
+    const model = formModel.find((mdl: DynamicFormControlModel) => mdl.id === 'addressLocation');
+    let errorKeys: string[];
+
+    service.addErrorToField(control, model, 'Test error message');
+
+    // the group itself should get an error
+    errorKeys = Object.keys(control.errors);
+    expect(errorKeys.length).toBe(1);
+    expect(control.hasError(errorKeys[0])).toBe(true);
+
+    expect(control.touched).toBe(true);
+
+    // the group's inputs should get an error
+    Object.values(control.controls).forEach((subControl: AbstractControl) => {
+      expect(subControl.errors).not.toBeNull();
+      errorKeys = Object.keys(subControl.errors);
+      expect(errorKeys.length).toBe(1);
+      expect(subControl.hasError(errorKeys[0])).toBe(true);
+      expect(subControl.touched).toBe(true);
+    });
+  });
+
   it('should remove error from field', () => {
     let control = controls.description;
     let model = formModel.find((mdl: DynamicFormControlModel) => mdl.id === 'description');
@@ -276,6 +302,33 @@ describe('FormService test suite', () => {
 
     // the group's inputs should no longer have an error
     Object.values(control.controls).forEach((subControl: AbstractControl) => {
+      errorKeys = Object.keys(subControl.errors);
+      expect(errorKeys.length).toBe(1);
+      expect(subControl.hasError(errorKeys[0])).toBe(false);
+      expect(subControl.touched).toBe(false);
+    });
+  });
+
+  it('should remove errors from fields of complex group', () => {
+    (builderService as any).isComplexGroup.and.returnValue(true);
+
+    const control = controls.addressLocation;
+    const model = formModel.find((mdl: DynamicFormControlModel) => mdl.id === 'addressLocation');
+    let errorKeys: string[];
+
+    service.addErrorToField(control, model, 'Test error message');
+    errorKeys = Object.keys(control.errors);
+
+    service.removeErrorFromField(control, model, errorKeys[0]);
+
+    // the group itself should no longer have an error
+    expect(errorKeys.length).toBe(1);
+    expect(control.hasError(errorKeys[0])).toBe(false);
+    expect(control.touched).toBe(false);
+
+    // the group's inputs should no longer have an error
+    Object.values(control.controls).forEach((subControl: AbstractControl) => {
+      expect(subControl.errors).not.toBeNull();
       errorKeys = Object.keys(subControl.errors);
       expect(errorKeys.length).toBe(1);
       expect(subControl.hasError(errorKeys[0])).toBe(false);

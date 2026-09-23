@@ -10,6 +10,8 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MockStore } from '@ngrx/store/testing';
 
+import { DsDynamicFormControlContainerComponent } from './app/shared/form/builder/ds-dynamic-form-ui/ds-dynamic-form-control-container.component';
+
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
   BrowserDynamicTestingModule,
@@ -23,4 +25,5 @@ jasmine.getEnv().afterEach(() => {
   getTestBed().inject(MockStore, null)?.resetSelectors();
   // Close any leftover modals
   getTestBed().inject(NgbModal, null)?.dismissAll?.();
+  DsDynamicFormControlContainerComponent.resetIdCounters();
 });
