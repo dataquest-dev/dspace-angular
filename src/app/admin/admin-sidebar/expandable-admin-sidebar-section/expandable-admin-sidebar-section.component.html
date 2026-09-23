@@ -13,6 +13,7 @@
       [attr.aria-label]="('menu.section.toggle.' + (section.accessibilityHandle ?? section.id)) | translate"
       [class.disabled]="section.model?.disabled"
       (click)="toggleSection($event)"
+      (keydown.space)="$event.preventDefault()"
       (keyup.space)="toggleSection($event)"
       href="javascript:void(0);"
       >

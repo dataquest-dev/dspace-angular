@@ -19,6 +19,7 @@ import { ActivatedRouteStub } from '../../testing/active-router.stub';
 import { QueryParamsDirectiveStub } from '../../testing/query-params-directive.stub';
 import { RouterStub } from '../../testing/router.stub';
 import { RouterLinkDirectiveStub } from '../../testing/router-link-directive.stub';
+import { dispatchSpaceKey } from '../../testing/utils.test';
 import { LinkMenuItemComponent } from './link-menu-item.component';
 
 describe('LinkMenuItemComponent', () => {
@@ -86,5 +87,11 @@ describe('LinkMenuItemComponent', () => {
 
     expect(routerParamsQuery.length).toBe(1);
     expect(routerParamsQuery[0].queryParams).toBe(queryParams);
+  });
+
+  it('should prevent the page from scrolling when space is pressed', () => {
+    const control = fixture.debugElement.query(By.css('a.ds-menu-item')).nativeElement;
+
+    expect(dispatchSpaceKey(control, 'keydown').defaultPrevented).toBeTrue();
   });
 });

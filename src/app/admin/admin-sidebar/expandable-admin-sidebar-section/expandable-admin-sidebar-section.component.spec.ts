@@ -16,6 +16,7 @@ import { CSSVariableService } from '../../../shared/sass-helper/css-variable.ser
 import { CSSVariableServiceStub } from '../../../shared/testing/css-variable-service.stub';
 import { MenuServiceStub } from '../../../shared/testing/menu-service.stub';
 import { RouterStub } from '../../../shared/testing/router.stub';
+import { dispatchSpaceKey } from '../../../shared/testing/utils.test';
 import { ExpandableAdminSidebarSectionComponent } from './expandable-admin-sidebar-section.component';
 
 describe('ExpandableAdminSidebarSectionComponent', () => {
@@ -57,6 +58,12 @@ describe('ExpandableAdminSidebarSectionComponent', () => {
     it('should set the right icon', () => {
       const icon = fixture.debugElement.query(By.css('[data-test="sidebar-section-icon"] > i.fas'));
       expect(icon.nativeElement.getAttribute('class')).toContain('fa-' + iconString);
+    });
+
+    it('should prevent the page from scrolling when space is pressed', () => {
+      const control = fixture.debugElement.query(By.css('a.sidebar-section-wrapper')).nativeElement;
+
+      expect(dispatchSpaceKey(control, 'keydown').defaultPrevented).toBeTrue();
     });
 
     describe('when the header text is clicked', () => {

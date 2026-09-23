@@ -5,6 +5,7 @@
     href="javascript:void(0);"
     [title]="item.text | translate"
     (click)="activate($event)"
+    (keydown.space)="$event.preventDefault()"
     (keyup.space)="activate($event)"
     (keyup.enter)="activate($event)"
     [attr.data-test]="item.text"

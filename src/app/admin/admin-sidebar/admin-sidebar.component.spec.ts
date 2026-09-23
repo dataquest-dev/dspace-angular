@@ -32,6 +32,7 @@ import { CSSVariableService } from '../../shared/sass-helper/css-variable.servic
 import { AuthServiceStub } from '../../shared/testing/auth-service.stub';
 import { CSSVariableServiceStub } from '../../shared/testing/css-variable-service.stub';
 import { MenuServiceStub } from '../../shared/testing/menu-service.stub';
+import { dispatchSpaceKey } from '../../shared/testing/utils.test';
 import { ThemeService } from '../../shared/theme-support/theme.service';
 import { AdminSidebarComponent } from './admin-sidebar.component';
 
@@ -166,6 +167,12 @@ describe('AdminSidebarComponent', () => {
     it('should call toggleMenu on the menuService', () => {
       expect(menuService.toggleMenu).toHaveBeenCalled();
     });
+  });
+
+  it('should prevent the page from scrolling when space is pressed on the collapse link', () => {
+    const control = fixture.debugElement.query(By.css('#sidebar-collapse-toggle-container > a')).nativeElement;
+
+    expect(dispatchSpaceKey(control, 'keydown').defaultPrevented).toBeTrue();
   });
 
   describe('when the the mouse enters the nav tag', () => {

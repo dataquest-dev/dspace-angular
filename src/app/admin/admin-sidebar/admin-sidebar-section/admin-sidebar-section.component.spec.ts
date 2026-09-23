@@ -13,6 +13,7 @@ import { MenuService } from '../../../shared/menu/menu.service';
 import { CSSVariableService } from '../../../shared/sass-helper/css-variable.service';
 import { CSSVariableServiceStub } from '../../../shared/testing/css-variable-service.stub';
 import { MenuServiceStub } from '../../../shared/testing/menu-service.stub';
+import { dispatchSpaceKey } from '../../../shared/testing/utils.test';
 import { AdminSidebarSectionComponent } from './admin-sidebar-section.component';
 
 describe('AdminSidebarSectionComponent', () => {
@@ -52,6 +53,12 @@ describe('AdminSidebarSectionComponent', () => {
     it('should not contain the disabled class', () => {
       const disabled = fixture.debugElement.query(By.css('.disabled'));
       expect(disabled).toBeFalsy();
+    });
+
+    it('should prevent the page from scrolling when space is pressed', () => {
+      const control = fixture.debugElement.query(By.css('a.sidebar-section-wrapper')).nativeElement;
+
+      expect(dispatchSpaceKey(control, 'keydown').defaultPrevented).toBeTrue();
     });
 
   });
