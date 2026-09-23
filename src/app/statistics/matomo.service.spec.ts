@@ -27,6 +27,7 @@ import {
   MATOMO_ENABLED,
   MATOMO_SITE_ID,
   MATOMO_TRACKER_URL,
+  matomoItemDimensionInterceptor,
   MatomoService,
 } from './matomo.service';
 
@@ -39,7 +40,7 @@ describe('MatomoService', () => {
   let configService: jasmine.SpyObj<ConfigurationDataService>;
 
   beforeEach(() => {
-    matomoTracker = jasmine.createSpyObj('MatomoTracker', ['setConsentGiven', 'forgetConsentGiven', 'getVisitorId']);
+    matomoTracker = jasmine.createSpyObj('MatomoTracker', ['setConsentGiven', 'forgetConsentGiven', 'getVisitorId', 'setCustomDimension', 'deleteCustomDimension']);
     matomoInitializer = jasmine.createSpyObj('MatomoInitializerService', ['initializeTracker', 'initialize']);
     orejimeService = jasmine.createSpyObj('OrejimeService', ['getSavedPreferences']);
     nativeWindowService = jasmine.createSpyObj('NativeWindowService', [], { nativeWindow: {} });
@@ -153,6 +154,72 @@ describe('MatomoService', () => {
     service.init();
 
     expect(matomoInitializer.initializeTracker).not.toHaveBeenCalled();
+  });
+
+  describe('per-item custom dimension', () => {
+    const handle = 'https://hdl.handle.net/123456789/1';
+    let previousMatomoConfig;
+
+    beforeEach(() => {
+      previousMatomoConfig = environment.matomo;
+      environment.matomo = { trackerUrl: '', dimensionId: 7 };
+      service.matomoTracker = matomoTracker;
+    });
+
+    afterEach(() => {
+      environment.matomo = previousMatomoConfig;
+    });
+
+    it('should report the item handle as the value of the configured dimension', () => {
+      service.setItemHandle(handle);
+
+      service.applyItemCustomDimension();
+
+      expect(matomoTracker.setCustomDimension).toHaveBeenCalledWith(7, handle);
+    });
+
+    it('should report the item handle before the tracker has been initialised', () => {
+      service.matomoTracker = undefined;
+      service.setItemHandle(handle);
+
+      service.applyItemCustomDimension();
+
+      expect(matomoTracker.setCustomDimension).toHaveBeenCalledWith(7, handle);
+    });
+
+    it('should clear the dimension on a page that has no item handle', () => {
+      service.applyItemCustomDimension();
+
+      expect(matomoTracker.setCustomDimension).not.toHaveBeenCalled();
+      expect(matomoTracker.deleteCustomDimension).toHaveBeenCalledWith(7);
+    });
+
+    it('should not attribute the next page view to the previous item', () => {
+      service.setItemHandle(handle);
+      service.applyItemCustomDimension();
+
+      service.applyItemCustomDimension();
+
+      expect(matomoTracker.deleteCustomDimension).toHaveBeenCalledWith(7);
+    });
+
+    it('should be applied by the router interceptor on the same service instance', () => {
+      spyOn(service, 'applyItemCustomDimension');
+
+      TestBed.runInInjectionContext(() => matomoItemDimensionInterceptor());
+
+      expect(service.applyItemCustomDimension).toHaveBeenCalled();
+    });
+
+    it('should send nothing when dimensionId is not configured', () => {
+      environment.matomo = { trackerUrl: '' };
+      service.setItemHandle(handle);
+
+      expect(() => service.applyItemCustomDimension()).not.toThrow();
+
+      expect(matomoTracker.setCustomDimension).not.toHaveBeenCalled();
+      expect(matomoTracker.deleteCustomDimension).not.toHaveBeenCalled();
+    });
   });
 
   describe('with visitorId set', () => {

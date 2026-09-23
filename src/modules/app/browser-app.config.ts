@@ -37,9 +37,13 @@ import {
   provideMatomo,
   withRouteData,
   withRouter,
+  withRouterInterceptors,
 } from 'ngx-matomo-client';
 import { customMatomoScriptFactory } from 'src/app/statistics/matomo.factory';
-import { MatomoService } from 'src/app/statistics/matomo.service';
+import {
+  matomoItemDimensionInterceptor,
+  MatomoService,
+} from 'src/app/statistics/matomo.service';
 
 import { commonAppConfig } from '../../app/app.config';
 import { storeModuleConfig } from '../../app/app.reducer';
@@ -171,6 +175,7 @@ export const browserAppConfig: ApplicationConfig = mergeApplicationConfig({
       },
       withRouter(),
       withRouteData(),
+      withRouterInterceptors([matomoItemDimensionInterceptor]),
     ),
     {
       provide: MATOMO_SCRIPT_FACTORY,
