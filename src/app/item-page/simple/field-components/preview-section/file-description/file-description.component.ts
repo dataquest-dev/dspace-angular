@@ -8,7 +8,10 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+} from '@angular/router';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -38,6 +41,7 @@ import {
   getFirstCompletedRemoteData,
   getFirstSucceededRemoteData,
 } from '../../../../../core/shared/operators';
+import { getGrantedAccessToken } from '../../../../../shared/clarin-shared-util';
 import { hasValue } from '../../../../../shared/empty.util';
 import { FileSizePipe } from '../../../../../shared/utils/file-size-pipe';
 import { followLink } from '../../../../../shared/utils/follow-link-config.model';
@@ -81,6 +85,7 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
   emailToContact: string;
   content_url$: Observable<string>;
   content_url: string;
+  video_url: string;
   thumbnail_url$: Observable<string>;
   handlers_added = false;
   playPromise: Promise<void>;
@@ -90,6 +95,7 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
 
   constructor(protected halService: HALEndpointService,
               private router: Router,
+              private route: ActivatedRoute,
               private bitstreamService: BitstreamDataService,
               private auth: AuthService,
               private authDataService: AuthorizationDataService,
@@ -125,6 +131,8 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
         ));
     this.content_url$.pipe(take(1)).subscribe((url) => {
       this.content_url = url;
+      const accessToken = this.getAccessToken();
+      this.video_url = url && accessToken ? `${url}?accessToken=${encodeURIComponent(accessToken)}` : url;
     });
   }
 
@@ -221,7 +229,14 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public downloadFile() {
-    void this.router.navigateByUrl('bitstreams/' + this.fileInput.id + '/download');
+    const accessToken = this.getAccessToken();
+    void this.router.navigate(['bitstreams', this.fileInput.id, 'download'], {
+      queryParams: accessToken ? { accessToken } : {},
+    });
+  }
+
+  private getAccessToken(): string {
+    return getGrantedAccessToken(this.route.snapshot?.data?.itemRequest, this.fileInput.id);
   }
 
   public togglePreview() {

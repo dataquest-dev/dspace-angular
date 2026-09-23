@@ -1,11 +1,13 @@
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { ItemRequest } from '../core/shared/item-request.model';
 import { MetadataValue } from '../core/shared/metadata.models';
 import { getFirstSucceededRemoteDataPayload } from '../core/shared/operators';
 import { AuthorNameLink } from './clarin-item-box-view/clarin-author-name-link.model';
 import {
   isEmpty,
+  isNotEmpty,
   isNull,
   isUndefined,
 } from './empty.util';
@@ -113,4 +115,15 @@ export function encodeRFC3986URIComponent(uriPart: string) {
   // Encode special characters in the filename
   return encodeURIComponent(decodedFileName)
     .replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
+}
+
+/**
+ * The request-a-copy access token that an approved, unexpired request grants for the given bitstream,
+ * or for all files when no bitstream id is given. Undefined when there is no such grant.
+ * @param itemRequest the item request the access token resolver put into the route data
+ * @param bitstreamId the id of the bitstream to download
+ */
+export function getGrantedAccessToken(itemRequest: ItemRequest, bitstreamId?: string): string {
+  const grantsFile = itemRequest?.allfiles !== false || (isNotEmpty(bitstreamId) && itemRequest?.bitstreamId === bitstreamId);
+  return itemRequest?.acceptRequest && !itemRequest.accessExpired && grantsFile ? itemRequest.accessToken : undefined;
 }

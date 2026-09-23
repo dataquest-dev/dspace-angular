@@ -4,7 +4,10 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+} from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbCollapseConfig } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -28,6 +31,7 @@ import { Bitstream } from '../../../../../core/shared/bitstream.model';
 import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
 import { FileService } from '../../../../../core/shared/file.service';
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
+import { ItemRequest } from '../../../../../core/shared/item-request.model';
 import { TranslateLoaderMock } from '../../../../../shared/mocks/translate-loader.mock';
 import { createSuccessfulRemoteDataObject$ } from '../../../../../shared/remote-data.utils';
 import { AuthServiceStub } from '../../../../../shared/testing/auth-service.stub';
@@ -58,14 +62,24 @@ const AXE_OPTIONS: axe.RunOptions = {
   resultTypes: ['violations'],
 };
 
+const APPROVED_REQUEST = Object.assign(new ItemRequest(), {
+  acceptRequest: true,
+  accessExpired: false,
+  allfiles: true,
+  accessToken: 'approved-token',
+});
+
 describe('FileDescriptionComponent', () => {
   let component: FileDescriptionComponent;
   let fixture: ComponentFixture<FileDescriptionComponent>;
   let halService: HALEndpointService;
   let bitstreamDataService: BitstreamDataService;
   let localeService: LocaleService;
+  let route: { snapshot: { data: { itemRequest?: ItemRequest } } };
 
   beforeEach(async () => {
+    route = { snapshot: { data: {} } };
+
     const configurationDataService = jasmine.createSpyObj('configurationDataService', {
       findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
         name: 'test',
@@ -106,6 +120,7 @@ describe('FileDescriptionComponent', () => {
         { provide: AuthorizationDataService, useClass: AuthorizationDataServiceStub },
         { provide: BitstreamDataService, useValue: bitstreamDataService },
         { provide: LocaleService, useValue: localeService },
+        { provide: ActivatedRoute, useValue: route },
       ],
     }).compileComponents();
   });
@@ -152,10 +167,11 @@ describe('FileDescriptionComponent', () => {
 
   describe('the download control', () => {
     const downloadButton = (): HTMLElement => fixture.nativeElement.querySelector('a.download-btn');
-    let navigateByUrl: jasmine.Spy;
+    const downloadRoute = (): string[] => ['bitstreams', component.fileInput.id, 'download'];
+    let navigate: jasmine.Spy;
 
     beforeEach(() => {
-      navigateByUrl = spyOn(TestBed.inject(Router), 'navigateByUrl').and.returnValue(Promise.resolve(true));
+      navigate = spyOn(TestBed.inject(Router), 'navigate').and.returnValue(Promise.resolve(true));
     });
 
     it('is in the tab order', () => {
@@ -178,38 +194,91 @@ describe('FileDescriptionComponent', () => {
     });
 
     it('starts the download from Enter and from Space', () => {
-      const target = `bitstreams/${component.fileInput.id}/download`;
+      const noToken = { queryParams: {} };
       // bubbles stays false on purpose: a handler moved to an ancestor must not satisfy this.
       const press = (key: string) =>
         downloadButton().dispatchEvent(new KeyboardEvent('keyup', { key, bubbles: false }));
 
       press('Enter');
-      expect(navigateByUrl)
+      expect(navigate)
         .withContext('Enter on the Download control did not start the download')
-        .toHaveBeenCalledWith(target);
+        .toHaveBeenCalledWith(downloadRoute(), noToken);
 
-      navigateByUrl.calls.reset();
+      navigate.calls.reset();
 
       press(' ');
-      expect(navigateByUrl)
+      expect(navigate)
         .withContext('Space on the Download control did not start the download')
-        .toHaveBeenCalledWith(target);
+        .toHaveBeenCalledWith(downloadRoute(), noToken);
 
-      navigateByUrl.calls.reset();
+      navigate.calls.reset();
 
       press('a');
-      expect(navigateByUrl)
+      expect(navigate)
         .withContext('a key that is neither Enter nor Space started the download')
         .not.toHaveBeenCalled();
 
       downloadButton().click();
-      expect(navigateByUrl)
+      expect(navigate)
         .withContext('clicking the Download control did not start the download')
-        .toHaveBeenCalledWith(target);
+        .toHaveBeenCalledWith(downloadRoute(), noToken);
     });
 
     it('does not scroll the page when Space is pressed', () => {
       expect(dispatchSpaceKey(downloadButton(), 'keydown').defaultPrevented).toBeTrue();
+    });
+
+    it('carries an approved request-a-copy token to the download', () => {
+      route.snapshot.data.itemRequest = APPROVED_REQUEST;
+
+      downloadButton().click();
+
+      expect(navigate).toHaveBeenCalledWith(downloadRoute(), { queryParams: { accessToken: 'approved-token' } });
+    });
+
+    it('carries a token that was granted for this file only', () => {
+      route.snapshot.data.itemRequest = Object.assign(new ItemRequest(), APPROVED_REQUEST, {
+        allfiles: false,
+        bitstreamId: component.fileInput.id,
+      });
+
+      downloadButton().click();
+
+      expect(navigate).toHaveBeenCalledWith(downloadRoute(), { queryParams: { accessToken: 'approved-token' } });
+    });
+
+    it('does not carry a token that was granted for another file', () => {
+      route.snapshot.data.itemRequest = Object.assign(new ItemRequest(), APPROVED_REQUEST, {
+        allfiles: false,
+        bitstreamId: 'another-file',
+      });
+
+      downloadButton().click();
+
+      expect(navigate).toHaveBeenCalledWith(downloadRoute(), { queryParams: {} });
+    });
+  });
+
+  describe('the video preview', () => {
+    const videoSource = (): string => fixture.nativeElement.querySelector('video').getAttribute('src');
+
+    beforeEach(() => {
+      component.fileInput.format = 'video/mp4';
+    });
+
+    it('carries an approved request-a-copy token to the video source', () => {
+      route.snapshot.data.itemRequest = APPROVED_REQUEST;
+      component.ngOnInit();
+      fixture.detectChanges();
+
+      expect(videoSource()).toEqual('content?accessToken=approved-token');
+    });
+
+    it('streams the video without a token when the route has none', () => {
+      component.ngOnInit();
+      fixture.detectChanges();
+
+      expect(videoSource()).toEqual('content');
     });
   });
 
