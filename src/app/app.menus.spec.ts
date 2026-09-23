@@ -22,6 +22,7 @@ import {
 } from './shared/menu/menu-provider.model';
 import { MenuProviderService } from './shared/menu/menu-provider.service';
 import { MenuRoute } from './shared/menu/menu-route.model';
+import { ClarinAdminMenuProvider } from './shared/menu/providers/clarin-admin.menu';
 import { ComColSearchMenuProvider } from './shared/menu/providers/comcol-search.menu';
 import { createSuccessfulRemoteDataObject } from './shared/remote-data.utils';
 
@@ -161,6 +162,41 @@ describe('MENUS - scoped-search entry (ComColSearchMenuProvider)', () => {
       expect(addedScopedSearchSections()).toEqual([]);
     }));
 
+  });
+
+});
+
+/**
+ * CLARIN/LINDAT: guard for the admin sidebar registration (card X-03c).
+ *
+ * clarin-admin.menu.spec.ts covers what the provider returns; nothing covered the other half, that
+ * the provider reaches the admin menu at all. Dropping its line from app.menus.ts takes all four
+ * CLARIN entries out of the sidebar without turning a single existing spec red - the same "the way
+ * in is gone" shape as the missing update-config entry.
+ */
+describe('MENUS - CLARIN admin entries (ClarinAdminMenuProvider)', () => {
+
+  function registrations(): any[] {
+    return (MENUS as any[]).filter((provider: any) =>
+      provider !== null
+      && typeof provider === 'object'
+      && provider.provide === MENU_PROVIDER
+      && Array.isArray(provider.deps)
+      && provider.deps[0] === ClarinAdminMenuProvider,
+    );
+  }
+
+  it('should register ClarinAdminMenuProvider exactly once', () => {
+    expect(registrations().length).toEqual(1);
+  });
+
+  it('should register it in the admin sidebar menu', () => {
+    const registration = registrations()[0];
+    const configured: AbstractMenuProvider = registration?.useFactory(
+      new ClarinAdminMenuProvider(null),
+    );
+
+    expect(configured?.menuID).toEqual(MenuID.ADMIN);
   });
 
 });
