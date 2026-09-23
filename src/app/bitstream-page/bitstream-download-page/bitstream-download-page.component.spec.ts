@@ -15,6 +15,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
 import { getForbiddenRoute } from '../../app-routing-paths';
 import { AuthService } from '../../core/auth/auth.service';
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
@@ -231,6 +232,26 @@ describe('BitstreamDownloadPageComponent', () => {
           expect(router.navigateByUrl).toHaveBeenCalledWith('login');
         });
       }));
+    });
+  });
+
+  describe('when signposting is disabled', () => {
+    beforeEach(waitForAsync(() => {
+      init();
+      environment.signpostingEnabled = false;
+      initTestbed();
+    }));
+    beforeEach(() => {
+      fixture = TestBed.createComponent(BitstreamDownloadPageComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+    afterEach(() => {
+      environment.signpostingEnabled = true;
+    });
+    it('should not request the signposting links', () => {
+      expect(signpostingDataService.getLinks).not.toHaveBeenCalled();
+      expect(serverResponseService.setHeader).not.toHaveBeenCalled();
     });
   });
 

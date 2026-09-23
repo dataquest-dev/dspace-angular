@@ -481,4 +481,6 @@ export const environment: BuildConfig = {
   accessibility: {
     cookieExpirationDuration: 7,
   },
+
+  signpostingEnabled: true,
 };

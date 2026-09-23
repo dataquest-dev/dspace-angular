@@ -161,6 +161,7 @@ describe('buildPublicConfig', () => {
       expect(publicConfig.markdown).toEqual(resolved.markdown);
       expect(publicConfig.vocabularies).toEqual(resolved.vocabularies);
       expect(publicConfig.comcolSelectionSort).toEqual(resolved.comcolSelectionSort);
+      expect(publicConfig.signpostingEnabled).toEqual(resolved.signpostingEnabled);
     });
   });
 
