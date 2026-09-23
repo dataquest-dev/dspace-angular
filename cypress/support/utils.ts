@@ -135,6 +135,7 @@ const isExposedToAssistiveTech = (element: Element, view: Window): boolean => {
 // Every link rendered inside `context` must have a non-empty accessible name. Walks the anchors
 // rather than the axe rule, whose a[href] selector skips an anchor whose href arrives async.
 export const testLinkNamesOnPage = (context: string) => {
+  waitForClientRender(context);
   cy.window().then((view) => {
     cy.get(context).then(($page) => {
       const anchors = Array.from($page[0].querySelectorAll('a'))
