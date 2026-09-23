@@ -35,7 +35,7 @@ import { SubmissionSectionClarinLicenseDistributionComponent } from './clarin-li
 
 const collectionId = mockSubmissionCollectionId;
 const licenseText = 'License text';
-const helpDeskMail = 'test@mail.com';
+const helpDeskMail = 'help@example.org';
 const mockCollection = Object.assign(new Collection(), {
   name: 'Community 1-Collection 1',
   id: collectionId,
@@ -49,7 +49,7 @@ const mockCollection = Object.assign(new Collection(), {
 });
 
 const sectionObject: SectionDataObject = {
-  config: 'https://dspace7.4science.it/or2018/api/config/submissionforms/license',
+  config: 'http://localhost:8080/server/api/config/submissionforms/license',
   mandatory: true,
   data: {
     url: null,
