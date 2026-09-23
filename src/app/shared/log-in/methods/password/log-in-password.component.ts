@@ -25,7 +25,10 @@ import {
   select,
   Store,
 } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import {
   combineLatest,
   Observable,
@@ -51,16 +54,21 @@ import {
   getAuthenticationInfo,
 } from '../../../../core/auth/selectors';
 import { CoreState } from '../../../../core/core-state.model';
+import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../../../core/data/feature-authorization/feature-id';
 import { CookieService } from '../../../../core/services/cookie.service';
 import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
+import { getFirstSucceededRemoteDataPayload } from '../../../../core/shared/operators';
+import { HELP_DESK_PROPERTY } from '../../../../item-page/tombstone/tombstone.constants';
 import { fadeOut } from '../../../animations/fade';
 import { BtnDisabledDirective } from '../../../btn-disabled.directive';
 import {
   isEmpty,
   isNotEmpty,
 } from '../../../empty.util';
+import { NotificationOptions } from '../../../notifications/models/notification-options.model';
+import { NotificationsService } from '../../../notifications/notifications.service';
 import { BrowserOnlyPipe } from '../../../utils/browser-only.pipe';
 
 export const SHOW_DISCOJUICE_POPUP_CACHE_NAME = 'SHOW_DISCOJUICE_POPUP';
@@ -155,6 +163,9 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) protected platformId: object,
     protected storage: CookieService,
     protected zone: NgZone,
+    protected configurationService: ConfigurationDataService,
+    private notificationService: NotificationsService,
+    private translateService: TranslateService,
   ) {
     this.authMethod = injectedAuthMethodModel;
   }
@@ -165,6 +176,7 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
    */
   public ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
+      this.checkIfHasLoginError();
       this.initializeDiscoJuiceCache();
       this.toggleDiscojuiceLogin();
     }
@@ -213,6 +225,23 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
 
   getForgotRoute() {
     return getForgotPasswordRoute();
+  }
+
+  /** The backend redirects a failed Shibboleth login here, so say it failed and give the help desk address. */
+  private checkIfHasLoginError(): void {
+    if (this.route.snapshot.queryParams?.error !== 'shibboleth-authentication-failed') {
+      return;
+    }
+
+    this.configurationService.findByPropertyName(HELP_DESK_PROPERTY).pipe(
+      getFirstSucceededRemoteDataPayload(),
+    ).subscribe((helpDeskEmail) => {
+      this.notificationService.error(
+        this.translateService.instant('login.auth.failed.shibboleth.title'),
+        this.translateService.instant('login.auth.failed.shibboleth.message', { email: helpDeskEmail?.values?.[0] }),
+        new NotificationOptions(-1, true),
+      );
+    });
   }
 
   /**

@@ -22,6 +22,7 @@ import { of } from 'rxjs';
 
 import { authReducer } from '../../core/auth/auth.reducer';
 import { AuthService } from '../../core/auth/auth.service';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { CookieService } from '../../core/services/cookie.service';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
@@ -34,6 +35,7 @@ import {
   authMethodsMock,
   AuthServiceStub,
 } from '../testing/auth-service.stub';
+import { ConfigurationDataServiceStub } from '../testing/configuration-data.service.stub';
 import { createTestComponent } from '../testing/utils.test';
 import { ThemeService } from '../theme-support/theme.service';
 import { LogInComponent } from './log-in.component';
@@ -88,6 +90,7 @@ describe('LogInComponent', () => {
         { provide: HardRedirectService, useValue: hardRedirectService },
         { provide: AuthorizationDataService, useValue: authorizationService },
         { provide: CookieService, useValue: new CookieServiceMock() },
+        { provide: ConfigurationDataService, useClass: ConfigurationDataServiceStub },
         provideMockStore({ initialState }),
         { provide: ThemeService, useValue: getMockThemeService() },
         LogInComponent,
