@@ -21,6 +21,8 @@ import {
   Observable,
   of,
 } from 'rxjs';
+import { ConfigurationDataService } from 'src/app/core/data/configuration-data.service';
+import { ConfigurationDataServiceStub } from 'src/app/shared/testing/configuration-data.service.stub';
 
 import {
   APP_CONFIG,
@@ -48,7 +50,6 @@ import { SearchService } from '../../../../core/shared/search/search.service';
 import { UUIDService } from '../../../../core/shared/uuid.service';
 import { WorkspaceitemDataService } from '../../../../core/submission/workspaceitem-data.service';
 import { DsoEditMenuComponent } from '../../../../shared/dso-page/dso-edit-menu/dso-edit-menu.component';
-import { MetadataFieldWrapperComponent } from '../../../../shared/metadata-field-wrapper/metadata-field-wrapper.component';
 import { mockTruncatableService } from '../../../../shared/mocks/mock-trucatable.service';
 import { TranslateLoaderMock } from '../../../../shared/mocks/translate-loader.mock';
 import { NotificationsService } from '../../../../shared/notifications/notifications.service';
@@ -58,19 +59,15 @@ import { BrowseDefinitionDataServiceStub } from '../../../../shared/testing/brow
 import { createPaginatedList } from '../../../../shared/testing/utils.test';
 import { TruncatableService } from '../../../../shared/truncatable/truncatable.service';
 import { TruncatePipe } from '../../../../shared/utils/truncate.pipe';
-import { ThemedThumbnailComponent } from '../../../../thumbnail/themed-thumbnail.component';
-import { CollectionsComponent } from '../../../field-components/collections/collections.component';
+import { ClarinRefBoxComponent } from '../../../clarin-ref-box/clarin-ref-box.component';
 import { ThemedMediaViewerComponent } from '../../../media-viewer/themed-media-viewer.component';
 import { MiradorViewerComponent } from '../../../mirador-viewer/mirador-viewer.component';
+import { ItemVersionsSharedService } from '../../../versions/item-versions-shared.service';
+import { ClarinCollectionsItemFieldComponent } from '../../field-components/clarin-collections-item-field/clarin-collections-item-field.component';
+import { ClarinGenericItemFieldComponent } from '../../field-components/clarin-generic-item-field/clarin-generic-item-field.component';
 import { ClarinItemVersionsFieldComponent } from '../../field-components/clarin-item-versions-field/clarin-item-versions-field.component';
-import { ThemedFileSectionComponent } from '../../field-components/file-section/themed-file-section.component';
-import { ItemPageAbstractFieldComponent } from '../../field-components/specific-field/abstract/item-page-abstract-field.component';
-import { ItemPageDateFieldComponent } from '../../field-components/specific-field/date/item-page-date-field.component';
 import { GenericItemPageFieldComponent } from '../../field-components/specific-field/generic/generic-item-page-field.component';
 import { ThemedItemPageTitleFieldComponent } from '../../field-components/specific-field/title/themed-item-page-field.component';
-import { ItemPageUriFieldComponent } from '../../field-components/specific-field/uri/item-page-uri-field.component';
-import { ThemedMetadataRepresentationListComponent } from '../../metadata-representation-list/themed-metadata-representation-list.component';
-import { RelatedItemsComponent } from '../../related-items/related-items-component';
 import {
   createRelationshipsObservable,
   getIIIFEnabled,
@@ -92,6 +89,7 @@ function getItem(metadata: MetadataMap) {
 describe('PublicationComponent', () => {
   let comp: PublicationComponent;
   let fixture: ComponentFixture<PublicationComponent>;
+  const configurationDataService = new ConfigurationDataServiceStub();
 
   beforeEach(waitForAsync(() => {
     const mockBitstreamDataService = {
@@ -130,8 +128,10 @@ describe('PublicationComponent', () => {
         { provide: BitstreamDataService, useValue: mockBitstreamDataService },
         { provide: WorkspaceitemDataService, useValue: {} },
         { provide: SearchService, useValue: {} },
+        { provide: ItemVersionsSharedService, useValue: {} },
         { provide: RouteService, useValue: mockRouteService },
         { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub },
+        { provide: ConfigurationDataService, useValue: configurationDataService },
         { provide: APP_CONFIG, useValue: environment },
         { provide: APP_DATA_SERVICES_MAP, useValue: {}  },
       ],
@@ -139,7 +139,16 @@ describe('PublicationComponent', () => {
     }).overrideComponent(PublicationComponent, {
       add: { changeDetection: ChangeDetectionStrategy.Default },
       remove: {
-        imports: [ThemedResultsBackButtonComponent, MiradorViewerComponent, ThemedItemPageTitleFieldComponent, DsoEditMenuComponent, MetadataFieldWrapperComponent, ThemedThumbnailComponent, ThemedMediaViewerComponent, ThemedFileSectionComponent, ItemPageDateFieldComponent, ThemedMetadataRepresentationListComponent, GenericItemPageFieldComponent, RelatedItemsComponent, ItemPageAbstractFieldComponent, ItemPageUriFieldComponent, CollectionsComponent, ClarinItemVersionsFieldComponent,
+        imports: [
+          ThemedResultsBackButtonComponent,
+          MiradorViewerComponent,
+          ThemedItemPageTitleFieldComponent,
+          DsoEditMenuComponent,
+          ThemedMediaViewerComponent,
+          ClarinRefBoxComponent,
+          ClarinGenericItemFieldComponent,
+          ClarinCollectionsItemFieldComponent,
+          ClarinItemVersionsFieldComponent,
         ],
       },
     });
@@ -154,9 +163,14 @@ describe('PublicationComponent', () => {
       fixture.detectChanges();
     }));
 
-    it('should contain a component to display the date', () => {
-      const fields = fixture.debugElement.queryAll(By.css('ds-item-page-date-field'));
-      expect(fields.length).toBeGreaterThanOrEqual(1);
+    it('should contain the clarin citation box', () => {
+      const fields = fixture.debugElement.queryAll(By.css('ds-clarin-ref-box'));
+      expect(fields.length).toBe(1);
+    });
+
+    it('should contain clarin generic item fields for the metadata (date, uri, description, ...)', () => {
+      const fields = fixture.debugElement.queryAll(By.css('ds-clarin-generic-item-field'));
+      expect(fields.length).toBeGreaterThanOrEqual(10);
     });
 
     it('should not contain a metadata only author field', () => {
@@ -164,29 +178,24 @@ describe('PublicationComponent', () => {
       expect(fields.length).toBe(0);
     });
 
-    it('should contain a mixed metadata and relationship field for authors', () => {
-      const fields = fixture.debugElement.queryAll(By.css('.ds-item-page-mixed-author-field'));
-      expect(fields.length).toBe(1);
-    });
-
-    it('should contain a component to display the abstract', () => {
-      const fields = fixture.debugElement.queryAll(By.css('ds-item-page-abstract-field'));
-      expect(fields.length).toBeGreaterThanOrEqual(1);
-    });
-
-    it('should contain a component to display the uri', () => {
-      const fields = fixture.debugElement.queryAll(By.css('ds-item-page-uri-field'));
-      expect(fields.length).toBeGreaterThanOrEqual(1);
+    it('should not contain the vanilla item page collections component', () => {
+      const fields = fixture.debugElement.queryAll(By.css('ds-item-page-collections'));
+      expect(fields.length).toBe(0);
     });
 
     it('should contain a component to display the collections', () => {
-      const fields = fixture.debugElement.queryAll(By.css('ds-item-page-collections'));
+      const fields = fixture.debugElement.queryAll(By.css('ds-clarin-collections-item-field'));
       expect(fields.length).toBeGreaterThanOrEqual(1);
     });
 
     it('should contain a component to display the version history', () => {
       const fields = fixture.debugElement.queryAll(By.css('ds-clarin-item-versions-field'));
       expect(fields.length).toBe(1);
+    });
+
+    it('should not contain an iiif viewer component', () => {
+      const fields = fixture.debugElement.queryAll(By.css('ds-mirador-viewer'));
+      expect(fields.length).toBe(0);
     });
   });
 
@@ -208,15 +217,14 @@ describe('PublicationComponent', () => {
       const fields = fixture.debugElement.queryAll(By.css('ds-mirador-viewer'));
       expect(fields.length).toBeGreaterThanOrEqual(1);
     });
-    it('should not retrieve the query term for previous route', fakeAsync((): void => {
-      //tick(10)
+
+    it('should not retrieve the query term for previous route', (): void => {
       expect(comp.iiifQuery$).toBeFalsy();
-    }));
+    });
 
   });
 
   describe('with IIIF viewer and search', () => {
-
     const localMockRouteService = {
       getPreviousUrl(): Observable<string> {
         return of('/search?query=test%20query&fakeParam=true');
@@ -246,10 +254,9 @@ describe('PublicationComponent', () => {
       expect(fields.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('should retrieve the query term for previous route', fakeAsync((): void => {
+    it('should retrieve the query term for previous route', (): void => {
       expect(comp.iiifQuery$.subscribe(result => expect(result).toEqual('test query')));
-    }));
-
+    });
   });
 
   describe('with IIIF viewer and search but no previous search query', () => {
@@ -282,7 +289,7 @@ describe('PublicationComponent', () => {
       expect(fields.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('should not retrieve the query term for previous route', fakeAsync( () => {
+    it('should not retrieve the query term for previous route', fakeAsync(() => {
       let emitted;
       comp.iiifQuery$.subscribe(result => emitted = result);
       tick(10);
