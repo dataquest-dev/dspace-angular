@@ -6,6 +6,7 @@ let restBaseUrl: string;
 let adminAuthorization: string;
 let withdrawnItemId: string;
 let replacedItemId: string;
+const createdItemIds: string[] = [];
 
 /**
  * Send a REST request as the administrator, with a fresh CSRF token.
@@ -51,6 +52,7 @@ function createWithdrawnItem(collectionId: string, metadata: object): Cypress.Ch
     metadata,
   }).then((response) => {
     const itemId: string = response.body.uuid;
+    createdItemIds.push(itemId);
     return adminRequest('PATCH', '/api/core/items/' + itemId, [{ op: 'replace', path: '/withdrawn', value: true }])
       .then(() => itemId);
   });
@@ -80,9 +82,7 @@ describe('Admin Tombstone Page', () => {
   });
 
   after(() => {
-    [withdrawnItemId, replacedItemId]
-      .filter((itemId) => itemId !== undefined)
-      .forEach((itemId) => adminRequest('DELETE', '/api/core/items/' + itemId));
+    createdItemIds.forEach((itemId) => adminRequest('DELETE', '/api/core/items/' + itemId));
   });
 
   beforeEach(() => {
