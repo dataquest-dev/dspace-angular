@@ -48,18 +48,18 @@
                   </button>
                   <div ngbDropdown #paginationControls="ngbDropdown" class="btn-group float-end p-0"
                        container="body" placement="bottom-right">
-                    <button class="btn btn-outline-secondary btn-sm" id="paginationControls" ngbDropdownToggle
+                    <button class="btn btn-outline-secondary btn-sm" id="paginationControls-bundle-{{ sanitizedBundleName }}" ngbDropdownToggle
                       [title]="'pagination.options.description' | translate"
                       [attr.aria-label]="'pagination.options.description' | translate" aria-haspopup="true"
                       aria-expanded="false">
                       <i class="fas fa-cog" aria-hidden="true"></i>
                     </button>
-                    <ul id="paginationControlsDropdownMenu" aria-labelledby="paginationControls" role="menu"
+                    <ul id="paginationControlsDropdownMenu-bundle-{{ sanitizedBundleName }}" [attr.aria-labelledby]="'paginationControls-bundle-' + sanitizedBundleName" role="menu"
                       ngbDropdownMenu>
                       <li role="menuitem">
-                        <span class="dropdown-header" id="pagination-control_results-per-page"
+                        <span class="dropdown-header" id="pagination-control_results-per-page-bundle-{{ sanitizedBundleName }}"
                         role="heading">{{ 'pagination.results-per-page' | translate}}</span>
-                        <ul aria-labelledby="pagination-control_results-per-page" class="list-unstyled" role="listbox">
+                        <ul [attr.aria-labelledby]="'pagination-control_results-per-page-bundle-' + sanitizedBundleName" class="list-unstyled" role="listbox">
                           @for (size of paginationOptions.pageSizeOptions; track size) {
                             <li role="option"
                               [attr.aria-selected]="size === (pageSize$ | async)">
