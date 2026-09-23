@@ -1,5 +1,6 @@
 import { Route } from '@angular/router';
 
+import { accessTokenResolver } from '../core/auth/access-token.resolver';
 import { authenticatedGuard } from '../core/auth/authenticated.guard';
 import { bitstreamBreadcrumbResolver } from '../core/breadcrumbs/bitstream-breadcrumb.resolver';
 import { i18nBreadcrumbResolver } from '../core/breadcrumbs/i18n-breadcrumb.resolver';
@@ -41,6 +42,7 @@ export const ROUTES: Route[] = [
     component: ClarinBitstreamDownloadPageComponent,
     resolve: {
       bitstream: bitstreamPageResolver,
+      itemRequest: accessTokenResolver,
     },
   },
   {

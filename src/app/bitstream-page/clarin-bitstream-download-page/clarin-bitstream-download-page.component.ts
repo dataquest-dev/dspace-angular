@@ -63,6 +63,7 @@ import { ClarinLicenseAgreementPageComponent } from '../clarin-license-agreement
  * `/<BITSTREAM_UUID>/download` page
  * This component decides if the bitstream will be downloaded or if the user must fill in some user metadata or
  * if the path contains `dtoken` parameter the component tries to download the bitstream with the token.
+ * A request-a-copy `accessToken` is handed over to the backend, which decides whether it authorizes the download.
  */
 @Component({
   imports: [
@@ -83,6 +84,7 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
   downloadStatus: BehaviorSubject<string> = new BehaviorSubject('');
   zipDownloadLink: BehaviorSubject<string> = new BehaviorSubject('');
   dtoken: string;
+  accessToken: string;
 
   constructor(
     protected route: ActivatedRoute,
@@ -99,6 +101,9 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
   ngOnInit(): void {
     // Get dtoken
     this.dtoken = isUndefined(this.route.snapshot.queryParams.dtoken) ? null : this.route.snapshot.queryParams.dtoken;
+    // Get the request-a-copy accessToken sent in the approval e-mail
+    this.accessToken = isUndefined(this.route.snapshot.queryParams.accessToken) ? null :
+      this.route.snapshot.queryParams.accessToken;
 
     if (isUndefined(this.bitstreamRD$)) {
       this.bitstreamRD$ = this.route.data.pipe(
@@ -172,6 +177,13 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
       } else if ((isAuthorized || isAuthorizedByClarin) && !isLoggedIn) {
         this.downloadStatus.next(RequestEntryState.Success);
         window.location.replace(bitstreamURL);
+      } else if (!(isAuthorized || isAuthorizedByClarin) && isNotEmpty(this.accessToken) &&
+        this.downloadStatus.value === AUTHORIZATION_DENIED_EXCEPTION) {
+        // Only the policy refused, which a request-a-copy token can answer. A missing licence or an
+        // expired dtoken keeps its own page, because the user can still act on those here.
+        const separator = bitstreamURL.includes('?') ? '&' : '?';
+        this.downloadStatus.next(RequestEntryState.Success);
+        this.hardRedirectService.redirect(bitstreamURL + separator + 'accessToken=' + encodeURIComponent(this.accessToken));
       } else if (!(isAuthorized || isAuthorizedByClarin) && isLoggedIn &&
         this.downloadStatus.value === (RequestEntryState.Error as string)) {
         // this.downloadStatus is `ERROR` - no CLARIN exception is thrown up
