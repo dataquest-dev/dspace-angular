@@ -131,7 +131,8 @@ describe('EpicHandleDataService', () => {
     });
 
     it('keeps the _links returned by the backend when present', (done) => {
-      const links = { self: { href: `${mockBaseUrl}/${mockHandleId}` } };
+      // Not the URL the fallback would build, so the test tells the two apart
+      const links = { self: { href: `https://backend.example/epichandles/${mockHandleId}` } };
 
       service.findByPrefixAndSuffix(mockPrefix, mockSuffix).subscribe(handle => {
         expect(handle._links).toEqual(links);

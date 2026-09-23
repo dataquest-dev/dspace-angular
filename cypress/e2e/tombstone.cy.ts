@@ -1,4 +1,7 @@
-import { XSRF_REQUEST_HEADER } from 'src/app/core/xsrf/xsrf.constants';
+import {
+  DSPACE_XSRF_COOKIE,
+  XSRF_REQUEST_HEADER,
+} from 'src/app/core/xsrf/xsrf.constants';
 
 const TOMBSTONED_ITEM_MESSAGE = 'This item has been withdrawn';
 
@@ -9,10 +12,19 @@ let replacedItemId: string;
 const createdItemIds: string[] = [];
 
 /**
+ * Remove every CSRF cookie (the backend sets its own on another path) and create a single new one,
+ * so the backend can only compare the header against that one.
+ */
+function freshCsrfToken(): Cypress.Chainable<string> {
+  cy.task('getRestBaseDomain').then((domain: string) => cy.clearCookie(DSPACE_XSRF_COOKIE, { domain }));
+  return cy.createCSRFCookie();
+}
+
+/**
  * Send a REST request as the administrator, with a fresh CSRF token.
  */
-function adminRequest(method: string, path: string, body?: any): Cypress.Chainable<Cypress.Response<any>> {
-  return cy.createCSRFCookie().then((csrfToken: string) => cy.request({
+function adminRequest(method: string, path: string, body?: any, failOnStatusCode = true): Cypress.Chainable<Cypress.Response<any>> {
+  return freshCsrfToken().then((csrfToken: string) => cy.request({
     method,
     url: restBaseUrl + path,
     headers: {
@@ -20,6 +32,7 @@ function adminRequest(method: string, path: string, body?: any): Cypress.Chainab
       Authorization: adminAuthorization,
     },
     body,
+    failOnStatusCode,
   }));
 }
 
@@ -30,7 +43,7 @@ function loginAdminOverRest() {
   cy.task('getRestBaseURL').then((url: string) => {
     restBaseUrl = url;
   });
-  cy.createCSRFCookie().then((csrfToken: string) => cy.request({
+  freshCsrfToken().then((csrfToken: string) => cy.request({
     method: 'POST',
     url: restBaseUrl + '/api/authn/login',
     headers: { [XSRF_REQUEST_HEADER]: csrfToken },
@@ -82,7 +95,11 @@ describe('Admin Tombstone Page', () => {
   });
 
   after(() => {
-    createdItemIds.forEach((itemId) => adminRequest('DELETE', '/api/core/items/' + itemId));
+    // Try every DELETE before failing, so one refused DELETE does not leave the other item behind.
+    const statuses: number[] = [];
+    createdItemIds.forEach((itemId) => adminRequest('DELETE', '/api/core/items/' + itemId, undefined, false)
+      .then((response) => statuses.push(response.status)));
+    cy.then(() => expect(statuses).to.deep.equal(createdItemIds.map(() => 204)));
   });
 
   beforeEach(() => {
