@@ -110,6 +110,7 @@ describe('EpicHandleDataService', () => {
         req.params.get('page') === '0' &&
         req.params.get('size') === '10',
       );
+      expect(searchReq.request.params.get('url')).toBe(urlPattern);
       searchReq.flush(mockPaginationResponse);
     });
   });

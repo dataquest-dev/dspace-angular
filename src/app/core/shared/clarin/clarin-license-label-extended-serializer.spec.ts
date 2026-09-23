@@ -1,7 +1,7 @@
 import { ClarinLicenseLabelExtendedSerializer } from './clarin-license-label-extended-serializer';
 
 /**
- * `extended` became a real boolean in the license label form (dtq-dev #1299), while older
+ * `extended` became a real boolean in the license label form, while older
  * payloads still carry the legacy 'Yes'/'No' strings. None of the ported component specs
  * exercises the boolean branch, so it is covered here.
  */
