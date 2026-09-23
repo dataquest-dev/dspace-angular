@@ -12,7 +12,11 @@ import {
   UntypedFormControl,
   UntypedFormGroup,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Params,
+  Router,
+} from '@angular/router';
 import {
   TranslateModule,
   TranslateService,
@@ -74,6 +78,7 @@ export class CurationFormComponent implements OnDestroy, OnInit {
     private handleService: HandleService,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute,
   ) {
   }
 
@@ -86,6 +91,13 @@ export class CurationFormComponent implements OnDestroy, OnInit {
       task: new UntypedFormControl(''),
       handle: new UntypedFormControl(''),
     });
+
+    this.subs.push(this.route.queryParams.subscribe((params: Params) => {
+      const itemId: string = params.item_id;
+      if (isNotEmpty(itemId) && !this.hasHandleValue()) {
+        this.form.get('handle').patchValue(itemId);
+      }
+    }));
 
     this.config = this.configurationDataService.findByPropertyName(CURATION_CFG);
     this.subs.push(this.config.pipe(

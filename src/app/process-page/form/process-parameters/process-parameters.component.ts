@@ -15,7 +15,10 @@ import {
 } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { hasValue } from '../../../shared/empty.util';
+import {
+  hasValue,
+  isNotEmpty,
+} from '../../../shared/empty.util';
 import { ProcessParameter } from '../../processes/process-parameter.model';
 import { Script } from '../../scripts/script.model';
 import { ScriptParameter } from '../../scripts/script-parameter.model';
@@ -60,18 +63,25 @@ export class ProcessParametersComponent implements OnChanges, OnInit {
   parameterValues: ProcessParameter[];
 
   ngOnInit(): void {
-    if (hasValue(this.initialParams)) {
-      this.parameterValues = this.initialParams;
+    if (isNotEmpty(this.initialParams)) {
+      this.parameterValues = this.deepCopyParameters(this.initialParams);
     }
   }
 
   /**
-   * Makes sure the parameters are reset when the script changes
+   * Makes sure the parameters are reset when the script changes, unless the caller supplied some
    * @param changes
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.script) {
-      this.initParameters();
+      if (isNotEmpty(this.initialParams)) {
+        this.parameterValues = this.deepCopyParameters(this.initialParams);
+        if (this.parameterValues.length === 0 || hasValue(this.parameterValues[this.parameterValues.length - 1].name)) {
+          this.addParameter();
+        }
+      } else {
+        this.initParameters();
+      }
     }
   }
 
@@ -80,8 +90,8 @@ export class ProcessParametersComponent implements OnChanges, OnInit {
    * Initializes the first parameter value
    */
   initParameters() {
-    if (hasValue(this.initialParams)) {
-      this.parameterValues = this.initialParams;
+    if (isNotEmpty(this.initialParams)) {
+      this.parameterValues = this.deepCopyParameters(this.initialParams);
     } else {
       this.parameterValues = [];
       this.initializeParameter();
@@ -130,5 +140,17 @@ export class ProcessParametersComponent implements OnChanges, OnInit {
    */
   addParameter() {
     this.parameterValues = [...this.parameterValues, new ProcessParameter()];
+  }
+
+  /**
+   * Copies a list of parameters so that editing them here cannot reach the caller's array
+   */
+  private deepCopyParameters(params: ProcessParameter[]): ProcessParameter[] {
+    return params.map((param: ProcessParameter) =>
+      Object.assign(new ProcessParameter(), {
+        name: param.name,
+        value: param.value,
+      }),
+    );
   }
 }
