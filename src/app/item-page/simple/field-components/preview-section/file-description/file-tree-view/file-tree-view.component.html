@@ -4,6 +4,7 @@
     <a role="button" tabindex="0"
       (click)="isCollapsed = !isCollapsed"
       (keyup.enter)="isCollapsed = !isCollapsed"
+      (keydown.space)="$event.preventDefault()"
       (keyup.space)="isCollapsed = !isCollapsed"
       [attr.aria-expanded]="!isCollapsed"
       attr.aria-controls="folder_{{ node.name }}">

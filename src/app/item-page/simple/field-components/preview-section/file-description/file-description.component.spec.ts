@@ -33,6 +33,7 @@ import { createSuccessfulRemoteDataObject$ } from '../../../../../shared/remote-
 import { AuthServiceStub } from '../../../../../shared/testing/auth-service.stub';
 import { AuthorizationDataServiceStub } from '../../../../../shared/testing/authorization-service.stub';
 import { FileServiceStub } from '../../../../../shared/testing/file-service.stub';
+import { dispatchSpaceKey } from '../../../../../shared/testing/utils.test';
 import { FileDescriptionComponent } from './file-description.component';
 
 const CLOSE_KEY = 'item.file.description.preview.close';
@@ -53,12 +54,8 @@ const ARCHIVE_TREE = [
 // assertion on visibility would pass whatever the template does.
 const BOOTSTRAP_COLLAPSE_RULE = '.collapse:not(.show) { display: none; }';
 
-// color-contrast is off because the panel heading inherits the hand-written Bootstrap 3 shim
-// (hex 3a87ad on d9edf7, measured 3.32:1). That palette is out of scope here and is reported
-// instead of being repainted; leaving the rule on would make this guard permanently red.
 const AXE_OPTIONS: axe.RunOptions = {
   resultTypes: ['violations'],
-  rules: { 'color-contrast': { enabled: false } },
 };
 
 describe('FileDescriptionComponent', () => {
@@ -210,6 +207,10 @@ describe('FileDescriptionComponent', () => {
         .withContext('clicking the Download control did not start the download')
         .toHaveBeenCalledWith(target);
     });
+
+    it('does not scroll the page when Space is pressed', () => {
+      expect(dispatchSpaceKey(downloadButton(), 'keydown').defaultPrevented).toBeTrue();
+    });
   });
 
   describe('file preview panel', () => {
@@ -300,11 +301,30 @@ describe('FileDescriptionComponent', () => {
         .toBeFalse();
       expect(previewButton().getAttribute('aria-expanded')).toEqual('false');
     });
+
+    it('does not scroll the page when Space is pressed on Preview', () => {
+      expect(dispatchSpaceKey(previewButton(), 'keydown').defaultPrevented).toBeTrue();
+    });
+
+    it('does not scroll the page when Space is pressed on the close control', () => {
+      expect(dispatchSpaceKey(closeButton(), 'keydown').defaultPrevented).toBeTrue();
+    });
   });
 
   describe('the controls the open panel exposes', () => {
     let en: Record<string, any>;
     let cs: Record<string, any>;
+    let style: HTMLStyleElement;
+
+    beforeEach(() => {
+      style = document.createElement('style');
+      style.textContent = BOOTSTRAP_COLLAPSE_RULE;
+      document.head.appendChild(style);
+    });
+
+    afterEach(() => {
+      style.remove();
+    });
 
     // The real catalogues, not a stub: a stub stays green after someone drops the key, while
     // production then renders the bare key - a non-empty accessible name that axe cannot flag.
@@ -329,6 +349,10 @@ describe('FileDescriptionComponent', () => {
       fixture.detectChanges();
       (fixture.nativeElement.querySelector('a.preview-btn') as HTMLElement).click();
       fixture.detectChanges();
+      // axe skips hidden nodes, so a check over a collapsed panel passes whatever its colours are
+      expect(getComputedStyle(fixture.nativeElement.querySelector('[id^="file_file_"]')).display)
+        .withContext('the preview panel did not open')
+        .not.toEqual('none');
     };
 
     it('keeps the close label in en.json5 and in cs.json5', () => {

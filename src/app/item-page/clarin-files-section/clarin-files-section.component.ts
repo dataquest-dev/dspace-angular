@@ -163,7 +163,7 @@ export class ClarinFilesSectionComponent implements OnInit, OnChanges, OnDestroy
       const encodedName = encodeURIComponent(name)
         .replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
       const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\$/g, '\\$').replace(/`/g, '\\`');
-      return `-o "${safeName}" "${baseUrl}/${encodedName}"`;
+      return `-o "${safeName}" "${baseUrl}?filename=${encodedName}"`;
     });
     this.command = `curl ${parts.join(' ')}`;
   }

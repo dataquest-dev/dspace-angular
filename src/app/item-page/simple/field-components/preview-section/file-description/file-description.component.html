@@ -46,6 +46,7 @@
       <a class="download-btn" role="button" tabindex="0"
         (click)="downloadFile()"
         (keyup.enter)="downloadFile()"
+        (keydown.space)="$event.preventDefault()"
         (keyup.space)="downloadFile()">
         <i class="fa fa-chevron-circle-down">&nbsp;</i>
         {{'item.file.description.download.file' | translate}}
@@ -56,6 +57,7 @@
         <a class="preview-btn" role="button" tabindex="0"
           (click)="togglePreview()"
           (keyup.enter)="togglePreview()"
+          (keydown.space)="$event.preventDefault()"
           (keyup.space)="togglePreview()"
           [attr.aria-expanded]="!previewCollapsed"
           attr.aria-controls="file_file_{{ fileInput.id }}">
@@ -73,6 +75,7 @@
         <a class="pull-right cursor-pointer" role="button" tabindex="0"
           (click)="togglePreview()"
           (keyup.enter)="togglePreview()"
+          (keydown.space)="$event.preventDefault()"
           (keyup.space)="togglePreview()"
           [attr.aria-expanded]="!previewCollapsed"
           attr.aria-controls="file_file_{{ fileInput.id }}"
