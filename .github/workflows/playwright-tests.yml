@@ -2,7 +2,19 @@ name: Playwright tests
 
 on:
   workflow_dispatch:
+    inputs:
+      ui_tests_ref:
+        description: 'Branch or tag of dataquest-dev/dspace-ui-tests to check out'
+        required: false
+        type: string
+        default: master
   workflow_call:
+    inputs:
+      ui_tests_ref:
+        description: 'Branch or tag of dataquest-dev/dspace-ui-tests to check out'
+        required: false
+        type: string
+        default: master
 
 jobs:
   playwright-tests:
@@ -13,6 +25,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: dataquest-dev/dspace-ui-tests
+          ref: ${{ inputs.ui_tests_ref }}
           path: dspace-ui-tests
           token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
 
