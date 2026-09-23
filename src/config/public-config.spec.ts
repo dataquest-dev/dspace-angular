@@ -118,6 +118,7 @@ describe('buildPublicConfig', () => {
 
     it('should pass through the item, browse, search and theme configuration', () => {
       expect(publicConfig.item).toEqual(resolved.item);
+      expect(publicConfig.item.bitstream.enableRequestACopyLink).toBeFalse();
       expect(publicConfig.browseBy).toEqual(resolved.browseBy);
       expect(publicConfig.search).toEqual(resolved.search);
       expect(publicConfig.themes).toEqual(resolved.themes);

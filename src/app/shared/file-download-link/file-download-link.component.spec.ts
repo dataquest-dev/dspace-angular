@@ -17,6 +17,7 @@ import {
 import { of } from 'rxjs';
 import { APP_DATA_SERVICES_MAP } from 'src/config/app-config.interface';
 
+import { environment } from '../../../environments/environment';
 import { getBitstreamModuleRoute } from '../../app-routing-paths';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
@@ -130,8 +131,9 @@ describe('FileDownloadLinkComponent', () => {
         });
       });
 
-      describe('when the user has no download rights but has the right to request a copy', () => {
+      describe('when the user has no download rights but has the right to request a copy, the CLARIN licence gate is the default', () => {
         beforeEach(waitForAsync(() => {
+          environment.item.bitstream.enableRequestACopyLink = false;
           scheduler = getTestScheduler();
           init();
           (authorizationService.isAuthorized as jasmine.Spy).and.callFake((featureId, object) => {
@@ -152,7 +154,47 @@ describe('FileDownloadLinkComponent', () => {
         it('should return canDownload falsy', () => {
           expect(component.canDownload$).toBeObservable(cold('-a', { a: false }));
         });
-        it('should return the bitstreamPath based on the input bitstream', () => {
+        it('should return the licence gate path instead of the request-a-copy path', () => {
+          expect(component.bitstreamPath$).toBeObservable(cold('--a', { a: { routerLink: new URLCombiner(getBitstreamModuleRoute(), bitstream.uuid, 'download').toString(), queryParams: {} } }));
+
+        });
+        it('should init the component', () => {
+          scheduler.flush();
+          fixture.detectChanges();
+          const link = fixture.debugElement.query(By.css('a'));
+          expect(link.injector.get(RouterLinkDirectiveStub).routerLink).toContain(new URLCombiner(getBitstreamModuleRoute(), bitstream.uuid, 'download').toString());
+          const lock = fixture.debugElement.query(By.css('.fa-lock')).nativeElement;
+          expect(lock).toBeTruthy();
+        });
+        it('should title the link as restricted, not as a request for a copy', () => {
+          expect(component.getDownloadLinkTitle(false, false, 'bitstream name')).toEqual('file-download-link.restricted bitstream name');
+        });
+      });
+
+      describe('when request-a-copy links are enabled and the user has the right to request a copy', () => {
+        beforeEach(waitForAsync(() => {
+          environment.item.bitstream.enableRequestACopyLink = true;
+          scheduler = getTestScheduler();
+          init();
+          (authorizationService.isAuthorized as jasmine.Spy).and.callFake((featureId) => {
+            if (featureId === FeatureID.CanDownload) {
+              return cold('-a', { a: false });
+            }
+            return cold('-a', { a: true });
+          });
+          initTestbed();
+        }));
+        beforeEach(() => {
+          fixture = TestBed.createComponent(FileDownloadLinkComponent);
+          component = fixture.componentInstance;
+          component.item = item;
+          component.bitstream = bitstream;
+          fixture.detectChanges();
+        });
+        afterEach(() => {
+          environment.item.bitstream.enableRequestACopyLink = false;
+        });
+        it('should return the vanilla request-a-copy path', () => {
           expect(component.bitstreamPath$).toBeObservable(cold('--a', { a: { routerLink: new URLCombiner(getItemModuleRoute(), item.uuid, 'request-a-copy').toString(), queryParams: { bitstream: bitstream.uuid } } }));
 
         });
@@ -163,6 +205,9 @@ describe('FileDownloadLinkComponent', () => {
           expect(link.injector.get(RouterLinkDirectiveStub).routerLink).toContain(new URLCombiner(getItemModuleRoute(), item.uuid, 'request-a-copy').toString());
           const lock = fixture.debugElement.query(By.css('.fa-lock')).nativeElement;
           expect(lock).toBeTruthy();
+        });
+        it('should title the link as a request for a copy', () => {
+          expect(component.getDownloadLinkTitle(false, false, 'bitstream name')).toContain('file-download-link.request-copy');
         });
       });
 
