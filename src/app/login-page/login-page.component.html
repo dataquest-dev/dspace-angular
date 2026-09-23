@@ -2,12 +2,34 @@
   <div class="text-center mt-5 row justify-content-center">
     <div>
       <img class="mb-4 login-logo" src="assets/images/dspace-logo.svg" [alt]="'repository.image.logo' | translate">
-      <a href="https://www.clarin.eu/">
+      <a href="https://www.clarin.eu/" target="_blank" rel="noopener noreferrer">
         <img class="clarin-logo" src="assets/images/clarin-logo.svg" alt="Clarin logo">
       </a>
-      <h1 class="h3 mb-0 fw-normal">{{"login.form.header" | translate}}</h1>
-      <ds-log-in
-      [isStandalonePage]="true"></ds-log-in>
+      @if (!authenticatedUser) {
+        <h1 class="h3 mb-0 fw-normal">{{"login.form.header" | translate}}</h1>
+      } @else {
+        <div>
+          <h1 class="h3 mb-3 fw-normal">{{"login.already-authenticated.header" | translate}}</h1>
+          <p class="mb-4">{{"login.already-authenticated.message" | translate}}</p>
+          <div class="action-buttons">
+            <a [routerLink]="['/home']" class="btn btn-primary me-3">
+              {{"login.already-authenticated.go-home" | translate}}
+            </a>
+            <a [routerLink]="['/profile']" class="btn btn-outline-primary">
+              {{"login.already-authenticated.go-profile" | translate}}
+            </a>
+          </div>
+          <div class="mt-4">
+            <button class="btn btn-link" [routerLink]="['/logout']">
+              {{"login.already-authenticated.logout" | translate}}
+            </button>
+          </div>
+        </div>
+      }
+      @if (!authenticatedUser) {
+        <ds-log-in
+        [isStandalonePage]="true"></ds-log-in>
+      }
     </div>
   </div>
 </div>

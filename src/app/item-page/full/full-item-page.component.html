@@ -5,6 +5,24 @@
         <div>
           <ds-item-alerts [item]="item"></ds-item-alerts>
           <ds-item-versions-notice [item]="item"></ds-item-versions-notice>
+          <ng-template #workflowActions>
+            @if ((item$ | async) && (workflowitem$ | async)) {
+              @if ((claimedTask$ | async); as claimedTaskRD) {
+                <div class="mb-3 text-end">
+                  @if (claimedTaskRD?.hasSucceeded && claimedTaskRD?.payload) {
+                    <ds-claimed-task-actions
+                      [item]="item$.value"
+                      [object]="claimedTaskRD.payload"
+                      [workflowitem]="workflowitem$.value"
+                      [showViewButton]="false"
+                      (processCompleted)="onWorkflowActionCompleted($event.reloadedObject)">
+                    </ds-claimed-task-actions>
+                  }
+                </div>
+              }
+            }
+          </ng-template>
+          <ng-container *ngTemplateOutlet="workflowActions"></ng-container>
           @if (!item.isWithdrawn || (isAdmin$|async)) {
             <div class="full-item-info">
               <div class="d-flex flex-row justify-content-end">
@@ -55,6 +73,7 @@
               }
             </div>
           }
+          <ng-container *ngTemplateOutlet="workflowActions"></ng-container>
         </div>
       }
     </div>

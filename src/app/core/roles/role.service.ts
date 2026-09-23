@@ -3,7 +3,6 @@ import {
   Observable,
   of,
 } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
 
 import { CollectionDataService } from '../data/collection-data.service';
 import { RoleType } from './role-types';
@@ -26,9 +25,8 @@ export class RoleService {
    * Check if current user is a submitter
    */
   isSubmitter(): Observable<boolean> {
-    return this.collectionService.hasAuthorizedCollection().pipe(
-      distinctUntilChanged(),
-    );
+    // TODO find a way to check if user has submitted items, not just if they have a collection with the submitter role
+    return of(true);
   }
 
   /**

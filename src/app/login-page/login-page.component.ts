@@ -3,15 +3,20 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  RouterLink,
+} from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   combineLatest as observableCombineLatest,
+  of,
   Subscription,
 } from 'rxjs';
 import {
   filter,
+  switchMap,
   take,
 } from 'rxjs/operators';
 
@@ -22,8 +27,10 @@ import {
   AuthenticationSuccessAction,
   ResetAuthenticationMessagesAction,
 } from '../core/auth/auth.actions';
+import { AuthService } from '../core/auth/auth.service';
 import { AuthTokenInfo } from '../core/auth/models/auth-token-info.model';
 import { isAuthenticated } from '../core/auth/selectors';
+import { EPerson } from '../core/eperson/models/eperson.model';
 import {
   hasValue,
   isNotEmpty,
@@ -38,6 +45,7 @@ import { ThemedLogInComponent } from '../shared/log-in/themed-log-in.component';
   styleUrls: ['./login-page.component.scss'],
   templateUrl: './login-page.component.html',
   imports: [
+    RouterLink,
     ThemedLogInComponent,
     TranslateModule,
   ],
@@ -45,27 +53,35 @@ import { ThemedLogInComponent } from '../shared/log-in/themed-log-in.component';
 export class LoginPageComponent implements OnDestroy, OnInit {
 
   /**
-   * Subscription to unsubscribe onDestroy
-   * @type {Subscription}
+   * Array to track all subscriptions and unsubscribe them onDestroy
    */
-  sub: Subscription;
+  private subs: Subscription[] = [];
+
+  /**
+   * The current authenticated user. It is null if the user is not authenticated.
+   */
+  authenticatedUser: EPerson | null = null;
 
   /**
    * Initialize instance variables
    *
    * @param {ActivatedRoute} route
    * @param {Store<AppState>} store
+   * @param {AuthService} authService
    */
   constructor(private route: ActivatedRoute,
-              private store: Store<AppState>) {}
+              private store: Store<AppState>,
+              private authService: AuthService) {}
 
   /**
    * Initialize instance variables
    */
   ngOnInit() {
+    this.initializeTheAuthenticationState();
+
     const queryParamsObs = this.route.queryParams;
     const authenticated = this.store.select(isAuthenticated);
-    this.sub = observableCombineLatest(queryParamsObs, authenticated).pipe(
+    this.subs.push(observableCombineLatest(queryParamsObs, authenticated).pipe(
       filter(([params, auth]) => isNotEmpty(params.token) || isNotEmpty(params.expired)),
       take(1),
     ).subscribe(([params, auth]) => {
@@ -84,16 +100,39 @@ export class LoginPageComponent implements OnDestroy, OnInit {
           this.store.dispatch(new AuthenticationSuccessAction(authToken));
         }
       }
-    });
+    }));
+  }
+
+  /**
+   * Resolves the authenticated user from the store, or null when nobody is logged in.
+   */
+  initializeTheAuthenticationState() {
+    this.subs.push(this.authService.isAuthenticated().pipe(
+      take(1),
+      switchMap((isUserAuthenticated: boolean) => {
+        if (isUserAuthenticated) {
+          return this.authService.getAuthenticatedUserFromStore().pipe(take(1));
+        } else {
+          return of(null);
+        }
+      }),
+    ).subscribe({
+      next: (user: EPerson | null) => {
+        this.authenticatedUser = user;
+      },
+      error: () => {
+        this.authenticatedUser = null;
+      },
+    }));
   }
 
   /**
    * Unsubscribe from subscription
    */
   ngOnDestroy() {
-    if (hasValue(this.sub)) {
-      this.sub.unsubscribe();
-    }
+    this.subs
+      .filter((sub) => hasValue(sub))
+      .forEach((sub) => sub.unsubscribe());
     // Clear all authentication messages when leaving login page
     this.store.dispatch(new ResetAuthenticationMessagesAction());
   }
