@@ -432,14 +432,14 @@ describe('CommunityListComponent', () => {
   });
 
   describe('aria-expanded on tree rows', () => {
-    describe('in the rendered tree', () => {
-      const rowFor = (name: string): HTMLElement => {
-        const row: DebugElement = fixture.debugElement.queryAll(By.css('cdk-tree-node'))
-          .find((node: DebugElement) => node.query(By.css('a.lead'))?.nativeElement.textContent.trim() === name);
-        expect(row).toBeTruthy();
-        return row.nativeElement;
-      };
+    const rowFor = (name: string): HTMLElement => {
+      const row: DebugElement = fixture.debugElement.queryAll(By.css('cdk-tree-node'))
+        .find((node: DebugElement) => node.query(By.css('a.lead'))?.nativeElement.textContent.trim() === name);
+      expect(row).toBeTruthy();
+      return row.nativeElement;
+    };
 
+    describe('in the rendered tree', () => {
       beforeEach(fakeAsync(() => {
         const toggleButtons: DebugElement[] = fixture.debugElement.queryAll(By.css('.expandable-node button'));
         toggleButtons[1].nativeElement.click();
@@ -462,6 +462,58 @@ describe('CommunityListComponent', () => {
         expect(showMoreRows.length).toEqual(2);
         showMoreRows.forEach((row: DebugElement) => expect(row.nativeElement.hasAttribute('aria-expanded')).toBe(false));
       });
+    });
+
+    describe('after an arrow key, which moves the tree control on its own', () => {
+      const press = (row: HTMLElement, key: string): void => {
+        row.focus();
+        row.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+        tick();
+        fixture.detectChanges();
+      };
+
+      const rowCount = (): number => fixture.debugElement.queryAll(By.css('cdk-tree-node')).length;
+
+      const expandSecondCommunity = (): void => {
+        fixture.debugElement.queryAll(By.css('.expandable-node button[data-test="expand-button"]'))[1].nativeElement.click();
+        tick();
+        fixture.detectChanges();
+      };
+
+      it('a collapsed community row still reads false and opens nothing', fakeAsync(() => {
+        const row: HTMLElement = rowFor('community1');
+        const rowsBefore: number = rowCount();
+
+        press(row, 'ArrowRight');
+
+        expect(row.getAttribute('aria-expanded')).toEqual('false');
+        expect(rowCount()).toEqual(rowsBefore);
+      }));
+
+      it('an expanded community row still reads true and keeps its children', fakeAsync(() => {
+        expandSecondCommunity();
+        const row: HTMLElement = rowFor('community2');
+        const rowsBefore: number = rowCount();
+
+        press(row, 'ArrowLeft');
+
+        expect(row.getAttribute('aria-expanded')).toEqual('true');
+        expect(rowCount()).toEqual(rowsBefore);
+      }));
+
+      it('a community without children reads false before and after, and renders no toggle', fakeAsync(() => {
+        fixture.debugElement.query(By.css('.show-more-node .btn-outline-primary'))
+          .triggerEventHandler('click', { preventDefault: () => {/**/} });
+        tick();
+        fixture.detectChanges();
+        const row: HTMLElement = rowFor('community3');
+        expect(row.querySelector('button[data-test="expand-button"]')).toBeNull();
+        expect(row.getAttribute('aria-expanded')).toEqual('false');
+
+        press(row, 'ArrowRight');
+
+        expect(row.getAttribute('aria-expanded')).toEqual('false');
+      }));
     });
 
     describe('when a node has not loaded its children yet', () => {
