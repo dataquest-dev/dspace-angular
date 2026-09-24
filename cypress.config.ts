@@ -46,6 +46,16 @@ export default defineConfig({
   e2e: {
     // Setup our plugins for e2e tests
     setupNodeEvents(on, config) {
+      // The default spec reporter hides which retry attempt passed, so print one line per flaky test.
+      on('after:spec', (spec, results) => {
+        (results?.tests ?? []).forEach((test) => {
+          const attempts = test.attempts ?? [];
+          if (attempts.length > 1 && test.state === 'passed') {
+            const passedOn = attempts.findIndex((attempt) => attempt.state === 'passed') + 1;
+            console.log(`FLAKY ${spec.relative} > ${(test.title ?? []).join(' ')} passed on attempt ${passedOn}/${attempts.length}`);
+          }
+        });
+      });
       return require('./cypress/plugins/index.ts')(on, config);
     },
     // This is the base URL that Cypress will run all tests against
