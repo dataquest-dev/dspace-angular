@@ -91,4 +91,38 @@ describe('FullFileSectionComponent', () => {
       expect(fileSection.length).toEqual(6);
     });
   });
+
+  describe('thumbnail rendering (#201)', () => {
+    const makeBitstream = (withThumbnail: boolean) => Object.assign(new Bitstream(), {
+      sizeBytes: 1234,
+      format: observableOf(MockBitstreamFormat1),
+      bundleName: 'ORIGINAL',
+      _links: { self: { href: 'self' }, content: { href: 'content' } },
+      id: withThumbnail ? 'with-thumb' : 'no-thumb',
+      uuid: withThumbnail ? 'with-thumb' : 'no-thumb',
+      metadata: { 'dc.title': [{ language: null, value: withThumbnail ? 'with.pdf' : 'without.pdf' }] },
+      thumbnail: withThumbnail
+        ? createSuccessfulRemoteDataObject$(Object.assign(new Bitstream(), { _links: { self: { href: 't' }, content: { href: 'tc' } } }))
+        : createSuccessfulRemoteDataObject$(null),
+    });
+
+    function renderWith(bitstreams: Bitstream[]) {
+      bitstreamDataService.findAllByItemAndBundleName.and.returnValue(
+        createSuccessfulRemoteDataObject$(createPaginatedList(bitstreams)));
+      fixture = TestBed.createComponent(FullFileSectionComponent);
+      comp = fixture.componentInstance;
+      fixture.detectChanges();
+    }
+
+    it('omits the thumbnail tile for a bitstream without a thumbnail', () => {
+      renderWith([makeBitstream(false)]);
+      expect(fixture.debugElement.queryAll(By.css('ds-themed-thumbnail')).length).toBe(0);
+      expect(fixture.debugElement.queryAll(By.css('.file-section')).length).toBeGreaterThan(0);
+    });
+
+    it('renders the thumbnail tile for a bitstream that has a thumbnail', () => {
+      renderWith([makeBitstream(true)]);
+      expect(fixture.debugElement.queryAll(By.css('ds-themed-thumbnail')).length).toBeGreaterThan(0);
+    });
+  });
 });
