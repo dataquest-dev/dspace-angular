@@ -3,10 +3,7 @@ import {
   ComponentFixture,
   TestBed,
 } from '@angular/core/testing';
-import {
-  ActivatedRoute,
-  Router,
-} from '@angular/router';
+import { Router } from '@angular/router';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -20,14 +17,12 @@ import { RegistryService } from '../../core/registry/registry.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { HALLink } from '../../core/shared/hal-link.model';
 import { Item } from '../../core/shared/item.model';
-import { ItemRequest } from '../../core/shared/item-request.model';
 import { ResourceType } from '../../core/shared/resource-type';
 import { RouterMock } from '../../shared/mocks/router.mock';
 import { createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
 import { HALEndpointServiceStub } from '../../shared/testing/hal-endpoint-service.stub';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { ClarinLicenseInfoComponent } from '../clarin-license-info/clarin-license-info.component';
-import { getItemPageRoute } from '../item-page-routing-paths';
 import { PreviewSectionComponent } from '../simple/field-components/preview-section/preview-section.component';
 import { ClarinFilesSectionComponent } from './clarin-files-section.component';
 
@@ -37,8 +32,6 @@ describe('ClarinFilesSectionComponent', () => {
 
   let mockRegistryService: any;
   let halService: any;
-  let router: RouterMock;
-  let route: { snapshot: { data: { itemRequest?: ItemRequest } } };
 
   const ROOT_HREF = 'http://localhost:8080/server/api';
 
@@ -68,7 +61,6 @@ describe('ClarinFilesSectionComponent', () => {
   const bitstreamStream = new BehaviorSubject(metadataBitstreams);
 
   const mockItem: Item = Object.assign(new Item(), {
-    uuid: 'item-with-files',
     bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
     metadata: {
       'local.files.size': [
@@ -91,8 +83,6 @@ describe('ClarinFilesSectionComponent', () => {
     halService = Object.assign(new HALEndpointServiceStub('some url'), {
       getRootHref: () => ROOT_HREF,
     });
-    router = new RouterMock();
-    route = { snapshot: { data: {} } };
 
     await TestBed.configureTestingModule({
       imports: [
@@ -102,8 +92,7 @@ describe('ClarinFilesSectionComponent', () => {
       ],
       providers: [
         { provide: RegistryService, useValue: mockRegistryService },
-        { provide: Router, useValue: router },
-        { provide: ActivatedRoute, useValue: route },
+        { provide: Router, useValue: new RouterMock() },
         { provide: HALEndpointService, useValue: halService },
         { provide: ConfigurationDataService, useValue: configurationServiceSpy },
       ],
@@ -271,33 +260,6 @@ describe('ClarinFilesSectionComponent', () => {
       expect(url.pathname).toBe(`${new URL(BASE).pathname}/123456789/15`);
       expect(Array.from(url.searchParams.keys())).toEqual(['filename']);
       expect(url.searchParams.get('filename')).toBe(name);
-    });
-  });
-
-  describe('downloadFiles', () => {
-    const zipRoute = (): string[] => [getItemPageRoute(mockItem), 'download', 'zip'];
-    const approvedRequest = (allfiles: boolean) => Object.assign(new ItemRequest(), {
-      acceptRequest: true,
-      accessExpired: false,
-      allfiles,
-      accessToken: 'approved-token',
-    });
-
-    it('should open the ZIP download without a token when the route has none', () => {
-      component.downloadFiles();
-      expect(router.navigate).toHaveBeenCalledWith(zipRoute(), { queryParams: {} });
-    });
-
-    it('should carry a token that was granted for all files to the ZIP download', () => {
-      route.snapshot.data.itemRequest = approvedRequest(true);
-      component.downloadFiles();
-      expect(router.navigate).toHaveBeenCalledWith(zipRoute(), { queryParams: { accessToken: 'approved-token' } });
-    });
-
-    it('should not carry a token that was granted for one file only to the ZIP download', () => {
-      route.snapshot.data.itemRequest = approvedRequest(false);
-      component.downloadFiles();
-      expect(router.navigate).toHaveBeenCalledWith(zipRoute(), { queryParams: {} });
     });
   });
 });

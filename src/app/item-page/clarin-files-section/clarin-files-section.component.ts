@@ -7,10 +7,7 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import {
-  ActivatedRoute,
-  Router,
-} from '@angular/router';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -27,7 +24,6 @@ import {
   getAllSucceededRemoteListPayload,
   getFirstSucceededRemoteDataPayload,
 } from '../../core/shared/operators';
-import { getGrantedAccessToken } from '../../shared/clarin-shared-util';
 import { FileSizePipe } from '../../shared/utils/file-size-pipe';
 import { ClarinLicenseInfoComponent } from '../clarin-license-info/clarin-license-info.component';
 import { getItemPageRoute } from '../item-page-routing-paths';
@@ -109,7 +105,6 @@ export class ClarinFilesSectionComponent implements OnInit, OnChanges, OnDestroy
 
   constructor(protected registryService: RegistryService,
               protected router: Router,
-              protected route: ActivatedRoute,
               protected halService: HALEndpointService,
               protected configurationService: ConfigurationDataService,
               protected modalService: NgbModal) {
@@ -145,10 +140,7 @@ export class ClarinFilesSectionComponent implements OnInit, OnChanges, OnDestroy
   }
 
   downloadFiles() {
-    const accessToken = getGrantedAccessToken(this.route.snapshot?.data?.itemRequest);
-    void this.router.navigate([getItemPageRoute(this.item), 'download', 'zip'], {
-      queryParams: accessToken ? { accessToken } : {},
-    });
+    void this.router.navigate([getItemPageRoute(this.item), 'download', 'zip']);
   }
 
   generateCurlCommand() {

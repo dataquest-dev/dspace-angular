@@ -37,11 +37,11 @@ import { RemoteData } from '../../../../../core/data/remote-data';
 import { Bitstream } from '../../../../../core/shared/bitstream.model';
 import { FileService } from '../../../../../core/shared/file.service';
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
+import { ItemRequest } from '../../../../../core/shared/item-request.model';
 import {
   getFirstCompletedRemoteData,
   getFirstSucceededRemoteData,
 } from '../../../../../core/shared/operators';
-import { getGrantedAccessToken } from '../../../../../shared/clarin-shared-util';
 import { hasValue } from '../../../../../shared/empty.util';
 import { FileSizePipe } from '../../../../../shared/utils/file-size-pipe';
 import { followLink } from '../../../../../shared/utils/follow-link-config.model';
@@ -235,8 +235,14 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
     });
   }
 
+  /**
+   * The request-a-copy access token of the approved, unexpired request in the route data, when it grants this file.
+   * The same rule as vanilla's FileDownloadLinkComponent.
+   */
   private getAccessToken(): string {
-    return getGrantedAccessToken(this.route.snapshot?.data?.itemRequest, this.fileInput.id);
+    const itemRequest: ItemRequest = this.route.snapshot?.data?.itemRequest;
+    const grantsFile = itemRequest?.allfiles !== false || itemRequest?.bitstreamId === this.fileInput.id;
+    return itemRequest?.acceptRequest && !itemRequest.accessExpired && grantsFile ? itemRequest.accessToken : undefined;
   }
 
   public togglePreview() {
