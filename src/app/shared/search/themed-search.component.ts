@@ -7,6 +7,7 @@ import {
 
 import { Context } from '../../core/shared/context.model';
 import { DSpaceObject } from '../../core/shared/dspace-object.model';
+import { DSpaceObjectType } from '../../core/shared/dspace-object-type.model';
 import { ViewMode } from '../../core/shared/view-mode.model';
 import { CollectionElementLinkType } from '../object-collection/collection-element-link.type';
 import { ListableObject } from '../object-collection/shared/listable-object.model';
@@ -51,6 +52,7 @@ export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
     'query',
     'scope',
     'hideScopeInUrl',
+    'forcedDsoTypes',
     'resultFound',
     'deselectObject',
     'selectObject',
@@ -105,6 +107,8 @@ export class ThemedSearchComponent extends ThemedComponent<SearchComponent> {
   @Input() scope: string;
 
   @Input() hideScopeInUrl: boolean;
+
+  @Input() forcedDsoTypes: DSpaceObjectType[];
 
   @Output() resultFound: EventEmitter<SearchObjects<DSpaceObject>> = new EventEmitter();
 
