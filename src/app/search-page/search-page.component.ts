@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+import { DSpaceObjectType } from '../core/shared/dspace-object-type.model';
 import { SearchConfigurationService } from '../core/shared/search/search-configuration.service';
 import { SEARCH_CONFIG_SERVICE } from '../my-dspace-page/my-dspace-configuration.service';
 import { ThemedSearchComponent } from '../shared/search/themed-search.component';
@@ -22,4 +23,6 @@ import { ThemedSearchComponent } from '../shared/search/themed-search.component'
  * It renders search results depending on the current search options
  */
 export class SearchPageComponent {
+  /** Restrict the search page to items only (hides community/collection results); empty = all types. */
+  forcedDsoTypes: DSpaceObjectType[] = [DSpaceObjectType.ITEM];
 }
