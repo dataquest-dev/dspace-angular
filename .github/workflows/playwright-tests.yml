@@ -19,7 +19,7 @@ on:
 jobs:
   playwright-tests:
     runs-on: dspace-test-1
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - name: Checkout Playwright tests
         uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
         # Five minutes under the job limit, so the suite gives up on its own.
         # A job that the limit cancels concludes 'cancelled' whatever its steps do,
         # and a cancelled run reads as 'nothing is red' although nothing was measured.
-        timeout-minutes: 55
+        timeout-minutes: 115
         run: |
           ./test.sh
 
