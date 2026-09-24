@@ -1,9 +1,13 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  Component,
+  NO_ERRORS_SCHEMA,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
+import { UntypedFormBuilder } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
   ActivatedRoute,
@@ -15,8 +19,10 @@ import {
   of,
 } from 'rxjs';
 
+import { AuthService } from '../../../../core/auth/auth.service';
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
+import { ItemDataService } from '../../../../core/data/item-data.service';
 import { buildPaginatedList } from '../../../../core/data/paginated-list.model';
 import { VersionDataService } from '../../../../core/data/version-data.service';
 import { VersionHistoryDataService } from '../../../../core/data/version-history-data.service';
@@ -27,11 +33,14 @@ import { Version } from '../../../../core/shared/version.model';
 import { VersionHistory } from '../../../../core/shared/version-history.model';
 import { WorkflowItemDataService } from '../../../../core/submission/workflowitem-data.service';
 import { WorkspaceitemDataService } from '../../../../core/submission/workspaceitem-data.service';
+import { AlertComponent } from '../../../../shared/alert/alert.component';
 import { NotificationsService } from '../../../../shared/notifications/notifications.service';
+import { PaginationComponent } from '../../../../shared/pagination/pagination.component';
 import { createSuccessfulRemoteDataObject$ } from '../../../../shared/remote-data.utils';
 import { ActivatedRouteStub } from '../../../../shared/testing/active-router.stub';
 import { NotificationsServiceStub } from '../../../../shared/testing/notifications-service.stub';
 import { PaginationServiceStub } from '../../../../shared/testing/pagination-service.stub';
+import { ItemVersionsComponent } from '../../../versions/item-versions.component';
 import { ClarinItemVersionsFieldComponent } from './clarin-item-versions-field.component';
 
 describe('ClarinItemVersionsFieldComponent', () => {
@@ -108,9 +117,17 @@ describe('ClarinItemVersionsFieldComponent', () => {
         { provide: WorkflowItemDataService, useValue: jasmine.createSpyObj('workflowItemDataService', { findByItem: EMPTY }) },
         { provide: ConfigurationDataService, useValue: configurationServiceSpy },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+        { provide: AuthService, useValue: jasmine.createSpyObj('authService', { isAuthenticated: of(true) }) },
+        { provide: ItemDataService, useValue: jasmine.createSpyObj('itemDataService', ['delete']) },
+        { provide: UntypedFormBuilder, useValue: new UntypedFormBuilder() },
       ],
       schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+    })
+      .overrideComponent(ItemVersionsComponent, {
+        remove: { imports: [AlertComponent, PaginationComponent] },
+        add: { schemas: [NO_ERRORS_SCHEMA] },
+      })
+      .compileComponents();
   }));
 
   describe('when the item has more than one version', () => {
@@ -144,6 +161,51 @@ describe('ClarinItemVersionsFieldComponent', () => {
 
     it('should link a version to its item version route', () => {
       expect(component.getVersionRoute(version2.id)).toContain(version2.id);
+    });
+  });
+
+  describe('next to the version table administrators see', () => {
+    @Component({
+      template: `
+        <ds-item-versions [item]="item" [displayActions]="false"></ds-item-versions>
+        <ds-clarin-item-versions-field [item]="item"></ds-clarin-item-versions-field>`,
+      imports: [
+        ClarinItemVersionsFieldComponent,
+        ItemVersionsComponent,
+      ],
+    })
+    class ItemPageVersionsHostComponent {
+      item = item1;
+    }
+
+    let host: HTMLElement;
+
+    beforeEach(() => {
+      authorizationServiceSpy.isAuthorized.and.returnValue(of(true));
+      versionHistoryServiceSpy.getVersions.and.returnValue(
+        createSuccessfulRemoteDataObject$(paginatedVersions(versions)),
+      );
+      const hostFixture = TestBed.createComponent(ItemPageVersionsHostComponent);
+      hostFixture.detectChanges();
+      host = hostFixture.nativeElement;
+    });
+
+    afterEach(() => {
+      authorizationServiceSpy.isAuthorized.and.returnValue(of(false));
+    });
+
+    it('should not emit an element id that the version table also emits', () => {
+      expect(host.querySelectorAll('ds-item-versions tbody tr[id]').length)
+        .withContext('the administrator version table did not render its rows')
+        .toBe(versions.length);
+      expect(host.querySelectorAll('ds-clarin-item-versions-field li[id]').length)
+        .withContext('the version list did not render its rows')
+        .toBe(versions.length);
+
+      const ids = Array.from(host.querySelectorAll('[id]')).map((element: Element) => element.id);
+      expect(ids.filter((id: string, index: number) => ids.indexOf(id) !== index))
+        .withContext('duplicate element ids on the item page')
+        .toEqual([]);
     });
   });
 

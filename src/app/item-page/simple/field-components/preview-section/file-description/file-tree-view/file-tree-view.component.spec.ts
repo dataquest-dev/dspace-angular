@@ -8,6 +8,7 @@ import {
   MetadataBitstream,
 } from 'src/app/core/metadata/metadata-bitstream.model';
 
+import { dispatchSpaceKey } from '../../../../../../shared/testing/utils.test';
 import { FileTreeViewComponent } from './file-tree-view.component';
 
 describe('FileTreeViewComponent', () => {
@@ -60,5 +61,10 @@ describe('FileTreeViewComponent', () => {
 
   it('should correctly get the keys of the sub object', () => {
     expect(component.getKeys(component.node.sub)).toEqual(['TestSubFolder']);
+  });
+
+  it('does not scroll the page when Space is pressed on a folder', () => {
+    const folder: HTMLElement = fixture.debugElement.query(By.css('a[role="button"]')).nativeElement;
+    expect(dispatchSpaceKey(folder, 'keydown').defaultPrevented).toBeTrue();
   });
 });

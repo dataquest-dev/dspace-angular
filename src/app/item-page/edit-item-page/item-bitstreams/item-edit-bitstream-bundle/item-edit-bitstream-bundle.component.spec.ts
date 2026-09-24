@@ -1,5 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
+  Component,
   NO_ERRORS_SCHEMA,
   ViewContainerRef,
 } from '@angular/core';
@@ -8,6 +9,7 @@ import {
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   of,
@@ -29,6 +31,7 @@ import { BitstreamChecksum } from '../../../../core/shared/bitstream-checksum.mo
 import { Bundle } from '../../../../core/shared/bundle.model';
 import { Item } from '../../../../core/shared/item.model';
 import { getMockRequestService } from '../../../../shared/mocks/request.service.mock';
+import { PaginationComponent } from '../../../../shared/pagination/pagination.component';
 import { createSuccessfulRemoteDataObject$ } from '../../../../shared/remote-data.utils';
 import { ResponsiveColumnSizes } from '../../../../shared/responsive-table-sizes/responsive-column-sizes';
 import { ResponsiveTableSizes } from '../../../../shared/responsive-table-sizes/responsive-table-sizes';
@@ -437,5 +440,71 @@ describe('ItemEditBitstreamBundleComponent', () => {
       expect(bitstreamChecksumService.findByHref).not.toHaveBeenCalled();
       expect(comp.loading).toBeFalse();
     });
+  });
+});
+
+describe('ItemEditBitstreamBundleComponent with two bundles on one page', () => {
+  @Component({
+    template: `
+      @for (bundle of bundles; track bundle.id) {
+        <ds-item-edit-bitstream-bundle [item]="item" [bundle]="bundle" [columnSizes]="columnSizes"></ds-item-edit-bitstream-bundle>
+      }`,
+    imports: [
+      ItemEditBitstreamBundleComponent,
+    ],
+  })
+  class TwoBundlesHostComponent {
+    item = Object.assign(new Item(), { id: 'item-1', uuid: 'item-1' });
+    columnSizes = getItemBitstreamsServiceStub().getColumnSizes();
+    bundles = ['ORIGINAL', 'LICENSE'].map((name: string) => Object.assign(new Bundle(), {
+      id: name,
+      uuid: name,
+      metadata: { 'dc.title': [{ value: name }] },
+      _links: { self: { href: `${name}-selflink` } },
+    }));
+  }
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot(), RouterModule.forRoot([]), TwoBundlesHostComponent],
+      providers: [
+        {
+          provide: BundleDataService, useValue: jasmine.createSpyObj('bundleService', {
+            getBitstreamsEndpoint: of('fake-rest-endpoint'),
+            getBitstreams: createSuccessfulRemoteDataObject$(createPaginatedList([])),
+          }),
+        },
+        {
+          provide: ObjectUpdatesService, useValue: jasmine.createSpyObj('objectUpdatesService', {
+            initialize: undefined,
+            getFieldUpdatesExclusive: of({}),
+          }),
+        },
+        { provide: PaginationService, useValue: new PaginationServiceStub() },
+        { provide: RequestService, useValue: getMockRequestService() },
+        { provide: ItemBitstreamsService, useValue: getItemBitstreamsServiceStub() },
+        { provide: BitstreamChecksumDataService, useValue: jasmine.createSpyObj('bitstreamChecksumService', ['findByHref']) },
+      ],
+    })
+      .overrideComponent(ItemEditBitstreamBundleComponent, {
+        remove: { imports: [PaginationComponent] },
+        add: { schemas: [NO_ERRORS_SCHEMA] },
+      })
+      .compileComponents();
+  });
+
+  it('should not repeat the pagination control ids of the other bundle', () => {
+    const fixture = TestBed.createComponent(TwoBundlesHostComponent);
+    fixture.detectChanges();
+    const page: HTMLElement = fixture.nativeElement;
+
+    expect(page.querySelectorAll('[ngbDropdownToggle][id^="paginationControls"]').length)
+      .withContext('each bundle renders its own pagination control')
+      .toBe(2);
+
+    const ids = Array.from(page.querySelectorAll('[id]')).map((element: Element) => element.id);
+    expect(ids.filter((id: string, index: number) => ids.indexOf(id) !== index))
+      .withContext('duplicate element ids on the edit bitstreams page')
+      .toEqual([]);
   });
 });

@@ -27,7 +27,7 @@
           <ul class="list-unstyled dropdown-versions">
             @for (enhancedVersion of enhancedVersions; track trackByVersionId($index, enhancedVersion)) {
               <li
-                [id]="'version-row-' + enhancedVersion.version.id">
+                [id]="'clarin-version-row-' + enhancedVersion.version.id">
                 @if ((enhancedVersion.versionItem$ | async)?.payload; as versionItem) {
                   @if ((enhancedVersion.workspaceId$ | async) || (enhancedVersion.workflowId$ | async)) {
                     {{ getVersionItemDisplayName(versionItem) }}

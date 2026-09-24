@@ -80,11 +80,11 @@ function expectPages(fixture: ComponentFixture<any>, pagesDef: string[]): void {
 }
 
 function changePageSize(fixture: ComponentFixture<any>, pageSize: string): void {
-  const buttonEl = fixture.nativeElement.querySelector('#paginationControls');
+  const buttonEl = fixture.nativeElement.querySelector('[id^="paginationControls-"]');
 
   buttonEl.click();
 
-  const dropdownMenu = fixture.debugElement.query(By.css('#paginationControlsDropdownMenu'));
+  const dropdownMenu = fixture.debugElement.query(By.css('[id^="paginationControlsDropdownMenu-"]'));
   const buttons = dropdownMenu.nativeElement.querySelectorAll('button');
 
   for (const button of buttons) {
@@ -355,7 +355,7 @@ describe('Pagination component', () => {
       });
 
       it('should call goPrev method', () => {
-        const prev = testFixture.debugElement.query(By.css('#nav-prev'));
+        const prev = testFixture.debugElement.query(By.css('[id^="nav-prev-"]'));
         testFixture.detectChanges();
         prev.triggerEventHandler('click', null);
         expect(testComp.goPrev).toHaveBeenCalled();
@@ -369,7 +369,7 @@ describe('Pagination component', () => {
       });
 
       it('should call goNext method', () => {
-        const next = testFixture.debugElement.query(By.css('#nav-next'));
+        const next = testFixture.debugElement.query(By.css('[id^="nav-next-"]'));
         testFixture.detectChanges();
         next.triggerEventHandler('click', null);
         expect(testComp.goNext).toHaveBeenCalled();
@@ -378,15 +378,57 @@ describe('Pagination component', () => {
 
     describe('check for prev and next button', () => {
       it('shoud have a previous button', () => {
-        const prev = testFixture.debugElement.query(By.css('#nav-prev'));
+        const prev = testFixture.debugElement.query(By.css('[id^="nav-prev-"]'));
         testFixture.detectChanges();
         expect(prev).toBeTruthy();
       });
 
       it('shoud have a next button', () => {
-        const next = testFixture.debugElement.query(By.css('#nav-next'));
+        const next = testFixture.debugElement.query(By.css('[id^="nav-next-"]'));
         testFixture.detectChanges();
         expect(next).toBeTruthy();
+      });
+    });
+  });
+
+  describe('when two paginations render on one page', () => {
+    let paginations: HTMLElement[];
+
+    beforeEach(() => {
+      html = `
+      <ds-pagination [paginationOptions]="paginationOptions" [sortOptions]="sortOptions"
+                     [collectionSize]="collectionSize" [showPaginator]="false" [objects]="objects"></ds-pagination>
+      <ds-pagination [paginationOptions]="otherPaginationOptions" [sortOptions]="sortOptions"
+                     [collectionSize]="collectionSize" [showPaginator]="false" [objects]="objects"></ds-pagination>`;
+      testFixture = createTestComponent(html, TestComponent) as ComponentFixture<TestComponent>;
+      testFixture.detectChanges();
+      paginations = Array.from(testFixture.nativeElement.querySelectorAll('ds-pagination'));
+    });
+
+    it('should not repeat the control ids of the other pagination', () => {
+      const ids = paginations
+        .map((instance) => Array.from(instance.querySelectorAll('[id]')).map((element) => element.id))
+        .reduce((all, own) => all.concat(own), []);
+
+      expect(paginations.map((instance) => instance.querySelectorAll('[ngbDropdownToggle][id]').length))
+        .withContext('each pagination should render its settings toggle')
+        .toEqual([1, 1]);
+      expect(ids.filter((id, index) => ids.indexOf(id) !== index))
+        .withContext('duplicate element ids across the two paginations')
+        .toEqual([]);
+    });
+
+    it('should point every aria-labelledby at an element of the same pagination', () => {
+      paginations.forEach((instance) => {
+        const labelled = Array.from(instance.querySelectorAll('[aria-labelledby]'));
+        expect(labelled.length).withContext('the pagination rendered no labelled element').toBeGreaterThan(0);
+        labelled.forEach((element) => {
+          const labelId = element.getAttribute('aria-labelledby');
+          const label = testFixture.nativeElement.querySelector(`#${CSS.escape(labelId)}`);
+          expect(instance.contains(label))
+            .withContext(`aria-labelledby="${labelId}" points outside its own pagination`)
+            .toBeTrue();
+        });
       });
     });
   });
@@ -408,6 +450,7 @@ class TestComponent {
   collection: string[] = [];
   collectionSize: number;
   paginationOptions = new PaginationComponentOptions();
+  otherPaginationOptions = Object.assign(new PaginationComponentOptions(), { id: 'other' });
   sortOptions = new SortOptions('dc.title', SortDirection.ASC);
   showPaginator: boolean;
   objects = {
