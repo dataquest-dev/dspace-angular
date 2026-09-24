@@ -529,6 +529,11 @@ describe('SubmissionService test suite', () => {
       isValid,
     });
 
+    // The store of this suite is not registered under the 'submission' feature key, so the real
+    // selectors are run against a state literal instead.
+    const selectFrom = (objects: { [id: string]: any }) =>
+      spyOn((service as any).store, 'select').and.callFake((selector) => of(selector({ submission: { objects } })));
+
     it('should dispatch a new SaveAndDepositSubmissionAction', () => {
       service.dispatchDeposit(submissionId);
       const expected = new SaveAndDepositSubmissionAction(submissionId);
@@ -537,9 +542,7 @@ describe('SubmissionService test suite', () => {
     });
 
     it('should warn and not dispatch a SaveAndDepositSubmissionAction when the clarin-notice section is not confirmed', () => {
-      spyOn((service as any).store, 'select').and.returnValue(of({
-        sections: { 'clarin-notice': clarinNoticeSection(false) },
-      }));
+      selectFrom({ [submissionId]: { sections: { 'clarin-notice': clarinNoticeSection(false) } } });
       const instant = spyOn((service as any).translate, 'instant').and.returnValue('notice not confirmed');
       const warning = spyOn((service as any).notificationsService, 'warning');
 
@@ -551,9 +554,7 @@ describe('SubmissionService test suite', () => {
     });
 
     it('should dispatch a new SaveAndDepositSubmissionAction when the clarin-notice section is confirmed', () => {
-      spyOn((service as any).store, 'select').and.returnValue(of({
-        sections: { 'clarin-notice': clarinNoticeSection(true) },
-      }));
+      selectFrom({ [submissionId]: { sections: { 'clarin-notice': clarinNoticeSection(true) } } });
       const warning = spyOn((service as any).notificationsService, 'warning');
 
       service.dispatchDeposit(submissionId);
@@ -563,9 +564,20 @@ describe('SubmissionService test suite', () => {
     });
 
     it('should dispatch a new SaveAndDepositSubmissionAction when the submission has no clarin-notice section', () => {
-      spyOn((service as any).store, 'select').and.returnValue(of({
-        sections: { license: clarinNoticeSection(false) },
-      }));
+      selectFrom({ [submissionId]: { sections: { license: clarinNoticeSection(false) } } });
+      const warning = spyOn((service as any).notificationsService, 'warning');
+
+      service.dispatchDeposit(submissionId);
+
+      expect((service as any).store.dispatch).toHaveBeenCalledWith(new SaveAndDepositSubmissionAction(submissionId));
+      expect(warning).not.toHaveBeenCalled();
+    });
+
+    it('should ignore the clarin-notice section of another submission', () => {
+      selectFrom({
+        [submissionId]: { sections: { 'clarin-notice': clarinNoticeSection(true) } },
+        'another-submission': { sections: { 'clarin-notice': clarinNoticeSection(false) } },
+      });
       const warning = spyOn((service as any).notificationsService, 'warning');
 
       service.dispatchDeposit(submissionId);

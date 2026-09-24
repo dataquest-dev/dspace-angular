@@ -6,7 +6,11 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterLink } from '@angular/router';
+import {
+  NgbCollapseModule,
+  NgbDropdownModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { DynamicFormControlModel } from '@ng-dynamic-forms/core';
 import {
   TranslateModule,
@@ -77,6 +81,8 @@ import { License4Selector } from './license-4-selector.model';
   imports: [
     CommonModule,
     NgbCollapseModule,
+    NgbDropdownModule,
+    RouterLink,
     TranslateModule,
   ],
 })
