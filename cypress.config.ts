@@ -52,7 +52,7 @@ export default defineConfig({
           const attempts = test.attempts ?? [];
           if (attempts.length > 1 && test.state === 'passed') {
             const passedOn = attempts.findIndex((attempt) => attempt.state === 'passed') + 1;
-            console.log(`FLAKY ${spec.relative} > ${test.title.join(' ')} passed on attempt ${passedOn}/${attempts.length}`);
+            console.log(`FLAKY ${spec.relative} > ${(test.title ?? []).join(' ')} passed on attempt ${passedOn}/${attempts.length}`);
           }
         });
       });
