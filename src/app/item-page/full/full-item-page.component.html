@@ -20,7 +20,7 @@
             <ng-container *ngFor="let mdEntry of (metadata$ | async) | keyvalue">
               <tr *ngFor="let mdValue of mdEntry.value">
                 <td>{{mdEntry.key}}</td>
-                <td>{{mdValue.value}}</td>
+                <td><span [innerHTML]="makeLinks(mdValue.value)"></span></td>
                 <td>{{mdValue.language}}</td>
               </tr>
             </ng-container>
