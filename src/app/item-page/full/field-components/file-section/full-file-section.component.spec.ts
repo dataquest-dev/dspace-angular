@@ -114,6 +114,13 @@ describe('FullFileSectionComponent', () => {
       fixture.detectChanges();
     }
 
+    afterEach(() => {
+      // renderWith() mutates the shared spy; restore the default 3-bitstream list so
+      // other specs are unaffected (Jasmine runs specs in random order by default).
+      bitstreamDataService.findAllByItemAndBundleName.and.returnValue(
+        createSuccessfulRemoteDataObject$(createPaginatedList([mockBitstream, mockBitstream, mockBitstream])));
+    });
+
     it('omits the thumbnail tile for a bitstream without a thumbnail', () => {
       renderWith([makeBitstream(false)]);
       expect(fixture.debugElement.queryAll(By.css('ds-themed-thumbnail')).length).toBe(0);
