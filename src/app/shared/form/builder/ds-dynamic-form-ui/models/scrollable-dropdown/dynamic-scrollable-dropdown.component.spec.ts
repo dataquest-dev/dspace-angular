@@ -262,8 +262,8 @@ describe('Dynamic Dynamic Scrollable Dropdown component', () => {
         expect(currentValue).toBe('Corpus');
       });
 
-      // Regression for ufal/clarin-dspace#1377: after a dc.type change the section
-      // reloads and pushes a new value with an empty display through the form control.
+      // After a dc.type change the section reloads and pushes a new value with an
+      // empty display through the form control.
       // The rendered input must not blank out.
       it('should keep the rendered value when a value with empty display arrives via valueChanges', fakeAsync(() => {
         const reloadedValue = Object.assign(

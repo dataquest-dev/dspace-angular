@@ -22,7 +22,7 @@ Disallow: /entities/*?f
 # "Disallow: /search" above only matches paths that START with /search, so
 # /collections/<uuid>/search and /communities/<uuid>/search stayed crawlable.
 # Crawlers enumerating those facet combinations saturated SSR on 2026-07-22
-# (HTTP 504 for everyone); see dspace-customers#902 (mendelu 29b88bf36b).
+# (HTTP 504 for everyone). Same rules as mendelu commit 29b88bf36b.
 Disallow: /collections/*/search
 Disallow: /communities/*/search
 # The two rules below cover any URL carrying a Discovery facet filter

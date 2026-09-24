@@ -15,10 +15,12 @@ import { AuthService } from '../../core/auth/auth.service';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { RequestService } from '../../core/data/request.service';
+import { RequestEntryState } from '../../core/data/request-entry-state.model';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
 import { Bitstream } from '../../core/shared/bitstream.model';
 import {
   AUTHORIZATION_DENIED_EXCEPTION,
+  DOWNLOAD_TOKEN_EXPIRED_EXCEPTION,
   HTTP_STATUS_UNAUTHORIZED,
   MISSING_LICENSE_AGREEMENT_EXCEPTION,
 } from '../../core/shared/clarin/constants';
@@ -143,5 +145,39 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
     expect(hardRedirectService.redirect).not.toHaveBeenCalled();
     expect(router.navigateByUrl).not.toHaveBeenCalled();
     expect(component.downloadStatus.value).toEqual(AUTHORIZATION_DENIED_EXCEPTION);
+  });
+
+  describe('processClarinAuthorization', () => {
+    /**
+     * A CLARIN authorization response that failed with 401 and the given exception message.
+     */
+    function clarinFailure(errorMessage: string) {
+      return createFailedRemoteDataObject(errorMessage, HTTP_STATUS_UNAUTHORIZED);
+    }
+
+    it('should authorize and flag success on 200', () => {
+      expect(component.processClarinAuthorization(createSuccessfulRemoteDataObject({}))).toBeTrue();
+      expect(component.downloadStatus.value).toEqual(RequestEntryState.Success);
+    });
+
+    it('should ask for the licence agreement on MissingLicenseAgreementException', () => {
+      expect(component.processClarinAuthorization(clarinFailure(MISSING_LICENSE_AGREEMENT_EXCEPTION))).toBeFalse();
+      expect(component.downloadStatus.value).toEqual(MISSING_LICENSE_AGREEMENT_EXCEPTION);
+    });
+
+    it('should show the expired token page on DownloadTokenExpiredException', () => {
+      expect(component.processClarinAuthorization(clarinFailure(DOWNLOAD_TOKEN_EXPIRED_EXCEPTION))).toBeFalse();
+      expect(component.downloadStatus.value).toEqual(DOWNLOAD_TOKEN_EXPIRED_EXCEPTION);
+    });
+
+    it('should show the denial page when the message starts with the denial prefix', () => {
+      expect(component.processClarinAuthorization(clarinFailure(AUTHORIZATION_DENIED_EXCEPTION + ': READ'))).toBeFalse();
+      expect(component.downloadStatus.value).toEqual(AUTHORIZATION_DENIED_EXCEPTION);
+    });
+
+    it('should fall back to the error state for a failure that is not a 401', () => {
+      expect(component.processClarinAuthorization(createFailedRemoteDataObject('Server error', 500))).toBeFalse();
+      expect(component.downloadStatus.value).toEqual(RequestEntryState.Error);
+    });
   });
 });

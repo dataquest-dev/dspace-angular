@@ -27,14 +27,10 @@ import { ComColSearchMenuProvider } from './shared/menu/providers/comcol-search.
 import { createSuccessfulRemoteDataObject } from './shared/remote-data.utils';
 
 /**
- * CLARIN/LINDAT: guards for the scoped-search menu entry (dtq-dev PR #1326, card FE-22).
+ * CLARIN/LINDAT: guards for the scoped-search menu entry.
  *
- * The provider itself is covered by comcol-search.menu.spec.ts, but nothing covered the two things
- * that make the feature correct in the app: that it is registered in app.menus.ts at all, and that
- * it is registered for Community/Collection pages *only*. The source commit asserted the latter
- * against the 7.x DSOEditMenuResolver ('should not return Community/Collection-specific entries' ->
- * `expect(menu.find(e => e.id === 'search-dso')).toBeFalsy()`); on v9 the resolver is gone and the
- * equivalent guard is this one.
+ * comcol-search.menu.spec.ts covers the provider itself. These tests cover the two things that make
+ * the entry work in the app: app.menus.ts registers it, and only for Community and Collection pages.
  */
 describe('MENUS - scoped-search entry (ComColSearchMenuProvider)', () => {
 
@@ -167,12 +163,10 @@ describe('MENUS - scoped-search entry (ComColSearchMenuProvider)', () => {
 });
 
 /**
- * CLARIN/LINDAT: guard for the admin sidebar registration (card X-03c).
+ * CLARIN/LINDAT: guard for the admin sidebar registration.
  *
- * clarin-admin.menu.spec.ts covers what the provider returns; nothing covered the other half, that
- * the provider reaches the admin menu at all. Dropping its line from app.menus.ts takes all four
- * CLARIN entries out of the sidebar without turning a single existing spec red - the same "the way
- * in is gone" shape as the missing update-config entry.
+ * clarin-admin.menu.spec.ts covers what the provider returns. This test covers that app.menus.ts
+ * registers the provider at all: without that line all four CLARIN entries leave the admin sidebar.
  */
 describe('MENUS - CLARIN admin entries (ClarinAdminMenuProvider)', () => {
 

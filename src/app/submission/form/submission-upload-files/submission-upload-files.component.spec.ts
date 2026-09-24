@@ -415,7 +415,7 @@ describe('SubmissionUploadFilesComponent Component', () => {
         // calls translate.get. `get` never being called therefore proves the ternary took the
         // size-limit branch and that the raw, un-interpolated size-limit string is what reached
         // NotificationsService - without asserting message identity through the notifications stub,
-        // which AC-T-05 forbids because the shared-spy mock makes such assertions unfalsifiable.
+        // because the shared-spy mock makes such assertions unfalsifiable.
         expect(translateService.get).not.toHaveBeenCalled();
         expect(notificationsServiceStub.error.calls.mostRecent().args.length).toBe(2);
       });
