@@ -50,7 +50,7 @@ export class CommunityListComponent implements OnInit, OnDestroy {
   private expandedNodes: FlatNode[] = [];
   public loadingNode: FlatNode;
 
-  treeControl = new CommunityListTreeControl();
+  treeControl = new CommunityListTreeControl(() => this.expandedNodes);
   dataSource: CommunityListDatasource;
   paginationConfig: FindListOptions;
   trackBy = (index, node: FlatNode) => node.id;

@@ -134,11 +134,14 @@ describe('CommunityListComponent', () => {
       }), of(false), 0, false, null,
     ),
   ];
+  // Like the real service, every reload builds new node objects and marks the expanded ones by id.
+  const reloaded = (nodes: FlatNode[], expandedNodes: FlatNode[]): FlatNode[] => nodes.map((node: FlatNode) => ({
+    ...node,
+    isExpanded: (expandedNodes ?? []).some((expanded: FlatNode) => expanded.id === node.id),
+  }));
   let communityListServiceStub;
 
   beforeEach(waitForAsync(() => {
-    // the flat nodes are shared between specs and toggleExpanded() mutates them in place
-    mockTopFlatnodesUnexpanded.forEach((node: FlatNode) => node.isExpanded = false);
     communityListServiceStub = {
       pageSize: 2,
       expandedNodes: [],
@@ -167,9 +170,9 @@ describe('CommunityListComponent', () => {
         }
         if (expandedNodes === null || isEmpty(expandedNodes)) {
           if (showMoreTopComNode) {
-            return of([...mockTopFlatnodesUnexpanded.slice(0, endPageIndex), showMoreFlatNode(`community-${uuidv4()}`, 0, null)]);
+            return of(reloaded([...mockTopFlatnodesUnexpanded.slice(0, endPageIndex), showMoreFlatNode(`community-${uuidv4()}`, 0, null)], expandedNodes));
           } else {
-            return of(mockTopFlatnodesUnexpanded.slice(0, endPageIndex));
+            return of(reloaded(mockTopFlatnodesUnexpanded.slice(0, endPageIndex), expandedNodes));
           }
         } else {
           flatnodes = [];
@@ -210,7 +213,7 @@ describe('CommunityListComponent', () => {
           if (showMoreTopComNode) {
             flatnodes = [...flatnodes, showMoreFlatNode(`community-${uuidv4()}`, 0, null)];
           }
-          return of(flatnodes);
+          return of(reloaded(flatnodes, expandedNodes));
         }
       },
     };
@@ -439,6 +442,15 @@ describe('CommunityListComponent', () => {
       return row.nativeElement;
     };
 
+    const clickToggle = (name: string): void => {
+      rowFor(name).querySelector<HTMLElement>('button[data-test="expand-button"]').click();
+      tick();
+      fixture.detectChanges();
+    };
+
+    const rowNames = (): string[] => fixture.debugElement.queryAll(By.css('cdk-tree-node a.lead'))
+      .map((link: DebugElement) => link.nativeElement.textContent.trim());
+
     describe('in the rendered tree', () => {
       beforeEach(fakeAsync(() => {
         const toggleButtons: DebugElement[] = fixture.debugElement.queryAll(By.css('.expandable-node button'));
@@ -464,6 +476,52 @@ describe('CommunityListComponent', () => {
       });
     });
 
+    describe('when the tree reloads with new node objects', () => {
+      const ariaExpanded = (name: string): string => rowFor(name).getAttribute('aria-expanded');
+
+      it('follows a row through expand, collapse and expand again', fakeAsync(() => {
+        clickToggle('community2');
+        expect(rowNames()).toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('true');
+
+        clickToggle('community2');
+        expect(rowNames()).not.toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('false');
+
+        clickToggle('community2');
+        expect(rowNames()).toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('true');
+      }));
+
+      it('reads true on a row that was on screen before another row expanded', fakeAsync(() => {
+        clickToggle('community1');
+        clickToggle('community2');
+
+        expect(rowNames()).toContain('subcommunity1');
+        expect(rowNames()).toContain('collection1');
+        expect(ariaExpanded('community1')).toEqual('true');
+        expect(ariaExpanded('community2')).toEqual('true');
+      }));
+
+      it('follows a row that the store restores as expanded', fakeAsync(() => {
+        clickToggle('community2');
+        fixture.destroy();
+        fixture = TestBed.createComponent(CommunityListComponent);
+        fixture.detectChanges();
+
+        expect(rowNames()).toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('true');
+
+        clickToggle('community2');
+        expect(rowNames()).not.toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('false');
+
+        clickToggle('community2');
+        expect(rowNames()).toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('true');
+      }));
+    });
+
     describe('after an arrow key, which moves the tree control on its own', () => {
       const press = (row: HTMLElement, key: string): void => {
         row.focus();
@@ -474,14 +532,17 @@ describe('CommunityListComponent', () => {
 
       const rowCount = (): number => fixture.debugElement.queryAll(By.css('cdk-tree-node')).length;
 
-      const expandSecondCommunity = (): void => {
-        fixture.debugElement.queryAll(By.css('.expandable-node button[data-test="expand-button"]'))[1].nativeElement.click();
-        tick();
-        fixture.detectChanges();
+      // Focus the row before the first reload: after one, the key manager no longer finds surviving
+      // rows. tabindex 0 then shows the arrow key reaches this row.
+      const activate = (name: string): HTMLElement => {
+        const row: HTMLElement = rowFor(name);
+        row.focus();
+        return row;
       };
 
       it('a collapsed community row still reads false and opens nothing', fakeAsync(() => {
         const row: HTMLElement = rowFor('community1');
+        expect(row.getAttribute('tabindex')).toEqual('0');
         const rowsBefore: number = rowCount();
 
         press(row, 'ArrowRight');
@@ -491,13 +552,29 @@ describe('CommunityListComponent', () => {
       }));
 
       it('an expanded community row still reads true and keeps its children', fakeAsync(() => {
-        expandSecondCommunity();
-        const row: HTMLElement = rowFor('community2');
+        const row: HTMLElement = activate('community2');
+        clickToggle('community2');
+        expect(row.getAttribute('tabindex')).toEqual('0');
+        expect(row.getAttribute('aria-expanded')).toEqual('true');
         const rowsBefore: number = rowCount();
 
         press(row, 'ArrowLeft');
 
         expect(row.getAttribute('aria-expanded')).toEqual('true');
+        expect(rowCount()).toEqual(rowsBefore);
+      }));
+
+      it('a community row collapsed again by click still reads false after ArrowRight and opens nothing', fakeAsync(() => {
+        const row: HTMLElement = activate('community2');
+        clickToggle('community2');
+        clickToggle('community2');
+        expect(row.getAttribute('tabindex')).toEqual('0');
+        expect(row.getAttribute('aria-expanded')).toEqual('false');
+        const rowsBefore: number = rowCount();
+
+        press(row, 'ArrowRight');
+
+        expect(row.getAttribute('aria-expanded')).toEqual('false');
         expect(rowCount()).toEqual(rowsBefore);
       }));
 
