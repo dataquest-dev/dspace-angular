@@ -427,6 +427,13 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
     it('selects the focused license with Space', () => {
       selectsWith(' ', 32);
     });
+
+    it('returns focus to the license toggle after the choice', () => {
+      selectsWith('Enter', 13);
+      expect(focused())
+        .withContext(`focus is on ${focused().outerHTML.slice(0, 80)}`)
+        .toBe(toggle());
+    });
   });
 
   describe('license selector button', () => {

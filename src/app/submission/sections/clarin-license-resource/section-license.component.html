@@ -48,6 +48,7 @@
           <input type="button"
             class="custom-select clarin-select-input btn text-left"
             id="aspect_submission_StepTransformer_field_license"
+            #licenseToggle
             ngbDropdownToggle
             aria-haspopup="true"
             [value]="this.selectedLicenseName"/>
@@ -60,12 +61,12 @@
                 class="form-control border-top-0 border-left-0 border-right-0 no-radius shadow-none"
                 placeholder="Search">
             </div>
-            <button type="button" ngbDropdownItem class="dropdown-item clarin-dropdown-item pt-2" value="0" (click)="selectLicense(0)">
+            <button type="button" ngbDropdownItem class="dropdown-item clarin-dropdown-item pt-2" value="0" (click)="selectLicense(0); licenseToggle.focus()">
               <b>{{'submission.sections.clarin-license.head.license-select-default-value' | translate}}</b>
             </button>
             @for (license of filteredLicenses4Selector; track license) {
               <button type="button" ngbDropdownItem class="dropdown-item clarin-dropdown-item pt-2"
-                (click)="selectLicense(license.id)"
+                (click)="selectLicense(license.id); licenseToggle.focus()"
                 [value]="license.id"
                 [id]="'license_option_' + license.id">
                 <span [class]="'label label-default label-' + license.licenseLabel">{{license.licenseLabel}}</span>

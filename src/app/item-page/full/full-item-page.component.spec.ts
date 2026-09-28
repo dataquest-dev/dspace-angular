@@ -406,6 +406,12 @@ describe('FullItemPageComponent', () => {
       expect(statisticsButton()).toBeNull();
     });
 
+    it('should be hidden when the statistics endpoint is missing', () => {
+      appConfig.statistics = { baseUrl: 'http://localhost:8080/statistics', endpoint: '' };
+      fixture.detectChanges();
+      expect(statisticsButton()).toBeNull();
+    });
+
     it('should be shown when statistics are configured', () => {
       appConfig.statistics = { baseUrl: 'http://localhost:8080/statistics', endpoint: 'views' };
       fixture.detectChanges();
