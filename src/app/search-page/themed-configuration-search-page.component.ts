@@ -4,7 +4,6 @@ import {
 } from '@angular/core';
 
 import { Context } from '../core/shared/context.model';
-import { DSpaceObjectType } from '../core/shared/dspace-object-type.model';
 import { ViewMode } from '../core/shared/view-mode.model';
 import { CollectionElementLinkType } from '../shared/object-collection/collection-element-link.type';
 import { SelectionConfig } from '../shared/search/search-results/search-results.component';
@@ -144,11 +143,6 @@ export class ThemedConfigurationSearchPageComponent extends ThemedComponent<Conf
    */
   @Input() hideScopeInUrl: boolean;
 
-  /**
-   * Restrict results to these DSpaceObject types (e.g. items only); empty = all types
-   */
-  @Input() forcedDsoTypes: DSpaceObjectType[];
-
   protected inAndOutputNames: (keyof ConfigurationSearchPageComponent & keyof this)[] = [
     'configurationList',
     'context',
@@ -174,7 +168,6 @@ export class ThemedConfigurationSearchPageComponent extends ThemedComponent<Conf
     'query',
     'scope',
     'hideScopeInUrl',
-    'forcedDsoTypes',
   ];
 
   protected getComponentName(): string {

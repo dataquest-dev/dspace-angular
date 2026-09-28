@@ -19,7 +19,6 @@ import { RemoteData } from '../../../../core/data/remote-data';
 import { Collection } from '../../../../core/shared/collection.model';
 import { Community } from '../../../../core/shared/community.model';
 import { Context } from '../../../../core/shared/context.model';
-import { DSpaceObjectType } from '../../../../core/shared/dspace-object-type.model';
 import { SEARCH_CONFIG_SERVICE } from '../../../../my-dspace-page/my-dspace-configuration.service';
 import { hasValue } from '../../../empty.util';
 import { ThemedSearchComponent } from '../../../search/themed-search.component';
@@ -47,8 +46,6 @@ export class ComcolSearchSectionComponent implements OnInit {
 
   protected readonly comcolContext = Context.Any;
 
-  /** Items only: subcommunities and collections must not show up in the comcol search. */
-  forcedDsoTypes: DSpaceObjectType[] = [DSpaceObjectType.ITEM];
 
   comcol$: Observable<Community | Collection>;
 
