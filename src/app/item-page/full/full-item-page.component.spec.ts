@@ -25,6 +25,10 @@ import {
   of,
 } from 'rxjs';
 
+import {
+  APP_CONFIG,
+  AppConfig,
+} from '../../../config/app-config.interface';
 import { LinkService } from '../../core/cache/builders/link.service';
 import { NotifyInfoService } from '../../core/coar-notify/notify-info/notify-info.service';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
@@ -139,6 +143,7 @@ describe('FullItemPageComponent', () => {
   let headTagService: HeadTagServiceMock;
   let claimedTaskService: ClaimedTaskDataService;
   let linkService: LinkService;
+  let appConfig: Partial<AppConfig>;
 
   const mocklink = {
     href: 'http://test.org',
@@ -192,6 +197,8 @@ describe('FullItemPageComponent', () => {
 
     linkService = getMockLinkService();
 
+    appConfig = {};
+
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot({
         loader: {
@@ -212,6 +219,7 @@ describe('FullItemPageComponent', () => {
         { provide: LinkService, useValue: linkService },
         { provide: PLATFORM_ID, useValue: 'server' },
         { provide: ThemeService, useValue: getMockThemeService() },
+        { provide: APP_CONFIG, useValue: appConfig },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
@@ -389,6 +397,22 @@ describe('FullItemPageComponent', () => {
       expect(linkHeadService.addTag).toHaveBeenCalledTimes(3);
     });
   });
+
+  describe('statistics button', () => {
+    const statisticsButton = () => fixture.debugElement.query(By.css('ds-views-downloads-statistics-button'));
+
+    it('should be hidden when statistics are not configured', () => {
+      fixture.detectChanges();
+      expect(statisticsButton()).toBeNull();
+    });
+
+    it('should be shown when statistics are configured', () => {
+      appConfig.statistics = { baseUrl: 'http://localhost:8080/statistics', endpoint: 'views' };
+      fixture.detectChanges();
+      expect(statisticsButton()).not.toBeNull();
+    });
+  });
+
   describe('Workflow Actions Integration', () => {
     describe('when route data contains workflow item', () => {
       beforeEach(() => {

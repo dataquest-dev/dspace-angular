@@ -36,7 +36,9 @@
           @if (!item.isWithdrawn || (isAdmin$|async)) {
             <div class="full-item-info">
               <div class="d-flex flex-row justify-content-end">
-                <ds-views-downloads-statistics-button [object]="item"></ds-views-downloads-statistics-button>
+                @if (hasConfiguredStatistics) {
+                  <ds-views-downloads-statistics-button [object]="item"></ds-views-downloads-statistics-button>
+                }
                 <ds-dso-edit-menu></ds-dso-edit-menu>
               </div>
               @if (!fromSubmissionObject) {
