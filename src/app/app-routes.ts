@@ -183,7 +183,6 @@ export const APP_ROUTES: Route[] = [
         path: 'login',
         loadChildren: () => import('./login-page/login-page-routes')
           .then((m) => m.ROUTES),
-        canActivate: [notAuthenticatedGuard],
       },
       {
         path: 'logout',
