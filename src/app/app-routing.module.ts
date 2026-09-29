@@ -180,8 +180,7 @@ import { notAuthenticatedGuard } from './core/auth/not-authenticated.guard';
           {
             path: 'login',
             loadChildren: () => import('./login-page/login-page.module')
-              .then((m) => m.LoginPageModule),
-            canActivate: [notAuthenticatedGuard]
+              .then((m) => m.LoginPageModule)
           },
           {
             path: 'logout',
