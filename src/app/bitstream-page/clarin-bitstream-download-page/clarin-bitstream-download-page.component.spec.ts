@@ -35,11 +35,11 @@ import { ROUTES } from '../bitstream-page-routes';
 import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page.component';
 
 describe('bitstream-page :id/download route', () => {
-  it('should resolve the request-a-copy access token', () => {
+  it('should not resolve the request-a-copy access token, the page reads it from the URL', () => {
     const downloadRoute: Route = ROUTES.find((route: Route) => route.path === ':id/download');
 
     expect(downloadRoute).toBeTruthy();
-    expect(downloadRoute.resolve.itemRequest).toBe(accessTokenResolver);
+    expect(Object.values(downloadRoute.resolve)).not.toContain(accessTokenResolver);
   });
 });
 
