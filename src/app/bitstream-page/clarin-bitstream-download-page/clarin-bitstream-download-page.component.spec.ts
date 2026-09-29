@@ -35,11 +35,11 @@ import { ROUTES } from '../bitstream-page-routes';
 import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page.component';
 
 describe('bitstream-page :id/download route', () => {
-  it('should resolve the request-a-copy access token', () => {
+  it('should not resolve the request-a-copy access token, the page reads it from the URL', () => {
     const downloadRoute: Route = ROUTES.find((route: Route) => route.path === ':id/download');
 
     expect(downloadRoute).toBeTruthy();
-    expect(downloadRoute.resolve.itemRequest).toBe(accessTokenResolver);
+    expect(Object.values(downloadRoute.resolve)).not.toContain(accessTokenResolver);
   });
 });
 
@@ -126,15 +126,60 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
     expect(component.downloadStatus.value).toEqual('Success');
   });
 
-  it('should still show the licence agreement when the licence is what is missing', () => {
+  it('should send the access token instead of showing the licence agreement', () => {
     rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
       MISSING_LICENSE_AGREEMENT_EXCEPTION, HTTP_STATUS_UNAUTHORIZED)));
     activatedRoute.snapshot.queryParams = { accessToken: accessToken };
 
     component.ngOnInit();
 
+    expect(hardRedirectService.redirect).toHaveBeenCalledWith(contentHref + '?accessToken=' + accessToken);
+    expect(component.downloadStatus.value).toEqual('Success');
+  });
+
+  it('should still show the licence agreement when no access token is in the URL', () => {
+    rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
+      MISSING_LICENSE_AGREEMENT_EXCEPTION, HTTP_STATUS_UNAUTHORIZED)));
+    activatedRoute.snapshot.queryParams = {};
+
+    component.ngOnInit();
+
     expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
     expect(component.downloadStatus.value).toEqual(MISSING_LICENSE_AGREEMENT_EXCEPTION);
+  });
+
+  it('should send the access token instead of the login page for an anonymous user', () => {
+    rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
+      'Unauthorized', HTTP_STATUS_UNAUTHORIZED)));
+    activatedRoute.snapshot.queryParams = { accessToken: accessToken };
+
+    component.ngOnInit();
+
+    expect(hardRedirectService.redirect).toHaveBeenCalledWith(contentHref + '?accessToken=' + accessToken);
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
+  });
+
+  it('should send the access token instead of the forbidden page for a logged-in user', () => {
+    authService.isAuthenticated.and.returnValue(of(true));
+    rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject('Server error', 500)));
+    activatedRoute.snapshot.queryParams = { accessToken: accessToken };
+
+    component.ngOnInit();
+
+    expect(hardRedirectService.redirect).toHaveBeenCalledWith(contentHref + '?accessToken=' + accessToken);
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
+  });
+
+  it('should send an anonymous user without an access token to the login page', () => {
+    rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
+      'Unauthorized', HTTP_STATUS_UNAUTHORIZED)));
+    activatedRoute.snapshot.queryParams = {};
+
+    component.ngOnInit();
+
+    expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+    expect(router.navigateByUrl).toHaveBeenCalledWith('login');
   });
 
   it('should keep refusing the download when no access token is in the URL', () => {
