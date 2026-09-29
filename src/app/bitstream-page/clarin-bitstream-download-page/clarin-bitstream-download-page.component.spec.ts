@@ -137,6 +137,18 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
     expect(component.downloadStatus.value).toEqual('Success');
   });
 
+  it('should still show the licence agreement when no access token is in the URL', () => {
+    rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
+      MISSING_LICENSE_AGREEMENT_EXCEPTION, HTTP_STATUS_UNAUTHORIZED)));
+    activatedRoute.snapshot.queryParams = {};
+
+    component.ngOnInit();
+
+    expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
+    expect(component.downloadStatus.value).toEqual(MISSING_LICENSE_AGREEMENT_EXCEPTION);
+  });
+
   it('should send the access token instead of the login page for an anonymous user', () => {
     rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
       'Unauthorized', HTTP_STATUS_UNAUTHORIZED)));
