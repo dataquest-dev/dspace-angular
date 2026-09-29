@@ -321,7 +321,16 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
 
     const toggle = (): HTMLElement =>
       fixture.nativeElement.querySelector('#aspect_submission_StepTransformer_field_license');
-    const menu = (): HTMLElement => fixture.nativeElement.querySelector('ul.dropdown-menu');
+    const menu = (): HTMLElement => fixture.nativeElement.querySelector('.dropdown-menu');
+    const focused = (): HTMLElement => document.activeElement as HTMLElement;
+
+    // Angular matches (keydown.ArrowDown) on event.key, ng-bootstrap then reads the legacy event.which.
+    const press = (key: string, which: number): void => {
+      const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+      Object.defineProperty(event, 'which', { value: which });
+      focused().dispatchEvent(event);
+      fixture.detectChanges();
+    };
     const isVisible = (el: HTMLElement): boolean => getComputedStyle(el).display !== 'none';
 
     beforeEach(async () => {
@@ -371,6 +380,59 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
       const link: HTMLElement = fixture.nativeElement.querySelector('a.alert-link');
 
       expect(link.getAttribute('href')).toMatch(/\/licenses$/);
+    });
+
+    it('moves through the license options with the arrow keys', () => {
+      toggle().focus();
+      press('ArrowDown', 40);
+      expect(isVisible(menu()))
+        .withContext('ArrowDown on the toggle did not open the license menu')
+        .toBeTrue();
+
+      press('ArrowDown', 40);
+      press('ArrowDown', 40);
+      expect(focused().id)
+        .withContext(`ArrowDown did not reach the license, focus is on ${focused().outerHTML.slice(0, 80)}`)
+        .toEqual('license_option_7');
+
+      press('ArrowUp', 38);
+      expect((focused() as HTMLButtonElement).value)
+        .withContext('ArrowUp did not go back to the "select a license" option')
+        .toEqual('0');
+    });
+
+    const selectsWith = (key: string, which: number): void => {
+      const selectLicense = spyOn(fixture.componentInstance, 'selectLicense');
+      toggle().focus();
+      press('ArrowDown', 40);
+      press('ArrowDown', 40);
+      press('ArrowDown', 40);
+
+      press(key, which);
+      // A synthetic key event does not make the browser press the focused button, so do what it does.
+      expect(focused().tagName).toEqual('BUTTON');
+      focused().click();
+      fixture.detectChanges();
+
+      expect(selectLicense).toHaveBeenCalledOnceWith(7);
+      expect(isVisible(menu()))
+        .withContext('the license menu stayed open after the choice')
+        .toBeFalse();
+    };
+
+    it('selects the focused license with Enter', () => {
+      selectsWith('Enter', 13);
+    });
+
+    it('selects the focused license with Space', () => {
+      selectsWith(' ', 32);
+    });
+
+    it('returns focus to the license toggle after the choice', () => {
+      selectsWith('Enter', 13);
+      expect(focused())
+        .withContext(`focus is on ${focused().outerHTML.slice(0, 80)}`)
+        .toBe(toggle());
     });
   });
 

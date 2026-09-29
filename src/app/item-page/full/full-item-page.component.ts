@@ -8,6 +8,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
+  inject,
   OnDestroy,
   OnInit,
   PLATFORM_ID,
@@ -33,6 +34,10 @@ import {
   tap,
 } from 'rxjs/operators';
 
+import {
+  APP_CONFIG,
+  AppConfig,
+} from '../../../config/app-config.interface';
 import { LinkService } from '../../core/cache/builders/link.service';
 import { NotifyInfoService } from '../../core/coar-notify/notify-info/notify-info.service';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
@@ -103,6 +108,18 @@ import { ViewsDownloadsStatisticsButtonComponent } from '../views-downloads-stat
 export class FullItemPageComponent extends ItemPageComponent implements OnInit, OnDestroy {
   protected readonly makeLinks = makeLinks;
   protected readonly SEPARATOR = SEPARATOR;
+
+  /**
+   * CLARIN: external statistics config, used to gate the views/downloads statistics button.
+   */
+  protected readonly appConfig: AppConfig = inject(APP_CONFIG, { optional: true });
+
+  /**
+   * CLARIN: true when the external statistics (Matomo-backed) service is configured.
+   */
+  get hasConfiguredStatistics(): boolean {
+    return !!this.appConfig?.statistics?.baseUrl && !!this.appConfig?.statistics?.endpoint;
+  }
 
 
   itemRD$: BehaviorSubject<RemoteData<Item>>;
