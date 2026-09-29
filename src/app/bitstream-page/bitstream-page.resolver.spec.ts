@@ -41,8 +41,8 @@ describe('BITSTREAM_PAGE_LINKS_TO_FOLLOW', () => {
     expect(url).toContain('embed=bundle/item');
   });
 
-  it('should embed the primary bitstream of the bundle', () => {
-    expect(url).toContain('embed=bundle/primaryBitstream');
+  it('should embed the primary bitstream and the item of the bundle next to each other', () => {
+    expect(new URL(url).searchParams.getAll('embed')).toEqual(['bundle/primaryBitstream', 'bundle/item', 'format']);
   });
 
   it('should not nest the item below the primary bitstream', () => {
