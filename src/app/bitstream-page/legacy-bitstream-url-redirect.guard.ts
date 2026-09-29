@@ -10,7 +10,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
-import { PAGE_NOT_FOUND_PATH } from '../app-routing-paths';
+import {
+  getBitstreamDownloadRoute,
+  PAGE_NOT_FOUND_PATH,
+} from '../app-routing-paths';
 import { BitstreamDataService } from '../core/data/bitstream-data.service';
 import { RemoteData } from '../core/data/remote-data';
 import { HardRedirectService } from '../core/services/hard-redirect.service';
@@ -49,7 +52,7 @@ export const legacyBitstreamURLRedirectGuard: CanActivateFn = (
     map((rd: RemoteData<Bitstream>) => {
       if (rd.hasSucceeded && !rd.hasNoContent) {
         const nameSpace = appConfig.ui.nameSpace?.replace(/\/$/, '') || '';
-        const redirectUrl = new URL(nameSpace + `/bitstreams/${rd.payload.uuid}/download`, serverHardRedirectService.getCurrentOrigin()).href;
+        const redirectUrl = new URL(nameSpace + getBitstreamDownloadRoute(rd.payload), serverHardRedirectService.getBaseUrl()).href;
         serverHardRedirectService.redirect(redirectUrl, 301);
         return false;
       } else {

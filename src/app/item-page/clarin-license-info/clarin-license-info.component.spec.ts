@@ -49,7 +49,7 @@ describe('ClarinLicenseInfoComponent', () => {
       bypassSecurityTrustUrl: null
     });
     localeService = jasmine.createSpyObj('LocaleService', {
-      getCurrentLanguageCode: jasmine.createSpy('getCurrentLanguageCode'),
+      getCurrentLanguageCodeSync: jasmine.createSpy('getCurrentLanguageCodeSync'),
     });
 
     await TestBed.configureTestingModule({

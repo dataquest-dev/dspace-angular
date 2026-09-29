@@ -301,6 +301,8 @@ import { ClarinDateService } from './clarin-date.service';
 import { ItemIdentifierService } from './item-identifier.service';
 import { ClarinLicenseRequiredInfoCheckedPipe } from './utils/clarin-license-required-info-checked.pipe';
 import { DsLangPipe } from './utils/ds-lang.pipe';
+import { AuthorizedCommunitySelectorComponent } from './dso-selector/dso-selector/authorized-community-selector/authorized-community-selector.component';
+import { AuthorizedItemSelectorComponent } from './dso-selector/dso-selector/authorized-item-selector/authorized-item-selector.component';
 
 const MODULES = [
   CommonModule,
@@ -420,6 +422,8 @@ const COMPONENTS = [
   ExportBatchSelectorComponent,
   ConfirmationModalComponent,
   AuthorizedCollectionSelectorComponent,
+  AuthorizedCommunitySelectorComponent,
+  AuthorizedItemSelectorComponent,
   SearchNavbarComponent,
   ItemPageTitleFieldComponent,
   ThemedSearchNavbarComponent,

@@ -44,7 +44,7 @@ export class HeaderComponent implements OnInit {
   * @returns {string} The current language code
   */
   getLangCode(): string {
-    return this.localeService.getCurrentLanguageCode();
+    return this.localeService.getCurrentLanguageCodeSync();
   }
 
   /**
@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit {
   * @returns {string} The language code if Czech, empty string otherwise
   */
   getLangCodeIfCzech(): string {
-    return this.localeService.getCurrentLanguageCode() === 'cs' ? 'cs' : '';
+    return this.localeService.getCurrentLanguageCodeSync() === 'cs' ? 'cs' : '';
   }
 
   /**
@@ -61,7 +61,7 @@ export class HeaderComponent implements OnInit {
   * @returns {string} The translated slug if in Czech, the original slug if in English, or empty string if translation not found
   */
   translateSlug(slug: string): string {
-    const currentLang = this.localeService.getCurrentLanguageCode();
+    const currentLang = this.localeService.getCurrentLanguageCodeSync();
     if (currentLang === 'en') {
       return slug;
     }
