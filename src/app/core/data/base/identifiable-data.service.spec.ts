@@ -139,6 +139,12 @@ describe('IdentifiableDataService', () => {
       const result = (service as any).getIDHref(endpointMock, resourceIdMock, followLink('owningCollection', {}, followLink('itemtemplate', {}, followLink('relationships'))));
       expect(result).toEqual(expected);
     });
+
+    it('should include sibling nested linksToFollow under the same parent', () => {
+      const expected = `${endpointMock}/${resourceIdMock}?embed=owningCollection${EMBED_SEPARATOR}itemtemplate&embed=owningCollection${EMBED_SEPARATOR}relationships`;
+      const result = (service as any).getIDHref(endpointMock, resourceIdMock, followLink('owningCollection', {}, followLink('itemtemplate'), followLink('relationships')));
+      expect(result).toEqual(expected);
+    });
   });
 
   describe('invalidateById', () => {
