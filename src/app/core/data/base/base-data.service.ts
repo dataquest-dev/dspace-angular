@@ -225,10 +225,9 @@ export class BaseDataService<T extends CacheableObject> implements HALDataServic
    * @param linksToFollow   links we want to embed in query string if shouldEmbed is true
    */
   protected addNestedEmbeds(embedString: string, href: string, args: string[], ...linksToFollow: FollowLinkConfig<T>[]): string[] {
-    let nestEmbed = embedString;
     linksToFollow.forEach((linkToFollow: FollowLinkConfig<T>) => {
       if (hasValue(linkToFollow) && linkToFollow.shouldEmbed) {
-        nestEmbed = nestEmbed + EMBED_SEPARATOR + String(linkToFollow.name);
+        const nestEmbed = embedString + EMBED_SEPARATOR + String(linkToFollow.name);
         // Add the nested embeds size if given in the FollowLinkConfig.FindListOptions
         if (hasValue(linkToFollow.findListOptions) && hasValue(linkToFollow.findListOptions.elementsPerPage)) {
           const nestedEmbedSize = 'embed.size=' + nestEmbed.split('=')[1] + '=' + linkToFollow.findListOptions.elementsPerPage;
