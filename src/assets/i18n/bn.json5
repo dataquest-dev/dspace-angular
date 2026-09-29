@@ -7533,6 +7533,9 @@
   // "default.search.results.head": "Search Results",
   "default.search.results.head": "অনুসন্ধানের ফলাফল",
 
+  // "items.search.results.head": "Search Results",
+  "items.search.results.head": "অনুসন্ধানের ফলাফল",
+
   // "default-relationships.search.results.head": "Search Results",
   "default-relationships.search.results.head": "অনুসন্ধান ফলাফল",
 

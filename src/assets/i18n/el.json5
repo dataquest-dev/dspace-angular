@@ -8255,6 +8255,9 @@
   // "default.search.results.head": "Search Results",
   "default.search.results.head": "Αποτελέσματα αναζήτησης",
 
+  // "items.search.results.head": "Search Results",
+  "items.search.results.head": "Αποτελέσματα αναζήτησης",
+
   // "default-relationships.search.results.head": "Search Results",
   "default-relationships.search.results.head": "Αποτελέσματα αναζήτησης",
 

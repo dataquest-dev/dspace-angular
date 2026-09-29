@@ -8431,6 +8431,9 @@
   // "default.search.results.head": "Search Results",
   "default.search.results.head": "Toraidhean Rannsachaidh",
 
+  // "items.search.results.head": "Search Results",
+  "items.search.results.head": "Toraidhean Rannsachaidh",
+
   // "default-relationships.search.results.head": "Search Results",
   // TODO New key - Add a translation
   "default-relationships.search.results.head": "Search Results",
