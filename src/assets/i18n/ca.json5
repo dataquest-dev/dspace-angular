@@ -7535,6 +7535,9 @@
   // "default.search.results.head": "Search Results",
   "default.search.results.head": "Resultats de la cerca",
 
+  // "items.search.results.head": "Search Results",
+  "items.search.results.head": "Resultats de la cerca",
+
   // "default-relationships.search.results.head": "Search Results",
   "default-relationships.search.results.head": "Resultats de la cerca",
 

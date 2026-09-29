@@ -7604,6 +7604,9 @@
   // "default.search.results.head": "Search Results",
   "default.search.results.head": "தேடல் முடிவுகள்",
 
+  // "items.search.results.head": "Search Results",
+  "items.search.results.head": "தேடல் முடிவுகள்",
+
   // "default-relationships.search.results.head": "Search Results",
   "default-relationships.search.results.head": "தேடல் முடிவுகள்",
 

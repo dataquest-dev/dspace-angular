@@ -8491,6 +8491,9 @@
   // "default.search.results.head": "Search Results",
   "default.search.results.head": "Sökresultat",
 
+  // "items.search.results.head": "Search Results",
+  "items.search.results.head": "Sökresultat",
+
   // "default-relationships.search.results.head": "Search Results",
   // TODO New key - Add a translation
   "default-relationships.search.results.head": "Search Results",
