@@ -64,6 +64,10 @@ export class ClarinRefCitationComponent implements OnInit {
    */
   repositoryNameText: string;
   /**
+   * Name of publisher
+   */
+  publisherText: string;
+  /**
    * BehaviorSubject to store the prettified identifier.
    */
   prettifiedIdentifier: BehaviorSubject<string> = new BehaviorSubject<string>(null);
@@ -94,10 +98,11 @@ export class ClarinRefCitationComponent implements OnInit {
     // First Part could be authors or publisher
     let firstPart = this.getAuthors();
     const year = this.getYear();
+    const publisher = this.item.firstMetadataValue('dc.publisher');
 
     // Show publisher instead of author if author is none
     if (isEmpty(firstPart)) {
-      firstPart = this.item.firstMetadataValue('dc.publisher');
+      firstPart = publisher;
     }
 
     let citationArray = [firstPart, year];
@@ -114,8 +119,16 @@ export class ClarinRefCitationComponent implements OnInit {
       .then((value: string) => {
         this.prettifiedIdentifier.next(value);
       });
+    // Citation publisher line
+    if (isNotEmpty(publisher)) {
+      this.publisherText = publisher;
+    }
     void this.getRepositoryName().then(res => {
       this.repositoryNameText = res?.payload?.values?.[0];
+      // Show repository name instead of publisher if publisher is none
+      if (isEmpty(this.publisherText)) {
+        this.publisherText = this.repositoryNameText;
+      }
     });
   }
 
@@ -126,7 +139,7 @@ export class ClarinRefCitationComponent implements OnInit {
     const tabChar = '  ';
     let authorWithItemName = this.citationText + ',\n' + tabChar + this.itemNameText;
     this.clipboard.copy(authorWithItemName + ', ' +
-      this.repositoryNameText + ', \n' + tabChar + this.identifierURI);
+      this.publisherText + ', \n' + tabChar + this.identifierURI);
     setTimeout(() => {
       this.tooltipRef.close();
     }, 700);
