@@ -6,12 +6,14 @@
   }
   @if ((downloadStatus | async) === 'MissingLicenseAgreementException') {
     <ds-clarin-license-agreement-page
-      [bitstream$]="bitstream$">
+      [bitstream$]="bitstream$"
+      [accessToken]="accessToken">
     </ds-clarin-license-agreement-page>
   }
   @if ((downloadStatus | async) === 'DownloadTokenExpiredException') {
     <ds-clarin-bitstream-token-expired
-      [bitstream$]="bitstream$">
+      [bitstream$]="bitstream$"
+      [accessToken]="accessToken">
     </ds-clarin-bitstream-token-expired>
   }
   @if ((downloadStatus | async) === 'Authorization denied') {

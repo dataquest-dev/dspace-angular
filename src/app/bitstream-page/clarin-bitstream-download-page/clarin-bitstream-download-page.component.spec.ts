@@ -1,7 +1,13 @@
+/* eslint-disable max-classes-per-file */
+import {
+  Component,
+  Input,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
 } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import {
   ActivatedRoute,
   Route,
@@ -32,7 +38,27 @@ import {
   createSuccessfulRemoteDataObject,
 } from '../../shared/remote-data.utils';
 import { ROUTES } from '../bitstream-page-routes';
+import { ClarinBitstreamTokenExpiredComponent } from '../clarin-bitstream-token-expired/clarin-bitstream-token-expired.component';
+import { ClarinLicenseAgreementPageComponent } from '../clarin-license-agreement-page/clarin-license-agreement-page.component';
 import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page.component';
+
+@Component({
+  selector: 'ds-clarin-license-agreement-page',
+  template: '',
+})
+class LicenceAgreementStubComponent {
+  @Input() bitstream$;
+  @Input() accessToken: string;
+}
+
+@Component({
+  selector: 'ds-clarin-bitstream-token-expired',
+  template: '',
+})
+class TokenExpiredStubComponent {
+  @Input() bitstream$;
+  @Input() accessToken: string;
+}
 
 describe('bitstream-page :id/download route', () => {
   it('should not resolve the request-a-copy access token, the page reads it from the URL', () => {
@@ -59,6 +85,7 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
   let bitstream: Bitstream;
 
   const accessToken = '0a64b3f2-1f18-4d1a-9b6f-4f0a2d3e77c1';
+  const dtoken = 'download-token';
   const contentHref = 'bitstream-content-link';
 
   beforeEach(async () => {
@@ -86,13 +113,14 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
     halService = jasmine.createSpyObj('halService', {
       getRootHref: 'rest-api',
     });
-    // A request-a-copy grantee has no READ policy, so the CLARIN gate refuses before any license check
+    // The CLARIN check refuses unless a test says otherwise
     rdbService = jasmine.createSpyObj('rdbService', {
       buildFromRequestUUID: of(createFailedRemoteDataObject(
         AUTHORIZATION_DENIED_EXCEPTION + ' for action READ on BITSTREAM', HTTP_STATUS_UNAUTHORIZED)),
     });
     requestService = getMockRequestService();
     router = jasmine.createSpyObj('router', ['navigateByUrl']);
+    router.url = '/bitstreams/bitstreamUuid/download';
     activatedRoute = {
       data: of({ bitstream: createSuccessfulRemoteDataObject(bitstream) }),
       snapshot: { queryParams: {} },
@@ -111,30 +139,109 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
         { provide: RemoteDataBuildService, useValue: rdbService },
         { provide: RequestService, useValue: requestService },
       ],
+    }).overrideComponent(ClarinBitstreamDownloadPageComponent, {
+      remove: { imports: [ClarinLicenseAgreementPageComponent, ClarinBitstreamTokenExpiredComponent] },
+      add: { imports: [LicenceAgreementStubComponent, TokenExpiredStubComponent] },
     }).compileComponents();
 
     fixture = TestBed.createComponent(ClarinBitstreamDownloadPageComponent);
     component = fixture.componentInstance;
+    // The real method leaves the test page, so the tests only record the url
+    spyOn(component, 'redirectToContent');
   });
 
-  it('should send the access token with the content request when the CLARIN gate refuses', () => {
+  /**
+   * The url of the CLARIN authorization request the page sent.
+   */
+  function clarinCheckUrl(): string {
+    return requestService.send.calls.mostRecent().args[0].href;
+  }
+
+  it('should ask the CLARIN check with the access token', () => {
     activatedRoute.snapshot.queryParams = { accessToken: accessToken };
 
     component.ngOnInit();
 
-    expect(hardRedirectService.redirect).toHaveBeenCalledWith(contentHref + '?accessToken=' + accessToken);
-    expect(component.downloadStatus.value).toEqual('Success');
+    expect(clarinCheckUrl()).toEqual('rest-api/authrn/bitstreamUuid?accessToken=' + accessToken);
   });
 
-  it('should send the access token instead of showing the licence agreement', () => {
+  it('should ask the CLARIN check with the dtoken and the access token', () => {
+    activatedRoute.snapshot.queryParams = { dtoken: dtoken, accessToken: accessToken };
+
+    component.ngOnInit();
+
+    expect(clarinCheckUrl()).toEqual('rest-api/authrn/bitstreamUuid?dtoken=' + dtoken + '&accessToken=' + accessToken);
+  });
+
+  it('should show the licence agreement and hand it the access token', () => {
     rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
       MISSING_LICENSE_AGREEMENT_EXCEPTION, HTTP_STATUS_UNAUTHORIZED)));
     activatedRoute.snapshot.queryParams = { accessToken: accessToken };
 
+    fixture.detectChanges();
+
+    expect(component.downloadStatus.value).toEqual(MISSING_LICENSE_AGREEMENT_EXCEPTION);
+    expect(component.redirectToContent).not.toHaveBeenCalled();
+    expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+    const licencePage = fixture.debugElement.query(By.directive(LicenceAgreementStubComponent));
+    expect(licencePage.componentInstance.accessToken).toEqual(accessToken);
+  });
+
+  it('should hand the access token to the expired download token page', () => {
+    rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
+      DOWNLOAD_TOKEN_EXPIRED_EXCEPTION, HTTP_STATUS_UNAUTHORIZED)));
+    activatedRoute.snapshot.queryParams = { dtoken: dtoken, accessToken: accessToken };
+
+    fixture.detectChanges();
+
+    const expiredPage = fixture.debugElement.query(By.directive(TokenExpiredStubComponent));
+    expect(expiredPage.componentInstance.accessToken).toEqual(accessToken);
+  });
+
+  it('should come back with the access token after the login', () => {
+    rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
+      'Anonymous user cannot download this bitstream', HTTP_STATUS_UNAUTHORIZED)));
+    activatedRoute.snapshot.queryParams = { accessToken: accessToken };
+    router.url = '/bitstreams/bitstreamUuid/download?accessToken=' + accessToken;
+
     component.ngOnInit();
 
-    expect(hardRedirectService.redirect).toHaveBeenCalledWith(contentHref + '?accessToken=' + accessToken);
-    expect(component.downloadStatus.value).toEqual('Success');
+    expect(authService.setRedirectUrl).toHaveBeenCalledWith('/bitstreams/bitstreamUuid/download?accessToken=' + accessToken);
+    expect(router.navigateByUrl).toHaveBeenCalledWith('login');
+    expect(component.redirectToContent).not.toHaveBeenCalled();
+  });
+
+  it('should download with the dtoken and the access token once the CLARIN check passes', () => {
+    rdbService.buildFromRequestUUID.and.returnValue(of(createSuccessfulRemoteDataObject({})));
+    activatedRoute.snapshot.queryParams = { dtoken: dtoken, accessToken: accessToken };
+
+    component.ngOnInit();
+
+    expect(component.redirectToContent).toHaveBeenCalledWith(
+      contentHref + '?dtoken=' + dtoken + '&accessToken=' + accessToken);
+  });
+
+  it('should download through the file link with the access token for a logged-in user', () => {
+    authService.isAuthenticated.and.returnValue(of(true));
+    fileService.retrieveFileDownloadLink.and.returnValue(of(contentHref + '?authentication-token=short-lived'));
+    rdbService.buildFromRequestUUID.and.returnValue(of(createSuccessfulRemoteDataObject({})));
+    activatedRoute.snapshot.queryParams = { accessToken: accessToken };
+
+    component.ngOnInit();
+
+    expect(component.redirectToContent).toHaveBeenCalledWith(
+      contentHref + '?authentication-token=short-lived&accessToken=' + accessToken);
+  });
+
+  it('should show the denial page and not download when the CLARIN check refuses the access token', () => {
+    activatedRoute.snapshot.queryParams = { accessToken: accessToken };
+
+    component.ngOnInit();
+
+    expect(component.downloadStatus.value).toEqual(AUTHORIZATION_DENIED_EXCEPTION);
+    expect(component.redirectToContent).not.toHaveBeenCalled();
+    expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
   });
 
   it('should still show the licence agreement when no access token is in the URL', () => {
@@ -142,33 +249,24 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
       MISSING_LICENSE_AGREEMENT_EXCEPTION, HTTP_STATUS_UNAUTHORIZED)));
     activatedRoute.snapshot.queryParams = {};
 
-    component.ngOnInit();
+    fixture.detectChanges();
 
-    expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+    expect(clarinCheckUrl()).toEqual('rest-api/authrn/bitstreamUuid');
+    expect(component.redirectToContent).not.toHaveBeenCalled();
     expect(router.navigateByUrl).not.toHaveBeenCalled();
     expect(component.downloadStatus.value).toEqual(MISSING_LICENSE_AGREEMENT_EXCEPTION);
+    const licencePage = fixture.debugElement.query(By.directive(LicenceAgreementStubComponent));
+    expect(licencePage.componentInstance.accessToken).toBeNull();
   });
 
-  it('should send the access token instead of the login page for an anonymous user', () => {
-    rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject(
-      'Unauthorized', HTTP_STATUS_UNAUTHORIZED)));
-    activatedRoute.snapshot.queryParams = { accessToken: accessToken };
+  it('should download with only the dtoken when no access token is in the URL', () => {
+    rdbService.buildFromRequestUUID.and.returnValue(of(createSuccessfulRemoteDataObject({})));
+    activatedRoute.snapshot.queryParams = { dtoken: dtoken };
 
     component.ngOnInit();
 
-    expect(hardRedirectService.redirect).toHaveBeenCalledWith(contentHref + '?accessToken=' + accessToken);
-    expect(router.navigateByUrl).not.toHaveBeenCalled();
-  });
-
-  it('should send the access token instead of the forbidden page for a logged-in user', () => {
-    authService.isAuthenticated.and.returnValue(of(true));
-    rdbService.buildFromRequestUUID.and.returnValue(of(createFailedRemoteDataObject('Server error', 500)));
-    activatedRoute.snapshot.queryParams = { accessToken: accessToken };
-
-    component.ngOnInit();
-
-    expect(hardRedirectService.redirect).toHaveBeenCalledWith(contentHref + '?accessToken=' + accessToken);
-    expect(router.navigateByUrl).not.toHaveBeenCalled();
+    expect(clarinCheckUrl()).toEqual('rest-api/authrn/bitstreamUuid?dtoken=' + dtoken);
+    expect(component.redirectToContent).toHaveBeenCalledWith(contentHref + '?dtoken=' + dtoken);
   });
 
   it('should send an anonymous user without an access token to the login page', () => {
@@ -178,7 +276,8 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
 
     component.ngOnInit();
 
-    expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+    expect(component.redirectToContent).not.toHaveBeenCalled();
+    expect(authService.setRedirectUrl).toHaveBeenCalledWith('/bitstreams/bitstreamUuid/download');
     expect(router.navigateByUrl).toHaveBeenCalledWith('login');
   });
 
@@ -187,9 +286,27 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
 
     component.ngOnInit();
 
-    expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+    expect(component.redirectToContent).not.toHaveBeenCalled();
     expect(router.navigateByUrl).not.toHaveBeenCalled();
     expect(component.downloadStatus.value).toEqual(AUTHORIZATION_DENIED_EXCEPTION);
+  });
+
+  describe('addDownloadParams', () => {
+    it('should add the dtoken and the access token with the right separator', () => {
+      component.dtoken = dtoken;
+      component.accessToken = 'a+b';
+
+      expect(component.addDownloadParams('content')).toEqual('content?dtoken=' + dtoken + '&accessToken=a%2Bb');
+      expect(component.addDownloadParams('content?authentication-token=t'))
+        .toEqual('content?authentication-token=t&dtoken=' + dtoken + '&accessToken=a%2Bb');
+    });
+
+    it('should leave the url alone without tokens', () => {
+      component.dtoken = null;
+      component.accessToken = null;
+
+      expect(component.addDownloadParams('content')).toEqual('content');
+    });
   });
 
   describe('processClarinAuthorization', () => {

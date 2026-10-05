@@ -55,4 +55,12 @@ describe('ClarinBitstreamTokenExpiredComponent', () => {
     tick(5000);
     expect(hardRedirectService.redirect).toHaveBeenCalledWith('/bitstreams/bitstream-uuid/download');
   }));
+
+  it('should keep the request-a-copy access token in the redirect', fakeAsync(() => {
+    component.accessToken = 'a+b';
+    fixture.detectChanges();
+
+    tick(5000);
+    expect(hardRedirectService.redirect).toHaveBeenCalledWith('/bitstreams/bitstream-uuid/download?accessToken=a%2Bb');
+  }));
 });
