@@ -19,6 +19,7 @@ import { AuthorizationDataService } from '../../core/data/feature-authorization/
 import { ServerResponseService } from '../../core/services/server-response.service';
 import { SignpostingDataService } from '../../core/data/signposting-data.service';
 import { LinkHeadService } from '../../core/services/link-head.service';
+import { makeLinks } from '../../shared/clarin-shared-util';
 
 /**
  * This component renders a full item page.
@@ -33,6 +34,7 @@ import { LinkHeadService } from '../../core/services/link-head.service';
   animations: [fadeInOut]
 })
 export class FullItemPageComponent extends ItemPageComponent implements OnInit, OnDestroy {
+  protected readonly makeLinks = makeLinks;
 
   itemRD$: BehaviorSubject<RemoteData<Item>>;
 

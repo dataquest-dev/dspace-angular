@@ -272,4 +272,52 @@ describe('FullItemPageComponent', () => {
       expect(linkHeadService.addTag).toHaveBeenCalledTimes(2);
     });
   });
+
+  describe('metadata URL rendering (#977)', () => {
+    const itemWithUrls: Item = Object.assign(new Item(), {
+      bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
+      relationships: createRelationshipsObservable(),
+      metadata: {
+        'dc.identifier.uri': [{ language: null, value: 'https://hdl.handle.net/123456789/1' }],
+        'dc.relation.uri': [{ language: null, value: 'http://example.com/dataset' }],
+        'dc.identifier.other': [{ language: null, value: 'ftp://ftp.example.org/pub/file.zip' }],
+        'dc.relation.ispartof': [{ language: null, value: 'www.dspace.org' }],
+        'dc.description': [{ language: 'en', value: 'See https://github.com/dataquest-dev/DSpace for details' }],
+        'dc.description.abstract': [{ language: 'en', value: 'Plain text without any link' }],
+      },
+    });
+
+    const tableAnchors = () => fixture.debugElement.queryAll(By.css('table td a'));
+
+    beforeEach(() => {
+      routeData.dso = createSuccessfulRemoteDataObject(itemWithUrls);
+      comp.ngOnInit();
+      fixture.detectChanges();
+    });
+
+    it('renders http/https/ftp URLs as links opening in a new tab', () => {
+      const hrefs = tableAnchors().map((a) => a.nativeElement.getAttribute('href'));
+      expect(hrefs).toContain('https://hdl.handle.net/123456789/1');
+      expect(hrefs).toContain('http://example.com/dataset');
+      expect(hrefs).toContain('ftp://ftp.example.org/pub/file.zip');
+      tableAnchors().forEach((a) => expect(a.nativeElement.getAttribute('target')).toBe('_blank'));
+    });
+
+    it('links a URL embedded in a longer text value', () => {
+      const embedded = tableAnchors().find((a) => a.nativeElement.getAttribute('href') === 'https://github.com/dataquest-dev/DSpace');
+      expect(embedded).toBeTruthy();
+    });
+
+    it('renders a bare www. value as a link', () => {
+      const www = tableAnchors().find((a) => a.nativeElement.textContent.includes('www.dspace.org'));
+      expect(www).toBeTruthy();
+    });
+
+    it('leaves non-URL metadata values as plain text', () => {
+      const table = fixture.debugElement.query(By.css('table'));
+      expect(table.nativeElement.textContent).toContain('Plain text without any link');
+      const plainAsLink = tableAnchors().find((a) => a.nativeElement.textContent.includes('Plain text without any link'));
+      expect(plainAsLink).toBeFalsy();
+    });
+  });
 });
