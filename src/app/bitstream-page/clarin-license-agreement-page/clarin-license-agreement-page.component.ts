@@ -301,7 +301,8 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   }
 
   private navigateToItemPage() {
-    this.router.navigate([getItemPageRoute(this.item$?.value)]);
+    void this.router.navigate([getItemPageRoute(this.item$?.value)],
+      { queryParams: isNotEmpty(this.accessToken) ? { accessToken: this.accessToken } : {} });
   }
 
   private isDownloadingZIP() {

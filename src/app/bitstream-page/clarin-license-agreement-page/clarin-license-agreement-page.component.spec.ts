@@ -28,6 +28,7 @@ import { Bitstream } from '../../core/shared/bitstream.model';
 import { ClarinUserMetadata } from '../../core/shared/clarin/clarin-user-metadata.model';
 import { FileService } from '../../core/shared/file.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { Item } from '../../core/shared/item.model';
 import { HtmlContentService } from '../../shared/html-content.service';
 import { getMockRemoteDataBuildService } from '../../shared/mocks/remote-data-build.service.mock';
 import { getMockRequestService } from '../../shared/mocks/request.service.mock';
@@ -168,6 +169,34 @@ describe('ClarinLicenseAgreementPageComponent', () => {
       expect(manageUrl()).toEqual('root-url/core/clarinusermetadata/manage?bitstreamUUID=bitstream-uuid');
       expect(hardRedirectService.redirect).toHaveBeenCalledWith('file-link?dtoken=download-token');
     }));
+
+    describe('when the download link goes by e-mail', () => {
+      let router;
+
+      beforeEach(() => {
+        router = TestBed.inject(Router);
+        (TestBed.inject(RemoteDataBuildService).buildFromRequestUUID as jasmine.Spy)
+          .and.returnValue(of(createSuccessfulRemoteDataObject('checkEmail')));
+        component.item$.next(Object.assign(new Item(), { uuid: 'item-uuid', metadata: {} }));
+      });
+
+      it('should go back to the item page with the access token', fakeAsync(() => {
+        component.accessToken = 'a+b';
+
+        component.accept();
+        flushMicrotasks();
+
+        expect(router.navigate).toHaveBeenCalledWith(['/items/item-uuid'], { queryParams: { accessToken: 'a+b' } });
+        expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+      }));
+
+      it('should go back to the item page without a query without an access token', fakeAsync(() => {
+        component.accept();
+        flushMicrotasks();
+
+        expect(router.navigate).toHaveBeenCalledWith(['/items/item-uuid'], { queryParams: {} });
+      }));
+    });
   });
 
   describe('shouldSeeSendTokenInfo', () => {
