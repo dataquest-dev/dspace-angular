@@ -1,3 +1,5 @@
+import { appendFileSync } from 'node:fs';
+
 import { defineConfig } from 'cypress';
 
 export default defineConfig({
@@ -46,13 +48,18 @@ export default defineConfig({
   e2e: {
     // Setup our plugins for e2e tests
     setupNodeEvents(on, config) {
-      // The default spec reporter hides which retry attempt passed, so print one line per flaky test.
+      // The default spec reporter hides which retry attempt passed, so print one line per flaky test,
+      // to the log and to the GitHub job summary.
       on('after:spec', (spec, results) => {
         (results?.tests ?? []).forEach((test) => {
           const attempts = test.attempts ?? [];
           if (attempts.length > 1 && test.state === 'passed') {
             const passedOn = attempts.findIndex((attempt) => attempt.state === 'passed') + 1;
-            console.log(`FLAKY ${spec.relative} > ${(test.title ?? []).join(' ')} passed on attempt ${passedOn}/${attempts.length}`);
+            const line = `FLAKY ${spec.relative} > ${(test.title ?? []).join(' ')} passed on attempt ${passedOn}/${attempts.length}`;
+            console.log(line);
+            if (process.env.GITHUB_STEP_SUMMARY) {
+              appendFileSync(process.env.GITHUB_STEP_SUMMARY, `- ${line}\n`);
+            }
           }
         });
       });
