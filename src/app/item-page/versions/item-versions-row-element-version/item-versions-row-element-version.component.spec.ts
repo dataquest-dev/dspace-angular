@@ -144,13 +144,13 @@ describe('ItemVersionsRowElementVersionComponent', () => {
     expect(link.nativeElement.textContent).toContain('Version item title');
   });
 
-  it('should display Untitled when the version item has no title', () => {
+  it('should display the untitled label when the version item has no title', () => {
     component.version = Object.assign(new Version(), version, {
       item: createSuccessfulRemoteDataObject$(Object.assign(new Item(), item, { metadata: {} })),
     });
     fixture.detectChanges();
     const link = fixture.debugElement.query(By.css(`.left-column a`));
-    expect(link.nativeElement.textContent.trim()).toEqual('Untitled');
+    expect(link.nativeElement.textContent.trim()).toEqual('dso.name.untitled');
   });
 
   it(`should displau an asterisk in the correct column for current version`, () => {

@@ -1,9 +1,9 @@
 <div class="left-column">
   @if ((version.item | async)?.payload; as versionItem) {
     @if ((workspaceId$ | async) || (workflowId$ | async)) {
-      {{ versionItem.firstMetadataValue('dc.title') || versionItem.name || 'Untitled' }}
+      {{ versionItem.firstMetadataValue('dc.title') || versionItem.name || ('dso.name.untitled' | translate) }}
     } @else {
-      <a [routerLink]="getVersionRoute(version.id)">{{ versionItem.firstMetadataValue('dc.title') || versionItem.name || 'Untitled' }}</a>
+      <a [routerLink]="getVersionRoute(version.id)">{{ versionItem.firstMetadataValue('dc.title') || versionItem.name || ('dso.name.untitled' | translate) }}</a>
     }
   }
   @if (version?.id === itemVersion?.id) {
