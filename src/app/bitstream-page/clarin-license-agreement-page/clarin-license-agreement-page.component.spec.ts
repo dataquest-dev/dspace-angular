@@ -5,6 +5,8 @@ import {
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {
   ComponentFixture,
+  fakeAsync,
+  flushMicrotasks,
   TestBed,
 } from '@angular/core/testing';
 import { Router } from '@angular/router';
@@ -22,14 +24,19 @@ import { ItemDataService } from '../../core/data/item-data.service';
 import { buildPaginatedList } from '../../core/data/paginated-list.model';
 import { RequestService } from '../../core/data/request.service';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
+import { Bitstream } from '../../core/shared/bitstream.model';
 import { ClarinUserMetadata } from '../../core/shared/clarin/clarin-user-metadata.model';
 import { FileService } from '../../core/shared/file.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
+import { Item } from '../../core/shared/item.model';
 import { HtmlContentService } from '../../shared/html-content.service';
 import { getMockRemoteDataBuildService } from '../../shared/mocks/remote-data-build.service.mock';
 import { getMockRequestService } from '../../shared/mocks/request.service.mock';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
-import { createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
+import {
+  createSuccessfulRemoteDataObject,
+  createSuccessfulRemoteDataObject$,
+} from '../../shared/remote-data.utils';
 import { HALEndpointServiceStub } from '../../shared/testing/hal-endpoint-service.stub';
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 import { ClarinLicenseAgreementPageComponent } from './clarin-license-agreement-page.component';
@@ -117,6 +124,78 @@ describe('ClarinLicenseAgreementPageComponent', () => {
       expect(component.userMetadata$.value.page.length).toEqual(2);
       expect(component.getMetadataValueByKey('COUNTRY')).toEqual('CZ');
       expect(component.getMetadataValueByKey('NAME')).toEqual('Jan Novak');
+    });
+  });
+
+  describe('accept', () => {
+    let requestService;
+    let hardRedirectService;
+
+    beforeEach(() => {
+      requestService = TestBed.inject(RequestService);
+      hardRedirectService = TestBed.inject(HardRedirectService);
+      (TestBed.inject(HALEndpointService) as any).getRootHref = () => 'root-url';
+      (TestBed.inject(Router) as any).routerState = { snapshot: { url: '/bitstreams/bitstream-uuid/download' } };
+      spyOn(TestBed.inject(RemoteDataBuildService), 'buildFromRequestUUID')
+        .and.returnValue(of(createSuccessfulRemoteDataObject('download-token')));
+      component.bitstream$ = of(Object.assign(new Bitstream(), {
+        uuid: 'bitstream-uuid',
+        _links: { content: { href: 'content-link' } },
+      }));
+      component.ipAddress$.next('127.0.0.1');
+    });
+
+    /**
+     * The url of the request that stored the user metadata.
+     */
+    function manageUrl(): string {
+      return requestService.send.calls.mostRecent().args[0].href;
+    }
+
+    it('should send the access token to the server and download with both tokens', fakeAsync(() => {
+      component.accessToken = 'a+b';
+
+      component.accept();
+      flushMicrotasks();
+
+      expect(manageUrl()).toEqual('root-url/core/clarinusermetadata/manage?bitstreamUUID=bitstream-uuid&accessToken=a%2Bb');
+      expect(hardRedirectService.redirect).toHaveBeenCalledWith('file-link?dtoken=download-token&accessToken=a%2Bb');
+    }));
+
+    it('should download with only the dtoken without an access token', fakeAsync(() => {
+      component.accept();
+      flushMicrotasks();
+
+      expect(manageUrl()).toEqual('root-url/core/clarinusermetadata/manage?bitstreamUUID=bitstream-uuid');
+      expect(hardRedirectService.redirect).toHaveBeenCalledWith('file-link?dtoken=download-token');
+    }));
+
+    describe('when the download link goes by e-mail', () => {
+      let router;
+
+      beforeEach(() => {
+        router = TestBed.inject(Router);
+        (TestBed.inject(RemoteDataBuildService).buildFromRequestUUID as jasmine.Spy)
+          .and.returnValue(of(createSuccessfulRemoteDataObject('checkEmail')));
+        component.item$.next(Object.assign(new Item(), { uuid: 'item-uuid', metadata: {} }));
+      });
+
+      it('should go back to the item page with the access token', fakeAsync(() => {
+        component.accessToken = 'a+b';
+
+        component.accept();
+        flushMicrotasks();
+
+        expect(router.navigate).toHaveBeenCalledWith(['/items/item-uuid'], { queryParams: { accessToken: 'a+b' } });
+        expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+      }));
+
+      it('should go back to the item page without a query without an access token', fakeAsync(() => {
+        component.accept();
+        flushMicrotasks();
+
+        expect(router.navigate).toHaveBeenCalledWith(['/items/item-uuid'], { queryParams: {} });
+      }));
     });
   });
 

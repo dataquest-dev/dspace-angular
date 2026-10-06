@@ -52,7 +52,6 @@ import {
   hasValue,
   isEmpty,
   isNotEmpty,
-  isNotNull,
   isUndefined,
 } from '../../shared/empty.util';
 import { ClarinBitstreamAuthorizationDeniedComponent } from '../clarin-bitstream-authorization-denied/clarin-bitstream-authorization-denied.component';
@@ -63,7 +62,8 @@ import { ClarinLicenseAgreementPageComponent } from '../clarin-license-agreement
  * `/<BITSTREAM_UUID>/download` page
  * This component decides if the bitstream will be downloaded or if the user must fill in some user metadata or
  * if the path contains `dtoken` parameter the component tries to download the bitstream with the token.
- * A request-a-copy `accessToken` is handed over to the backend, which decides whether it authorizes the download.
+ * A request-a-copy `accessToken` from the URL goes with the CLARIN check, the licence page, the login and the final
+ * content URL.
  */
 @Component({
   imports: [
@@ -122,8 +122,8 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
         // Get Authorization Bitstream endpoint url
         authorizationUrl = this.halService.getRootHref() + '/' + AuthrnBitstream.type.value + '/' + bitstream.uuid;
 
-        // Add token to the url or not
-        authorizationUrl = isNotEmpty(this.dtoken) ? authorizationUrl + '?dtoken=' + this.dtoken : authorizationUrl;
+        // Add the tokens to the url or not
+        authorizationUrl = this.addDownloadParams(authorizationUrl);
 
         const requestId = this.requestService.generateRequestId();
         const headRequest = new GetRequest(requestId, authorizationUrl);
@@ -140,7 +140,7 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
       take(1),
       switchMap(([clarinIsAuthorized, isAuthorized, isLoggedIn, bitstream]: [RemoteData<any>, boolean, boolean, Bitstream]) => {
         const isAuthorizedByClarin = this.processClarinAuthorization(clarinIsAuthorized);
-        if (isAuthorizedByClarin && isAuthorized && isLoggedIn) {
+        if (isAuthorizedByClarin && (isAuthorized || isNotEmpty(this.accessToken)) && isLoggedIn) {
           return this.fileService.retrieveFileDownloadLink(bitstream._links.content.href).pipe(
             filter((fileLink) => hasValue(fileLink)),
             take(1),
@@ -155,12 +155,8 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
       let bitstreamURL = bitstream._links.content.href;
       // Clarin Authorization is approving the user by token
       if (isAuthorizedByClarin) {
-        if (fileLink.includes('authentication-token')) {
-          fileLink = isNotNull(this.dtoken) ? fileLink + '&dtoken=' + this.dtoken : fileLink;
-        } else {
-          fileLink = isNotNull(this.dtoken) ? fileLink + '?dtoken=' + this.dtoken : fileLink;
-        }
-        bitstreamURL = isNotNull(this.dtoken) ? bitstreamURL + '?dtoken=' + this.dtoken : bitstreamURL;
+        fileLink = this.addDownloadParams(fileLink);
+        bitstreamURL = this.addDownloadParams(bitstreamURL);
       }
       if (isNotEmpty(this.zipDownloadLink.getValue())) {
         const authToken = fileLink.substring(fileLink.indexOf('authentication-token'));
@@ -173,17 +169,10 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
       // bitstreamURL = 'http://localhost:8080/server/api/core/bitstreams/d9a41f84-a470-495a-8821-20e0a18e9276/content';
       if ((isAuthorized || isAuthorizedByClarin) && isLoggedIn && isNotEmpty(fileLink)) {
         this.downloadStatus.next(RequestEntryState.Success);
-        window.location.replace(fileLink);
+        this.redirectToContent(fileLink);
       } else if ((isAuthorized || isAuthorizedByClarin) && !isLoggedIn) {
         this.downloadStatus.next(RequestEntryState.Success);
-        window.location.replace(bitstreamURL);
-      } else if (!(isAuthorized || isAuthorizedByClarin) && isNotEmpty(this.accessToken) &&
-        this.downloadStatus.value === AUTHORIZATION_DENIED_EXCEPTION) {
-        // Only the policy refused, which a request-a-copy token can answer. A missing licence or an
-        // expired dtoken keeps its own page, because the user can still act on those here.
-        const separator = bitstreamURL.includes('?') ? '&' : '?';
-        this.downloadStatus.next(RequestEntryState.Success);
-        this.hardRedirectService.redirect(bitstreamURL + separator + 'accessToken=' + encodeURIComponent(this.accessToken));
+        this.redirectToContent(bitstreamURL);
       } else if (!(isAuthorized || isAuthorizedByClarin) && isLoggedIn &&
         this.downloadStatus.value === (RequestEntryState.Error as string)) {
         // this.downloadStatus is `ERROR` - no CLARIN exception is thrown up
@@ -194,6 +183,30 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
         this.router.navigateByUrl('login');
       }
     });
+  }
+
+  /**
+   * Adds the `dtoken` and the request-a-copy `accessToken` of this page to the url.
+   */
+  addDownloadParams(url: string): string {
+    const params: string[] = [];
+    if (isNotEmpty(this.dtoken)) {
+      params.push('dtoken=' + this.dtoken);
+    }
+    if (isNotEmpty(this.accessToken)) {
+      params.push('accessToken=' + encodeURIComponent(this.accessToken));
+    }
+    if (isEmpty(params)) {
+      return url;
+    }
+    return url + (url.includes('?') ? '&' : '?') + params.join('&');
+  }
+
+  /**
+   * Starts the download.
+   */
+  redirectToContent(url: string) {
+    window.location.replace(url);
   }
 
   /**

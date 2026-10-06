@@ -100,6 +100,12 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   bitstream$: Observable<Bitstream>;
 
   /**
+   * The request-a-copy access token of the download page. It goes with the download and with the e-mailed link.
+   */
+  @Input()
+  accessToken: string;
+
+  /**
    * The user IP Address which is loaded from `http://api.ipify.org/?format=json`
    */
   ipAddress$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
@@ -249,6 +255,9 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       CLARIN_USER_METADATA_MANAGE;
     url += this.isDownloadingZIP() ? '/zip?itemUUID=' + this.item$.value.uuid : '?bitstreamUUID=' +
       this.getBitstreamUUID();
+    if (!this.isDownloadingZIP() && isNotEmpty(this.accessToken)) {
+      url += '&accessToken=' + encodeURIComponent(this.accessToken);
+    }
     if (this.userMetadata$.value?.page) {
       // Filter the page array to exclude items with metadataKey "IP"
       this.userMetadata$.value.page =
@@ -292,7 +301,8 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   }
 
   private navigateToItemPage() {
-    this.router.navigate([getItemPageRoute(this.item$?.value)]);
+    void this.router.navigate([getItemPageRoute(this.item$?.value)],
+      { queryParams: isNotEmpty(this.accessToken) ? { accessToken: this.accessToken } : {} });
   }
 
   private isDownloadingZIP() {
@@ -301,7 +311,7 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
 
   /**
    * Redirects to the download link of the bitstream.
-   * If a download token is provided, it appends it as a query parameter.
+   * The download token and the request-a-copy access token, when there are any, go as query parameters.
    *
    * @param downloadToken
    * @private
@@ -317,11 +327,16 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
         ),
       );
 
+      const params: string[] = [];
+      if (downloadToken) {
+        params.push(`dtoken=${downloadToken}`);
+      }
+      if (isNotEmpty(this.accessToken)) {
+        params.push(`accessToken=${encodeURIComponent(this.accessToken)}`);
+      }
       // Determine whether the URL already contains query parameters
-      const hasQueryParams = fileLink.includes('?');
-      const tokenParam = downloadToken ? `${hasQueryParams ? '&' : '?'}dtoken=${downloadToken}` : '';
-
-      const redirectUrl = `${fileLink}${tokenParam}`;
+      const separator = fileLink.includes('?') ? '&' : '?';
+      const redirectUrl = isEmpty(params) ? fileLink : fileLink + separator + params.join('&');
       this.hardRedirectService.redirect(redirectUrl);
     } catch (error) {
       this.notificationsService.error(this.translateService.instant('clarin-license-agreement-page.download-error'));
