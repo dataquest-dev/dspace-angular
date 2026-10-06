@@ -2,7 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  RouterLink,
+} from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 /**
@@ -14,6 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './page-error.component.html',
   changeDetection: ChangeDetectionStrategy.Default,
   imports: [
+    RouterLink,
     TranslateModule,
   ],
 })

@@ -7,7 +7,10 @@ import {
 import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { cold } from 'jasmine-marbles';
-import { of } from 'rxjs';
+import {
+  of,
+  Subject,
+} from 'rxjs';
 import { FormBuilderService } from 'src/app/shared/form/builder/form-builder.service';
 
 import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
@@ -293,6 +296,34 @@ describe('SubmissionSectionCcLicensesComponent', () => {
           expect(component.getSectionStatus()).toBeObservable(cold('(a)', { a: true })); // first true is because the section is not required
         });
       });
+    });
+  });
+
+  describe('when the section state comes back from a save', () => {
+    const storedLink = 'stored cc license link';
+    let sectionState$: Subject<any>;
+
+    beforeEach(() => {
+      sectionState$ = new Subject();
+      spyOn(sectionService, 'getSectionState').and.returnValue(sectionState$);
+      operationsBuilder.add.calls.reset();
+      operationsBuilder.remove.calls.reset();
+      component.sectionData.data = { uri: storedLink };
+      component.onSectionInit();
+    });
+
+    it('should not remove the licence a second time', () => {
+      sectionState$.next({ data: { uri: storedLink, accepted: false } });
+      sectionState$.next({ data: { uri: null } });
+      expect(operationsBuilder.remove).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not remove a licence that was accepted again', () => {
+      sectionState$.next({ data: { uri: storedLink, accepted: false } });
+      sectionState$.next({ data: { uri: storedLink, accepted: true } });
+      sectionState$.next({ data: { uri: storedLink } });
+      expect(operationsBuilder.add).toHaveBeenCalledTimes(1);
+      expect(operationsBuilder.remove).toHaveBeenCalledTimes(1);
     });
   });
 });

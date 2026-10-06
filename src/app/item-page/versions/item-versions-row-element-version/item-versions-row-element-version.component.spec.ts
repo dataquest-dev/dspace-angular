@@ -69,6 +69,9 @@ describe('ItemVersionsRowElementVersionComponent', () => {
     id: 'item-identifier-1',
     uuid: 'item-identifier-1',
     handle: '123456789/1',
+    metadata: {
+      'dc.title': [{ value: 'Version item title' }],
+    },
     version: createSuccessfulRemoteDataObject$(version),
     _links: {
       self: {
@@ -136,9 +139,18 @@ describe('ItemVersionsRowElementVersionComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it(`should display version ${version.version} in the correct column for version ${version.id}`, () => {
-    const id = fixture.debugElement.query(By.css(`.left-column`));
-    expect(id.nativeElement.textContent).toContain(version.version.toString());
+  it(`should display the item title in the correct column for version ${version.id}`, () => {
+    const link = fixture.debugElement.query(By.css(`.left-column a`));
+    expect(link.nativeElement.textContent).toContain('Version item title');
+  });
+
+  it('should display Untitled when the version item has no title', () => {
+    component.version = Object.assign(new Version(), version, {
+      item: createSuccessfulRemoteDataObject$(Object.assign(new Item(), item, { metadata: {} })),
+    });
+    fixture.detectChanges();
+    const link = fixture.debugElement.query(By.css(`.left-column a`));
+    expect(link.nativeElement.textContent.trim()).toEqual('Untitled');
   });
 
   it(`should displau an asterisk in the correct column for current version`, () => {

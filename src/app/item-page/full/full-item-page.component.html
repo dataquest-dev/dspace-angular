@@ -74,7 +74,9 @@
               </div>
               <ds-item-page-collections [item]="item"></ds-item-page-collections>
               <ds-item-versions class="mt-2" [item]="item"></ds-item-versions>
-              <ds-clarin-files-section [item]="item" [itemHandle]="item.handle"></ds-clarin-files-section>
+              @if (item.firstMetadataValue('local.has.files') !== 'no') {
+                <ds-clarin-files-section [item]="item" [itemHandle]="item.handle"></ds-clarin-files-section>
+              }
               @if (fromSubmissionObject) {
                 <div class="button-row bottom">
                   <div class="text-end">

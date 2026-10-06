@@ -271,6 +271,24 @@ describe('ItemPageComponent', () => {
     });
   });
 
+  describe('local.has.files', () => {
+    const withHasFiles = (value: string): Item => Object.assign(new Item(), mockItem, {
+      metadata: { 'local.has.files': [{ value }] },
+    });
+
+    it('should not display the files section when the item has no files', () => {
+      comp.itemRD$ = createSuccessfulRemoteDataObject$(withHasFiles('no'));
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('ds-clarin-files-section'))).toBeNull();
+    });
+
+    it('should display the files section when the item has files', () => {
+      comp.itemRD$ = createSuccessfulRemoteDataObject$(withHasFiles('yes'));
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('ds-clarin-files-section'))).not.toBeNull();
+    });
+  });
+
 });
 
 /**
