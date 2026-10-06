@@ -21,7 +21,7 @@ describe('ClarinRefCitationComponent', () => {
     'dc.contributor.author': [{ value: 'Novák, Jan' }],
     'dc.date.issued': [{ value: '2026-01-01' }],
     'dc.title': [{ value: 'Test item' }],
-    'dc.identifier.uri': [{ value: 'http://hdl.handle.net/11025/3' }],
+    'dc.identifier.uri': [{ value: 'http://hdl.handle.net/123456789/3' }],
   };
 
   beforeEach(() => {
@@ -33,7 +33,7 @@ describe('ClarinRefCitationComponent', () => {
       })),
     );
     itemIdentifierService = jasmine.createSpyObj('ItemIdentifierService', ['prettifyIdentifier']);
-    itemIdentifierService.prettifyIdentifier.and.returnValue(Promise.resolve('11025/3'));
+    itemIdentifierService.prettifyIdentifier.and.returnValue(Promise.resolve('123456789/3'));
 
     component = new ClarinRefCitationComponent(
       configurationService,
@@ -65,7 +65,7 @@ describe('ClarinRefCitationComponent', () => {
     component.item = buildItem({
       'dc.date.issued': [{ value: '2026-01-01' }],
       'dc.title': [{ value: 'Test item' }],
-      'dc.identifier.uri': [{ value: 'http://hdl.handle.net/11025/3' }],
+      'dc.identifier.uri': [{ value: 'http://hdl.handle.net/123456789/3' }],
       'dc.publisher': [{ value: 'Springer Nature' }],
     });
     component.ngOnInit();
