@@ -496,7 +496,7 @@
   "admin.access-control.epeople.form.lastName": "Příjmení",
 
   // "admin.access-control.epeople.form.email": "Email",
-  "admin.access-control.epeople.form.email": "E-mail",
+  "admin.access-control.epeople.form.email": "Email",
 
   // "admin.access-control.epeople.form.emailHint": "Must be a valid email address",
   "admin.access-control.epeople.form.emailHint": "Musí to být platná e-mailová adresa",
@@ -2681,7 +2681,7 @@
   "community.create.notifications.success": "Úspěšně vytvořena komunita",
 
   // "community.create.sub-head": "Create a Sub-Community for Community {{ parent }}",
-  "community.create.sub-head": "Vytvořit podkomunitu v komunitě {{ parent }}",
+  "community.create.sub-head": "Vytvořit podkomunitu pro komunitu {{ parent }}",
 
   // "community.curate.header": "Curate Community: {{community}}",
   "community.curate.header": "Spravovat komunitu: {{ community }}",
@@ -3426,7 +3426,7 @@
   "error.top-level-communities": "Chyba při načítání komunit nejvyšší úrovně",
 
   // "error.validation.license.notgranted": "You must grant this license to complete your submission. If you are unable to grant this license at this time you may save your work and return later or remove the submission.",
-  "error.validation.license.notgranted": "Bez udělení licence nelze záznam dokončit. Pokud v tuto chvíli nemůžete licenci udělit, uložte svou práci a vraťte se k příspěvku později nebo jej smažte.",
+  "error.validation.license.notgranted": "Pro dokončení zaslání musíte udělit licenci. Pokud v tuto chvíli tuto licenci nemůžete udělit, můžete svou práci uložit a později se k svému příspěvku vrátit nebo jej smazat.",
 
   // "error.validation.cclicense.required": "You must grant this cclicense to complete your submission. If you are unable to grant the cclicense at this time, you may save your work and return later or remove the submission.",
   "error.validation.cclicense.required": "Pro dokončení vkladu musíte udělit tuto licenci CC. Pokud v tuto chvíli nemůžete licenci CC udělit, můžete svou práci uložit a vrátit se později nebo vklad odstranit.",
@@ -4083,7 +4083,7 @@
   "health-page.section.solrOaiCore.title": "Solr: oai core",
 
   // "health-page.section.solrSearchCore.title": "Solr: search core",
-  "health-page.section.solrSearchCore.title": "Solr: search core",
+  "health-page.section.solrSearchCore.title": "Solr: vyhledávací jádro",
 
   // "health-page.section.solrStatisticsCore.title": "Solr: statistics core",
   "health-page.section.solrStatisticsCore.title": "Solr: statistics core",
@@ -5023,7 +5023,7 @@
   "item.edit.tabs.status.buttons.unauthorized": "Nejste oprávněni provést tuto akci",
 
   // "item.edit.tabs.status.buttons.withdraw.button": "Withdraw this item",
-  "item.edit.tabs.status.buttons.withdraw.button": "Odstranit...",
+  "item.edit.tabs.status.buttons.withdraw.button": "Stáhnout...",
 
   // "item.edit.tabs.license.head": "License",
   "item.edit.tabs.license.head": "Licence",
@@ -5032,7 +5032,7 @@
   "item.edit.tabs.license.title": "Úprava záznamu - Licence",
 
   // "item.edit.tabs.status.buttons.withdraw.label": "Withdraw item from the repository",
-  "item.edit.tabs.status.buttons.withdraw.label": "Odstranit záznam z repozitáře",
+  "item.edit.tabs.status.buttons.withdraw.label": "Stáhnout záznam z repozitáře",
 
   // "item.edit.tabs.status.description": "Welcome to the item management page. From here you can withdraw, reinstate, move or delete the item. You may also update or add new metadata / bitstreams on the other tabs.",
   "item.edit.tabs.status.description": "Vítejte na stránce pro správu záznamů. Odtud můžete záznam stáhnout, obnovit, přesunout nebo odstranit. Na ostatních záložkách můžete také aktualizovat nebo přidávat nová metadata / bitové toky.",
@@ -5079,16 +5079,16 @@
   "item.edit.withdraw.confirm": "Odebrat",
 
   // "item.edit.withdraw.description": "Are you sure this item should be withdrawn from the archive?",
-  "item.edit.withdraw.description": "Jste si jisti, že by tento záznam měl být odebrán z archivu?",
+  "item.edit.withdraw.description": "Jste si jisti, že by tento záznam měl být stažen z archivu?",
 
   // "item.edit.withdraw.error": "An error occurred while withdrawing the item",
-  "item.edit.withdraw.error": "Při odebírání záznamu došlo k chybě",
+  "item.edit.withdraw.error": "Při stahování záznamu došlo k chybě",
 
   // "item.edit.withdraw.header": "Withdraw item: {{ id }}",
-  "item.edit.withdraw.header": "Odebrat záznam: {{ id }}",
+  "item.edit.withdraw.header": "Stáhnout záznam: {{ id }}",
 
   // "item.edit.withdraw.success": "The item was withdrawn successfully",
-  "item.edit.withdraw.success": "Záznam byl úspěšně odebrán",
+  "item.edit.withdraw.success": "Záznam byl úspěšně stažen",
 
   // "item.file.description.checksum": "MD5",
   "item.file.description.checksum": "MD5",
@@ -5371,7 +5371,7 @@
   "item.page.journal.search.title": "Články v tomto časopise",
 
   // "item.page.link.full": "Full item page",
-  "item.page.link.full": "Zobrazit úplný záznam",
+  "item.page.link.full": "Zobrazit celý záznam",
 
   // "item.page.link.simple": "Simple item page",
   "item.page.link.simple": "Zobrazit minimální záznam",
@@ -5418,7 +5418,7 @@
   "item.page.subject": "Klíčová slova",
 
   // "item.page.uri": "URI",
-  "item.page.uri": "Permanentní identifikátor",
+  "item.page.uri": "Identifikátor",
 
   // "item.page.users.note": "User's note:",
   "item.page.users.note": "Vzkaz od uživatele:",
@@ -7904,7 +7904,7 @@
   "repository.title": "Institucionální digitální repozitář",
 
   // "repository.title.prefix": "DSpace Repository :: ",
-  "repository.title.prefix": "IDR :: ",
+  "repository.title.prefix": "LINDAT/CLARIAH-CZ Repozitář",
 
   // "repository.title.prefixDSpace": "DSpace",
   "repository.title.prefixDSpace": "DSpace",
