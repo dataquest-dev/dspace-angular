@@ -11,11 +11,15 @@
                            [retainScrollPosition]="true">
 
 
-                <div class="file-section row mb-3" *ngFor="let file of originals?.page;">
-                    <div class="col-3" *ngIf="(file.thumbnail | async)?.payload as thumbnail">
-                        <ds-themed-thumbnail [thumbnail]="thumbnail"></ds-themed-thumbnail>
+                <ng-container *ngVar="(originalsHaveThumbnail$ | async) as haveThumbnail">
+                <div class="file-section row mb-3" [class.mt-4]="!haveThumbnail && isFirst"
+                     [class.file-section--no-thumbnail]="!haveThumbnail"
+                     *ngFor="let file of originals?.page; first as isFirst">
+                    <div class="col-3" *ngIf="haveThumbnail">
+                        <ds-themed-thumbnail *ngIf="(file.thumbnail | async)?.payload as thumbnail"
+                                             [thumbnail]="thumbnail"></ds-themed-thumbnail>
                     </div>
-                    <div class="col-7">
+                    <div [ngClass]="haveThumbnail ? 'col-7' : 'col-10'">
                         <dl class="row">
                             <dt class="col-md-4">{{"item.page.filesection.name" | translate}}</dt>
                             <dd class="col-md-8">{{ dsoNameService.getName(file) }}</dd>
@@ -39,6 +43,7 @@
                         </ds-themed-file-download-link>
                     </div>
                 </div>
+                </ng-container>
             </ds-pagination>
         </div>
     </div>
@@ -54,11 +59,15 @@
                            [retainScrollPosition]="true">
 
 
-                <div class="file-section row" *ngFor="let file of licenses?.page;">
-                    <div class="col-3" *ngIf="(file.thumbnail | async)?.payload as thumbnail">
-                        <ds-themed-thumbnail [thumbnail]="thumbnail"></ds-themed-thumbnail>
+                <ng-container *ngVar="(licensesHaveThumbnail$ | async) as haveThumbnail">
+                <div class="file-section row" [class.mt-4]="!haveThumbnail && isFirst"
+                     [class.file-section--no-thumbnail]="!haveThumbnail"
+                     *ngFor="let file of licenses?.page; first as isFirst">
+                    <div class="col-3" *ngIf="haveThumbnail">
+                        <ds-themed-thumbnail *ngIf="(file.thumbnail | async)?.payload as thumbnail"
+                                             [thumbnail]="thumbnail"></ds-themed-thumbnail>
                     </div>
-                    <div class="col-7">
+                    <div [ngClass]="haveThumbnail ? 'col-7' : 'col-10'">
                         <dl class="row">
                             <dt class="col-md-4">{{"item.page.filesection.name" | translate}}</dt>
                             <dd class="col-md-8">{{ dsoNameService.getName(file) }}</dd>
@@ -80,6 +89,7 @@
                         </ds-themed-file-download-link>
                     </div>
                 </div>
+                </ng-container>
             </ds-pagination>
         </div>
     </div>

@@ -106,30 +106,57 @@ describe('FullFileSectionComponent', () => {
         : createSuccessfulRemoteDataObject$(null),
     });
 
-    function renderWith(bitstreams: Bitstream[]) {
-      bitstreamDataService.findAllByItemAndBundleName.and.returnValue(
-        createSuccessfulRemoteDataObject$(createPaginatedList(bitstreams)));
+    // The layout is driven per bundle by whether any of its files has a resolved
+    // thumbnail (each file's own `thumbnail` RemoteData, set in makeBitstream). The
+    // mock returns the given files for ORIGINAL and an empty list for other bundles.
+    function setup(originalFiles: Bitstream[]) {
+      bitstreamDataService.findAllByItemAndBundleName.and.callFake((_item: any, bundleName: string) =>
+        createSuccessfulRemoteDataObject$(createPaginatedList(bundleName === 'ORIGINAL' ? originalFiles : [])));
       fixture = TestBed.createComponent(FullFileSectionComponent);
       comp = fixture.componentInstance;
       fixture.detectChanges();
     }
 
     afterEach(() => {
-      // renderWith() mutates the shared spy; restore the default 3-bitstream list so
-      // other specs are unaffected (Jasmine runs specs in random order by default).
+      // setup() mutates the shared spy; restore the default 3-bitstream list so other
+      // specs are unaffected (Jasmine runs specs in random order by default).
       bitstreamDataService.findAllByItemAndBundleName.and.returnValue(
         createSuccessfulRemoteDataObject$(createPaginatedList([mockBitstream, mockBitstream, mockBitstream])));
     });
 
     it('omits the thumbnail tile for a bitstream without a thumbnail', () => {
-      renderWith([makeBitstream(false)]);
+      setup([makeBitstream(false)]);
       expect(fixture.debugElement.queryAll(By.css('ds-themed-thumbnail')).length).toBe(0);
       expect(fixture.debugElement.queryAll(By.css('.file-section')).length).toBeGreaterThan(0);
     });
 
     it('renders the thumbnail tile for a bitstream that has a thumbnail', () => {
-      renderWith([makeBitstream(true)]);
+      setup([makeBitstream(true)]);
       expect(fixture.debugElement.queryAll(By.css('ds-themed-thumbnail')).length).toBeGreaterThan(0);
+      // the details column keeps its reduced width next to the thumbnail column
+      expect(fixture.debugElement.queryAll(By.css('.file-section .col-7')).length)
+        .toBe(fixture.debugElement.queryAll(By.css('.file-section')).length);
+      expect(fixture.debugElement.queryAll(By.css('.file-section .col-10')).length).toBe(0);
+    });
+
+    it('keeps the (empty) thumbnail column for files without a thumbnail when the bundle has at least one', () => {
+      setup([makeBitstream(true), makeBitstream(false)]);
+      const rows = fixture.debugElement.queryAll(By.css('.file-section'));
+      // every row keeps a thumbnail column so the details stay aligned...
+      expect(fixture.debugElement.queryAll(By.css('.file-section .col-3')).length).toBe(rows.length);
+      // ...but only the files that actually have a thumbnail render a tile (no placeholder)
+      expect(fixture.debugElement.queryAll(By.css('ds-themed-thumbnail')).length).toBeLessThan(rows.length);
+      expect(fixture.debugElement.queryAll(By.css('ds-themed-thumbnail')).length).toBeGreaterThan(0);
+    });
+
+    it('drops the thumbnail column and widens the details when no file has a thumbnail', () => {
+      setup([makeBitstream(false), makeBitstream(false)]);
+      const rows = fixture.debugElement.queryAll(By.css('.file-section'));
+      expect(rows.length).toBeGreaterThan(0);
+      expect(fixture.debugElement.queryAll(By.css('.file-section .col-3')).length).toBe(0);
+      expect(fixture.debugElement.queryAll(By.css('ds-themed-thumbnail')).length).toBe(0);
+      // the details column moves to the far left and widens to fill the freed space
+      expect(fixture.debugElement.queryAll(By.css('.file-section .col-10')).length).toBe(rows.length);
     });
   });
 });
