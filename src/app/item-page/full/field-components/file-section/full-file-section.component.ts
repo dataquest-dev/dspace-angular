@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of as observableOf } from 'rxjs';
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
 
 import { Bitstream } from '../../../../core/shared/bitstream.model';
@@ -9,7 +9,7 @@ import { FileSectionComponent } from '../../../simple/field-components/file-sect
 import { PaginationComponentOptions } from '../../../../shared/pagination/pagination-component-options.model';
 import { PaginatedList } from '../../../../core/data/paginated-list.model';
 import { RemoteData } from '../../../../core/data/remote-data';
-import { switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { NotificationsService } from '../../../../shared/notifications/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
 import { hasValue, isEmpty } from '../../../../shared/empty.util';
@@ -35,6 +35,9 @@ export class FullFileSectionComponent extends FileSectionComponent implements On
 
   originals$: Observable<RemoteData<PaginatedList<Bitstream>>>;
   licenses$: Observable<RemoteData<PaginatedList<Bitstream>>>;
+
+  originalsHaveThumbnail$: Observable<boolean>;
+  licensesHaveThumbnail$: Observable<boolean>;
 
   originalOptions = Object.assign(new PaginationComponentOptions(), {
     id: 'obo',
@@ -100,10 +103,39 @@ export class FullFileSectionComponent extends FileSectionComponent implements On
       )
     );
 
+    this.originalsHaveThumbnail$ = this.bundleHasThumbnail(this.originals$);
+    this.licensesHaveThumbnail$ = this.bundleHasThumbnail(this.licenses$);
+
   }
 
   hasValuesInBundle(bundle: PaginatedList<Bitstream>) {
     return hasValue(bundle) && !isEmpty(bundle.page);
+  }
+
+  /**
+   * Emits true when at least one bitstream in the bundle has a resolved thumbnail.
+   */
+  bundleHasThumbnail(bundle$: Observable<RemoteData<PaginatedList<Bitstream>>>): Observable<boolean> {
+    return bundle$.pipe(
+      filter((rd: RemoteData<PaginatedList<Bitstream>>) => rd.hasSucceeded || rd.hasFailed),
+      switchMap((rd: RemoteData<PaginatedList<Bitstream>>) => {
+        const files: Bitstream[] = rd?.payload?.page;
+        if (isEmpty(files)) {
+          return observableOf(false);
+        }
+        return combineLatest(files.map((file: Bitstream) =>
+          (file.thumbnail ?? observableOf(null)).pipe(
+            filter((thumbnail: RemoteData<Bitstream>) => thumbnail == null || thumbnail.hasSucceeded || thumbnail.hasFailed),
+            take(1),
+            map((thumbnail: RemoteData<Bitstream>) => hasValue(thumbnail?.payload)),
+          ),
+        )).pipe(
+          map((present: boolean[]) => present.some(Boolean)),
+        );
+      }),
+      startWith(false),
+      distinctUntilChanged(),
+    );
   }
 
   ngOnDestroy(): void {
