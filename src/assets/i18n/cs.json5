@@ -8647,6 +8647,9 @@
   // "default.search.results.head": "Search Results",
   "default.search.results.head": "Výsledky vyhledávání",
 
+  // "items.search.results.head": "Search Results",
+  "items.search.results.head": "Výsledky vyhledávání",
+
   // "default-relationships.search.results.head": "Search Results",
   "default-relationships.search.results.head": "Výsledky vyhledávání",
 
