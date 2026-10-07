@@ -6,13 +6,13 @@
     .file-section--no-thumbnail {
         dt {
             text-align: left;
-            flex: 0 0 5.5rem;
-            max-width: 5.5rem;
+            flex: 0 0 8rem;
+            max-width: 8rem;
         }
 
         dd {
-            flex: 0 0 calc(100% - 5.5rem);
-            max-width: calc(100% - 5.5rem);
+            flex: 0 0 calc(100% - 8rem);
+            max-width: calc(100% - 8rem);
         }
     }
 }
