@@ -343,7 +343,8 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
         distinctUntilChanged(),
         map((sectionState) => sectionState.data as WorkspaceitemSectionCcLicenseObject),
       ).subscribe((data) => {
-        if (this.data.accepted !== data.accepted) {
+        // the server never returns "accepted", so only a user change may queue a patch
+        if (this.data.accepted !== data.accepted && data.accepted !== undefined) {
           const path = this.pathCombiner.getPath('uri');
           if (data.accepted) {
             this.getCcLicenseLink$().pipe(

@@ -163,7 +163,7 @@ describe('HeadTagService', () => {
     (headTagService as any).processRouteChange({
       data: {
         value: {
-          dso: createSuccessfulRemoteDataObject(ItemMock),
+          dso: createSuccessfulRemoteDataObject(mockType(ItemMock, 'Thesis')),
         },
       },
     });
@@ -182,9 +182,54 @@ describe('HeadTagService', () => {
     expect(meta.addTag).toHaveBeenCalledWith({ name: 'citation_language', content: 'en' });
     expect(meta.addTag).toHaveBeenCalledWith({
       name: 'citation_keywords',
-      content: 'keyword1; keyword2; keyword3',
+      content: 'keyword1; keyword2; keyword3; Thesis',
     });
   }));
+
+  describe('CLARIN tags', () => {
+    const datasetItem = Object.assign(new Item(), ItemMock, {
+      metadata: {
+        ...ItemMock.metadata,
+        'dc.contributor.author': [{ value: 'Author, First' }, { value: 'Author, Second' }],
+        'dc.language.iso': [{ value: 'ces' }],
+        'dc.identifier.uri': [{ value: 'https://hdl.example.org/123/456' }],
+        'dc.rights.uri': [{ value: 'https://creativecommons.org/licenses/by/4.0/' }],
+        'dc.relation.isreferencedby': [{ value: 'https://example.org/paper' }],
+      },
+    }) as Item;
+
+    beforeEach(fakeAsync(() => {
+      (headTagService as any).processRouteChange({
+        data: {
+          value: {
+            dso: createSuccessfulRemoteDataObject(datasetItem),
+          },
+        },
+      });
+      tick();
+    }));
+
+    it('should set citation_date and the dataset tags', () => {
+      expect(meta.addTag).toHaveBeenCalledWith({ name: 'citation_date', content: '1650-06-26' });
+      expect(meta.addTag).toHaveBeenCalledWith({ name: 'dataset_keywords', content: 'keyword1' });
+      expect(meta.addTag).toHaveBeenCalledWith({ name: 'dataset_license', content: 'https://creativecommons.org/licenses/by/4.0/' });
+      expect(meta.addTag).toHaveBeenCalledWith({ name: 'dataset_url', content: 'https://hdl.example.org/123/456' });
+      expect(meta.addTag).toHaveBeenCalledWith({ name: 'dataset_citation', content: 'https://example.org/paper' });
+      expect(meta.addTag).toHaveBeenCalledWith({ name: 'dataset_identifier', content: 'https://hdl.example.org/123/456' });
+      expect(meta.addTag).toHaveBeenCalledWith({ name: 'dataset_creator', content: 'Author, First' });
+    });
+
+    it('should set only the first author as citation_author', () => {
+      expect(meta.addTag).toHaveBeenCalledWith({ name: 'citation_author', content: 'Author, First' });
+      expect(meta.addTag).not.toHaveBeenCalledWith({ name: 'citation_author', content: 'Author, Second' });
+      expect(meta.addTag).not.toHaveBeenCalledWith({ name: 'citation_author', content: 'Doe, Jane' });
+    });
+
+    it('should prefer dc.language.iso for citation_language', () => {
+      expect(meta.addTag).toHaveBeenCalledWith({ name: 'citation_language', content: 'ces' });
+      expect(meta.addTag).not.toHaveBeenCalledWith({ name: 'citation_language', content: 'en' });
+    });
+  });
 
   it('items page should set meta tags as published Thesis', fakeAsync(() => {
     (headTagService as any).processRouteChange({

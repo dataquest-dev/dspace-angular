@@ -196,6 +196,14 @@ export class HeadTagService {
       this.setCitationDissertationNameTag();
     }
 
+    this.setCitationDateTag();
+    this.setDatasetKeywordsTag();
+    this.setDatasetLicenseTag();
+    this.setDatasetUrlTag();
+    this.setDatasetCitationTag();
+    this.setDatasetIdentifierTag();
+    this.setDatasetCreatorTag();
+
     // this.setCitationJournalTitleTag();
     // this.setCitationVolumeTag();
     // this.setCitationIssueTag();
@@ -251,8 +259,8 @@ export class HeadTagService {
    * Add <meta name="citation_author" ... >  to the <head>
    */
   protected setCitationAuthorTags(): void {
-    const values: string[] = this.getMetaTagValues(['dc.author', 'dc.contributor.author', 'dc.creator']);
-    this.addMetaTags('citation_author', values);
+    const value = this.getFirstMetaTagValue(['dc.author', 'dc.contributor.author', 'dc.creator']);
+    this.addMetaTag('citation_author', value);
   }
 
   /**
@@ -283,7 +291,7 @@ export class HeadTagService {
    * Add <meta name="citation_language" ... >  to the <head>
    */
   protected setCitationLanguageTag(): void {
-    const value = this.getFirstMetaTagValue(['dc.language', 'dc.language.iso']);
+    const value = this.getFirstMetaTagValue(['dc.language.iso', 'dc.language']);
     this.addMetaTag('citation_language', value);
   }
 
@@ -313,8 +321,64 @@ export class HeadTagService {
    * Add <meta name="citation_keywords" ... >  to the <head>
    */
   protected setCitationKeywordsTag(): void {
-    const value = this.getMetaTagValuesAndCombine('dc.subject');
+    const value = this.getMetaTagValues(['dc.subject', 'dc.type']).join('; ');
     this.addMetaTag('citation_keywords', value);
+  }
+
+  /**
+   * Add <meta name="citation_date" ... >  to the <head>
+   */
+  protected setCitationDateTag(): void {
+    const value = this.getMetaTagValue('dc.date.issued');
+    this.addMetaTag('citation_date', value);
+  }
+
+  /**
+   * Add <meta name="dataset_keywords" ... >  to the <head>
+   */
+  protected setDatasetKeywordsTag(): void {
+    const value = this.getMetaTagValue('dc.subject');
+    this.addMetaTag('dataset_keywords', value);
+  }
+
+  /**
+   * Add <meta name="dataset_license" ... >  to the <head>
+   */
+  protected setDatasetLicenseTag(): void {
+    const value = this.getMetaTagValue('dc.rights.uri');
+    this.addMetaTag('dataset_license', value);
+  }
+
+  /**
+   * Add <meta name="dataset_url" ... >  to the <head>
+   */
+  protected setDatasetUrlTag(): void {
+    const value = this.getMetaTagValue('dc.identifier.uri');
+    this.addMetaTag('dataset_url', value);
+  }
+
+  /**
+   * Add <meta name="dataset_citation" ... >  to the <head>
+   */
+  protected setDatasetCitationTag(): void {
+    const value = this.getMetaTagValue('dc.relation.isreferencedby');
+    this.addMetaTag('dataset_citation', value);
+  }
+
+  /**
+   * Add <meta name="dataset_identifier" ... >  to the <head>
+   */
+  protected setDatasetIdentifierTag(): void {
+    const value = this.getMetaTagValue('dc.identifier.uri');
+    this.addMetaTag('dataset_identifier', value);
+  }
+
+  /**
+   * Add <meta name="dataset_creator" ... >  to the <head>
+   */
+  protected setDatasetCreatorTag(): void {
+    const value = this.getMetaTagValue('dc.contributor.author');
+    this.addMetaTag('dataset_creator', value);
   }
 
   /**
