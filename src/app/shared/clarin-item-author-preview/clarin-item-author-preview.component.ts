@@ -5,6 +5,7 @@ import { Item } from '../../core/shared/item.model';
 import { ConfigurationProperty } from '../../core/shared/configuration-property.model';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { AuthorNameLink } from '../clarin-item-box-view/clarin-author-name-link.model';
+import { AuthorOrcidLinkTarget, loadAuthorOrcidLinkTarget, loadOrcidDomainUrl } from '../utils/orcid-author.util';
 
 @Component({
   selector: 'ds-clarin-item-author-preview',
@@ -38,11 +39,22 @@ export class ClarinItemAuthorPreviewComponent implements OnInit {
    */
   baseUrl = '';
 
+  /**
+   * Whether the name of an author with an ORCID iD links to the ORCID profile instead of the search
+   * (backend property `orcid.author.link-target`).
+   */
+  linkNameToOrcid = false;
+
   constructor(protected configurationService: ConfigurationDataService) { }
 
   async ngOnInit(): Promise<void> {
     await this.assignBaseUrl();
-    loadItemAuthors(this.item, this.itemAuthors, this.baseUrl, this.fields);
+    const [orcidDomainUrl, orcidLinkTarget] = await Promise.all([
+      loadOrcidDomainUrl(this.configurationService),
+      loadAuthorOrcidLinkTarget(this.configurationService),
+    ]);
+    this.linkNameToOrcid = orcidLinkTarget === AuthorOrcidLinkTarget.Orcid;
+    loadItemAuthors(this.item, this.itemAuthors, this.baseUrl, this.fields, orcidDomainUrl);
   }
   toggleShowEveryAuthor() {
     this.showEveryAuthor.next(!this.showEveryAuthor.value);
