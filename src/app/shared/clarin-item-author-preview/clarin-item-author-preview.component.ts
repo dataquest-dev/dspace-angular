@@ -48,8 +48,8 @@ export class ClarinItemAuthorPreviewComponent implements OnInit {
   constructor(protected configurationService: ConfigurationDataService) { }
 
   async ngOnInit(): Promise<void> {
-    await this.assignBaseUrl();
-    const [orcidDomainUrl, orcidLinkTarget] = await Promise.all([
+    const [, orcidDomainUrl, orcidLinkTarget] = await Promise.all([
+      this.assignBaseUrl(),
       loadOrcidDomainUrl(this.configurationService),
       loadAuthorOrcidLinkTarget(this.configurationService),
     ]);

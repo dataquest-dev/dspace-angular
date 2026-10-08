@@ -36,7 +36,7 @@
 
 <ng-template #authorLink let-author>
   <a *ngIf="author.orcidUrl && linkNameToOrcid; else searchLink" [href]="author.orcidUrl" class="item-author"
-     target="_blank" rel="noopener noreferrer"
+     target="_blank" rel="noopener noreferrer" [title]="'item.view.box.author.preview.orcid-link.title' | translate"
      [attr.aria-label]="('item.view.box.author.preview.orcid-link.title' | translate) + ' ' + author.name">{{ author.name }}
     <i class="fa-brands fa-orcid orcid-icon" aria-hidden="true"></i></a>
   <ng-template #searchLink>

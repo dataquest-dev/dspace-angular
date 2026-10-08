@@ -36,7 +36,7 @@ export enum AuthorOrcidLinkTarget {
   Orcid = 'orcid',
 }
 
-export const DEFAULT_AUTHOR_ORCID_LINK_TARGET = AuthorOrcidLinkTarget.Browse;
+const DEFAULT_AUTHOR_ORCID_LINK_TARGET = AuthorOrcidLinkTarget.Browse;
 
 const HTTP_URL_PATTERN = /^https?:\/\//i;
 

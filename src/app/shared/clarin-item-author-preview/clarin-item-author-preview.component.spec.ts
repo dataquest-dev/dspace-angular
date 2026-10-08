@@ -103,6 +103,7 @@ describe('ClarinItemAuthorPreviewComponent', () => {
         expect(orcidLink.getAttribute('target')).toBe('_blank');
         expect(orcidLink.getAttribute('rel')).toBe('noopener noreferrer');
         expect(orcidLink.getAttribute('aria-label')).toBe(`${ORCID_LINK_TITLE_KEY} Doe, Jane`);
+        expect(orcidLink.getAttribute('title')).toBe(ORCID_LINK_TITLE_KEY);
         expect(orcidLink.querySelector('i.fa-orcid').getAttribute('aria-hidden')).toBe('true');
       });
     }
