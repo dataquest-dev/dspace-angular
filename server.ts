@@ -443,6 +443,8 @@ function saveToCache(req, page: any) {
     const key = getCacheKey(req);
     // Avoid caching "/reload/[random]" paths (these are hard refreshes after logout)
     if (key.startsWith('/reload')) { return; }
+    // Avoid caching not successful responses (status code different from 2XX status)
+    if (hasNotSucceeded(req.res.statusCode)) { return; }
 
     // If bot cache is enabled, save it to that cache if it doesn't exist or is expired
     // (NOTE: has() will return false if page is expired in cache)
@@ -457,6 +459,15 @@ function saveToCache(req, page: any) {
       if (environment.cache.serverSide.debug) { console.log(`CACHE SAVE FOR ${key} in anonymous cache.`); }
     }
   }
+}
+
+/**
+ * Check if status code is different from 2XX
+ * @param statusCode
+ */
+function hasNotSucceeded(statusCode) {
+  const rgx = new RegExp(/^20+/);
+  return !rgx.test(statusCode);
 }
 
 /**
