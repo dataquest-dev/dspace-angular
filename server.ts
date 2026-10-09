@@ -465,9 +465,8 @@ function saveToCache(req, page: any) {
  * Check if status code is different from 2XX
  * @param statusCode
  */
-function hasNotSucceeded(statusCode) {
-  const rgx = new RegExp(/^20+/);
-  return !rgx.test(statusCode);
+function hasNotSucceeded(statusCode: number): boolean {
+  return statusCode < 200 || statusCode >= 300;
 }
 
 /**
