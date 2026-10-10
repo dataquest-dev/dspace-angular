@@ -443,8 +443,8 @@ function saveToCache(req, page: any) {
     const key = getCacheKey(req);
     // Avoid caching "/reload/[random]" paths (these are hard refreshes after logout)
     if (key.startsWith('/reload')) { return; }
-    // Avoid caching not successful responses (status code different from 2XX status)
-    if (hasNotSucceeded(req.res.statusCode)) { return; }
+    // Only cache regular pages (200). Never cache redirects (e.g. 302 from /bitstreams/:id/download) or error pages.
+    if (req.res.statusCode !== 200) { return; }
 
     // If bot cache is enabled, save it to that cache if it doesn't exist or is expired
     // (NOTE: has() will return false if page is expired in cache)
@@ -459,14 +459,6 @@ function saveToCache(req, page: any) {
       if (environment.cache.serverSide.debug) { console.log(`CACHE SAVE FOR ${key} in anonymous cache.`); }
     }
   }
-}
-
-/**
- * Check if status code is different from 2XX
- * @param statusCode
- */
-function hasNotSucceeded(statusCode: number): boolean {
-  return statusCode < 200 || statusCode >= 300;
 }
 
 /**
