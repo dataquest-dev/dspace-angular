@@ -51,4 +51,15 @@ describe('BitstreamUrlSerializer', () => {
     const resultUrl = new DefaultUrlSerializer().serialize(result);
     expect(resultUrl).toBe(expectedUrl);
   });
+
+  it('should keep the DSpace 6 query and decode an already encoded legacy filename to the original name', () => {
+    // As received from a browser / Express: the filename is percent-encoded (incl. an encoded '?'), the query is raw
+    const originalUrl = '/bitstream/handle/11025/16659/E%26M%20%C5%BD%C3%A1dost%3F%2B.pdf?sequence=4&isAllowed=y';
+
+    const result: UrlTree = serializer.parse(originalUrl);
+
+    const segments = result.root.children.primary.segments.map(segment => segment.path);
+    expect(segments).toEqual(['bitstream', 'handle', '11025', '16659', 'E&M Žádost?+.pdf']);
+    expect(result.queryParams).toEqual({ sequence: '4', isAllowed: 'y' });
+  });
 });
