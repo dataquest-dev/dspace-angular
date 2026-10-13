@@ -8,6 +8,7 @@ import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { secureImageData } from '../../shared/clarin-shared-util';
+import { RequestParam } from '../../core/cache/models/request-param.model';
 
 /**
  * This component show clarin license info in the item page and item full page.
@@ -72,10 +73,7 @@ export class ClarinLicenseInfoComponent implements OnInit {
     // load license label icons
     const options = {
       searchParams: [
-        {
-          fieldName: 'name',
-          fieldValue: this.license
-        }
+        new RequestParam('name', this.license)
       ]
     };
     this.clarinLicenseService.searchBy('byName', options, false)
