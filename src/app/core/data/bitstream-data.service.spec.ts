@@ -4,7 +4,7 @@ import { RequestService } from './request.service';
 import { Bitstream } from '../shared/bitstream.model';
 import { HALEndpointService } from '../shared/hal-endpoint.service';
 import { BitstreamFormatDataService } from './bitstream-format-data.service';
-import { of as observableOf } from 'rxjs';
+import { EMPTY, Observable, of as observableOf } from 'rxjs';
 import { BitstreamFormat } from '../shared/bitstream-format.model';
 import { BitstreamFormatSupportLevel } from '../shared/bitstream-format-support-level';
 import { PutRequest } from './request.models';
@@ -67,6 +67,37 @@ describe('BitstreamDataService', () => {
 
     it('should send a put request', () => {
       expect(requestService.send).toHaveBeenCalledWith(jasmine.any(PutRequest));
+    });
+  });
+
+  describe('findByItemHandle', () => {
+    // legacy /bitstream/handle/<prefix>/<suffix>/<filename> URLs: the route param is already decoded by the router,
+    // so the filename has to be encoded exactly once when it is put in the REST query string
+    const expectFilenameInHref = (filename: string, encoded: string, done: DoneFn) => {
+      spyOn(service, 'findByHref').and.returnValue(EMPTY);
+      service.findByItemHandle('15240/123', undefined, filename);
+      const hrefObs = (service.findByHref as jasmine.Spy).calls.mostRecent().args[0] as Observable<string>;
+      hrefObs.subscribe((href: string) => {
+        expect(href).toBe(`${url}/bitstreams/search/byItemHandle?handle=15240%2F123&filename=${encoded}`);
+        expect(href).toMatch(/^[!-~]*$/);
+        done();
+      });
+    };
+
+    it('should encode an ampersand in the filename', (done: DoneFn) => {
+      expectFilenameInHref('E&M_synthetic_test.pdf', 'E%26M_synthetic_test.pdf', done);
+    });
+
+    it('should encode a plus sign in the filename', (done: DoneFn) => {
+      expectFilenameInHref('E+M_3_2026_10.pdf', 'E%2BM_3_2026_10.pdf', done);
+    });
+
+    it('should encode spaces, hash signs and non-ASCII characters in the filename', (done: DoneFn) => {
+      expectFilenameInHref('zkouška #1 říjen.pdf', 'zkou%C5%A1ka%20%231%20%C5%99%C3%ADjen.pdf', done);
+    });
+
+    it('should encode a literal percent sign only once', (done: DoneFn) => {
+      expectFilenameInHref('100%25 done.pdf', '100%2525%20done.pdf', done);
     });
   });
 });

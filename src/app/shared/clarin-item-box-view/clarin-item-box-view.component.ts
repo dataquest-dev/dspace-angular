@@ -27,6 +27,7 @@ import { Bitstream } from '../../core/shared/bitstream.model';
 import { LicenseType } from '../../item-page/clarin-license-info/clarin-license-info.component';
 import { ListableObject } from '../object-collection/shared/listable-object.model';
 import { ItemSearchResult } from '../object-collection/shared/item-search-result.model';
+import { RequestParam } from '../../core/cache/models/request-param.model';
 
 /**
  * Show item on the Home/Search page in the customized box with Item's information.
@@ -189,10 +190,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
     // load license label icons
     const options = {
       searchParams: [
-        {
-          fieldName: 'name',
-          fieldValue: this.license
-        }
+        new RequestParam('name', this.license)
       ]
     };
     this.clarinLicenseService.searchBy('byName', options, false)
