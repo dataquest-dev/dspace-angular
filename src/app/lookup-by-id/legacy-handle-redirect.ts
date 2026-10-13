@@ -68,35 +68,57 @@ export function getDSORouteFromJson(dso: any): string | undefined {
   return undefined;
 }
 
+// A lookup that takes longer falls through to SSR (which then does its own lookup, as before this fast path).
+const LOOKUP_TIMEOUT_MS = 10000;
+
 // Keep-alive agents, reused between requests (like ServerXhrService does for the SSR requests to REST);
 // created on first use because this file is also loaded by the (browser) unit tests.
 let agents: { httpAgent: HttpAgent, httpsAgent: HttpsAgent };
 
-function restGet(url: string): Promise<{ data: any }> {
+function restGet(url: string, headers: { [name: string]: string }): Promise<{ data: any }> {
   if (agents === undefined) {
     agents = { httpAgent: new HttpAgent({ keepAlive: true }), httpsAgent: new HttpsAgent({ keepAlive: true }) };
   }
-  return axios.get(url, agents);
+  return axios.get(url, { ...agents, headers, timeout: LOOKUP_TIMEOUT_MS });
+}
+
+/**
+ * Whether the query string can be decoded; Angular fails on a malformed one before LookupGuard runs.
+ */
+function hasValidQuery(url: string): boolean {
+  const index = url.indexOf('?');
+  try {
+    decodeURIComponent(index < 0 ? '' : url.substring(index + 1));
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 /**
  * Express handler: redirect /handle/<prefix>/<suffix> to the object's page, or call next() to let SSR handle it.
  * @param restBaseUrl the REST API base URL (e.g. https://host/server)
  * @param nameSpace   the UI namespace (e.g. /)
- * @param get         HTTP GET returning the JSON body as `data` (rejects on non-2xx); axios with keep-alive by default
+ * @param get         HTTP GET returning the JSON body as `data` (rejects on non-2xx or timeout); axios by default
  */
 export function legacyHandleRedirect(restBaseUrl: string, nameSpace: string,
-                                     get: (url: string) => Promise<{ data: any }> = restGet) {
+                                     get: (url: string, headers: { [name: string]: string }) => Promise<{ data: any }> = restGet) {
   return (req, res, next): Promise<void> => {
     const handle = getLegacyHandle(req.path);
-    if (handle === null) {
+    if (handle === null || !hasValidQuery(req.url)) {
       next();
       return Promise.resolve();
     }
-    return get(`${restBaseUrl}/api/pid/find?id=${encodeURIComponent('hdl:' + handle)}`)
-      .then((response) => getDSORouteFromJson(response.data), () => undefined)
+    // forward the client IP like ForwardClientIpInterceptor does for the SSR requests (IP-based authorization)
+    const headers = { 'X-Forwarded-For': req.get('x-forwarded-for') || req.connection.remoteAddress };
+    return get(`${restBaseUrl}/api/pid/find?id=${encodeURIComponent('hdl:' + handle)}`, headers)
+      .then((response) => getDSORouteFromJson(response.data))
+      .catch(() => undefined)
       .then((route: string | undefined) => {
-        if (hasValue(route) && !res.headersSent) {
+        if (res.headersSent) {
+          return;
+        }
+        if (hasValue(route)) {
           res.redirect(302, nameSpace.replace(/\/$/, '') + route);
         } else {
           next();

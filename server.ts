@@ -216,12 +216,12 @@ export function app() {
   server.get('/app/health', healthCheck);
 
   /**
-   * Answer /handle/<prefix>/<suffix> of anonymous users with a redirect before starting Angular
+   * When SSR is on, answer /handle/<prefix>/<suffix> of anonymous users with a redirect before starting Angular
    * (with Angular 13 that SSR render never finishes after the redirect); other requests fall through.
    */
   const handleRedirect = legacyHandleRedirect(environment.rest.baseUrl, environment.ui.nameSpace);
   router.get('/handle/*', (req, res, next) => {
-    if (isUserAuthenticated(req)) {
+    if (!environment.universal.preboot || isUserAuthenticated(req)) {
       next();
     } else {
       void handleRedirect(req, res, next);
