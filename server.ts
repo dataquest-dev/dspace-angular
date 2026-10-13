@@ -55,6 +55,7 @@ import { APP_CONFIG, AppConfig } from './src/config/app-config.interface';
 import { extendEnvironmentWithAppConfig } from './src/config/config.util';
 import { logStartupMessage } from './startup-message';
 import { TOKENITEM } from 'src/app/core/auth/models/auth-token-info.model';
+import { legacyHandleRedirect } from './src/app/lookup-by-id/legacy-handle-redirect';
 
 
 /*
@@ -213,6 +214,19 @@ export function app() {
    * Checking server status
    */
   server.get('/app/health', healthCheck);
+
+  /**
+   * When SSR is on, answer /handle/<prefix>/<suffix> of anonymous users with a redirect before starting Angular
+   * (with Angular 13 that SSR render never finishes after the redirect); other requests fall through.
+   */
+  const handleRedirect = legacyHandleRedirect(environment.rest.baseUrl, environment.ui.nameSpace);
+  router.get('/handle/*', (req, res, next) => {
+    if (!environment.universal.preboot || isUserAuthenticated(req)) {
+      next();
+    } else {
+      void handleRedirect(req, res, next);
+    }
+  });
 
   /**
    * Default sending all incoming requests to ngApp() function, after first checking for a cached
