@@ -30,7 +30,7 @@ describe('MyDSpaceConfigurationService', () => {
   });
 
   const backendFilters = [
-    new SearchFilter('f.namedresourcetype', ['another value']),
+    new SearchFilter('f.namedresourcetype', ['another value'], 'equals'),
     new SearchFilter('f.dateSubmitted', ['[2013 TO 2018]'], 'equals')
   ];
 
