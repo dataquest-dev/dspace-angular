@@ -12,14 +12,22 @@ export class BitstreamUrlSerializer extends DefaultUrlSerializer {
   // Intercept parsing of every URL
   parse(url: string): UrlTree {
     if (url.startsWith('/bitstream/')) {
-      // Split the URL to isolate the filename
-      const parts = url.split('/');
+      // Separate the path from the query string and fragment (everything from the first raw '?' or '#')
+      const queryIndex = url.search(/[?#]/);
+      const path = queryIndex === -1 ? url : url.substring(0, queryIndex);
+      const queryAndFragment = queryIndex === -1 ? '' : url.substring(queryIndex);
+
+      // Split the path to isolate the filename
+      const parts = path.split('/');
       if (parts.length > this.FILENAME_INDEX) {
-        // Fetch the filename from the URL
-        const filename = parts.slice(this.FILENAME_INDEX).join();
+        const filename = parts.slice(this.FILENAME_INDEX).join('/');
         const encodedFilename = encodeRFC3986URIComponent(filename);
-        // Reconstruct the URL with the encoded filename
-        url = [...parts.slice(0, this.FILENAME_INDEX), encodedFilename].join('/');
+
+        // Reconstruct the path with the encoded filename
+        const newPath = [...parts.slice(0, this.FILENAME_INDEX), encodedFilename].join('/');
+
+        // Reattach the query string and fragment unchanged
+        url = newPath + queryAndFragment;
       }
     }
     return super.parse(url);
