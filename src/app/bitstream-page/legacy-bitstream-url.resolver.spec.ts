@@ -109,6 +109,29 @@ describe(`LegacyBitstreamUrlResolver`, () => {
         });
       });
     });
+    describe(`For filenames with characters that are special in URLs`, () => {
+      beforeEach(() => {
+        spyOn(bitstreamDataService, 'findByItemHandle').and.returnValue(EMPTY);
+      });
+      it(`should encode a literal % instead of throwing`, () => {
+        route = Object.assign({}, route, {
+          params: { prefix: '123456789', suffix: '1234', filename: '100%.pdf' },
+        });
+        testScheduler.run(() => {
+          resolver.resolve(route, state);
+          expect(bitstreamDataService.findByItemHandle).toHaveBeenCalledWith('123456789/1234', undefined, '100%25.pdf');
+        });
+      });
+      it(`should encode spaces, & and non-ASCII characters once`, () => {
+        route = Object.assign({}, route, {
+          params: { prefix: '123456789', suffix: '1234', filename: 'E&M Žádost.pdf' },
+        });
+        testScheduler.run(() => {
+          resolver.resolve(route, state);
+          expect(bitstreamDataService.findByItemHandle).toHaveBeenCalledWith('123456789/1234', undefined, 'E%26M%20%C5%BD%C3%A1dost.pdf');
+        });
+      });
+    });
     describe(`should return and complete after the remotedata has...`, () => {
       it(`...failed`, () => {
         testScheduler.run(({ cold, expectObservable }) => {
