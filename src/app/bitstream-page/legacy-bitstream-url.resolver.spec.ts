@@ -61,6 +61,31 @@ describe(`LegacyBitstreamUrlResolver`, () => {
     });
 
     describe(`For XMLUI-style URLs`, () => {
+      describe(`when there is a DSpace 6 sequence query parameter`, () => {
+        beforeEach(() => {
+          spyOn(bitstreamDataService, 'findByItemHandle').and.returnValue(EMPTY);
+          route = Object.assign({}, route, {
+            params: {
+              prefix: '123456789',
+              suffix: '1234',
+              filename: 'some-file.pdf',
+            },
+            queryParams: {
+              sequence: '5'
+            }
+          });
+        });
+        it(`should call findByItemHandle with the sequence from the queryParams`, () => {
+          testScheduler.run(() => {
+            resolver.resolve(route, state);
+            expect(bitstreamDataService.findByItemHandle).toHaveBeenCalledWith(
+              `${route.params.prefix}/${route.params.suffix}`,
+              route.queryParams.sequence,
+              route.params.filename
+            );
+          });
+        });
+      });
       describe(`when there is a sequenceId query parameter`, () => {
         beforeEach(() => {
           spyOn(bitstreamDataService, 'findByItemHandle').and.returnValue(EMPTY);

@@ -34,7 +34,8 @@ export class LegacyBitstreamUrlResolver implements Resolve<RemoteData<Bitstream>
 
       let sequenceId = route.params.sequence_id;
       if (hasNoValue(sequenceId)) {
-        sequenceId = route.queryParams.sequenceId;
+        // DSpace 6 links use ?sequence=; keep ?sequenceId=, the frontend read it until now
+        sequenceId = route.queryParams.sequence ?? route.queryParams.sequenceId;
       }
 
       return this.bitstreamDataService.findByItemHandle(

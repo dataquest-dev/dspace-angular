@@ -132,4 +132,14 @@ describe('BitstreamDataService', () => {
       expect(service.invalidateByHref).toHaveBeenCalledWith('fake-bitstream2-self');
     });
   });
+
+  describe('findByItemHandle', () => {
+    it('should send the sequence as the REST parameter "sequence"', () => {
+      service.findByItemHandle('123456789/1234', '4', 'file.pdf');
+
+      expect(requestService.send).toHaveBeenCalledWith(objectContaining({
+        href: `${url}/bitstreams/search/byItemHandle?handle=123456789/1234&sequence=4&filename=file.pdf`,
+      }), true);
+    });
+  });
 });
