@@ -12,8 +12,10 @@ import {
   ItemMock,
   MockBitstream1,
   MockBitstream3,
-  MockBitstream2
+  MockBitstream2,
+  NonDiscoverableItemMock
 } from '../../shared/mocks/item.mock';
+import { DSpaceObject } from '../shared/dspace-object.model';
 import { createSuccessfulRemoteDataObject, createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
 import { PaginatedList } from '../data/paginated-list.model';
 import { Bitstream } from '../shared/bitstream.model';
@@ -96,6 +98,7 @@ describe('MetadataService', () => {
 
     appConfig = {
       item: {
+        noIndex: [],
         bitstream: {
           pageSize: 5
         }
@@ -404,6 +407,90 @@ describe('MetadataService', () => {
       });
 
     });
+  });
+
+  describe('robots meta tag', () => {
+    const noIndexTag = { name: 'robots', content: 'noindex, noarchive' };
+
+    const routeTo = (dso: any) => {
+      (metadataService as any).processRouteChange({
+        data: { value: { dso: createSuccessfulRemoteDataObject(dso) } }
+      });
+      tick();
+    };
+
+    it('should not add a robots tag for a normal discoverable item', fakeAsync(() => {
+      routeTo(ItemMock);
+      expect(meta.addTag).not.toHaveBeenCalledWith(jasmine.objectContaining({ name: 'robots' }));
+    }));
+
+    it('should add a robots noindex tag for a non-discoverable item', fakeAsync(() => {
+      routeTo(NonDiscoverableItemMock);
+      expect(meta.addTag).toHaveBeenCalledWith(noIndexTag);
+    }));
+
+    it('should add a robots noindex tag when the item uuid is configured', fakeAsync(() => {
+      appConfig.item.noIndex = ['0ec7ff22-f211-40ab-a69e-c819b0b1f357'];
+      routeTo(ItemMock);
+      expect(meta.addTag).toHaveBeenCalledWith(noIndexTag);
+    }));
+
+    it('should add a robots noindex tag when the item handle is configured', fakeAsync(() => {
+      appConfig.item.noIndex = ['10673/6'];
+      routeTo(ItemMock);
+      expect(meta.addTag).toHaveBeenCalledWith(noIndexTag);
+    }));
+
+    it('should normalize handle URLs, casing and whitespace in item.noIndex', fakeAsync(() => {
+      appConfig.item.noIndex = ['  HTTP://hdl.handle.net/10673/6  '];
+      routeTo(ItemMock);
+      expect(meta.addTag).toHaveBeenCalledWith(noIndexTag);
+    }));
+
+    it('should not add a robots tag for an item that is not configured', fakeAsync(() => {
+      appConfig.item.noIndex = ['11025/9501', 'f4c45569-cdfc-4b3d-98df-46bfeba016b9'];
+      routeTo(ItemMock);
+      expect(meta.addTag).not.toHaveBeenCalledWith(jasmine.objectContaining({ name: 'robots' }));
+    }));
+
+    it('should not add a robots tag for a non-Item DSpaceObject', fakeAsync(() => {
+      appConfig.item.noIndex = ['10673/6'];
+      routeTo(Object.assign(new DSpaceObject(), { uuid: '10673/6', handle: '10673/6', metadata: {} }));
+      expect(meta.addTag).not.toHaveBeenCalledWith(jasmine.objectContaining({ name: 'robots' }));
+    }));
+
+    it('should register the robots tag in the meta tag store so it is cleared on the next route change', fakeAsync(() => {
+      appConfig.item.noIndex = ['10673/6'];
+      routeTo(ItemMock);
+      expect(store.dispatch).toHaveBeenCalledWith(new AddMetaTagAction('robots'));
+    }));
+
+    it('should suppress citation_pdf_url for a noindex item', fakeAsync(() => {
+      appConfig.item.noIndex = ['10673/6'];
+      routeTo(ItemMock);
+      expect(meta.addTag).not.toHaveBeenCalledWith(jasmine.objectContaining({ name: 'citation_pdf_url' }));
+      expect(meta.addTag).toHaveBeenCalledWith(jasmine.objectContaining({ name: 'citation_title' }));
+    }));
+
+    it('should keep citation_pdf_url for a normal item', fakeAsync(() => {
+      routeTo(ItemMock);
+      expect(meta.addTag).toHaveBeenCalledWith(jasmine.objectContaining({ name: 'citation_pdf_url' }));
+    }));
+
+    it('should not break the other meta tags when item.noIndex is a scalar instead of a list', fakeAsync(() => {
+      // Must degrade to "off", never throw - that would strip the meta tags off every page.
+      appConfig.item.noIndex = '10673/6' as any;
+      expect(() => routeTo(ItemMock)).not.toThrow();
+      expect(meta.addTag).toHaveBeenCalledWith(jasmine.objectContaining({ name: 'citation_title' }));
+      expect(meta.addTag).not.toHaveBeenCalledWith(jasmine.objectContaining({ name: 'robots' }));
+    }));
+
+    it('should ignore non-string entries in item.noIndex without throwing', fakeAsync(() => {
+      appConfig.item.noIndex = [9501 as any, null, '10673/6'];
+      expect(() => routeTo(ItemMock)).not.toThrow();
+      expect(meta.addTag).toHaveBeenCalledWith(noIndexTag);
+      expect(meta.addTag).toHaveBeenCalledWith(jasmine.objectContaining({ name: 'citation_title' }));
+    }));
   });
 
   describe(`when there's no bitstream with an allowed format on the first page`, () => {
