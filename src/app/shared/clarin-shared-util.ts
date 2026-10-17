@@ -4,6 +4,7 @@ import { ConfigurationDataService } from '../core/data/configuration-data.servic
 import { isEmpty, isNull, isUndefined } from './empty.util';
 import { MetadataValue } from '../core/shared/metadata.models';
 import { AuthorNameLink } from './clarin-item-box-view/clarin-author-name-link.model';
+import { buildOrcidProfileUrl } from './utils/orcid-author.util';
 
 /**
  * Convert raw byte array to the image is not secure - this function make it secure
@@ -62,14 +63,15 @@ export function buildAuthoritySearchFilter(searchType: string, mdValue: { author
 
 /**
  * Load Authors of the current item into BehaviourSubject - ItemAuthors. This method also compose
- * search link for every Author.
+ * search link for every Author and, for an ORCID iD authority, the ORCID profile link.
  *
  * @param item current Item
  * @param itemAuthors BehaviourSubject (async) of Authors with search links
  * @param baseUrl e.g. localhost:8080
  * @param fields metadata fields where authors are stored
+ * @param orcidDomainUrl ORCID base URL from the backend (`orcid.domain-url`); without it no ORCID link is built
  */
-export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
+export function loadItemAuthors(item, itemAuthors, baseUrl, fields, orcidDomainUrl: string | null = null) {
   if (isNull(item) || isNull(itemAuthors) || isNull(baseUrl)) {
     return;
   }
@@ -84,7 +86,8 @@ export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
     const authorNameLink = Object.assign(new AuthorNameLink(), {
       name: authorMV.value,
       url: authorSearchLink,
-      isAuthority: !!authorMV.authority
+      isAuthority: !!authorMV.authority,
+      orcidUrl: buildOrcidProfileUrl(authorMV.authority, orcidDomainUrl)
     });
     itemAuthorsLocal.push(authorNameLink);
   });
