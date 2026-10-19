@@ -108,6 +108,24 @@ describe(`LegacyBitstreamUrlResolver`, () => {
           });
         });
       });
+      describe(`when the filename contains characters that are special in URLs`, () => {
+        // the router already decoded the path segment; the filename goes to the service as-is and RequestParam encodes it
+        const resolveWithFilename = (filename: string) => {
+          spyOn(bitstreamDataService, 'findByItemHandle').and.returnValue(EMPTY);
+          route = Object.assign({}, route, {
+            params: { prefix: '123456789', suffix: '1234', filename },
+          });
+          resolver.resolve(route, state);
+          expect(bitstreamDataService.findByItemHandle).toHaveBeenCalledWith('123456789/1234', undefined, filename);
+        };
+
+        it(`should pass a filename with a literal percent sign unchanged`, () => {
+          resolveWithFilename('100%.pdf');
+        });
+        it(`should pass a filename with an ampersand, spaces and non-ASCII characters unchanged`, () => {
+          resolveWithFilename('E&M Žádost.pdf');
+        });
+      });
     });
     describe(`should return and complete after the remotedata has...`, () => {
       it(`...failed`, () => {
