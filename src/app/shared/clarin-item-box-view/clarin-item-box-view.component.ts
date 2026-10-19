@@ -31,6 +31,7 @@ import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
 import { FindListOptions } from '../../core/data/find-list-options.model';
 import { ClarinDateService } from '../clarin-date.service';
 import { AUTHOR_METADATA_FIELDS } from '../../core/shared/clarin/constants';
+import { RequestParam } from '../../core/cache/models/request-param.model';
 
 /**
  * Show item on the Home/Search page in the customized box with Item's information.
@@ -228,10 +229,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
     // load license label icons
     const options = {
       searchParams: [
-        {
-          fieldName: 'name',
-          fieldValue: this.license
-        }
+        new RequestParam('name', this.license)
       ]
     };
     this.clarinLicenseService.searchBy('byName', options, false)
