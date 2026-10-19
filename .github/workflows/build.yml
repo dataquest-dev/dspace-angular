@@ -39,9 +39,6 @@ jobs:
       DSPACE_CACHE_SERVERSIDE_ANONYMOUSCACHE_MAX: 0
       # Tell Cypress to run e2e tests using the same UI URL
       CYPRESS_BASE_URL: http://127.0.0.1:4000
-      # When Chrome version is specified, we pin to a specific version of Chrome
-      # Comment this out to use the latest release
-      #CHROME_VERSION: "90.0.4430.212-1"
       # Bump Node heap size (OOM in CI after upgrading to Angular 15)
       NODE_OPTIONS: '--max-old-space-size=4096'
       # Project name to use when running docker compose prior to e2e tests
@@ -63,22 +60,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
-      # If CHROME_VERSION env variable specified above, then pin to that version.
-      # Otherwise, just install latest version of Chrome.
-      - name: Install Chrome (for e2e tests)
-        run: |
-          if [[ -z "${CHROME_VERSION}" ]]
-          then
-             echo "Installing latest stable version"
-             sudo apt-get update
-             sudo apt-get --only-upgrade install google-chrome-stable -y
-          else
-             echo "Installing version ${CHROME_VERSION}"
-             wget -q "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb"
-             sudo dpkg -i "google-chrome-stable_${CHROME_VERSION}_amd64.deb"
-          fi
-          google-chrome --version
 
       # https://github.com/actions/cache/blob/main/examples.md#node---yarn
       - name: Get Yarn cache directory
@@ -133,8 +114,9 @@ jobs:
       - name: Run e2e tests (integration tests)
         uses: cypress-io/github-action@v6
         with:
-          # Run tests in Chrome, headless mode (default)
-          browser: chrome
+          # Cypress 12 has no "chrome-for-testing" browser and the runner's Chrome 155 times out,
+          # so run in the Electron bundled with Cypress, as customer/TUL does
+          browser: electron
           # Start app before running tests (will be stopped automatically after tests finish)
           start: yarn run serve:ssr
           # Wait for backend & frontend to be available
@@ -191,6 +173,21 @@ jobs:
 
       - name: Stop running app
         run: kill -9 $(lsof -t -i:4000)
+
+      # If any prior step errors out, export the backend logs for help with debugging issues
+      - name: Export backend logs (on failure only)
+        if: failure()
+        run: |
+          docker compose -f ./docker/docker-compose-ci.yml logs > backend-logs-${{ matrix.node-version }}.txt
+
+      # If any prior step errors out, upload backend logs to artifact
+      - name: Upload backend logs to artifact (on failure only)
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: backend-logs-${{ matrix.node-version }}
+          path: backend-logs-${{ matrix.node-version }}.txt
+          retention-days: 14
 
       - name: Shutdown Docker containers
         run: docker compose -f ./docker/docker-compose-ci.yml down
