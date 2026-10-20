@@ -211,14 +211,15 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
     expect(component.redirectToContent).not.toHaveBeenCalled();
   });
 
-  it('should download with the dtoken and the access token once the CLARIN check passes', () => {
+  it('should redirect an anonymous user through HardRedirectService with the dtoken and the access token once the CLARIN check passes', () => {
     rdbService.buildFromRequestUUID.and.returnValue(of(createSuccessfulRemoteDataObject({})));
     activatedRoute.snapshot.queryParams = { dtoken: dtoken, accessToken: accessToken };
 
     component.ngOnInit();
 
-    expect(component.redirectToContent).toHaveBeenCalledWith(
+    expect(hardRedirectService.redirect).toHaveBeenCalledWith(
       contentHref + '?dtoken=' + dtoken + '&accessToken=' + accessToken);
+    expect(component.redirectToContent).not.toHaveBeenCalled();
   });
 
   it('should download through the file link with the access token for a logged-in user', () => {
@@ -266,7 +267,8 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
     component.ngOnInit();
 
     expect(clarinCheckUrl()).toEqual('rest-api/authrn/bitstreamUuid?dtoken=' + dtoken);
-    expect(component.redirectToContent).toHaveBeenCalledWith(contentHref + '?dtoken=' + dtoken);
+    expect(hardRedirectService.redirect).toHaveBeenCalledWith(contentHref + '?dtoken=' + dtoken);
+    expect(component.redirectToContent).not.toHaveBeenCalled();
   });
 
   it('should send an anonymous user without an access token to the login page', () => {
