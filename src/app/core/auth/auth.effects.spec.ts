@@ -28,7 +28,8 @@ import {
   RetrieveAuthMethodsAction,
   RetrieveAuthMethodsErrorAction,
   RetrieveAuthMethodsSuccessAction,
-  RetrieveTokenAction
+  RetrieveTokenAction,
+  SetUserAsIdleAction
 } from './auth.actions';
 import { authMethodsMock, AuthServiceStub } from '../../shared/testing/auth-service.stub';
 import { AuthService } from './auth.service';
@@ -39,6 +40,7 @@ import { AppState, storeModuleConfig } from '../../app.reducer';
 import { StoreActionTypes } from '../../store.actions';
 import { isAuthenticated, isAuthenticatedLoaded } from './selectors';
 import { AuthorizationDataService } from '../data/feature-authorization/authorization-data.service';
+import { environment } from '../../../environments/environment';
 
 describe('AuthEffects', () => {
   let authEffects: AuthEffects;
@@ -486,5 +488,29 @@ describe('AuthEffects', () => {
         done();
       });
     });
+  });
+
+  describe('trackIdleness$', () => {
+    let emitted: any[];
+
+    beforeEach(() => {
+      emitted = [];
+      actions = observableOf({ type: StoreActionTypes.REHYDRATE });
+    });
+
+    it('should set the user as idle when the timer runs out in the browser', fakeAsync(() => {
+      authEffects.trackIdleness$.subscribe((action) => emitted.push(action));
+      tick(environment.auth.ui.timeUntilIdle);
+
+      expect(emitted).toEqual([new SetUserAsIdleAction()]);
+    }));
+
+    it('should not start the timer on the server', fakeAsync(() => {
+      (authEffects as any).platformId = 'server';
+      authEffects.trackIdleness$.subscribe((action) => emitted.push(action));
+      tick(environment.auth.ui.timeUntilIdle);
+
+      expect(emitted).toEqual([]);
+    }));
   });
 });
