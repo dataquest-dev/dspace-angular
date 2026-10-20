@@ -22,6 +22,7 @@ import {
   throwError as observableThrow,
 } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
 import {
   AppState,
   storeModuleConfig,
@@ -52,6 +53,7 @@ import {
   RetrieveAuthMethodsErrorAction,
   RetrieveAuthMethodsSuccessAction,
   RetrieveTokenAction,
+  SetUserAsIdleAction,
 } from './auth.actions';
 import { AuthEffects } from './auth.effects';
 import { authReducer } from './auth.reducer';
@@ -105,6 +107,28 @@ describe('AuthEffects', () => {
 
     authEffects = TestBed.inject(AuthEffects);
     store = TestBed.inject(Store as any);
+  });
+
+  describe('trackIdleness$', () => {
+    let emitted: any[];
+
+    beforeEach(() => {
+      emitted = [];
+      actions = of({ type: StoreActionTypes.REHYDRATE });
+    });
+
+    it('should set the user as idle when the timer runs out in the browser', fakeAsync(() => {
+      authEffects.trackIdleness$.subscribe((action) => emitted.push(action));
+      tick(environment.auth.ui.timeUntilIdle);
+      expect(emitted).toEqual([new SetUserAsIdleAction()]);
+    }));
+
+    it('should not start the timer on the server', fakeAsync(() => {
+      (authEffects as any).platformId = 'server';
+      authEffects.trackIdleness$.subscribe((action) => emitted.push(action));
+      tick(environment.auth.ui.timeUntilIdle);
+      expect(emitted).toEqual([]);
+    }));
   });
 
   describe('authenticate$', () => {
