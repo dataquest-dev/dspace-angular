@@ -1,27 +1,8 @@
-// ZCU-PUB / dspace-customers#1088 - embargo badge position in the item view.
-//
-// Each bitstream in the Files section is a <ds-file-download-link> that renders
-// the (optional) lock icon + filename, followed by a <ds-access-status-badge>
-// (the "Embargo until <date>" badge). The file list separates entries with a
-// projected <br/> (see FileSectionComponent.separator), which lands *inside*
-// the link, before the badge. The result was: the badge wrapped onto the next
-// visual line and ran straight into the following file's lock icon.
-//
-// Fix: lay each file out as its own block and drop the badge onto its own line
-// directly under the filename, so the layout reads:
-//
-//     <lock> filename (size)
-//     Embargo until <date>
-//
-// Scoped to the custom theme's item-page file section only - submission and
-// process-detail reuse <ds-file-download-link> and must keep their inline layout.
 :host ::ng-deep .file-section {
 
   ds-themed-file-download-link {
     display: block;
 
-    // Block layout already breaks between files, so the projected <br/>
-    // separator would only add an empty line between the filename and badge.
     br {
       display: none;
     }
@@ -31,8 +12,6 @@
     }
   }
 
-  // Badge onto its own line, under the filename (instead of inline, where it
-  // collided with the next file's lock icon).
   ds-themed-access-status-badge {
     display: block;
   }
