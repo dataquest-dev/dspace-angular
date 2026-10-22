@@ -1,0 +1,18 @@
+:host ::ng-deep .file-section {
+
+  ds-themed-file-download-link {
+    display: block;
+
+    br {
+      display: none;
+    }
+
+    &:not(:last-of-type) {
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  ds-themed-access-status-badge {
+    display: block;
+  }
+}
