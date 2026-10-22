@@ -31,7 +31,8 @@ import axios from 'axios';
 import LRU from 'lru-cache';
 import isbot from 'isbot';
 import { createCertificate } from 'pem';
-import { createServer } from 'https';
+import { Agent as HttpsAgent, createServer } from 'https';
+import { Agent as HttpAgent } from 'http';
 import { json } from 'body-parser';
 
 import { existsSync, readFileSync } from 'fs';
@@ -55,6 +56,7 @@ import { APP_CONFIG, AppConfig } from './src/config/app-config.interface';
 import { extendEnvironmentWithAppConfig } from './src/config/config.util';
 import { logStartupMessage } from './startup-message';
 import { TOKENITEM } from 'src/app/core/auth/models/auth-token-info.model';
+import { IdentifierType } from './src/app/core/data/request.models';
 
 
 /*
@@ -78,6 +80,16 @@ let anonymousCache: LRU<string, any>;
 
 // extend environment with app config for server
 extendEnvironmentWithAppConfig(environment, appConfig);
+
+// Routes that look up an object by its identifier (`/handle/<prefix>/<suffix>`, `/id/<type>/<id>`), see LookupGuard
+const LOOKUP_ROUTES = ['handle', 'id'];
+// A path segment Angular's router reads as is: no matrix parameters (`;`, `=`), outlets (`()`) or encoded characters
+const PLAIN_SEGMENT = /^[\w.~:@,-]+$/;
+// The REST API gets this long to look up an identifier, then the page renders as usual
+const LOOKUP_TIMEOUT_MS = 3000;
+const HTTP_NOT_FOUND = 404;
+// Lookups reuse connections to the REST API: a flood of them must not open a connection each
+const LOOKUP_AGENTS = { httpAgent: new HttpAgent({ keepAlive: true }), httpsAgent: new HttpsAgent({ keepAlive: true }) };
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
@@ -216,9 +228,9 @@ export function app() {
 
   /**
    * Default sending all incoming requests to ngApp() function, after first checking for a cached
-   * copy of the page (see cacheCheck())
+   * copy of the page (see cacheCheck()) and for an identifier that does not exist (see lookupCheck())
    */
-  router.get('*', cacheCheck, ngApp);
+  router.get('*', cacheCheck, lookupCheck, ngApp);
 
   server.use(environment.ui.nameSpace, router);
 
@@ -292,6 +304,58 @@ function serverSideRender(req, res, sendToUser: boolean = true) {
  */
 function clientSideRender(req, res) {
   res.sendFile(indexHtml);
+}
+
+/**
+ * The REST request LookupGuard makes for a request path, or undefined when the path is no identifier lookup.
+ * A handle suffix may be anything, so it is never judged here: only the REST API knows whether it exists.
+ * @param path the request path, relative to the UI namespace
+ */
+function lookupUrl(path: string): string {
+  const [route, idType, ...rest] = path.replace(/^\//, '').split('/');
+  if (!LOOKUP_ROUTES.includes(route) || rest.length === 0 || ![idType, ...rest].every((segment) => PLAIN_SEGMENT.test(segment))) {
+    return undefined;
+  }
+  const id = rest.join('/');
+  const query = idType === IdentifierType.UUID
+    ? `dso/find?uuid=${id}`
+    : `pid/find?id=${encodeURIComponent(idType === IdentifierType.HANDLE ? `hdl:${id}` : `hdl:${idType}/${id}`)}`;
+  return `${environment.rest.baseUrl}/api/${query}`;
+}
+
+/**
+ * Answer a lookup of an identifier that does not exist with a 404 and the client-side app, which shows the usual
+ * "not found" page in the browser. A server-side render of that page costs about 19 REST requests, and crawlers
+ * request junk paths like `/handle/15240/<n>/pt-br.html/en.html` by the million (dataquest-dev/dspace-customers#1087);
+ * this check costs the one REST request the app would make first. Any other answer renders the page as usual.
+ * @param req current request
+ * @param res current response
+ * @param next the next handler
+ */
+function lookupCheck(req, res, next) {
+  const url = environment.universal.preboot ? lookupUrl(req.path) : undefined;
+  if (hasNoValue(url)) {
+    return next();
+  }
+  // a deadline over the whole request, axios' timeout only starts once connected
+  const deadline = new AbortController();
+  const timer = setTimeout(() => deadline.abort(), LOOKUP_TIMEOUT_MS);
+  void axios.get(url, { maxRedirects: 0, validateStatus: () => true, signal: deadline.signal, ...LOOKUP_AGENTS })
+    .then((response) => response.status === HTTP_NOT_FOUND, () => false)
+    .then((notFound: boolean) => {
+      clearTimeout(timer);
+      notFound ? sendNotFound(res) : next();
+    });
+}
+
+/**
+ * Send a 404 with the client-side app (as clientSideRender()). The object may be created later, so the answer is not
+ * cacheable, and not a range or a revalidation of index.html.
+ * @param res current response
+ */
+function sendNotFound(res) {
+  res.status(HTTP_NOT_FOUND).set('Cache-Control', 'no-store')
+    .sendFile(indexHtml, { acceptRanges: false, cacheControl: false, etag: false, lastModified: false });
 }
 
 
