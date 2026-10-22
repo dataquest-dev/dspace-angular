@@ -36,6 +36,7 @@ import { createHttpTerminator } from 'http-terminator';
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { hostname } from 'os';
 
 import { enableProdMode } from '@angular/core';
 
@@ -56,6 +57,7 @@ import { extendEnvironmentWithAppConfig } from './src/config/config.util';
 import { logStartupMessage } from './startup-message';
 import { TOKENITEM } from './src/app/core/auth/models/auth-token-info.model';
 import { SsrExcludePatterns } from './src/config/universal-config.interface';
+import { SSR_CACHE_STATS_PATH, SsrCacheEntry, snapshotCache, startSsrCacheStatsServer } from './src/backend/ssr-cache-stats';
 
 
 /*
@@ -72,10 +74,10 @@ const cookieParser = require('cookie-parser');
 const appConfig: AppConfig = buildAppConfig(join(DIST_FOLDER, 'assets/config.json'));
 
 // cache of SSR pages for known bots, only enabled in production mode
-let botCache: LRU<string, any>;
+let botCache: LRU<string, SsrCacheEntry>;
 
 // cache of SSR pages for anonymous users. Disabled by default, and only available in production mode
-let anonymousCache: LRU<string, any>;
+let anonymousCache: LRU<string, SsrCacheEntry>;
 
 // extend environment with app config for server
 extendEnvironmentWithAppConfig(environment, appConfig);
@@ -592,8 +594,40 @@ function run() {
       });
 }
 
+/**
+ * Expose the contents of this process's SSR caches on 127.0.0.1 for operators.
+ * Under pm2 cluster mode every worker gets its own port (basePort + NODE_APP_INSTANCE), because a shared
+ * port would be answered by an arbitrary worker. A failed bind is logged and never stops the UI.
+ */
+function startCacheStatsServer(basePort: number) {
+  const instance = Number(process.env.NODE_APP_INSTANCE) || 0;
+  const port = basePort + instance;
+  const statsServer = startSsrCacheStatsServer(port, () => {
+    const memory = process.memoryUsage();
+    return {
+      host: hostname(),
+      pid: process.pid,
+      instance,
+      generatedAt: new Date().toISOString(),
+      uptimeSeconds: Math.round(process.uptime()),
+      memory: { rss: memory.rss, heapUsed: memory.heapUsed },
+      caches: [
+        snapshotCache('bot', botCache, environment.production && botCacheEnabled()),
+        snapshotCache('anonymous', anonymousCache, environment.production && anonymousCacheEnabled())
+      ]
+    };
+  });
+  statsServer.on('listening', () => console.log(`SSR cache stats listening at http://127.0.0.1:${port}${SSR_CACHE_STATS_PATH}`));
+  statsServer.on('error', (e: Error) => console.error(`SSR cache stats server not started on port ${port}: ${e.message}`));
+  process.on('SIGINT', () => statsServer.close());
+}
+
 function start() {
   logStartupMessage(environment);
+
+  if (environment.cache.serverSide.statsPort > 0) {
+    startCacheStatsServer(environment.cache.serverSide.statsPort);
+  }
 
   /*
   * If SSL is enabled

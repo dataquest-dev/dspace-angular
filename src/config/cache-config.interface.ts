@@ -15,6 +15,9 @@ export interface CacheConfig extends Config {
     debug: boolean,
     // List of response headers to save into the cache
     headers: string[],
+    // Loopback-only HTTP port reporting the contents of the caches below (GET http://127.0.0.1:<port>/app/cache-stats).
+    // 0 disables it. Under pm2 cluster mode each worker listens on statsPort + NODE_APP_INSTANCE.
+    statsPort: number,
     // Cache specific to known bots.  Allows you to serve cached contents to bots only.
     botCache: {
       // Maximum number of pages (rendered via SSR) to cache. Setting max=0 disables the cache.
