@@ -1,4 +1,4 @@
-import { createServer } from 'http';
+import { createServer, IncomingMessage, ServerResponse } from 'http';
 import LRU from 'lru-cache';
 
 export interface SsrCacheEntry {
@@ -98,15 +98,19 @@ export function renderStatsHtml(stats: SsrCacheStats): string {
     `<tbody>${summary}</tbody></table>${details}</html>`;
 }
 
+const LOOPBACK_ADDRESSES = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
+
+/** True for a socket address on the local host; used to keep the stats off the public UI port. */
+export function isLoopbackAddress(address: string | undefined): boolean {
+  return address !== undefined && LOOPBACK_ADDRESSES.includes(address);
+}
+
 /**
- * Serve the cache stats on 127.0.0.1:port (0 = ephemeral). Only GET /app/cache-stats answers; `?format=json` for JSON.
- * The request handler never throws; a failed bind surfaces on the returned server's 'error' event.
+ * Request handler answering GET with the stats as HTML, or as JSON for `?format=json`; any other method gets 404
+ * and an unparsable request target 400. It never throws, so it is safe on a bare `http` server.
  */
-export function startSsrCacheStatsServer(port: number, getStats: () => SsrCacheStats): ReturnType<typeof createServer> {
-  if (!Number.isInteger(port) || port < 0 || port > 65535) {
-    throw new Error('SSR cache stats port must be an integer from 0 to 65535');
-  }
-  const server = createServer((request, response) => {
+export function createSsrCacheStatsHandler(getStats: () => SsrCacheStats): (request: IncomingMessage, response: ServerResponse) => void {
+  return (request, response) => {
     response.setHeader('Cache-Control', 'no-store');
     response.setHeader('X-Content-Type-Options', 'nosniff');
     response.setHeader('Content-Security-Policy', "default-src 'none'; base-uri 'none'; frame-ancestors 'none'");
@@ -117,7 +121,7 @@ export function startSsrCacheStatsServer(port: number, getStats: () => SsrCacheS
       response.writeHead(400).end();
       return;
     }
-    if (request.method !== 'GET' || url.pathname !== SSR_CACHE_STATS_PATH) {
+    if (request.method !== 'GET') {
       response.writeHead(404).end();
       return;
     }
@@ -127,6 +131,24 @@ export function startSsrCacheStatsServer(port: number, getStats: () => SsrCacheS
     } else {
       response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' }).end(renderStatsHtml(stats));
     }
+  };
+}
+
+/**
+ * Serve the cache stats on 127.0.0.1:port (0 = ephemeral) under /app/cache-stats only.
+ * A failed bind surfaces on the returned server's 'error' event.
+ */
+export function startSsrCacheStatsServer(port: number, getStats: () => SsrCacheStats): ReturnType<typeof createServer> {
+  if (!Number.isInteger(port) || port < 0 || port > 65535) {
+    throw new Error('SSR cache stats port must be an integer from 0 to 65535');
+  }
+  const handler = createSsrCacheStatsHandler(getStats);
+  const server = createServer((request, response) => {
+    if ((request.url || '/').split('?')[0] !== SSR_CACHE_STATS_PATH) {
+      response.writeHead(404).end();
+      return;
+    }
+    handler(request, response);
   });
   return server.listen(port, '127.0.0.1');
 }

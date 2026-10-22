@@ -57,7 +57,15 @@ import { extendEnvironmentWithAppConfig } from './src/config/config.util';
 import { logStartupMessage } from './startup-message';
 import { TOKENITEM } from './src/app/core/auth/models/auth-token-info.model';
 import { SsrExcludePatterns } from './src/config/universal-config.interface';
-import { SSR_CACHE_STATS_PATH, SsrCacheEntry, snapshotCache, startSsrCacheStatsServer } from './src/backend/ssr-cache-stats';
+import {
+  createSsrCacheStatsHandler,
+  isLoopbackAddress,
+  snapshotCache,
+  SSR_CACHE_STATS_PATH,
+  SsrCacheEntry,
+  SsrCacheStats,
+  startSsrCacheStatsServer
+} from './src/backend/ssr-cache-stats';
 
 
 /*
@@ -230,6 +238,16 @@ export function app() {
    * Checking server status
    */
   server.get('/app/health', healthCheck);
+
+  /**
+   * SSR cache contents for operators on this host (see cache.serverSide.stats). With stats.port = 0 the page is
+   * served here, but only to loopback clients: the raw socket address is checked, not req.ip, which honours
+   * X-Forwarded-For when `trust proxy` is on. Other clients get the same 404 as an unknown route.
+   */
+  if (environment.cache.serverSide.stats.enabled && environment.cache.serverSide.stats.port === 0) {
+    const statsHandler = createSsrCacheStatsHandler(collectCacheStats);
+    server.get(SSR_CACHE_STATS_PATH, (req, res) => isLoopbackAddress(req.socket.remoteAddress) ? statsHandler(req, res) : res.sendStatus(404));
+  }
 
   /**
    * Default sending all incoming requests to ngApp() function, after first checking for a cached
@@ -594,29 +612,33 @@ function run() {
       });
 }
 
+/** pm2 cluster mode numbers its workers 0..n-1 in NODE_APP_INSTANCE; a single process reports 0. */
+const CLUSTER_INSTANCE = Number(process.env.NODE_APP_INSTANCE) || 0;
+
+function collectCacheStats(): SsrCacheStats {
+  const memory = process.memoryUsage();
+  return {
+    host: hostname(),
+    pid: process.pid,
+    instance: CLUSTER_INSTANCE,
+    generatedAt: new Date().toISOString(),
+    uptimeSeconds: Math.round(process.uptime()),
+    memory: { rss: memory.rss, heapUsed: memory.heapUsed },
+    caches: [
+      snapshotCache('bot', botCache, environment.production && botCacheEnabled()),
+      snapshotCache('anonymous', anonymousCache, environment.production && anonymousCacheEnabled())
+    ]
+  };
+}
+
 /**
- * Expose the contents of this process's SSR caches on 127.0.0.1 for operators.
- * Under pm2 cluster mode every worker gets its own port (basePort + NODE_APP_INSTANCE), because a shared
- * port would be answered by an arbitrary worker. A failed bind is logged and never stops the UI.
+ * Serve the cache stats on a loopback-only port of their own. Every pm2 cluster worker gets basePort + its
+ * instance number, because a port shared by the workers would be answered by an arbitrary one.
+ * A failed bind is logged and never stops the UI.
  */
 function startCacheStatsServer(basePort: number) {
-  const instance = Number(process.env.NODE_APP_INSTANCE) || 0;
-  const port = basePort + instance;
-  const statsServer = startSsrCacheStatsServer(port, () => {
-    const memory = process.memoryUsage();
-    return {
-      host: hostname(),
-      pid: process.pid,
-      instance,
-      generatedAt: new Date().toISOString(),
-      uptimeSeconds: Math.round(process.uptime()),
-      memory: { rss: memory.rss, heapUsed: memory.heapUsed },
-      caches: [
-        snapshotCache('bot', botCache, environment.production && botCacheEnabled()),
-        snapshotCache('anonymous', anonymousCache, environment.production && anonymousCacheEnabled())
-      ]
-    };
-  });
+  const port = basePort + CLUSTER_INSTANCE;
+  const statsServer = startSsrCacheStatsServer(port, collectCacheStats);
   statsServer.on('listening', () => console.log(`SSR cache stats listening at http://127.0.0.1:${port}${SSR_CACHE_STATS_PATH}`));
   statsServer.on('error', (e: Error) => console.error(`SSR cache stats server not started on port ${port}: ${e.message}`));
   process.on('SIGINT', () => statsServer.close());
@@ -625,8 +647,8 @@ function startCacheStatsServer(basePort: number) {
 function start() {
   logStartupMessage(environment);
 
-  if (environment.cache.serverSide.statsPort > 0) {
-    startCacheStatsServer(environment.cache.serverSide.statsPort);
+  if (environment.cache.serverSide.stats.enabled && environment.cache.serverSide.stats.port > 0) {
+    startCacheStatsServer(environment.cache.serverSide.stats.port);
   }
 
   /*

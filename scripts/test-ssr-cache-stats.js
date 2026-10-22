@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const { once } = require('node:events');
+const { createServer } = require('node:http');
 const { connect } = require('node:net');
 const { test } = require('node:test');
 const { setTimeout: sleep } = require('node:timers/promises');
@@ -7,7 +8,19 @@ const LRU = require('lru-cache');
 
 process.env.TS_NODE_PROJECT = 'tsconfig.ts-node.json';
 require('ts-node/register/transpile-only');
-const { snapshotCache, renderStatsHtml, startSsrCacheStatsServer } = require('../src/backend/ssr-cache-stats.ts');
+const {
+  snapshotCache, renderStatsHtml, startSsrCacheStatsServer, createSsrCacheStatsHandler, isLoopbackAddress
+} = require('../src/backend/ssr-cache-stats.ts');
+
+const rawRequest = async (port, requestLine) => {
+  const socket = connect(port, '127.0.0.1');
+  await once(socket, 'connect');
+  socket.end(`${requestLine}\r\nHost: x\r\nConnection: close\r\n\r\n`);
+  const chunks = [];
+  socket.on('data', chunk => chunks.push(chunk));
+  await once(socket, 'close');
+  return Buffer.concat(chunks).toString();
+};
 
 const statsOf = (caches) => ({
   host: 'node-1', pid: 1, instance: 0, generatedAt: 'now', uptimeSeconds: 2,
@@ -85,15 +98,28 @@ test('stats server listens on loopback and answers only GET /app/cache-stats', a
     assert.equal((await fetch(`${base}/other`)).status, 404);
     assert.equal((await fetch(`${base}/app/cache-stats`, { method: 'POST' })).status, 404);
 
-    const socket = connect(address.port, '127.0.0.1');
-    await once(socket, 'connect');
-    socket.end('GET //[ HTTP/1.1\r\nHost: x\r\nConnection: close\r\n\r\n');
-    const chunks = [];
-    socket.on('data', chunk => chunks.push(chunk));
-    await once(socket, 'close');
-    assert.match(Buffer.concat(chunks).toString(), /^HTTP\/1\.1 400 /);
+    assert.equal((await rawRequest(address.port, 'GET //[ HTTP/1.1')).split(' ')[1], '404');
   } finally {
     await new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+  }
+});
+
+test('handler answers an unparsable request target with 400 instead of throwing', async () => {
+  const server = createServer(createSsrCacheStatsHandler(() => statsOf([]))).listen(0, '127.0.0.1');
+  try {
+    await once(server, 'listening');
+    assert.equal((await rawRequest(server.address().port, 'GET //[ HTTP/1.1')).split(' ')[1], '400');
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
+test('loopback check accepts only local socket addresses', () => {
+  for (const address of ['127.0.0.1', '::1', '::ffff:127.0.0.1']) {
+    assert.equal(isLoopbackAddress(address), true, address);
+  }
+  for (const address of ['10.0.0.5', '::ffff:10.0.0.5', '0.0.0.0', '', undefined]) {
+    assert.equal(isLoopbackAddress(address), false, String(address));
   }
 });
 
