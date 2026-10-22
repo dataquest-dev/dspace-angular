@@ -467,3 +467,18 @@ accessibility:
 matomo:
   hostUrl: http://localhost:8135/
   siteId: 1
+
+# Values substituted for `${key}` placeholders in static pages served from `static-files`
+# (e.g. `${dspace.name}` in terms-of-service.html). Values are plain text; HTML is escaped on insert.
+# A missing or empty value leaves the `${key}` placeholder as is and logs a warning.
+# Placeholders are substituted in text content only. Do not use them inside
+# href, src, or other attribute values.
+# You can override a single key; the other defaults are kept.
+# Keys contain dots, so set them in this YAML file rather than through environment variables.
+#staticPage:
+#  variables:
+#    dspace.name: LINDAT/CLARIAH-CZ Repository
+#    lr.description.institution: Institute of Formal and Applied Linguistics
+#    lr.description.location: Malostranské náměstí 25, 118 00 Praha, Czech Republic
+#    lr.description.city: Prague
+#    lr.description.country: Czech Republic

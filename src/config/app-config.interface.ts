@@ -27,6 +27,7 @@ import { SearchConfig } from './search-page-config.interface';
 import { AccessibilitySettingsConfig } from '../app/accessibility/accessibility-settings.config';
 import { MatomoConfig } from './matomo-config';
 import { StatisticsConfig } from './statistics-config';
+import { StaticPageConfig } from './static-page-config.interface';
 
 interface AppConfig extends Config {
   ui: UIServerConfig;
@@ -59,6 +60,7 @@ interface AppConfig extends Config {
   signpostingEnabled: boolean;
   matomo: MatomoConfig;
   statistics?: StatisticsConfig;
+  staticPage?: StaticPageConfig;
 }
 
 /**

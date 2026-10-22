@@ -26,6 +26,7 @@ import { LiveRegionConfig } from '../app/shared/live-region/live-region.config';
 import { SearchConfig } from './search-page-config.interface';
 import { AccessibilitySettingsConfig } from '../app/accessibility/accessibility-settings.config';
 import { MatomoConfig } from './matomo-config';
+import { StaticPageConfig } from './static-page-config.interface';
 
 export class DefaultAppConfig implements AppConfig {
   production = false;
@@ -455,5 +456,17 @@ export class DefaultAppConfig implements AppConfig {
     hostUrl: 'http://localhost:8135/',
     siteId: '1',
     dimensionId: 1
+  };
+
+  // Values substituted for `${key}` placeholders in static pages (e.g. terms-of-service.html).
+  // Plain text; HTML is escaped on insert. A missing or empty value leaves the placeholder as is.
+  staticPage: StaticPageConfig = {
+    variables: {
+      'dspace.name': 'LINDAT/CLARIAH-CZ Repository',
+      'lr.description.institution': 'Institute of Formal and Applied Linguistics',
+      'lr.description.location': 'Malostranské náměstí 25, 118 00 Praha, Czech Republic',
+      'lr.description.city': 'Prague',
+      'lr.description.country': 'Czech Republic',
+    }
   };
 }

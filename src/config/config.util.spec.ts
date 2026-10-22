@@ -1,5 +1,5 @@
 import { environment } from '../environments/environment.production';
-import { extendEnvironmentWithAppConfig } from './config.util';
+import { extendEnvironmentWithAppConfig, mergeConfig } from './config.util';
 import { DefaultAppConfig } from './default-app-config';
 import { HandleThemeConfig } from './theme.config';
 
@@ -55,6 +55,21 @@ describe('Config Util', () => {
       expect(environment.themes[0].name).toEqual('dspace');
       expect(environment.themes[1].name).toEqual(customTheme.name);
       expect((environment.themes[1] as HandleThemeConfig).handle).toEqual(customTheme.handle);
+    });
+  });
+
+  describe('mergeConfig', () => {
+    it('should override a single static page variable and keep the other defaults', () => {
+      const appConfig = new DefaultAppConfig();
+      const defaults = { ...appConfig.staticPage.variables };
+
+      mergeConfig(appConfig, { staticPage: { variables: { 'dspace.name': 'X' } } } as any);
+
+      expect(appConfig.staticPage.variables['dspace.name']).toEqual('X');
+      Object.keys(defaults)
+        .filter((key) => key !== 'dspace.name')
+        .forEach((key) => expect(appConfig.staticPage.variables[key]).toEqual(defaults[key]));
+      expect(Object.keys(appConfig.staticPage.variables).length).toEqual(5);
     });
   });
 });

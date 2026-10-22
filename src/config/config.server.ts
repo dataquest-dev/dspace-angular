@@ -287,6 +287,8 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
       search: appConfig.search,
       accessibility: appConfig.accessibility,
       signpostingEnabled: appConfig.signpostingEnabled,
+      // Static page placeholder values (e.g. terms-of-service.html), needed for client-side rendering
+      staticPage: appConfig.staticPage,
       // Matomo analytics - only expose client-side tracking properties
       ...(appConfig.matomo && {
         matomo: {

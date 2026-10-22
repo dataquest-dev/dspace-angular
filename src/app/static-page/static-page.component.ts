@@ -6,6 +6,7 @@ import { isEmpty } from '../shared/empty.util';
 import { STATIC_PAGE_PATH } from './static-page-routing-paths';
 import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 import { ServerResponseService } from '../core/services/server-response.service';
+import escapeHtml from 'lodash/escape';
 
 /**
  * Component which load and show static files from the `static-files` folder.
@@ -40,6 +41,7 @@ export class StaticPageComponent implements OnInit {
         const restBase = this.appConfig?.rest?.baseUrl;
         const oaiUrl = restBase ? restBase.replace(/\/+$/, '') + '/oai' : '/server/oai';
         htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
+        htmlContent = this.interpolateVariables(htmlContent);
 
         this.htmlContent.next(htmlContent);
         this.contentState = 'found';
@@ -83,6 +85,31 @@ export class StaticPageComponent implements OnInit {
     const namespacePrefix = this.getNamespacePrefix();
     const staticPageBaseUrl = this.composeStaticPageBaseUrl(namespacePrefix);
     this.redirectToRelativeLink(staticPageBaseUrl, href);
+  }
+
+  /**
+   * Replace `${key}` placeholders with values from `staticPage.variables` in the app config.
+   * Values are HTML-escaped. Missing, null, non-string, or empty values leave the placeholder unchanged.
+   * @param html static page content
+   * @private
+   */
+  private interpolateVariables(html: string): string {
+    const vars = this.appConfig?.staticPage?.variables ?? {};
+    const missing = new Set<string>();
+    // Function replacer: `$&`, `$'` etc. in values are inserted literally, not as replacement patterns.
+    const out = html.replace(/\$\{([\w.-]+)\}/g, (match: string, key: string) => {
+      // Own-property check, so `${toString}` does not resolve to an inherited member.
+      const value = Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : undefined;
+      if (typeof value !== 'string' || value.trim() === '') {
+        missing.add(key);
+        return match;
+      }
+      return escapeHtml(value);
+    });
+    if (missing.size > 0) {
+      console.warn('Static page: unresolved variables', [...missing]);
+    }
+    return out;
   }
 
   private getNamespacePrefix(): string {
