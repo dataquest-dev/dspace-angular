@@ -70,34 +70,6 @@ export function snapshotCache(name: string, cache: LRU<string, SsrCacheEntry> | 
   };
 }
 
-function escapeHtml(value: string): string {
-  return value.replace(/[&<>"']/g, character => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  })[character]);
-}
-
-export function renderStatsHtml(stats: SsrCacheStats): string {
-  const summary = stats.caches.map(cache =>
-    `<tr><th>${escapeHtml(cache.name)}</th><td>${cache.enabled}</td><td>${cache.entryCount} / ${cache.maxEntries}</td>` +
-    `<td>${cache.staleCount}</td><td>${cache.totalHtmlBytes}</td></tr>`
-  ).join('');
-  const details = stats.caches.map(cache =>
-    `<h2>${escapeHtml(cache.name)} entries</h2><p>Configured TTL: ${cache.configuredTtlMs} ms. ` +
-    'HTML byte counts exclude object and V8 overhead.</p>' +
-    '<table border="1"><thead><tr><th>Path</th><th>HTML bytes</th><th>Remaining TTL (ms)</th><th>Stale</th></tr></thead><tbody>' +
-    cache.entries.map(entry =>
-      `<tr><td>${escapeHtml(entry.key)}</td><td>${entry.htmlBytes}</td>` +
-      `<td>${entry.remainingTtlMs === null ? 'unlimited' : entry.remainingTtlMs}</td><td>${entry.stale}</td></tr>`
-    ).join('') + '</tbody></table>'
-  ).join('');
-  return '<!doctype html><html lang="en"><meta charset="utf-8"><title>SSR cache stats</title><h1>SSR cache stats</h1>' +
-    `<p>Node: ${escapeHtml(stats.host)}; PID: ${stats.pid}; instance: ${stats.instance}; generated: ${escapeHtml(stats.generatedAt)}; ` +
-    `uptime: ${stats.uptimeSeconds} s; RSS: ${stats.memory.rss} bytes; heap used: ${stats.memory.heapUsed} bytes.</p>` +
-    '<p>Each Node process has its own cache; this page reports this process only. <a href="?format=json">JSON</a></p>' +
-    '<table border="1"><thead><tr><th>Cache</th><th>Enabled</th><th>Entries / limit</th><th>Stale</th><th>HTML bytes</th></tr></thead>' +
-    `<tbody>${summary}</tbody></table>${details}</html>`;
-}
-
 const LOOPBACK_ADDRESSES = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
 /** Headers a reverse proxy adds; a request carrying one came through the proxy even if its socket is loopback. */
 const PROXY_HEADERS = ['forwarded', 'via', 'x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-real-ip'];
@@ -113,32 +85,15 @@ export function isDirectLoopbackRequest(request: IncomingMessage): boolean {
     !PROXY_HEADERS.some(header => request.headers[header] !== undefined);
 }
 
-/**
- * Request handler answering GET with the stats as HTML, or as JSON for `?format=json`; any other method gets 404
- * and an unparsable request target 400. It never throws, so it is safe on a bare `http` server.
- */
+/** Request handler answering GET with the stats as JSON; any other method gets 404. */
 export function createSsrCacheStatsHandler(getStats: () => SsrCacheStats): (request: IncomingMessage, response: ServerResponse) => void {
   return (request, response) => {
     response.setHeader('Cache-Control', 'no-store');
-    response.setHeader('X-Content-Type-Options', 'nosniff');
-    response.setHeader('Content-Security-Policy', "default-src 'none'; base-uri 'none'; frame-ancestors 'none'");
-    let url: URL;
-    try {
-      url = new URL(request.url || '/', 'http://localhost');
-    } catch {
-      response.writeHead(400).end();
-      return;
-    }
     if (request.method !== 'GET') {
       response.writeHead(404).end();
       return;
     }
-    const stats = getStats();
-    if (url.searchParams.get('format') === 'json') {
-      response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' }).end(JSON.stringify(stats));
-    } else {
-      response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' }).end(renderStatsHtml(stats));
-    }
+    response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' }).end(JSON.stringify(getStats()));
   };
 }
 

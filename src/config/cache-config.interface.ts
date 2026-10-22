@@ -15,7 +15,7 @@ export interface CacheConfig extends Config {
     debug: boolean,
     // List of response headers to save into the cache
     headers: string[],
-    // Report the contents of the caches below to operators on this host: GET /app/cache-stats (HTML, or ?format=json)
+    // Report the contents of the caches below to operators on this host: GET /app/cache-stats (JSON)
     stats: {
       enabled: boolean,
       // 0 = serve it on the UI port to requests made directly from this host (loopback socket, no proxy headers).

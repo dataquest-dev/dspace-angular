@@ -240,7 +240,7 @@ export function app() {
   server.get('/app/health', healthCheck);
 
   /**
-   * SSR cache contents for operators on this host (see cache.serverSide.stats). With stats.port = 0 the page is
+   * SSR cache contents for operators on this host (see cache.serverSide.stats). With stats.port = 0 they are
    * served here, but only to requests made directly from this host: loopback socket address (not req.ip, which
    * honours X-Forwarded-For when `trust proxy` is on) and no proxy headers, so traffic relayed by a same-host
    * reverse proxy is refused too. Everyone else gets the same 404 as an unknown route.

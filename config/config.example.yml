@@ -97,7 +97,7 @@ cache:
   serverSide:
     # Set to true to see all cache hits/misses/refreshes in your console logs. Useful for debugging SSR caching issues.
     debug: false
-    # Lets operators on this machine see what the caches below hold: GET /app/cache-stats (HTML) or ?format=json.
+    # Lets operators on this machine see what the caches below hold: GET /app/cache-stats (JSON).
     # Each Node process reports its own cache. Off by default.
     stats:
       enabled: false
