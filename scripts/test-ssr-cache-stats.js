@@ -9,7 +9,7 @@ const LRU = require('lru-cache');
 process.env.TS_NODE_PROJECT = 'tsconfig.ts-node.json';
 require('ts-node/register/transpile-only');
 const {
-  snapshotCache, renderStatsHtml, startSsrCacheStatsServer, createSsrCacheStatsHandler, isLoopbackAddress
+  snapshotCache, renderStatsHtml, startSsrCacheStatsServer, createSsrCacheStatsHandler, isDirectLoopbackRequest
 } = require('../src/backend/ssr-cache-stats.ts');
 
 const rawRequest = async (port, requestLine) => {
@@ -114,13 +114,18 @@ test('handler answers an unparsable request target with 400 instead of throwing'
   }
 });
 
-test('loopback check accepts only local socket addresses', () => {
+test('direct loopback check accepts local sockets without proxy headers only', () => {
+  const request = (remoteAddress, headers = {}) => ({ socket: { remoteAddress }, headers });
   for (const address of ['127.0.0.1', '::1', '::ffff:127.0.0.1']) {
-    assert.equal(isLoopbackAddress(address), true, address);
+    assert.equal(isDirectLoopbackRequest(request(address)), true, address);
   }
   for (const address of ['10.0.0.5', '::ffff:10.0.0.5', '0.0.0.0', '', undefined]) {
-    assert.equal(isLoopbackAddress(address), false, String(address));
+    assert.equal(isDirectLoopbackRequest(request(address)), false, String(address));
   }
+  for (const header of ['forwarded', 'via', 'x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-real-ip']) {
+    assert.equal(isDirectLoopbackRequest(request('127.0.0.1', { [header]: '' })), false, header);
+  }
+  assert.equal(isDirectLoopbackRequest(request('127.0.0.1', { 'user-agent': 'curl' })), true);
 });
 
 test('stats server reports a failed bind on its error event instead of throwing', async () => {

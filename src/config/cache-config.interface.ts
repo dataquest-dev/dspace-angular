@@ -18,8 +18,9 @@ export interface CacheConfig extends Config {
     // Report the contents of the caches below to operators on this host: GET /app/cache-stats (HTML, or ?format=json)
     stats: {
       enabled: boolean,
-      // 0 = serve it on the UI port, loopback clients only. >0 = listen on 127.0.0.1:<port> instead;
-      // under pm2 cluster mode worker N listens on <port> + N, so each worker's own cache can be inspected.
+      // 0 = serve it on the UI port to requests made directly from this host (loopback socket, no proxy headers).
+      // >0 = listen on 127.0.0.1:<port> instead; under pm2 cluster mode worker N listens on <port> + N, so each
+      // worker's own cache can be inspected. Prefer a port when a same-host reverse proxy adds no X-Forwarded-* headers.
       port: number,
     },
     // Cache specific to known bots.  Allows you to serve cached contents to bots only.

@@ -99,10 +99,18 @@ export function renderStatsHtml(stats: SsrCacheStats): string {
 }
 
 const LOOPBACK_ADDRESSES = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
+/** Headers a reverse proxy adds; a request carrying one came through the proxy even if its socket is loopback. */
+const PROXY_HEADERS = ['forwarded', 'via', 'x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-real-ip'];
 
-/** True for a socket address on the local host; used to keep the stats off the public UI port. */
-export function isLoopbackAddress(address: string | undefined): boolean {
-  return address !== undefined && LOOPBACK_ADDRESSES.includes(address);
+/**
+ * True when the request was made directly on this host: loopback socket address and no proxy headers.
+ * A same-host reverse proxy also connects from loopback, so the socket address alone is not enough.
+ * A proxy that adds none of these headers cannot be told apart; use a separate port there instead.
+ */
+export function isDirectLoopbackRequest(request: IncomingMessage): boolean {
+  const address = request.socket.remoteAddress;
+  return address !== undefined && LOOPBACK_ADDRESSES.includes(address) &&
+    !PROXY_HEADERS.some(header => request.headers[header] !== undefined);
 }
 
 /**

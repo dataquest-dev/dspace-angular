@@ -59,7 +59,7 @@ import { TOKENITEM } from './src/app/core/auth/models/auth-token-info.model';
 import { SsrExcludePatterns } from './src/config/universal-config.interface';
 import {
   createSsrCacheStatsHandler,
-  isLoopbackAddress,
+  isDirectLoopbackRequest,
   snapshotCache,
   SSR_CACHE_STATS_PATH,
   SsrCacheEntry,
@@ -241,12 +241,13 @@ export function app() {
 
   /**
    * SSR cache contents for operators on this host (see cache.serverSide.stats). With stats.port = 0 the page is
-   * served here, but only to loopback clients: the raw socket address is checked, not req.ip, which honours
-   * X-Forwarded-For when `trust proxy` is on. Other clients get the same 404 as an unknown route.
+   * served here, but only to requests made directly from this host: loopback socket address (not req.ip, which
+   * honours X-Forwarded-For when `trust proxy` is on) and no proxy headers, so traffic relayed by a same-host
+   * reverse proxy is refused too. Everyone else gets the same 404 as an unknown route.
    */
   if (environment.cache.serverSide.stats.enabled && environment.cache.serverSide.stats.port === 0) {
     const statsHandler = createSsrCacheStatsHandler(collectCacheStats);
-    server.get(SSR_CACHE_STATS_PATH, (req, res) => isLoopbackAddress(req.socket.remoteAddress) ? statsHandler(req, res) : res.sendStatus(404));
+    server.get(SSR_CACHE_STATS_PATH, (req, res) => isDirectLoopbackRequest(req) ? statsHandler(req, res) : res.sendStatus(404));
   }
 
   /**

@@ -101,7 +101,9 @@ cache:
     # Each Node process reports its own cache. Off by default.
     stats:
       enabled: false
-      # 0 = answer on the UI port, but only to clients connecting from 127.0.0.1 (everyone else gets 404).
+      # 0 = answer on the UI port, but only to requests made directly from this host: connecting from 127.0.0.1 and
+      # carrying no proxy headers (Forwarded, Via, X-Forwarded-*, X-Real-IP). Everyone else gets 404. A same-host reverse
+      # proxy that adds none of those headers would pass this check, so use a port number there.
       # A port number (e.g. 4001) = listen on 127.0.0.1:<port> instead; under pm2 cluster mode worker N uses <port> + N,
       # which is the only way to pick a specific worker.
       port: 0
