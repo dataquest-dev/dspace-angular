@@ -37,7 +37,7 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
 
   beforeEach(async () => {
     authService = jasmine.createSpyObj('authService', {
-      isAuthenticated: observableOf(true),
+      isAuthenticated: observableOf(false),
       setRedirectUrl: {}
     });
     authorizationService = jasmine.createSpyObj('authorizationSerivice', {
@@ -70,7 +70,7 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
     };
     router = jasmine.createSpyObj('router', ['navigateByUrl']);
     requestService = getMockRequestService();
-    halService = Object.assign(new HALEndpointServiceStub(url));
+    halService = Object.assign(new HALEndpointServiceStub(url), { getRootHref: () => url }) as any;
     rdbService = getMockRemoteDataBuildService();
 
     await TestBed.configureTestingModule({
@@ -99,5 +99,9 @@ describe('ClarinBitstreamDownloadPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should redirect an anonymous user to the bitstream content through HardRedirectService', () => {
+    expect(hardRedirectService.redirect).toHaveBeenCalledWith('bitstream-content-link');
   });
 });
