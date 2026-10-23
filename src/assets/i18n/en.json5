@@ -6108,6 +6108,8 @@
 
   "item.file.description.description": "Description",
 
+  "item.file.description.na": "N/A",
+
   "item.file.description.checksum": "MD5",
 
   "item.file.description.download.file": "Download file",

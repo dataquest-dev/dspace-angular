@@ -527,6 +527,18 @@
   // "admin.access-control.epeople.form.notification.deleted.failure": "Failed to delete EPerson \"{{name}}\"",
   "admin.access-control.epeople.form.notification.deleted.failure": "Nepodařilo se smazat uživatele \"{{name}}\"",
 
+  // "admin.access-control.epeople.notification.deleted.forbidden.self": "You cannot delete your own EPerson account.",
+  "admin.access-control.epeople.notification.deleted.forbidden.self": "Nemůžete smazat svůj vlastní účet uživatele.",
+
+  // "admin.access-control.epeople.delete.warning.submitter": "Warning: this user has submitted items. Deleting this EPerson may affect submission ownership and related repository records.",
+  "admin.access-control.epeople.delete.warning.submitter": "Upozornění: Tento uživatel odeslal položky. Smazání tohoto uživatele může ovlivnit vlastnictví příspěvků a související záznamy v repozitáři.",
+
+  // "admin.access-control.epeople.delete.warning.admin": "Warning: this user has administrator privileges. Deleting this EPerson will remove an administrator account.",
+  "admin.access-control.epeople.delete.warning.admin": "Upozornění: Tento uživatel má oprávnění správce. Smazání tohoto uživatele odebere účet správce.",
+
+  // "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Warning: this user has submitted items and has administrator privileges. Deleting this EPerson may affect submission ownership and remove an administrator account.",
+  "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Upozornění: Tento uživatel odeslal položky a má oprávnění správce. Smazání tohoto uživatele může ovlivnit vlastnictví příspěvků a odebrat účet správce.",
+
   // "admin.access-control.epeople.form.groupsEPersonIsMemberOf": "Member of these groups:",
   "admin.access-control.epeople.form.groupsEPersonIsMemberOf": "Člen těchto skupin:",
 
@@ -550,18 +562,6 @@
 
   // "admin.access-control.epeople.notification.deleted.success": "Successfully deleted EPerson: \"{{name}}\"",
   "admin.access-control.epeople.notification.deleted.success": "Úspěšně odstraněn uživatel: \"{{name}}\"",
-
-  // "admin.access-control.epeople.notification.deleted.forbidden.self": "You cannot delete your own EPerson account.",
-  "admin.access-control.epeople.notification.deleted.forbidden.self": "Nemůžete smazat svůj vlastní účet uživatele.",
-
-  // "admin.access-control.epeople.delete.warning.submitter": "Warning: this user has submitted items. Deleting this EPerson may affect submission ownership and related repository records.",
-  "admin.access-control.epeople.delete.warning.submitter": "Upozornění: Tento uživatel odeslal položky. Smazání tohoto uživatele může ovlivnit vlastnictví příspěvků a související záznamy v repozitáři.",
-
-  // "admin.access-control.epeople.delete.warning.admin": "Warning: this user has administrator privileges. Deleting this EPerson will remove an administrator account.",
-  "admin.access-control.epeople.delete.warning.admin": "Upozornění: Tento uživatel má oprávnění správce. Smazání tohoto uživatele odebere účet správce.",
-
-  // "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Warning: this user has submitted items and has administrator privileges. Deleting this EPerson may affect submission ownership and remove an administrator account.",
-  "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Upozornění: Tento uživatel odeslal položky a má oprávnění správce. Smazání tohoto uživatele může ovlivnit vlastnictví příspěvků a odebrat účet správce.",
 
   // "admin.access-control.groups.title": "Groups",
   "admin.access-control.groups.title": "Skupiny",
@@ -4632,6 +4632,10 @@
   // "menu.section.icon.workflow": "Administer workflow menu section",
   "menu.section.icon.workflow": "Sekce menu pro administrativní workflow",
 
+  // "menu.section.icon.update_config": "Update Configuration menu section",
+  // TODO New key - Add a translation
+  "menu.section.icon.update_config": "Update Configuration menu section",
+
   // "menu.section.icon.unpin": "Unpin sidebar",
   "menu.section.icon.unpin": "Odepnout postranní panel",
 
@@ -8211,6 +8215,9 @@
   // "menu.section.system-wide-alert": "System-wide Alert",
   "menu.section.system-wide-alert": "Systémová upozornění",
 
+  // "menu.section.update-config": "Update Config",
+  "menu.section.update-config": "Úprava konfigurace",
+
   // "system-wide-alert.form.header": "System-wide Alert",
   "system-wide-alert.form.header": "Systémová upozornění",
 
@@ -8258,12 +8265,6 @@
 
   // "system-wide-alert.form.create.error": "Something went wrong when creating the system-wide alert",
   "system-wide-alert.form.create.error": "Něco se pokazilo při vytváření systémového upozornění",
-
-  // "admin.system-wide-alert.breadcrumbs": "System-wide Alerts",
-  "admin.system-wide-alert.breadcrumbs": "Systémová upozornění",
-
-  // "admin.system-wide-alert.title": "System-wide Alerts",
-  "admin.system-wide-alert.title": "Systémová upozornění",
 
   // "admin.update-config.title": "Update Configuration",
   "admin.update-config.title": "Aktualizace konfigurace",
@@ -8419,8 +8420,9 @@
   // "admin.update-config.help.allowed-files.title": "Editable Files",
   "admin.update-config.help.allowed-files.title": "Editovatelné soubory",
 
-  // "admin.update-config.help.allowed-files.description": "Only XML files in the config-be directory can be edited for security reasons:",
-  "admin.update-config.help.allowed-files.description": "Pouze XML soubory v adresáři config-be mohou být editovány z bezpečnostních důvodů:",
+  // "admin.update-config.help.allowed-files.description": "Only configuration files in the server configuration directory can be edited for security reasons:",
+  // TODO New key - Add a translation
+  "admin.update-config.help.allowed-files.description": "Only configuration files in the server configuration directory can be edited for security reasons:",
 
   // "admin.update-config.error.load-files.title": "Load Error",
   "admin.update-config.error.load-files.title": "Chyba načtení",
@@ -8429,6 +8431,7 @@
   "admin.update-config.error.load-files.message": "Nepodařilo se načíst seznam konfiguračních souborů",
 
   // Breadcrumb
+  // "admin.update-config.breadcrumbs": "Update Configuration",
   "admin.update-config.breadcrumbs": "Aktualizace konfigurace",
 
   // File Information
@@ -8513,6 +8516,12 @@
 
   // "admin.update-config.error.reload.message": "Could not reload original file",
   "admin.update-config.error.reload.message": "Nepodařilo se znovu načíst původní soubor",
+
+  // "admin.system-wide-alert.breadcrumbs": "System-wide Alerts",
+  "admin.system-wide-alert.breadcrumbs": "Systémová upozornění",
+
+  // "admin.system-wide-alert.title": "System-wide Alerts",
+  "admin.system-wide-alert.title": "Systémová upozornění",
 
   // "item-access-control-title": "This form allows you to perform changes to the access conditions of the item's metadata or its bitstreams.",
   "item-access-control-title": "Tento formulář umožňuje provést změny typu přístupu k metadatovému záznamu nebo souborům.",
@@ -8605,16 +8614,25 @@
   "access-control-option-end-date": "Povolit přístup do",
 
   // "access-control-option-end-date-note": "Select the date until which the related access condition is applied",
-
-  "item.delete.virtual-metadata.info": "Zobrazit informace o virtuálních metadatech",
-  "access-control.start-date.calendar-button": "Otevřít kalendář počátečního data",
-  "access-control.end-date.calendar-button": "Otevřít kalendář koncového data",
-  "form.remove-related-item": "Odebrat související položku",
-  "form.relation-group.save": "Uložit skupinu vztahů",
-  "form.relation-group.delete": "Smazat skupinu vztahů",
-  "form.relation-group.clear": "Vyčistit skupinu vztahů",
-  "submission.cc-license.field-info": "Více informací o tomto licenčním poli",
   "access-control-option-end-date-note": "Vyberte datum, do kterého má být typ přístupu aktivován",
+
+  // "item.delete.virtual-metadata.info": "Show virtual metadata information",
+  // TODO Source message changed - Revise the translation
+  "item.delete.virtual-metadata.info": "Zobrazit informace o virtuálních metadatech",
+  // "access-control.start-date.calendar-button": "Open start date calendar",
+  "access-control.start-date.calendar-button": "Otevřít kalendář počátečního data",
+  // "access-control.end-date.calendar-button": "Open end date calendar",
+  "access-control.end-date.calendar-button": "Otevřít kalendář koncového data",
+  // "form.remove-related-item": "Remove related item",
+  "form.remove-related-item": "Odebrat související položku",
+  // "form.relation-group.save": "Save relation group",
+  "form.relation-group.save": "Uložit skupinu vztahů",
+  // "form.relation-group.delete": "Delete relation group",
+  "form.relation-group.delete": "Smazat skupinu vztahů",
+  // "form.relation-group.clear": "Clear relation group",
+  "form.relation-group.clear": "Vyčistit skupinu vztahů",
+  // "submission.cc-license.field-info": "More information about this license field",
+  "submission.cc-license.field-info": "Více informací o tomto licenčním poli",
 
   // "vocabulary-treeview.search.form.add": "Add",
   "vocabulary-treeview.search.form.add": "Přidat",
@@ -9213,6 +9231,9 @@
   // "item.file.description.description": "Description",
   "item.file.description.description": "Popis",
 
+  // "item.file.description.na": "N/A",
+  "item.file.description.na": "Neuvedeno",
+
   // "item.file.description.checksum": "MD5",
   "item.file.description.checksum": "MD5",
 
@@ -9230,8 +9251,11 @@
 
   // "item.page.download.button.command.line": "Download instructions for command line",
   "item.page.download.button.command.line": "Instrukce pro stažení z příkazové řádky",
+  // "item.page.download.command.copy": "Copy to clipboard",
   "item.page.download.command.copy": "Kopírovat",
+  // "item.page.download.command.copied": "Copied!",
   "item.page.download.command.copied": "Zkopírováno!",
+  // "item.page.download.command.close": "Close",
   "item.page.download.command.close": "Zavřít",
 
   // "item.page.download.button.all.files.zip": "Download all files in item",
@@ -9380,9 +9404,6 @@
 
   // "menu.section.licenses": "License Administration",
   "menu.section.licenses": "Správa licencí",
-
-  // "menu.section.update-config": "Update Config",
-  "menu.section.update-config": "Úprava konfigurace",
 
   // "menu.section.submissions": "Submissions",
   "menu.section.submissions": "Příspěvky",
