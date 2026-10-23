@@ -227,8 +227,12 @@ export function app() {
    * reverse proxy is refused too. Everyone else falls through to the catch-all route, exactly as for an unknown path.
    */
   if (environment.cache.serverSide.stats.enabled && environment.cache.serverSide.stats.port === 0) {
+    if (environment.ui.useProxies) {
+      console.warn('SSR cache stats are served on the UI port behind a proxy; a same-host proxy adding no forwarding headers would expose them. Prefer cache.serverSide.stats.port > 0.');
+    }
     const statsHandler = createSsrCacheStatsHandler(collectCacheStats);
-    server.get(SSR_CACHE_STATS_PATH, (req, res, next) => req.method === 'GET' && isDirectLoopbackRequest(req) ? statsHandler(req, res) : next());
+    server.get(SSR_CACHE_STATS_PATH, (req, res, next) =>
+      req.method === 'GET' && req.path === SSR_CACHE_STATS_PATH && isDirectLoopbackRequest(req) ? statsHandler(req, res) : next());
   }
 
   /**
@@ -703,8 +707,12 @@ function startCacheStatsServer(basePort: number) {
     notStarted(e);
     return;
   }
-  statsServer.on('listening', () => console.log(`SSR cache stats listening at http://127.0.0.1:${port}${SSR_CACHE_STATS_PATH}`));
-  statsServer.on('error', notStarted);
+  let listening = false;
+  statsServer.on('listening', () => {
+    listening = true;
+    console.log(`SSR cache stats listening at http://127.0.0.1:${port}${SSR_CACHE_STATS_PATH}`);
+  });
+  statsServer.on('error', (e: Error) => listening ? console.error(`SSR cache stats server on port ${port}: ${e.message}`) : notStarted(e));
   process.on('SIGINT', () => statsServer.close());
 }
 
