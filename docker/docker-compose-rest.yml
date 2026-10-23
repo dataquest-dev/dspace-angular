@@ -85,6 +85,7 @@ services:
     volumes:
     - dspace_logs:/dspace/log
     - assetstore:/dspace/assetstore
+    - sitemaps:/dspace/sitemaps
     - handle_server:/dspace/handle-server
     - ./local.cfg:/dspace/config/local.cfg
     # Mount a tmpfs over the requests folder to protect it - associated with https://github.com/dataquest-dev/DSpace/pull/1095
@@ -178,6 +179,7 @@ services:
 volumes:
   # Commented out because there are a lot of files in the assetstore
   assetstore:
+  sitemaps:
   pgdata:
   pg_logs:
   solr_data:
