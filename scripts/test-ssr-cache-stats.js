@@ -91,7 +91,7 @@ test('direct loopback check accepts local sockets without proxy headers only', (
   for (const address of ['10.0.0.5', '::ffff:10.0.0.5', '0.0.0.0', '', undefined]) {
     assert.equal(isDirectLoopbackRequest(request(address)), false, String(address));
   }
-  for (const header of ['forwarded', 'via', 'x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-real-ip']) {
+  for (const header of ['forwarded', 'via', 'x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-ssl', 'x-real-ip']) {
     assert.equal(isDirectLoopbackRequest(request('127.0.0.1', { [header]: '' })), false, header);
   }
   assert.equal(isDirectLoopbackRequest(request('127.0.0.1', { 'user-agent': 'curl' })), true);

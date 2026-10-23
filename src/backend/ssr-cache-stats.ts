@@ -77,7 +77,8 @@ export function snapshotCache(name: string, cache: LRUCache<string, SsrCacheEntr
 
 const LOOPBACK_ADDRESSES = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
 /** Headers a reverse proxy adds; a request carrying one came through the proxy even if its socket is loopback. */
-const PROXY_HEADERS = ['forwarded', 'via', 'x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-real-ip'];
+const PROXY_HEADERS = ['forwarded', 'via', 'x-real-ip'];
+const PROXY_HEADER_PREFIX = 'x-forwarded-';
 
 /**
  * True when the request was made directly on this host: loopback socket address and no proxy headers.
@@ -87,7 +88,7 @@ const PROXY_HEADERS = ['forwarded', 'via', 'x-forwarded-for', 'x-forwarded-host'
 export function isDirectLoopbackRequest(request: IncomingMessage): boolean {
   const address = request.socket.remoteAddress;
   return address !== undefined && LOOPBACK_ADDRESSES.includes(address) &&
-    !PROXY_HEADERS.some(header => request.headers[header] !== undefined);
+    !Object.keys(request.headers).some(header => PROXY_HEADERS.includes(header) || header.startsWith(PROXY_HEADER_PREFIX));
 }
 
 /** Request handler answering GET with the stats as JSON; any other method gets 404. */
@@ -98,7 +99,14 @@ export function createSsrCacheStatsHandler(getStats: () => SsrCacheStats): (requ
       response.writeHead(404).end();
       return;
     }
-    response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' }).end(JSON.stringify(getStats()));
+    let body: string;
+    try {
+      body = JSON.stringify(getStats());
+    } catch {
+      response.writeHead(500).end();
+      return;
+    }
+    response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' }).end(body);
   };
 }
 
