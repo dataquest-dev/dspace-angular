@@ -6,4 +6,5 @@ export class AuthorNameLink {
   name: string;
   url: string;
   isAuthority: boolean;
+  orcidUrl?: string;
 }
