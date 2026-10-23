@@ -18,6 +18,8 @@ import { buildPaginatedList } from '../../core/data/paginated-list.model';
 import { RequestService } from '../../core/data/request.service';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
 import { Bitstream } from '../../core/shared/bitstream.model';
+import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
+import { ClarinUserMetadata } from '../../core/shared/clarin/clarin-user-metadata.model';
 import { Item } from '../../core/shared/item.model';
 import { FileService } from '../../core/shared/file.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
@@ -149,6 +151,45 @@ describe('ClarinLicenseAgreementPageComponent', () => {
       }));
       expect(component.userMetadata$.value).not.toBeNull();
       expect(component.userMetadata$.value.page.some((entry) => entry.metadataKey === 'IP')).toBeTrue();
+    });
+
+    // Keys from a previous transaction that the license no longer requires must not be sent.
+    it('should send only the metadata keys required by the license, plus the current IP', () => {
+      const testIpAddress = '203.0.113.42';
+
+      component.userMetadata$.next(buildPaginatedList(undefined, [
+        Object.assign(new ClarinUserMetadata(), { metadataKey: 'NAME', metadataValue: 'Jane Tester' }),
+        Object.assign(new ClarinUserMetadata(), { metadataKey: 'COUNTRY', metadataValue: 'CZ' }),
+        Object.assign(new ClarinUserMetadata(), { metadataKey: 'IP', metadataValue: '198.51.100.7' }),
+      ], false, undefined));
+      component.requiredInfo$.next([Object.assign(new ClarinLicenseRequiredInfo(), { name: 'NAME' })]);
+      component.ipAddress$.next(testIpAddress);
+      component.item$.next(Object.assign(new Item(), { uuid: 'item-uuid' }));
+      requestService.send.calls.reset();
+
+      component.accept();
+
+      expect(requestService.send).toHaveBeenCalled();
+      const body = requestService.send.calls.mostRecent().args[0].body;
+      expect(body.map((entry: ClarinUserMetadata) => entry.metadataKey)).toEqual(['NAME', 'IP']);
+      expect(body.find((entry: ClarinUserMetadata) => entry.metadataKey === 'IP').metadataValue).toEqual(testIpAddress);
+    });
+
+    // ORGANIZATION is optional and may stay empty; REQUIRED_ORGANIZATION is mandatory.
+    it('should allow an empty ORGANIZATION but block an empty REQUIRED_ORGANIZATION', () => {
+      component.userMetadata$.next(null);
+      component.ipAddress$.next('203.0.113.42');
+      component.item$.next(Object.assign(new Item(), { uuid: 'item-uuid' }));
+
+      component.requiredInfo$.next([Object.assign(new ClarinLicenseRequiredInfo(), { name: 'ORGANIZATION' })]);
+      requestService.send.calls.reset();
+      component.accept();
+      expect(requestService.send).toHaveBeenCalled();
+
+      component.requiredInfo$.next([Object.assign(new ClarinLicenseRequiredInfo(), { name: 'REQUIRED_ORGANIZATION' })]);
+      requestService.send.calls.reset();
+      component.accept();
+      expect(requestService.send).not.toHaveBeenCalled();
     });
 
   });

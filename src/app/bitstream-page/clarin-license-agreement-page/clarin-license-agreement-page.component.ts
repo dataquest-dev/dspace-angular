@@ -118,6 +118,11 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
   LICENSE_PATH_SEZNAM_CZ = 'szn-dataset-licence.html';
 
   /**
+   * The list of metadata keys that are optional and do not require user input.
+   */
+  OPTIONAL_METADATA_KEYS = ['ORGANIZATION'];
+
+  /**
    * The content of the Seznam dataset license. Fetch from the static file.
    */
   licenseContentSeznam: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -212,8 +217,11 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     }
     if (this.userMetadata$.value?.page) {
       // Filter the page array to exclude items with metadataKey "IP"
+      // and exclude items that are not in the requiredInfo list
       this.userMetadata$.value.page =
-        this.userMetadata$.value.page.filter(item => item.metadataKey !== 'IP');
+        this.userMetadata$.value.page.filter(item => item.metadataKey !== 'IP' &&
+          this.requiredInfo$?.value?.some(requiredInfo =>
+            requiredInfo.name === item.metadataKey));
     }
     // Add IP address into request. Every restricted download must have stored IP address in the `user_metadata` table.
     this.userMetadata$.value?.page.push(Object.assign(new ClarinUserMetadata(), {
@@ -425,13 +433,18 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
     // Every requiredInfo.name === userMetadata.metadataKey must have the value in the userMetadata.metadataValue
     this.requiredInfo$?.value?.forEach(requiredInfo => {
       let hasMetadataValue = false;
-      this.userMetadata$?.value?.page?.forEach(userMetadata => {
-        if (userMetadata.metadataKey === requiredInfo.name) {
-          if (isNotEmpty(userMetadata.metadataValue)) {
-            hasMetadataValue = true;
+      // The OPTIONAL metadata keys don't require user input, so we consider them as filled in
+      if (this.OPTIONAL_METADATA_KEYS.includes(requiredInfo.name)) {
+        hasMetadataValue = true;
+      } else {
+        this.userMetadata$?.value?.page?.forEach(userMetadata => {
+          if (userMetadata.metadataKey === requiredInfo.name) {
+            if (isNotEmpty(userMetadata.metadataValue)) {
+              hasMetadataValue = true;
+            }
           }
-        }
-      });
+        });
+      }
       areFilledIn.push(hasMetadataValue);
     });
 
