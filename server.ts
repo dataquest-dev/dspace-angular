@@ -224,11 +224,11 @@ export function app() {
    * SSR cache contents for operators on this host (see cache.serverSide.stats). With stats.port = 0 they are
    * served here, but only to requests made directly from this host: loopback socket address (not req.ip, which
    * honours X-Forwarded-For when `trust proxy` is on) and no proxy headers, so traffic relayed by a same-host
-   * reverse proxy is refused too. Everyone else gets the same 404 as an unknown route.
+   * reverse proxy is refused too. Everyone else falls through to the catch-all route, exactly as for an unknown path.
    */
   if (environment.cache.serverSide.stats.enabled && environment.cache.serverSide.stats.port === 0) {
     const statsHandler = createSsrCacheStatsHandler(collectCacheStats);
-    server.get(SSR_CACHE_STATS_PATH, (req, res) => isDirectLoopbackRequest(req) ? statsHandler(req, res) : res.sendStatus(404));
+    server.get(SSR_CACHE_STATS_PATH, (req, res, next) => isDirectLoopbackRequest(req) ? statsHandler(req, res) : next());
   }
 
   /**
@@ -678,8 +678,8 @@ function collectCacheStats(): SsrCacheStats {
     uptimeSeconds: Math.round(process.uptime()),
     memory: { rss: memory.rss, heapUsed: memory.heapUsed },
     caches: [
-      snapshotCache('bot', botCache, environment.production && botCacheEnabled()),
-      snapshotCache('anonymous', anonymousCache, environment.production && anonymousCacheEnabled())
+      snapshotCache('bot', botCache, !!(environment.production && botCacheEnabled())),
+      snapshotCache('anonymous', anonymousCache, !!(environment.production && anonymousCacheEnabled()))
     ]
   };
 }
@@ -687,13 +687,20 @@ function collectCacheStats(): SsrCacheStats {
 /**
  * Serve the cache stats on a loopback-only port of their own. Every pm2 cluster worker gets basePort + its
  * instance number, because a port shared by the workers would be answered by an arbitrary one.
- * A failed bind is logged and never stops the UI.
+ * An invalid port or a failed bind is logged and never stops the UI.
  */
 function startCacheStatsServer(basePort: number) {
   const port = basePort + CLUSTER_INSTANCE;
-  const statsServer = startSsrCacheStatsServer(port, collectCacheStats);
+  const notStarted = (e: Error) => console.error(`SSR cache stats server not started on port ${port}: ${e.message}`);
+  let statsServer: ReturnType<typeof startSsrCacheStatsServer>;
+  try {
+    statsServer = startSsrCacheStatsServer(port, collectCacheStats);
+  } catch (e) {
+    notStarted(e);
+    return;
+  }
   statsServer.on('listening', () => console.log(`SSR cache stats listening at http://127.0.0.1:${port}${SSR_CACHE_STATS_PATH}`));
-  statsServer.on('error', (e: Error) => console.error(`SSR cache stats server not started on port ${port}: ${e.message}`));
+  statsServer.on('error', notStarted);
   process.on('SIGINT', () => statsServer.close());
 }
 
