@@ -81,6 +81,18 @@ test('stats server listens on loopback and answers only GET /app/cache-stats', a
   }
 });
 
+test('stats server answers 500 when the snapshot throws', async () => {
+  const server = startSsrCacheStatsServer(0, () => { throw new Error('boom'); });
+  try {
+    await once(server, 'listening');
+    const response = await fetch(`http://127.0.0.1:${server.address().port}/app/cache-stats`);
+    assert.equal(response.status, 500);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
 test('direct loopback check accepts local sockets without proxy headers only', () => {
   const request = (remoteAddress, headers = {}) => ({ socket: { remoteAddress }, headers });
   for (const address of ['127.0.0.1', '::1', '::ffff:127.0.0.1']) {

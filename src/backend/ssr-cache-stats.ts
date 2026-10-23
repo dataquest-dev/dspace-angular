@@ -42,7 +42,7 @@ export const SSR_CACHE_STATS_PATH = '/app/cache-stats';
 /**
  * Describe every entry resident in an SSR page cache, largest page first.
  * `dump()` visits stale entries too (unlike `forEach`, which skips them when `allowStale` is false);
- * `dump()`, `peek()` and `has()` leave recency and TTL untouched. Byte counting is O(total cached HTML).
+ * `dump()` and `has()` leave recency and TTL untouched. Byte counting is O(total cached HTML).
  */
 export function snapshotCache(name: string, cache: LRU<string, SsrCacheEntry> | undefined, enabled: boolean): SsrCacheSnapshot {
   const entries: SsrCacheEntryStats[] = [];
