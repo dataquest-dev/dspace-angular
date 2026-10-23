@@ -247,7 +247,7 @@ export function app() {
    */
   if (environment.cache.serverSide.stats.enabled && environment.cache.serverSide.stats.port === 0) {
     const statsHandler = createSsrCacheStatsHandler(collectCacheStats);
-    server.get(SSR_CACHE_STATS_PATH, (req, res, next) => isDirectLoopbackRequest(req) ? statsHandler(req, res) : next());
+    server.get(SSR_CACHE_STATS_PATH, (req, res, next) => req.method === 'GET' && isDirectLoopbackRequest(req) ? statsHandler(req, res) : next());
   }
 
   /**
@@ -635,11 +635,15 @@ function collectCacheStats(): SsrCacheStats {
 /**
  * Serve the cache stats on a loopback-only port of their own. Every pm2 cluster worker gets basePort + its
  * instance number, because a port shared by the workers would be answered by an arbitrary one.
- * An invalid port or a failed bind is logged and never stops the UI.
+ * An invalid port, a clash with the UI port or a failed bind is logged and never stops the UI.
  */
 function startCacheStatsServer(basePort: number) {
   const port = basePort + CLUSTER_INSTANCE;
-  const notStarted = (e: Error) => console.error(`SSR cache stats server not started on port ${port}: ${e.message}`);
+  const notStarted = (e: unknown) => console.error(`SSR cache stats server not started on port ${port}: ${e instanceof Error ? e.message : String(e)}`);
+  if (port === environment.ui.port) {
+    notStarted('it is the UI port');
+    return;
+  }
   let statsServer: ReturnType<typeof startSsrCacheStatsServer>;
   try {
     statsServer = startSsrCacheStatsServer(port, collectCacheStats);
@@ -655,8 +659,14 @@ function startCacheStatsServer(basePort: number) {
 function start() {
   logStartupMessage(environment);
 
-  if (environment.cache.serverSide.stats.enabled && environment.cache.serverSide.stats.port > 0) {
-    startCacheStatsServer(environment.cache.serverSide.stats.port);
+  const statsConfig = environment.cache.serverSide.stats;
+  if (statsConfig.enabled && statsConfig.port !== 0) {
+    // port 0 is served by the Express app, see app()
+    if (Number.isInteger(statsConfig.port) && statsConfig.port > 0) {
+      startCacheStatsServer(statsConfig.port);
+    } else {
+      console.error(`SSR cache stats server not started: invalid port ${JSON.stringify(statsConfig.port)}`);
+    }
   }
 
   /*
