@@ -70,7 +70,10 @@ test('stats server listens on loopback and answers only GET /app/cache-stats', a
     assert.equal(json.headers.get('cache-control'), 'no-store');
     assert.deepEqual(await json.json(), payload);
 
+    assert.equal((await fetch(`${base}/app/cache-stats?x=1`)).status, 200);
     assert.equal((await fetch(`${base}/other`)).status, 404);
+    assert.equal((await fetch(`${base}/app/cache-stats/`)).status, 404);
+    assert.equal((await fetch(`${base}/app/cache-stats`, { method: 'HEAD' })).status, 404);
     assert.equal((await fetch(`${base}/app/cache-stats`, { method: 'POST' })).status, 404);
 
   } finally {
