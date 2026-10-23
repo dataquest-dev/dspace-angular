@@ -207,6 +207,9 @@ export class ClarinLicenseAgreementPageComponent implements OnInit {
       CLARIN_USER_METADATA_MANAGE;
     url += this.isDownloadingZIP() ? '/zip?itemUUID=' + this.item$.value.uuid : '?bitstreamUUID=' +
       this.getBitstreamUUID();
+    if (isEmpty(this.userMetadata$.value) || isEmpty(this.userMetadata$.value.page)) {
+      this.userMetadata$.next(buildPaginatedList(undefined, [], false, undefined));
+    }
     if (this.userMetadata$.value?.page) {
       // Filter the page array to exclude items with metadataKey "IP"
       this.userMetadata$.value.page =
