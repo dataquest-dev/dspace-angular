@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "test:rest": "ts-node --project ./tsconfig.ts-node.json scripts/test-rest.ts",
+    "test:ssr-cache-stats": "node --test scripts/test-ssr-cache-stats.js",
     "start": "npm run start:prod",
     "start:dev": "cross-env NODE_ENV=development npm run serve --watch",
     "start:prod": "npm run build:prod && cross-env NODE_ENV=production npm run serve:ssr",

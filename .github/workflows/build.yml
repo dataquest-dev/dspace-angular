@@ -90,6 +90,9 @@ jobs:
       - name: Run lint
         run: npm run lint:nobuild -- --quiet
 
+      - name: Run SSR cache stats tests
+        run: npm run test:ssr-cache-stats
+
       - name: Check for circular dependencies
         run: npm run check-circ-deps
 
