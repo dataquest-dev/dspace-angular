@@ -8,7 +8,7 @@ import { ClarinLicenseDataService } from '../../../core/data/clarin/clarin-licen
 import { getFirstCompletedRemoteData, getFirstSucceededRemoteListPayload } from '../../../core/shared/operators';
 import { PaginatedList } from '../../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../../core/shared/clarin/clarin-license.model';
-import { FindListOptions } from '../../../core/data/find-list-options.model';
+import { FindListOptions, MAX_PAGE_SIZE } from '../../../core/data/find-list-options.model';
 import { PutRequest } from '../../../core/data/request.models';
 import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { RequestService } from '../../../core/data/request.service';
@@ -90,7 +90,7 @@ export class ItemLicenseMapperComponent implements OnInit {
       const options = new FindListOptions();
       options.currentPage = 0;
       // Load all licenses
-      options.elementsPerPage = 1000;
+      options.elementsPerPage = MAX_PAGE_SIZE;
 
       this.clarinLicenseService.findAll(options, false)
         .pipe(

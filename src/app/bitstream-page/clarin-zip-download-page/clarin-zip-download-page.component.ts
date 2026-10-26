@@ -20,6 +20,7 @@ import { BitstreamDataService } from '../../core/data/bitstream-data.service';
 import { createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
+import { MAX_PAGE_SIZE } from '../../core/data/find-list-options.model';
 
 /**
  * Fetch ZIP file from the server as a single file into `bitstreamRD$` property which is extended and then call
@@ -59,7 +60,7 @@ export class ClarinZipDownloadPageComponent extends ClarinBitstreamDownloadPageC
     this.itemRD$.subscribe((itemRD: RemoteData<Item>)  => {
       this.bitstreamDataService.findAllByItemAndBundleName(itemRD?.payload, 'ORIGINAL', {
         currentPage: 1,
-        elementsPerPage: 9999
+        elementsPerPage: MAX_PAGE_SIZE
       }).pipe(
         getFirstCompletedRemoteData(),
       ).subscribe((bitstreamsRD: RemoteData<PaginatedList<Bitstream>>) => {

@@ -5,6 +5,7 @@ import { ItemVersionsComponent } from '../../../versions/item-versions.component
 import { Item } from '../../../../core/shared/item.model';
 import { Version } from '../../../../core/shared/version.model';
 import { RemoteData } from '../../../../core/data/remote-data';
+import { MAX_PAGE_SIZE } from '../../../../core/data/find-list-options.model';
 
 /**
  * Local type definition matching the parent component's VersionsDTO structure
@@ -43,7 +44,7 @@ export class ClarinItemVersionsFieldComponent extends ItemVersionsComponent impl
   /**
    * Maximum number of versions to fetch at once for the dropdown display.
    */
-  private readonly MAX_VERSIONS_TO_DISPLAY = 9999;
+  private readonly MAX_VERSIONS_TO_DISPLAY = MAX_PAGE_SIZE;
 
   /**
    * Icon name for the clarin field
