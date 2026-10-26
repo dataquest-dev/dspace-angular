@@ -2,6 +2,7 @@ import {
   ComponentFixture,
   TestBed,
 } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
@@ -10,7 +11,10 @@ import { buildPaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
 import { PageInfo } from '../../core/shared/page-info.model';
-import { createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
+import {
+  createFailedRemoteDataObject$,
+  createSuccessfulRemoteDataObject$,
+} from '../../shared/remote-data.utils';
 import {
   createdLicenseRD$,
   mockLicenseRD$,
@@ -45,6 +49,7 @@ describe('ClarinAllLicensesPageComponent', () => {
       ],
       providers: [
         { provide: ClarinLicenseDataService, useValue: clarinLicenseDataService },
+        provideNoopAnimations(),
       ],
     }).compileComponents();
 
@@ -77,6 +82,17 @@ describe('ClarinAllLicensesPageComponent', () => {
     component.loadAllLicenses();
 
     expect(component.isLoading).toBeFalse();
+  });
+
+  it('should stop loading and show an error when the licences fail to load', () => {
+    (clarinLicenseDataService.findAll as jasmine.Spy).and.returnValue(createFailedRemoteDataObject$('error', 500));
+
+    component.loadAllLicenses();
+    fixture.detectChanges();
+
+    expect(component.isLoading).toBeFalse();
+    expect(fixture.nativeElement.querySelector('ds-loading')).toBeNull();
+    expect(fixture.nativeElement.querySelector('ds-error')).not.toBeNull();
   });
 
   it('should deserialize a required info string into objects', () => {

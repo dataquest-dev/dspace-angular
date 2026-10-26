@@ -2209,6 +2209,9 @@
   // "clarin.license.all-page.labels": "Labels:",
   "clarin.license.all-page.labels": "Štítky:",
 
+  // "clarin.license.all-page.load-error": "The licenses could not be loaded.",
+  "clarin.license.all-page.load-error": "Licence se nepodařilo načíst.",
+
   // "clarin.license.all-page.source": "Source:",
   "clarin.license.all-page.source": "Zdroj:",
 

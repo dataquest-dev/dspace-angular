@@ -4,6 +4,9 @@
     @if (isLoading) {
       <ds-loading class="text-center"></ds-loading>
     }
+    @if (hasLoadError) {
+      <ds-error message="{{ 'clarin.license.all-page.load-error' | translate }}"></ds-error>
+    }
     @for (clarinLicense of (licensesRD$ | async); track clarinLicense) {
       <div class="card-body">
         <h6 class="card-header border-bottom-0 license-card-border"><a [href]="clarinLicense?.definition">{{ clarinLicense?.name }}</a></h6>
