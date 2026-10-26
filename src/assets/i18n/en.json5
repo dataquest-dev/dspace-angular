@@ -5804,6 +5804,8 @@
 
   "clarin.license.all-page.extra-information.default": "NONE",
 
+  "clarin.license.all-page.load-error": "The licenses could not be loaded.",
+
   "browse.comcol.by.language": "By Language",
 
   "browse.metadata.language": "Language",
