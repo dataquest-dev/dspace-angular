@@ -60,7 +60,7 @@ const archiveFormats = [
 const allowedPreviewFormats = archiveFormats.concat(['text/plain',  'text/html']);
 
 @Component({
-  selector: 'ds-file-description',
+  selector: 'ds-file-description',
   imports: [
     CommonModule,
     FileSizePipe,

@@ -17,7 +17,7 @@ import { ClarinLicenseRequiredInfoSerializer } from '../../core/shared/clarin/cl
 import { getFirstSucceededRemoteListPayload } from '../../core/shared/operators';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
 
-@Component({
+@Component({
   imports: [
     CommonModule,
     ThemedLoadingComponent,
