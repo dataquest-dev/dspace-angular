@@ -297,7 +297,7 @@ jobs:
 
       # If any prior step errors out, upload backend logs to artifact
       - name: Upload backend logs to artifact (on failure only)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: backend-logs-${{ matrix.node-version }}
