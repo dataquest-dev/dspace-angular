@@ -33,6 +33,7 @@ import { createHttpTerminator } from 'http-terminator';
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { hostname } from 'os';
 
 import { enableProdMode } from '@angular/core';
 
@@ -58,6 +59,15 @@ import {
   RESPONSE,
 } from './src/express.tokens';
 import { SsrExcludePatterns } from "./src/config/ssr-config.interface";
+import {
+  createSsrCacheStatsHandler,
+  isDirectLoopbackRequest,
+  snapshotCache,
+  SSR_CACHE_STATS_PATH,
+  SsrCacheEntry,
+  SsrCacheStats,
+  startSsrCacheStatsServer
+} from './src/backend/ssr-cache-stats';
 
 /*
  * Set path for the browser application's dist folder
@@ -77,10 +87,10 @@ appConfig.themes.forEach(themeConfig => hashedFileMapping.addThemeStyle(themeCon
 hashedFileMapping.save();
 
 // cache of SSR pages for known bots, only enabled in production mode
-let botCache: LRUCache<string, any>;
+let botCache: LRUCache<string, SsrCacheEntry>;
 
 // cache of SSR pages for anonymous users. Disabled by default, and only available in production mode
-let anonymousCache: LRUCache<string, any>;
+let anonymousCache: LRUCache<string, SsrCacheEntry>;
 
 // extend environment with app config for server
 extendEnvironmentWithAppConfig(environment, appConfig);
@@ -209,6 +219,21 @@ export function app() {
    * Checking server status
    */
   server.get('/app/health', healthCheck);
+
+  /**
+   * SSR cache contents for operators on this host (see cache.serverSide.stats). With stats.port = 0 they are
+   * served here, but only to requests made directly from this host: loopback socket address (not req.ip, which
+   * honours X-Forwarded-For when `trust proxy` is on) and no proxy headers, so traffic relayed by a same-host
+   * reverse proxy is refused too. Everyone else falls through to the catch-all route, exactly as for an unknown path.
+   */
+  if (environment.cache.serverSide.stats.enabled && environment.cache.serverSide.stats.port === 0) {
+    if (environment.ui.useProxies) {
+      console.warn('SSR cache stats are served on the UI port behind a proxy; a same-host proxy adding no forwarding headers would expose them. Prefer cache.serverSide.stats.port > 0.');
+    }
+    const statsHandler = createSsrCacheStatsHandler(collectCacheStats);
+    server.get(SSR_CACHE_STATS_PATH, (req, res, next) =>
+      req.method === 'GET' && req.path === SSR_CACHE_STATS_PATH && isDirectLoopbackRequest(req) ? statsHandler(req, res) : next());
+  }
 
   /**
    * Default sending all incoming requests to ngApp() function, after first checking for a cached
@@ -644,8 +669,65 @@ function run() {
   });
 }
 
+/** pm2 cluster mode numbers its workers 0..n-1 in NODE_APP_INSTANCE; a single process reports 0. */
+const CLUSTER_INSTANCE = Number(process.env.NODE_APP_INSTANCE) || 0;
+
+function collectCacheStats(): SsrCacheStats {
+  const memory = process.memoryUsage();
+  return {
+    host: hostname(),
+    pid: process.pid,
+    instance: CLUSTER_INSTANCE,
+    generatedAt: new Date().toISOString(),
+    uptimeSeconds: Math.round(process.uptime()),
+    memory: { rss: memory.rss, heapUsed: memory.heapUsed },
+    caches: [
+      snapshotCache('bot', botCache, !!(environment.production && botCacheEnabled())),
+      snapshotCache('anonymous', anonymousCache, !!(environment.production && anonymousCacheEnabled()))
+    ]
+  };
+}
+
+/**
+ * Serve the cache stats on a loopback-only port of their own. Every pm2 cluster worker gets basePort + its
+ * instance number, because a port shared by the workers would be answered by an arbitrary one.
+ * An invalid port, a clash with the UI port or a failed bind is logged and never stops the UI.
+ */
+function startCacheStatsServer(basePort: number) {
+  const port = basePort + CLUSTER_INSTANCE;
+  const notStarted = (e: unknown) => console.error(`SSR cache stats server not started on port ${port}: ${e instanceof Error ? e.message : String(e)}`);
+  if (port === environment.ui.port) {
+    notStarted('it is the UI port');
+    return;
+  }
+  let statsServer: ReturnType<typeof startSsrCacheStatsServer>;
+  try {
+    statsServer = startSsrCacheStatsServer(port, collectCacheStats);
+  } catch (e) {
+    notStarted(e);
+    return;
+  }
+  let listening = false;
+  statsServer.on('listening', () => {
+    listening = true;
+    console.log(`SSR cache stats listening at http://127.0.0.1:${port}${SSR_CACHE_STATS_PATH}`);
+  });
+  statsServer.on('error', (e: Error) => listening ? console.error(`SSR cache stats server on port ${port}: ${e.message}`) : notStarted(e));
+  process.on('SIGINT', () => statsServer.close());
+}
+
 function start() {
   logStartupMessage(environment);
+
+  const statsConfig = environment.cache.serverSide.stats;
+  if (statsConfig.enabled && statsConfig.port !== 0) {
+    // port 0 is served by the Express app, see app()
+    if (Number.isInteger(statsConfig.port) && statsConfig.port > 0) {
+      startCacheStatsServer(statsConfig.port);
+    } else {
+      console.error(`SSR cache stats server not started: invalid port ${JSON.stringify(statsConfig.port)}`);
+    }
+  }
 
   /*
   * If SSL is enabled

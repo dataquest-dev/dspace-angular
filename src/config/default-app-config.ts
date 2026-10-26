@@ -96,6 +96,11 @@ export class DefaultAppConfig implements AppConfig {
       debug: false,
       // Link header is used for signposting functionality
       headers: ['Link'],
+      // Cache stats endpoint for operators, off by default
+      stats: {
+        enabled: false,
+        port: 0,
+      },
       // Cache specific to known bots.  Allows you to serve cached contents to bots only.
       // Defaults to caching 1,000 pages. Each page expires after 1 day
       botCache: {
