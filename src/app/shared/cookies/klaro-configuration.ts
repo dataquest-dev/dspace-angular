@@ -3,6 +3,7 @@ import { IMPERSONATING_COOKIE, REDIRECT_COOKIE } from '../../core/auth/auth.serv
 import { LANG_COOKIE } from '../../core/locale/locale.service';
 import { CAPTCHA_COOKIE, CAPTCHA_NAME } from '../../core/google-recaptcha/google-recaptcha.service';
 import { ACCESSIBILITY_COOKIE } from '../../accessibility/accessibility-settings.service';
+import { MATOMO_CONSENT_CALLBACK, MATOMO_KLARO_KEY } from '../../statistics/matomo-consent-tracker';
 
 /**
  * Cookie for has_agreed_end_user
@@ -192,6 +193,12 @@ export const klaroConfiguration: any = {
       re-enables them due to a consent change by the user.
       */
       onlyOnce: true,
+    },
+    {
+      name: MATOMO_KLARO_KEY,
+      purposes: ['statistical'],
+      required: false,
+      callback: (consent: boolean) => (window as any)[MATOMO_CONSENT_CALLBACK]?.(consent),
     },
     {
       name: CAPTCHA_NAME,
