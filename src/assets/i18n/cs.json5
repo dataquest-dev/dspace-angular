@@ -7197,8 +7197,8 @@
   // "submission.sections.upload.header.policy.default.withlist": "Please note that uploaded files in the {{collectionName}} collection will be accessible, in addition to what is explicitly decided for the single file, with the following group(s):",
   "submission.sections.upload.header.policy.default.withlist": "Vezměte prosím na vědomí, že nahrané soubory v kolekci {{collectionName}} budou kromě toho, co je explicitně rozhodnuto pro jednotlivý soubor, přístupné podle následujících skupin:",
 
-  // "submission.sections.upload.info": "Here you will find all the files currently in the item. You can update the file metadata and access conditions or <strong>upload additional files by dragging & dropping them anywhere on the page.</strong>",
-  "submission.sections.upload.info": "Zde najdete všechny soubory, které jsou aktuálně v záznamu. Můžete aktualizovat metadata souborů a podmínky přístupu nebo <strong>nahrát další soubory pouhým přetažením kdekoli na stránku</strong>.",
+  // "submission.sections.upload.info": "Here you will find all the files currently in the item. You can update the file metadata and access conditions or <strong>upload additional files by dragging & dropping them anywhere on the page.</strong><br/>When uploading language resources, please try to use one of the recommended formats mentioned in the <a href=\"https://standards.clarin.eu/sis/views/view-centre.xq?id=LINDAT\" target=\"_blank\" rel=\"noopener noreferrer\">CLARIN Standards Information System</a>.",
+  "submission.sections.upload.info": "Zde najdete všechny soubory, které jsou aktuálně v záznamu. Můžete aktualizovat metadata souborů a podmínky přístupu nebo <strong>nahrát další soubory pouhým přetažením kdekoli na stránku</strong>.<br/>Při nahrávání jazykových zdrojů zkuste prosím použít některý z doporučených formátů, uvedených v <a href=\"https://standards.clarin.eu/sis/views/view-centre.xq?id=LINDAT\" target=\"_blank\" rel=\"noopener noreferrer\">CLARIN Standards Information System</a>.",
 
   // "submission.sections.upload.no-entry": "No",
   "submission.sections.upload.no-entry": "Ne",
