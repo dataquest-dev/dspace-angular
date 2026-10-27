@@ -23,7 +23,9 @@ export class LocaleInterceptor implements HttpInterceptor {
    */
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let newReq: HttpRequest<any>;
-    return this.localeService.getLanguageCodeList(this.isNeededForEPersonLanguage(req.url))
+    const ignoreEPersonSettings: boolean = this.shouldIgnoreEPersonSettings(req.url);
+
+    return this.localeService.getLanguageCodeList(ignoreEPersonSettings)
       .pipe(
         take(1),
         scan((acc: any, value: any) => [...acc, value], []),
@@ -39,11 +41,10 @@ export class LocaleInterceptor implements HttpInterceptor {
   }
 
   /**
-   * The EPerson's language is read through the root and the EPerson endpoints, so requests to them
-   * can't wait for it: they would wait for themselves and block every other request.
+   * Avoid recursive EPerson language lookup for requests that are needed to resolve EPerson itself.
    */
-  private isNeededForEPersonLanguage(url: string): boolean {
-    const root = this.halEndpointService.getRootHref();
-    return url === root || url.startsWith(`${root}/eperson/epersons/`);
+  private shouldIgnoreEPersonSettings(url: string): boolean {
+    const rootHref = this.halEndpointService.getRootHref();
+    return url === rootHref || url.startsWith(`${rootHref}/eperson/epersons`);
   }
 }
