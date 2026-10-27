@@ -1,5 +1,5 @@
 import { isPlatformServer } from '@angular/common';
-import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { firstValueFrom, of as observableOf } from 'rxjs';
@@ -7,7 +7,6 @@ import { HTML_SUFFIX, STATIC_FILES_PROJECT_PATH } from '../static-page/static-pa
 import { isEmpty } from './empty.util';
 import { LocaleService } from '../core/locale/locale.service';
 import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
-import { REQUEST } from '@nguniversal/express-engine/tokens';
 
 /**
  * Service for loading static `.html` files stored in the `/static-files` folder.
@@ -18,7 +17,6 @@ export class HtmlContentService {
               private localeService: LocaleService,
               @Inject(APP_CONFIG) protected appConfig?: AppConfig,
               @Inject(PLATFORM_ID) private platformId?: object,
-              @Optional() @Inject(REQUEST) private request?: any,
             ) {}
 
   private getNamespacePrefix(): string {
@@ -45,17 +43,12 @@ export class HtmlContentService {
   }
 
   private buildRuntimeUrl(path: string): string {
-    if (!isPlatformServer(this.platformId) || !this.request) {
+    if (!isPlatformServer(this.platformId)) {
       return path;
     }
 
-    const protocol = this.request.protocol;
-    const host = this.request.get?.('host');
-    if (!protocol || !host) {
-      return path;
-    }
-
-    return `${protocol}://${host}${path}`;
+    // The request Host header is client-controlled; SSR loads static HTML only from the configured UI origin.
+    return `${new URL(this.appConfig.ui.baseUrl).origin}${path}`;
   }
 
   getHtmlContent(url: string) {
