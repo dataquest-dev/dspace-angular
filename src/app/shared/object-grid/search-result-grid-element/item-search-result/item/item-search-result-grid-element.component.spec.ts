@@ -83,6 +83,26 @@ mockItemWithAbstractOnly.indexableObject = Object.assign(new Item(), {
     ]
   }
 });
+const htmlDescription = 'Read more <a href="https://example.org/">here</a><img src="https://example.org/pixel.png">';
+const mockItemWithHtmlDescription: ItemSearchResult = new ItemSearchResult();
+mockItemWithHtmlDescription.hitHighlights = {};
+mockItemWithHtmlDescription.indexableObject = Object.assign(new Item(), {
+  bundles: createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [])),
+  metadata: {
+    'dc.title': [
+      {
+        language: 'en_US',
+        value: dcTitle
+      }
+    ],
+    'dc.description': [
+      {
+        language: 'en_US',
+        value: htmlDescription
+      }
+    ]
+  }
+});
 const mockPerson: ItemSearchResult = Object.assign(new ItemSearchResult(), {
   hitHighlights: {
     'person.familyName': [{
@@ -206,7 +226,7 @@ mockItemWithoutMetadata.indexableObject = Object.assign(new Item(), {
   }
 });
 
-describe('ItemGridElementComponent', getEntityGridElementTestComponent(ItemSearchResultGridElementComponent, mockItemWithMetadata, mockItemWithoutMetadata, ['authors', 'date', 'abstract'], mockItemWithAbstractOnly));
+describe('ItemGridElementComponent', getEntityGridElementTestComponent(ItemSearchResultGridElementComponent, mockItemWithMetadata, mockItemWithoutMetadata, ['authors', 'date', 'abstract'], mockItemWithAbstractOnly, mockItemWithHtmlDescription));
 
 /**
  * Create test cases for a grid component of an entity.
@@ -216,6 +236,8 @@ describe('ItemGridElementComponent', getEntityGridElementTestComponent(ItemSearc
  * @param fieldsToCheck                 A list of fields to check. The tests expect to find html elements with class ".item-${field}", so make sure they exist in the html template of the grid element.
  *                                      For example: If one of the fields to check is labeled "authors", the html template should contain at least one element with class ".item-authors" that's
  *                                      present when the author metadata is available.
+ * @param searchResultWithHtmlDescription An optional ItemSearchResult containing an item whose dc.description is HTML markup,
+ *                                      which must be rendered as text in the ".item-abstract" or ".item-description" field
  */
 export function getEntityGridElementTestComponent(
   component,
@@ -223,6 +245,7 @@ export function getEntityGridElementTestComponent(
   searchResultWithoutMetadata: ItemSearchResult,
   fieldsToCheck: string[],
   searchResultWithAbstractOnly?: ItemSearchResult,
+  searchResultWithHtmlDescription?: ItemSearchResult,
 ) {
   return () => {
     let comp;
@@ -280,6 +303,22 @@ export function getEntityGridElementTestComponent(
         it('should not show abstract field', () => {
           const abstractField = fixture.debugElement.query(By.css('.item-abstract'));
           expect(abstractField).toBeNull();
+        });
+      });
+    }
+
+    if (searchResultWithHtmlDescription) {
+      describe('when the item has HTML markup in dc.description', () => {
+        beforeEach(() => {
+          comp.object = searchResultWithHtmlDescription;
+          fixture.detectChanges();
+        });
+
+        it('should render the markup as text, not as elements', () => {
+          const descriptionField = fixture.debugElement.query(By.css('.item-abstract, .item-description'));
+          expect(descriptionField.query(By.css('a, img'))).toBeNull();
+          expect(descriptionField.nativeElement.textContent.trim())
+            .toEqual(searchResultWithHtmlDescription.indexableObject.firstMetadataValue('dc.description'));
         });
       });
     }
