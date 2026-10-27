@@ -2,11 +2,6 @@ import { MatomoConfig } from '../../config/matomo-config';
 import { hasValue, isNotEmpty } from '../shared/empty.util';
 
 /**
- * Name of the Matomo service in the Klaro configuration
- */
-export const MATOMO_KLARO_KEY = 'matomo';
-
-/**
  * Window function through which the Klaro Matomo service reports the visitor's consent
  */
 export const MATOMO_CONSENT_CALLBACK = 'changeMatomoConsent';
@@ -64,9 +59,13 @@ export class MatomoConsentTracker {
       return;
     }
     this.consent = consent;
+    this.dimension = undefined;
     if (consent) {
       this.load();
-      this.push('setConsentGiven');
+      // A function keeps its queue position; a queued 'setConsentGiven' name would run before 'forgetConsentGiven'
+      this.push(function () {
+        this.setConsentGiven();
+      });
       this.trackPendingPageView();
     } else {
       this.push('forgetConsentGiven');
@@ -74,13 +73,13 @@ export class MatomoConsentTracker {
   }
 
   /**
-   * Remember the item identifier of a page_view event for the next page view
+   * Remember the item identifier of a page_view event, if any, for the next page view
    * @param action     the Angulartics event action
    * @param properties the Angulartics event properties
    */
   eventTrack(action: string, properties?: any): void {
-    if (action === PAGE_VIEW_ACTION && isNotEmpty(properties?.dc_identifier)) {
-      this.dimension = properties.dc_identifier;
+    if (action === PAGE_VIEW_ACTION) {
+      this.dimension = properties?.dc_identifier;
     }
   }
 
@@ -135,7 +134,7 @@ export class MatomoConsentTracker {
   }
 
   private isConfigured(): boolean {
-    return isNotEmpty(this.config?.hostUrl) && isNotEmpty(this.config?.siteId);
+    return [this.config?.hostUrl, this.config?.siteId].every((value) => isNotEmpty(`${value ?? ''}`.trim()));
   }
 
   private push(...command: unknown[]): void {

@@ -1,6 +1,6 @@
 import { MatomoConfig } from '../../config/matomo-config';
-import { klaroConfiguration } from '../shared/cookies/klaro-configuration';
-import { MATOMO_CONSENT_CALLBACK, MATOMO_KLARO_KEY, MatomoConsentTracker } from './matomo-consent-tracker';
+import { klaroConfiguration, MATOMO_KLARO_KEY } from '../shared/cookies/klaro-configuration';
+import { MATOMO_CONSENT_CALLBACK, MatomoConsentTracker } from './matomo-consent-tracker';
 
 describe('MatomoConsentTracker', () => {
   const config: MatomoConfig = { hostUrl: 'https://matomo.example.org/', siteId: '7', dimensionId: 3 };
@@ -44,21 +44,23 @@ describe('MatomoConsentTracker', () => {
     tracker.eventTrack('page_view', { dc_identifier: 'declined-item' });
     tracker.trackPage('/declined');
     tracker.trackPage('/current');
+    tracker.eventTrack('page_view', { dc_identifier: 'declined-unfinished-navigation' });
 
     expect(browser._paq).toContain(['forgetConsentGiven']);
     expect(trackedPages()).toEqual(['/accepted']);
     expect(requestProcessor()?.('link=declined')).toBe('');
 
     applyKlaroConsent(true);
+    tracker.trackPage('/next');
 
-    expect(trackedPages()).toEqual(['/accepted', '/current']);
+    expect(trackedPages()).toEqual(['/accepted', '/current', '/next']);
     expect(JSON.stringify(browser._paq)).not.toContain('declined');
     expect(requestProcessor()?.('link=accepted')).toBe('link=accepted');
     expect(loadedScripts()).toBe(1);
   });
 
   it('should not load Matomo without a tracker URL and site ID', () => {
-    [undefined, { ...config, hostUrl: '' }, { ...config, siteId: '' }].forEach((matomoConfig) => {
+    [undefined, { ...config, hostUrl: '' }, { ...config, siteId: '' }, { ...config, siteId: ' ' }].forEach((matomoConfig) => {
       const tracker = createTracker(matomoConfig);
       applyKlaroConsent(true);
       tracker.trackPage('/items/current');
