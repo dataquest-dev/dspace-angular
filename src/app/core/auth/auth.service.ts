@@ -456,7 +456,15 @@ export class AuthService {
 
     // Set the cookie expire date
     const expires = new Date(expireDate);
-    const options: CookieAttributes = {expires: expires};
+    // Harden the auth cookie: mark it Secure when the page is actually served over HTTPS so it
+    // is only sent over encrypted connections, and constrain it to same-site requests. 'lax'
+    // still allows the cookie on top-level navigations, which the external-auth redirect flow
+    // relies on.
+    const options: CookieAttributes = {
+      expires: expires,
+      secure: this._window.nativeWindow.location?.protocol === 'https:',
+      sameSite: 'lax',
+    };
 
     // Save cookie with the token
     return this.storage.set(TOKENITEM, token, options);
