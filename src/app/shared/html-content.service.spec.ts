@@ -127,6 +127,15 @@ describe('HtmlContentService', () => {
     expect(await promise).toBe('Trusted content');
   });
 
+  it('should not request a file name that leaves static-files once decoded', async () => {
+    setup('/repository');
+
+    const promise = service.getHmtlContentByPathAndLocale('..%2Findex');
+
+    httpMock.expectNone(() => true);
+    expect(await promise).toBeUndefined();
+  });
+
   it('should return empty string from getHtmlContent when request fails', async () => {
     setup('/repository');
 

@@ -85,9 +85,25 @@ export class HtmlContentService {
   }
 
   /**
+   * Whether a file name taken from the URL is still one file name once the server decodes it,
+   * so it cannot address a file outside `static-files` (e.g. `..%2Findex`). A query part is ignored.
+   */
+  private isPlainFileName(fileName: string): boolean {
+    try {
+      return !/[/\\]/.test(decodeURIComponent(fileName.split('?')[0]));
+    } catch {
+      // Missing name or malformed percent-encoding: nothing to load.
+      return false;
+    }
+  }
+
+  /**
    * Get the html file content as a string by the file name and the current locale.
    */
   async getHmtlContentByPathAndLocale(fileName: string) {
+    if (!this.isPlainFileName(fileName)) {
+      return undefined;
+    }
     let url = '';
     // Get current language
     let language = this.localeService.getCurrentLanguageCode();
