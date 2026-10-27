@@ -45,6 +45,8 @@ describe(`LocaleInterceptor`, () => {
     localeService = TestBed.inject(LocaleService);
 
     localeService.getCurrentLanguageCode.and.returnValue(of('en'));
+    localeService.getLanguageCodeList.calls.reset();
+    mockHalEndpointService.getRootHref.and.returnValue('server/api');
   });
 
   describe('', () => {
@@ -73,6 +75,22 @@ describe(`LocaleInterceptor`, () => {
       const lang = httpRequest.request.headers.get('Accept-Language');
       expect(lang).toBeDefined();
       expect(lang).toBe(languageList.toString());
+    });
+
+    it('should use the EPerson language for other requests', () => {
+      service.request(RestRequestMethod.GET, 'server/api/core/items/123').subscribe();
+      httpMock.expectOne('server/api/core/items/123');
+
+      expect(localeService.getLanguageCodeList).toHaveBeenCalledWith(false);
+    });
+
+    it('should not use the EPerson language for the root and EPerson requests, they load the EPerson', () => {
+      service.request(RestRequestMethod.GET, 'server/api').subscribe();
+      service.request(RestRequestMethod.GET, 'server/api/eperson/epersons/123').subscribe();
+      httpMock.expectOne('server/api');
+      httpMock.expectOne('server/api/eperson/epersons/123');
+
+      expect(localeService.getLanguageCodeList.calls.allArgs()).toEqual([[true], [true]]);
     });
 
   });
