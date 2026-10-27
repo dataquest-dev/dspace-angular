@@ -84,7 +84,7 @@ mockItemWithAbstractOnly.indexableObject = Object.assign(new Item(), {
   }
 });
 const htmlDescription = 'Read more <a href="https://example.org/">here</a><img src="https://example.org/pixel.png">';
-const mockItemWithHtmlDescription: ItemSearchResult = new ItemSearchResult();
+export const mockItemWithHtmlDescription: ItemSearchResult = new ItemSearchResult();
 mockItemWithHtmlDescription.hitHighlights = {};
 mockItemWithHtmlDescription.indexableObject = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [])),
