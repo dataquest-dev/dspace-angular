@@ -392,8 +392,8 @@ function cacheCheck(req, res, next) {
   // Cached copy of page (if found)
   let cachedCopy;
 
-  // If the bot cache is enabled and this request looks like a bot, check the bot cache for a cached page.
-  if (botCacheEnabled() && isbot(req.get('user-agent'))) {
+  // If the bot cache is enabled and this request looks like an anonymous bot, check the bot cache for a cached page.
+  if (botCacheEnabled() && isbot(req.get('user-agent')) && !isUserAuthenticated(req)) {
     cachedCopy = checkCacheForRequest('bot', botCache, req, res);
   } else if (anonymousCacheEnabled() && !isUserAuthenticated(req)) {
     cachedCopy = checkCacheForRequest('anonymous', anonymousCache, req, res);
