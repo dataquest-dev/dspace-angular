@@ -112,7 +112,7 @@ jobs:
       # https://github.com/cypress-io/github-action
       # (NOTE: to run these e2e tests locally, just use 'ng e2e')
       - name: Run e2e tests (integration tests)
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7.4.4
         with:
           # Cypress 12 has no "chrome-for-testing" browser and the runner's Chrome 155 times out,
           # so run in the Electron bundled with Cypress, as customer/TUL does
