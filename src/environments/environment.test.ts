@@ -84,6 +84,10 @@ export const environment: BuildConfig = {
     serverSide: {
       debug: false,
       headers: ['Link'],
+      stats: {
+        enabled: false,
+        port: 0,
+      },
       botCache: {
         max: 0,
         timeToLive: 24 * 60 * 60 * 1000, // 1 day

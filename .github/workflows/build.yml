@@ -83,6 +83,9 @@ jobs:
       - name: Run lint
         run: yarn run lint --quiet
 
+      - name: Run SSR cache stats tests
+        run: yarn run test:ssr-cache-stats
+
       - name: Check for circular dependencies
         run: yarn run check-circ-deps
 
