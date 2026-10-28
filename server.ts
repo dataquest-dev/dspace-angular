@@ -55,6 +55,7 @@ import { APP_CONFIG, AppConfig } from './src/config/app-config.interface';
 import { extendEnvironmentWithAppConfig } from './src/config/config.util';
 import { logStartupMessage } from './startup-message';
 import { TOKENITEM } from './src/app/core/auth/models/auth-token-info.model';
+import { getSsrCacheKey } from './src/app/shared/ssr-cache-key.util';
 import { SsrExcludePatterns } from './src/config/universal-config.interface';
 
 
@@ -385,14 +386,14 @@ function anonymousCacheEnabled(): boolean {
 
 /**
  * Check if the currently requested page is in our server-side, in-memory cache.
- * Caching is ONLY done for SSR requests. Pages are cached base on their path (e.g. /home or /search?query=test)
+ * Caching is ONLY done for SSR requests. Pages are cached by path, origin and language (see getSsrCacheKey)
  */
 function cacheCheck(req, res, next) {
   // Cached copy of page (if found)
   let cachedCopy;
 
-  // If the bot cache is enabled and this request looks like a bot, check the bot cache for a cached page.
-  if (botCacheEnabled() && isbot(req.get('user-agent'))) {
+  // If the bot cache is enabled and this request looks like an anonymous bot, check the bot cache for a cached page.
+  if (botCacheEnabled() && isbot(req.get('user-agent')) && !isUserAuthenticated(req)) {
     cachedCopy = checkCacheForRequest('bot', botCache, req, res);
   } else if (anonymousCacheEnabled() && !isUserAuthenticated(req)) {
     cachedCopy = checkCacheForRequest('anonymous', anonymousCache, req, res);
@@ -435,7 +436,7 @@ function cacheCheck(req, res, next) {
  */
 function checkCacheForRequest(cacheName: string, cache: LRU<string, any>, req, res): any {
   // Get the cache key for this request
-  const key = getCacheKey(req);
+  const key = getSsrCacheKey(req);
 
   // Check if this page is in our cache
   let cachedCopy = cache.get(key);
@@ -460,18 +461,6 @@ function checkCacheForRequest(cacheName: string, cache: LRU<string, any>, req, r
 }
 
 /**
- * Create a cache key from the current request.
- * The cache key is the URL path (NOTE: this key will also include any querystring params).
- * E.g. "/home" or "/search?query=test"
- * @param req current request
- * @returns cache key to use for this page
- */
-function getCacheKey(req): string {
-  // NOTE: this will return the URL path *without* any baseUrl
-  return req.url;
-}
-
-/**
  * Save page to server side cache(s), if enabled. If caching is not enabled or a user is authenticated, this is a noop
  * If multiple caches are enabled, the page will be saved to any caches where it does not yet exist (or is expired).
  * (This minimizes the number of times we need to run SSR on the same page.)
@@ -483,9 +472,9 @@ function saveToCache(req, page: any) {
   // NOTE: It's not safe to save page data to the cache when a user is authenticated. In that situation,
   // the page may include sensitive or user-specific materials. As the cache is shared across all users, it can only contain public info.
   if (!isUserAuthenticated(req)) {
-    const key = getCacheKey(req);
+    const key = getSsrCacheKey(req);
     // Avoid caching "/reload/[random]" paths (these are hard refreshes after logout)
-    if (key.startsWith('/reload')) { return; }
+    if (req.url.startsWith('/reload')) { return; }
     // Avoid caching not successful responses (status code different from 2XX status)
     if (hasNotSucceeded(req.res.statusCode)) { return; }
 
