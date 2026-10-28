@@ -47,7 +47,7 @@
               <td>{{mdEntry.key}}</td>
               <td>
                 <span *ngFor="let value of mdValue.value.split(SEPARATOR); let last=last;">
-                  <span [innerHTML]="makeLinks(value) | dsReplace: [';', ' ']" ></span>
+                  <span [innerHTML]="makeLinks(value | dsReplace: [';', ' '])" ></span>
                   <span *ngIf="!last" [innerHTML]="' '"></span>
                 </span>
               </td>

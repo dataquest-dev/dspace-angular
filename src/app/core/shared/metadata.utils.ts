@@ -42,7 +42,7 @@ export class Metadata {
         if (hitHighlights[mdKey]) {
           for (const candidate of hitHighlights[mdKey]) {
             if (Metadata.valueMatches(candidate as MetadataValue, filter)) {
-              matches.push(candidate as MetadataValue);
+              matches.push(escapeHTML ? Metadata.escapeHighlight(candidate as MetadataValue) : candidate as MetadataValue);
             }
           }
         }
@@ -98,7 +98,8 @@ export class Metadata {
       for (const key of Metadata.resolveKeys(hitHighlights, keyOrKeys)) {
         const values: MetadataValue[] = hitHighlights[key] as MetadataValue[];
         if (values) {
-          return values.find((value: MetadataValue) => Metadata.valueMatches(value, filter));
+          const result: MetadataValue = values.find((value: MetadataValue) => Metadata.valueMatches(value, filter));
+          return escapeHTML && result ? Metadata.escapeHighlight(result) : result;
         }
       }
     }
@@ -142,6 +143,16 @@ export class Metadata {
    */
   public static has(metadata: MetadataMapInterface, keyOrKeys: string | string[], hitHighlights?: MetadataMapInterface, filter?: MetadataValueFilter): boolean {
     return isNotUndefined(Metadata.first(metadata, keyOrKeys, hitHighlights, filter));
+  }
+
+  /**
+   * Escapes a hit highlight for `[innerHTML]`. Solr returns the stored value unescaped, so only the `<em>` tags it
+   * puts around the matched words are kept.
+   */
+  private static escapeHighlight(highlight: MetadataValue): MetadataValue {
+    return Object.assign(new MetadataValue(), highlight, {
+      value: escape(highlight.value).replace(/&lt;(\/?)em&gt;/g, '<$1em>'),
+    });
   }
 
   /**

@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import escape from 'lodash/escape';
 
 @Pipe({ name: 'dsEmphasize' })
 /**
@@ -40,9 +41,11 @@ export class EmphasizePipe implements PipeTransform {
    * @returns {any} Transformed haystack with the needle emphasized
    */
   transform(haystack, needle): any {
-    const escaped = this.escapeRegExp(needle);
-    const reg = new RegExp(escaped, 'gi');
-    return haystack.replace(reg, '<em>$&</em>');
+    const reg = new RegExp('(' + this.escapeRegExp(needle) + ')', 'gi');
+    // The matches are the odd parts. Everything is escaped, so the <em> tags are the only HTML.
+    return haystack.split(reg)
+      .map((part, i) => i % 2 === 0 ? escape(part) : '<em>' + escape(part) + '</em>')
+      .join('');
   }
 
   /**

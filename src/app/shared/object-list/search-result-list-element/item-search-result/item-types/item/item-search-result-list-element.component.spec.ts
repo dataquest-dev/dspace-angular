@@ -86,6 +86,26 @@ const mockItemWithHtmlDescription: ItemSearchResult = Object.assign(new ItemSear
       }
     })
 });
+const htmlAuthor = 'Smith <img src="https://example.org/pixel.png">';
+const mockItemWithHtmlAuthor: ItemSearchResult = Object.assign(new ItemSearchResult(), {
+  hitHighlights: {
+    'dc.contributor.author': [{
+      value: '<em>Smith</em> <img src="https://example.org/pixel.png">'
+    }],
+  },
+  indexableObject:
+    Object.assign(new Item(), {
+      bundles: observableOf({}),
+      metadata: {
+        'dc.contributor.author': [
+          {
+            language: 'en_US',
+            value: htmlAuthor
+          }
+        ]
+      }
+    })
+});
 const mockItemWithoutMetadata: ItemSearchResult = Object.assign(new ItemSearchResult(), {
   indexableObject:
     Object.assign(new Item(), {
@@ -259,6 +279,20 @@ describe('ItemSearchResultListElementComponent', () => {
     it('should show the author paragraph', () => {
       const itemAuthorField = fixture.debugElement.query(By.css('span.item-list-authors'));
       expect(itemAuthorField).not.toBeNull();
+    });
+  });
+
+  describe('When a highlighted author has HTML markup', () => {
+    beforeEach(() => {
+      publicationListElementComponent.object = mockItemWithHtmlAuthor;
+      fixture.detectChanges();
+    });
+
+    it('should keep the highlight and render the markup as text', () => {
+      const itemAuthorField = fixture.debugElement.query(By.css('span.item-list-authors'));
+      expect(itemAuthorField.query(By.css('em'))).not.toBeNull();
+      expect(itemAuthorField.query(By.css('img'))).toBeNull();
+      expect(itemAuthorField.nativeElement.textContent).toContain(htmlAuthor);
     });
   });
 

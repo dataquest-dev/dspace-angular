@@ -23,7 +23,7 @@
             </ds-truncatable-part>
             <ds-truncatable-part [id]="dso.id" [minLines]="1" *ngIf="dso.hasMetadata(['dc.contributor.author', 'dc.creator', 'dc.contributor.*'])">
                 <p class="item-authors card-text text-muted">
-                    <span *ngIf="dso.hasMetadata('dc.date.issued')" class="item-date">{{firstMetadataValue('dc.date.issued')}}</span>
+                    <span *ngIf="dso.hasMetadata('dc.date.issued')" class="item-date">{{firstMetadataValue('dc.date.issued', false)}}</span>
                     <span *ngFor="let author of allMetadataValues(['dc.contributor.author', 'dc.creator', 'dc.contributor.*']);">,
                         <span [innerHTML]="author"></span>
                     </span>

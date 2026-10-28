@@ -192,4 +192,19 @@ describe(`DSONameService`, () => {
       expect(mockDSO.firstMetadataValue).toHaveBeenCalledWith('dc.title', undefined, undefined);
     });
   });
+
+  describe(`getHitHighlights with escapeHTML`, () => {
+    const item = Object.assign(new Item(), {
+      metadata: { 'dc.title': [{ value: 'Title <img src="x">' }] },
+    });
+
+    it(`should escape the title`, () => {
+      expect(service.getHitHighlights({}, item, true)).toBe('Title &lt;img src=&quot;x&quot;&gt;');
+    });
+
+    it(`should escape a highlighted title but keep its <em> tags`, () => {
+      const hitHighlights = { 'dc.title': [{ value: '<em>Title</em> <img src="x">' }] };
+      expect(service.getHitHighlights({ hitHighlights }, item, true)).toBe('<em>Title</em> &lt;img src=&quot;x&quot;&gt;');
+    });
+  });
 });

@@ -174,6 +174,27 @@ describe('Metadata', () => {
     });
   });
 
+  describe('with escapeHTML', () => {
+    const htmlTitle = { 'dc.title': [mdValue('A & B <img src="x">')] };
+    const htmlHighlight = { 'dc.title': [mdValue('<em>A</em> & B <img src="x">')] };
+
+    it('should escape metadata values', () => {
+      expect(Metadata.firstValue(htmlTitle, 'dc.title', undefined, undefined, true))
+        .toEqual('A &amp; B &lt;img src=&quot;x&quot;&gt;');
+    });
+
+    it('should escape hit highlights but keep their <em> tags', () => {
+      expect(Metadata.firstValue(htmlTitle, 'dc.title', htmlHighlight, undefined, true))
+        .toEqual('<em>A</em> &amp; B &lt;img src=&quot;x&quot;&gt;');
+      expect(Metadata.allValues(htmlTitle, 'dc.title', htmlHighlight, undefined, true))
+        .toEqual(['<em>A</em> &amp; B &lt;img src=&quot;x&quot;&gt;']);
+    });
+
+    it('should return the values unchanged without escapeHTML', () => {
+      expect(Metadata.firstValue(htmlTitle, 'dc.title', htmlHighlight)).toEqual('<em>A</em> & B <img src="x">');
+    });
+  });
+
   describe('valueMatches method', () => {
 
     const testValueMatches = (value: MetadataValue, expected: boolean, filter?: MetadataValueFilter) => {
