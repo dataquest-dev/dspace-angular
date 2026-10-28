@@ -10,8 +10,7 @@
 </ng-template>
 <ds-truncatable [id]="mdRepresentation.id">
   <a [routerLink]="[itemPageRoute]"
-     [innerHTML]="mdRepresentation.getValue()"
-     [ngbTooltip]="mdRepresentation.allMetadata(['person.jobTitle']).length > 0 ? descTemplate : null"></a>
+     [ngbTooltip]="mdRepresentation.allMetadata(['person.jobTitle']).length > 0 ? descTemplate : null">{{mdRepresentation.getValue()}}</a>
   <ds-orcid-badge-and-tooltip class="ml-1"
                               *ngIf="mdRepresentation.firstMetadata('person.identifier.orcid')"
                               [orcid]="mdRepresentation.firstMetadata('person.identifier.orcid')"
