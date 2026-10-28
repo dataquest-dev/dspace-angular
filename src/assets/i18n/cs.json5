@@ -8757,6 +8757,9 @@
   // "clarin.license.all-page.extra-information.default": "NONE",
   "clarin.license.all-page.extra-information.default": "Žádné",
 
+  // "clarin.license.all-page.load-error": "The licenses could not be loaded.",
+  "clarin.license.all-page.load-error": "Licence se nepodařilo načíst.",
+
   // "browse.comcol.by.language": "By Language",
   "browse.comcol.by.language": "Podle jazyka",
 

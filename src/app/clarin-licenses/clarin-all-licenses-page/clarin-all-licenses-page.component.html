@@ -2,6 +2,7 @@
   <div class="card">
     <h5 class="card-header">{{ 'clarin.license.all-page.title' | translate }}</h5>
     <ds-loading *ngIf="isLoading" class="text-center"></ds-loading>
+    <ds-error *ngIf="hasLoadError" message="{{ 'clarin.license.all-page.load-error' | translate }}"></ds-error>
     <div class="card-body" *ngFor="let clarinLicense of (licensesRD$ | async)">
       <h6 class="card-header border-bottom-0 license-card-border"><a [href]="clarinLicense?.definition">{{ clarinLicense?.name }}</a></h6>
       <div class="card-body rounded-bottom license-card-border">

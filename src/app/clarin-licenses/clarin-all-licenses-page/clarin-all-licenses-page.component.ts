@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
-import { getFirstSucceededRemoteListPayload } from '../../core/shared/operators';
+import { getFirstCompletedRemoteData } from '../../core/shared/operators';
+import { RemoteData } from '../../core/data/remote-data';
+import { PaginatedList } from '../../core/data/paginated-list.model';
 import { FindListOptions, MAX_PAGE_SIZE } from '../../core/data/find-list-options.model';
 import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
 import { ClarinLicenseRequiredInfoSerializer } from '../../core/shared/clarin/clarin-license-required-info-serializer';
@@ -24,6 +26,11 @@ export class ClarinAllLicensesPageComponent implements OnInit {
    */
   isLoading = false;
 
+  /**
+   * The licenses request failed.
+   */
+  hasLoadError = false;
+
   constructor(private clarinLicenseService: ClarinLicenseDataService) { }
 
   ngOnInit(): void {
@@ -32,16 +39,21 @@ export class ClarinAllLicensesPageComponent implements OnInit {
 
   loadAllLicenses() {
     this.isLoading = true;
+    this.hasLoadError = false;
 
     const options = new FindListOptions();
     options.currentPage = 0;
     // Load all licenses
     options.elementsPerPage = MAX_PAGE_SIZE;
     return this.clarinLicenseService.findAll(options, false)
-      .pipe(getFirstSucceededRemoteListPayload())
-      .subscribe(res => {
-        this.licensesRD$.next(this.filterLicensesByLicenseLabel(res));
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe((rd: RemoteData<PaginatedList<ClarinLicense>>) => {
         this.isLoading = false;
+        if (rd.hasSucceeded) {
+          this.licensesRD$.next(this.filterLicensesByLicenseLabel(rd.payload?.page));
+        } else {
+          this.hasLoadError = true;
+        }
       });
   }
 
