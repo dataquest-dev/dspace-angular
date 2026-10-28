@@ -13,7 +13,7 @@ import { CookieService } from '../services/cookie.service';
 import { AuthRequestServiceStub } from '../../shared/testing/auth-request-service.stub';
 import { AuthRequestService } from './auth-request.service';
 import { AuthStatus } from './models/auth-status.model';
-import { AuthTokenInfo } from './models/auth-token-info.model';
+import { AuthTokenInfo, TOKENITEM } from './models/auth-token-info.model';
 import { EPerson } from '../eperson/models/eperson.model';
 import { EPersonMock } from '../../shared/testing/eperson.mock';
 import { AppState } from '../../app.reducer';
@@ -367,6 +367,30 @@ describe('AuthService test', () => {
     it('should save token into storage', () => {
       authService.storeToken(token);
       expect(storage.set).toHaveBeenCalled();
+    });
+
+    it('should store the token with a Secure, SameSite cookie when served over https', () => {
+      Object.defineProperty(window, 'nativeWindow', {
+        get: () => ({ location: { protocol: 'https:' } }),
+        configurable: true,
+      });
+      authService.storeToken(token);
+      expect(storage.set).toHaveBeenCalledWith(TOKENITEM, token, jasmine.objectContaining({
+        secure: true,
+        sameSite: 'lax',
+      }));
+    });
+
+    it('should store the token without the Secure flag when served over http', () => {
+      Object.defineProperty(window, 'nativeWindow', {
+        get: () => ({ location: { protocol: 'http:' } }),
+        configurable: true,
+      });
+      authService.storeToken(token);
+      expect(storage.set).toHaveBeenCalledWith(TOKENITEM, token, jasmine.objectContaining({
+        secure: false,
+        sameSite: 'lax',
+      }));
     });
 
     it('should remove token from storage', () => {
