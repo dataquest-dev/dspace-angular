@@ -1928,6 +1928,12 @@
   // "collection.edit.tabs.roles.title": "Collection Edit - Roles",
   "collection.edit.tabs.roles.title": "Upravit kolekci - Role",
 
+  // "collection.edit.tabs.source.allow-external-urls": "Allow external URLs",
+  "collection.edit.tabs.source.allow-external-urls": "Povolit externí URL",
+
+  // "collection.edit.tabs.source.allow-external-urls.warning": "When off, files are fetched only from the same scheme and host as the OAI provider above, and a record pointing elsewhere is skipped in full. When on, your server fetches from any address the provider names — that provider, not you, decides what is downloaded and republished here, so enable it only for providers you trust. Private and internal addresses stay blocked either way.",
+  "collection.edit.tabs.source.allow-external-urls.warning": "Když je vypnuto, stahují se soubory jen ze stejného schématu a hostitele, jaké má adresa poskytovatele OAI výše; záznam odkazující jinam se přeskočí celý. Když je zapnuto, stahuje váš server z libovolné adresy, kterou poskytovatel uvede — o tom, co se zde stáhne a znovu zveřejní, tak rozhoduje on, a ne vy. Zapínejte jen u poskytovatelů, kterým důvěřujete. Privátní a interní adresy zůstávají blokované tak či tak.",
+
   // "collection.edit.tabs.source.external": "This collection harvests its content from an external source",
   "collection.edit.tabs.source.external": "Tato kolekce získává svůj obsah z externího zdroje",
 

@@ -1,6 +1,7 @@
 import {
   AsyncPipe,
   Location,
+  NgClass,
 } from '@angular/common';
 import {
   Component,
@@ -79,6 +80,7 @@ import { CollectionSourceControlsComponent } from './collection-source-controls/
     BtnDisabledDirective,
     CollectionSourceControlsComponent,
     FormComponent,
+    NgClass,
     ThemedLoadingComponent,
     TranslateModule,
   ],
@@ -253,6 +255,11 @@ export class CollectionSourceComponent extends AbstractTrackableComponent implem
    * The content harvesting type used when harvesting is disabled
    */
   harvestTypeNone = ContentSourceHarvestType.None;
+
+  /**
+   * The content harvesting type that downloads bitstreams, the only one the external URL flag applies to
+   */
+  harvestTypeMetadataAndBitstreams = ContentSourceHarvestType.MetadataAndBitstreams;
 
   /**
    * The previously selected harvesting type
@@ -463,6 +470,16 @@ export class CollectionSourceComponent extends AbstractTrackableComponent implem
       this.contentSource.harvestType = ContentSourceHarvestType.None;
     }
     this.updateContentSource(false);
+  }
+
+  /**
+   * Switch the allowExternalUrls flag on or off and fire a field update
+   * Deliberately not a dynamic form control: the patchValue() in initializeOriginalContentSource() only names the
+   * three form containers, so a control here would not revert on Discard/Reinstate
+   */
+  changeAllowExternalUrls() {
+    this.contentSource.allowExternalUrls = !this.contentSource.allowExternalUrls;
+    this.saveFieldUpdate();
   }
 
   /**
