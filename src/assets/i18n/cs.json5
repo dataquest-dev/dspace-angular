@@ -2162,6 +2162,12 @@
   // "cookies.consent.app.description.google-analytics": "Allows us to track statistical data",
   "cookies.consent.app.description.google-analytics": "Umožňuje nám sledovat statistické údaje",
 
+  // "cookies.consent.app.title.matomo": "Matomo",
+  "cookies.consent.app.title.matomo": "Matomo",
+
+  // "cookies.consent.app.description.matomo": "Allows us to track statistical data",
+  "cookies.consent.app.description.matomo": "Umožňuje nám sledovat statistické údaje",
+
   // "cookies.consent.app.title.google-recaptcha": "Google reCaptcha",
   "cookies.consent.app.title.google-recaptcha": "Google reCaptcha",
 
