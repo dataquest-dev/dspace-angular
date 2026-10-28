@@ -77,7 +77,7 @@ export class GrantDenyRequestCopyComponent implements OnInit {
     );
     this.itemName$ = this.itemRD$.pipe(
       getFirstSucceededRemoteDataPayload(),
-      map((item) => this.nameService.getName(item)),
+      map((item) => this.nameService.getName(item, true)),
     );
     this.itemUrl$ = this.itemRD$.pipe(
       getFirstSucceededRemoteDataPayload(),
