@@ -26,25 +26,27 @@ import { TruncatableService } from '../../../../truncatable/truncatable.service'
 import { TruncatePipe } from '../../../../utils/truncate.pipe';
 import { DsLangPipe } from '../../../../utils/ds-lang.pipe';
 import { ItemSearchResultGridElementComponent } from './item-search-result-grid-element.component';
+import { MetadataValue } from '../../../../../core/shared/metadata.models';
 
 const mockItemWithMetadata: ItemSearchResult = new ItemSearchResult();
-mockItemWithMetadata.hitHighlights = {};
 const mockItemWithAbstractOnly: ItemSearchResult = new ItemSearchResult();
 mockItemWithAbstractOnly.hitHighlights = {};
 const dcTitle = 'This is just another <em>title</em>';
+mockItemWithMetadata.hitHighlights = {
+  'dc.title': [
+    Object.assign(new MetadataValue(), {
+      value: dcTitle,
+    }),
+  ],
+};
 mockItemWithMetadata.indexableObject = Object.assign(new Item(), {
-  hitHighlights: {
-    'dc.title': [{
-      value: dcTitle
-    }],
-  },
   bundles: createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [])),
   metadata: {
     'dc.title': [
       {
         language: 'en_US',
-        value: dcTitle
-      }
+        value: 'This is just another title',
+      },
     ],
     'dc.contributor.author': [
       {
