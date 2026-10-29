@@ -492,7 +492,12 @@ export class AuthService {
 
     // Set the cookie expire date
     const expires = new Date(expireDate);
-    const options: Cookies.CookieAttributes = { expires: expires };
+    // Use Secure on HTTPS; Lax allows external-auth redirects via top-level GET navigation.
+    const options: Cookies.CookieAttributes = {
+      expires: expires,
+      secure: this._window.nativeWindow.location?.protocol === 'https:',
+      sameSite: 'lax',
+    };
 
     // Save cookie with the token
     return this.storage.set(TOKENITEM, token, options);
