@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SubmissionSectionCcLicensesComponent } from './submission-section-cc-licenses.component';
 import { SUBMISSION_CC_LICENSE } from '../../../core/submission/models/submission-cc-licence.resource-type';
-import { of as observableOf } from 'rxjs';
+import { of as observableOf, Subject } from 'rxjs';
 import { SubmissionCcLicenseDataService } from '../../../core/submission/submission-cc-license-data.service';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -139,9 +139,11 @@ describe('SubmissionSectionCcLicensesComponent', () => {
     getCcLicenseLink: observableOf('test cc license link'),
   });
 
+  let sectionState$: Subject<any>;
+
   const sectionService = {
     getSectionState: () => {
-      return observableOf({});
+      return sectionState$;
     },
     setSectionStatus: () => undefined,
     updateSectionData: (submissionId, sectionId, updatedData) => {
@@ -186,6 +188,7 @@ describe('SubmissionSectionCcLicensesComponent', () => {
   }));
 
   beforeEach(() => {
+    sectionState$ = new Subject<any>();
     fixture = TestBed.createComponent(SubmissionSectionCcLicensesComponent);
     component = fixture.componentInstance;
     de = fixture.debugElement;
@@ -309,9 +312,18 @@ describe('SubmissionSectionCcLicensesComponent', () => {
     };
     const cc0: SubmissionCcLicence = { id: 'cc0', type: SUBMISSION_CC_LICENSE, name: 'CC0 1.0 Universal', fields: [], _links };
     const mark: SubmissionCcLicence = { id: 'mark', type: SUBMISSION_CC_LICENSE, name: 'Public Domain Mark 1.0 Universal', fields: [], _links };
+    const sampling: SubmissionCcLicence = {
+      id: 'sampling',
+      type: SUBMISSION_CC_LICENSE,
+      name: 'Creative Commons Sampling License (1.0)',
+      fields: [
+        { id: 'sampling', label: 'sampling', description: '', enums: [enumOption('sampling'), enumOption('samplingplus'), enumOption('ncsamplingplus')] },
+      ],
+      _links,
+    };
 
     const restore = (uri: string) => {
-      component.submissionCcLicenses = [cc30, cc40, cc0, mark];
+      component.submissionCcLicenses = [cc30, cc40, cc0, mark, sampling];
       component.sectionData.data = { uri };
       (component as any).restoreSelectionFromStoredUri();
     };
@@ -332,6 +344,12 @@ describe('SubmissionSectionCcLicensesComponent', () => {
       expect(component.data.ccLicense.fields.jurisdiction.id).toEqual('us');
     });
 
+    it('should restore a Sampling license with its option', () => {
+      restore('https://creativecommons.org/licenses/nc-sampling+/1.0/');
+      expect(component.data.ccLicense.id).toEqual('sampling');
+      expect(component.data.ccLicense.fields.sampling.id).toEqual('ncsamplingplus');
+    });
+
     it('should distinguish public domain licenses with the same version', () => {
       restore('https://creativecommons.org/publicdomain/mark/1.0/');
       expect(component.data.ccLicense.id).toEqual('mark');
@@ -350,6 +368,40 @@ describe('SubmissionSectionCcLicensesComponent', () => {
       component.sectionData.data = { uri: 'https://creativecommons.org/licenses/by/4.0/', ccLicense: { id: 'cc0', fields: {} } };
       (component as any).restoreSelectionFromStoredUri();
       expect(component.data.ccLicense.id).toEqual('cc0');
+    });
+  });
+
+  describe('when the section state changes', () => {
+    const uri = 'https://creativecommons.org/licenses/by/4.0/';
+
+    beforeEach(() => {
+      operationsBuilder.add.calls.reset();
+      operationsBuilder.remove.calls.reset();
+    });
+
+    it('should queue a remove when the stored license is no longer accepted', () => {
+      component.sectionData.data = { uri };
+      sectionState$.next({ data: { uri, accepted: false } });
+      expect(operationsBuilder.remove).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not queue a remove for a save response of an already removed license', () => {
+      component.sectionData.data = { uri, accepted: false };
+      // The REST API returns the cleared section data without an accepted state
+      sectionState$.next({ data: { uri: null, rights: null, file: null } });
+      expect(operationsBuilder.remove).not.toHaveBeenCalled();
+      expect(component.accepted).toBeFalse();
+    });
+
+    it('should queue a single remove when another license is selected', () => {
+      // Like the store, only apply the update once it is emitted by the section state
+      let updatedData;
+      spyOn(sectionService, 'updateSectionData').and.callFake((submissionId, sectionId, data) => updatedData = data);
+      component.submissionCcLicenses = submissionCcLicenses;
+      component.sectionData.data = { uri };
+      component.selectCcLicense(submissionCcLicenses[0]);
+      sectionState$.next({ data: updatedData });
+      expect(operationsBuilder.remove).toHaveBeenCalledTimes(1);
     });
   });
 });
