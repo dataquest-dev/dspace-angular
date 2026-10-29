@@ -17,7 +17,7 @@ import {
   SPONSOR_METADATA_NAME,
 
 } from '../ds-dynamic-form-ui/models/ds-dynamic-complex.model';
-import { hasValue, isNotEmpty, isUndefined } from '../../../empty.util';
+import { hasValue, isEmpty, isNotEmpty, isUndefined } from '../../../empty.util';
 import { ParserOptions } from './parser-options';
 import {
   CONFIG_DATA,
@@ -160,6 +160,10 @@ export class ComplexFieldParser extends FieldParser {
       // required. It should be marked as required in the complex group for every input field.
       if (inputConfig.required) {
         this.markAsRequired(inputModel);
+        // an optional complex field has no mandatory message of its own
+        if (isEmpty(inputModel.errorMessages.required)) {
+          inputModel.errorMessages.required = 'error.validation.required';
+        }
       }
       concatGroup.group.push(inputModel);
     });
