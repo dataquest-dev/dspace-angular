@@ -257,8 +257,8 @@ export const buildAppConfig = (destConfigPath?: string, mapping?: ServerHashedFi
           ssrBaseUrl: appConfig.rest.ssrBaseUrl,
         },
       }),
-      // UI namespace for routing
-      ...(appConfig.ui ? { ui: { nameSpace: appConfig.ui.nameSpace } } : {}),
+      // UI namespace for routing, public base URL for absolute links built in the browser
+      ...(appConfig.ui ? { ui: { nameSpace: appConfig.ui.nameSpace, baseUrl: appConfig.ui.baseUrl } } : {}),
       // Auth configuration - only expose client-side settings (idle timeout, token refresh)
       auth: {
         ui: {
