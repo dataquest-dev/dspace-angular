@@ -18,9 +18,17 @@ export interface SsrCacheEntryStats {
   stale: boolean;
 }
 
-export interface SsrCacheSnapshot {
+/** Request lookups since worker start; stale pages served count as hits. */
+export interface SsrCacheCounters {
+  hits: number;
+  misses: number;
+}
+
+export interface SsrCacheSnapshot extends SsrCacheCounters {
   name: string;
   enabled: boolean;
+  /** Hits / (hits + misses), or null before the first lookup. */
+  hitRate: number | null;
   maxEntries: number;
   configuredTtlMs: number;
   entryCount: number;
@@ -49,7 +57,7 @@ export const SSR_CACHE_STATS_PATH = '/app/cache-stats';
  * `dump()` visits stale entries too (unlike `forEach`, which skips them when `allowStale` is false);
  * `dump()` and `has()` leave recency and TTL untouched. Byte counting is O(total cached HTML).
  */
-export function snapshotCache(name: string, cache: LRUCache<string, SsrCacheEntry> | undefined, enabled: boolean): SsrCacheSnapshot {
+export function snapshotCache(name: string, cache: LRUCache<string, SsrCacheEntry> | undefined, enabled: boolean, counters?: SsrCacheCounters): SsrCacheSnapshot {
   const entries: SsrCacheEntryStats[] = [];
   if (cache) {
     for (const [key, { value }] of cache.dump()) {
@@ -63,9 +71,14 @@ export function snapshotCache(name: string, cache: LRUCache<string, SsrCacheEntr
     }
   }
   entries.sort((a, b) => b.htmlBytes - a.htmlBytes || a.key.localeCompare(b.key));
+  const hits = counters?.hits ?? 0;
+  const misses = counters?.misses ?? 0;
   return {
     name,
     enabled,
+    hits,
+    misses,
+    hitRate: hits + misses > 0 ? hits / (hits + misses) : null,
     maxEntries: cache ? cache.max : 0,
     configuredTtlMs: cache ? cache.ttl : 0,
     entryCount: entries.length,

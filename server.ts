@@ -91,6 +91,10 @@ let botCache: LRUCache<string, SsrCacheEntry>;
 
 // cache of SSR pages for anonymous users. Disabled by default, and only available in production mode
 let anonymousCache: LRUCache<string, SsrCacheEntry>;
+const cacheCounters = {
+  bot: { hits: 0, misses: 0 },
+  anonymous: { hits: 0, misses: 0 },
+};
 
 // extend environment with app config for server
 extendEnvironmentWithAppConfig(environment, appConfig);
@@ -510,13 +514,14 @@ function cacheCheck(req, res, next) {
  * @param next the next function
  * @returns cached copy (if found) or undefined (if not found)
  */
-function checkCacheForRequest(cacheName: string, cache: LRUCache<string, any>, req, res, next): any {
+function checkCacheForRequest(cacheName: 'bot' | 'anonymous', cache: LRUCache<string, any>, req, res, next): any {
   // Get the cache key for this request
   const key = getCacheKey(req);
 
   // Check if this page is in our cache
   const cachedCopy = cache.get(key);
   if (cachedCopy) {
+    cacheCounters[cacheName].hits++;
     if (environment.cache.serverSide.debug) { console.log(`CACHE HIT FOR ${key} in ${cacheName} cache`); }
 
     // Check if cached copy is expired (If expired, the key will now be gone from cache)
@@ -529,6 +534,7 @@ function checkCacheForRequest(cacheName: string, cache: LRUCache<string, any>, r
       serverSideRender(req, res, next, false);
     }
   } else {
+    cacheCounters[cacheName].misses++;
     if (environment.cache.serverSide.debug) { console.log(`CACHE MISS FOR ${key} in ${cacheName} cache.`); }
   }
 
@@ -682,8 +688,8 @@ function collectCacheStats(): SsrCacheStats {
     uptimeSeconds: Math.round(process.uptime()),
     memory: { rss: memory.rss, heapUsed: memory.heapUsed },
     caches: [
-      snapshotCache('bot', botCache, !!(environment.production && botCacheEnabled())),
-      snapshotCache('anonymous', anonymousCache, !!(environment.production && anonymousCacheEnabled()))
+      snapshotCache('bot', botCache, !!(environment.production && botCacheEnabled()), cacheCounters.bot),
+      snapshotCache('anonymous', anonymousCache, !!(environment.production && anonymousCacheEnabled()), cacheCounters.anonymous)
     ]
   };
 }

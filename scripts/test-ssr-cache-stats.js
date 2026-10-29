@@ -23,7 +23,11 @@ test('snapshot reports entries, HTML byte sizes and TTL without changing LRU ord
   cache.set('/large', { page: 'larger', headers: {} });
   const before = [...cache.keys()];
 
-  const stats = snapshotCache('bot', cache, true);
+  const stats = snapshotCache('bot', cache, true, { hits: 3, misses: 1 });
+
+  assert.equal(stats.hits, 3);
+  assert.equal(stats.misses, 1);
+  assert.equal(stats.hitRate, 0.75);
 
   assert.equal(stats.entryCount, 2);
   assert.equal(stats.totalHtmlBytes, 8);
@@ -51,7 +55,7 @@ test('snapshot counts expired entries even when the cache does not serve stale p
 
 test('snapshot of a missing cache and of a cache without TTL', () => {
   assert.deepEqual(snapshotCache('bot', undefined, false), {
-    name: 'bot', enabled: false, maxEntries: 0, configuredTtlMs: 0, entryCount: 0, staleCount: 0, totalHtmlBytes: 0, entries: []
+    name: 'bot', enabled: false, hits: 0, misses: 0, hitRate: null, maxEntries: 0, configuredTtlMs: 0, entryCount: 0, staleCount: 0, totalHtmlBytes: 0, entries: []
   });
   const cache = new LRUCache({ max: 1 });
   cache.set('/forever', { page: 'x' });
