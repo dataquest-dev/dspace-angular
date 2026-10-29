@@ -11,23 +11,6 @@ export interface SsrCacheEntry {
   headers?: Record<string, unknown>;
 }
 
-/** Per-worker page cache with lifetime request counters; maintenance reads are not counted. */
-export class SsrPageCache extends LRUCache<string, SsrCacheEntry> {
-  hits = 0;
-  misses = 0;
-
-  /** Count the existing lookup once. A stale page returned by allowStale is a hit. */
-  getForRequest(key: string): SsrCacheEntry | undefined {
-    const entry = this.get(key);
-    if (entry) {
-      this.hits++;
-    } else {
-      this.misses++;
-    }
-    return entry;
-  }
-}
-
 export interface SsrCacheEntryStats {
   key: string;
   htmlBytes: number;
@@ -35,12 +18,16 @@ export interface SsrCacheEntryStats {
   stale: boolean;
 }
 
-export interface SsrCacheSnapshot {
-  name: string;
-  enabled: boolean;
+/** Request lookups since worker start; stale pages served count as hits. */
+export interface SsrCacheCounters {
   hits: number;
   misses: number;
-  /** Hits / (hits + misses), or null before the first request lookup. */
+}
+
+export interface SsrCacheSnapshot extends SsrCacheCounters {
+  name: string;
+  enabled: boolean;
+  /** Hits / (hits + misses), or null before the first lookup. */
   hitRate: number | null;
   maxEntries: number;
   configuredTtlMs: number;
@@ -70,7 +57,7 @@ export const SSR_CACHE_STATS_PATH = '/app/cache-stats';
  * `dump()` visits stale entries too (unlike `forEach`, which skips them when `allowStale` is false);
  * `dump()` and `has()` leave recency and TTL untouched. Byte counting is O(total cached HTML).
  */
-export function snapshotCache(name: string, cache: SsrPageCache | undefined, enabled: boolean): SsrCacheSnapshot {
+export function snapshotCache(name: string, cache: LRUCache<string, SsrCacheEntry> | undefined, enabled: boolean, counters?: SsrCacheCounters): SsrCacheSnapshot {
   const entries: SsrCacheEntryStats[] = [];
   if (cache) {
     for (const [key, { value }] of cache.dump()) {
@@ -84,8 +71,8 @@ export function snapshotCache(name: string, cache: SsrPageCache | undefined, ena
     }
   }
   entries.sort((a, b) => b.htmlBytes - a.htmlBytes || a.key.localeCompare(b.key));
-  const hits = cache ? cache.hits : 0;
-  const misses = cache ? cache.misses : 0;
+  const hits = counters?.hits ?? 0;
+  const misses = counters?.misses ?? 0;
   return {
     name,
     enabled,

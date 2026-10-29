@@ -108,9 +108,6 @@ cache:
     debug: false
     # Lets operators on this machine see what the caches below hold: GET /app/cache-stats (JSON).
     # Each Node process reports its own cache. Off by default.
-    # hits/misses count request lookups since process start, including stale pages served as hits.
-    # hitRate = hits / (hits + misses), or null before any lookups. Bypassed requests are not counted.
-    # Poll all pm2 workers with: bash scripts/ssr-cache-stats.sh [container] [base-port] [workers]
     stats:
       enabled: false
       # 0 = answer on the UI port, but only to requests made directly from this host: connecting from 127.0.0.1 and

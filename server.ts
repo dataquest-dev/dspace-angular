@@ -24,6 +24,7 @@ import express from 'express';
 import * as ejs from 'ejs';
 import * as compression from 'compression';
 import expressStaticGzip from 'express-static-gzip';
+import { LRUCache } from 'lru-cache';
 import { isbot } from 'isbot';
 import { createCertificate } from 'pem';
 import { createServer } from 'https';
@@ -63,8 +64,8 @@ import {
   isDirectLoopbackRequest,
   snapshotCache,
   SSR_CACHE_STATS_PATH,
+  SsrCacheEntry,
   SsrCacheStats,
-  SsrPageCache,
   startSsrCacheStatsServer
 } from './src/backend/ssr-cache-stats';
 
@@ -86,10 +87,14 @@ appConfig.themes.forEach(themeConfig => hashedFileMapping.addThemeStyle(themeCon
 hashedFileMapping.save();
 
 // cache of SSR pages for known bots, only enabled in production mode
-let botCache: SsrPageCache;
+let botCache: LRUCache<string, SsrCacheEntry>;
 
 // cache of SSR pages for anonymous users. Disabled by default, and only available in production mode
-let anonymousCache: SsrPageCache;
+let anonymousCache: LRUCache<string, SsrCacheEntry>;
+const cacheCounters = {
+  bot: { hits: 0, misses: 0 },
+  anonymous: { hits: 0, misses: 0 },
+};
 
 // extend environment with app config for server
 extendEnvironmentWithAppConfig(environment, appConfig);
@@ -420,7 +425,7 @@ function initCache() {
     // Initialize a new "least-recently-used" item cache (where least recently used pages are removed first)
     // See https://www.npmjs.com/package/lru-cache
     // When enabled, each page defaults to expiring after 1 day (defined in default-app-config.ts)
-    botCache = new SsrPageCache( {
+    botCache = new LRUCache( {
       max: environment.cache.serverSide.botCache.max,
       ttl: environment.cache.serverSide.botCache.timeToLive,
       allowStale: environment.cache.serverSide.botCache.allowStale,
@@ -432,7 +437,7 @@ function initCache() {
     // may expire pages more frequently.
     // When enabled, each page defaults to expiring after 10 seconds (defined in default-app-config.ts)
     // to minimize anonymous users seeing out-of-date content
-    anonymousCache = new SsrPageCache( {
+    anonymousCache = new LRUCache( {
       max: environment.cache.serverSide.anonymousCache.max,
       ttl: environment.cache.serverSide.anonymousCache.timeToLive,
       allowStale: environment.cache.serverSide.anonymousCache.allowStale,
@@ -509,13 +514,14 @@ function cacheCheck(req, res, next) {
  * @param next the next function
  * @returns cached copy (if found) or undefined (if not found)
  */
-function checkCacheForRequest(cacheName: string, cache: SsrPageCache, req, res, next): any {
+function checkCacheForRequest(cacheName: 'bot' | 'anonymous', cache: LRUCache<string, any>, req, res, next): any {
   // Get the cache key for this request
   const key = getCacheKey(req);
 
   // Check if this page is in our cache
-  const cachedCopy = cache.getForRequest(key);
+  const cachedCopy = cache.get(key);
   if (cachedCopy) {
+    cacheCounters[cacheName].hits++;
     if (environment.cache.serverSide.debug) { console.log(`CACHE HIT FOR ${key} in ${cacheName} cache`); }
 
     // Check if cached copy is expired (If expired, the key will now be gone from cache)
@@ -528,6 +534,7 @@ function checkCacheForRequest(cacheName: string, cache: SsrPageCache, req, res, 
       serverSideRender(req, res, next, false);
     }
   } else {
+    cacheCounters[cacheName].misses++;
     if (environment.cache.serverSide.debug) { console.log(`CACHE MISS FOR ${key} in ${cacheName} cache.`); }
   }
 
@@ -681,8 +688,8 @@ function collectCacheStats(): SsrCacheStats {
     uptimeSeconds: Math.round(process.uptime()),
     memory: { rss: memory.rss, heapUsed: memory.heapUsed },
     caches: [
-      snapshotCache('bot', botCache, !!(environment.production && botCacheEnabled())),
-      snapshotCache('anonymous', anonymousCache, !!(environment.production && anonymousCacheEnabled()))
+      snapshotCache('bot', botCache, !!(environment.production && botCacheEnabled()), cacheCounters.bot),
+      snapshotCache('anonymous', anonymousCache, !!(environment.production && anonymousCacheEnabled()), cacheCounters.anonymous)
     ]
   };
 }
