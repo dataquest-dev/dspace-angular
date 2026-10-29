@@ -11,6 +11,23 @@ export interface SsrCacheEntry {
   headers?: Record<string, unknown>;
 }
 
+/** Per-worker page cache with lifetime request counters; maintenance reads are not counted. */
+export class SsrPageCache extends LRUCache<string, SsrCacheEntry> {
+  hits = 0;
+  misses = 0;
+
+  /** Count the existing lookup once. A stale page returned by allowStale is a hit. */
+  getForRequest(key: string): SsrCacheEntry | undefined {
+    const entry = this.get(key);
+    if (entry) {
+      this.hits++;
+    } else {
+      this.misses++;
+    }
+    return entry;
+  }
+}
+
 export interface SsrCacheEntryStats {
   key: string;
   htmlBytes: number;
@@ -21,6 +38,10 @@ export interface SsrCacheEntryStats {
 export interface SsrCacheSnapshot {
   name: string;
   enabled: boolean;
+  hits: number;
+  misses: number;
+  /** Hits / (hits + misses), or null before the first request lookup. */
+  hitRate: number | null;
   maxEntries: number;
   configuredTtlMs: number;
   entryCount: number;
@@ -49,7 +70,7 @@ export const SSR_CACHE_STATS_PATH = '/app/cache-stats';
  * `dump()` visits stale entries too (unlike `forEach`, which skips them when `allowStale` is false);
  * `dump()` and `has()` leave recency and TTL untouched. Byte counting is O(total cached HTML).
  */
-export function snapshotCache(name: string, cache: LRUCache<string, SsrCacheEntry> | undefined, enabled: boolean): SsrCacheSnapshot {
+export function snapshotCache(name: string, cache: SsrPageCache | undefined, enabled: boolean): SsrCacheSnapshot {
   const entries: SsrCacheEntryStats[] = [];
   if (cache) {
     for (const [key, { value }] of cache.dump()) {
@@ -63,9 +84,14 @@ export function snapshotCache(name: string, cache: LRUCache<string, SsrCacheEntr
     }
   }
   entries.sort((a, b) => b.htmlBytes - a.htmlBytes || a.key.localeCompare(b.key));
+  const hits = cache ? cache.hits : 0;
+  const misses = cache ? cache.misses : 0;
   return {
     name,
     enabled,
+    hits,
+    misses,
+    hitRate: hits + misses > 0 ? hits / (hits + misses) : null,
     maxEntries: cache ? cache.max : 0,
     configuredTtlMs: cache ? cache.ttl : 0,
     entryCount: entries.length,

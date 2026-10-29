@@ -24,7 +24,6 @@ import express from 'express';
 import * as ejs from 'ejs';
 import * as compression from 'compression';
 import expressStaticGzip from 'express-static-gzip';
-import { LRUCache } from 'lru-cache';
 import { isbot } from 'isbot';
 import { createCertificate } from 'pem';
 import { createServer } from 'https';
@@ -64,8 +63,8 @@ import {
   isDirectLoopbackRequest,
   snapshotCache,
   SSR_CACHE_STATS_PATH,
-  SsrCacheEntry,
   SsrCacheStats,
+  SsrPageCache,
   startSsrCacheStatsServer
 } from './src/backend/ssr-cache-stats';
 
@@ -87,10 +86,10 @@ appConfig.themes.forEach(themeConfig => hashedFileMapping.addThemeStyle(themeCon
 hashedFileMapping.save();
 
 // cache of SSR pages for known bots, only enabled in production mode
-let botCache: LRUCache<string, SsrCacheEntry>;
+let botCache: SsrPageCache;
 
 // cache of SSR pages for anonymous users. Disabled by default, and only available in production mode
-let anonymousCache: LRUCache<string, SsrCacheEntry>;
+let anonymousCache: SsrPageCache;
 
 // extend environment with app config for server
 extendEnvironmentWithAppConfig(environment, appConfig);
@@ -421,7 +420,7 @@ function initCache() {
     // Initialize a new "least-recently-used" item cache (where least recently used pages are removed first)
     // See https://www.npmjs.com/package/lru-cache
     // When enabled, each page defaults to expiring after 1 day (defined in default-app-config.ts)
-    botCache = new LRUCache( {
+    botCache = new SsrPageCache( {
       max: environment.cache.serverSide.botCache.max,
       ttl: environment.cache.serverSide.botCache.timeToLive,
       allowStale: environment.cache.serverSide.botCache.allowStale,
@@ -433,7 +432,7 @@ function initCache() {
     // may expire pages more frequently.
     // When enabled, each page defaults to expiring after 10 seconds (defined in default-app-config.ts)
     // to minimize anonymous users seeing out-of-date content
-    anonymousCache = new LRUCache( {
+    anonymousCache = new SsrPageCache( {
       max: environment.cache.serverSide.anonymousCache.max,
       ttl: environment.cache.serverSide.anonymousCache.timeToLive,
       allowStale: environment.cache.serverSide.anonymousCache.allowStale,
@@ -510,12 +509,12 @@ function cacheCheck(req, res, next) {
  * @param next the next function
  * @returns cached copy (if found) or undefined (if not found)
  */
-function checkCacheForRequest(cacheName: string, cache: LRUCache<string, any>, req, res, next): any {
+function checkCacheForRequest(cacheName: string, cache: SsrPageCache, req, res, next): any {
   // Get the cache key for this request
   const key = getCacheKey(req);
 
   // Check if this page is in our cache
-  const cachedCopy = cache.get(key);
+  const cachedCopy = cache.getForRequest(key);
   if (cachedCopy) {
     if (environment.cache.serverSide.debug) { console.log(`CACHE HIT FOR ${key} in ${cacheName} cache`); }
 

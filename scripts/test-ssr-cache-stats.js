@@ -2,14 +2,13 @@ const assert = require('node:assert/strict');
 const { once } = require('node:events');
 const { test } = require('node:test');
 const { setTimeout: sleep } = require('node:timers/promises');
-const { LRUCache } = require('lru-cache');
 
 process.env.TS_NODE_PROJECT = 'tsconfig.ts-node.json';
 // tsconfig.json uses moduleResolution 'bundler', which ts-node cannot combine with the commonjs output it needs.
 process.env.TS_NODE_COMPILER_OPTIONS = JSON.stringify({ module: 'commonjs', moduleResolution: 'node10' });
 require('ts-node/register/transpile-only');
 const {
-  snapshotCache, startSsrCacheStatsServer, isDirectLoopbackRequest
+  SsrPageCache, snapshotCache, startSsrCacheStatsServer, isDirectLoopbackRequest
 } = require('../src/backend/ssr-cache-stats.ts');
 
 const statsOf = (caches) => ({
@@ -17,8 +16,54 @@ const statsOf = (caches) => ({
   memory: { rss: 1, heapUsed: 1 }, caches
 });
 
+test('request lookups count hits and misses independently of cache population and stats polling', () => {
+  const bot = new SsrPageCache({ max: 2 });
+  const anonymous = new SsrPageCache({ max: 2 });
+  bot.set('/page', { page: 'html' });
+  assert.equal(bot.get('/page').page, 'html');
+  assert.equal(bot.has('/page'), true);
+  assert.equal(snapshotCache('bot', bot, true).hitRate, null);
+
+  assert.equal(bot.getForRequest('/page').page, 'html');
+  assert.equal(bot.getForRequest('/missing'), undefined);
+  assert.equal(bot.getForRequest('/page').page, 'html');
+  for (let i = 0; i < 2; i++) {
+    const stats = snapshotCache('bot', bot, true);
+    assert.equal(stats.hits, 2);
+    assert.equal(stats.misses, 1);
+    assert.equal(stats.hitRate, 2 / 3);
+  }
+  const other = snapshotCache('anonymous', anonymous, true);
+  assert.equal(other.hits, 0);
+  assert.equal(other.misses, 0);
+  assert.equal(other.hitRate, null);
+});
+
+test('expired pages count as hits only when served stale', async () => {
+  for (const allowStale of [true, false]) {
+    const cache = new SsrPageCache({ max: 2, ttl: 1, allowStale });
+    cache.set('/expired', { page: 'html' });
+    await sleep(10);
+    assert.equal(cache.getForRequest('/expired')?.page, allowStale ? 'html' : undefined);
+    assert.equal(cache.hits, allowStale ? 1 : 0);
+    assert.equal(cache.misses, allowStale ? 0 : 1);
+    assert.equal(cache.getForRequest('/expired'), undefined);
+    assert.equal(cache.misses, allowStale ? 1 : 2);
+  }
+});
+
+test('eviction does not reset request counters', () => {
+  const cache = new SsrPageCache({ max: 1 });
+  cache.set('/first', { page: 'first' });
+  cache.getForRequest('/first');
+  cache.set('/second', { page: 'second' });
+  cache.getForRequest('/first');
+  assert.equal(cache.hits, 1);
+  assert.equal(cache.misses, 1);
+});
+
 test('snapshot reports entries, HTML byte sizes and TTL without changing LRU order', () => {
-  const cache = new LRUCache({ max: 3, ttl: 60000 });
+  const cache = new SsrPageCache({ max: 3, ttl: 60000 });
   cache.set('/small', { page: 'é', headers: { 'content-type': 'text/html' } });
   cache.set('/large', { page: 'larger', headers: {} });
   const before = [...cache.keys()];
@@ -36,7 +81,7 @@ test('snapshot reports entries, HTML byte sizes and TTL without changing LRU ord
 });
 
 test('snapshot counts expired entries even when the cache does not serve stale pages', async () => {
-  const cache = new LRUCache({ max: 2, ttl: 1, allowStale: false });
+  const cache = new SsrPageCache({ max: 2, ttl: 1, allowStale: false });
   cache.set('/expired', { page: 'x' });
   await sleep(5);
   assert.equal(cache.size, 1);
@@ -51,16 +96,21 @@ test('snapshot counts expired entries even when the cache does not serve stale p
 
 test('snapshot of a missing cache and of a cache without TTL', () => {
   assert.deepEqual(snapshotCache('bot', undefined, false), {
-    name: 'bot', enabled: false, maxEntries: 0, configuredTtlMs: 0, entryCount: 0, staleCount: 0, totalHtmlBytes: 0, entries: []
+    name: 'bot', enabled: false, hits: 0, misses: 0, hitRate: null,
+    maxEntries: 0, configuredTtlMs: 0, entryCount: 0, staleCount: 0, totalHtmlBytes: 0, entries: []
   });
-  const cache = new LRUCache({ max: 1 });
+  const cache = new SsrPageCache({ max: 1 });
   cache.set('/forever', { page: 'x' });
   assert.equal(snapshotCache('bot', cache, true).entries[0].remainingTtlMs, null);
 });
 
 test('stats server listens on loopback and answers only GET /app/cache-stats', async () => {
-  const payload = statsOf([]);
-  const server = startSsrCacheStatsServer(0, () => payload);
+  const cache = new SsrPageCache({ max: 2 });
+  cache.set('/page', { page: 'html' });
+  cache.getForRequest('/page');
+  cache.getForRequest('/missing');
+  const payload = statsOf([snapshotCache('bot', cache, true)]);
+  const server = startSsrCacheStatsServer(0, () => statsOf([snapshotCache('bot', cache, true)]));
   try {
     await once(server, 'listening');
     const address = server.address();
@@ -77,6 +127,8 @@ test('stats server listens on loopback and answers only GET /app/cache-stats', a
     assert.equal((await fetch(`${base}/app/cache-stats/`)).status, 404);
     assert.equal((await fetch(`${base}/app/cache-stats`, { method: 'HEAD' })).status, 404);
     assert.equal((await fetch(`${base}/app/cache-stats`, { method: 'POST' })).status, 404);
+    assert.equal(cache.hits, 1);
+    assert.equal(cache.misses, 1);
 
   } finally {
     await new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
