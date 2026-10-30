@@ -1,37 +1,36 @@
 # DSpace Docker image build for hub.docker.com
 name: Docker images
 
-# Run this Build for all pushes to 'dtq-dev-9-base' (the CLARIN/DSpace 9 base branch).
+# Run this Build for all pushes to 'clarin-v9'.
 # Also run for PRs to ensure PR doesn't break Docker build process (PRs build, but do not push).
-# NOTE: uses "reusable-docker-build.yml" from the 'dtq-dev' branch of dataquest-dev/DSpace to actually
-# build each of the Docker images. That is the same reusable workflow which builds our 'dtq-dev' and
-# 'customer/*' images, and it pushes straight to hub.docker.com/u/dataquest.
-# https://github.com/dataquest-dev/DSpace/blob/dtq-dev/.github/workflows/reusable-docker-build.yml
+# NOTE: uses "reusable-docker-build.yml" in ufal/clarin-dspace to actually build each of the Docker images
+# https://github.com/ufal/clarin-dspace/blob/clarin-v9/.github/workflows/reusable-docker-build.yml
 on:
   push:
     branches:
-      - dtq-dev-9-base
+      - clarin-v9
   pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read  # to fetch code (actions/checkout)
+  packages: write # to write images to GitHub Container Registry (GHCR)
 
 jobs:
   #############################################################
-  # Build/Push the 'dataquest/dspace-angular' image ('-dev' tag)
+  # Build/Push the 'ufal/dspace-angular' image ('-dev' tag)
   #############################################################
   dspace-angular:
-    # Ensure this job never runs on forked repos. It's only executed for 'dataquest-dev/dspace-angular'
-    if: github.repository == 'dataquest-dev/dspace-angular'
-    # Use the reusable-docker-build.yml script from dataquest-dev/DSpace repo to build our Docker image
-    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
+    # Ensure this job never runs on forked repos. It's only executed for 'ufal/dspace-angular'
+    if: github.repository == 'ufal/dspace-angular'
+    # Use the reusable-docker-build.yml script from ufal/clarin-dspace repo to build our Docker image
+    uses: ufal/clarin-dspace/.github/workflows/reusable-docker-build.yml@clarin-v9
     with:
       build_id: dspace-angular-dev
-      image_name: dataquest/dspace-angular
+      image_name: ufal/dspace-angular
       dockerfile_path: ./Dockerfile
       # As this is a development image, its tags are all suffixed with "-dev". Otherwise, it uses the same
-      # tagging logic as the primary 'dataquest/dspace-angular' image below.
+      # tagging logic as the primary 'ufal/dspace-angular' image below.
       tags_flavor: suffix=-dev
       run_python_version_script: true
       python_version_script_dest: src/static-files/VERSION_D.html
@@ -40,32 +39,20 @@ jobs:
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
   #############################################################
-  # Build/Push the 'dataquest/dspace-angular' image.
-  # This is the production ("dist") build and, matching 'dtq-dev',
-  # it is the one published under the plain (un-suffixed) tag.
+  # Build/Push the 'ufal/dspace-angular' image.
+  # This is the production ("dist") build, published under the plain (un-suffixed) tag.
   #############################################################
   dspace-angular-dist:
-    # Ensure this job never runs on forked repos. It's only executed for 'dataquest-dev/dspace-angular'
-    if: github.repository == 'dataquest-dev/dspace-angular'
-    # Use the reusable-docker-build.yml script from dataquest-dev/DSpace repo to build our Docker image
-    uses: dataquest-dev/DSpace/.github/workflows/reusable-docker-build.yml@dtq-dev
+    # Ensure this job never runs on forked repos. It's only executed for 'ufal/dspace-angular'
+    if: github.repository == 'ufal/dspace-angular'
+    # Use the reusable-docker-build.yml script from ufal/clarin-dspace repo to build our Docker image
+    uses: ufal/clarin-dspace/.github/workflows/reusable-docker-build.yml@clarin-v9
     with:
       build_id: dspace-angular
-      image_name: dataquest/dspace-angular
+      image_name: ufal/dspace-angular
       dockerfile_path: ./Dockerfile.dist
       run_python_version_script: true
       python_version_script_dest: src/static-files/VERSION_D.html
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-
-  deploy:
-    needs: dspace-angular
-    if: ${{ github.event_name != 'pull_request' }}
-    uses: ./.github/workflows/deploy.yml
-    with:
-      INSTANCE: '8603'
-      IMPORT: false
-      ERASE_DB: false
-      DEV_MACHINE: 'dev-6'
-    secrets: inherit
