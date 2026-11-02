@@ -42,7 +42,8 @@ async function fixture(t, options = {}) {
   const router = express.Router();
   router.get(/^\/handle\/[^/]+\/[^/]+\/?$/, createHandleRedirectHandler(
     `${rest}/internal/server/`, options.namespace ?? '/',
-    { enabled: options.enabled ?? true, timeoutMs: options.timeoutMs ?? 1000 }, options.fetchRest
+    { enabled: options.enabled ?? true, timeoutMs: options.timeoutMs ?? 1000 },
+    { fetchRest: options.fetchRest, cacheControl: options.cacheControl, warn: options.warn ?? (() => undefined), now: options.now }
   ));
   router.use((req, res) => res.status(418).json({
     method: req.method, url: req.url, originalUrl: req.originalUrl, cookies: req.cookies
@@ -198,3 +199,67 @@ for (const headers of [{ Cookie: 'dsAuthInfo=private' }, { Authorization: 'Beare
     assert.equal(requests.length, 0);
   });
 }
+
+test('301 carries the configured Cache-Control, like the Angular redirect via addCacheControl', async (t) => {
+  const { get } = await fixture(t, { cacheControl: 'max-age=604800' });
+  const response = await get();
+  assert.equal(response.status, 301);
+  assert.equal(response.headers.get('cache-control'), 'max-age=604800');
+});
+
+test('fall-through does not set Cache-Control', async (t) => {
+  const { get } = await fixture(t, { cacheControl: 'max-age=604800', data: searchResult(null) });
+  const response = await get();
+  assert.equal(response.status, 418);
+  assert.equal(response.headers.get('cache-control'), null);
+});
+
+test('failures are warned at most once per minute, with the count', async (t) => {
+  const warnings = [];
+  let clock = 0;
+  const { get } = await fixture(t, {
+    backend: (_req, res) => { res.statusCode = 500; res.end('boom'); },
+    warn: (message) => warnings.push(message), now: () => clock,
+  });
+  for (const at of [0, 1000, 2000]) {
+    clock = at;
+    assert.equal((await get()).status, 418);
+  }
+  assert.equal(warnings.length, 1);
+  assert.match(warnings[0], /HTTP 500/);
+  clock = 61_000;
+  assert.equal((await get()).status, 418);
+  assert.equal(warnings.length, 2);
+  assert.match(warnings[1], /3 failure\(s\)/);
+});
+
+test('a successful lookup or a search miss is not a failure', async (t) => {
+  const warnings = [];
+  const ok = await fixture(t, { warn: (message) => warnings.push(message) });
+  assert.equal((await ok.get()).status, 301);
+  const miss = await fixture(t, { data: searchResult(null), warn: (message) => warnings.push(message) });
+  assert.equal((await miss.get()).status, 418);
+  assert.deepEqual(warnings, []);
+});
+
+for (const timeoutMs of [undefined, 0, -5, Number.NaN, 'abc']) {
+  test(`invalid timeoutMs ${String(timeoutMs)} uses the 1000 ms default instead of aborting every lookup`, async (t) => {
+    const { get } = await fixture(t, { timeoutMs });
+    // fixture() turns undefined into 1000 itself; pass the raw value through for the others.
+    assert.equal((await get()).status, 301);
+  });
+}
+
+test('a body left unread by failed JSON parsing is cancelled', async (t) => {
+  let cancelled = false;
+  const fetchRest = async () => {
+    const body = new ReadableStream({ pull: (c) => c.enqueue(new TextEncoder().encode('{"not json')), cancel: () => { cancelled = true; } });
+    const response = new Response(body, { status: 200, headers: { 'Content-Type': 'application/hal+json' } });
+    // json() fails before the stream ends; simulate it so the body stays unread.
+    response.json = async () => { throw new SyntaxError('Unexpected end of JSON input'); };
+    return response;
+  };
+  const { get } = await fixture(t, { fetchRest });
+  assert.equal((await get()).status, 418);
+  assert.equal(cancelled, true);
+});

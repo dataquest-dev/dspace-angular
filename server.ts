@@ -212,6 +212,8 @@ export function app() {
   if (environment.ssr.enabled) {
     router.get(/^\/handle\/[^/]+\/[^/]+\/?$/, createHandleRedirectHandler(
       REST_BASE_URL, environment.ui.nameSpace, environment.ssr.handleRedirect,
+      // Same value addCacheControl gives the Angular redirect today (every handle contains a dot).
+      { cacheControl: environment.cache.control || 'max-age=604800' },
     ));
   }
 
