@@ -51,6 +51,11 @@ themes:
           href: assets/custom/images/favicons/manifest.webmanifest
 
 ssr:
+  # One anonymous REST lookup instead of an Angular render just to send a handle's 301.
+  # Search misses and errors fall through to Angular. DSPACE_SSR_HANDLEREDIRECT_ENABLED=false disables it.
+  handleRedirect:
+    enabled: true
+    timeoutMs: 1000
   excludePathPatterns:
     - pattern: "^/communities/[a-f0-9-]{36}/browse(/.*)?$"
       flag: "i"
