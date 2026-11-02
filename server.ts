@@ -59,6 +59,7 @@ import {
   RESPONSE,
 } from './src/express.tokens';
 import { SsrExcludePatterns } from "./src/config/ssr-config.interface";
+import { createHandleRedirectHandler } from './src/backend/handle-redirect';
 import {
   createSsrCacheStatsHandler,
   isDirectLoopbackRequest,
@@ -202,6 +203,18 @@ export function app() {
       max: (environment.ui as UIServerConfig).rateLimiter.max,
     });
     server.use(limiter);
+  }
+
+  /**
+   * Resolve handles before the catch-all render: otherwise Angular spends CPU only to send a 301.
+   * Uncertain lookups stay in Angular, including objects missing from the search index.
+   */
+  if (environment.ssr.enabled) {
+    router.get(/^\/handle\/[^/]+\/[^/]+\/?$/, createHandleRedirectHandler(
+      REST_BASE_URL, environment.ui.nameSpace, environment.ssr.handleRedirect,
+      // Same value addCacheControl gives the Angular redirect today (every handle contains a dot).
+      { cacheControl: environment.cache.control || 'max-age=604800' },
+    ));
   }
 
   /*
