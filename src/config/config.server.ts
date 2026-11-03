@@ -290,6 +290,7 @@ export const buildAppConfig = (destConfigPath?: string): AppConfig => {
       // Matomo analytics - only expose client-side tracking properties
       ...(appConfig.matomo && {
         matomo: {
+          enabled: appConfig.matomo.enabled,
           hostUrl: appConfig.matomo.hostUrl,
           siteId: appConfig.matomo.siteId,
           dimensionId: appConfig.matomo.dimensionId,
