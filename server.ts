@@ -55,7 +55,7 @@ import { APP_CONFIG, AppConfig } from './src/config/app-config.interface';
 import { extendEnvironmentWithAppConfig } from './src/config/config.util';
 import { logStartupMessage } from './startup-message';
 import { TOKENITEM } from './src/app/core/auth/models/auth-token-info.model';
-import { createBackgroundSsrContext } from './src/backend/ssr-response-context';
+import { createSsrRefreshContext } from './src/backend/ssr-response-context';
 import { getSsrCacheKey } from './src/app/shared/ssr-cache-key.util';
 import { SsrExcludePatterns } from './src/config/universal-config.interface';
 
@@ -459,7 +459,7 @@ function checkCacheForRequest(cacheName: string, cache: LRU<string, any>, req, r
       // Update cached copy by rerendering server-side
       // NOTE: In this scenario the currently cached copy will be returned to the current user.
       // This re-render is peformed behind the scenes to update cached copy for next user.
-      const background = createBackgroundSsrContext(req, res);
+      const background = createSsrRefreshContext(req, res);
       serverSideRender(background.request, background.response, false);
     }
   } else {

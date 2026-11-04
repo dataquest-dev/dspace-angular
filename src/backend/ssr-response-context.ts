@@ -11,12 +11,11 @@ import type {
  * The request is a read-only metadata snapshot; its body, socket and event handlers
  * belong to the original request and must not be consumed by background rendering.
  */
-export function createBackgroundSsrContext(req: Request, res: Response): { request: Request; response: Response } {
-  const request: Request = Object.assign(Object.create(Object.getPrototypeOf(req)), req);
+export function createSsrRefreshContext(req: Request, res: Response): { request: Request; response: Response } {
+  const request = Object.assign(Object.create(Object.getPrototypeOf(req)), req) as Request;
   const response = new ServerResponse(request) as unknown as Response;
   Object.setPrototypeOf(response, Object.getPrototypeOf(res));
-  response.req = request;
-  response.locals = {};
+  Object.assign(response, { locals: {}, req: request });
   request.res = response;
   return { request, response };
 }
