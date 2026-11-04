@@ -308,13 +308,13 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
         }),
         map((sectionState) => sectionState.data as WorkspaceitemSectionCcLicenseObject),
       ).subscribe((data) => {
-        const wasAccepted = this.data.accepted;
         const wasUri = this.data.uri;
 
-        // Only process if acceptance state actually changed
-        if (wasAccepted !== data.accepted && data.accepted !== undefined) {
+        // The REST API never returns the accepted state, so only changes made in this section (which always
+        // set it) should queue a patch. Otherwise a save response would queue a remove of an already removed uri.
+        if (hasValue(data.accepted) && this.data.accepted !== data.accepted) {
           const path = this.pathCombiner.getPath('uri');
-          if (data.accepted && !wasAccepted) {
+          if (data.accepted) {
             // Only add URI if we're switching from not accepted to accepted
             const licenseLink$ = this.getCcLicenseLink$();
             if (licenseLink$) {
@@ -325,8 +325,7 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
                 this.operationsBuilder.add(path, link.toString(), false, true);
               });
             }
-          } else if (!data.accepted && wasAccepted && !!this.data.uri) {
-            // Only remove URI if we're switching from accepted to not accepted
+          } else if (this.data.uri) {
             this.operationsBuilder.remove(path);
           }
         }
