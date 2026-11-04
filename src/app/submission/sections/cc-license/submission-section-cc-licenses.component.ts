@@ -95,6 +95,12 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
   private ccLicenseLinkTrigger$ = new Subject<void>();
 
   /**
+   * Whether a remove of the stored uri is queued but not yet saved, so accepting the same license again
+   * has to queue an add instead of being skipped as unchanged.
+   */
+  private uriRemoveQueued = false;
+
+  /**
    * The Creative Commons link saved in the workspace item.
    */
   get storedCcLicenseLink(): string {
@@ -309,6 +315,10 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
         map((sectionState) => sectionState.data as WorkspaceitemSectionCcLicenseObject),
       ).subscribe((data) => {
         const wasUri = this.data.uri;
+        if (!hasValue(data.accepted)) {
+          // Section data from the REST API, so any queued patch has been saved
+          this.uriRemoveQueued = false;
+        }
 
         // The REST API never returns the accepted state, so only changes made in this section (which always
         // set it) should queue a patch. Otherwise a save response would queue a remove of an already removed uri.
@@ -320,13 +330,16 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
             if (licenseLink$) {
               licenseLink$.pipe(
                 take(1),
-                filter(link => !!link && link !== wasUri) // Only proceed if link exists and is different
+                // Only proceed if link exists and is different, or the stored one is about to be removed
+                filter(link => !!link && (this.uriRemoveQueued || link !== wasUri))
               ).subscribe((link) => {
                 this.operationsBuilder.add(path, link.toString(), false, true);
+                this.uriRemoveQueued = false;
               });
             }
           } else if (this.data.uri) {
             this.operationsBuilder.remove(path);
+            this.uriRemoveQueued = true;
           }
         }
         const previousCcLicense = this.data?.ccLicense;

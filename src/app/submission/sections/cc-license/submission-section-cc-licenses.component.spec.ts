@@ -385,6 +385,23 @@ describe('SubmissionSectionCcLicensesComponent', () => {
       expect(operationsBuilder.remove).toHaveBeenCalledTimes(1);
     });
 
+    it('should queue the stored license again when it is unticked and ticked again before saving', () => {
+      component.sectionData.data = { uri };
+      sectionState$.next({ data: { uri, accepted: false } });
+      sectionState$.next({ data: { uri, accepted: true } });
+      expect(operationsBuilder.remove).toHaveBeenCalledTimes(1);
+      expect(operationsBuilder.add).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not queue a duplicate add for a license the server already stores', () => {
+      component.sectionData.data = { uri };
+      sectionState$.next({ data: { uri, accepted: false } });
+      // Section data from the server, without an accepted state, ends the pending remove
+      sectionState$.next({ data: { uri } });
+      sectionState$.next({ data: { uri, accepted: true } });
+      expect(operationsBuilder.add).not.toHaveBeenCalled();
+    });
+
     it('should not queue a remove for a save response of an already removed license', () => {
       component.sectionData.data = { uri, accepted: false };
       // The REST API returns the cleared section data without an accepted state
