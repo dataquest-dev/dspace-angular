@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AuthService } from '../../core/auth/auth.service';
 import { FileService } from '../../core/shared/file.service';
-import { of as observableOf } from 'rxjs';
+import { EMPTY, of as observableOf, Subject, throwError } from 'rxjs';
 import { Bitstream } from '../../core/shared/bitstream.model';
 import { BitstreamDownloadPageComponent } from './bitstream-download-page.component';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
@@ -189,4 +189,110 @@ describe('BitstreamDownloadPageComponent', () => {
       });
     });
   });
+  describe('when signposting responds after download authorization', () => {
+    let links$: Subject<any[]>;
+
+    beforeEach(waitForAsync(() => {
+      init();
+      links$ = new Subject();
+      signpostingDataService.getLinks.and.returnValue(links$);
+      initTestbed();
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(BitstreamDownloadPageComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+
+    it('should not wait for optional signposting before redirecting', () => {
+      expect(hardRedirectService.redirect).toHaveBeenCalledWith('content-url-with-headers');
+    });
+
+    it('should cancel pending optional signposting at the redirect decision', () => {
+      expect(links$.observers.length).toBe(0);
+    });
+
+    it('should ignore signposting that arrives after redirecting', () => {
+      links$.next([mocklink]);
+      expect(serverResponseService.setHeader).not.toHaveBeenCalled();
+      expect(hardRedirectService.redirect).toHaveBeenCalledTimes(1);
+    });
+
+    it('should redirect without a Link header if signposting is empty or malformed', () => {
+      links$.next(null);
+      expect(serverResponseService.setHeader).not.toHaveBeenCalled();
+      expect(hardRedirectService.redirect).toHaveBeenCalledWith('content-url-with-headers');
+    });
+
+    it('should ignore optional signposting errors after redirecting', () => {
+      const warning = spyOn(console, 'warn');
+      links$.error(new Error('signposting unavailable'));
+      expect(serverResponseService.setHeader).not.toHaveBeenCalled();
+      expect(hardRedirectService.redirect).toHaveBeenCalledWith('content-url-with-headers');
+      expect(warning).not.toHaveBeenCalled();
+    });
+
+    it('should request download authorization while signposting is pending', () => {
+      expect(authorizationService.isAuthorized).toHaveBeenCalled();
+      expect(fileService.retrieveFileDownloadLink).toHaveBeenCalled();
+      expect(hardRedirectService.redirect).toHaveBeenCalled();
+    });
+
+  });
+
+  [
+    { name: 'malformed', response: () => observableOf(null), warns: false },
+    { name: 'failed', response: () => throwError(() => new Error('optional metadata failed')), warns: true },
+    { name: 'empty', response: () => EMPTY, warns: false },
+    { name: 'a null link entry', response: () => observableOf([null]), warns: true },
+    { name: 'an invalid header', response: () => observableOf([mocklink]), warns: true },
+  ].forEach(scenario => {
+    describe(`when optional signposting is ${scenario.name} before authorization completes`, () => {
+      beforeEach(waitForAsync(() => {
+        init();
+        signpostingDataService.getLinks.and.returnValue(scenario.response());
+        initTestbed();
+      }));
+
+      it('should omit Link and still redirect', () => {
+        const warning = spyOn(console, 'warn');
+        if (scenario.name === 'an invalid header') {
+          serverResponseService.setHeader.and.throwError('Invalid character in header content');
+        }
+        fixture = TestBed.createComponent(BitstreamDownloadPageComponent);
+        fixture.detectChanges();
+        expect(serverResponseService.setHeader.calls.count()).toBe(scenario.name === 'an invalid header' ? 1 : 0);
+        expect(hardRedirectService.redirect).toHaveBeenCalledWith('content-url-with-headers');
+        expect(warning.calls.count()).toBe(scenario.warns ? 1 : 0);
+      });
+    });
+  });
+
+  describe('when destroyed before download authorization completes', () => {
+    let authorization$: Subject<boolean>;
+    let links$: Subject<any[]>;
+
+    beforeEach(waitForAsync(() => {
+      init();
+      authorization$ = new Subject();
+      links$ = new Subject();
+      (authorizationService.isAuthorized as jasmine.Spy).and.returnValue(authorization$);
+      signpostingDataService.getLinks.and.returnValue(links$);
+      initTestbed();
+    }));
+
+    it('should unsubscribe pending metadata and authorization without late side effects', () => {
+      fixture = TestBed.createComponent(BitstreamDownloadPageComponent);
+      fixture.detectChanges();
+      fixture.destroy();
+      authorization$.next(true);
+      links$.next([mocklink]);
+      expect(authorization$.observers.length).toBe(0);
+      expect(links$.observers.length).toBe(0);
+      expect(serverResponseService.setHeader).not.toHaveBeenCalled();
+      expect(hardRedirectService.redirect).not.toHaveBeenCalled();
+    });
+  });
+
 });

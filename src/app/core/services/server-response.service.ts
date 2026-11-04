@@ -10,6 +10,8 @@ import { Response } from 'express';
 export class ServerResponseService {
   private response: Response;
 
+  private warnedAboutCommittedResponse = false;
+
   constructor(@Optional() @Inject(RESPONSE) response: any) {
     this.response = response;
   }
@@ -21,7 +23,7 @@ export class ServerResponseService {
    * @param message
    */
   setStatus(code: number, message?: string): this {
-    if (this.response) {
+    if (this.canModifyResponse()) {
       this.response.statusCode = code;
       if (message) {
         this.response.statusMessage = message;
@@ -73,8 +75,23 @@ export class ServerResponseService {
    * @param content
    */
   setHeader(header: string, content: string) {
-    if (this.response) {
+    if (this.canModifyResponse()) {
       this.response.setHeader(header, content);
     }
   }
+
+  private canModifyResponse(): boolean {
+    if (!this.response) {
+      return false;
+    }
+    if (this.response.headersSent) {
+      if (!this.warnedAboutCommittedResponse) {
+        console.warn('Server response already committed; skipping subsequent header/status updates.');
+        this.warnedAboutCommittedResponse = true;
+      }
+      return false;
+    }
+    return true;
+  }
+
 }
