@@ -6948,6 +6948,81 @@
   // "submission.sections.ccLicense.confirmation": "I grant the license above",
   "submission.sections.ccLicense.confirmation": "Uděluji výše uvedenou licenci",
 
+  // "cc-license.commercial.label": "Allow commercial uses of your work?",
+  "cc-license.commercial.label": "Povolit komerční užití vašeho díla?",
+
+  // "cc-license.commercial.hint": "Choose whether others may use your work for commercial purposes.",
+  "cc-license.commercial.hint": "Zvolte, zda mohou ostatní užívat vaše dílo pro komerční účely.",
+
+  // "cc-license.commercial.option.yes.label": "Yes",
+  "cc-license.commercial.option.yes.label": "Ano",
+
+  // "cc-license.commercial.option.yes.hint": "Visitors may copy, distribute, display and perform your Submission for any purpose, including commercial purposes.",
+  "cc-license.commercial.option.yes.hint": "Návštěvníci mohou váš příspěvek kopírovat, šířit, vystavovat a předvádět za jakýmkoli účelem, včetně komerčního.",
+
+  // "cc-license.commercial.option.no.label": "No",
+  "cc-license.commercial.option.no.label": "Ne",
+
+  // "cc-license.commercial.option.no.hint": "Visitors may copy, distribute, display and perform your Submission, but only for non-commercial purposes.",
+  "cc-license.commercial.option.no.hint": "Návštěvníci mohou váš příspěvek kopírovat, šířit, vystavovat a předvádět, ale pouze pro nekomerční účely.",
+
+  // "cc-license.derivatives.label": "Allow modifications of your work?",
+  "cc-license.derivatives.label": "Povolit úpravy vašeho díla?",
+
+  // "cc-license.derivatives.hint": "Choose whether others may create derivative works based on your Submission.",
+  "cc-license.derivatives.hint": "Zvolte, zda mohou ostatní vytvářet odvozená díla na základě vašeho příspěvku.",
+
+  // "cc-license.derivatives.option.yes.label": "Yes",
+  "cc-license.derivatives.option.yes.label": "Ano",
+
+  // "cc-license.derivatives.option.yes.hint": "Visitors may copy, distribute, display, perform and modify your Submission in any way.",
+  "cc-license.derivatives.option.yes.hint": "Návštěvníci mohou váš příspěvek kopírovat, šířit, vystavovat, předvádět a jakkoli upravovat.",
+
+  // "cc-license.derivatives.option.sharealike.label": "ShareAlike",
+  "cc-license.derivatives.option.sharealike.label": "Zachovejte licenci (ShareAlike)",
+
+  // "cc-license.derivatives.option.sharealike.hint": "Visitors are permitted to copy, display, perform and modify your Submission, as long as they distribute the modified version on similar use terms.",
+  "cc-license.derivatives.option.sharealike.hint": "Návštěvníci mohou váš příspěvek kopírovat, vystavovat, předvádět a upravovat, pokud upravenou verzi šíří za stejných licenčních podmínek.",
+
+  // "cc-license.derivatives.option.no.label": "No",
+  "cc-license.derivatives.option.no.label": "Ne",
+
+  // "cc-license.derivatives.option.no.hint": "Visitors are only permitted to copy and distribute unaltered versions of your Submission.",
+  "cc-license.derivatives.option.no.hint": "Návštěvníci mohou váš příspěvek pouze kopírovat a šířit v nezměněné podobě.",
+
+  // "cc-license.jurisdiction.label": "Jurisdiction",
+  "cc-license.jurisdiction.label": "Jurisdikce",
+
+  // "cc-license.jurisdiction.hint": "Select the legal jurisdiction for your Creative Commons license, or leave as the default international license.",
+  "cc-license.jurisdiction.hint": "Vyberte právní jurisdikci licence Creative Commons, nebo ponechte výchozí mezinárodní licenci.",
+
+  // "cc-license.jurisdiction.option.unported.label": "Generic (Unported)",
+  "cc-license.jurisdiction.option.unported.label": "Obecná (mezinárodní)",
+
+  // "cc-license.sampling.label": "Which Sampling license would you like to use?",
+  "cc-license.sampling.label": "Kterou licenci Sampling chcete použít?",
+
+  // "cc-license.sampling.hint": "Choose which kind of sampling, remixing or mash-up of your work you allow.",
+  "cc-license.sampling.hint": "Zvolte, jaký druh samplování, remixování nebo mash-upu vašeho díla povolujete.",
+
+  // "cc-license.sampling.option.sampling.label": "Sampling",
+  "cc-license.sampling.option.sampling.label": "Sampling",
+
+  // "cc-license.sampling.option.sampling.hint": "Visitors may sample, remix or transform parts of your work for any purpose other than advertising, but may not copy or distribute the entire work.",
+  "cc-license.sampling.option.sampling.hint": "Návštěvníci mohou části vašeho díla samplovat, remixovat nebo upravovat za jakýmkoli účelem kromě reklamy, ale nesmí kopírovat ani šířit celé dílo.",
+
+  // "cc-license.sampling.option.samplingplus.label": "Sampling Plus",
+  "cc-license.sampling.option.samplingplus.label": "Sampling Plus",
+
+  // "cc-license.sampling.option.samplingplus.hint": "Visitors may sample, remix or transform parts of your work for any purpose other than advertising, and may also copy and distribute the entire work for non-commercial purposes.",
+  "cc-license.sampling.option.samplingplus.hint": "Návštěvníci mohou části vašeho díla samplovat, remixovat nebo upravovat za jakýmkoli účelem kromě reklamy a celé dílo mohou kopírovat a šířit pro nekomerční účely.",
+
+  // "cc-license.sampling.option.ncsamplingplus.label": "NonCommercial Sampling Plus",
+  "cc-license.sampling.option.ncsamplingplus.label": "Nekomerční Sampling Plus",
+
+  // "cc-license.sampling.option.ncsamplingplus.hint": "Visitors may sample, remix or transform parts of your work, and copy and distribute the entire work, but only for non-commercial purposes.",
+  "cc-license.sampling.option.ncsamplingplus.hint": "Návštěvníci mohou části vašeho díla samplovat, remixovat nebo upravovat a celé dílo kopírovat a šířit, ale pouze pro nekomerční účely.",
+
   // "submission.sections.general.add-more": "Add more",
   "submission.sections.general.add-more": "Přidat další",
 
