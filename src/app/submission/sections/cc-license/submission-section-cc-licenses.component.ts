@@ -324,7 +324,12 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
         // set it) should queue a patch. Otherwise a save response would queue a remove of an already removed uri.
         if (hasValue(data.accepted) && this.data.accepted !== data.accepted) {
           const path = this.pathCombiner.getPath('uri');
-          if (data.accepted) {
+          if (data.accepted && this.uriRemoveQueued && wasUri && this.isSelectionForUri(wasUri)) {
+            // The stored license is accepted again before its remove was saved. Queue it right away, as an add
+            // from the asynchronous link lookup below could miss a save that is already on its way.
+            this.operationsBuilder.add(path, wasUri, false, true);
+            this.uriRemoveQueued = false;
+          } else if (data.accepted) {
             // Only add URI if we're switching from not accepted to accepted
             const licenseLink$ = this.getCcLicenseLink$();
             if (licenseLink$) {
@@ -424,14 +429,50 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
     if (hasValue(this.data?.ccLicense) || !this.storedCcLicenseLink) {
       return;
     }
-    const parsed = this.parseCcLicenseUri(this.storedCcLicenseLink);
-    if (!parsed) {
+    const selection = this.getSelectionForUri(this.storedCcLicenseLink);
+    if (!selection) {
+      // Unknown uri, or the license might be on a page that hasn't been loaded yet
       return;
+    }
+    this.selectedCcLicense = selection.license;
+    this.updateSectionData({
+      ccLicense: {
+        id: selection.license.id,
+        fields: selection.fields,
+      },
+    });
+  }
+
+  /**
+   * Whether the currently selected license and options are the ones the given license uri was issued for.
+   * @param uri the license uri
+   */
+  private isSelectionForUri(uri: string): boolean {
+    const selection = this.getSelectionForUri(uri);
+    const selectedCcLicense = this.getSelectedCcLicense();
+    if (!selection || !selectedCcLicense || selectedCcLicense.id !== selection.license.id) {
+      return false;
+    }
+    return (selection.license.fields ?? []).every((field) => {
+      const expected = selection.fields[field.id];
+      const actual = this.getSelectedOption(selectedCcLicense, field);
+      return !!expected && !!actual && expected.id === actual.id;
+    });
+  }
+
+  /**
+   * Get the license and field answers that a given license uri was issued for.
+   * Returns null when the uri is not a known Creative Commons license or the license isn't loaded.
+   * @param uri the license uri
+   */
+  private getSelectionForUri(uri: string): { license: SubmissionCcLicence, fields: { [fieldId: string]: Option } } {
+    const parsed = this.parseCcLicenseUri(uri);
+    if (!parsed) {
+      return null;
     }
     const license = this.submissionCcLicenses.find((ccLicense) => parsed.matches(ccLicense.name ?? ''));
     if (!license) {
-      // The license might be on a page that hasn't been loaded yet
-      return;
+      return null;
     }
 
     const fields: { [fieldId: string]: Option } = {};
@@ -457,14 +498,7 @@ export class SubmissionSectionCcLicensesComponent extends SectionModelComponent 
         fields[field.id] = option;
       }
     });
-
-    this.selectedCcLicense = license;
-    this.updateSectionData({
-      ccLicense: {
-        id: license.id,
-        fields,
-      },
-    });
+    return { license, fields };
   }
 
   /**

@@ -393,6 +393,33 @@ describe('SubmissionSectionCcLicensesComponent', () => {
       expect(operationsBuilder.add).toHaveBeenCalledTimes(1);
     });
 
+    describe('when the stored license is selected', () => {
+      const cc0Uri = 'https://creativecommons.org/publicdomain/zero/1.0/';
+      const cc0License: SubmissionCcLicence = {
+        id: 'cc0', type: SUBMISSION_CC_LICENSE, name: 'CC0 1.0 Universal', fields: [], _links: submissionCcLicenses[0]._links,
+      };
+
+      beforeEach(() => {
+        component.submissionCcLicenses = [cc0License];
+        submissionCcLicenseUrlDataService.getCcLicenseLink.calls.reset();
+      });
+
+      it('should queue the stored uri right away when it is ticked again before saving', () => {
+        component.sectionData.data = { uri: cc0Uri, ccLicense: { id: 'cc0', fields: {} } };
+        sectionState$.next({ data: { uri: cc0Uri, ccLicense: { id: 'cc0', fields: {} }, accepted: false } });
+        sectionState$.next({ data: { uri: cc0Uri, ccLicense: { id: 'cc0', fields: {} }, accepted: true } });
+        expect(operationsBuilder.add).toHaveBeenCalledOnceWith(jasmine.anything(), cc0Uri, false, true);
+        expect(submissionCcLicenseUrlDataService.getCcLicenseLink).not.toHaveBeenCalled();
+      });
+
+      it('should look up the link when the selection differs from the stored uri', () => {
+        component.sectionData.data = { uri, ccLicense: { id: 'cc0', fields: {} } };
+        sectionState$.next({ data: { uri, ccLicense: { id: 'cc0', fields: {} }, accepted: false } });
+        sectionState$.next({ data: { uri, ccLicense: { id: 'cc0', fields: {} }, accepted: true } });
+        expect(operationsBuilder.add).toHaveBeenCalledOnceWith(jasmine.anything(), 'test cc license link', false, true);
+      });
+    });
+
     it('should not queue a duplicate add for a license the server already stores', () => {
       component.sectionData.data = { uri };
       sectionState$.next({ data: { uri, accepted: false } });
