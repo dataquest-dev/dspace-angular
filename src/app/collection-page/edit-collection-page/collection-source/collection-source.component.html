@@ -52,6 +52,26 @@ class="fas fa-save"></i>
     (cancel)="onCancel()"></ds-form>
   }
 </div>
+@if (contentSource && (contentSource?.harvestType === harvestTypeMetadataAndBitstreams)) {
+  <div class="container mt-2">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="allowExternalUrlsCheck"
+            [checked]="contentSource.allowExternalUrls" (change)="changeAllowExternalUrls()"
+            [attr.aria-describedby]="'allowExternalUrlsWarning'">
+          <label class="form-check-label"
+          for="allowExternalUrlsCheck">{{ 'collection.edit.tabs.source.allow-external-urls' | translate }}</label>
+        </div>
+        <!-- Warning styling only in the risky state; no role="alert", this is static help text -->
+        <div id="allowExternalUrlsWarning" class="mt-2"
+          [ngClass]="contentSource.allowExternalUrls ? 'alert alert-warning' : 'form-text'">
+          {{ 'collection.edit.tabs.source.allow-external-urls.warning' | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+}
 @if ((contentSource?.harvestType !== harvestTypeNone)) {
   <div class="container mt-2">
     <div class="row">
