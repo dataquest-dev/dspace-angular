@@ -5940,4 +5940,6 @@
   "navbar.about.project-partnership": "Project partnerships",
 
   "embargo.listelement.badge": "Embargo until {{ date }}",
+
+  "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
 }

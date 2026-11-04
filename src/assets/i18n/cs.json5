@@ -8413,4 +8413,6 @@
   "item.page.cc.license.disclaimer": "Except where otherwised noted, this item's license is described as",
   // "embargo.listelement.badge": "Embargo until {{ date }}",
   "embargo.listelement.badge": "Embargo do {{ date }}",
+  // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+  "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
 }
