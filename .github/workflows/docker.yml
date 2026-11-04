@@ -10,6 +10,7 @@ on:
   push:
     branches:
       - dtq-dev
+      - dtq-dev-767-base
       - customer/*
   pull_request:
   workflow_dispatch:
