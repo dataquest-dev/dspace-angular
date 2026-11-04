@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { catchError, filter, map, startWith, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { hasValue, isNotEmpty } from '../../shared/empty.util';
 import { getRemoteDataPayload } from '../../core/shared/operators';
@@ -7,7 +7,7 @@ import { Bitstream } from '../../core/shared/bitstream.model';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
 import { AuthService } from '../../core/auth/auth.service';
-import { combineLatest as observableCombineLatest, Observable, of as observableOf } from 'rxjs';
+import { combineLatest as observableCombineLatest, Observable, of as observableOf, Subject } from 'rxjs';
 import { FileService } from '../../core/shared/file.service';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
 import { getForbiddenRoute } from '../../app-routing-paths';
@@ -27,10 +27,12 @@ import { environment } from '../../../environments/environment';
 /**
  * Page component for downloading a bitstream
  */
-export class BitstreamDownloadPageComponent implements OnInit {
+export class BitstreamDownloadPageComponent implements OnInit, OnDestroy {
 
   bitstream$: Observable<Bitstream>;
   bitstreamRD$: Observable<RemoteData<Bitstream>>;
+
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -45,7 +47,6 @@ export class BitstreamDownloadPageComponent implements OnInit {
     private responseService: ServerResponseService,
     @Inject(PLATFORM_ID) protected platformId: string
   ) {
-    this.initPageLinks();
   }
 
   back(): void {
@@ -62,7 +63,7 @@ export class BitstreamDownloadPageComponent implements OnInit {
       getRemoteDataPayload()
     );
 
-    this.bitstream$.pipe(
+    const download$ = this.bitstream$.pipe(
       switchMap((bitstream: Bitstream) => {
         const isAuthorized$ = this.authorizationService.isAuthorized(FeatureID.CanDownload, isNotEmpty(bitstream) ? bitstream.self : undefined);
         const isLoggedIn$ = this.auth.isAuthenticated();
@@ -82,6 +83,13 @@ export class BitstreamDownloadPageComponent implements OnInit {
           return [[isAuthorized, isLoggedIn, bitstream, '']];
         }
       })
+    );
+
+    download$.pipe(
+      withLatestFrom(this.initPageLinks().pipe(startWith(undefined))),
+      take(1),
+      map(([download]) => download),
+      takeUntil(this.destroy$)
     ).subscribe(([isAuthorized, isLoggedIn, bitstream, fileLink]: [boolean, boolean, Bitstream, string]) => {
       if (isAuthorized && isLoggedIn && isNotEmpty(fileLink)) {
         this.hardRedirectService.redirect(fileLink);
@@ -101,22 +109,31 @@ export class BitstreamDownloadPageComponent implements OnInit {
    *
    * @private
    */
-  private initPageLinks(): void {
-    if (!environment.signpostingEnabled) {
-      return;
+  private initPageLinks(): Observable<void> {
+    if (!environment.signpostingEnabled || !isPlatformServer(this.platformId)) {
+      return observableOf(undefined);
     }
-    if (isPlatformServer(this.platformId)) {
-      this.route.params.subscribe(params => {
-        this.signpostingDataService.getLinks(params.id).pipe(take(1)).subscribe((signpostingLinks: SignpostingLink[]) => {
-          let links = '';
-
-          signpostingLinks.forEach((link: SignpostingLink) => {
-            links = links + (isNotEmpty(links) ? ', ' : '') + `<${link.href}> ; rel="${link.rel}"` + (isNotEmpty(link.type) ? ` ; type="${link.type}" ` : ' ');
-          });
-
+    return this.route.params.pipe(
+      take(1),
+      switchMap(params => this.signpostingDataService.getLinks(params.id).pipe(take(1))),
+      tap((signpostingLinks: SignpostingLink[]) => {
+        const links = (Array.isArray(signpostingLinks) ? signpostingLinks : []).map((link: SignpostingLink) =>
+          `<${link.href}> ; rel="${link.rel}"` + (isNotEmpty(link.type) ? ` ; type="${link.type}" ` : ' ')
+        ).join(', ');
+        if (isNotEmpty(links)) {
           this.responseService.setHeader('Link', links);
-        });
-      });
-    }
+        }
+      }),
+      map(() => undefined),
+      catchError(() => {
+        console.warn('Unable to load signposting links for the download response.');
+        return observableOf(undefined);
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
