@@ -1,0 +1,6 @@
+:host ::ng-deep .file-section {
+  ds-themed-file-download-link { display: block; }
+  ds-themed-file-download-link:not(:last-of-type) { margin-bottom: 0.25rem; }
+  ds-themed-file-download-link br { display: none; }
+  ds-themed-file-download-link a { word-break: break-all; margin-right: 0.5rem; }
+}
