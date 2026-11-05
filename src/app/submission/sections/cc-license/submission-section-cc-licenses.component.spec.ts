@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SubmissionSectionCcLicensesComponent } from './submission-section-cc-licenses.component';
 import { SUBMISSION_CC_LICENSE } from '../../../core/submission/models/submission-cc-licence.resource-type';
-import { of as observableOf } from 'rxjs';
+import { of as observableOf, Subject } from 'rxjs';
 import { SubmissionCcLicenseDataService } from '../../../core/submission/submission-cc-license-data.service';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -139,9 +139,11 @@ describe('SubmissionSectionCcLicensesComponent', () => {
     getCcLicenseLink: observableOf('test cc license link'),
   });
 
+  let sectionState$: Subject<any>;
+
   const sectionService = {
     getSectionState: () => {
-      return observableOf({});
+      return sectionState$;
     },
     setSectionStatus: () => undefined,
     updateSectionData: (submissionId, sectionId, updatedData) => {
@@ -186,6 +188,7 @@ describe('SubmissionSectionCcLicensesComponent', () => {
   }));
 
   beforeEach(() => {
+    sectionState$ = new Subject<any>();
     fixture = TestBed.createComponent(SubmissionSectionCcLicensesComponent);
     component = fixture.componentInstance;
     de = fixture.debugElement;
@@ -279,6 +282,170 @@ describe('SubmissionSectionCcLicensesComponent', () => {
           expect(component.getSectionStatus()).toBeObservable(cold('(a|)', { a: true }));
         });
       });
+    });
+  });
+
+  describe('when a license uri is stored', () => {
+
+    const enumOption = (id: string) => ({ id, label: id, description: id });
+    const _links = { self: { href: 'test link' } };
+    const cc30: SubmissionCcLicence = {
+      id: 'cc30',
+      type: SUBMISSION_CC_LICENSE,
+      name: 'Creative Commons License (3.0)',
+      fields: [
+        { id: 'commercial', label: 'commercial', description: '', enums: [enumOption('y'), enumOption('n')] },
+        { id: 'derivatives', label: 'derivatives', description: '', enums: [enumOption('y'), enumOption('sa'), enumOption('n')] },
+        { id: 'jurisdiction', label: 'jurisdiction', description: '', enums: [enumOption(''), enumOption('us')] },
+      ],
+      _links,
+    };
+    const cc40: SubmissionCcLicence = {
+      id: 'cc40',
+      type: SUBMISSION_CC_LICENSE,
+      name: 'Creative Commons License (4.0)',
+      fields: [
+        { id: 'commercial', label: 'commercial', description: '', enums: [enumOption('y'), enumOption('n')] },
+        { id: 'derivatives', label: 'derivatives', description: '', enums: [enumOption('y'), enumOption('sa'), enumOption('n')] },
+      ],
+      _links,
+    };
+    const cc0: SubmissionCcLicence = { id: 'cc0', type: SUBMISSION_CC_LICENSE, name: 'CC0 1.0 Universal', fields: [], _links };
+    const mark: SubmissionCcLicence = { id: 'mark', type: SUBMISSION_CC_LICENSE, name: 'Public Domain Mark 1.0 Universal', fields: [], _links };
+    const sampling: SubmissionCcLicence = {
+      id: 'sampling',
+      type: SUBMISSION_CC_LICENSE,
+      name: 'Creative Commons Sampling License (1.0)',
+      fields: [
+        { id: 'sampling', label: 'sampling', description: '', enums: [enumOption('sampling'), enumOption('samplingplus'), enumOption('ncsamplingplus')] },
+      ],
+      _links,
+    };
+
+    const restore = (uri: string) => {
+      component.submissionCcLicenses = [cc30, cc40, cc0, mark, sampling];
+      component.sectionData.data = { uri };
+      (component as any).restoreSelectionFromStoredUri();
+    };
+
+    it('should restore a CC 4.0 license with its options', () => {
+      restore('https://creativecommons.org/licenses/by-nc-sa/4.0/');
+      expect(component.data.ccLicense.id).toEqual('cc40');
+      expect(component.data.ccLicense.fields.commercial.id).toEqual('n');
+      expect(component.data.ccLicense.fields.derivatives.id).toEqual('sa');
+      expect(component.data.uri).toEqual('https://creativecommons.org/licenses/by-nc-sa/4.0/');
+    });
+
+    it('should restore a CC 3.0 license with its jurisdiction', () => {
+      restore('https://creativecommons.org/licenses/by-nd/3.0/us/');
+      expect(component.data.ccLicense.id).toEqual('cc30');
+      expect(component.data.ccLicense.fields.commercial.id).toEqual('y');
+      expect(component.data.ccLicense.fields.derivatives.id).toEqual('n');
+      expect(component.data.ccLicense.fields.jurisdiction.id).toEqual('us');
+    });
+
+    it('should restore a Sampling license with its option', () => {
+      restore('https://creativecommons.org/licenses/nc-sampling+/1.0/');
+      expect(component.data.ccLicense.id).toEqual('sampling');
+      expect(component.data.ccLicense.fields.sampling.id).toEqual('ncsamplingplus');
+    });
+
+    it('should distinguish public domain licenses with the same version', () => {
+      restore('https://creativecommons.org/publicdomain/mark/1.0/');
+      expect(component.data.ccLicense.id).toEqual('mark');
+      restore('https://creativecommons.org/publicdomain/zero/1.0/');
+      expect(component.data.ccLicense.id).toEqual('cc0');
+    });
+
+    it('should leave an unknown uri untouched', () => {
+      restore('https://example.org/my-license');
+      expect(component.data.ccLicense).toBeUndefined();
+      expect(component.accepted).toBeTrue();
+    });
+
+    it('should not override an existing selection', () => {
+      component.submissionCcLicenses = [cc30, cc40, cc0, mark];
+      component.sectionData.data = { uri: 'https://creativecommons.org/licenses/by/4.0/', ccLicense: { id: 'cc0', fields: {} } };
+      (component as any).restoreSelectionFromStoredUri();
+      expect(component.data.ccLicense.id).toEqual('cc0');
+    });
+  });
+
+  describe('when the section state changes', () => {
+    const uri = 'https://creativecommons.org/licenses/by/4.0/';
+
+    beforeEach(() => {
+      operationsBuilder.add.calls.reset();
+      operationsBuilder.remove.calls.reset();
+    });
+
+    it('should queue a remove when the stored license is no longer accepted', () => {
+      component.sectionData.data = { uri };
+      sectionState$.next({ data: { uri, accepted: false } });
+      expect(operationsBuilder.remove).toHaveBeenCalledTimes(1);
+    });
+
+    it('should queue the stored license again when it is unticked and ticked again before saving', () => {
+      component.sectionData.data = { uri };
+      sectionState$.next({ data: { uri, accepted: false } });
+      sectionState$.next({ data: { uri, accepted: true } });
+      expect(operationsBuilder.remove).toHaveBeenCalledTimes(1);
+      expect(operationsBuilder.add).toHaveBeenCalledTimes(1);
+    });
+
+    describe('when the stored license is selected', () => {
+      const cc0Uri = 'https://creativecommons.org/publicdomain/zero/1.0/';
+      const cc0License: SubmissionCcLicence = {
+        id: 'cc0', type: SUBMISSION_CC_LICENSE, name: 'CC0 1.0 Universal', fields: [], _links: submissionCcLicenses[0]._links,
+      };
+
+      beforeEach(() => {
+        component.submissionCcLicenses = [cc0License];
+        submissionCcLicenseUrlDataService.getCcLicenseLink.calls.reset();
+      });
+
+      it('should queue the stored uri right away when it is ticked again before saving', () => {
+        component.sectionData.data = { uri: cc0Uri, ccLicense: { id: 'cc0', fields: {} } };
+        sectionState$.next({ data: { uri: cc0Uri, ccLicense: { id: 'cc0', fields: {} }, accepted: false } });
+        sectionState$.next({ data: { uri: cc0Uri, ccLicense: { id: 'cc0', fields: {} }, accepted: true } });
+        expect(operationsBuilder.add).toHaveBeenCalledOnceWith(jasmine.anything(), cc0Uri, false, true);
+        expect(submissionCcLicenseUrlDataService.getCcLicenseLink).not.toHaveBeenCalled();
+      });
+
+      it('should look up the link when the selection differs from the stored uri', () => {
+        component.sectionData.data = { uri, ccLicense: { id: 'cc0', fields: {} } };
+        sectionState$.next({ data: { uri, ccLicense: { id: 'cc0', fields: {} }, accepted: false } });
+        sectionState$.next({ data: { uri, ccLicense: { id: 'cc0', fields: {} }, accepted: true } });
+        expect(operationsBuilder.add).toHaveBeenCalledOnceWith(jasmine.anything(), 'test cc license link', false, true);
+      });
+    });
+
+    it('should not queue a duplicate add for a license the server already stores', () => {
+      component.sectionData.data = { uri };
+      sectionState$.next({ data: { uri, accepted: false } });
+      // Section data from the server, without an accepted state, ends the pending remove
+      sectionState$.next({ data: { uri } });
+      sectionState$.next({ data: { uri, accepted: true } });
+      expect(operationsBuilder.add).not.toHaveBeenCalled();
+    });
+
+    it('should not queue a remove for a save response of an already removed license', () => {
+      component.sectionData.data = { uri, accepted: false };
+      // The REST API returns the cleared section data without an accepted state
+      sectionState$.next({ data: { uri: null, rights: null, file: null } });
+      expect(operationsBuilder.remove).not.toHaveBeenCalled();
+      expect(component.accepted).toBeFalse();
+    });
+
+    it('should queue a single remove when another license is selected', () => {
+      // Like the store, only apply the update once it is emitted by the section state
+      let updatedData;
+      spyOn(sectionService, 'updateSectionData').and.callFake((submissionId, sectionId, data) => updatedData = data);
+      component.submissionCcLicenses = submissionCcLicenses;
+      component.sectionData.data = { uri };
+      component.selectCcLicense(submissionCcLicenses[0]);
+      sectionState$.next({ data: updatedData });
+      expect(operationsBuilder.remove).toHaveBeenCalledTimes(1);
     });
   });
 });
