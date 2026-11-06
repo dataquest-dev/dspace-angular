@@ -7,7 +7,7 @@ on:
 jobs:
   playwright-tests:
     runs-on: dspace-test-1
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - name: Checkout Playwright tests
         uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
         working-directory: dspace-ui-tests/scripts
         env:
           HOME_URL: https://dev-5.pc:8443/repository/
-          NAME: DEFAULT
+          NAME: LINDAT
           PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
         run: |
           ./test.sh

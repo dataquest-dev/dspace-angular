@@ -22,7 +22,7 @@
       </dd>
       <dt>{{'item.file.description.description' | translate}}</dt>
       <dd>
-        {{ fileInput.description }}
+        {{ (fileInput.description) || ('item.file.description.na' | translate) }}
       </dd>
       <dt>{{'item.file.description.checksum' | translate}}</dt>
       <dd>

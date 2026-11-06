@@ -100,4 +100,26 @@ describe('FileDescriptionComponent', () => {
     ).nativeElement;
     expect(fileNameElement.textContent).toContain('testFile');
   });
+
+  it('should show the fallback translation key when description is empty', () => {
+    component.fileInput.description = '';
+    fixture.detectChanges();
+
+    const descDt = fixture.debugElement.queryAll(By.css('.file-content dt'))
+       .find((de) => (de.nativeElement as HTMLElement).textContent?.includes('item.file.description.description'));
+     expect(descDt).toBeTruthy();
+     const descElement = (descDt!.nativeElement as HTMLElement).nextElementSibling as HTMLElement;
+     expect(descElement.textContent).toContain('item.file.description.na');
+  });
+
+  it('should show the description text when description is present', () => {
+    component.fileInput.description = 'This is a test description';
+    fixture.detectChanges();
+
+    const descDt = fixture.debugElement.queryAll(By.css('.file-content dt'))
+       .find((de) => (de.nativeElement as HTMLElement).textContent?.includes('item.file.description.description'));
+     expect(descDt).toBeTruthy();
+     const descElement = (descDt!.nativeElement as HTMLElement).nextElementSibling as HTMLElement;
+     expect(descElement.textContent).toContain('This is a test description');
+  });
 });
