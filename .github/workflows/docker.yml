@@ -62,11 +62,45 @@ jobs:
       REDEPLOY_SANDBOX_URL:  ${{ secrets.REDEPLOY_SANDBOX_URL }}
       REDEPLOY_DEMO_URL:  ${{ secrets.REDEPLOY_DEMO_URL }}
 
-      #  deploy:
-      #    needs: dspace-angular
-      #    uses: ufal/dspace-angular/.github/workflows/deploy.yml@clarin-v7
-      #    if: ${{ github.event_name != 'pull_request' }}
-      #    with:
-      #      INSTANCE: '5'
-      #      IMPORT: false
-      #    secrets: inherit
+  ###########################################################################
+  # Notify ufal/dspace-k8s of a new build, for the ok-dspace test environment
+  ###########################################################################
+  # Replaces the old commented-out deploy stub, which targeted the dataquest
+  # docker-compose instances (dev-5/dev-8) we no longer have access to.
+  #
+  # Runs only for pushes to `clarin-v7` - currently the default branch, named
+  # explicitly here because that is exactly what the guard below matches - and
+  # only after the image this environment consumes has actually been pushed.
+  #
+  # This job records a new version; it does not deploy. It sends a
+  # repository_dispatch to ufal/dspace-k8s, which pins the tag to git, and a
+  # reconciler inside that cluster applies it. No deployment step and no cluster
+  # credential exists in this repository, or anywhere in GitHub.
+  deploy-ok-dspace:
+    if: github.repository == 'ufal/dspace-angular' && github.event_name == 'push' && github.ref_name == 'clarin-v7'
+    # dspace-angular-dist, NOT dspace-angular: the latter builds the '-dev'
+    # suffixed image, while the overlay runs the unsuffixed dist image.
+    needs: [dspace-angular-dist]
+    runs-on: ubuntu-latest
+    # This job authenticates with a PAT and never uses GITHUB_TOKEN, so it needs
+    # none of the workflow-level permissions at all.
+    permissions: {}
+    steps:
+      # One POST, hand-rolled with the `gh` and `jq` that ubuntu-latest already
+      # ships, rather than a third-party dispatch action: a single API call is
+      # not worth a supply-chain dependency that runs with the PAT in its
+      # environment.
+      - name: Notify ufal/dspace-k8s
+        env:
+          # Fine-grained PAT, scoped to ufal/dspace-k8s only, Contents: write
+          # (what POST /repos/{owner}/{repo}/dispatches requires).
+          GH_TOKEN: ${{ secrets.OK_DSPACE_DEPLOY_TOKEN }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          # jq builds the payload from an --arg, so the value is a JSON string
+          # by construction rather than by careful quoting.
+          jq -n --arg sha "${SHA}" \
+            '{event_type: "deploy-ok-dspace",
+              client_payload: {component: "frontend", sha: $sha}}' \
+            | gh api -X POST repos/ufal/dspace-k8s/dispatches --input -
