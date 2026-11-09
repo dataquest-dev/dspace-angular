@@ -19,7 +19,7 @@ jobs:
       - name: test
         working-directory: dspace-ui-tests/scripts
         env:
-          HOME_URL: https://dev-5.pc:8443/repository/
+          HOME_URL: http://dev-6.pc:8633/repository/
           NAME: DEFAULT
           PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
         run: |
