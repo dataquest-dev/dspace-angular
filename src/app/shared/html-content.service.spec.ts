@@ -38,7 +38,7 @@ describe('HtmlContentService', () => {
   /**
    * @param nameSpace  value of appConfig.ui.nameSpace
    * @param platformId 'server' exercises the SSR branch of buildRuntimeUrl
-   * @param request    the express request injected through the REQUEST token
+   * @param request    an express request provided through the REQUEST token; the service ignores it
    */
   function setup(nameSpace: string, platformId: string = 'browser', request?: any): void {
     TestBed.configureTestingModule({
