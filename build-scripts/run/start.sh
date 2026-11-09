@@ -10,7 +10,7 @@ echo "Using envfile: [$ENVFILE] for project: [$PROJECT]"
 
 source $ENVFILE
 
-# The base compose files publish fixed host ports (5432/8080/8983/4000), which are global to
+# The vanilla compose files publish fixed host ports (5432/8080/8983/4000), which are global to
 # the machine, so this `up` would fight whichever instance already owns them. When
 # INSTANCE_OVERLAY points at /opt/dspace-envs/<instance>, bring the containers up through that
 # overlay too: its `ports: !override` replaces the fixed ports with instance-scoped ones.

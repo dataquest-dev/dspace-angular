@@ -23,7 +23,7 @@ on:
       DUMP_PATH:
         required: false
         type: string
-        default: ''
+        default: '/opt/dspace-envs/8633/dump/dspace_dev5_dump_26.07.16.sql'
       ASSETSTORE_PATH:
         required: false
         type: string
@@ -37,11 +37,9 @@ on:
         type: choice
         options:
           - '8633'
-      # Unlike dtq-dev-9-base this defaults to false: a plain "Run workflow" must not
-      # load a dump into 8633, which is meant to start empty.
       IMPORT:
         required: true
-        default: false
+        default: true
         type: boolean
       ERASE_DB:
         required: false
@@ -55,7 +53,7 @@ on:
         description: 'Absolute path of the SQL dump ON THE DEV MACHINE (used only when IMPORT is checked)'
         required: false
         type: string
-        default: ''
+        default: '/opt/dspace-envs/8633/dump/dspace_dev5_dump_26.07.16.sql'
       ASSETSTORE_PATH:
         description: 'Absolute path of the assetstore directory ON THE DEV MACHINE'
         required: false
@@ -108,11 +106,11 @@ jobs:
             -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
             config 2>&1 | grep -nE '^  [a-z-]+:|container_name:|published:|^\s+ports:' | head -40 \
             || echo "compose config failed"
-          # The overlay must REPLACE the fixed ports the base compose files publish, not add to
+          # The overlay must REPLACE the fixed ports the vanilla files publish, not add to
           # them: compose merges `ports` lists across -f files. If a fixed port survives the
           # merge above, the overlay is missing `ports: !override` and this instance will
           # fight whichever one already owns it on the host.
-          echo "===== base compose files alone, for comparison (the fixed ports the overlay must replace)"
+          echo "===== vanilla files alone, for comparison (the fixed ports the overlay must replace)"
           docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
             -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
             config 2>&1 | grep -nE '^  [a-z-]+:|container_name:|published:|^\s+ports:' | head -30 \
@@ -122,7 +120,7 @@ jobs:
                -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
                -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
                config 2>/dev/null | grep -qE 'published: "(5432|8080|8983|4000|9876)"'; then
-            echo "  WARNING: overlay still inherits the base fixed ports."
+            echo "  WARNING: overlay still inherits vanilla fixed ports."
             echo "  Add 'ports: !override' to $CONFIG_PATH/docker-compose.yml and docker-compose-rest.yml,"
             echo "  otherwise the deploy will fail with 'port is already allocated'."
           else
@@ -133,7 +131,7 @@ jobs:
         run: |
           docker exec dspacedb$INSTANCE sh -c 'echo "PGPORT=$PGPORT"; pg_isready -U dspace; psql -U dspace -d postgres -tAc "SHOW port;" 2>/dev/null' || echo "could not probe dspacedb$INSTANCE"
 
-      # Does the instance actually hold the expected data and serve it? A green import
+      # Does the instance actually hold the imported data and serve it? A green import
       # job only proves the commands exited 0.
       - name: data + service health
         run: |
@@ -143,10 +141,17 @@ jobs:
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
             "select version, script, success from schema_version order by installed_rank desc limit 5;" \
             2>&1 || echo "could not read schema_version"
-          echo "===== anything database repair marked deleted"
+          # What `database repair` did to the imported CLARIN history. repair only rewrites
+          # this bookkeeping table -- it never touches user tables or their rows.
+          echo "===== CLARIN 7.6 entries / anything repair marked deleted"
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
-            "select installed_rank||' | '||version||' | type='||type||' | success='||success||' | '||script from schema_version where type='DELETE' order by installed_rank desc limit 12;" \
+            "select installed_rank||' | '||version||' | type='||type||' | success='||success||' | '||script from schema_version where version like '7.6%' or type='DELETE' order by installed_rank desc limit 12;" \
             2>&1 || echo "could not read schema_version"
+          echo "===== CLARIN-specific tables still present after repair"
+          docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
+            "select 'public tables total='||count(*) from information_schema.tables where table_schema='public';" 2>&1 || true
+          docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
+            "select string_agg(table_name, ', ') from information_schema.tables where table_schema='public' and (table_name like '%clarin%' or table_name like '%license%');" 2>&1 || true
           echo "===== row counts"
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
             "select 'item='||(select count(*) from item) || ' bitstream='||(select count(*) from bitstream) || ' collection='||(select count(*) from collection) || ' community='||(select count(*) from community) || ' eperson='||(select count(*) from eperson);" \
@@ -204,13 +209,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: import dump
+      - name: vanilla import
         run: |
           export DNAME=dspace${INSTANCE}
           export DDBNAME=dspacedb${INSTANCE}
 
           if [ ! -f "$DUMP_PATH" ]; then
-            echo "::error::Dump not found on ${{inputs.DEV_MACHINE}}: '$DUMP_PATH' (set the DUMP_PATH input)"
+            echo "::error::Dump not found on ${{inputs.DEV_MACHINE}}: $DUMP_PATH"
             exit 1
           fi
           echo "Importing dump: $DUMP_PATH ($(du -h "$DUMP_PATH" | cut -f1))"
@@ -221,7 +226,7 @@ jobs:
           echo "====="
           docker cp "$DUMP_PATH" $DDBNAME:/tmp/dump.sql
 
-          # Recreate the database from scratch and load the dump.
+          # Recreate the database from scratch and load the vanilla dump.
           docker exec $DDBNAME /bin/bash -c "
           dropdb -U dspace dspace || true &&
           createdb -U dspace --owner=dspace --encoding=UNICODE dspace &&
@@ -251,13 +256,17 @@ jobs:
           echo "Stopping app container so its restart loop can't kill the migration..."
           docker stop $DNAME || true
 
-          # `database repair` before `migrate`: if the dump's schema_version lists migrations
-          # that this tree does not carry, Flyway validation refuses to migrate at all
-          # ("Detected applied migration not resolved locally"). repair marks those entries
-          # as deleted; it only rewrites the bookkeeping table, never user tables.
+          # `database repair` before `migrate`: the dump comes from a CLARIN 7.6 instance,
+          # so its flyway_schema_history lists CLARIN-specific migrations that do not exist
+          # in this vanilla v9 tree. Flyway validation then refuses to migrate at all:
+          #   "Detected applied migration not resolved locally: 7.6.2026.06.01."
+          # repair marks those unresolvable entries as deleted, which is exactly what we want
+          # when migrating an old CLARIN dump onto vanilla v9 -- their DDL is already in the
+          # dump, we just do not carry the migration scripts any more.
           echo "Running one-off DB repair + migration via docker compose..."
           docker compose --env-file $ENVFILE -p dspace-${INSTANCE} \
             -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
+            \
             -f $OVERLAY/docker-compose-rest.yml -f $OVERLAY/docker-compose.yml \
             run --rm --no-deps --entrypoint /bin/bash dspace \
             -c "while (!</dev/tcp/dspacedb/5432) >/dev/null 2>&1; do sleep 1; done; cd /dspace/bin && ./dspace database repair && ./dspace database migrate ignored"
@@ -284,7 +293,6 @@ jobs:
             echo "Assetstore path is empty. Not copying assetstore."
           else
             docker cp "$ASSETSTORE_PATH" $DNAME:/dspace/
-            # The v7 image runs the webapp as the `dspace` user (see start.sh); v9 dropped this.
             docker exec -u root $DNAME chown -R dspace:dspace /dspace/assetstore
           fi
 
