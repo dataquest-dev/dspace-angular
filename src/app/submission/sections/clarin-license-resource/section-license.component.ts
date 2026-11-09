@@ -32,7 +32,7 @@ import { ItemDataService } from '../../../core/data/item-data.service';
 import { Item } from '../../../core/shared/item.model';
 import { MetadataValue } from '../../../core/shared/metadata.models';
 import { TranslateService } from '@ngx-translate/core';
-import { FindListOptions } from 'src/app/core/data/find-list-options.model';
+import { FindListOptions, MAX_PAGE_SIZE } from 'src/app/core/data/find-list-options.model';
 import { hasFailed } from 'src/app/core/data/request-entry-state.model';
 import {RequestParam} from '../../../core/cache/models/request-param.model';
 
@@ -404,9 +404,6 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
    * Get the license object from the API by the license name.
    */
   private async findClarinLicenseByName(licenseName): Promise<RemoteData<PaginatedList<ClarinLicense>>> {
-    if (licenseName.includes('+')) {
-      licenseName = encodeURIComponent(licenseName);
-    }
     const options = {
       searchParams: [
         new RequestParam('name', licenseName)
@@ -551,7 +548,7 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
     const options = new FindListOptions();
     options.currentPage = 0;
     // Load all licenses
-    options.elementsPerPage = 1000;
+    options.elementsPerPage = MAX_PAGE_SIZE;
     return this.clarinLicenseService.findAll(options, false)
       .pipe(getFirstSucceededRemoteListPayload())
       .toPromise();
