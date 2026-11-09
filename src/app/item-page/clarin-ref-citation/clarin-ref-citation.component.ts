@@ -7,10 +7,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  DomSanitizer,
-  SafeHtml,
-} from '@angular/platform-browser';
-import {
   NgbModal,
   NgbTooltip,
   NgbTooltipConfig,
@@ -64,9 +60,9 @@ export class ClarinRefCitationComponent implements OnInit {
 
   /**
    * The content of the reference box, which will be displayed in the tooltip.
-   * This content is fetched from the RefBox Controller.
+   * This content is fetched from the RefBox Controller and sanitized by Angular when rendered.
    */
-  refboxContent: BehaviorSubject<SafeHtml> = new BehaviorSubject<SafeHtml>(null);
+  refboxContent: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
   /**
    * The raw content of the reference box, which is fetched from the RefBox Controller.
@@ -84,8 +80,7 @@ export class ClarinRefCitationComponent implements OnInit {
               private modalService: NgbModal,
               private requestService: RequestService,
               protected rdbService: RemoteDataBuildService,
-              protected halService: HALEndpointService,
-              private sanitizer: DomSanitizer) {
+              protected halService: HALEndpointService) {
     // Configure the tooltip to show on click - `Copied` message
     config.triggers = 'click';
   }
@@ -94,7 +89,7 @@ export class ClarinRefCitationComponent implements OnInit {
     void this.fetchRefBoxContent()
       .then((content) => {
         this.refboxCopyContent = content; // Store raw HTML
-        this.refboxContent.next(this.sanitizer.bypassSecurityTrustHtml(content));
+        this.refboxContent.next(content);
       }).catch((error) => {
         console.error('Failed to fetch refbox content:', error);
         this.refboxCopyContent = this.EMPTY_CONTENT;
