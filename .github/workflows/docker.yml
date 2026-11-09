@@ -71,5 +71,5 @@ jobs:
       INSTANCE: '8633'
       IMPORT: false
       ERASE_DB: false
-      DEV_MACHINE: 'dev-6'
+      DEV_MACHINE: 'dev-20'
     secrets: inherit

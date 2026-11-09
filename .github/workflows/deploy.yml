@@ -7,7 +7,7 @@ on:
       DEV_MACHINE:
         required: false
         type: string
-        default: 'dev-6'
+        default: 'dev-20'
       INSTANCE:
         required: false
         type: string
@@ -50,7 +50,7 @@ on:
       DEV_MACHINE:
         required: false
         type: string
-        default: 'dev-6'
+        default: 'dev-20'
       DUMP_PATH:
         description: 'Absolute path of the SQL dump ON THE DEV MACHINE (used only when IMPORT is checked)'
         required: false
@@ -325,7 +325,7 @@ jobs:
             --repo "$REPO" \
             --ref master \
             -f CUSTOMER="${{ github.ref_name }}" \
-            -f URL="http://dev-6.pc:8633/repository/server/api" 2>&1)
+            -f URL="http://dev-20.pc:8633/repository/server/api" 2>&1)
 
           RUN_ID=$(echo "$OUTPUT" | grep -oE '/runs/[0-9]+' | grep -oE '[0-9]+')
 
@@ -354,7 +354,7 @@ jobs:
             --repo "$REPO" \
             --ref master \
             -f CUSTOMER="${{ github.ref_name }}" \
-            -f URL="http://dev-6.pc:8633/repository/server/api" 2>&1)
+            -f URL="http://dev-20.pc:8633/repository/server/api" 2>&1)
 
           RUN_ID=$(echo "$OUTPUT" | grep -oE '/runs/[0-9]+' | grep -oE '[0-9]+')
 
