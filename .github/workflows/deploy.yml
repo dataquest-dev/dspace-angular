@@ -23,7 +23,7 @@ on:
       DUMP_PATH:
         required: false
         type: string
-        default: '/opt/dspace-envs/8633/dump/dspace_dev5_dump_26.07.16.sql'
+        default: '/opt/dspace-envs/8633/dump/dspace_dev5_dump_26.07.16_anon.sql'
       ASSETSTORE_PATH:
         required: false
         type: string
@@ -53,7 +53,7 @@ on:
         description: 'Absolute path of the SQL dump ON THE DEV MACHINE (used only when IMPORT is checked)'
         required: false
         type: string
-        default: '/opt/dspace-envs/8633/dump/dspace_dev5_dump_26.07.16.sql'
+        default: '/opt/dspace-envs/8633/dump/dspace_dev5_dump_26.07.16_anon.sql'
       ASSETSTORE_PATH:
         description: 'Absolute path of the assetstore directory ON THE DEV MACHINE'
         required: false
