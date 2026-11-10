@@ -117,10 +117,20 @@ jobs:
             config 2>&1 | grep -nE '^  [a-z-]+:|container_name:|published:|^\s+ports:' | head -30 \
             || echo "compose config failed"
           echo "===== verdict"
-          if docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
+          # The greps above swallow compose errors (`cmd | grep | head || echo` never reaches
+          # the echo), so check the resolution itself first.
+          if ! err=$(docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
                -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
                -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
-               config 2>/dev/null | grep -qE 'published: "(5432|8080|8983|4000|9876)"'; then
+               config -q 2>&1); then
+            echo "  ERROR: compose config failed, the deploy will fail the same way:"
+            echo "$err" | sed 's/^/    /'
+          # On this branch the repo files build ports from INSTANCE (808${INSTANCE} -> 8088633),
+          # so an inherited port shows up as a 6+ digit number rather than a fixed one.
+          elif docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
+               -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
+               -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
+               config 2>/dev/null | grep -qE 'published: "(5432|8080|8983|4000|9876|[0-9]{6,})"'; then
             echo "  WARNING: overlay still inherits vanilla fixed ports."
             echo "  Add 'ports: !override' to $CONFIG_PATH/docker-compose.yml and docker-compose-rest.yml,"
             echo "  otherwise the deploy will fail with 'port is already allocated'."
@@ -208,6 +218,7 @@ jobs:
       ASSETSTORE_PATH: ${{inputs.ASSETSTORE_PATH}}
       DEV_MACHINE: ${{inputs.DEV_MACHINE}}
       ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+      USER_PASSWORD: ${{ secrets.DSPACE_USER_PASSWORD }}
     steps:
       - uses: actions/checkout@v6
 
@@ -232,7 +243,7 @@ jobs:
           docker exec $DDBNAME /bin/bash -c "
           dropdb -U dspace dspace || true &&
           createdb -U dspace --owner=dspace --encoding=UNICODE dspace &&
-          psql -U dspace -d dspace -f /tmp/dump.sql
+          psql -U dspace -d dspace -v ON_ERROR_STOP=1 -f /tmp/dump.sql
           "
           echo "====="
           docker exec $DDBNAME /bin/bash -c "rm -f /tmp/dump.sql" || true
@@ -303,6 +314,14 @@ jobs:
           export DNAME=dspace${INSTANCE}
           echo "Creating DSpace administrator..."
           docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace create-administrator -e dspace.admin.dev@dataquest.sk -f admin -l user -p \"${ADMIN_PASSWORD}\" -c en -o dataquest"
+
+      # The import replaced the whole DB, so the dev user start.sh created is gone too; the
+      # REST tests after import log in as this user.
+      - name: create dev user
+        run: |
+          export DNAME=dspace${INSTANCE}
+          echo "Creating DSpace dev user..."
+          docker exec $DNAME /bin/bash -c "cd /dspace/bin && ./dspace user --add -m dspace.user.dev@dataquest.sk -g meno -s priezvisko -l en -p \"${USER_PASSWORD}\" -o dataquest"
 
       - name: rebuild discovery index and run oai import
         run: |
