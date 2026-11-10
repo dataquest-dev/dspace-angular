@@ -20,7 +20,7 @@ jobs:
         working-directory: dspace-ui-tests/scripts
         env:
           HOME_URL: http://dev-20.pc:8633/repository/
-          NAME: DEFAULT
+          NAME: lindat-767
           PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
         run: |
           ./test.sh
