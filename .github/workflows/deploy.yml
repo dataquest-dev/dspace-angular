@@ -75,6 +75,7 @@ jobs:
       INSTANCE: ${{inputs.INSTANCE}}
       CONFIG_PATH: /opt/dspace-envs/${{inputs.INSTANCE}}
       ENVFILE: /opt/dspace-envs/${{inputs.INSTANCE}}/.env
+      DUMP_PATH: ${{inputs.DUMP_PATH}}
     steps:
       - uses: actions/checkout@v6
 
@@ -85,7 +86,7 @@ jobs:
           echo "===== $CONFIG_PATH/dump"
           ls -la "$CONFIG_PATH/dump/" || echo "MISSING: $CONFIG_PATH/dump"
           echo "===== dump referenced by DUMP_PATH input"
-          ls -la "${{ inputs.DUMP_PATH }}" || echo "MISSING dump: ${{ inputs.DUMP_PATH }}"
+          ls -la "$DUMP_PATH" || echo "MISSING dump: $DUMP_PATH"
           echo "===== port-ish keys from .env (values shown; these are ports, not secrets)"
           grep -E '^(PG_PORT|SOLR_PORT|DSPACE_PORT|DSPACE_FE_PORT|DSPACE_REST_PORT|DSPACE_DOCKER_REST_PORT|DSPACE_VER|DSPACE_HOST)=' "$ENVFILE" || echo "no port keys found"
 
@@ -205,6 +206,7 @@ jobs:
       CONFIG_PATH: /opt/dspace-envs/${{inputs.INSTANCE}}
       DUMP_PATH: ${{inputs.DUMP_PATH}}
       ASSETSTORE_PATH: ${{inputs.ASSETSTORE_PATH}}
+      DEV_MACHINE: ${{inputs.DEV_MACHINE}}
       ADMIN_PASSWORD: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
     steps:
       - uses: actions/checkout@v6
@@ -215,7 +217,7 @@ jobs:
           export DDBNAME=dspacedb${INSTANCE}
 
           if [ ! -f "$DUMP_PATH" ]; then
-            echo "::error::Dump not found on ${{inputs.DEV_MACHINE}}: $DUMP_PATH"
+            echo "::error::Dump not found on $DEV_MACHINE: $DUMP_PATH"
             exit 1
           fi
           echo "Importing dump: $DUMP_PATH ($(du -h "$DUMP_PATH" | cut -f1))"
