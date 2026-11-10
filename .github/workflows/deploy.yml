@@ -204,7 +204,7 @@ jobs:
         run: |
           ./start.sh dspace-$INSTANCE
           cd ../..
-          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
+          docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml -f $CONFIG_PATH/extra.yml up -d --no-build --remove-orphans
 
   import-8633:
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
