@@ -65,9 +65,11 @@ jobs:
 
   deploy:
     needs: dspace-angular
-    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@dtq-dev
     if: ${{ github.event_name != 'pull_request' }}
+    uses: ./.github/workflows/deploy.yml
     with:
-      INSTANCE: '5'
+      INSTANCE: '8633'
       IMPORT: false
+      ERASE_DB: false
+      DEV_MACHINE: 'dev-20'
     secrets: inherit
