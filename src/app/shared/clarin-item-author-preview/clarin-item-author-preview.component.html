@@ -5,14 +5,12 @@
               <span *ngIf="i == (itemAuthors | async).length -1 && (itemAuthors | async).length > 1">
                 {{'item.view.box.author.preview.and' | translate}}
               </span>
-              <a [href]="author.url" class="item-author">{{ author.name }}
-                <i *ngIf="author.isAuthority" class="fa-brands fa-orcid"> &nbsp;</i></a>
+              <ng-container *ngTemplateOutlet="authorLink; context: { $implicit: author }"></ng-container>
             </span>
   </div>
   <div *ngIf="(itemAuthors | async).length > 5">
     <div *ngFor="let author of (itemAuthors | async); let i = index">
-      <span *ngIf="i == 0" ><a [href]="author.url" class="item-author">{{ author.name }}
-        <i *ngIf="author.isAuthority" class="fa-brands fa-orcid"> &nbsp;</i></a>; et al.</span>
+      <span *ngIf="i == 0" ><ng-container *ngTemplateOutlet="authorLink; context: { $implicit: author }"></ng-container>; et al.</span>
     </div>
     <div class="item-author-wrapper">
               <span (click)="toggleShowEveryAuthor()" class="clarin-font-size cursor-pointer">
@@ -27,10 +25,26 @@
                   <span *ngIf="i == (itemAuthors | async).length -1">
                     {{'item.view.box.author.preview.and' | translate}}
                   </span>
-                  <a *ngIf="i > 0" [href]="author.url" class="item-author">{{author.name}}
-                    <i *ngIf="author.isAuthority" class="fa-brands fa-orcid"> &nbsp;</i></a>
+                  <ng-container *ngIf="i > 0">
+                    <ng-container *ngTemplateOutlet="authorLink; context: { $implicit: author }"></ng-container>
+                  </ng-container>
                 </span>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #authorLink let-author>
+  <a *ngIf="author.orcidUrl && linkNameToOrcid; else searchLink" [href]="author.orcidUrl" class="item-author"
+     target="_blank" rel="noopener noreferrer" [title]="'item.view.box.author.preview.orcid-link.title' | translate"
+     [attr.aria-label]="('item.view.box.author.preview.orcid-link.title' | translate) + ' ' + author.name">{{ author.name }}
+    <i class="fa-brands fa-orcid orcid-icon" aria-hidden="true"></i></a>
+  <ng-template #searchLink>
+    <a [href]="author.url" class="item-author">{{ author.name }}
+      <i *ngIf="author.isAuthority && !author.orcidUrl" class="fa-brands fa-orcid"> &nbsp;</i></a><a
+      *ngIf="author.orcidUrl" [href]="author.orcidUrl" class="orcid-icon-link" target="_blank" rel="noopener noreferrer"
+      [title]="'item.view.box.author.preview.orcid-link.title' | translate"
+      [attr.aria-label]="('item.view.box.author.preview.orcid-link.title' | translate) + ' ' + author.name"><i
+      class="fa-brands fa-orcid orcid-icon" aria-hidden="true"></i></a>
+  </ng-template>
+</ng-template>
