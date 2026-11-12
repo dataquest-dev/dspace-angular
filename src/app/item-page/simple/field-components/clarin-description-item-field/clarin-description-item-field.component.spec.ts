@@ -36,4 +36,20 @@ describe('ClarinDescriptionItemFieldComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should show markup in the description as text and keep URLs as links', () => {
+    component.item = Object.assign(new Item(), {
+      metadata: {
+        'dc.description': [{ language: null, value: '<b>Bold</b> <img src="pixel.png"> See https://example.org' }]
+      }
+    });
+    component.fields = ['dc.description'];
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.querySelector('b, img')).toBeNull();
+    expect(element.textContent).toContain('<b>Bold</b> <img src="pixel.png"> See https://example.org');
+    expect(element.querySelector('a').getAttribute('href')).toEqual('https://example.org');
+  });
 });

@@ -71,6 +71,41 @@ const mockItemWithAbstractOnly: ItemSearchResult = Object.assign(new ItemSearchR
       }
     })
 });
+const htmlDescription = 'Read more <a href="https://example.org/">here</a><img src="https://example.org/pixel.png">';
+const mockItemWithHtmlDescription: ItemSearchResult = Object.assign(new ItemSearchResult(), {
+  indexableObject:
+    Object.assign(new Item(), {
+      bundles: observableOf({}),
+      metadata: {
+        'dc.description': [
+          {
+            language: 'en_US',
+            value: htmlDescription
+          }
+        ]
+      }
+    })
+});
+const htmlAuthor = 'Smith <img src="https://example.org/pixel.png">';
+const mockItemWithHtmlAuthor: ItemSearchResult = Object.assign(new ItemSearchResult(), {
+  hitHighlights: {
+    'dc.contributor.author': [{
+      value: '<em>Smith</em> <img src="https://example.org/pixel.png">'
+    }],
+  },
+  indexableObject:
+    Object.assign(new Item(), {
+      bundles: observableOf({}),
+      metadata: {
+        'dc.contributor.author': [
+          {
+            language: 'en_US',
+            value: htmlAuthor
+          }
+        ]
+      }
+    })
+});
 const mockItemWithoutMetadata: ItemSearchResult = Object.assign(new ItemSearchResult(), {
   indexableObject:
     Object.assign(new Item(), {
@@ -247,6 +282,20 @@ describe('ItemSearchResultListElementComponent', () => {
     });
   });
 
+  describe('When a highlighted author has HTML markup', () => {
+    beforeEach(() => {
+      publicationListElementComponent.object = mockItemWithHtmlAuthor;
+      fixture.detectChanges();
+    });
+
+    it('should keep the highlight and render the markup as text', () => {
+      const itemAuthorField = fixture.debugElement.query(By.css('span.item-list-authors'));
+      expect(itemAuthorField.query(By.css('em'))).not.toBeNull();
+      expect(itemAuthorField.query(By.css('img'))).toBeNull();
+      expect(itemAuthorField.nativeElement.textContent).toContain(htmlAuthor);
+    });
+  });
+
   describe('When the item has no author', () => {
     beforeEach(() => {
       publicationListElementComponent.object = mockItemWithoutMetadata;
@@ -316,6 +365,24 @@ describe('ItemSearchResultListElementComponent', () => {
     it('should show the abstract span', () => {
       const abstractField = fixture.debugElement.query(By.css('div.item-list-abstract'));
       expect(abstractField).not.toBeNull();
+    });
+
+    it('should show the dc.description text unchanged', () => {
+      const abstractField = fixture.debugElement.query(By.css('div.item-list-abstract'));
+      expect(abstractField.nativeElement.textContent.trim()).toEqual('This is the abstract');
+    });
+  });
+
+  describe('When the item has HTML markup in dc.description', () => {
+    beforeEach(() => {
+      publicationListElementComponent.object = mockItemWithHtmlDescription;
+      fixture.detectChanges();
+    });
+
+    it('should render the markup as text, not as elements', () => {
+      const abstractField = fixture.debugElement.query(By.css('div.item-list-abstract'));
+      expect(abstractField.query(By.css('a, img'))).toBeNull();
+      expect(abstractField.nativeElement.textContent.trim()).toEqual(htmlDescription);
     });
   });
 

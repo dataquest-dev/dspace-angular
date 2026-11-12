@@ -26,10 +26,10 @@
       <p *ngIf="dso.hasMetadata('creativework.editor')"
          class="item-publisher card-text text-muted">
         <ds-truncatable-part [id]="dso.id" [minLines]="1">
-          <span class="item-editor">{{firstMetadataValue('creativework.editor')}}</span>
+          <span class="item-editor">{{firstMetadataValue('creativework.editor', false)}}</span>
           <span *ngIf="dso.hasMetadata('creativework.publisher')" class="item-publisher">
             <span>, </span>
-            {{firstMetadataValue('creativework.publisher')}}
+            {{firstMetadataValue('creativework.publisher', false)}}
           </span>
         </ds-truncatable-part>
       </p>

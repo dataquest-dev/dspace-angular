@@ -45,6 +45,15 @@ describe('PersonItemMetadataListElementComponent', () => {
     expect(linkText).toBe(lastName + ', ' + firstName);
   });
 
+  it('should show markup in the name as text', () => {
+    const name = 'Anonymous <img src="https://example.org/pixel.png">';
+    comp.mdRepresentation = Object.assign(new ItemMetadataRepresentation(Object.assign(new MetadataValue(), { value: name })), mockItem);
+    fixture.detectChanges();
+    const link = fixture.debugElement.query(By.css('a'));
+    expect(link.query(By.css('img'))).toBeNull();
+    expect(link.nativeElement.textContent).toBe(name);
+  });
+
   it('should show the description on hover over the link in a tooltip', () => {
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('mouseenter', null);

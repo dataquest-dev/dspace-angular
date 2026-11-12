@@ -1,3 +1,4 @@
+import escape from 'lodash/escape';
 import { take } from 'rxjs/operators';
 import {isEmpty } from '../../../../../empty.util';
 import {TranslateService} from '@ngx-translate/core';
@@ -25,7 +26,7 @@ export class DsDynamicAutocompleteService {
       .pipe(take(1))
       .subscribe( pn => { projectName = pn; });
 
-    return (fundingCode + ': ').bold() + fundingProjectCode + '<br>' + (projectName + ': ').bold() + fundingName;
+    return (fundingCode + ': ').bold() + escape(fundingProjectCode) + '<br>' + (projectName + ': ').bold() + escape(fundingName);
   }
 
   static pretifyLanguageSuggestion(suggestion, translateService: TranslateService) {
@@ -34,7 +35,7 @@ export class DsDynamicAutocompleteService {
     // fetch language message
     const languageMessage = translateService.instant('autocomplete.suggestion.language.title');
 
-    return (isoMessage + ': ').bold() + suggestion?.value + '<br>' + (languageMessage + ': ').bold() +
-      suggestion?.display;
+    return (isoMessage + ': ').bold() + escape(suggestion?.value) + '<br>' + (languageMessage + ': ').bold() +
+      escape(suggestion?.display);
   }
 }

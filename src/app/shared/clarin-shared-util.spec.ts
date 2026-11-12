@@ -1,6 +1,23 @@
-import { buildAuthoritySearchFilter, convertMetadataFieldIntoSearchType } from './clarin-shared-util';
+import { buildAuthoritySearchFilter, convertMetadataFieldIntoSearchType, makeLinks } from './clarin-shared-util';
 
 describe('clarin-shared-util', () => {
+  describe('makeLinks', () => {
+    it('turns URLs into links', () => {
+      expect(makeLinks('See https://example.org/a?b=1&c=2 now'))
+        .toBe('See <a href="https://example.org/a?b=1&amp;c=2" target="_blank">https://example.org/a?b=1&amp;c=2</a> now');
+    });
+
+    it('escapes markup in the text', () => {
+      expect(makeLinks('Read <a href="https://evil.example/">here</a><img src="x">'))
+        .toBe('Read &lt;a href=&quot;<a href="https://evil.example/" target="_blank">https://evil.example/</a>&quot;&gt;here&lt;/a&gt;&lt;img src=&quot;x&quot;&gt;');
+    });
+
+    it('keeps empty values', () => {
+      expect(makeLinks(undefined)).toBeUndefined();
+      expect(makeLinks('')).toBe('');
+    });
+  });
+
   describe('buildAuthoritySearchFilter', () => {
     it('uses the authority operator and key when an authority is present', () => {
       expect(buildAuthoritySearchFilter('publisher', { value: 'ACME Press', authority: '02mhbdp94' }))

@@ -1,4 +1,5 @@
 import { DomSanitizer } from '@angular/platform-browser';
+import escape from 'lodash/escape';
 import { getFirstSucceededRemoteDataPayload } from '../core/shared/operators';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { isEmpty, isNull, isUndefined } from './empty.util';
@@ -92,9 +93,13 @@ export function loadItemAuthors(item, itemAuthors, baseUrl, fields) {
 }
 
 export function makeLinks(text: string): string {
-  // Use a regular expression to find URLs and convert them into clickable links
-  const regex = /(?:https?|ftp):\/\/[^\s)]+|www\.[^\s)]+/g;
-  return text?.replace(regex, (url) => `<a href="${url}" target="_blank">${url}</a>`);
+  if (!text) {
+    return text;
+  }
+  // Split the text into plain parts and URLs (the odd parts). Everything is escaped, so the links are the only HTML.
+  return text.split(/((?:https?|ftp):\/\/[^\s)"<>]+|www\.[^\s)"<>]+)/)
+    .map((part, i) => i % 2 === 0 ? escape(part) : `<a href="${escape(part)}" target="_blank">${escape(part)}</a>`)
+    .join('');
 }
 
 /**
