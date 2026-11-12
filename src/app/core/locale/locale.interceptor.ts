@@ -3,13 +3,17 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 
 import { Observable } from 'rxjs';
 
+import { HALEndpointService } from '../shared/hal-endpoint.service';
 import { LocaleService } from './locale.service';
-import { mergeMap, scan } from 'rxjs/operators';
+import { mergeMap, scan, take } from 'rxjs/operators';
 
 @Injectable()
 export class LocaleInterceptor implements HttpInterceptor {
 
-  constructor(private localeService: LocaleService) {
+  constructor(
+    protected halEndpointService: HALEndpointService,
+    protected localeService: LocaleService,
+  ) {
   }
 
   /**
@@ -19,8 +23,11 @@ export class LocaleInterceptor implements HttpInterceptor {
    */
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let newReq: HttpRequest<any>;
-    return this.localeService.getLanguageCodeList()
+    const ignoreEPersonSettings: boolean = this.shouldIgnoreEPersonSettings(req.url);
+
+    return this.localeService.getLanguageCodeList(ignoreEPersonSettings)
       .pipe(
+        take(1),
         scan((acc: any, value: any) => [...acc, value], []),
         mergeMap((languages) => {
           // Clone the request to add the new header.
@@ -31,5 +38,13 @@ export class LocaleInterceptor implements HttpInterceptor {
           // Pass on the new request instead of the original request.
           return next.handle(newReq);
         }));
+  }
+
+  /**
+   * Avoid recursive EPerson language lookup for requests that are needed to resolve EPerson itself.
+   */
+  private shouldIgnoreEPersonSettings(url: string): boolean {
+    const rootHref = this.halEndpointService.getRootHref();
+    return url === rootHref || url.startsWith(`${rootHref}/eperson/epersons`);
   }
 }

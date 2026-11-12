@@ -109,4 +109,32 @@ describe('EpicHandleDataService',()=>{
         searchReq.flush(mockPaginationResponse);
       });
     });
+
+    describe('findByPrefixAndSuffix', () => {
+      it('builds a namespace-aware fallback self link when _links is missing', (done) => {
+        service.findByPrefixAndSuffix(mockPrefix, mockSuffix).subscribe(handle => {
+          expect(handle.id).toBe(mockHandleId);
+          expect(handle.url).toBe('http://example.com');
+          // fallback is derived from the resolved endpoint, not a hardcoded /server/api path
+          expect(handle._links.self.href).toBe(`${mockBaseUrl}/${mockHandleId}`);
+          done();
+        });
+
+        const req = httpMock.expectOne(`${mockBaseUrl}/${mockPrefix}/${mockSuffix}`);
+        expect(req.request.method).toBe('GET');
+        req.flush({ id: mockHandleId, url: 'http://example.com' });
+      });
+
+      it('keeps the _links returned by the backend when present', (done) => {
+        const links = { self: { href: `${mockBaseUrl}/${mockHandleId}` } };
+
+        service.findByPrefixAndSuffix(mockPrefix, mockSuffix).subscribe(handle => {
+          expect(handle._links).toEqual(links);
+          done();
+        });
+
+        httpMock.expectOne(`${mockBaseUrl}/${mockPrefix}/${mockSuffix}`)
+          .flush({ id: mockHandleId, url: 'http://example.com', _links: links });
+      });
+    });
 });

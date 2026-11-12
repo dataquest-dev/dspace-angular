@@ -1,2 +1,3 @@
 DSPACE_UI_HOST=0.0.0.0
 DSPACE_UI_IMAGE=dspace-angular
+UI_URL=http://localhost:4000

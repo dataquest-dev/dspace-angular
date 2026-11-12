@@ -100,7 +100,7 @@ export class ClarinLicenseInfoComponent implements OnInit {
    * Check if current language is Czech
    */
   isCsLocale() {
-    return this.localeService.getCurrentLanguageCode() === 'cs';
+    return this.localeService.getCurrentLanguageCodeSync() === 'cs';
   }
 }
 

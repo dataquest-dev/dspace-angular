@@ -560,6 +560,7 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    * for this instance's base ID.
    */
   ngOnDestroy(): void {
+    super.ngOnDestroy();
     if (this._baseId) {
       const state = DsDynamicFormControlContainerComponent._idState.get(this._baseId);
       if (state) {

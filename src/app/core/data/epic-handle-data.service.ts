@@ -187,17 +187,18 @@ export class EpicHandleDataService {
   findByPrefixAndSuffix(prefix: string, suffix: string): Observable<EpicHandle> {
     // we search for the handle using the prefix and suffix
     return this.halService.getEndpoint('epichandles').pipe(
-      map(baseUrl => `${baseUrl}/${prefix}/${suffix}`),
-      mergeMap(url => this.http.get<{id: string; url: string; _links?: any}>(url)),
-      map(response => {
-        const handle = new EpicHandle();
-        handle.id = response.id;
-        handle.url = response.url;
-        handle._links = response._links || {
-          self: { href: `/server/api/epichandles/${response.id}`}
-        };
-        return handle;
-      }),
+      mergeMap(baseUrl => this.http.get<{id: string; url: string; _links?: any}>(`${baseUrl}/${prefix}/${suffix}`).pipe(
+        map(response => {
+          const handle = new EpicHandle();
+          handle.id = response.id;
+          handle.url = response.url;
+          // Fall back to the resolved REST endpoint (namespace-aware) rather than a hardcoded /server path
+          handle._links = response._links || {
+            self: { href: `${baseUrl}/${response.id}` },
+          };
+          return handle;
+        }),
+      )),
       catchError(error => {
         return throwError(() => error);
       })

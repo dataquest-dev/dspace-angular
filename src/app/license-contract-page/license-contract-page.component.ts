@@ -97,7 +97,7 @@ export class LicenseContractPageComponent implements OnInit, OnDestroy {
 
   private loadAuthorizedCollections(): void {
     this.collectionsRD$ = this.paginationService.getFindListOptions(this.paginationId, this.config).pipe(
-      switchMap((config: FindListOptions) => this.collectionDataService.getAuthorizedCollection('', config, true, true, followLink('license')))
+      switchMap((config: FindListOptions) => this.collectionDataService.getAuthorizedCollection('', config, true, true, 'findSubmitAuthorized', followLink('license')))
     );
   }
 }
