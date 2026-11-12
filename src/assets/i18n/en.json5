@@ -2629,8 +2629,6 @@
 
   "item.preview.dc.description.abstract": "Abstract:",
 
-  "item.preview.dc.identifier.other": "Other identifier:",
-
   "item.preview.dc.language.iso": "Language:",
 
   "item.preview.dc.subject": "Subjects:",
@@ -5545,14 +5543,6 @@
 
   "admin.update-config.help.directory": "Only files in /config/config-be/ directory can be edited for security reasons.",
 
-  "admin.update-config.success.save.title": "Configuration Saved",
-
-  "admin.update-config.success.save.message": "{{message}}",
-
-  "admin.update-config.error.save.title": "Save Failed",
-
-  "admin.update-config.error.save.message": "Unable to save configuration file. Please check the logs and try again.",
-
   "admin.update-config.error.load.title": "Load Failed",
 
   "admin.update-config.error.load.message": "Unable to load configuration file: {{fileName}}",
@@ -5568,7 +5558,6 @@
   "admin.update-config.file-selection.label": "Select Configuration File",
 
   "admin.update-config.file-info.path": "Path",
-  "admin.update-config.file-info.modified": "Last Modified",
 
   "admin.update-config.select.choose-file": "Choose a configuration file to edit",
   "admin.update-config.select.no-files": "No configuration files found",
