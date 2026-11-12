@@ -261,6 +261,42 @@ describe('WorkspaceitemActionsComponent', () => {
     expect(btn).not.toBeNull();
   });
 
+  it('should display share button', () => {
+    const btn = fixture.debugElement.query(By.css('#share_1234'));
+
+    expect(btn).not.toBeNull();
+  });
+
+  it('should request the share link and open the share-submission page', () => {
+    const router = TestBed.inject(Router);
+    const rdbService = TestBed.inject(RemoteDataBuildService);
+    const shareLink = 'https://ui/share-submission?change-token=abc';
+    spyOn(rdbService, 'buildFromRequestUUID').and.returnValue(createSuccessfulRemoteDataObject$({ shareLink }));
+
+    fixture.debugElement.query(By.css('#share_1234')).nativeElement.click();
+
+    expect(requestServce.send).toHaveBeenCalledWith(jasmine.objectContaining({
+      href: 'https://rest.api/server/api/submission/share?workspaceitemid=1234',
+    }));
+    expect(notificationsServiceStub.success).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/share-submission'], {
+      queryParams: { changeSubmitterLink: shareLink },
+    });
+    expect(component.shareSubmissionSpinner).toBeFalse();
+  });
+
+  it('should show an error notification when the share link request fails', () => {
+    const router = TestBed.inject(Router);
+    const rdbService = TestBed.inject(RemoteDataBuildService);
+    spyOn(rdbService, 'buildFromRequestUUID').and.returnValue(createFailedRemoteDataObject$('Error', 500));
+
+    fixture.debugElement.query(By.css('#share_1234')).nativeElement.click();
+
+    expect(notificationsServiceStub.error).toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(component.shareSubmissionSpinner).toBeFalse();
+  });
+
   it('should display add URL bitstream button when script is executable', () => {
     const btn = fixture.debugElement.query(By.css('#add_url_bitstream_1234'));
 
