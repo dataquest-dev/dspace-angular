@@ -347,7 +347,7 @@ describe('ClarinLicenseTableComponent', () => {
       tick();
 
       const putArgument = (clarinLicenseLabelDataService.put as jasmine.Spy).calls.mostRecent().args[0];
-      expect(putArgument.icon).toBeUndefined();
+      expect(putArgument.icon).toEqual([1, 2, 3]);
     }));
 
     it('should show error notification on failed edit', fakeAsync(() => {
