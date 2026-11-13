@@ -12,7 +12,7 @@ import { RemoteData } from './core/data/remote-data';
 import { TextMenuItemModel } from './shared/menu/menu-item/models/text.model';
 import { BrowseService } from './core/browse/browse.service';
 import { MenuService } from './shared/menu/menu.service';
-import { filter, find, map, mergeMap, take } from 'rxjs/operators';
+import { filter, find, map, mergeMap, switchMap, take } from 'rxjs/operators';
 import { hasValue } from './shared/empty.util';
 import { FeatureID } from './core/data/feature-authorization/feature-id';
 import {
@@ -479,11 +479,11 @@ export class MenuResolver implements Resolve<boolean> {
     ];
     menuList.forEach((menuSection) => this.menuService.addSection(MenuID.ADMIN, menuSection));
 
-    observableCombineLatest([
-      this.authorizationService.isAuthorized(FeatureID.AdministratorOf),
-      this.scriptDataService.scriptWithNameExistsAndCanExecute(METADATA_EXPORT_SCRIPT_NAME)
-    ]).pipe(
-      filter(([authorized, metadataExportScriptExists]: boolean[]) => authorized && metadataExportScriptExists),
+    this.authorizationService.isAuthorized(FeatureID.AdministratorOf).pipe(
+      switchMap((authorized: boolean) => authorized
+        ? this.scriptDataService.scriptWithNameExistsAndCanExecute(METADATA_EXPORT_SCRIPT_NAME)
+        : observableOf(false)),
+      filter((scriptExists: boolean) => scriptExists),
       take(1)
     ).subscribe(() => {
       // Hides the export menu for unauthorised people
@@ -540,11 +540,11 @@ export class MenuResolver implements Resolve<boolean> {
     const menuList = [];
     menuList.forEach((menuSection) => this.menuService.addSection(MenuID.ADMIN, menuSection));
 
-    observableCombineLatest([
-      this.authorizationService.isAuthorized(FeatureID.AdministratorOf),
-      this.scriptDataService.scriptWithNameExistsAndCanExecute(METADATA_IMPORT_SCRIPT_NAME)
-    ]).pipe(
-      filter(([authorized, metadataImportScriptExists]: boolean[]) => authorized && metadataImportScriptExists),
+    this.authorizationService.isAuthorized(FeatureID.AdministratorOf).pipe(
+      switchMap((authorized: boolean) => authorized
+        ? this.scriptDataService.scriptWithNameExistsAndCanExecute(METADATA_IMPORT_SCRIPT_NAME)
+        : observableOf(false)),
+      filter((scriptExists: boolean) => scriptExists),
       take(1)
     ).subscribe(() => {
       // Hides the import menu for unauthorised people
