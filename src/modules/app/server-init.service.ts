@@ -96,6 +96,6 @@ export class ServerInitService extends InitService {
   }
 
   private saveAppConfigForCSR(): void {
-    this.transferState.set<AppConfig>(APP_CONFIG_STATE, buildPublicConfig(environment as AppConfig) as AppConfig);
+    this.transferState.set<AppConfig>(APP_CONFIG_STATE, buildPublicConfig(environment) as AppConfig);
   }
 }

@@ -1,9 +1,9 @@
-import { AppConfig } from './app-config.interface';
+import { BuildConfig } from './build-config.interface';
 import { DefaultAppConfig } from './default-app-config';
 import { buildPublicConfig } from './public-config';
 
 describe('buildPublicConfig', () => {
-  const appConfig: AppConfig = {
+  const appConfig: BuildConfig = {
     ...new DefaultAppConfig(),
     ui: {
       ssl: false,
@@ -22,6 +22,16 @@ describe('buildPublicConfig', () => {
       baseUrl: 'https://repository.example.org/server',
       ssrBaseUrl: 'http://dspace:8080/server',
     },
+    universal: {
+      preboot: true,
+      async: true,
+      time: false,
+      transferState: false,
+      replaceRestUrl: true,
+      excludePathPatterns: [{ pattern: '^/search' }],
+      enableSearchComponent: false,
+      enableBrowseComponent: false,
+    },
   };
 
   let publicConfig: any;
@@ -35,12 +45,12 @@ describe('buildPublicConfig', () => {
     expect(Object.keys(publicConfig.rest)).toEqual(['baseUrl', 'nameSpace']);
     expect(publicConfig.cache.serverSide).toBeUndefined();
     expect(publicConfig.actuators).toBeUndefined();
-    expect(publicConfig.universal).toBeUndefined();
   });
 
   it('should contain the settings the browser reads', () => {
     expect(publicConfig.rest.baseUrl).toEqual('https://repository.example.org/server');
     expect(publicConfig.ui.nameSpace).toEqual('/');
+    expect(publicConfig.universal).toEqual({ transferState: false });
     expect(publicConfig.cache.msToLive).toEqual(appConfig.cache.msToLive);
     expect(publicConfig.cache.control).toEqual(appConfig.cache.control);
     expect(publicConfig.cache.autoSync).toEqual(appConfig.cache.autoSync);

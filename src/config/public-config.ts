@@ -1,10 +1,10 @@
-import { AppConfig } from './app-config.interface';
+import { BuildConfig } from './build-config.interface';
 
 /**
  * Returns only the part of the app config the browser needs.
  * It is written to config.json and to the SSR transfer state.
  */
-export const buildPublicConfig = (appConfig: AppConfig) => ({
+export const buildPublicConfig = (appConfig: Partial<BuildConfig>) => ({
   production: appConfig.production,
   ...(appConfig.rest && {
     rest: {
@@ -13,6 +13,7 @@ export const buildPublicConfig = (appConfig: AppConfig) => ({
     },
   }),
   ...(appConfig.ui ? { ui: { nameSpace: appConfig.ui.nameSpace } } : {}),
+  ...(appConfig.universal && { universal: { transferState: appConfig.universal.transferState } }),
   auth: {
     ui: {
       timeUntilIdle: appConfig.auth?.ui?.timeUntilIdle,
