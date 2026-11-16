@@ -5835,5 +5835,7 @@
 
   "navbar.about.service-integrations": "Service integrations",
 
-  "navbar.about.project-partnership": "Project partnerships"
+  "navbar.about.project-partnership": "Project partnerships",
+
+  "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
 }

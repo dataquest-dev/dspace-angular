@@ -8355,4 +8355,6 @@
 
   // "navbar.about.project-partnership" : "Project partnerships"
   "navbar.about.project-partnership" : "Projektové partnerství",
+  // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+  "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
 }
