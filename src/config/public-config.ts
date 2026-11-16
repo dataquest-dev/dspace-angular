@@ -1,10 +1,12 @@
 import { BuildConfig } from './build-config.interface';
 
+type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;
+
 /**
  * Returns only the part of the app config the browser needs.
  * It is written to config.json and to the SSR transfer state.
  */
-export const buildPublicConfig = (appConfig: Partial<BuildConfig>) => ({
+export const buildPublicConfig = (appConfig: Partial<BuildConfig>): DeepPartial<BuildConfig> => ({
   production: appConfig.production,
   ...(appConfig.rest && {
     rest: {
