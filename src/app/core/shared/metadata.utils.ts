@@ -146,16 +146,6 @@ export class Metadata {
   }
 
   /**
-   * Escapes a hit highlight for `[innerHTML]`. Solr returns the stored value unescaped, so only the `<em>` tags it
-   * puts around the matched words are kept.
-   */
-  private static escapeHighlight(highlight: MetadataValue): MetadataValue {
-    return Object.assign(new MetadataValue(), highlight, {
-      value: escape(highlight.value).replace(/&lt;(\/?)em&gt;/g, '<$1em>'),
-    });
-  }
-
-  /**
    * Checks if a value matches a filter.
    *
    * @param {MetadataValue} mdValue the value to check.
@@ -271,5 +261,15 @@ export class Metadata {
     } else {
       mdMap[key] = [Object.assign(new MetadataValue(), { value: value })];
     }
+  }
+
+  /**
+   * Escapes a hit highlight for `[innerHTML]`. Solr returns the stored value unescaped, so only the `<em>` tags it
+   * puts around the matched words are kept.
+   */
+  private static escapeHighlight(highlight: MetadataValue): MetadataValue {
+    return Object.assign(new MetadataValue(), highlight, {
+      value: escape(highlight.value).replace(/&lt;(\/?)em&gt;/g, '<$1em>'),
+    });
   }
 }
