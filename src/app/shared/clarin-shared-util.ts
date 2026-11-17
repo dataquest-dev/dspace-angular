@@ -98,7 +98,7 @@ export function makeLinks(text: string): string {
   }
   // Split the text into plain parts and URLs (the odd parts). Everything is escaped, so the links are the only HTML.
   return text.split(/((?:https?|ftp):\/\/[^\s)"<>]+|www\.[^\s)"<>]+)/)
-    .map((part, i) => i % 2 === 0 ? escape(part) : `<a href="${escape(part)}" target="_blank">${escape(part)}</a>`)
+    .map((part, i) => i % 2 === 0 ? escape(part) : `<a href="${escape(part)}" target="_blank" rel="noopener noreferrer">${escape(part)}</a>`)
     .join('');
 }
 
