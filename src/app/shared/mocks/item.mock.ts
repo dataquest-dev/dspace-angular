@@ -294,3 +294,12 @@ export const ItemMock: Item = Object.assign(new Item(), {
   )
 });
 /* eslint-enable @typescript-eslint/no-shadow */
+
+// `metadata` is copied because spec helpers mutate it in place and would hit ItemMock too.
+export const NonDiscoverableItemMock: Item = Object.assign(new Item(), ItemMock, {
+  handle: '10673/7',
+  id: '0ec7ff22-f211-40ab-a69e-c819b0b1f358',
+  uuid: '0ec7ff22-f211-40ab-a69e-c819b0b1f358',
+  isDiscoverable: false,
+  metadata: Object.assign({}, ItemMock.metadata),
+});

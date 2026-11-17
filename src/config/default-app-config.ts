@@ -281,6 +281,8 @@ export class DefaultAppConfig implements AppConfig {
     },
     // Show the item access status label in items lists
     showAccessStatuses: false,
+    // Item uuids or handles to exclude from search engine indexes
+    noIndex: [],
     bitstream: {
       // Number of entries in the bitstream list in the item view page.
       // Rounded to the nearest size in the list of selectable sizes on the

@@ -192,3 +192,6 @@ item:
   bitstream:
     # Per-bitstream embargo-date badge in the Item View
     showAccessStatuses: true
+  # Item uuids or handles to exclude from search engine indexes. Empty = off.
+  # Keep empty: this config is served to the browser, so entries here are public.
+  noIndex: []
