@@ -7,5 +7,6 @@
 </ng-template>
 <ds-truncatable [id]="mdRepresentation.id">
   <a [routerLink]="[itemPageRoute]"
-     [ngbTooltip]="mdRepresentation.hasMetadata(['dc.description']) ? descTemplate : null">{{mdRepresentation.getValue()}}</a>
+     [innerHTML]="mdRepresentation.getValue()"
+     [ngbTooltip]="mdRepresentation.hasMetadata(['dc.description']) ? descTemplate : null"></a>
 </ds-truncatable>
