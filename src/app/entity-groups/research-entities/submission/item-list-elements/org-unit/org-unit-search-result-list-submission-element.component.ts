@@ -62,7 +62,7 @@ export class OrgUnitSearchResultListSubmissionElementComponent extends SearchRes
 
     if (this.useNameVariants) {
       const defaultValue = this.dso ? this.dsoNameService.getName(this.dso) : undefined;
-      const alternatives = this.allMetadataValues(this.alternativeField);
+      const alternatives = this.allMetadataValues(this.alternativeField, false);
       this.allSuggestions = [defaultValue, ...alternatives];
 
       this.relationshipService.getNameVariant(this.listID, this.dso.uuid)

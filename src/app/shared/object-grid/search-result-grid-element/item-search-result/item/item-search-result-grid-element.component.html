@@ -23,15 +23,15 @@
             </ds-truncatable-part>
             <ds-truncatable-part [id]="dso.id" [minLines]="1" *ngIf="dso.hasMetadata(['dc.contributor.author', 'dc.creator', 'dc.contributor.*'])">
                 <p class="item-authors card-text text-muted">
-                    <span *ngIf="dso.hasMetadata('dc.date.issued')" class="item-date">{{firstMetadataValue('dc.date.issued')}}</span>
+                    <span *ngIf="dso.hasMetadata('dc.date.issued')" class="item-date">{{firstMetadataValue('dc.date.issued', false)}}</span>
                     <span *ngFor="let author of allMetadataValues(['dc.contributor.author', 'dc.creator', 'dc.contributor.*']);">,
                         <span [innerHTML]="author"></span>
                     </span>
                 </p>
             </ds-truncatable-part>
-            <ds-truncatable-part *ngIf="dso.hasMetadata('dc.description')" [id]="dso.id" [minLines]="3">
+            <ds-truncatable-part *ngIf="firstMetadataValue('dc.description') as abstract" [id]="dso.id" [minLines]="3">
                 <p class="item-abstract card-text">
-                    <span [innerHTML]="firstMetadataValue('dc.description')"></span>
+                    <span [innerHTML]="abstract"></span>
                 </p>
             </ds-truncatable-part>
         </ds-truncatable>

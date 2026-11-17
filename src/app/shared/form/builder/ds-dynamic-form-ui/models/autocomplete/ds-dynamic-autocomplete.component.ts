@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NgbTypeahead, NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
+import escape from 'lodash/escape';
 import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
 import { PageInfo } from '../../../../../../core/shared/page-info.model';
 import { VocabularyService } from '../../../../../../core/submission/vocabularies/vocabulary.service';
@@ -213,7 +214,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       return DsDynamicAutocompleteService.pretifyLanguageSuggestion(suggestion, this.translateService);
     }
     // @ts-ignore
-    return suggestion.display;
+    return escape(suggestion.display);
   };
 
   /**

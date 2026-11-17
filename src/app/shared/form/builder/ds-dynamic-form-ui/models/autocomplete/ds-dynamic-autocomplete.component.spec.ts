@@ -196,6 +196,11 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
     it('should format object values using display fallback', () => {
       expect(autComp.formatter({ display: 'Alumu-Tesu' })).toEqual('Alumu-Tesu');
     });
+
+    it('should escape markup in the suggestions', () => {
+      const suggestion: any = Object.assign(new VocabularyEntry(), { display: 'A & B <img src="x">', value: 1 });
+      expect(autComp.suggestionFormatter(suggestion)).toEqual('A &amp; B &lt;img src=&quot;x&quot;&gt;');
+    });
   });
 });
 

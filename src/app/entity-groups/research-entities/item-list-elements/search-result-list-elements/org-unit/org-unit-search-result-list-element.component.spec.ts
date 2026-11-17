@@ -53,6 +53,28 @@ const mockItemWithoutMetadata: ItemSearchResult = Object.assign(
       }
     })
   });
+const htmlDescription = 'Read more <a href="https://example.org/">here</a><img src="https://example.org/pixel.png">';
+const mockItemWithHtmlDescription: ItemSearchResult = Object.assign(
+  new ItemSearchResult(),
+  {
+    indexableObject: Object.assign(new Item(), {
+      bundles: observableOf({}),
+      metadata: {
+        'dc.title': [
+          {
+            language: 'en_US',
+            value: 'This is just another title'
+          }
+        ],
+        'dc.description': [
+          {
+            language: 'en_US',
+            value: htmlDescription
+          }
+        ]
+      }
+    })
+  });
 
 const environmentUseThumbs = {
   browseBy: {
@@ -119,6 +141,19 @@ describe('OrgUnitSearchResultListElementComponent', () => {
     it('should show the description span', () => {
       const orgUnitDescriptionField = fixture.debugElement.query(By.css('span.item-list-org-unit-description'));
       expect(orgUnitDescriptionField).not.toBeNull();
+    });
+  });
+
+  describe('When the item has HTML markup in its org unit description', () => {
+    beforeEach(() => {
+      orgUnitListElementComponent.object = mockItemWithHtmlDescription;
+      fixture.detectChanges();
+    });
+
+    it('should render the markup as text, not as elements', () => {
+      const orgUnitDescriptionField = fixture.debugElement.query(By.css('span.item-list-org-unit-description'));
+      expect(orgUnitDescriptionField.query(By.css('a, img'))).toBeNull();
+      expect(orgUnitDescriptionField.nativeElement.textContent.trim()).toEqual(htmlDescription);
     });
   });
 
