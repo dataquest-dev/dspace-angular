@@ -56,6 +56,7 @@ services:
     volumes:
     - dspace_logs:/dspace/log
     - assetstore:/dspace/assetstore
+    - sitemaps:/dspace/sitemaps
     # Mount DSpace's solr configs to a volume, so that we can share to 'dspacesolr' container (see below)
     - solr_configs:/dspace/solr
     - ./local.cfg:/dspace/config/local.cfg
@@ -137,6 +138,7 @@ services:
       exec solr -p 8983 -f -m "${SOLR_HEAP:-4g}"
 volumes:
   assetstore:
+  sitemaps:
   pgdata:
   solr_data:
   # Special volume used to share Solr configs from 'dspace' to 'dspacesolr' container (see above)
