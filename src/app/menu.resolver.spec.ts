@@ -1,7 +1,7 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MenuResolver } from './menu.resolver';
-import { of as observableOf } from 'rxjs';
+import { BehaviorSubject, of as observableOf } from 'rxjs';
 import { FeatureID } from './core/data/feature-authorization/feature-id';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -423,4 +423,19 @@ describe('MenuResolver', () => {
       });
     });
   });
+  ['Import', 'Export'].forEach(action => {
+    it(`should not request protected ${action.toLowerCase()} scripts before administrator authorization`, () => {
+      const authorized$ = new BehaviorSubject(false);
+      authorizationService.isAuthorized.and.returnValue(authorized$);
+      scriptService.scriptWithNameExistsAndCanExecute.calls.reset();
+      resolver[`create${action}MenuSections`]();
+      expect(scriptService.scriptWithNameExistsAndCanExecute).not.toHaveBeenCalled();
+      authorized$.next(true);
+      expect(scriptService.scriptWithNameExistsAndCanExecute).toHaveBeenCalledTimes(1);
+      expect(menuService.addSection).toHaveBeenCalledWith(MenuID.ADMIN, jasmine.objectContaining({
+        id: action.toLowerCase(), visible: true
+      }));
+    });
+  });
+
 });

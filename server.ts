@@ -55,6 +55,7 @@ import { APP_CONFIG, AppConfig } from './src/config/app-config.interface';
 import { extendEnvironmentWithAppConfig } from './src/config/config.util';
 import { logStartupMessage } from './startup-message';
 import { TOKENITEM } from './src/app/core/auth/models/auth-token-info.model';
+import { createSsrRefreshContext } from './src/backend/ssr-response-context';
 import { getSsrCacheKey } from './src/app/shared/ssr-cache-key.util';
 import { SsrExcludePatterns } from './src/config/universal-config.interface';
 
@@ -275,6 +276,14 @@ function serverSideRender(req, res, sendToUser: boolean = true) {
     originUrl: environment.ui.baseUrl,
     requestUrl: req.originalUrl,
   }, (err, data) => {
+    if (res.headersSent && hasValue(err)) {
+      console.warn('Server-side rendering failed after the response was committed.');
+    }
+    // If headers were already sent, then do nothing else, it is probably a
+    // redirect response
+    if (res.headersSent) {
+      return;
+    }
     if (hasNoValue(err) && hasValue(data)) {
       // Replace REST URL with UI URL
         if (environment.universal.replaceRestUrl && REST_BASE_URL !== environment.rest.baseUrl) {
@@ -450,7 +459,8 @@ function checkCacheForRequest(cacheName: string, cache: LRU<string, any>, req, r
       // Update cached copy by rerendering server-side
       // NOTE: In this scenario the currently cached copy will be returned to the current user.
       // This re-render is peformed behind the scenes to update cached copy for next user.
-      serverSideRender(req, res, false);
+      const background = createSsrRefreshContext(req, res);
+      serverSideRender(background.request, background.response, false);
     }
   } else {
     if (environment.cache.serverSide.debug) { console.log(`CACHE MISS FOR ${key} in ${cacheName} cache.`); }
