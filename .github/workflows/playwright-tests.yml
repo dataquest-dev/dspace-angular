@@ -1,0 +1,48 @@
+name: Playwright tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      ui_tests_ref:
+        description: 'Branch or tag of dataquest-dev/dspace-ui-tests to check out'
+        required: false
+        type: string
+        default: master
+  workflow_call:
+    inputs:
+      ui_tests_ref:
+        description: 'Branch or tag of dataquest-dev/dspace-ui-tests to check out'
+        required: false
+        type: string
+        default: master
+
+jobs:
+  playwright-tests:
+    runs-on: dspace-test-1
+    timeout-minutes: 120
+    steps:
+      - name: Checkout Playwright tests
+        uses: actions/checkout@v4
+        with:
+          repository: dataquest-dev/dspace-ui-tests
+          ref: ${{ inputs.ui_tests_ref }}
+          path: dspace-ui-tests
+          token: ${{ secrets.DEPLOY_DEV5_GH_ACTION_DISPATCH }}
+
+      - name: test
+        working-directory: dspace-ui-tests/scripts
+        env:
+          HOME_URL: http://dev-6.pc:8603/repository/
+          NAME: LINDAT-9
+          PASSWORD_ADMIN: ${{ secrets.DSPACE_ADMIN_PASSWORD }}
+        # Five minutes under the job limit, so the suite gives up on its own.
+        # A job that the limit cancels concludes 'cancelled' whatever its steps do,
+        # and a cancelled run reads as 'nothing is red' although nothing was measured.
+        timeout-minutes: 115
+        run: |
+          ./test.sh
+
+      - uses: mazoea/ga-maz/end@master
+        with:
+          CHOWN_DIR: ./
+        if: ${{ always() }}
