@@ -21,9 +21,8 @@ import { BreadcrumbsService } from '../../app/breadcrumbs/breadcrumbs.service';
 import { ThemeService } from '../../app/shared/theme-support/theme.service';
 import { take } from 'rxjs/operators';
 import { MenuService } from '../../app/shared/menu/menu.service';
-import { isEmpty } from '../../app/shared/empty.util';
+import { isEmpty, isNotEmpty } from '../../app/shared/empty.util';
 import { BuildConfig } from '../../config/build-config.interface';
-import { buildPublicConfig } from '../../config/public-config';
 
 /**
  * Performs server-side initialization.
@@ -96,6 +95,14 @@ export class ServerInitService extends InitService {
   }
 
   private saveAppConfigForCSR(): void {
-    this.transferState.set<AppConfig>(APP_CONFIG_STATE, buildPublicConfig(environment) as AppConfig);
+    if (isNotEmpty(environment.rest.ssrBaseUrl) && environment.rest.baseUrl !== environment.rest.ssrBaseUrl) {
+      // Avoid to transfer ssrBaseUrl in order to prevent security issues
+      const config: AppConfig = Object.assign({}, environment as AppConfig, {
+        rest: Object.assign({}, environment.rest, { ssrBaseUrl: '', hasSsrBaseUrl: true }),
+      });
+      this.transferState.set<AppConfig>(APP_CONFIG_STATE, config);
+    } else {
+      this.transferState.set<AppConfig>(APP_CONFIG_STATE, environment as AppConfig);
+    }
   }
 }
