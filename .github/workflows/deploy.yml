@@ -206,6 +206,20 @@ jobs:
           cd ../..
           docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml -f $CONFIG_PATH/extra.yml up -d --no-build --remove-orphans
 
+      # docker compose returns as soon as the containers start, long before DSpace answers.
+      # Without this wait the UI tests that follow start too early and their first specs fail.
+      - name: wait until the instance answers
+        timeout-minutes: 15
+        run: |
+          BASE_URL="http://${{ inputs.DEV_MACHINE }}.pc:$INSTANCE/repository"
+          for url in "$BASE_URL/server/api" "$BASE_URL/"; do
+            echo "Waiting for $url"
+            until [ "$(curl -sL -o /dev/null -w '%{http_code}' --max-time 30 "$url")" = "200" ]; do
+              sleep 10
+            done
+            echo "$url -> 200"
+          done
+
   import-8633:
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
     if: inputs.IMPORT
