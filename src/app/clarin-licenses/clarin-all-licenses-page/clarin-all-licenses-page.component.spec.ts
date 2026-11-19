@@ -5,6 +5,7 @@ import { createdLicenseRD$, mockLicenseRD$ } from '../../shared/testing/clarin-l
 import { of as observableOf } from 'rxjs';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { createFailedRemoteDataObject$ } from '../../shared/remote-data.utils';
 
 describe('ClarinAllLicensesPageComponent', () => {
   let component: ClarinAllLicensesPageComponent;
@@ -40,5 +41,22 @@ describe('ClarinAllLicensesPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should load the licenses', () => {
+    expect(component.isLoading).toBeFalse();
+    expect(component.hasLoadError).toBeFalse();
+    expect(component.licensesRD$.value.length).toBe(1);
+  });
+
+  it('should stop loading and show an error when the licenses fail to load', () => {
+    (clarinLicenseDataService.findAll as jasmine.Spy).and.returnValue(createFailedRemoteDataObject$('error', 500));
+
+    component.loadAllLicenses();
+    fixture.detectChanges();
+
+    expect(component.isLoading).toBeFalse();
+    expect(fixture.nativeElement.querySelector('ds-loading')).toBeNull();
+    expect(fixture.nativeElement.querySelector('ds-error')).not.toBeNull();
   });
 });
