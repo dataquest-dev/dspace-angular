@@ -1,4 +1,5 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Inject, Injectable, NgZone, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 import {
   asyncScheduler,
@@ -263,6 +264,8 @@ export class AuthEffects {
    * @method trackIdleness
    */
   public trackIdleness$: Observable<Action> = createEffect(() => this.actions$.pipe(
+    // Only in the browser: on the server this timer keeps an unfinished render in memory until it fires
+    filter(() => isPlatformBrowser(this.platformId)),
     filter((action: Action) => !IDLE_TIMER_IGNORE_TYPES.includes(action.type)),
     // Using switchMap the effect will stop subscribing to the previous timer if a new action comes
     // in, and start a new timer
@@ -282,11 +285,13 @@ export class AuthEffects {
    * @param {AuthorizationDataService} authorizationsService
    * @param {AuthService} authService
    * @param {Store} store
+   * @param {object} platformId
    */
   constructor(private actions$: Actions,
               private zone: NgZone,
               private authorizationsService: AuthorizationDataService,
               private authService: AuthService,
-              private store: Store<AppState>) {
+              private store: Store<AppState>,
+              @Inject(PLATFORM_ID) private platformId: object) {
   }
 }

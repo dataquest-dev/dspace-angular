@@ -26,6 +26,9 @@ const agentOptions: HttpAgentOptions = {
 const httpAgent = new HttpAgent(agentOptions);
 const httpsAgent = new HttpsAgent(agentOptions);
 
+// The status codes xhr2 follows on its own.
+const REDIRECT_STATUSES = [301, 302, 303, 307, 308];
+
 /**
  * Contructs the XMLHttpRequest instances used for all HttpClient requests.
  * Emulated by https://github.com/pwnall/node-xhr2 on the server.
@@ -36,6 +39,8 @@ const httpsAgent = new HttpsAgent(agentOptions);
  *   This was added to be able to perform a working XSRF request from the node server, as it needs to set a cookie for the XSRF token.
  * - Override NodeJS HTTP(S) agents to keep sessions alive between requests.
  *   This improves SSR performance by reducing REST request overhead on the server.
+ * - Read and discard the body of redirect responses that xhr2 follows. Otherwise their socket stays busy
+ *   until the REST server closes it, and keeps the SSR app that made the request in memory.
  *
  * Note that this must be provided in ServerAppModule;
  * it doesn't work when added as a Universal engine provider.
@@ -52,6 +57,14 @@ export class ServerXhrService implements XhrFactory {
       httpAgent,
       httpsAgent,
     });
+
+    const onHttpResponse = (xhr as any)._onHttpResponse;
+    (xhr as any)._onHttpResponse = function(request, response) {
+      if (REDIRECT_STATUSES.includes(response.statusCode)) {
+        response.resume();
+      }
+      return onHttpResponse.call(this, request, response);
+    };
 
     return xhr;
   }
