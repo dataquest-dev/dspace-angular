@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 # It must also cooperate with argparse
 
 # the idea is, that this will be different on each branch, but could be possibly passed by argv/argparse
-RELEASE_TAG_BASE='lindat'
+RELEASE_TAG_BASE='none'
 
 def get_time_in_timezone(zone: str = "Europe/Bratislava"):
     try:
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     link = sys.argv[1] + sys.argv[2]
     print('<br> <h4>Build run: </h4> <a href="' + link + '"> ' + link + '</a> ')
 
-    link = "https://github.com/ufal/dspace-angular/releases/tag/" \
+    link = "https://github.com/dataquest-dev/dspace-angular/releases/tag/" \
         + RELEASE_TAG_BASE + "-" + datetime.now().strftime('%Y.%m.') + sys.argv[2]
 
     print('<br> <br> <h4>Release link: </h4><a href="' + link + '"> ' + link + '</a> (if it does not work, then this is not an official release instance) ')
