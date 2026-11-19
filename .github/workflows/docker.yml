@@ -60,7 +60,7 @@ jobs:
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
   deploy:
-    needs: dspace-angular
+    needs: [dspace-angular, dspace-angular-dist]
     if: ${{ github.event_name != 'pull_request' }}
     uses: ./.github/workflows/deploy.yml
     with:
