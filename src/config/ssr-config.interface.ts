@@ -5,7 +5,16 @@ export interface SsrExcludePatterns {
   flag?: string;
 }
 
+export interface HandleRedirectConfig {
+  enabled: boolean;
+  /** Total anonymous REST lookup timeout, including the response body, in milliseconds. */
+  timeoutMs: number;
+}
+
 export interface SSRConfig extends Config {
+  /** Resolve ordinary handle redirects without rendering Angular (enabled by default for JCU). */
+  handleRedirect?: HandleRedirectConfig;
+
   /**
    * A boolean flag indicating whether the SSR configuration is enabled
    * Defaults to true.

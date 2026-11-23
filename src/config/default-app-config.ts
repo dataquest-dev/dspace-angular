@@ -27,6 +27,7 @@ import { INotificationBoardOptions } from './notifications-config.interfaces';
 import { QualityAssuranceConfig } from './quality-assurance.config';
 import { SearchConfig } from './search-page-config.interface';
 import { ServerConfig } from './server-config.interface';
+import { SSRConfig } from './ssr-config.interface';
 import { SubmissionConfig } from './submission-config.interface';
 import { SuggestionConfig } from './suggestion-config.interfaces';
 import { ThemeConfig } from './theme.config';
@@ -37,6 +38,14 @@ export class DefaultAppConfig implements AppConfig {
 
   // NOTE: will log all redux actions and transfers in console
   debug = false;
+
+  // Other SSR defaults come from the build environment; keep its enabled flag intact.
+  ssr: Pick<SSRConfig, 'handleRedirect'> = {
+    handleRedirect: {
+      enabled: true,
+      timeoutMs: 1000,
+    },
+  };
 
   // Angular express server settings
   // NOTE: these must be 'synced' with the 'dspace.ui.url' setting in your backend's local.cfg.
