@@ -38,7 +38,7 @@ describe('HtmlContentService', () => {
   /**
    * @param nameSpace  value of appConfig.ui.nameSpace
    * @param platformId 'server' exercises the SSR branch of buildRuntimeUrl
-   * @param request    the express request injected through the REQUEST token
+   * @param request    an express request provided through the REQUEST token; the service ignores it
    */
   function setup(nameSpace: string, platformId: string = 'browser', request?: any): void {
     TestBed.configureTestingModule({
@@ -52,7 +52,7 @@ describe('HtmlContentService', () => {
         {
           provide: APP_CONFIG,
           useValue: {
-            ui: { nameSpace },
+            ui: { nameSpace, baseUrl: `http://localhost:4000${nameSpace}` },
           },
         },
       ],
@@ -170,26 +170,34 @@ describe('HtmlContentService', () => {
     expect(content).toBe('');
   });
 
-  it('should build an absolute URL from the injected express REQUEST when rendering on the server', async () => {
-    setup('/repository', 'server', expressRequest('https', 'dev-6.pc:8603'));
+  it('should fetch static content from the configured UI origin, not the request Host, during SSR', async () => {
+    setup('/repository', 'server', expressRequest('https', 'other.example'));
 
-    const contentPromise = firstValueFrom(service.getHtmlContent('static-files/about.html'));
+    const promise = service.getHmtlContentByPathAndLocale('about');
+    await settle();
 
-    const request = httpMock.expectOne('https://dev-6.pc:8603/repository/static-files/about.html');
-    expect(request.request.method).toBe('GET');
-    request.flush('<div>About</div>');
-
-    expect(await contentPromise).toBe('<div>About</div>');
+    httpMock.expectOne('http://localhost:4000/repository/static-files/about.html').flush('Trusted content');
+    expect(await promise).toBe('Trusted content');
   });
 
-  it('should keep the relative URL on the server when no REQUEST is available', async () => {
+  it('should use the configured UI origin on the server also without a REQUEST', async () => {
     setup('/repository', 'server');
 
     const contentPromise = firstValueFrom(service.getHtmlContent('static-files/about.html'));
 
-    httpMock.expectOne('/repository/static-files/about.html').flush('<div>About</div>');
+    httpMock.expectOne('http://localhost:4000/repository/static-files/about.html').flush('<div>About</div>');
 
     expect(await contentPromise).toBe('<div>About</div>');
+  });
+
+  it('should not request a file name that leaves static-files once decoded', async () => {
+    setup('/repository');
+
+    const promise = service.getHmtlContentByPathAndLocale('..%2Findex');
+    await settle();
+
+    httpMock.expectNone(() => true);
+    expect(await promise).toBeUndefined();
   });
 
   it('should ignore the REQUEST and keep the relative URL in the browser', async () => {
