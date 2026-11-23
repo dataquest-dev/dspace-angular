@@ -134,9 +134,9 @@ jobs:
       # https://docs.cypress.io/app/references/launching-browsers
       - name: Install Chrome For Testing (for e2e tests)
         uses: browser-actions/setup-chrome@v2
-        # To pin to a specific version of Chrome, uncomment this parameter
-        #with:
-        #  chrome-version: 154
+        # Cypress before 16.3 crashes on Chrome 158 ("* is not a valid URL"). Unpin after upgrading to Cypress 16.3+.
+        with:
+          chrome-version: 157
 
       # Run integration tests via Cypress.io
       # https://github.com/cypress-io/github-action
