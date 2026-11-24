@@ -23,7 +23,7 @@ on:
       DUMP_PATH:
         required: false
         type: string
-        default: '/opt/dspace-envs/8603/dump/dspace_dev5_dump_26.07.16.sql'
+        default: '/opt/dspace-envs/8603/dump/dspace_lindat_dump_26.11.19.sql'
       ASSETSTORE_PATH:
         required: false
         type: string
@@ -53,7 +53,7 @@ on:
         description: 'Absolute path of the SQL dump ON THE DEV MACHINE (used only when IMPORT is checked)'
         required: false
         type: string
-        default: '/opt/dspace-envs/8603/dump/dspace_dev5_dump_26.07.16.sql'
+        default: '/opt/dspace-envs/8603/dump/dspace_lindat_dump_26.11.19.sql'
       ASSETSTORE_PATH:
         description: 'Absolute path of the assetstore directory ON THE DEV MACHINE'
         required: false
@@ -141,13 +141,13 @@ jobs:
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
             "select version, script, success from schema_version order by installed_rank desc limit 5;" \
             2>&1 || echo "could not read schema_version"
-          # What `database repair` did to the imported CLARIN history. repair only rewrites
-          # this bookkeeping table -- it never touches user tables or their rows.
-          echo "===== CLARIN 7.6 entries / anything repair marked deleted"
+          # CLARIN 7.6 history of the imported dump. type=DELETE rows only come from a
+          # manual `database repair`; the deploy no longer runs it.
+          echo "===== CLARIN 7.6 entries / anything marked deleted"
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
             "select installed_rank||' | '||version||' | type='||type||' | success='||success||' | '||script from schema_version where version like '7.6%' or type='DELETE' order by installed_rank desc limit 12;" \
             2>&1 || echo "could not read schema_version"
-          echo "===== CLARIN-specific tables still present after repair"
+          echo "===== CLARIN-specific tables"
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
             "select 'public tables total='||count(*) from information_schema.tables where table_schema='public';" 2>&1 || true
           docker exec dspacedb$INSTANCE psql -U dspace -d dspace -tAc \
@@ -256,20 +256,18 @@ jobs:
           echo "Stopping app container so its restart loop can't kill the migration..."
           docker stop $DNAME || true
 
-          # `database repair` before `migrate`: the dump comes from a CLARIN 7.6 instance,
-          # so its flyway_schema_history lists CLARIN-specific migrations that do not exist
-          # in this vanilla v9 tree. Flyway validation then refuses to migrate at all:
-          #   "Detected applied migration not resolved locally: 7.6.2026.06.01."
-          # repair marks those unresolvable entries as deleted, which is exactly what we want
-          # when migrating an old CLARIN dump onto vanilla v9 -- their DDL is already in the
-          # dump, we just do not carry the migration scripts any more.
-          echo "Running one-off DB repair + migration via docker compose..."
+          # Standard 7.6 -> 9 upgrade: `migrate ignored` also runs the lower-numbered
+          # migrations a 7.6 database never applied (plain `migrate` skips them for good).
+          # No `database repair`: the backend resolves every CLARIN 7.6 migration, so a
+          # failure here is a real upgrade problem and must not be hidden. `info` logs the
+          # final state; nothing should be left Ignored, Pending or Missing.
+          echo "Running one-off DB migration via docker compose..."
           docker compose --env-file $ENVFILE -p dspace-${INSTANCE} \
             -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
             \
             -f $OVERLAY/docker-compose-rest.yml -f $OVERLAY/docker-compose.yml \
             run --rm --no-deps --entrypoint /bin/bash dspace \
-            -c "while (!</dev/tcp/dspacedb/5432) >/dev/null 2>&1; do sleep 1; done; cd /dspace/bin && ./dspace database repair && ./dspace database migrate ignored"
+            -c "while (!</dev/tcp/dspacedb/5432) >/dev/null 2>&1; do sleep 1; done; cd /dspace/bin && ./dspace database migrate ignored && ./dspace database info"
 
           echo "Migration done. Starting app container (entrypoint migrate is now a no-op)..."
           docker start $DNAME
