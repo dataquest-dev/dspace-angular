@@ -10,13 +10,19 @@ import {
   RouterModule,
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import escapeHtml from 'lodash/escape';
+import {
+  BehaviorSubject,
+  firstValueFrom,
+} from 'rxjs';
 
 import {
   APP_CONFIG,
   AppConfig,
 } from '../../config/app-config.interface';
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { ServerResponseService } from '../core/services/server-response.service';
+import { getFirstCompletedRemoteData } from '../core/shared/operators';
 import { isEmpty } from '../shared/empty.util';
 import { HtmlContentService } from '../shared/html-content.service';
 import { ThemedLoadingComponent } from '../shared/loading/themed-loading.component';
@@ -48,6 +54,7 @@ export class StaticPageComponent implements OnInit {
               private router: Router,
               private responseService: ServerResponseService,
               private changeDetector: ChangeDetectorRef,
+              private configurationService: ConfigurationDataService,
               @Inject(APP_CONFIG) protected appConfig?: AppConfig) { }
 
   async ngOnInit(): Promise<void> {
@@ -63,6 +70,7 @@ export class StaticPageComponent implements OnInit {
         const restBase = this.appConfig?.rest?.baseUrl;
         const oaiUrl = restBase ? restBase.replace(/\/+$/, '') + '/oai' : '/server/oai';
         htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
+        htmlContent = await this.interpolateVariables(htmlContent);
 
         this.htmlContent.next(htmlContent);
         this.contentState = 'found';
@@ -106,6 +114,48 @@ export class StaticPageComponent implements OnInit {
     const namespacePrefix = this.getNamespacePrefix();
     const staticPageBaseUrl = this.composeStaticPageBaseUrl(namespacePrefix);
     this.redirectToRelativeLink(staticPageBaseUrl, href);
+  }
+
+  /**
+   * Replace `${key}` placeholders with the value of the backend configuration property `key`, e.g. `${dspace.name}`.
+   * The property must be listed in `rest.properties.exposed` on the backend.
+   * Values are HTML-escaped. A property that is not exposed, not set, empty, or fails to load leaves the placeholder unchanged.
+   * @param html static page content
+   * @private
+   */
+  private async interpolateVariables(html: string): Promise<string> {
+    const keys = [...new Set((html.match(/\$\{[\w.-]+\}/g) ?? []).map((placeholder) => placeholder.slice(2, -1)))];
+    if (keys.length === 0) {
+      return html;
+    }
+    const loaded = await Promise.all(keys.map((key) => this.getConfigValue(key)));
+    const values = new Map(keys.map((key, i) => [key, loaded[i]]));
+    const missing = keys.filter((key) => values.get(key) === undefined);
+    if (missing.length > 0) {
+      console.warn('Static page: unresolved variables', missing);
+    }
+    // Function replacer: `$&`, `$'` etc. in values are inserted literally, not as replacement patterns.
+    return html.replace(/\$\{([\w.-]+)\}/g, (match: string, key: string) => {
+      const value = values.get(key);
+      return value === undefined ? match : escapeHtml(value);
+    });
+  }
+
+  /**
+   * Load a configuration property from the backend.
+   * @param key property name
+   * @returns the property value, or `undefined` if it is missing, empty, or fails to load
+   * @private
+   */
+  private async getConfigValue(key: string): Promise<string | undefined> {
+    try {
+      const response = await firstValueFrom(this.configurationService.findByPropertyName(key).pipe(getFirstCompletedRemoteData()));
+      // The backend splits a value on commas into several values; join them back.
+      const value = response.hasSucceeded ? response.payload?.values?.join(', ').trim() : undefined;
+      return isEmpty(value) ? undefined : value;
+    } catch (error) {
+      return undefined;
+    }
   }
 
   private getNamespacePrefix(): string {

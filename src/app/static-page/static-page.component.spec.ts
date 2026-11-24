@@ -1,18 +1,32 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+} from '@angular/core/testing';
 import {
   Router,
   RouterModule,
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import {
+  Observable,
+  of,
+  throwError,
+} from 'rxjs';
 
 import { APP_CONFIG } from '../../config/app-config.interface';
 import { environment } from '../../environments/environment';
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { RemoteData } from '../core/data/remote-data';
 import { ServerResponseService } from '../core/services/server-response.service';
+import { ConfigurationProperty } from '../core/shared/configuration-property.model';
 import { HtmlContentService } from '../shared/html-content.service';
 import { ThemedLoadingComponent } from '../shared/loading/themed-loading.component';
 import { RouterMock } from '../shared/mocks/router.mock';
+import {
+  createFailedRemoteDataObject$,
+  createSuccessfulRemoteDataObject$,
+} from '../shared/remote-data.utils';
 import { StaticPageComponent } from './static-page.component';
 
 describe('StaticPageComponent', () => {
@@ -31,11 +45,20 @@ describe('StaticPageComponent', () => {
     restBase?: string,
     contentPromise?: Promise<string | undefined>,
     route = '/static/test-file.html',
+    configProperties: { [name: string]: string[] } = {},
   ) {
     const htmlContentService = jasmine.createSpyObj('htmlContentService', {
       fetchHtmlContent: of(html),
       getHmtlContentByPathAndLocale: contentPromise ?? Promise.resolve(html),
     });
+
+    // Unknown properties fail with 404, like a property the backend doesn't expose
+    const configurationService = jasmine.createSpyObj('configurationService', ['findByPropertyName']);
+    configurationService.findByPropertyName.and.callFake((name: string): Observable<RemoteData<ConfigurationProperty>> =>
+      Object.prototype.hasOwnProperty.call(configProperties, name)
+        ? createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), { name, values: configProperties[name] }))
+        : createFailedRemoteDataObject$('No such configuration property', 404),
+    );
 
     const responseService = jasmine.createSpyObj('responseService', {
       setNotFound: null,
@@ -65,6 +88,7 @@ describe('StaticPageComponent', () => {
         { provide: HtmlContentService, useValue: htmlContentService },
         { provide: Router, useValue: router },
         { provide: ServerResponseService, useValue: responseService },
+        { provide: ConfigurationDataService, useValue: configurationService },
         { provide: APP_CONFIG, useValue: appConfig },
       ],
     })
@@ -80,7 +104,7 @@ describe('StaticPageComponent', () => {
 
     const fixture = TestBed.createComponent(StaticPageComponent);
     const component = fixture.componentInstance;
-    return { fixture, component, htmlContentService, responseService };
+    return { fixture, component, htmlContentService, responseService, configurationService };
   }
 
   function createLinkEvent(href: string, useNestedTarget = false): Event {
@@ -178,6 +202,142 @@ describe('StaticPageComponent', () => {
     fixture.detectChanges();
 
     expect(component.htmlContent.value).toBe(otherHtml);
+  });
+
+  describe('variable interpolation', () => {
+    const allPlaceholdersHtml = '<p>Welcome to ${dspace.name}, provided by ${description.institution}, ' +
+      'located at ${description.location}.</p><p>Laws of ${description.country}, court of ${description.city}.</p>';
+    const allProperties = {
+      'dspace.name': ['Test Repository'],
+      'description.institution': ['Test Institute'],
+      'description.location': ['Test Street 1', '100 00 Test City'],
+      'description.city': ['Test City'],
+      'description.country': ['Test Country'],
+    };
+
+    function setupInterpolationTest(html: string, configProperties: { [name: string]: string[] } = {}, restBase?: string) {
+      return setupTest(html, restBase, undefined, '/static/test-file.html', configProperties);
+    }
+
+    async function render(fixture: ComponentFixture<StaticPageComponent>) {
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+    }
+
+    let warnSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      warnSpy = spyOn(console, 'warn');
+    });
+
+    it('should replace all placeholders with backend configuration properties', async () => {
+      const { fixture, component } = await setupInterpolationTest(allPlaceholdersHtml, allProperties);
+      await render(fixture);
+
+      expect(component.htmlContent.value).toBe('<p>Welcome to Test Repository, provided by Test Institute, ' +
+        'located at Test Street 1, 100 00 Test City.</p><p>Laws of Test Country, court of Test City.</p>');
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
+
+    it('should join a value the backend split on commas', async () => {
+      // How the backend returns `dspace.name = A (B), C, D`
+      const { fixture, component } = await setupInterpolationTest('<p>${dspace.name}</p>', {
+        'dspace.name': ['Test digital library at the Test Institute (TI)', 'Test Faculty', 'Test University'],
+      });
+      await render(fixture);
+
+      expect(component.htmlContent.value).toBe('<p>Test digital library at the Test Institute (TI), Test Faculty, Test University</p>');
+    });
+
+    it('should request each property once', async () => {
+      const { fixture, configurationService } = await setupInterpolationTest('<p>${dspace.name} ${dspace.name} ${description.city}</p>', allProperties);
+      await render(fixture);
+
+      expect(configurationService.findByPropertyName).toHaveBeenCalledTimes(2);
+      expect(configurationService.findByPropertyName).toHaveBeenCalledWith('dspace.name');
+      expect(configurationService.findByPropertyName).toHaveBeenCalledWith('description.city');
+    });
+
+    it('should not request any property when the page has no placeholders', async () => {
+      const html = '<p>No placeholders here</p>';
+      const { fixture, component, configurationService } = await setupInterpolationTest(html, allProperties);
+      await render(fixture);
+
+      expect(component.htmlContent.value).toBe(html);
+      expect(configurationService.findByPropertyName).not.toHaveBeenCalled();
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
+
+    it('should leave an unknown or unexposed placeholder literal and warn once', async () => {
+      const { fixture, component } = await setupInterpolationTest('<p>${dspace.name} ${foo.bar}</p>', allProperties);
+      await render(fixture);
+
+      expect(component.htmlContent.value).toBe('<p>Test Repository ${foo.bar}</p>');
+      expect(warnSpy).toHaveBeenCalledOnceWith('Static page: unresolved variables', ['foo.bar']);
+    });
+
+    it('should treat an empty value as missing', async () => {
+      const { fixture, component } = await setupInterpolationTest('<p>${dspace.name} ${description.city}</p>',
+        { 'dspace.name': [''], 'description.city': [] });
+      await render(fixture);
+
+      expect(component.htmlContent.value).toBe('<p>${dspace.name} ${description.city}</p>');
+      expect(warnSpy).toHaveBeenCalledOnceWith('Static page: unresolved variables', ['dspace.name', 'description.city']);
+    });
+
+    it('should still show the page when a property request errors', async () => {
+      const { fixture, component, configurationService, responseService } = await setupInterpolationTest('<p>${dspace.name}</p>');
+      configurationService.findByPropertyName.and.returnValue(throwError(() => new Error('backend down')));
+      await render(fixture);
+
+      expect(component.contentState).toBe('found');
+      expect(component.htmlContent.value).toBe('<p>${dspace.name}</p>');
+      expect(responseService.setNotFound).not.toHaveBeenCalled();
+      expect(warnSpy).toHaveBeenCalledOnceWith('Static page: unresolved variables', ['dspace.name']);
+    });
+
+    it('should HTML-escape values', async () => {
+      const { fixture, component } = await setupInterpolationTest('<p id="target">${dspace.name}</p>', { 'dspace.name': ['A & <b>B</b>'] });
+      await render(fixture);
+
+      expect(component.htmlContent.value).toBe('<p id="target">A &amp; &lt;b&gt;B&lt;/b&gt;</p>');
+      const target = fixture.nativeElement.querySelector('#target');
+      expect(target.querySelector('b')).toBeNull();
+      expect(target.textContent).toBe('A & <b>B</b>');
+    });
+
+    it('should insert values containing replacement patterns literally', async () => {
+      const { fixture, component } = await setupInterpolationTest(
+        '<p id="target">${dspace.name}|${description.city}</p>',
+        { 'dspace.name': ['a$&b'], 'description.city': ['c$1$`$\'d'] },
+      );
+      await render(fixture);
+
+      expect(fixture.nativeElement.querySelector('#target').textContent).toBe('a$&b|c$1$`$\'d');
+      expect(component.htmlContent.value).not.toContain('${');
+    });
+
+    it('should not touch other placeholder syntaxes', async () => {
+      const html = '<p>$dspace.name {{\'x\' | translate}} $ {dspace.name}</p>';
+      const { fixture, component, configurationService } = await setupInterpolationTest(html, allProperties);
+      await render(fixture);
+
+      expect(component.htmlContent.value).toBe(html);
+      expect(configurationService.findByPropertyName).not.toHaveBeenCalled();
+    });
+
+    it('should apply both the OAI link rewrite and variable interpolation', async () => {
+      const { fixture, component } = await setupInterpolationTest(
+        '<a href="/server/oai/request?verb=Identify">${dspace.name}</a>',
+        allProperties,
+        'https://api.example.org/repository/server',
+      );
+      await render(fixture);
+
+      expect(component.htmlContent.value)
+        .toBe('<a href="https://api.example.org/repository/server/oai/request?verb=Identify">Test Repository</a>');
+    });
   });
 
   describe('contentState behavior', () => {

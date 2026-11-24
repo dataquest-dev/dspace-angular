@@ -51,7 +51,7 @@
             @if (type === 'subject') {
               <span class="pe-1">
                 @for (subject of mdValue.value.split(separator); track subject) {
-                  <a class="badge text-bg-info text-white cursor-pointer me-1"
+                  <a class="badge text-wrap text-start text-bg-info text-white cursor-pointer me-1"
                     [href]="getLinkToSearch(-1, subject)">
                     {{subject}}
                   </a>

@@ -169,6 +169,29 @@ describe('FileDescriptionComponent', () => {
     expect(fileNameElement.textContent).toContain('testFile');
   });
 
+  describe('the file description', () => {
+    const descriptionValue = (): HTMLElement => {
+      const descDt = fixture.debugElement.queryAll(By.css('.file-content dt'))
+        .find((de) => (de.nativeElement as HTMLElement).textContent?.includes('item.file.description.description'));
+      expect(descDt).toBeTruthy();
+      return (descDt.nativeElement as HTMLElement).nextElementSibling as HTMLElement;
+    };
+
+    it('shows the fallback translation key when the description is empty', () => {
+      component.fileInput.description = '';
+      fixture.detectChanges();
+
+      expect(descriptionValue().textContent).toContain('item.file.description.na');
+    });
+
+    it('shows the description text when the description is present', () => {
+      component.fileInput.description = 'This is a test description';
+      fixture.detectChanges();
+
+      expect(descriptionValue().textContent).toContain('This is a test description');
+    });
+  });
+
   describe('the download control', () => {
     const downloadButton = (): HTMLElement => fixture.nativeElement.querySelector('a.download-btn');
     const downloadRoute = (): string[] => ['bitstreams', component.fileInput.id, 'download'];
