@@ -196,6 +196,24 @@ describe('SubmissionSectionClarinLicenseComponent', () => {
       expect(app).toBeDefined();
     }));
 
+    describe('findClarinLicenseByName', () => {
+      // the license name must be encoded exactly once in the byName query (RequestParam encodes it)
+      const expectEncodedName = async (app: SubmissionSectionClarinLicenseComponent, name: string, encoded: string) => {
+        mockClarinDataService.searchBy.and.returnValue(createSuccessfulRemoteDataObject$(createPaginatedList([])));
+        await (app as any).findClarinLicenseByName(name);
+        const options = mockClarinDataService.searchBy.calls.mostRecent().args[1];
+        expect(options.searchParams.map((p) => `${p.fieldName}=${p.fieldValue}`)).toEqual([`name=${encoded}`]);
+      };
+
+      it('should encode an ampersand and spaces in the license name', inject([SubmissionSectionClarinLicenseComponent], async (app: SubmissionSectionClarinLicenseComponent) => {
+        await expectEncodedName(app, 'Licence A & B', 'Licence%20A%20%26%20B');
+      }));
+
+      it('should encode a plus sign in the license name only once', inject([SubmissionSectionClarinLicenseComponent], async (app: SubmissionSectionClarinLicenseComponent) => {
+        await expectEncodedName(app, 'GNU GPL 2.0+', 'GNU%20GPL%202.0%2B');
+      }));
+    });
+
     it('sendRequest should PATCH the submission object self link (route-aware, works for workflow items)',
       inject([SubmissionSectionClarinLicenseComponent], (app: SubmissionSectionClarinLicenseComponent) => {
         // Arrange: enable validation flow so sendRequest actually executes
