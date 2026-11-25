@@ -42,6 +42,19 @@ export class HtmlContentService {
     return name.endsWith(HTML_SUFFIX) ? name : name + HTML_SUFFIX;
   }
 
+  /**
+   * Whether a file name taken from the URL is still one file name once the server decodes it,
+   * so it cannot address a file outside `static-files` (e.g. `..%2Findex`). A query part is ignored.
+   */
+  private isPlainFileName(fileName: string): boolean {
+    try {
+      return !/[/\\]/.test(decodeURIComponent(fileName.split('?')[0]));
+    } catch {
+      // Missing name or malformed percent-encoding: nothing to load.
+      return false;
+    }
+  }
+
   private fetch(url: string) {
     return this.http.get(url, { responseType: 'text' }).pipe(
       map((body): HtmlContentResult => ({ found: true, body })),
@@ -58,7 +71,7 @@ export class HtmlContentService {
    * and the content is loaded after hydration.
    */
   async getHtmlContentByPathAndLocale(fileName: string): Promise<string | undefined> {
-    if (!isPlatformBrowser(this.platformId)) {
+    if (!isPlatformBrowser(this.platformId) || !this.isPlainFileName(fileName)) {
       return undefined;
     }
 
