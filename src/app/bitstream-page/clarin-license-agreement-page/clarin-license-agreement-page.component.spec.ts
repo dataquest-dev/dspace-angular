@@ -25,6 +25,7 @@ import { buildPaginatedList } from '../../core/data/paginated-list.model';
 import { RequestService } from '../../core/data/request.service';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
 import { Bitstream } from '../../core/shared/bitstream.model';
+import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
 import { ClarinUserMetadata } from '../../core/shared/clarin/clarin-user-metadata.model';
 import { FileService } from '../../core/shared/file.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
@@ -168,6 +169,68 @@ describe('ClarinLicenseAgreementPageComponent', () => {
 
       expect(manageUrl()).toEqual('root-url/core/clarinusermetadata/manage?bitstreamUUID=bitstream-uuid');
       expect(hardRedirectService.redirect).toHaveBeenCalledWith('file-link?dtoken=download-token');
+    }));
+
+    /**
+     * The body of the request that stored the user metadata.
+     */
+    function sentMetadata(): ClarinUserMetadata[] {
+      return requestService.send.calls.mostRecent().args[0].body;
+    }
+
+    function requiredInfo(...names: string[]): ClarinLicenseRequiredInfo[] {
+      return names.map(name => Object.assign(new ClarinLicenseRequiredInfo(), { name }));
+    }
+
+    it('should send the IP when an anonymous user has no user metadata', fakeAsync(() => {
+      component.userMetadata$.next(null);
+      component.requiredInfo$.next([]);
+
+      component.accept();
+      flushMicrotasks();
+
+      expect(sentMetadata().map(entry => [entry.metadataKey, entry.metadataValue])).toEqual([['IP', '127.0.0.1']]);
+    }));
+
+    it('should send the IP when the user metadata list is empty', fakeAsync(() => {
+      component.userMetadata$.next(userMetadata([]));
+      component.requiredInfo$.next([]);
+
+      component.accept();
+      flushMicrotasks();
+
+      expect(sentMetadata().map(entry => entry.metadataKey)).toEqual(['IP']);
+    }));
+
+    it('should send only the keys the licence requires, plus the current IP', fakeAsync(() => {
+      component.userMetadata$.next(userMetadata([
+        { metadataKey: 'NAME', metadataValue: 'Jane Tester' },
+        { metadataKey: 'COUNTRY', metadataValue: 'CZ' },
+        { metadataKey: 'IP', metadataValue: '198.51.100.7' },
+      ]));
+      component.requiredInfo$.next(requiredInfo('NAME'));
+
+      component.accept();
+      flushMicrotasks();
+
+      expect(sentMetadata().map(entry => [entry.metadataKey, entry.metadataValue]))
+        .toEqual([['NAME', 'Jane Tester'], ['IP', '127.0.0.1']]);
+    }));
+
+    it('should allow an empty ORGANIZATION but block an empty REQUIRED_ORGANIZATION', fakeAsync(() => {
+      component.userMetadata$.next(null);
+
+      component.requiredInfo$.next(requiredInfo('ORGANIZATION'));
+      component.accept();
+      flushMicrotasks();
+      expect(requestService.send).toHaveBeenCalled();
+
+      requestService.send.calls.reset();
+      component.userMetadata$.next(null);
+      component.requiredInfo$.next(requiredInfo('REQUIRED_ORGANIZATION'));
+      component.accept();
+      flushMicrotasks();
+      expect(requestService.send).not.toHaveBeenCalled();
     }));
 
     describe('when the download link goes by e-mail', () => {
