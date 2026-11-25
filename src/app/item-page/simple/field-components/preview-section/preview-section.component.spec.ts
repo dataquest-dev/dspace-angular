@@ -1,8 +1,13 @@
-import { SimpleChange } from '@angular/core';
+import {
+  Component,
+  Input,
+  SimpleChange,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
 } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import {
   TranslateLoader,
   TranslateModule,
@@ -19,6 +24,7 @@ import { ResourceType } from 'src/app/core/shared/resource-type';
 
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { TranslateLoaderMock } from '../../../../shared/mocks/translate-loader.mock';
+import { FileDescriptionComponent } from './file-description/file-description.component';
 import { PreviewSectionComponent } from './preview-section.component';
 
 describe('PreviewSectionComponent', () => {
@@ -46,7 +52,12 @@ describe('PreviewSectionComponent', () => {
       providers: [
         { provide: RegistryService, useValue: mockRegistryService },
         { provide: ConfigurationDataService, useValue: mockConfigService }],
-    }).compileComponents();
+    })
+      .overrideComponent(PreviewSectionComponent, {
+        remove: { imports: [FileDescriptionComponent] },
+        add: { imports: [MockFileDescriptionComponent] },
+      })
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -100,4 +111,21 @@ describe('PreviewSectionComponent', () => {
       done();
     });
   });
+
+  it('should pass the item to each file description', () => {
+    component.listOfFiles.next([new MetadataBitstream()]);
+    fixture.detectChanges();
+
+    const fileDescription = fixture.debugElement.query(By.directive(MockFileDescriptionComponent));
+    expect(fileDescription.componentInstance.item).toBe(component.item);
+  });
 });
+
+@Component({
+  selector: 'ds-file-description',
+  template: '',
+})
+class MockFileDescriptionComponent {
+  @Input() fileInput: MetadataBitstream;
+  @Input() item: Item;
+}

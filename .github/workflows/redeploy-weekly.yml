@@ -2,7 +2,7 @@ name: Redeploy Weekly
 
 # Replaces the old "Import Weekly": instance 8603 is not re-imported on a schedule.
 # This only redeploys, which is non-destructive -- start.sh pulls the images first, so the
-# instance picks up the latest dtq-dev-9-base build. The database and assetstore are left
+# instance picks up the latest dtq-dev-93 build. The database and assetstore are left
 # alone (IMPORT and ERASE_DB both false).
 #
 # To load a dump, run "Deploy DSpace" manually with IMPORT checked.

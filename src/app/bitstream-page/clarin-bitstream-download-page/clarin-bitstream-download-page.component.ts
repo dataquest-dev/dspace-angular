@@ -172,7 +172,9 @@ export class ClarinBitstreamDownloadPageComponent implements OnInit {
         this.redirectToContent(fileLink);
       } else if ((isAuthorized || isAuthorizedByClarin) && !isLoggedIn) {
         this.downloadStatus.next(RequestEntryState.Success);
-        this.redirectToContent(bitstreamURL);
+        // Server-side too, so crawlers get a 302. Logged-in users keep the client-side
+        // redirect: a server 302 right after login left the browser on the login page.
+        this.hardRedirectService.redirect(bitstreamURL);
       } else if (!(isAuthorized || isAuthorizedByClarin) && isLoggedIn &&
         this.downloadStatus.value === (RequestEntryState.Error as string)) {
         // this.downloadStatus is `ERROR` - no CLARIN exception is thrown up

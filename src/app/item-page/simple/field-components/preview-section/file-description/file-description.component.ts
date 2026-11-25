@@ -28,6 +28,8 @@ import {
 } from 'rxjs/operators';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
 
+import { environment } from '../../../../../../environments/environment';
+import { getBitstreamRequestACopyRoute } from '../../../../../app-routing-paths';
 import { AuthService } from '../../../../../core/auth/auth.service';
 import { BitstreamDataService } from '../../../../../core/data/bitstream-data.service';
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
@@ -37,6 +39,7 @@ import { RemoteData } from '../../../../../core/data/remote-data';
 import { Bitstream } from '../../../../../core/shared/bitstream.model';
 import { FileService } from '../../../../../core/shared/file.service';
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
+import { Item } from '../../../../../core/shared/item.model';
 import { ItemRequest } from '../../../../../core/shared/item-request.model';
 import {
   getFirstCompletedRemoteData,
@@ -60,7 +63,7 @@ const archiveFormats = [
 const allowedPreviewFormats = archiveFormats.concat(['text/plain',  'text/html']);
 
 @Component({
-  selector: 'ds-file-description',
+  selector: 'ds-file-description',
   imports: [
     CommonModule,
     FileSizePipe,
@@ -77,6 +80,12 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
 
   @Input()
   fileInput: MetadataBitstream;
+
+  /**
+   * The item of the file, needed for the request-a-copy route.
+   */
+  @Input()
+  item: Item;
 
   @ViewChild('videoPreview') videoElement: ElementRef;
 
@@ -230,9 +239,38 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
 
   public downloadFile() {
     const accessToken = this.getAccessToken();
+    if (accessToken || !environment.item.bitstream.enableRequestACopyLink || !hasValue(this.item)) {
+      this.navigateToDownload(accessToken);
+      return;
+    }
+    this.canOnlyRequestACopy().subscribe((requestACopy: boolean) => {
+      if (requestACopy) {
+        const route = getBitstreamRequestACopyRoute(this.item, { uuid: this.fileInput.id });
+        void this.router.navigate([route.routerLink], { queryParams: route.queryParams });
+      } else {
+        this.navigateToDownload();
+      }
+    });
+  }
+
+  private navigateToDownload(accessToken?: string) {
     void this.router.navigate(['bitstreams', this.fileInput.id, 'download'], {
       queryParams: accessToken ? { accessToken } : {},
     });
+  }
+
+  /**
+   * True when the user cannot download the file but may request a copy, as in vanilla's FileDownloadLinkComponent.
+   */
+  private canOnlyRequestACopy(): Observable<boolean> {
+    return this.bitstreamService.getIDHrefObs(this.fileInput.id).pipe(
+      switchMap((href: string) => this.authDataService.isAuthorized(FeatureID.CanDownload, href).pipe(
+        switchMap((canDownload: boolean) => canDownload
+          ? of(false)
+          : this.authDataService.isAuthorized(FeatureID.CanRequestACopy, href)),
+      )),
+      take(1),
+    );
   }
 
   /**

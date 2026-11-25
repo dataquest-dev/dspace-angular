@@ -1,7 +1,7 @@
 # DSpace Docker image build for hub.docker.com
 name: Docker images
 
-# Run this Build for all pushes to 'dtq-dev-9-base' (the CLARIN/DSpace 9 base branch).
+# Run this Build for all pushes to 'dtq-dev-93' (the CLARIN/DSpace 9 base branch).
 # Also run for PRs to ensure PR doesn't break Docker build process (PRs build, but do not push).
 # NOTE: uses "reusable-docker-build.yml" from the 'dtq-dev' branch of dataquest-dev/DSpace to actually
 # build each of the Docker images. That is the same reusable workflow which builds our 'dtq-dev' and
@@ -10,7 +10,7 @@ name: Docker images
 on:
   push:
     branches:
-      - dtq-dev-9-base
+      - dtq-dev-93
   pull_request:
   workflow_dispatch:
 
@@ -60,7 +60,7 @@ jobs:
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
   deploy:
-    needs: dspace-angular
+    needs: [dspace-angular, dspace-angular-dist]
     if: ${{ github.event_name != 'pull_request' }}
     uses: ./.github/workflows/deploy.yml
     with:

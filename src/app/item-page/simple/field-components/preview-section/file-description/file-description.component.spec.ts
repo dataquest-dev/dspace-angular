@@ -22,15 +22,18 @@ import { FileInfo } from 'src/app/core/metadata/file-info.model';
 import { MetadataBitstream } from 'src/app/core/metadata/metadata-bitstream.model';
 import { ResourceType } from 'src/app/core/shared/resource-type';
 
+import { environment } from '../../../../../../environments/environment';
 import { AuthService } from '../../../../../core/auth/auth.service';
 import { BitstreamDataService } from '../../../../../core/data/bitstream-data.service';
 import { ConfigurationDataService } from '../../../../../core/data/configuration-data.service';
 import { AuthorizationDataService } from '../../../../../core/data/feature-authorization/authorization-data.service';
+import { FeatureID } from '../../../../../core/data/feature-authorization/feature-id';
 import { LocaleService } from '../../../../../core/locale/locale.service';
 import { Bitstream } from '../../../../../core/shared/bitstream.model';
 import { ConfigurationProperty } from '../../../../../core/shared/configuration-property.model';
 import { FileService } from '../../../../../core/shared/file.service';
 import { HALEndpointService } from '../../../../../core/shared/hal-endpoint.service';
+import { Item } from '../../../../../core/shared/item.model';
 import { ItemRequest } from '../../../../../core/shared/item-request.model';
 import { TranslateLoaderMock } from '../../../../../shared/mocks/translate-loader.mock';
 import { createSuccessfulRemoteDataObject$ } from '../../../../../shared/remote-data.utils';
@@ -99,6 +102,7 @@ describe('FileDescriptionComponent', () => {
         // lands on whichever async spec happens to be running
         _links: { self: { href: 'self' }, content: { href: 'content' } },
       })),
+      getIDHrefObs: of('bitstream-self'),
     });
 
     localeService = jasmine.createSpyObj('localeService', {
@@ -256,6 +260,58 @@ describe('FileDescriptionComponent', () => {
       downloadButton().click();
 
       expect(navigate).toHaveBeenCalledWith(downloadRoute(), { queryParams: {} });
+    });
+
+    it('ignores request-a-copy while the request-a-copy link is disabled', () => {
+      component.item = Object.assign(new Item(), { uuid: 'item-uuid' });
+      spyOn(TestBed.inject(AuthorizationDataService), 'isAuthorized').and.returnValue(of(true));
+
+      downloadButton().click();
+
+      expect(navigate).toHaveBeenCalledWith(downloadRoute(), { queryParams: {} });
+    });
+
+    describe('with the request-a-copy link enabled', () => {
+      let isAuthorized: jasmine.Spy;
+
+      const allow = (...features: FeatureID[]) =>
+        isAuthorized.and.callFake((feature: FeatureID) => of(features.includes(feature)));
+
+      beforeEach(() => {
+        environment.item.bitstream.enableRequestACopyLink = true;
+        component.item = Object.assign(new Item(), { uuid: 'item-uuid' });
+        isAuthorized = spyOn(TestBed.inject(AuthorizationDataService), 'isAuthorized');
+      });
+
+      afterEach(() => {
+        environment.item.bitstream.enableRequestACopyLink = false;
+      });
+
+      it('sends a user who can only request a copy to the request-a-copy form', () => {
+        allow(FeatureID.CanRequestACopy);
+
+        downloadButton().click();
+
+        expect(isAuthorized).toHaveBeenCalledWith(FeatureID.CanDownload, 'bitstream-self');
+        expect(navigate).toHaveBeenCalledWith(['/items/item-uuid/request-a-copy'],
+          { queryParams: { bitstream: component.fileInput.id } });
+      });
+
+      it('keeps the licence gate for a user who can download', () => {
+        allow(FeatureID.CanDownload, FeatureID.CanRequestACopy);
+
+        downloadButton().click();
+
+        expect(navigate).toHaveBeenCalledWith(downloadRoute(), { queryParams: {} });
+      });
+
+      it('keeps the licence gate when no copy can be requested', () => {
+        allow();
+
+        downloadButton().click();
+
+        expect(navigate).toHaveBeenCalledWith(downloadRoute(), { queryParams: {} });
+      });
     });
   });
 

@@ -8,7 +8,7 @@
   <!-- Show list of files -->
   @for (file of files; track file) {
     <div>
-      <ds-file-description [fileInput]="file"></ds-file-description>
+      <ds-file-description [fileInput]="file" [item]="item"></ds-file-description>
     </div>
   }
 } @else {
