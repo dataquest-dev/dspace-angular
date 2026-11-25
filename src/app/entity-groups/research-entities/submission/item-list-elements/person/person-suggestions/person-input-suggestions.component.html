@@ -22,7 +22,7 @@
       @for (suggestionOption of suggestions; track suggestionOption) {
         <div>
           <a href="javascript:void(0);" class="d-block dropdown-item"  (click)="onClickSuggestion(suggestionOption)" #suggestion>
-            <span [innerHTML]="suggestionOption"></span>
+            <span>{{suggestionOption}}</span>
           </a>
         </div>
       }

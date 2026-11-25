@@ -247,6 +247,9 @@ describe('ProcessDetailComponent', () => {
       const outputProcess = fixture.debugElement.query(By.css('#process-output pre'));
       expect(outputProcess.nativeElement.textContent).toContain(processOutput);
     });
+    it('should request the output logs without a token in the URL', () => {
+      expect((httpClient.get as jasmine.Spy).calls.mostRecent().args[0]).toBe('log-selflink');
+    });
   });
 
   describe('if press show output logs and process has no output logs', () => {

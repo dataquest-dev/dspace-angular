@@ -55,7 +55,6 @@ import {
   getFirstSucceededRemoteData,
   getFirstSucceededRemoteDataPayload,
 } from '../../core/shared/operators';
-import { URLCombiner } from '../../core/url-combiner/url-combiner';
 import { AlertType } from '../../shared/alert/alert-type';
 import { hasValue } from '../../shared/empty.util';
 import { ThemedFileDownloadLinkComponent } from '../../shared/file-download-link/themed-file-download-link.component';
@@ -108,7 +107,7 @@ export class ProcessDetailComponent implements OnInit, OnDestroy {
   filesRD$: Observable<RemoteData<PaginatedList<Bitstream>>>;
 
   /**
-   * File link that contain the output logs with auth token
+   * Link to the file that contains the output logs
    */
   outputLogFileUrl$: Observable<string>;
 
@@ -225,13 +224,8 @@ export class ProcessDetailComponent implements OnInit, OnDestroy {
             this.showOutputLogs = true;
           }
         }),
-        switchMap((processOutput: RemoteData<Bitstream>) => {
-          const url = processOutput.payload._links.content.href;
-          return this.authService.getShortlivedToken().pipe(take(1),
-            map((token: string) => {
-              return hasValue(token) ? new URLCombiner(url, `?authentication-token=${token}`).toString() : url;
-            }));
-        }),
+        // HttpClient sends the Authorization header, so the URL needs no token.
+        map((processOutput: RemoteData<Bitstream>) => processOutput.payload._links.content.href),
       );
     });
     this.outputLogFileUrl$.pipe(take(1),

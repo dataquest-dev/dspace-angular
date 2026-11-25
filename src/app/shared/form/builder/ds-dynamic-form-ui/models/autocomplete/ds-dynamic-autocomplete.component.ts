@@ -24,6 +24,7 @@ import {
   DynamicFormValidationService,
 } from '@ng-dynamic-forms/core';
 import { TranslateService } from '@ngx-translate/core';
+import escape from 'lodash/escape';
 import {
   BehaviorSubject,
   Observable,
@@ -257,7 +258,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       return DsDynamicAutocompleteService.pretifyLanguageSuggestion(suggestion, this.translateService);
     }
     // @ts-ignore
-    return suggestion.display;
+    return escape(suggestion.display);
   };
 
   /**
