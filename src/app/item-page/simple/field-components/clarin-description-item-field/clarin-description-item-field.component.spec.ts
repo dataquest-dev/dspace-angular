@@ -77,6 +77,17 @@ describe('ClarinDescriptionItemFieldComponent', () => {
     expect(anchor.nativeElement.getAttribute('target')).toEqual('_blank');
   });
 
+  it('should show markup in the description as text and keep URLs as links', () => {
+    render(itemWithDescriptions([
+      { value: '<b>Bold</b> <img src="pixel.png"> See https://example.org', language: 'en_US' },
+    ]));
+
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.querySelector('b, img')).toBeNull();
+    expect(element.textContent).toContain('<b>Bold</b> <img src="pixel.png"> See https://example.org');
+    expect(element.querySelector('a').getAttribute('href')).toEqual('https://example.org');
+  });
+
   it('should render nothing when the item has no description', () => {
     render(Object.assign(new Item(), { metadata: {} }));
 

@@ -70,4 +70,14 @@ describe('OrgUnitInputSuggestionsComponent', () => {
     });
   });
 
+  describe('When a suggestion has HTML markup', () => {
+    it('should render the markup as text', () => {
+      component.suggestions = ['Science <b>Unit</b>'];
+      fixture.detectChanges();
+      const option: HTMLElement = fixture.nativeElement.querySelector('.dropdown-item span');
+      expect(option.querySelector('b')).toBeNull();
+      expect(option.textContent).toEqual('Science <b>Unit</b>');
+    });
+  });
+
 });

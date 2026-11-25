@@ -60,7 +60,7 @@
                           <td>{{mdEntry.key}}</td>
                           <td>
                             @for (value of (mdValue.value || '').split(SEPARATOR); track $index; let last = $last) {
-                              <span><span [innerHTML]="makeLinks(value) | dsReplace: [';', ' ']"></span>@if (!last) {<span [innerHTML]="' '"></span>}</span>
+                              <span><span [innerHTML]="makeLinks(value | dsReplace: [';', ' '])"></span>@if (!last) {<span [innerHTML]="' '"></span>}</span>
                             }
                           </td>
                           @if ((isAdmin$|async)) {

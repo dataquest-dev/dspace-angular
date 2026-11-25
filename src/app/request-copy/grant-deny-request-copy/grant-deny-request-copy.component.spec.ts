@@ -113,6 +113,13 @@ describe('GrantDenyRequestCopyComponent', () => {
     });
   });
 
+  it('should request the item name HTML-escaped', (done) => {
+    component.itemName$.subscribe(() => {
+      expect(nameService.getName).toHaveBeenCalledWith(item, true);
+      done();
+    });
+  });
+
   it('should initialise itemUrl$', (done) => {
     component.itemUrl$.subscribe((result) => {
       expect(result).toEqual(itemUrl);
