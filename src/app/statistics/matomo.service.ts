@@ -64,6 +64,20 @@ export class MatomoService {
   /** Handle of the item whose page view is about to be tracked, when the current page has one. */
   private itemHandle: string;
 
+  /** Whether the visitor's consent to Matomo is applied. */
+  private consent = false;
+
+  /** The consent in force at the point Matomo has reached in its command queue. */
+  private consentInQueue = false;
+
+  /** Whether the router queued the current page view without consent. */
+  private pageViewWithoutConsent = false;
+
+  /** Site id and tracker URL, once Matomo is enabled and configured. */
+  private trackerConfig: { siteId: string, trackerUrl: string };
+
+  private scriptInjected = false;
+
   private statusSubject = new ReplaySubject<'loading' | 'loaded' | 'error'>(1);
   private status$ = this.statusSubject.asObservable();
 
@@ -88,7 +102,7 @@ export class MatomoService {
   /**
    * Initializes the Matomo tracker if in production environment.
    * Sets up the changeMatomoConsent function on the native window object.
-   * Subscribes to cookie consent preferences and initializes the tracker accordingly.
+   * Subscribes to cookie consent preferences and applies them once Matomo is configured.
    */
   init() {
     if (this._window.nativeWindow) {
@@ -96,40 +110,71 @@ export class MatomoService {
     }
 
     if (environment.production) {
+      this.matomoTracker = runInInjectionContext(this.injector, () => inject(MatomoTracker));
+      // Set before the router queues its first page view. Matomo then empties, and never sends, every request
+      // queued without consent, even when it runs the queue after a later consent.
+      this.matomoTracker.setCustomRequestProcessing((request: string) => this.consentInQueue ? request : '');
+
       const preferences$ = this.orejimeService.getSavedPreferences();
 
       combineLatest([preferences$, this.isMatomoEnabled$(), this.getSiteId$(), this.getTrackerUrl$()])
         .subscribe(([preferences, isMatomoEnabled, siteId, trackerUrl]) => {
           if (isMatomoEnabled && siteId && trackerUrl) {
-            runInInjectionContext(this.injector, () => {
-              this.matomoTracker = inject(MatomoTracker);
-              this.matomoInitializer = inject(MatomoInitializerService);
-            });
-            this.matomoInitializer.initializeTracker({ siteId, trackerUrl });
-            this.changeMatomoConsent(preferences?.matomo);
+            this.matomoInitializer = runInInjectionContext(this.injector, () => inject(MatomoInitializerService));
+            this.trackerConfig = { siteId, trackerUrl };
+            this.changeMatomoConsent(environment.info?.enableCookieConsentPopup === false || preferences?.matomo);
           }
         });
     }
   }
 
   /**
-   * Changes the Matomo consent status based on the given consent value.
+   * Applies the visitor's Matomo consent once Matomo is configured. The first consent loads the Matomo script.
+   * A consent tracks the current page if the router queued it without consent. A revocation stops tracking,
+   * and Matomo deletes its cookies.
    * @param consent - A boolean indicating whether consent is given for Matomo tracking.
    */
   changeMatomoConsent = (consent: boolean) => {
-    if (consent) {
-      this.matomoTracker?.setConsentGiven();
-    } else {
-      this.matomoTracker?.forgetConsentGiven();
+    const given = !!consent;
+    if (!this.trackerConfig || given === this.consent) {
+      return;
+    }
+    this.consent = given;
+    if (given && !this.scriptInjected) {
+      this.scriptInjected = true;
+      this.matomoInitializer.initializeTracker(this.trackerConfig);
+    }
+    this.runInQueue((matomo) => {
+      this.consentInQueue = given;
+      if (given) {
+        matomo.setConsentGiven();
+      } else {
+        matomo.forgetConsentGiven();
+      }
+    });
+    if (given && this.pageViewWithoutConsent) {
+      this.pageViewWithoutConsent = false;
+      this.matomoTracker.trackPageView();
     }
   };
 
   /**
-   * Appends the Matomo visitor ID to the given URL.
+   * Remembers whether the router queues the coming page view without consent, so that page is tracked once
+   * consent is given.
+   */
+  notePageView() {
+    this.pageViewWithoutConsent = !this.consent;
+  }
+
+  /**
+   * Appends the Matomo visitor ID to the given URL, while the visitor consents to Matomo.
    * @param url - The original URL to which the visitor ID will be added.
-   * @returns An Observable that emits the URL with the visitor ID appended.
+   * @returns An Observable that emits the URL with the visitor ID appended, or the URL unchanged without consent.
    */
   appendVisitorId(url: string): Observable<string> {
+    if (!this.consent) {
+      return of(url);
+    }
     return fromPromise(this.matomoTracker?.getVisitorId())
       .pipe(
         map(visitorId => this.appendTrackerId(url, visitorId)),
@@ -238,6 +283,16 @@ export class MatomoService {
     }
     return updatedURL.toString();
   }
+
+  /**
+   * Runs fn on the Matomo tracker when Matomo reaches it in its command queue. Matomo would run a queued
+   * 'setConsentGiven' name before the commands queued ahead of it, so consent changes go through here.
+   */
+  private runInQueue(fn: (matomo: any) => void) {
+    this._window.nativeWindow._paq.push([function () {
+      fn(this);
+    }]);
+  }
 }
 
 /**
@@ -245,4 +300,11 @@ export class MatomoService {
  */
 export function matomoItemDimensionInterceptor(): void {
   inject(MatomoService).applyItemCustomDimension();
+}
+
+/**
+ * Matomo router interceptor that notes whether the coming page view is queued without consent.
+ */
+export function matomoConsentInterceptor(): void {
+  inject(MatomoService).notePageView();
 }

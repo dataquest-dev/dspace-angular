@@ -41,6 +41,7 @@ import {
 } from 'ngx-matomo-client';
 import { customMatomoScriptFactory } from 'src/app/statistics/matomo.factory';
 import {
+  matomoConsentInterceptor,
   matomoItemDimensionInterceptor,
   MatomoService,
 } from 'src/app/statistics/matomo.service';
@@ -175,7 +176,7 @@ export const browserAppConfig: ApplicationConfig = mergeApplicationConfig({
       },
       withRouter(),
       withRouteData(),
-      withRouterInterceptors([matomoItemDimensionInterceptor]),
+      withRouterInterceptors([matomoItemDimensionInterceptor, matomoConsentInterceptor]),
     ),
     {
       provide: MATOMO_SCRIPT_FACTORY,
