@@ -94,4 +94,28 @@ describe('FiltersComponent', () => {
       });
     }));
   });
+
+  describe('result links', () => {
+    beforeEach(() => {
+      spyOn(component, 'getFilteredCollections').and.returnValue(of({
+        ...expected,
+        payload: {
+          collections: [{
+            label: 'Collection', handle: '123456789/2',
+            community_label: 'Community', community_handle: '123456789/1',
+            nb_total_items: 1, all_filters_value: 1, values: {},
+          }],
+          summary: { label: 'Test', nb_total_items: 1, all_filters_value: 1, values: {} },
+        },
+      } as RawRestResponse));
+      component.submit();
+      fixture.detectChanges();
+    });
+
+    it('should link to the handle relative to the base href', () => {
+      const hrefs = Array.from<HTMLAnchorElement>(fixture.nativeElement.querySelectorAll('tbody a'))
+        .map((a) => a.getAttribute('href'));
+      expect(hrefs).toEqual(['handle/123456789/1', 'handle/123456789/2']);
+    });
+  });
 });

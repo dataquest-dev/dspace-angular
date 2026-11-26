@@ -1,4 +1,5 @@
 
+import { Location } from '@angular/common';
 import {
   Component,
   Inject,
@@ -60,6 +61,11 @@ export class FeedbackFormComponent implements OnInit {
     page: [''],
   });
 
+  /**
+   * The router url of the page the feedback is about, to go back to after a successful submit
+   */
+  private previousUrl: string;
+
   constructor(
     @Inject(NativeWindowService) protected _window: NativeWindowRef,
     public routeService: RouteService,
@@ -68,7 +74,8 @@ export class FeedbackFormComponent implements OnInit {
     protected translate: TranslateService,
     private feedbackDataService: FeedbackDataService,
     private authService: AuthService,
-    private router: Router) {
+    private router: Router,
+    private location: Location) {
   }
 
   /**
@@ -86,7 +93,9 @@ export class FeedbackFormComponent implements OnInit {
       if (!url) {
         url = getHomePageRoute();
       }
-      const relatedUrl = new URLCombiner(this._window.nativeWindow.origin, url).toString();
+      this.previousUrl = url;
+      // The REST API only accepts a page under dspace.ui.url, so the base href must be part of it
+      const relatedUrl = new URLCombiner(this._window.nativeWindow.origin, this.location.prepareExternalUrl(url)).toString();
       this.feedbackForm.patchValue({ page: relatedUrl });
     });
 
@@ -96,12 +105,11 @@ export class FeedbackFormComponent implements OnInit {
    * Function to create the feedback from form values
    */
   createFeedback(): void {
-    const url = this.feedbackForm.value.page.replace(this._window.nativeWindow.origin, '');
     this.feedbackDataService.create(this.feedbackForm.value).pipe(getFirstCompletedRemoteData()).subscribe((response: RemoteData<NoContent>) => {
       if (response.isSuccess) {
         this.notificationsService.success(this.translate.instant('info.feedback.create.success'));
         this.feedbackForm.reset();
-        this.router.navigateByUrl(url);
+        this.router.navigateByUrl(this.previousUrl);
       }
     });
   }

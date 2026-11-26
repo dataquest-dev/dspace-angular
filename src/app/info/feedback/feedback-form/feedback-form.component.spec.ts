@@ -1,3 +1,4 @@
+import { APP_BASE_HREF } from '@angular/common';
 import {
   DebugElement,
   NO_ERRORS_SCHEMA,
@@ -22,6 +23,7 @@ import { BtnDisabledDirective } from '../../../shared/btn-disabled.directive';
 import { NativeWindowMockFactory } from '../../../shared/mocks/mock-native-window-ref';
 import { RouterMock } from '../../../shared/mocks/router.mock';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
+import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
 import { AuthServiceStub } from '../../../shared/testing/auth-service.stub';
 import { EPersonMock } from '../../../shared/testing/eperson.mock';
 import { NotificationsServiceStub } from '../../../shared/testing/notifications-service.stub';
@@ -55,6 +57,7 @@ describe('FeedbackFormComponent', () => {
         { provide: AuthService, useValue: authService },
         { provide: NativeWindowService, useFactory: NativeWindowMockFactory },
         { provide: Router, useValue: routerStub },
+        { provide: APP_BASE_HREF, useValue: '/repository/' },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -71,8 +74,8 @@ describe('FeedbackFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have page value', () => {
-    expect(component.feedbackForm.controls.page.value).toEqual('http://localhost/home');
+  it('should have page value including the base href', () => {
+    expect(component.feedbackForm.controls.page.value).toEqual('http://localhost/repository/home');
   });
 
   it('should have email if ePerson', () => {
@@ -100,6 +103,12 @@ describe('FeedbackFormComponent', () => {
       component.createFeedback();
       fixture.detectChanges();
       expect(feedbackDataServiceStub.create).toHaveBeenCalled();
+    });
+
+    it('after a successful submit should navigate back to the router url of the page', () => {
+      feedbackDataServiceStub.create.and.returnValue(createSuccessfulRemoteDataObject$({}));
+      component.createFeedback();
+      expect(routerStub.navigateByUrl).toHaveBeenCalledWith('/home');
     });
   });
 

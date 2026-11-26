@@ -1,4 +1,7 @@
-import { CommonModule } from '@angular/common';
+import {
+  APP_BASE_HREF,
+  CommonModule,
+} from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
@@ -46,6 +49,7 @@ import { RemoteData } from '../../../core/data/remote-data';
 import { EPersonDataService } from '../../../core/eperson/eperson-data.service';
 import { GroupDataService } from '../../../core/eperson/group-data.service';
 import { Group } from '../../../core/eperson/models/group.model';
+import { Collection } from '../../../core/shared/collection.model';
 import { DSpaceObject } from '../../../core/shared/dspace-object.model';
 import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { NoContent } from '../../../core/shared/NoContent.model';
@@ -263,6 +267,7 @@ describe('GroupFormComponent', () => {
         { provide: ActivatedRoute, useValue: route },
         { provide: Router, useValue: router },
         { provide: AuthorizationDataService, useValue: authorizationService },
+        { provide: APP_BASE_HREF, useValue: '/repository/' },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
@@ -404,6 +409,29 @@ describe('GroupFormComponent', () => {
     it('does NOT call router.navigate', () => {
       component.ngOnDestroy();
       expect(router.navigate).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('linkedEditRolesRoute$', () => {
+    beforeEach(() => {
+      const collection = Object.assign(new Collection(), {
+        id: 'collection-id',
+        type: Collection.type.value,
+        metadata: {},
+      });
+      spyOn(groupsDataServiceStub, 'getActiveGroup').and.returnValue(of(Object.assign(new Group(), {
+        name: 'COLLECTION_collection-id_SUBMIT',
+        metadata: {},
+        object: createSuccessfulRemoteDataObject$(collection),
+      })));
+      component.ngOnInit();
+    });
+
+    it('should resolve the edit roles route against the base href', (done) => {
+      component.linkedEditRolesRoute$.subscribe((editRolesRoute: string) => {
+        expect(editRolesRoute).toBe('/repository/collections/collection-id/edit/roles');
+        done();
+      });
     });
   });
 

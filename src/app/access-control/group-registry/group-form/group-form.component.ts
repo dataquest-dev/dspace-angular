@@ -1,4 +1,7 @@
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  Location,
+} from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -200,6 +203,7 @@ export class GroupFormComponent implements OnInit, OnDestroy {
     public requestService: RequestService,
     protected changeDetectorRef: ChangeDetectorRef,
     public dsoNameService: DSONameService,
+    protected location: Location,
   ) {
   }
 
@@ -535,7 +539,8 @@ export class GroupFormComponent implements OnInit, OnDestroy {
 
   /**
    * Get the route to the edit roles tab of the active {@link Group}'s linked object (community or collection linked
-   * to a workflow group) if it has one
+   * to a workflow group) if it has one.
+   * It lands in the raw `<a href>` of a translation, so it is resolved against the base href here.
    */
   getLinkedEditRolesRoute(): Observable<string> {
     return this.activeGroupLinkedDSO$.pipe(
@@ -543,9 +548,9 @@ export class GroupFormComponent implements OnInit, OnDestroy {
       map((dso: DSpaceObject) => {
         switch ((dso as any).type) {
           case Community.type.value:
-            return getCommunityEditRolesRoute(dso.id);
+            return this.location.prepareExternalUrl(getCommunityEditRolesRoute(dso.id));
           case Collection.type.value:
-            return getCollectionEditRolesRoute(dso.id);
+            return this.location.prepareExternalUrl(getCollectionEditRolesRoute(dso.id));
         }
       }),
     );

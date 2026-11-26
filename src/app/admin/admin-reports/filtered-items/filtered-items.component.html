@@ -170,10 +170,10 @@
                       <td class="num">{{ item.index }}</td>
                       <td>{{ item.uuid }}</td>
                       <td>@if (item.owningCollection) {
-                        <a href="/handle/{{ item.owningCollection.handle }}" rel="noopener noreferrer" target="_blank">{{ item.owningCollection.name }}</a>
+                        <a href="handle/{{ item.owningCollection.handle }}" rel="noopener noreferrer" target="_blank">{{ item.owningCollection.name }}</a>
                       }</td>
                       <td>@if (item.handle) {
-                        <a href="/handle/{{ item.handle }}" rel="noopener noreferrer" target="_blank">{{ item.handle }}</a>
+                        <a href="handle/{{ item.handle }}" rel="noopener noreferrer" target="_blank">{{ item.handle }}</a>
                       }</td>
                       <td>{{ item.name }}</td>
                       @for (field of queryForm.value['additionalFields']; track field) {

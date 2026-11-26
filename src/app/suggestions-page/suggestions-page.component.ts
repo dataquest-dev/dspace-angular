@@ -1,4 +1,7 @@
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  Location,
+} from '@angular/common';
 import {
   Component,
   OnInit,
@@ -132,6 +135,7 @@ export class SuggestionsPageComponent implements OnInit {
     private suggestionTargetsStateService: SuggestionTargetsStateService,
     private translateService: TranslateService,
     private workspaceItemService: WorkspaceitemDataService,
+    private location: Location,
   ) {
   }
 
@@ -245,7 +249,9 @@ export class SuggestionsPageComponent implements OnInit {
   approveAndImport(event: SuggestionApproveAndImport) {
     this.suggestionService.approveAndImport(this.workspaceItemService, event.suggestion, event.collectionId).pipe(
       tap((workspaceitem: WorkspaceItem) => {
-        const content = this.translateService.instant('suggestion.approveAndImport.success', { url: getWorkspaceItemEditRoute(workspaceitem.id) });
+        // The url lands in a raw <a href> of the notification, so it needs the base href
+        const url = this.location.prepareExternalUrl(getWorkspaceItemEditRoute(workspaceitem.id));
+        const content = this.translateService.instant('suggestion.approveAndImport.success', { url });
         this.notificationService.success('', content, { timeOut:0 }, true);
         this.suggestionTargetsStateService.dispatchRefreshUserSuggestionsAction();
       }),
