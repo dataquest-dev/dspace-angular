@@ -71,15 +71,15 @@ services:
     ports:
     - published: 8080
       target: 8080
-    # Handle server: TCP and UDP port 2641, HTTP port 8000
+    # Handle server: TCP and UDP port 2641, HTTP port 8010
     - published: 2641
       target: 2641
       protocol: tcp
     - published: 2641
       target: 2641
       protocol: udp
-    - published: 8000
-      target: 8000
+    - published: 8010
+      target: 8010
     volumes:
     # Keep DSpace logs and the Handle server config between reboots
     - dspace_logs:/dspace/log
