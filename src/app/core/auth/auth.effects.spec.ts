@@ -123,12 +123,12 @@ describe('AuthEffects', () => {
       expect(emitted).toEqual([new SetUserAsIdleAction()]);
     }));
 
+    // flush: false fails the spec if a timer is still pending
     it('should not start the timer on the server', fakeAsync(() => {
       (authEffects as any).platformId = 'server';
       authEffects.trackIdleness$.subscribe((action) => emitted.push(action));
-      tick(environment.auth.ui.timeUntilIdle);
       expect(emitted).toEqual([]);
-    }));
+    }, { flush: false }));
   });
 
   describe('authenticate$', () => {
