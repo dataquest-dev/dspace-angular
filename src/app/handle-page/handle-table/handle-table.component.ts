@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +15,7 @@ import {
 import {
   BehaviorSubject,
   combineLatest,
+  Subscription,
 } from 'rxjs';
 import {
   scan,
@@ -88,7 +90,7 @@ export const RESOURCE_TYPE_SEARCH_OPTION = 'resourceTypeId';
   templateUrl: './handle-table.component.html',
   styleUrls: ['./handle-table.component.scss'],
 })
-export class HandleTableComponent implements OnInit {
+export class HandleTableComponent implements OnInit, OnDestroy {
 
   constructor(private handleDataService: HandleDataService,
               private paginationService: PaginationService,
@@ -170,6 +172,11 @@ export class HandleTableComponent implements OnInit {
    */
   selectedHandle = null;
 
+  /**
+   * The running load of the table rows. A new load cancels it, so an older response cannot overwrite newer rows.
+   */
+  private handlesSub: Subscription;
+
   ngOnInit(): void {
     this.handleRoute = getHandleTableModulePath();
     this.initializePaginationOptions();
@@ -179,6 +186,10 @@ export class HandleTableComponent implements OnInit {
     this.handleOption = this.translateService.instant('handle-table.table.handle');
     this.internalOption = this.translateService.instant('handle-table.table.internal');
     this.resourceTypeOption = this.translateService.instant('handle-table.table.resource-type');
+  }
+
+  ngOnDestroy(): void {
+    this.handlesSub?.unsubscribe();
   }
 
   /**
@@ -193,7 +204,8 @@ export class HandleTableComponent implements OnInit {
     const currentSort$ = this.getCurrentSort();
     const searchTerm$ = new BehaviorSubject<string>(this.searchQuery);
 
-    combineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
+    this.handlesSub?.unsubscribe();
+    this.handlesSub = combineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
       scan((prevState, [currentPagination, currentSort, searchTerm]) => {
         // If search term has changed, reset to page 1; otherwise, keep current page
         const currentPage = prevState.searchTerm !== searchTerm ? 1 : currentPagination.currentPage;
@@ -474,6 +486,9 @@ export class HandleTableComponent implements OnInit {
     }
 
     this.sortConfiguration.field = parsedSearchOption + ':' + parsedSearchQuery;
+    // The results start on page 1. Replace the URL instead of adding a history entry,
+    // because Back cannot restore the search filter, which is not in the URL.
+    this.paginationService.updateRoute(this.options.id, { page: 1 }, {}, false, { replaceUrl: true });
     this.getAllHandles();
   }
 

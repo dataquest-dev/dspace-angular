@@ -1,5 +1,6 @@
 import { first } from 'rxjs/operators';
 
+import { SUBMISSION_LINKS_TO_FOLLOW } from '../core/submission/resolver/submission-links-to-follow';
 import { WorkflowItemDataService } from '../core/submission/workflowitem-data.service';
 import { createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
 import { workflowItemPageResolver } from './workflow-item-page.resolver';
@@ -12,7 +13,7 @@ describe('workflowItemPageResolver', () => {
 
     beforeEach(() => {
       wfiService = {
-        findById: (id: string) => createSuccessfulRemoteDataObject$({ id }),
+        findById: jasmine.createSpy('findById').and.callFake((id: string) => createSuccessfulRemoteDataObject$({ id })),
       } as any;
       resolver = workflowItemPageResolver;
     });
@@ -26,6 +27,15 @@ describe('workflowItemPageResolver', () => {
             done();
           },
         );
+    });
+
+    it('should not resolve from a cached copy of the workflow item', (done) => {
+      resolver({ params: { id: uuid } } as any, undefined, wfiService)
+        .pipe(first())
+        .subscribe(() => {
+          expect(wfiService.findById).toHaveBeenCalledWith(uuid, false, false, ...SUBMISSION_LINKS_TO_FOLLOW);
+          done();
+        });
     });
   });
 });
