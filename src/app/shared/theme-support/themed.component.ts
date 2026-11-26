@@ -62,6 +62,12 @@ export abstract class ThemedComponent<T extends object> implements AfterViewInit
    */
   @HostBinding('attr.data-used-theme') usedTheme: string;
 
+  /**
+   * Set when content is projected: Angular can't hydrate DOM nodes passed to createComponent,
+   * so this wrapper is rendered again in the browser instead.
+   */
+  @HostBinding('attr.ngSkipHydration') skipHydration: boolean;
+
   constructor(
     protected cdr: ChangeDetectorRef,
     protected themeService: ThemeService,
@@ -136,8 +142,11 @@ export abstract class ThemedComponent<T extends object> implements AfterViewInit
 
     this.lazyLoadSub = this.lazyLoadObs.subscribe(([simpleChanges, constructor]: [SimpleChanges, GenericConstructor<T>]) => {
       this.destroyComponentInstance();
+      // the content wrapper is gone once a component was rendered, see themed.component.html
+      const projectedNodes = this.themedElementContent?.nativeElement.childNodes ?? [];
+      this.skipHydration = projectedNodes.length > 0 ? true : null;
       this.compRef = this.vcr.createComponent(constructor, {
-        projectableNodes: [this.themedElementContent.nativeElement.childNodes],
+        projectableNodes: [projectedNodes],
       });
       if (hasValue(simpleChanges)) {
         this.ngOnChanges(simpleChanges);
@@ -146,7 +155,6 @@ export abstract class ThemedComponent<T extends object> implements AfterViewInit
       }
       this.compRef$.next(this.compRef);
       this.cdr.markForCheck();
-      this.themedElementContent.nativeElement.remove();
     });
   }
 
