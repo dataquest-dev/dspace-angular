@@ -1,7 +1,7 @@
 @if ((dataSource.loading$ | async) && !loadingNode) {
   <ds-loading class="ds-themed-loading"></ds-loading>
 }
-<cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" [trackBy]="trackBy">
+<cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" [trackBy]="trackBy" [expansionKey]="expansionKey">
   <!-- This is the tree node template for show more node -->
   <cdk-tree-node *cdkTreeNodeDef="let node; when: isShowMore" cdkTreeNodePadding
     class="example-tree-node show-more-node">
