@@ -169,21 +169,6 @@ describe('FileDescriptionComponent', () => {
     expect(fileNameElement.textContent).toContain('testFile');
   });
 
-  it('lets an empty value clear its floated label, so the MD5 value stays on its own row', () => {
-    component.fileInput.description = '';
-    fixture.detectChanges();
-
-    const label: HTMLElement = Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.file-content dt'))
-      .find((dt: HTMLElement) => dt.textContent.includes('item.file.description.description'));
-    const emptyValue = label.nextElementSibling as HTMLElement;
-    expect(emptyValue.textContent.trim()).toEqual('');
-
-    // Karma's window is narrower than the 768px side-by-side layout, so this checks the rule, not the rows.
-    const after = getComputedStyle(emptyValue, '::after');
-    expect(after.content).withContext('the empty value has no box that clears the label').not.toEqual('none');
-    expect(after.clear).toEqual('both');
-  });
-
   describe('the download control', () => {
     const downloadButton = (): HTMLElement => fixture.nativeElement.querySelector('a.download-btn');
     const downloadRoute = (): string[] => ['bitstreams', component.fileInput.id, 'download'];

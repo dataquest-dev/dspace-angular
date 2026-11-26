@@ -39,11 +39,6 @@
             }
         }
 
-        // Clears the floated dt, so an empty dd still fills its row.
-        .dl-horizontal dd {
-            @include clearfix();
-        }
-
 
         .preview-image {
             width: 10%;
