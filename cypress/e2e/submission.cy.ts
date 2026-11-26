@@ -180,12 +180,17 @@ describe('New Submission page', () => {
     // Wait for upload to complete before proceeding
     cy.wait('@upload');
 
+    // This is the POST command that will deposit the submission
+    cy.intercept('POST', '**/api/workflow/workflowitems*').as('deposit');
+
     // Wait for deposit button to not be disabled & click it.
     cy.get('button#deposit').should('not.be.disabled').click();
+    cy.wait('@deposit');
 
-    // No warnings should exist. Instead, just successful deposit alert is displayed
+    // No warnings should exist. The upload shows a success alert too, so look for the deposit one.
     cy.get('ds-notification div.alert-warning').should('not.exist');
-    cy.get('ds-notification div.alert-success').should('be.visible');
+    cy.contains('ds-notification div.alert-success', 'Submission deposited successfully.').should('be.visible');
+    cy.location('pathname').should('include', '/mydspace');
   });
 
   it('is possible to submit a new "Person" and that form passes accessibility', () => {
