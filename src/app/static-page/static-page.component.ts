@@ -36,6 +36,12 @@ export class StaticPageComponent implements OnInit {
     let url = '';
     // Fetch html file name from the url path. `static/some_file.html`
     this.htmlFileName = this.getHtmlFileName();
+    if (isNotEmpty(this.htmlFileName) && !this.isPlainFileName(this.htmlFileName)) {
+      this.responseService.setNotFound();
+      this.contentState = 'not-found';
+      this.changeDetector.detectChanges();
+      return;
+    }
 
     // Get current language
     let language = this.localeService.getCurrentLanguageCode();
@@ -136,6 +142,19 @@ export class StaticPageComponent implements OnInit {
   private redirectToAbsoluteLink(redirectUrl: string, href: string | null, namespacePrefix: string): void {
     const absoluteUrl = new URL(href, redirectUrl.replace(namespacePrefix, ''));
     window.location.href = absoluteUrl.href;
+  }
+
+  /**
+   * Whether a file name taken from the URL is still one file name once the server decodes it,
+   * so it cannot address a file outside `static-files` (e.g. `..%2Findex`). A query part is ignored.
+   */
+  private isPlainFileName(fileName: string): boolean {
+    try {
+      return !/[/\\]/.test(decodeURIComponent(fileName.split('?')[0]));
+    } catch {
+      // Malformed percent-encoding: nothing to load.
+      return false;
+    }
   }
 
   /**
