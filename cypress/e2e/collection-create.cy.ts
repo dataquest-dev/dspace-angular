@@ -9,7 +9,9 @@ it('should show loading component while saving', () => {
 
   // the spinner hides as soon as the save is done, so hold the reply
   cy.intercept('POST', '**/api/core/collections*', (req) => {
-    req.on('response', (res) => res.setDelay(2000));
+    req.on('response', (res) => {
+      res.setDelay(2000);
+    });
   });
   cy.get('button[type="submit"]').click();
 
