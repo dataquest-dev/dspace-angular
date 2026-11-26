@@ -6,6 +6,10 @@ import {
   importProvidersFrom,
 } from '@angular/core';
 import {
+  provideClientHydration,
+  withNoHttpTransferCache,
+} from '@angular/platform-browser';
+import {
   NoPreloading,
   provideRouter,
   UrlSerializer,
@@ -115,6 +119,9 @@ export const commonAppConfig: ApplicationConfig = {
       withPreloading(NoPreloading),
       withComponentInputBinding(),
     ),
+    // Needed on the server too, or the browser gets no hydration data and draws the page again.
+    // REST responses already reach the browser through the NgRx transfer state.
+    provideClientHydration(withNoHttpTransferCache()),
     {
       provide: APP_BASE_HREF,
       useFactory: getBaseHref,

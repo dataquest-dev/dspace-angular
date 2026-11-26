@@ -1,5 +1,5 @@
 @if (this.relationship.searchConfiguration && context) {
-  <ds-search
+  <ds-search ngSkipHydration
     [configuration]="this.relationship.searchConfiguration"
     [context]="context"
     [fixedFilterQuery]="this.relationship.filter"

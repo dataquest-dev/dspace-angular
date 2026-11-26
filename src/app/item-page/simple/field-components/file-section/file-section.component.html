@@ -3,7 +3,7 @@
     <ds-metadata-field-wrapper [label]="label | translate">
       <div class="file-section">
         @for (file of bitstreams; track file; let last = $last) {
-          <ds-file-download-link [bitstream]="file" [item]="item">
+          <ds-file-download-link ngSkipHydration [bitstream]="file" [item]="item">
           <span>
             @if (primaryBitstreamId === file.id) {
               <span class="badge bg-primary">{{ 'item.page.bitstreams.primary' | translate }}</span>

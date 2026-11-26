@@ -6,7 +6,7 @@
   <div class="col-md-10">
     <div class="file-section" *ngVar="(bitstreams$ | async) as bitstreams">
       @for (file of bitstreams; track file; let last = $last) {
-        <ds-file-download-link [bitstream]="file" [item]="item">
+        <ds-file-download-link ngSkipHydration [bitstream]="file" [item]="item">
           <span>{{file?.name}}</span>
           <span>({{(file?.sizeBytes) | dsFileSize }})</span>
           @if (!last) {

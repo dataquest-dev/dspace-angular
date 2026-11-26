@@ -59,6 +59,7 @@ import {
 } from './src/express.tokens';
 import { SsrExcludePatterns } from "./src/config/ssr-config.interface";
 import { getSsrCacheKey } from './src/app/shared/ssr-cache-key.util';
+import { getSsrPath } from './src/app/shared/ssr-path.util';
 
 /*
  * Set path for the browser application's dist folder
@@ -228,7 +229,8 @@ export function app() {
  * The callback function to serve server side angular
  */
 function ngApp(req, res, next) {
-  if (environment.ssr.enabled && req.method === 'GET' && (req.path === '/' || !isExcludedFromSsr(req.path, environment.ssr.excludePathPatterns))) {
+  const ssrAllowed = (path: string) => path === '/' || !isExcludedFromSsr(path, environment.ssr.excludePathPatterns);
+  if (environment.ssr.enabled && req.method === 'GET' && ssrAllowed(req.path) && ssrAllowed(getSsrPath(req, environment.ui.nameSpace))) {
     // Render the page to user via SSR (server side rendering)
     serverSideRender(req, res, next);
   } else {
