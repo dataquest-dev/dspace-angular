@@ -109,8 +109,15 @@ function loginViaForm(email: string, password: string): void {
   cy.get('[data-test="email"]').should('be.visible').type(email);
   // Enter password
   cy.get('[data-test="password"]').should('be.visible').type(password);
+  // The app reloads itself after login and renders the page again once it starts,
+  // so wait for the new page and for the app to leave /reload/.
+  cy.window().then((win) => {
+    (win as any).dsBeforeLogin = true;
+  });
   // Click login button
   cy.get('[data-test="login-button"]').click();
+  cy.window({ timeout: 20000 }).should('not.have.property', 'dsBeforeLogin');
+  cy.location('pathname', { timeout: 20000 }).should('not.contain', '/reload/');
 }
 // Add as a Cypress command (i.e. assign to 'cy.loginViaForm')
 Cypress.Commands.add('loginViaForm', loginViaForm);
