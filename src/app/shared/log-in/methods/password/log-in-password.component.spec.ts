@@ -1,3 +1,4 @@
+import { APP_BASE_HREF } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   PLATFORM_ID,
@@ -107,6 +108,8 @@ describe('LogInPasswordComponent', () => {
         { provide: NotificationsService, useClass: NotificationsServiceStub },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: ThemeService, useValue: themeService },
+        // The UI runs under a sub-path in production, e.g. http://dev-6.pc:8603/repository/
+        { provide: APP_BASE_HREF, useValue: '/repository/' },
         provideMockStore({ initialState }),
       ],
       schemas: [
@@ -204,12 +207,12 @@ describe('LogInPasswordComponent', () => {
       component.form.controls.password.setValue('password');
     });
 
-    it('redirects back to the redirectUrl page, reduced to an app-relative path', () => {
+    it('redirects back to the redirectUrl page, reduced to a router path', () => {
       setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/search' });
 
       component.submit();
 
-      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/search');
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/search');
       expect(setRedirectUrlIfNotSetSpy).not.toHaveBeenCalled();
     });
 
@@ -218,7 +221,7 @@ describe('LogInPasswordComponent', () => {
 
       component.submit();
 
-      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/search?query=test');
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/search?query=test');
     });
 
     it('prefers a nested redirectUrl so the login page is not the redirect target', () => {
@@ -228,7 +231,7 @@ describe('LogInPasswordComponent', () => {
 
       component.submit();
 
-      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/items/1');
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/items/1');
     });
 
     it('returns to the page the auth guard put into the login URL, after the DiscoJuice local-login reload', () => {
@@ -240,11 +243,19 @@ describe('LogInPasswordComponent', () => {
     });
 
     it('passes through an already-relative redirectUrl unchanged', () => {
-      setQueryParams({ redirectUrl: '/repository/search' });
+      setQueryParams({ redirectUrl: '/search' });
 
       component.submit();
 
-      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/search');
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/search');
+    });
+
+    it('targets the plain login route when the login started on the login page itself, so it ends on the home page', () => {
+      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/login' });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/login');
     });
 
     it('falls back to setRedirectUrlIfNotSet("/") when no redirectUrl query param is present', () => {
