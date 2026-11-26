@@ -23,7 +23,7 @@ import {
   AppState,
   keySelector,
 } from '../../app.reducer';
-import { compareArraysUsingIds } from '../../item-page/simple/item-types/shared/item-relationships-utils';
+import { compareArraysUsing } from '../../item-page/simple/item-types/shared/item-relationships-utils';
 import {
   hasNoValue,
   hasValue,
@@ -108,10 +108,14 @@ export class MenuService {
     return this.store.pipe(
       select(menuByIDSelector(menuID)),
       select(menuSectionStateSelector),
-      map((sections: MenuSections) => Object.values(sections)
-        .filter((section: MenuSection) => hasNoValue(section.parentID))
-        .filter((section: MenuSection) => !mustBeVisible || section.visible)),
-      distinctUntilChanged(compareArraysUsingIds()),
+      map((sections: MenuSections) => Object.values(sections)),
+      distinctUntilChanged(compareArraysUsing((section: MenuSection) => `${section.id}:${section.visible}`)),
+      map((sections: MenuSection[]) => {
+        return sections
+          .filter((section: MenuSection) => hasNoValue(section.parentID))
+          .filter((section: MenuSection) => !mustBeVisible || section.visible);
+      },
+      ),
     );
   }
 
