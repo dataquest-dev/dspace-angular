@@ -427,6 +427,23 @@ describe('FileDescriptionComponent', () => {
       expect(previewButton().getAttribute('aria-expanded')).toEqual('false');
     });
 
+    it('moves focus back to Preview when the close control closes the panel', () => {
+      ['Enter', ' '].forEach((key: string) => {
+        previewButton().click();
+        fixture.detectChanges();
+        closeButton().focus();
+        expect(document.activeElement).withContext('the close control cannot take focus').toBe(closeButton());
+
+        closeButton().dispatchEvent(new KeyboardEvent('keyup', { key, bubbles: true }));
+        fixture.detectChanges();
+
+        expect(isVisible(panel())).toBeFalse();
+        expect(document.activeElement)
+          .withContext(`after closing with "${key}" focus is on ${document.activeElement?.tagName}, not on Preview`)
+          .toBe(previewButton());
+      });
+    });
+
     it('does not scroll the page when Space is pressed on Preview', () => {
       expect(dispatchSpaceKey(previewButton(), 'keydown').defaultPrevented).toBeTrue();
     });

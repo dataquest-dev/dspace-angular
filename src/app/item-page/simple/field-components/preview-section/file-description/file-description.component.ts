@@ -89,6 +89,8 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
 
   @ViewChild('videoPreview') videoElement: ElementRef;
 
+  @ViewChild('previewButton') previewButton: ElementRef<HTMLElement>;
+
   previewCollapsed = true;
 
   emailToContact: string;
@@ -285,6 +287,15 @@ export class FileDescriptionComponent implements OnInit, OnDestroy, AfterViewIni
 
   public togglePreview() {
     this.previewCollapsed = !this.previewCollapsed;
+  }
+
+  /**
+   * Closes the preview from the control inside the panel. That control is hidden with the panel,
+   * so focus goes back to the Preview control instead of falling to the page body.
+   */
+  public closePreview() {
+    this.previewCollapsed = true;
+    this.previewButton?.nativeElement.focus();
   }
 
   public isTxt() {
