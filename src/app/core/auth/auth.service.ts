@@ -526,7 +526,7 @@ export class AuthService {
   public redirectToLoginWhenTokenExpired() {
     const redirectUrl = LOGIN_ROUTE + '?expired=true';
     if (this._window.nativeWindow.location) {
-      // Hard redirect to login page, so that all state is definitely lost.
+      // Hard redirect to login page, so that all state is definitely lost
       // Relative to <base href>, like the `reload/` URL in navigateToRedirectUrl.
       this._window.nativeWindow.location.href = '.' + redirectUrl;
     } else {
