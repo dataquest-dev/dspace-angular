@@ -235,7 +235,7 @@ describe('LogInPasswordComponent', () => {
     });
 
     it('returns to the page the auth guard put into the login URL, after the DiscoJuice local-login reload', () => {
-      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/login?redirectUrl=/mydspace' });
+      setQueryParams({ redirectUrl: 'http://localhost:4000/repository/login?redirectUrl=/mydspace' });
 
       component.submit();
 
@@ -243,7 +243,7 @@ describe('LogInPasswordComponent', () => {
     });
 
     it('keeps the query string of the page the auth guard stored, when aai.js encodes the login URL', () => {
-      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/login?redirectUrl=%2Fmydspace%3Fconfiguration%3Dworkflow' });
+      setQueryParams({ redirectUrl: 'http://localhost:4000/repository/login?redirectUrl=%2Fmydspace%3Fconfiguration%3Dworkflow' });
 
       component.submit();
 
@@ -259,7 +259,7 @@ describe('LogInPasswordComponent', () => {
     });
 
     it('targets the plain login route when the login started on the login page itself, so it ends on the home page', () => {
-      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/login' });
+      setQueryParams({ redirectUrl: 'http://localhost:4000/repository/login' });
 
       component.submit();
 
@@ -267,7 +267,7 @@ describe('LogInPasswordComponent', () => {
     });
 
     it('keeps the home page as the target, so a stored page does not win over it', () => {
-      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/' });
+      setQueryParams({ redirectUrl: 'http://localhost:4000/repository/' });
 
       component.submit();
 
