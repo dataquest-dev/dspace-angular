@@ -6,16 +6,26 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import {
+  of,
+  Subject,
+} from 'rxjs';
 
 import { HandleDataService } from '../../core/data/handle-data.service';
-import { buildPaginatedList } from '../../core/data/paginated-list.model';
+import {
+  buildPaginatedList,
+  PaginatedList,
+} from '../../core/data/paginated-list.model';
+import { RemoteData } from '../../core/data/remote-data';
 import { RequestService } from '../../core/data/request.service';
 import { Handle } from '../../core/handle/handle.model';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { PageInfo } from '../../core/shared/page-info.model';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
-import { createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
+import {
+  createSuccessfulRemoteDataObject,
+  createSuccessfulRemoteDataObject$,
+} from '../../shared/remote-data.utils';
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 import { PaginationServiceStub } from '../../shared/testing/pagination-service.stub';
 import { RouterStub } from '../../shared/testing/router.stub';
@@ -24,7 +34,10 @@ import {
   HANDLE_TABLE_EDIT_HANDLE_PATH,
 } from '../handle-page-routing-paths';
 import { HandleTableComponent } from './handle-table.component';
-import { defaultPagination } from './handle-table-pagination';
+import {
+  defaultPagination,
+  paginationID,
+} from './handle-table-pagination';
 
 const selectedHandleId = 1;
 const otherHandleId = 47;
@@ -75,9 +88,11 @@ describe('HandleTableComponent', () => {
   let handleDataService: HandleDataService;
   let requestService: RequestService;
   let notificationService: NotificationsServiceStub;
+  let paginationService: PaginationServiceStub;
 
   beforeEach(async () => {
     notificationService = new NotificationsServiceStub();
+    paginationService = new PaginationServiceStub();
     handleDataService = jasmine.createSpyObj('handleDataService', {
       findAll: mockHandleRD$,
       getLinkPath: of(''),
@@ -99,7 +114,7 @@ describe('HandleTableComponent', () => {
         { provide: RequestService, useValue: requestService },
         { provide: HandleDataService, useValue: handleDataService },
         { provide: Router, useValue: new RouterStub() },
-        { provide: PaginationService, useValue: new PaginationServiceStub() },
+        { provide: PaginationService, useValue: paginationService },
         { provide: NotificationsService, useValue: notificationService },
       ],
     })
@@ -140,6 +155,31 @@ describe('HandleTableComponent', () => {
     (component as HandleTableComponent).onPageChange();
     expect((component as any).handleDataService.findAll).toHaveBeenCalled();
     expect((component as HandleTableComponent).handlesRD$).not.toBeNull();
+  });
+
+  it('should move the paginator back to page 1 without a new history entry when a search starts', () => {
+    (component as HandleTableComponent).ngOnInit();
+    (component as HandleTableComponent).searchOption = (component as HandleTableComponent).handleOption;
+    (component as HandleTableComponent).searchQuery = mockHandle.handle;
+    (component as HandleTableComponent).searchHandles();
+
+    expect(paginationService.updateRoute).toHaveBeenCalledWith(paginationID, { page: 1 }, {}, false, { replaceUrl: true });
+    expect((component as any).handleDataService.findAll).toHaveBeenCalledWith(
+      jasmine.objectContaining({ currentPage: 1 }), false);
+  });
+
+  it('should not let a load that is still running overwrite the rows of a newer search', () => {
+    const firstLoad$ = new Subject<RemoteData<PaginatedList<Handle>>>();
+    const searchResult = createSuccessfulRemoteDataObject(buildPaginatedList(new PageInfo(), [otherMockHandle]));
+    (handleDataService.findAll as jasmine.Spy).and.returnValues(firstLoad$, of(searchResult));
+
+    (component as HandleTableComponent).ngOnInit();
+    (component as HandleTableComponent).searchOption = (component as HandleTableComponent).handleOption;
+    (component as HandleTableComponent).searchQuery = otherMockHandle.handle;
+    (component as HandleTableComponent).searchHandles();
+    firstLoad$.next(createSuccessfulRemoteDataObject(buildPaginatedList(new PageInfo(), [mockHandle])));
+
+    expect((component as HandleTableComponent).handlesRD$.value.payload.page).toEqual([otherMockHandle]);
   });
 
   it('should not allow to have two or more selected handles', () => {
