@@ -186,11 +186,10 @@ describe('New Submission page', () => {
 
     // Wait for deposit button to not be disabled & click it.
     cy.get('button#deposit').should('not.be.disabled').click();
-    cy.wait('@deposit');
+    cy.wait('@deposit').its('response.statusCode').should('eq', 201);
 
-    // No warnings should exist. The upload shows a success alert too, so look for the deposit one.
+    // No warnings should exist, and a deposit goes back to MyDSpace
     cy.get('ds-notification div.alert-warning').should('not.exist');
-    cy.contains('ds-notification div.alert-success', 'Submission deposited successfully.').should('be.visible');
     cy.location('pathname').should('include', '/mydspace');
   });
 
