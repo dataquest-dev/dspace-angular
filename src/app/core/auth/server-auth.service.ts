@@ -11,6 +11,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
+  APP_CONFIG,
+  AppConfig,
+} from '../../../config/app-config.interface';
+import {
   REQUEST,
   RESPONSE,
 } from '../../../express.tokens';
@@ -57,6 +61,7 @@ export class ServerAuthService extends AuthService {
     protected hardRedirectService: HardRedirectService,
     protected notificationService: NotificationsService,
     protected translateService: TranslateService,
+    @Inject(APP_CONFIG) protected appConfig: AppConfig,
   ) {
     super(
       _window,
@@ -123,7 +128,8 @@ export class ServerAuthService extends AuthService {
       this._window.nativeWindow.location.href = redirectUrl;
     } else if (this.response) {
       if (!this.response._headerSent) {
-        this.response.redirect(302, redirectUrl);
+        // The browser resolves a 302 Location against the request path, not <base href>, so add the UI namespace.
+        this.response.redirect(302, this.appConfig.ui.nameSpace.replace(/\/$/, '') + redirectUrl);
       }
     } else {
       this.router.navigateByUrl(redirectUrl);

@@ -1,6 +1,7 @@
 import {
   AsyncPipe,
   isPlatformBrowser,
+  Location,
 } from '@angular/common';
 import {
   Component,
@@ -166,6 +167,7 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
     protected configurationService: ConfigurationDataService,
     private notificationService: NotificationsService,
     private translateService: TranslateService,
+    private location: Location,
   ) {
     this.authMethod = injectedAuthMethodModel;
   }
@@ -303,9 +305,13 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
     return this.toRelativePath(redirectUrl);
   }
 
-  /** Reduce a possibly-absolute URL to an app-relative path by dropping the scheme+host; relative values pass through. */
+  /**
+   * Reduce a possibly-absolute URL to a router path by dropping the scheme+host and the base href (e.g. `/repository`).
+   * Without the base href a login page target is `/login`, which `AuthService.navigateToRedirectUrl` sends home.
+   * The home page itself normalizes to '', so it becomes `/`.
+   */
   private toRelativePath(url: string): string {
-    return url.replace(/^https?:\/\/[^/]+/i, '');
+    return this.location.normalize(url.replace(/^https?:\/\/[^/]+/i, '')) || '/';
   }
 
   /**
