@@ -111,7 +111,7 @@
                 // jQuery('input#login').focus();
                 // Use cookie to toggle discojuice popup.
                 setCookie('SHOW_DISCOJUICE_POPUP', false, 1)
-                window.location = window.location.origin + (namespace === '' ? namespace : '/' + namespace) + "/login?redirectUrl=" + window.location.href;
+                window.location = localLoginUrl(window.location.href);
                 break;
               //case 'saml':
               default:
@@ -134,6 +134,16 @@
         return djc;
       } //if jQuery(selector)
     };
+
+    // Exposed for tests.
+    this.localLoginUrl = localLoginUrl;
+
+    /**
+     * Login page URL that returns to `pageUrl` after a local login. Encoded, so the query string of `pageUrl` stays in it.
+     */
+    function localLoginUrl(pageUrl) {
+      return window.location.origin + formatNamespace(namespace) + '/login?redirectUrl=' + window.encodeURIComponent(pageUrl);
+    }
 
     // Set a cookie
     function setCookie(name, value, daysToExpire) {

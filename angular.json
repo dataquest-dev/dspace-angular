@@ -45,7 +45,10 @@
               {
                 "glob": "**/*",
                 "input": "src/aai",
-                "output": "/aai"
+                "output": "/aai",
+                "ignore": [
+                  "**/*.spec.ts"
+                ]
               }
             ],
             "styles": [

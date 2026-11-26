@@ -242,6 +242,14 @@ describe('LogInPasswordComponent', () => {
       expect(setRedirectUrlSpy).toHaveBeenCalledWith('/mydspace');
     });
 
+    it('keeps the query string of the page the auth guard stored, when aai.js encodes the login URL', () => {
+      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/login?redirectUrl=%2Fmydspace%3Fconfiguration%3Dworkflow' });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/mydspace?configuration=workflow');
+    });
+
     it('passes through an already-relative redirectUrl unchanged', () => {
       setQueryParams({ redirectUrl: '/search' });
 
