@@ -59,6 +59,7 @@ services:
     volumes:
     # Keep DSpace assetstore directory between reboots
     - assetstore:/dspace/assetstore
+    - sitemaps:/dspace/sitemaps
     # Keep DSpace log directory between reboots, so that dspace.log (see log4j2-container.xml)
     # survives a container recreate instead of being wiped with the writable layer.
     # A named volume is used on purpose: it inherits the ownership of /dspace/log from the image,
@@ -150,6 +151,7 @@ services:
       runuser -u solr -- env SOLR_HEAP="${SOLR_HEAP:-4g}" solr-foreground
 volumes:
   assetstore:
+  sitemaps:
   dspacelogs:
   pgdata:
   solr_data:
