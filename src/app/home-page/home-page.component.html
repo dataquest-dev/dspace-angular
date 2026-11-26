@@ -76,7 +76,7 @@
     <div class="row justify-content-center pt-5">
       <div class="col-md-9 responsive-padding">
         <div class="row offset-md-1">
-          <div class="col-md-4 border-bottom">
+          <div class="col-md-4 border-bottom fast-search-links">
             <strong>{{'home-page.hyperlink.author.message' | translate}}</strong>
             @for (authorLink of (authors$| async); track authorLink.url) {
               <div>
@@ -89,7 +89,7 @@
               </a>
             </div>
           </div>
-          <div class="col-md-4 border-bottom">
+          <div class="col-md-4 border-bottom fast-search-links">
             <strong>{{'home-page.hyperlink.subject.message' | translate}}</strong>
             @for (subjectLink of (subjects$| async); track subjectLink.url) {
               <div>
@@ -102,7 +102,7 @@
               </a>
             </div>
           </div>
-          <div class="col-md-4 border-bottom">
+          <div class="col-md-4 border-bottom fast-search-links">
             <strong>{{'home-page.hyperlink.language.message' | translate}}</strong>
             @for (languageLink of (languages$| async); track languageLink.url) {
               <div>
@@ -121,7 +121,7 @@
   </div>
 
   <div class="container pt-3">
-    <div class="card clarin-home-page-items-color">
+    <div class="card clarin-home-page-items-color new-items">
       <div class="card-body">
         <div class="justify-content-between d-flex">
           <div class="recent-submissions-head flex-fill">{{'home-page.whats-new.message' | translate}}</div>

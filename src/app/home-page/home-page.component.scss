@@ -151,6 +151,23 @@
     font-size: 120%;
   }
 
+  // The browser fills these boxes after load; keep their loaded size until then, so the page does not jump.
+  .fast-search-links:not(:has(span a)) {
+    min-height: 169px;
+
+    @media (min-width: 768px) and (max-width: 991.98px) {
+      min-height: 241px;
+    }
+
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+      min-height: 193px;
+    }
+  }
+
+  .new-items:not(:has(ds-clarin-item-box-view)) {
+    min-height: 875px;
+  }
+
   @media (max-width: 991.98px) {
     .carousel-ldata-info {
       left: 42%;
