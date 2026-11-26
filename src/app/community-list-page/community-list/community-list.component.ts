@@ -54,6 +54,9 @@ export class CommunityListComponent implements OnInit, OnDestroy {
   dataSource: CommunityListDatasource;
   paginationConfig: FindListOptions;
   trackBy = (index, node: FlatNode) => node.id;
+  // Every reload builds new node objects while kept rows hold their first one, so the tree
+  // must look up levels and positions by id too, or kept rows report aria-level 1.
+  expansionKey = (node: FlatNode) => node.id;
 
   constructor(
     protected communityListService: CommunityListService,

@@ -611,4 +611,46 @@ describe('CommunityListComponent', () => {
       });
     });
   });
+
+  describe('aria-level, aria-posinset and aria-setsize after the tree reloads', () => {
+    const rowFor = (name: string): HTMLElement => fixture.debugElement.queryAll(By.css('cdk-tree-node'))
+      .find((node: DebugElement) => node.query(By.css('a.lead'))?.nativeElement.textContent.trim() === name)
+      .nativeElement;
+
+    const aria = (name: string): string[] => ['aria-level', 'aria-posinset', 'aria-setsize']
+      .map((attribute: string) => rowFor(name).getAttribute(attribute));
+
+    const click = (button: HTMLElement): void => {
+      button.click();
+      tick();
+      fixture.detectChanges();
+    };
+
+    const toggle = (name: string): HTMLElement => rowFor(name).querySelector('button[data-test="expand-button"]');
+
+    it('stay right on rows that were on screen before another community expanded', fakeAsync(() => {
+      click(toggle('community1'));
+      expect(aria('subcommunity1')).toEqual(['2', '1', '2']);
+
+      click(toggle('community2'));
+
+      expect(aria('community1')).toEqual(['1', '1', '3']);
+      expect(aria('subcommunity1')).toEqual(['2', '1', '2']);
+      expect(aria('subcommunity2')).toEqual(['2', '2', '2']);
+      expect(aria('community2')).toEqual(['1', '2', '3']);
+      expect(aria('collection1')).toEqual(['2', '1', '3']);
+    }));
+
+    it('stay right on collections that were on screen before Show more', fakeAsync(() => {
+      click(toggle('community2'));
+      expect(aria('collection1')).toEqual(['2', '1', '3']);
+
+      click(fixture.debugElement.query(By.css('.show-more-node [data-test="show-more-button"]')).nativeElement);
+
+      expect(aria('collection1')).toEqual(['2', '1', '4']);
+      expect(aria('collection2')).toEqual(['2', '2', '4']);
+      expect(aria('collection3')).toEqual(['2', '3', '4']);
+      expect(aria('collection4')).toEqual(['2', '4', '4']);
+    }));
+  });
 });
