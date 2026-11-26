@@ -23,9 +23,7 @@ import { DSPACE_XSRF_COOKIE } from 'src/app/core/xsrf/xsrf.constants';
 
 // Known flaky tests, skipped until they are fixed. Remove an entry once its test is fixed.
 // Each entry is '<spec file name> > <full test title>'.
-const QUARANTINED_TESTS = [
-  'my-dspace.cy.ts > My DSpace page should let you filter to only archived items',
-];
+const QUARANTINED_TESTS: string[] = [];
 
 beforeEach(function () {
   if (QUARANTINED_TESTS.includes(`${Cypress.spec.name} > ${this.currentTest.fullTitle()}`)) {

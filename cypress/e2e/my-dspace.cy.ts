@@ -166,13 +166,11 @@ describe('My DSpace page', () => {
     cy.wait('@filterByItem');
 
     //Check that we have at least one item and that they all have the archived badge.
-    cy.get('ds-item-search-result-list-element-submission').should('exist');
-    cy.get('ds-item-search-result-list-element-submission')
-      .each(($item) => {
-        cy.wrap($item)
-          .find('.badge-archived')
-          .should('exist');
-      });
+    //The list renders again after the response, so retry the check on the current list.
+    cy.get('ds-item-search-result-list-element-submission').should(($items) => {
+      expect($items).to.have.length.greaterThan(0);
+      expect($items.filter(':not(:has(.badge-archived))')).to.have.length(0);
+    });
   });
 
   //This test also generate an item to validate workflow task section
