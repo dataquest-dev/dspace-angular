@@ -10241,6 +10241,9 @@
   // "submission.workflow.share-submission.email.error": "Cannot send the email with share link",
   "submission.workflow.share-submission.email.error": "Nelze odeslat e-mail s odkazem na sdílení",
 
+  // "submission.workflow.share-submission.email.not-sent": "The share link is ready, but the email with it could not be sent. Copy the link from this page.",
+  "submission.workflow.share-submission.email.not-sent": "Odkaz na sdílení je připraven, ale e-mail s ním se nepodařilo odeslat. Zkopírujte odkaz z této stránky.",
+
   // "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
   "submission.workflow.share-submission.email.successful": "E-mail s odkazem na sdílení byl úspěšně odeslán",
 
@@ -11563,6 +11566,9 @@
 
   // "share.submission.page.share-link.message.end": ". You will also receive an email with this link.",
   "share.submission.page.share-link.message.end": ". Odkaz vám také přijde e-mailem (v angličtině).",
+
+  // "share.submission.page.share-link.message.end.not-sent": ". The email with this link could not be sent.",
+  "share.submission.page.share-link.message.end.not-sent": ". E-mail s tímto odkazem se nepodařilo odeslat.",
 
   // "share.submission.page.share-link.message.start": "To pass your submission to another user give them the following link: ",
   "share.submission.page.share-link.message.start": "Chcete-li tento záznam předat někomu jinému, předejte tento odkaz: ",
