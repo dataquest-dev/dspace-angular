@@ -21,13 +21,18 @@ import {
   TranslateLoader,
   TranslateModule,
 } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import {
+  of,
+  Subject,
+} from 'rxjs';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { RemoteDataBuildService } from '../../../core/cache/builders/remote-data-build.service';
 import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
 import { ScriptDataService } from '../../../core/data/processes/script-data.service';
+import { RemoteData } from '../../../core/data/remote-data';
 import { RequestService } from '../../../core/data/request.service';
+import { RestRequestMethod } from '../../../core/data/rest-request-method';
 import { EPerson } from '../../../core/eperson/models/eperson.model';
 import { HALEndpointService } from '../../../core/shared/hal-endpoint.service';
 import { Item } from '../../../core/shared/item.model';
@@ -49,7 +54,10 @@ import { ActivatedRouteStub } from '../../testing/active-router.stub';
 import { HALEndpointServiceStub } from '../../testing/hal-endpoint-service.stub';
 import { NotificationsServiceStub } from '../../testing/notifications-service.stub';
 import { RouterStub } from '../../testing/router.stub';
-import { WorkspaceitemActionsComponent } from './workspaceitem-actions.component';
+import {
+  ShareSubmissionLink,
+  WorkspaceitemActionsComponent,
+} from './workspaceitem-actions.component';
 
 let component: WorkspaceitemActionsComponent;
 let fixture: ComponentFixture<WorkspaceitemActionsComponent>;
@@ -259,6 +267,48 @@ describe('WorkspaceitemActionsComponent', () => {
     const btn = fixture.debugElement.query(By.css('button[data-test="view-btn"]'));
 
     expect(btn).not.toBeNull();
+  });
+
+  it('should display share button', () => {
+    const btn = fixture.debugElement.query(By.css('#share_1234'));
+
+    expect(btn).not.toBeNull();
+  });
+
+  it('should request the share link and open the share-submission page', () => {
+    const router = TestBed.inject(Router);
+    const rdbService = TestBed.inject(RemoteDataBuildService);
+    const shareLink = 'https://ui/share-submission?change-token=abc';
+    const response$ = new Subject<RemoteData<ShareSubmissionLink>>();
+    spyOn(rdbService, 'buildFromRequestUUID').and.returnValue(response$);
+
+    fixture.debugElement.query(By.css('#share_1234')).nativeElement.click();
+
+    const request = requestServce.send.calls.mostRecent().args[0];
+    expect(request.method).toBe(RestRequestMethod.GET);
+    expect(request.href).toBe('https://rest.api/server/api/submission/share?workspaceitemid=1234');
+    expect(rdbService.buildFromRequestUUID).toHaveBeenCalledWith(request.uuid);
+    expect(component.shareSubmissionSpinner).toBeTrue();
+
+    response$.next(createSuccessfulRemoteDataObject({ shareLink }));
+
+    expect(notificationsServiceStub.success).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/share-submission'], {
+      queryParams: jasmine.objectContaining({ changeSubmitterLink: shareLink }),
+    });
+    expect(component.shareSubmissionSpinner).toBeFalse();
+  });
+
+  it('should show an error notification when the share link request fails', () => {
+    const router = TestBed.inject(Router);
+    const rdbService = TestBed.inject(RemoteDataBuildService);
+    spyOn(rdbService, 'buildFromRequestUUID').and.returnValue(createFailedRemoteDataObject$('Error', 500));
+
+    fixture.debugElement.query(By.css('#share_1234')).nativeElement.click();
+
+    expect(notificationsServiceStub.error).toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(component.shareSubmissionSpinner).toBeFalse();
   });
 
   it('should display add URL bitstream button when script is executable', () => {
