@@ -12,17 +12,25 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import uniqueId from 'lodash/uniqueId';
 import {
   FileItem,
+  FileLikeObject,
   FileUploader,
   FileUploadModule,
 } from 'ng2-file-upload';
 import { of } from 'rxjs';
 
+import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
+import { RemoteData } from '../../../core/data/remote-data';
 import { DragService } from '../../../core/drag.service';
 import { CookieService } from '../../../core/services/cookie.service';
+import { ConfigurationProperty } from '../../../core/shared/configuration-property.model';
+import { getFirstCompletedRemoteData } from '../../../core/shared/operators';
 import {
   XSRF_COOKIE,
   XSRF_REQUEST_HEADER,
@@ -39,6 +47,8 @@ import { UploaderCompleteEvent } from './uploader-complete-event.model';
 import { UploaderError } from './uploader-error.model';
 import { UploaderOptions } from './uploader-options.model';
 import { UploaderProperties } from './uploader-properties.model';
+
+export const MAX_UPLOAD_FILE_SIZE_CFG_PROPERTY = 'spring.servlet.multipart.max-file-size';
 
 @Component({
   selector: 'ds-uploader',
@@ -155,6 +165,8 @@ export class UploaderComponent implements OnInit, AfterViewInit {
     private tokenExtractor: HttpXsrfTokenExtractor,
     private cookieService: CookieService,
     private liveRegionService: LiveRegionService,
+    private configurationService: ConfigurationDataService,
+    private translate: TranslateService,
   ) {
   }
 
@@ -170,10 +182,12 @@ export class UploaderComponent implements OnInit, AfterViewInit {
       disableMultipart: this.uploadFilesOptions.disableMultipart,
       itemAlias: this.uploadFilesOptions.itemAlias,
       removeAfterUpload: true,
-      autoUpload: this.uploadFilesOptions.autoUpload,
+      // Turned on once the size limit is known, see setMaxFileSizeFromConfig.
+      autoUpload: false,
       method: this.uploadFilesOptions.method,
       queueLimit: this.uploadFilesOptions.maxFileNumber,
     });
+    this.setMaxFileSizeFromConfig();
 
     if (isUndefined(this.enableDragOverDocument)) {
       this.enableDragOverDocument = false;
@@ -242,6 +256,11 @@ export class UploaderComponent implements OnInit, AfterViewInit {
 
       this.onUploadError.emit({ item: item, response: response, status: status, headers: headers });
       this.uploader.cancelAll();
+    };
+    this.uploader.onWhenAddingFileFailed = (item: FileLikeObject, filter: any) => {
+      if (filter?.name === 'fileSize') {
+        this.emitSizeLimitError(item);
+      }
     };
     this.uploader.onProgressAll = () => this.onProgress();
     // Live region service setup
@@ -316,6 +335,52 @@ export class UploaderComponent implements OnInit, AfterViewInit {
     // which we will send back in the X-XSRF-TOKEN header per Angular best practices.
     this.cookieService.remove(XSRF_COOKIE);
     this.cookieService.set(XSRF_COOKIE, token);
+  }
+
+  /**
+   * Use the backend multipart limit as the uploader's max file size, so a too large file is refused before it is sent.
+   * Auto upload starts only after that, and files added in the meantime are checked first.
+   */
+  private setMaxFileSizeFromConfig(): void {
+    this.configurationService.findByPropertyName(MAX_UPLOAD_FILE_SIZE_CFG_PROPERTY).pipe(
+      getFirstCompletedRemoteData(),
+    ).subscribe((propertyRD: RemoteData<ConfigurationProperty>) => {
+      const maxFileSize = propertyRD.hasSucceeded ? this.dataSizeToBytes(propertyRD.payload.values[0]) : undefined;
+      this.uploader.options.maxFileSize = maxFileSize;
+      this.uploader.options.autoUpload = this.uploadFilesOptions.autoUpload;
+      this.uploader.setOptions(this.uploader.options);
+      this.uploader.queue
+        .filter((item: FileItem) => hasValue(maxFileSize) && item.file.size > maxFileSize)
+        .forEach((item: FileItem) => {
+          item.remove();
+          this.emitSizeLimitError(item.file);
+        });
+      if (this.uploader.autoUpload) {
+        this.uploader.uploadAll();
+      }
+    });
+  }
+
+  private emitSizeLimitError(item: FileLikeObject): void {
+    this.onUploadError.emit({
+      item: item,
+      response: this.translate.instant('submission.sections.upload.upload-failed.size-limit-exceeded'),
+      status: 400,
+      headers: {},
+    });
+  }
+
+  /**
+   * Convert a Spring data size like `4GB` or `512MB` to bytes; a bare number is bytes.
+   * Returns undefined for anything else, e.g. `-1`, which means no limit.
+   */
+  private dataSizeToBytes(size: string): number {
+    const match = /^(\d+)\s*([KMGT]?B)?$/i.exec(size?.trim() ?? '');
+    if (!match) {
+      return undefined;
+    }
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    return parseInt(match[1], 10) * Math.pow(1024, units.indexOf((match[2] ?? 'B').toUpperCase()));
   }
 
 }
