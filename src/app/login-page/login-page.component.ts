@@ -120,13 +120,15 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   /**
    * Puts the stored post-login target (e.g. set by the auth guard) into the `redirectUrl` query param.
    * The DiscoJuice scripts (aai.js) read it only from the URL: local login reloads the page, Shibboleth leaves the app.
+   * A URL with a request-a-copy `accessToken` stays only in the store, where the password login still reads it.
    */
   private showRedirectUrlInQueryParams() {
     if (isNotEmpty(this.route.snapshot.queryParams?.redirectUrl)) {
       return;
     }
     this.subs.push(this.authService.getRedirectUrl().pipe(take(1)).subscribe((redirectUrl: string) => {
-      if (isNotEmpty(redirectUrl)) {
+      const hasAccessToken = new URLSearchParams(redirectUrl?.split('?')[1] ?? '').has('accessToken');
+      if (isNotEmpty(redirectUrl) && !hasAccessToken) {
         void this.router.navigate([LOGIN_ROUTE], {
           queryParams: { redirectUrl },
           queryParamsHandling: 'merge',

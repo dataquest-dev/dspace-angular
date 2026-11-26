@@ -129,6 +129,12 @@ describe('LoginPageComponent', () => {
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
+    it('keeps a stored URL with an access token out of the login URL', () => {
+      initWith('/bitstreams/123/download?accessToken=abc');
+
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+
     it('leaves the URL alone when no page is stored', () => {
       initWith(undefined);
 
