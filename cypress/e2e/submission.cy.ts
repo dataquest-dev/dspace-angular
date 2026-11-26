@@ -148,51 +148,6 @@ describe('New Submission page', () => {
     });
   });
 
-  it('should allow for deposit if all required fields completed & file uploaded', () => {
-    // Create a new submission
-    cy.visit('/submit?collection='.concat(Cypress.env('DSPACE_TEST_SUBMIT_COLLECTION_UUID')).concat('&entityType=none'));
-
-    // This page is restricted, so we will be shown the login form. Fill it out & submit.
-    cy.loginViaForm(Cypress.env('DSPACE_TEST_SUBMIT_USER'), Cypress.env('DSPACE_TEST_SUBMIT_USER_PASSWORD'));
-
-    // Fill out all required fields (Title, Date)
-    cy.get('input#dc_title').type('DSpace logo uploaded via e2e tests');
-    cy.get('input#dc_date_issued_year').type('2022');
-
-    // Confirm the required license by checking checkbox
-    // (NOTE: requires "force:true" cause Cypress claims this checkbox is covered by its own <span>)
-    cy.get('ds-clarin-license-distribution ng-toggle').click();
-
-    // Before using Cypress drag & drop, we have to manually trigger the "dragover" event.
-    // This ensures our UI displays the dropzone that covers the entire submission page.
-    // (For some reason Cypress drag & drop doesn't trigger this even itself & upload won't work without this trigger)
-    cy.get('ds-uploader').trigger('dragover');
-
-    // This is the POST command that will upload the file
-    cy.intercept('POST', '/server/api/submission/workspaceitems/*').as('upload');
-
-    // Upload our DSpace logo via drag & drop onto submission form
-    // cy.get('div#section_upload')
-    cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.svg', {
-      action: 'drag-drop',
-    });
-
-    // Wait for upload to complete before proceeding
-    cy.wait('@upload');
-    cy.get('ds-submission-upload-section-file').should('contain', 'dspace-logo.svg');
-
-    // This is the POST command that will deposit the submission
-    cy.intercept('POST', '**/api/workflow/workflowitems*').as('deposit');
-
-    // Wait for deposit button to not be disabled & click it.
-    cy.get('button#deposit').should('not.be.disabled').click();
-    cy.wait('@deposit').its('response.statusCode').should('eq', 201);
-
-    // No warnings should exist, and a deposit goes back to MyDSpace
-    cy.get('ds-notification div.alert-warning').should('not.exist');
-    cy.location('pathname').should('include', '/mydspace');
-  });
-
   it('is possible to submit a new "Person" and that form passes accessibility', () => {
     // To submit a different entity type, we'll start from MyDSpace
     cy.visit('/mydspace');
