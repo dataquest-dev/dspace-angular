@@ -36,12 +36,16 @@ import {
 } from '../core/cache/models/sort-options.model';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { ItemDataService } from '../core/data/item-data.service';
+import { RemoteData } from '../core/data/remote-data';
 import { SiteDataService } from '../core/data/site-data.service';
 import { ConfigurationProperty } from '../core/shared/configuration-property.model';
 import { DSpaceObjectType } from '../core/shared/dspace-object-type.model';
 import { HALEndpointService } from '../core/shared/hal-endpoint.service';
 import { Item } from '../core/shared/item.model';
-import { getFirstSucceededRemoteDataPayload } from '../core/shared/operators';
+import {
+  getFirstCompletedRemoteData,
+  getFirstSucceededRemoteDataPayload,
+} from '../core/shared/operators';
 import { SearchService } from '../core/shared/search/search.service';
 import { Site } from '../core/shared/site.model';
 import { UsageReport } from '../core/statistics/models/usage-report.model';
@@ -94,6 +98,11 @@ export class HomePageComponent implements OnInit {
 
   newItems$: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>([]);
   topItems$: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>([]);
+
+  /**
+   * Boxes still waiting for their request. They keep their loaded height until it completes.
+   */
+  loading = new Set<string>(['author', 'subjectFirstValue', 'language', 'new-items']);
 
   siteId: string;
 
@@ -167,13 +176,14 @@ export class HomePageComponent implements OnInit {
         sort: sortConfiguration,
         dsoTypes: [DSpaceObjectType.ITEM],
       }))
-      .pipe(getFirstSucceededRemoteDataPayload())
-      .subscribe((searchObjects: SearchObjects<Item>) => {
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe((rd: RemoteData<SearchObjects<Item>>) => {
         const searchedItems: Item[] = [];
-        searchObjects?.page?.forEach(searchObject => {
+        rd.payload?.page?.forEach(searchObject => {
           searchedItems.push(searchObject?.indexableObject);
         });
         this.newItems$.next(searchedItems);
+        this.loading.delete('new-items');
       });
   }
 
@@ -272,9 +282,10 @@ export class HomePageComponent implements OnInit {
     });
     const searchOptions: PaginatedSearchOptions = new PaginatedSearchOptions({ configuration: 'homepage' });
     this.searchService.getFacetValuesFor(searchFilter, 1, searchOptions)
-      .pipe(getFirstSucceededRemoteDataPayload())
-      .subscribe(authorStats => {
-        authorStats.page.forEach((facetValue: FacetValue) => {
+      .pipe(getFirstCompletedRemoteData())
+      .subscribe(rd => {
+        this.loading.delete(facetName);
+        rd.payload?.page?.forEach((facetValue: FacetValue) => {
           let updatedSearchUrl = facetValue?._links?.search?.href?.replace(this.halService.getRootHref() +
             '/discover', this.baseUrl);
           if (isUndefined(updatedSearchUrl)) {
