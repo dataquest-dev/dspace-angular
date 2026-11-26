@@ -33,6 +33,13 @@ import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder
 import { WorkflowItem } from '../../../core/submission/models/workflowitem.model';
 import { WorkspaceItem } from '../../../core/submission/models/workspaceitem.model';
 import { SubmissionObjectDataService } from '../../../core/submission/submission-object-data.service';
+import {
+  AUTOCOMPLETE_COMPLEX_PREFIX,
+  DsDynamicAutocompleteModel,
+} from '../../../shared/form/builder/ds-dynamic-form-ui/models/autocomplete/ds-dynamic-autocomplete.model';
+import { DynamicClarinNameModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/clarin-name.model';
+import { DynamicComplexModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
+import { DynamicConcatModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-concat.model';
 import { DsDynamicInputModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-input.model';
 import { DynamicRowGroupModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-row-group-model';
 import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
@@ -636,6 +643,132 @@ describe('SubmissionSectionFormComponent test suite', () => {
       comp.onChange(dynamicFormControlEvent);
 
       expect(submissionServiceStub.dispatchSaveSection).not.toHaveBeenCalled();
+    });
+
+    describe('after a sponsor or author change', () => {
+      const author = 'Novák, Jan';
+      const sponsor = 'EU;101035447;European Commission;Test project;info:eu-repo/grantAgreement/EC/H2020/101035447/EU';
+      const savedAuthor: any = { 'dc.contributor.author': [new FormFieldMetadataValueObject(author)] };
+      const savedSponsor: any = { 'local.sponsor': [new FormFieldMetadataValueObject(sponsor)] };
+
+      function changeSubfield(metadata: string, field: DynamicConcatModel, subfieldValue: string, fieldValue: string, picked: boolean, rowIndex = 0) {
+        field.group.forEach((subfield) => subfield.parent = field);
+        const subfield = field.get(0) as DsDynamicAutocompleteModel;
+        subfield.value = subfieldValue;
+        subfield.suggestionPicked = picked;
+        formOperationsService.getArrayIndexFromEvent.and.returnValue(rowIndex);
+        formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue(metadata);
+        formOperationsService.getFieldValueFromChangeEvent.and.returnValue(new FormFieldMetadataValueObject(fieldValue));
+        comp.onChange(Object.assign({}, dynamicFormControlEvent, { group: field, model: subfield }));
+      }
+
+      function authorField(): DynamicClarinNameModel {
+        return new DynamicClarinNameModel({
+          id: 'dc_contributor_author_CLARIN_NAME_GROUP',
+          group: [
+            new DsDynamicAutocompleteModel({ id: 'dc.contributor.author_CLARIN_NAME_FIRST_INPUT', metadataFields: [], repeatable: false, submissionId: '1234', hasSelectableMetadata: false }),
+            new DsDynamicInputModel({ id: 'dc.contributor.author_CLARIN_NAME_SECOND_INPUT', metadataFields: [], repeatable: false, submissionId: '1234', hasSelectableMetadata: false }),
+          ],
+          separator: ',',
+          repeatable: false,
+          required: false,
+          metadataFields: [],
+          submissionId: '1234',
+          hasSelectableMetadata: false,
+        });
+      }
+
+      function sponsorField(): DynamicComplexModel {
+        return new DynamicComplexModel({
+          id: 'local_sponsor_COMPLEX_GROUP',
+          group: [
+            new DsDynamicAutocompleteModel({ id: 'local.sponsor_COMPLEX_INPUT_0', metadataFields: [], repeatable: false, submissionId: '1234', hasSelectableMetadata: false }),
+            new DsDynamicInputModel({ id: 'local.sponsor_COMPLEX_INPUT_1', metadataFields: [], repeatable: false, submissionId: '1234', hasSelectableMetadata: false }),
+          ],
+          separator: ';',
+          repeatable: false,
+          required: false,
+          metadataFields: [],
+          submissionId: '1234',
+          hasSelectableMetadata: false,
+        });
+      }
+
+      beforeEach(() => {
+        spyOn(comp, 'hasStoredValue').and.returnValue(false);
+        spyOn(comp, 'initForm');
+        spyOn(comp, 'checksForErrors');
+        comp.sectionData.data = {};
+        comp.sectionData.errorsToShow = [];
+      });
+
+      it('should rebuild the form once when the server returns a picked author', () => {
+        // the form data already holds the joined value, so there is no metadata enrichment
+        compAsAny.formData = savedAuthor;
+
+        changeSubfield('dc.contributor.author', authorField(), author, author, true);
+        comp.updateForm({ data: savedAuthor, errorsToShow: [] } as any);
+        comp.updateForm({ data: savedAuthor, errorsToShow: [] } as any);
+
+        expect(comp.initForm).toHaveBeenCalledTimes(1);
+        expect(comp.initForm).toHaveBeenCalledWith(savedAuthor, [], undefined);
+      });
+
+      it('should rebuild the form when the server returns a picked sponsor', () => {
+        compAsAny.formData = savedSponsor;
+
+        changeSubfield('local.sponsor', sponsorField(), AUTOCOMPLETE_COMPLEX_PREFIX + ';' + sponsor, sponsor, true);
+        comp.updateForm({ data: savedSponsor, errorsToShow: [] } as any);
+
+        expect(comp.initForm).toHaveBeenCalledWith(savedSponsor, [], undefined);
+      });
+
+      it('should rebuild the form when a picked value was already saved', () => {
+        comp.sectionData.data = savedAuthor;
+        compAsAny.formData = savedAuthor;
+
+        changeSubfield('dc.contributor.author', authorField(), author, author, true);
+        comp.updateForm({ data: savedAuthor, errorsToShow: [] } as any);
+
+        expect(comp.initForm).toHaveBeenCalled();
+      });
+
+      it('should not rebuild the form before the server returns the picked value', () => {
+        const savedTitle: any = { 'dc.title': [new FormFieldMetadataValueObject('test')] };
+        compAsAny.formData = savedTitle;
+
+        changeSubfield('dc.contributor.author', authorField(), author, author, true);
+        comp.updateForm({ data: savedTitle, errorsToShow: [] } as any);
+
+        expect(comp.initForm).not.toHaveBeenCalled();
+      });
+
+      it('should not rebuild the form after a typed last name with a comma', () => {
+        const typedAuthor = 'Smith, Jr., John';
+        const savedTypedAuthor: any = { 'dc.contributor.author': [new FormFieldMetadataValueObject(typedAuthor)] };
+        comp.sectionData.data = savedTypedAuthor;
+        compAsAny.formData = savedTypedAuthor;
+
+        changeSubfield('dc.contributor.author', authorField(), 'Smith, Jr.', typedAuthor, false);
+        comp.updateForm({ data: savedTypedAuthor, errorsToShow: [] } as any);
+
+        expect(comp.initForm).not.toHaveBeenCalled();
+      });
+
+      it('should rebuild the form only when the picked row is saved', () => {
+        const twoAuthors: any = { 'dc.contributor.author': [new FormFieldMetadataValueObject(author), new FormFieldMetadataValueObject(author)] };
+        comp.sectionData.data = savedAuthor;
+        compAsAny.formData = twoAuthors;
+
+        changeSubfield('dc.contributor.author', authorField(), author, author, true, 1);
+        comp.updateForm({ data: savedAuthor, errorsToShow: [] } as any);
+
+        expect(comp.initForm).not.toHaveBeenCalled();
+
+        comp.updateForm({ data: twoAuthors, errorsToShow: [] } as any);
+
+        expect(comp.initForm).toHaveBeenCalledWith(twoAuthors, [], undefined);
+      });
     });
 
     it('should set previousValue on form focus event', () => {

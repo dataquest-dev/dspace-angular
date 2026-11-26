@@ -34,6 +34,10 @@ export class DsDynamicAutocompleteModel extends DsDynamicInputModel {
   @serializable() minChars: number;
   @serializable() readonly type: string = DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE;
   @serializable() autocompleteCustom: string;
+  /**
+   * True only while the change of a picked suggestion is emitted, so listeners can tell it from typed text.
+   */
+  suggestionPicked = false;
 
   constructor(config: DsDynamicAutocompleteModelConfig, layout?: DynamicFormControlLayout) {
 

@@ -47,11 +47,13 @@ import { WorkspaceitemSectionFormObject } from '../../../core/submission/models/
 import { SubmissionObjectDataService } from '../../../core/submission/submission-object-data.service';
 import { SubmissionScopeType } from '../../../core/submission/submission-scope-type';
 import {
+  hasNoValue,
   hasValue,
   isEmpty,
   isNotEmpty,
   isUndefined,
 } from '../../../shared/empty.util';
+import { DsDynamicAutocompleteModel } from '../../../shared/form/builder/ds-dynamic-form-ui/models/autocomplete/ds-dynamic-autocomplete.model';
 import { AUTHOR_METADATA_FIELD_NAME } from '../../../shared/form/builder/ds-dynamic-form-ui/models/clarin-name.model';
 import { SPONSOR_METADATA_NAME } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
@@ -156,6 +158,11 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    * A flag representing if this section is readonly
    */
   protected isSectionReadonly = false;
+
+  /**
+   * A sponsor or author suggestion picked in the form, kept until the server returns it saved
+   */
+  protected pickedValue: { metadata: string, index: number, value: string };
 
   /**
    * The FormComponent reference
@@ -363,10 +370,12 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
 
     const sectionData = sectionState.data as WorkspaceitemSectionFormObject;
     const errors = sectionState.errorsToShow;
+    const isPickedValueSaved = this.hasSavedPickedValue(sectionData);
 
-    if (isNotEmpty(sectionData) && !isEqual(sectionData, this.sectionData.data)) {
+    if (isNotEmpty(sectionData) && (!isEqual(sectionData, this.sectionData.data) || isPickedValueSaved)) {
       this.sectionData.data = sectionData;
-      if (this.hasMetadataEnrichment(sectionData)) {
+      if (isPickedValueSaved || this.hasMetadataEnrichment(sectionData)) {
+        this.pickedValue = undefined;
         this.isUpdating = true;
         this.formModel = null;
         this.cdr.detectChanges();
@@ -452,9 +461,25 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     // Save immediately when a type-bind field (values like `dc_type`, `edm_type`) or a sponsor/author value changes.
     const isTypeBindField = this.formBuilderService.getTypeFieldValues()
       .some((typeValue) => typeValue === metadata.replace(/\./g, '_'));
-    if (isTypeBindField || [SPONSOR_METADATA_NAME, AUTHOR_METADATA_FIELD_NAME].includes(metadata)) {
+    const isSponsorOrAuthor = [SPONSOR_METADATA_NAME, AUTHOR_METADATA_FIELD_NAME].includes(metadata);
+    if (isTypeBindField || isSponsorOrAuthor) {
       this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
     }
+    // A picked suggestion puts the whole joined value into one subfield.
+    // Rebuild the form once the server returns that row saved, so each subfield shows its own part.
+    if (isSponsorOrAuthor && (event.model as DsDynamicAutocompleteModel).suggestionPicked) {
+      this.pickedValue = { metadata, index: this.formOperationsService.getArrayIndexFromEvent(event), value: value?.value };
+    }
+  }
+
+  /**
+   * Whether the section data from the server holds the sponsor or author value picked in the form, in the same row
+   */
+  private hasSavedPickedValue(sectionData: WorkspaceitemSectionFormObject): boolean {
+    if (hasNoValue(this.pickedValue)) {
+      return false;
+    }
+    return sectionData?.[this.pickedValue.metadata]?.[this.pickedValue.index]?.value === this.pickedValue.value;
   }
 
   private hasRelatedCustomError(medatata): boolean {
