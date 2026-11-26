@@ -30,6 +30,8 @@ import { ItemAdminSearchResultActionsComponent } from '../../item-admin-search-r
   selector: 'ds-item-admin-search-result-grid-element',
   styleUrls: ['./item-admin-search-result-grid-element.component.scss'],
   templateUrl: './item-admin-search-result-grid-element.component.html',
+  // Angular cannot hydrate DOM nodes passed as projectableNodes
+  host: { ngSkipHydration: 'true' },
   imports: [
     DynamicComponentLoaderDirective,
     ItemAdminSearchResultActionsComponent,

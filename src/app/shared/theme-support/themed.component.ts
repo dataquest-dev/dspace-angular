@@ -65,6 +65,8 @@ export abstract class ThemedComponent<T extends object> implements AfterViewInit
   /**
    * Set when content is projected: Angular can't hydrate DOM nodes passed to createComponent,
    * so this wrapper is rendered again in the browser instead.
+   * If the projected content has control flow (@if, @for), the parent template must also put a
+   * static ngSkipHydration attribute on the wrapper, or the browser can try to hydrate those blocks.
    */
   @HostBinding('attr.ngSkipHydration') skipHydration: boolean;
 
