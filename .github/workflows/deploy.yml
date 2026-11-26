@@ -195,7 +195,14 @@ jobs:
           cd ../..
           docker compose --env-file $ENVFILE -p dspace-$INSTANCE -f docker/docker-compose.yml -f docker/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose-rest.yml -f $CONFIG_PATH/docker-compose.yml up -d --no-build --remove-orphans
           # Volumes made by the older root image hold root-owned files, and DSpace now runs as `dspace`.
-          docker exec -u root dspace$INSTANCE chown -R dspace:dspace /dspace/assetstore /dspace/sitemaps /dspace/log /dspace/handle-server
+          # Restart, because the webapp has already started without write access to its logs.
+          # Empty on an image without the dspace user. A failed `docker exec` fails the step, so it never reads as clean.
+          DIRS="/dspace/assetstore /dspace/sitemaps /dspace/log /dspace/handle-server"
+          NOT_OWNED=$(docker exec -u root dspace$INSTANCE sh -c "id dspace >/dev/null 2>&1 || exit 0; find $DIRS ! -user dspace -print -quit")
+          if [ -n "$NOT_OWNED" ]; then
+            docker exec -u root dspace$INSTANCE chown -R dspace:dspace $DIRS
+            docker restart dspace$INSTANCE
+          fi
 
   import-8603:
     runs-on: dspace-${{inputs.DEV_MACHINE}}-dep-1
