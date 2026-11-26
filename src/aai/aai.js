@@ -49,10 +49,7 @@
 
             if (redirectUrlFromLogin != null && redirectUrlFromLogin !== '') {
               // Redirect from the login page with retrieved redirect URL
-              var baseUrl = window.location.origin + formatNamespace(namespace);
-              var redirectPath = ensureLeadingSlash(redirectUrlFromLogin);
-
-              redirectUrl = baseUrl + redirectPath;
+              redirectUrl = shibbolethReturnUrl(redirectUrlFromLogin);
             }
 
             // Encode the redirect URL
@@ -137,12 +134,24 @@
 
     // Exposed for tests.
     this.localLoginUrl = localLoginUrl;
+    this.shibbolethReturnUrl = shibbolethReturnUrl;
 
     /**
      * Login page URL that returns to `pageUrl` after a local login. Encoded, so the query string of `pageUrl` stays in it.
      */
     function localLoginUrl(pageUrl) {
       return window.location.origin + formatNamespace(namespace) + '/login?redirectUrl=' + window.encodeURIComponent(pageUrl);
+    }
+
+    /**
+     * Page to return to after a Shibboleth login, from the `redirectUrl` of the login page.
+     * A URL of this site (local login puts one there) is kept as it is, anything else is taken as a path in the app.
+     */
+    function shibbolethReturnUrl(redirectUrlFromLogin) {
+      if (redirectUrlFromLogin.startsWith(window.location.origin + '/')) {
+        return redirectUrlFromLogin;
+      }
+      return window.location.origin + formatNamespace(namespace) + ensureLeadingSlash(redirectUrlFromLogin);
     }
 
     // Set a cookie
