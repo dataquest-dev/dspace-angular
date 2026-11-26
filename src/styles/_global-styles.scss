@@ -567,8 +567,9 @@ ngb-tooltip-window {
   margin: var(--bs-btn-padding-y) 0;
   line-height: var(--bs-btn-line-height);
   display: inline-block;
-  -webkit-mask: url('/assets/images/grip-vertical.svg') no-repeat center;
-  mask: url('/assets/images/grip-vertical.svg') no-repeat center;
+  // '^' makes the build emit a relative url, so the icon also loads under a non-root base href
+  -webkit-mask: url('^assets/images/grip-vertical.svg') no-repeat center;
+  mask: url('^assets/images/grip-vertical.svg') no-repeat center;
   -webkit-mask-size: contain;
   mask-size: contain;
   background-color: currentColor;
