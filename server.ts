@@ -229,8 +229,8 @@ export function app() {
  * The callback function to serve server side angular
  */
 function ngApp(req, res, next) {
-  const path = getSsrPath(req, environment.ui.nameSpace);
-  if (environment.ssr.enabled && req.method === 'GET' && (path === '/' || !isExcludedFromSsr(path, environment.ssr.excludePathPatterns))) {
+  const ssrAllowed = (path: string) => path === '/' || !isExcludedFromSsr(path, environment.ssr.excludePathPatterns);
+  if (environment.ssr.enabled && req.method === 'GET' && ssrAllowed(req.path) && ssrAllowed(getSsrPath(req, environment.ui.nameSpace))) {
     // Render the page to user via SSR (server side rendering)
     serverSideRender(req, res, next);
   } else {

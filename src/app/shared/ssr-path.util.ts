@@ -12,7 +12,8 @@ export function getSsrPath(req: Request, nameSpace: string): string {
   if (!req.path.startsWith('/reload/') || typeof redirect !== 'string') {
     return req.path;
   }
-  const path = redirect.split(/[?#]/)[0];
+  const target = redirect.split(/[?#]/)[0];
+  const path = target.startsWith('/') ? target : '/' + target;
   const prefix = nameSpace.replace(/\/$/, '');
   return prefix && path.startsWith(prefix + '/') ? path.substring(prefix.length) : path;
 }

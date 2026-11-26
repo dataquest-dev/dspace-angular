@@ -20,6 +20,10 @@ describe('getSsrPath', () => {
     expect(getSsrPath(request('/reload/1', { redirect: '/repository/health' }), '/repository')).toEqual('/health');
   });
 
+  it('should resolve a relative redirect target from the root, like the router', () => {
+    expect(getSsrPath(request('/reload/1', { redirect: 'health' }), '/')).toEqual('/health');
+  });
+
   it('should return the request path of a reload without a redirect', () => {
     expect(getSsrPath(request('/reload/1'), '/')).toEqual('/reload/1');
   });

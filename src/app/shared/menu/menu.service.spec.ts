@@ -235,6 +235,20 @@ describe('MenuService', () => {
 
       expect(result).toBeObservable(expected);
     });
+
+    it('should emit again when a top section becomes visible', () => {
+      const emitted: MenuSection[][] = [];
+      service.getMenuTopSections(MenuID.ADMIN).subscribe((sections) => emitted.push(sections));
+
+      store.setState({
+        menus: {
+          'admin-sidebar': { ...fakeMenu, sections: { ...topSections, section_3: { ...hiddenSection3, visible: true } } },
+        },
+      });
+
+      expect(emitted.map((sections) => sections.map((section) => section.id)))
+        .toEqual([['section', 'section_2'], ['section', 'section_2', 'section_3']]);
+    });
   });
 
   describe('getSubSectionsByParentID', () => {

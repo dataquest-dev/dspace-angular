@@ -108,14 +108,10 @@ export class MenuService {
     return this.store.pipe(
       select(menuByIDSelector(menuID)),
       select(menuSectionStateSelector),
-      map((sections: MenuSections) => Object.values(sections)),
+      map((sections: MenuSections) => Object.values(sections)
+        .filter((section: MenuSection) => hasNoValue(section.parentID))
+        .filter((section: MenuSection) => !mustBeVisible || section.visible)),
       distinctUntilChanged(compareArraysUsingIds()),
-      map((sections: MenuSection[]) => {
-        return sections
-          .filter((section: MenuSection) => hasNoValue(section.parentID))
-          .filter((section: MenuSection) => !mustBeVisible || section.visible);
-      },
-      ),
     );
   }
 
