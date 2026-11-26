@@ -4,7 +4,11 @@ import {
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  Params,
+  Router,
+} from '@angular/router';
 import { Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,12 +20,14 @@ import { XSRFService } from '../core/xsrf/xsrf.service';
 import { AuthServiceMock } from '../shared/mocks/auth.service.mock';
 import { ActivatedRouteStub } from '../shared/testing/active-router.stub';
 import { EPersonMock } from '../shared/testing/eperson.mock';
+import { RouterStub } from '../shared/testing/router.stub';
 import { LoginPageComponent } from './login-page.component';
 
 describe('LoginPageComponent', () => {
   let comp: LoginPageComponent;
   let fixture: ComponentFixture<LoginPageComponent>;
   let authService: any;
+  let router: RouterStub;
 
   const mockUser = EPersonMock;
   const activatedRouteStub = Object.assign(new ActivatedRouteStub(), {
@@ -39,7 +45,9 @@ describe('LoginPageComponent', () => {
     authService = Object.assign(new AuthServiceMock(), {
       isAuthenticated: jasmine.createSpy('isAuthenticated').and.returnValue(of(false)),
       getAuthenticatedUserFromStore: jasmine.createSpy('getAuthenticatedUserFromStore').and.returnValue(of(mockUser)),
+      getRedirectUrl: jasmine.createSpy('getRedirectUrl').and.returnValue(of(undefined)),
     });
+    router = new RouterStub();
 
     TestBed.configureTestingModule({
       imports: [
@@ -49,9 +57,10 @@ describe('LoginPageComponent', () => {
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: AuthService, useValue: authService },
+        { provide: Router, useValue: router },
         { provide: XSRFService, useValue: {} },
         { provide: APP_DATA_SERVICES_MAP, useValue: {} },
-        provideMockStore({}),
+        provideMockStore({ initialState: { core: { auth: { authenticated: false } } } }),
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -93,6 +102,44 @@ describe('LoginPageComponent', () => {
       expect(authService.isAuthenticated).toHaveBeenCalled();
       expect(authService.getAuthenticatedUserFromStore).not.toHaveBeenCalled();
       expect(comp.authenticatedUser).toBeNull();
+    });
+  });
+
+  // aai.js (DiscoJuice) takes the post-login target only from the `redirectUrl` query param of the page.
+  describe('redirectUrl query param', () => {
+    const initWith = (storedRedirectUrl: string, queryParams: Params = {}) => {
+      authService.getRedirectUrl.and.returnValue(of(storedRedirectUrl));
+      (comp as any).route = { queryParams: of(queryParams), snapshot: { queryParams } };
+      comp.ngOnInit();
+    };
+
+    it('puts the page stored by the auth guard into the login URL', () => {
+      initWith('/mydspace');
+
+      expect(router.navigate).toHaveBeenCalledWith(['/login'], {
+        queryParams: { redirectUrl: '/mydspace' },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    });
+
+    it('keeps a redirectUrl that is already in the URL', () => {
+      initWith('/mydspace', { redirectUrl: 'http://localhost:4000/login?redirectUrl=/mydspace' });
+
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    it('leaves the URL alone when no page is stored', () => {
+      initWith(undefined);
+
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    it('does not navigate on the server', () => {
+      (comp as any).platformId = 'server';
+      initWith('/mydspace');
+
+      expect(router.navigate).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,10 +1,14 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
+  Inject,
   OnDestroy,
   OnInit,
+  PLATFORM_ID,
 } from '@angular/core';
 import {
   ActivatedRoute,
+  Router,
   RouterLink,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -27,7 +31,10 @@ import {
   AuthenticationSuccessAction,
   ResetAuthenticationMessagesAction,
 } from '../core/auth/auth.actions';
-import { AuthService } from '../core/auth/auth.service';
+import {
+  AuthService,
+  LOGIN_ROUTE,
+} from '../core/auth/auth.service';
 import { AuthTokenInfo } from '../core/auth/models/auth-token-info.model';
 import { isAuthenticated } from '../core/auth/selectors';
 import { EPerson } from '../core/eperson/models/eperson.model';
@@ -66,18 +73,25 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    * Initialize instance variables
    *
    * @param {ActivatedRoute} route
+   * @param {Router} router
    * @param {Store<AppState>} store
    * @param {AuthService} authService
+   * @param {object} platformId
    */
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private store: Store<AppState>,
-              private authService: AuthService) {}
+              private authService: AuthService,
+              @Inject(PLATFORM_ID) private platformId: object) {}
 
   /**
    * Initialize instance variables
    */
   ngOnInit() {
     this.initializeTheAuthenticationState();
+    if (isPlatformBrowser(this.platformId)) {
+      this.showRedirectUrlInQueryParams();
+    }
 
     const queryParamsObs = this.route.queryParams;
     const authenticated = this.store.select(isAuthenticated);
@@ -99,6 +113,25 @@ export class LoginPageComponent implements OnDestroy, OnInit {
           authToken = new AuthTokenInfo(token);
           this.store.dispatch(new AuthenticationSuccessAction(authToken));
         }
+      }
+    }));
+  }
+
+  /**
+   * Puts the stored post-login target (e.g. set by the auth guard) into the `redirectUrl` query param.
+   * The DiscoJuice scripts (aai.js) read it only from the URL: local login reloads the page, Shibboleth leaves the app.
+   */
+  private showRedirectUrlInQueryParams() {
+    if (isNotEmpty(this.route.snapshot.queryParams?.redirectUrl)) {
+      return;
+    }
+    this.subs.push(this.authService.getRedirectUrl().pipe(take(1)).subscribe((redirectUrl: string) => {
+      if (isNotEmpty(redirectUrl)) {
+        void this.router.navigate([LOGIN_ROUTE], {
+          queryParams: { redirectUrl },
+          queryParamsHandling: 'merge',
+          replaceUrl: true,
+        });
       }
     }));
   }

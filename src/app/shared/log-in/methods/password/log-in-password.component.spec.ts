@@ -231,6 +231,14 @@ describe('LogInPasswordComponent', () => {
       expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/items/1');
     });
 
+    it('returns to the page the auth guard put into the login URL, after the DiscoJuice local-login reload', () => {
+      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/login?redirectUrl=/mydspace' });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/mydspace');
+    });
+
     it('passes through an already-relative redirectUrl unchanged', () => {
       setQueryParams({ redirectUrl: '/repository/search' });
 
