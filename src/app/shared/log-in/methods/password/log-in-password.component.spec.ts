@@ -108,7 +108,7 @@ describe('LogInPasswordComponent', () => {
         { provide: NotificationsService, useClass: NotificationsServiceStub },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: ThemeService, useValue: themeService },
-        // The UI runs under a sub-path in production, e.g. http://dev-6.pc:8603/repository/
+        // The UI can run under a sub-path, e.g. /repository/
         { provide: APP_BASE_HREF, useValue: '/repository/' },
         provideMockStore({ initialState }),
       ],
@@ -264,6 +264,14 @@ describe('LogInPasswordComponent', () => {
       component.submit();
 
       expect(setRedirectUrlSpy).toHaveBeenCalledWith('/login');
+    });
+
+    it('keeps the home page as the target, so a stored page does not win over it', () => {
+      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/' });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/');
     });
 
     it('falls back to setRedirectUrlIfNotSet("/") when no redirectUrl query param is present', () => {

@@ -308,9 +308,10 @@ export class LogInPasswordComponent implements OnInit, OnDestroy {
   /**
    * Reduce a possibly-absolute URL to a router path by dropping the scheme+host and the base href (e.g. `/repository`).
    * Without the base href a login page target is `/login`, which `AuthService.navigateToRedirectUrl` sends home.
+   * The home page itself normalizes to '', so it becomes `/`.
    */
   private toRelativePath(url: string): string {
-    return this.location.normalize(url.replace(/^https?:\/\/[^/]+/i, ''));
+    return this.location.normalize(url.replace(/^https?:\/\/[^/]+/i, '')) || '/';
   }
 
   /**
