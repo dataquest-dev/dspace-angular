@@ -40,4 +40,20 @@ describe('aai.js', () => {
       expect(aai.shibbolethReturnUrl('https://example.org/items/1').startsWith(window.location.origin + '/')).toBeTrue();
     });
   });
+
+  describe('shibbolethLoginUrl', () => {
+    const opts = { host: 'https://ui.example', port: '', target: 'https://ui.example/server/api/authn/shibboleth' };
+
+    it('gives the backend the whole redirectUrl, with its own query string', () => {
+      const page = 'https://ui.example/search?query=corpus&page=2';
+
+      const loginUrl = new URL(aai.shibbolethLoginUrl(opts, page, 'https://idp.example/idp'));
+      // The SP decodes `target` once and sends the user there; the backend then reads `redirectUrl` from it.
+      const target = new URL(loginUrl.searchParams.get('target'));
+
+      expect(target.origin + target.pathname).toBe(opts.target);
+      expect(target.searchParams.get('redirectUrl')).toBe(page);
+      expect(loginUrl.searchParams.get('entityID')).toBe('https://idp.example/idp');
+    });
+  });
 });

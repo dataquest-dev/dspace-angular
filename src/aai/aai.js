@@ -32,7 +32,6 @@
       var targetUrl = '';
       var opts = jQuery.extend({}, this.defaults, options),
           defaultCallback = function(e) {
-            targetUrl = opts.target + '?redirectUrl=';
             // E.g. Redirect to Item page
             var redirectUrl = window.location.href;
 
@@ -52,9 +51,7 @@
               redirectUrl = shibbolethReturnUrl(redirectUrlFromLogin);
             }
 
-            // Encode the redirect URL
-            targetUrl += window.encodeURIComponent(redirectUrl);
-            window.location = opts.host + opts.port + '/Shibboleth.sso/Login?SAMLDS=1&target=' + targetUrl + '&entityID=' + window.encodeURIComponent(e.entityID);
+            window.location = shibbolethLoginUrl(opts, redirectUrl, e.entityID);
           };
       //console.log(opts);
       if(!opts.target){
@@ -135,6 +132,7 @@
     // Exposed for tests.
     this.localLoginUrl = localLoginUrl;
     this.shibbolethReturnUrl = shibbolethReturnUrl;
+    this.shibbolethLoginUrl = shibbolethLoginUrl;
 
     /**
      * Login page URL that returns to `pageUrl` after a local login. Encoded, so the query string of `pageUrl` stays in it.
@@ -152,6 +150,16 @@
         return redirectUrlFromLogin;
       }
       return window.location.origin + formatNamespace(namespace) + ensureLeadingSlash(redirectUrlFromLogin);
+    }
+
+    /**
+     * Shibboleth login URL whose `target` (the backend) returns to `redirectUrl`.
+     * `redirectUrl` is encoded inside `target` and then `target` as a whole, so the query string of `redirectUrl` reaches the backend.
+     */
+    function shibbolethLoginUrl(opts, redirectUrl, entityID) {
+      var target = opts.target + '?redirectUrl=' + window.encodeURIComponent(redirectUrl);
+      return opts.host + opts.port + '/Shibboleth.sso/Login?SAMLDS=1&target=' + window.encodeURIComponent(target) +
+        '&entityID=' + window.encodeURIComponent(entityID);
     }
 
     // Set a cookie
