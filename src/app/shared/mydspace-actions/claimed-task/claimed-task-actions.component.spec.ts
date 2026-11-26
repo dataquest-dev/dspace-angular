@@ -20,6 +20,8 @@ import {
 } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
+import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
+import { FeatureID } from '../../../core/data/feature-authorization/feature-id';
 import { RequestService } from '../../../core/data/request.service';
 import { WorkflowActionDataService } from '../../../core/data/workflow-action-data.service';
 import { Item } from '../../../core/shared/item.model';
@@ -54,6 +56,7 @@ let mockDataService;
 let searchService;
 let requestServce;
 let workflowActionService: WorkflowActionDataService;
+let authorizationService;
 
 let item;
 let rdItem;
@@ -108,6 +111,9 @@ function init() {
   workflowActionService = jasmine.createSpyObj('workflowActionService', {
     findById: createSuccessfulRemoteDataObject$(workflowAction),
   });
+  authorizationService = jasmine.createSpyObj('authorizationService', {
+    isAuthorized: of(true),
+  });
 }
 
 describe('ClaimedTaskActionsComponent', () => {
@@ -132,6 +138,7 @@ describe('ClaimedTaskActionsComponent', () => {
         { provide: SearchService, useValue: searchService },
         { provide: RequestService, useValue: requestServce },
         { provide: WorkflowActionDataService, useValue: workflowActionService },
+        { provide: AuthorizationDataService, useValue: authorizationService },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).overrideComponent(ClaimedTaskActionsComponent, {
@@ -196,15 +203,27 @@ describe('ClaimedTaskActionsComponent', () => {
 
   }));
 
-  it('should display a curate button', waitForAsync(() => {
+  it('should display a curate button to a site administrator', waitForAsync(() => {
     component.object = null;
     component.initObjects(mockObject);
     fixture.detectChanges();
 
     fixture.whenStable().then(() => {
+      expect(authorizationService.isAuthorized).toHaveBeenCalledWith(FeatureID.AdministratorOf);
       const debugElement = fixture.debugElement.query(By.css('.workflow-curate'));
       expect(debugElement).toBeTruthy();
       expect(debugElement.nativeElement.innerText.trim()).toBe('submission.workflow.generic.curate');
+    });
+
+  }));
+
+  it('should not display a curate button to a reviewer who is not a site administrator', waitForAsync(() => {
+    authorizationService.isAuthorized.and.returnValue(of(false));
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      expect(fixture.debugElement.query(By.css('.workflow-curate'))).toBeNull();
     });
 
   }));

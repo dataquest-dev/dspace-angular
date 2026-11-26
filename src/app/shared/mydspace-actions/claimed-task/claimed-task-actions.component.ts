@@ -16,6 +16,8 @@ import {
 } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
+import { AuthorizationDataService } from '../../../core/data/feature-authorization/authorization-data.service';
+import { FeatureID } from '../../../core/data/feature-authorization/feature-id';
 import { RemoteData } from '../../../core/data/remote-data';
 import { RequestService } from '../../../core/data/request.service';
 import { WorkflowActionDataService } from '../../../core/data/workflow-action-data.service';
@@ -76,6 +78,11 @@ export class ClaimedTaskActionsComponent extends MyDSpaceActionsComponent<Claime
   public actionRD$: Observable<RemoteData<WorkflowAction>>;
 
   /**
+   * Whether the current user may open the curation page, which only site administrators can
+   */
+  public canCurate$: Observable<boolean>;
+
+  /**
    * Initialize instance variables
    *
    * @param {Injector} injector
@@ -85,6 +92,7 @@ export class ClaimedTaskActionsComponent extends MyDSpaceActionsComponent<Claime
    * @param {SearchService} searchService
    * @param {RequestService} requestService
    * @param workflowActionService
+   * @param authorizationService
    */
   constructor(protected injector: Injector,
     protected router: Router,
@@ -93,6 +101,7 @@ export class ClaimedTaskActionsComponent extends MyDSpaceActionsComponent<Claime
     protected searchService: SearchService,
     protected requestService: RequestService,
     protected workflowActionService: WorkflowActionDataService,
+    protected authorizationService: AuthorizationDataService,
   ) {
     super(ClaimedTask.type, injector, router, notificationsService, translate, searchService, requestService);
   }
@@ -103,6 +112,7 @@ export class ClaimedTaskActionsComponent extends MyDSpaceActionsComponent<Claime
   ngOnInit() {
     this.initObjects(this.object);
     this.initAction(this.object);
+    this.canCurate$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
   }
 
   /**
