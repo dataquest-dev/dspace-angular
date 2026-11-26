@@ -21,10 +21,16 @@ export class ShareSubmissionPageComponent implements OnInit {
    */
   changeSubmitterLink: string;
 
+  /**
+   * False when the backend could not send the email with the link.
+   */
+  emailSent: boolean;
+
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     // Load `share-token` param value from the url
     this.changeSubmitterLink = this.route.snapshot.queryParams.changeSubmitterLink;
+    this.emailSent = this.route.snapshot.queryParams.emailSent !== 'false';
   }
 }

@@ -316,6 +316,37 @@ describe('WorkspaceitemActionsComponent', () => {
     expect(closeModal).not.toHaveBeenCalled();
   });
 
+  describe('shareSubmission', () => {
+    beforeEach(() => {
+      (component as any).halService.getRootHref = () => 'https://rest.api/server/api';
+    });
+
+    it('should show a success notification when the email was sent', () => {
+      spyOn((component as any).rdbService, 'buildFromRequestUUID').and.returnValue(
+        createSuccessfulRemoteDataObject$({ shareLink: 'https://share.link', emailSent: true }));
+
+      component.shareSubmission();
+
+      expect(notificationsServiceStub.success).toHaveBeenCalled();
+      expect(notificationsServiceStub.warning).not.toHaveBeenCalled();
+    });
+
+    it('should show a warning and still open the share link when the email was not sent', () => {
+      const router = TestBed.inject(Router);
+      spyOn((component as any).rdbService, 'buildFromRequestUUID').and.returnValue(
+        createSuccessfulRemoteDataObject$({ shareLink: 'https://share.link', emailSent: false }));
+
+      component.shareSubmission();
+
+      expect(notificationsServiceStub.warning).toHaveBeenCalledWith('submission.workflow.share-submission.email.not-sent');
+      expect(notificationsServiceStub.success).not.toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith(['/share-submission'], { queryParams: {
+        changeSubmitterLink: 'https://share.link',
+        emailSent: false,
+      } });
+    });
+  });
+
   describe('on discard confirmation', () => {
     beforeEach((done) => {
       mockDataService.delete.and.returnValue(of(true));

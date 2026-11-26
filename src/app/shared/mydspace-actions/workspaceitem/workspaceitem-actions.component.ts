@@ -250,12 +250,19 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
     response.pipe(getFirstCompletedRemoteData()).subscribe((rd: RemoteData<ShareSubmissionLink>) => {
       // If the request has succeeded
       if (rd.hasSucceeded) {
-        // Show success notification
-        this.notificationsService.success(
-          this.translate.instant('submission.workflow.share-submission.email.successful'));
+        const emailSent = rd.payload?.emailSent !== false;
+        if (emailSent) {
+          this.notificationsService.success(
+            this.translate.instant('submission.workflow.share-submission.email.successful'));
+        } else {
+          // The link works without the email, so warn and still show it
+          this.notificationsService.warning(
+            this.translate.instant('submission.workflow.share-submission.email.not-sent'));
+        }
         // Redirect to share-submission page
         void this.router.navigate(['/share-submission'], { queryParams: {
           changeSubmitterLink: rd.payload?.shareLink,
+          emailSent,
         } });
       } else {
         // Show error notification
@@ -269,4 +276,5 @@ export class WorkspaceitemActionsComponent extends MyDSpaceActionsComponent<Work
 
 export interface ShareSubmissionLink {
   shareLink: string;
+  emailSent?: boolean;
 }
