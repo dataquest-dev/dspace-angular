@@ -168,7 +168,9 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
    * @param event The value to set.
    */
   onSelectItem(event: NgbTypeaheadSelectItemEvent) {
+    this.model.suggestionPicked = true;
     this.updateModel(event.item);
+    this.model.suggestionPicked = false;
     this.cdr.detectChanges();
   }
 

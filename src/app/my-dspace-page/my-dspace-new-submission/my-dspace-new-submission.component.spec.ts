@@ -24,6 +24,7 @@ import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { Subject } from 'rxjs';
 
 import { AuthService } from '../../core/auth/auth.service';
+import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { EntityTypeDataService } from '../../core/data/entity-type-data.service';
 import { DragService } from '../../core/drag.service';
 import { CookieService } from '../../core/services/cookie.service';
@@ -37,6 +38,7 @@ import { getMockScrollToService } from '../../shared/mocks/scroll-to-service.moc
 import { TranslateLoaderMock } from '../../shared/mocks/translate-loader.mock';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { AuthServiceStub } from '../../shared/testing/auth-service.stub';
+import { ConfigurationDataServiceStub } from '../../shared/testing/configuration-data.service.stub';
 import { HALEndpointServiceStub } from '../../shared/testing/hal-endpoint-service.stub';
 import { HostWindowServiceStub } from '../../shared/testing/host-window-service.stub';
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
@@ -83,6 +85,7 @@ describe('MyDSpaceNewSubmissionComponent test', () => {
         { provide: HostWindowService, useValue: new HostWindowServiceStub(800) },
         { provide: EntityTypeDataService, useValue: getMockEntityTypeService() },
         { provide: LiveRegionService, useValue: getLiveRegionServiceStub() },
+        { provide: ConfigurationDataService, useClass: ConfigurationDataServiceStub },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

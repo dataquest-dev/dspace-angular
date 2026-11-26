@@ -195,6 +195,18 @@ describe('DsDynamicAutocompleteComponent test suite', () => {
       expect(autComp.change.emit).toHaveBeenCalled();
     }));
 
+    it('should mark only the change of a picked suggestion as picked', () => {
+      const pickedOnChange = [];
+      autComp.change.subscribe(() => pickedOnChange.push(autComp.model.suggestionPicked));
+      const event = { item: Object.assign(new VocabularyEntry(), { display: 'Name, Lastname', value: 1 }), preventDefault: () => undefined };
+
+      autComp.onSelectItem(event);
+      autComp.onBlur(new Event('blur'));
+
+      expect(pickedOnChange).toEqual([true, false]);
+      expect(autComp.model.suggestionPicked).toBeFalse();
+    });
+
     it('should normalize object value to string on blur', () => {
       spyOn(autComp.change, 'emit');
       autComp.currentValue = { value: 'aig', display: 'Alumu-Tesu' };
