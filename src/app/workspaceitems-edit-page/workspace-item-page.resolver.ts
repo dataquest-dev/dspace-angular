@@ -25,8 +25,10 @@ export const workspaceItemPageResolver: ResolveFn<RemoteData<WorkspaceItem>> = (
   state: RouterStateSnapshot,
   workspaceItemService: WorkspaceitemDataService = inject(WorkspaceitemDataService),
 ): Observable<RemoteData<WorkspaceItem>> => {
+  // No cached copy: the edit form must not start while a GET for this item is still running,
+  // or the form takes that response, which has no embedded collection, and stays on "Loading".
   return workspaceItemService.findById(route.params.id,
-    true,
+    false,
     false,
     ...SUBMISSION_LINKS_TO_FOLLOW,
   ).pipe(

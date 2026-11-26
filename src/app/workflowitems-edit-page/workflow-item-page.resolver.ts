@@ -17,9 +17,11 @@ export const workflowItemPageResolver: ResolveFn<RemoteData<WorkflowItem>> = (
   state: RouterStateSnapshot,
   workflowItemService: WorkflowItemDataService = inject(WorkflowItemDataService),
 ): Observable<RemoteData<WorkflowItem>> => {
+  // No cached copy: the edit form must not start while a GET for this item is still running,
+  // or the form takes that response, which has no embedded collection, and stays on "Loading".
   return workflowItemService.findById(
     route.params.id,
-    true,
+    false,
     false,
     ...SUBMISSION_LINKS_TO_FOLLOW,
   ).pipe(
