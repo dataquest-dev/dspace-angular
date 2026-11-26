@@ -1,4 +1,7 @@
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  Location,
+} from '@angular/common';
 import {
   Component,
   OnInit,
@@ -66,7 +69,7 @@ export class GrantDenyRequestCopyComponent implements OnInit {
   itemName$: Observable<string>;
 
   /**
-   * The url of the item
+   * The url of the item, resolved against the base href because it lands in the raw `<a href>` of a translation
    */
   itemUrl$: Observable<string>;
 
@@ -86,6 +89,7 @@ export class GrantDenyRequestCopyComponent implements OnInit {
     private authService: AuthService,
     private itemDataService: ItemDataService,
     private nameService: DSONameService,
+    private location: Location,
   ) {
 
   }
@@ -106,7 +110,7 @@ export class GrantDenyRequestCopyComponent implements OnInit {
     );
     this.itemUrl$ = this.itemRD$.pipe(
       getFirstSucceededRemoteDataPayload(),
-      map((item) => getItemPageRoute(item)),
+      map((item) => this.location.prepareExternalUrl(getItemPageRoute(item))),
     );
 
     this.denyRoute$ = this.itemRequestRD$.pipe(

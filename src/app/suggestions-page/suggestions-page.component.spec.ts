@@ -1,4 +1,7 @@
-import { CommonModule } from '@angular/common';
+import {
+  APP_BASE_HREF,
+  CommonModule,
+} from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   ComponentFixture,
@@ -91,6 +94,7 @@ describe('SuggestionPageComponent', () => {
         { provide: NotificationsService, useValue: new NotificationsServiceStub() },
         { provide: TranslateService, useValue: getMockTranslateService() },
         { provide: PaginationService, useValue: paginationService },
+        { provide: APP_BASE_HREF, useValue: '/repository/' },
         SuggestionsPageComponent,
       ],
       schemas: [NO_ERRORS_SCHEMA],
@@ -174,6 +178,17 @@ describe('SuggestionPageComponent', () => {
     expect(mockSuggestionsService.approveAndImport).toHaveBeenCalled();
     expect(mockSuggestionsTargetStateService.dispatchRefreshUserSuggestionsAction).toHaveBeenCalled();
     expect(component.updatePage).toHaveBeenCalled();
+  });
+
+  it('should link the imported item in the notification against the base href', () => {
+    component.targetId$ = of('testid');
+
+    scheduler.schedule(() => component.approveAndImport({ collectionId: '1234' } as unknown as SuggestionApproveAndImport));
+    scheduler.flush();
+
+    expect(TestBed.inject(TranslateService).instant).toHaveBeenCalledWith('suggestion.approveAndImport.success', {
+      url: '/repository/workspaceitems/1234/edit',
+    });
   });
 
   it('should approve and import multiple suggestions', () => {

@@ -1,3 +1,4 @@
+import { APP_BASE_HREF } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   ComponentFixture,
@@ -9,9 +10,9 @@ import {
 import { By } from '@angular/platform-browser';
 import {
   ActivatedRoute,
+  provideRouter,
   Router,
 } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
@@ -86,8 +87,11 @@ describe('GrantDenyRequestCopyComponent', () => {
     });
 
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), RouterTestingModule.withRoutes([]), GrantDenyRequestCopyComponent, VarDirective],
+      imports: [TranslateModule.forRoot(), GrantDenyRequestCopyComponent, VarDirective],
       providers: [
+        // RouterTestingModule would replace Location with a mock that ignores APP_BASE_HREF
+        provideRouter([]),
+        { provide: APP_BASE_HREF, useValue: '/repository/' },
         { provide: ActivatedRoute, useValue: route },
         { provide: AuthService, useValue: authService },
         { provide: ItemDataService, useValue: itemDataService },
@@ -115,7 +119,7 @@ describe('GrantDenyRequestCopyComponent', () => {
 
   it('should initialise itemUrl$', (done) => {
     component.itemUrl$.subscribe((result) => {
-      expect(result).toEqual(itemUrl);
+      expect(result).toEqual(`/repository${itemUrl}`);
       done();
     });
   });
