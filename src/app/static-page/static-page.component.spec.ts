@@ -83,4 +83,12 @@ describe('StaticPageComponent', () => {
     expect(responseService.setNotFound).toHaveBeenCalled();
     expect(component.contentState).toBe('not-found');
   });
+
+  it('should not request a file name that leaves static-files once decoded', async () => {
+    (TestBed.inject(Router) as unknown as RouterMock).setRoute('/static/..%2Findex');
+    await component.ngOnInit();
+    expect(htmlContentService.fetchHtmlContent).not.toHaveBeenCalled();
+    expect(responseService.setNotFound).toHaveBeenCalled();
+    expect(component.contentState).toBe('not-found');
+  });
 });
