@@ -4,7 +4,9 @@ import {
   Component,
   ComponentRef,
   ElementRef,
+  HostAttributeToken,
   HostBinding,
+  inject,
   OnChanges,
   OnDestroy,
   SimpleChanges,
@@ -62,13 +64,15 @@ export abstract class ThemedComponent<T extends object> implements AfterViewInit
    */
   @HostBinding('attr.data-used-theme') usedTheme: string;
 
+  private readonly hasStaticSkipHydration = inject(new HostAttributeToken('ngSkipHydration'), { optional: true }) !== null;
+
   /**
    * Set when content is projected: Angular can't hydrate DOM nodes passed to createComponent,
-   * so this wrapper is rendered again in the browser instead.
-   * If the projected content has control flow (@if, @for), the parent template must also put a
-   * static ngSkipHydration attribute on the wrapper, or the browser can try to hydrate those blocks.
+   * so this wrapper is rendered again in the browser instead. A static ngSkipHydration is kept.
+   * The parent template must add that static attribute when the projected content creates views
+   * (@if, @for, *ngIf, ng-template...), or the browser can try to hydrate those views.
    */
-  @HostBinding('attr.ngSkipHydration') skipHydration: boolean;
+  @HostBinding('attr.ngSkipHydration') skipHydration: boolean = this.hasStaticSkipHydration || null;
 
   constructor(
     protected cdr: ChangeDetectorRef,
@@ -146,7 +150,7 @@ export abstract class ThemedComponent<T extends object> implements AfterViewInit
       this.destroyComponentInstance();
       // the content wrapper is gone once a component was rendered, see themed.component.html
       const projectedNodes = this.themedElementContent?.nativeElement.childNodes ?? [];
-      this.skipHydration = projectedNodes.length > 0 ? true : null;
+      this.skipHydration = (this.hasStaticSkipHydration || projectedNodes.length > 0) ? true : null;
       this.compRef = this.vcr.createComponent(constructor, {
         projectableNodes: [projectedNodes],
       });

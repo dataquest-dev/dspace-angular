@@ -3,6 +3,7 @@ import {
   Component,
   DebugElement,
   NO_ERRORS_SCHEMA,
+  Type,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -51,6 +52,16 @@ class TestThemedComponent extends ThemedComponent<TestComponent> {
 class TestThemedHostComponent {
 }
 
+@Component({
+  selector: 'ds-test-themed-skip-host',
+  template: '<ds-test-themed-component ngSkipHydration></ds-test-themed-component>',
+  imports: [
+    TestThemedComponent,
+  ],
+})
+class TestThemedSkipHostComponent {
+}
+
 describe('ThemedComponent', () => {
   let component: TestThemedComponent;
   let fixture: ComponentFixture<TestThemedComponent>;
@@ -85,8 +96,8 @@ describe('ThemedComponent', () => {
       themedFixture.detectChanges();
     }
 
-    async function renderHost(): Promise<DebugElement> {
-      const hostFixture = TestBed.createComponent(TestThemedHostComponent);
+    async function renderHost(host: Type<unknown> = TestThemedHostComponent): Promise<DebugElement> {
+      const hostFixture = TestBed.createComponent(host);
       hostFixture.detectChanges();
       const themed = hostFixture.debugElement.query(By.directive(TestThemedComponent));
       await whenRendered(themed.componentInstance, hostFixture);
@@ -101,6 +112,11 @@ describe('ThemedComponent', () => {
 
     it('should skip hydration when content is projected', async () => {
       const themed = await renderHost();
+      expect(themed.nativeElement.hasAttribute('ngSkipHydration')).toBeTrue();
+    });
+
+    it('should keep a static ngSkipHydration when no content is projected', async () => {
+      const themed = await renderHost(TestThemedSkipHostComponent);
       expect(themed.nativeElement.hasAttribute('ngSkipHydration')).toBeTrue();
     });
 
