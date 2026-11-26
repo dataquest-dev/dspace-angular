@@ -119,7 +119,7 @@ jobs:
           if docker compose --env-file "$ENVFILE" -p dspace-$INSTANCE \
                -f docker/docker-compose.yml -f docker/docker-compose-rest.yml \
                -f "$CONFIG_PATH/docker-compose-rest.yml" -f "$CONFIG_PATH/docker-compose.yml" \
-               config 2>/dev/null | grep -qE 'published: "(5432|8080|8983|4000|9876)"'; then
+               config 2>/dev/null | grep -qE 'published: "(5432|8080|8983|4000|9876|2641|8000)"'; then
             echo "  WARNING: overlay still inherits vanilla fixed ports."
             echo "  Add 'ports: !override' to $CONFIG_PATH/docker-compose.yml and docker-compose-rest.yml,"
             echo "  otherwise the deploy will fail with 'port is already allocated'."
@@ -286,13 +286,16 @@ jobs:
         run: |
           export DNAME=dspace${INSTANCE}
 
-          # No `chown -R dspace:dspace` (unlike v7): the v9 runtime image has no `dspace`
-          # user, the webapp runs as root, and that chown fails with "invalid user".
+          # `docker cp` writes the files as root, but DSpace runs as `dspace`.
           echo "Preparing assetstore"
           if [ -z "$ASSETSTORE_PATH" ]; then
             echo "Assetstore path is empty. Not copying assetstore."
           else
             docker cp "$ASSETSTORE_PATH" $DNAME:/dspace/
+            # An image without the dspace user runs as root and needs no chown.
+            if docker exec $DNAME id dspace >/dev/null 2>&1; then
+              docker exec -u root $DNAME chown -R dspace:dspace /dspace/assetstore
+            fi
           fi
 
       - name: create administrator

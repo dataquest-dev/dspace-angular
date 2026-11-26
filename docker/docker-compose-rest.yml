@@ -52,6 +52,17 @@ services:
       # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
       proxies__P__trusted__P__ipranges: ${proxies__P__trusted__P__ipranges:-172.23.0}
       LOGGING_CONFIG: ${LOGGING_CONFIG:-/dspace/config/log4j2-container.xml}
+      # S3 assetstore, off by default. Same variables as in the 7.x compose file.
+      # NOTE: these environment variables override the same settings in local.cfg.
+      assetstore__P__index__P__primary: ${S3_STORAGE:-0}
+      assetstore__P__s3__P__enabled: ${S3_ENABLED:-false}
+      assetstore__P__s3__P__useRelativePath: ${S3_RELATIVE_PATH:-false}
+      assetstore__P__s3__P__bucketName: ${S3_BUCKET:-bucket-for-dspace}
+      assetstore__P__s3__P__subfolder: ${S3_SUBFOLDER:-}
+      assetstore__P__s3__P__awsAccessKey: ${S3_ACCESS:-}
+      assetstore__P__s3__P__awsSecretKey: ${S3_SECRET:-}
+      assetstore__P__s3__P__awsRegionName: ${S3_REGION_NAME:-}
+      assetstore__P__s3__P__endpoint: ${S3_ENDPOINT:-}
     image: "${DOCKER_REGISTRY:-docker.io}/${DOCKER_OWNER:-dspace}/dspace:${DSPACE_VER:-dspace-9_x-test}"
     depends_on:
     - dspacedb
@@ -60,19 +71,33 @@ services:
     ports:
     - published: 8080
       target: 8080
+    # Handle server: TCP and UDP port 2641, HTTP port 8000
+    - published: 2641
+      target: 2641
+      protocol: tcp
+    - published: 2641
+      target: 2641
+      protocol: udp
+    - published: 8000
+      target: 8000
     volumes:
+    # Keep DSpace logs and the Handle server config between reboots
+    - dspace_logs:/dspace/log
+    - handle_server:/dspace/handle-server
     # Keep DSpace assetstore directory between reboots
     - assetstore:/dspace/assetstore
     # Ensure that the database is ready BEFORE starting tomcat
     # 1. While a TCP connection to dspacedb port 5432 is not available, continue to sleep
     # 2. Then, run database migration to init database tables
-    # 3. Finally, start DSpace
+    # 3. Start the Handle server, but only after `make-handle-config` has created its config
+    # 4. Finally, start DSpace
     entrypoint:
     - /bin/bash
     - '-c'
     - |
       while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
       /dspace/bin/dspace database migrate
+      if [ -f /dspace/handle-server/config.dct ]; then /dspace/bin/start-handle-server; fi
       java -jar /dspace/webapps/server-boot.jar
   # DSpace database container    
   dspacedb:
@@ -109,6 +134,7 @@ services:
     volumes:
     # Keep Solr data directory between reboots
     - solr_data:/var/solr/data
+    - solr_logs:/var/solr/logs
     # NOTE: We are not running Solr as "root", but we need root permissions to copy our cores to the mounted
     # /var/solr/data directory. Then we start Solr as the "solr" user.
     user: root
@@ -142,3 +168,6 @@ volumes:
   assetstore:
   pgdata:
   solr_data:
+  solr_logs:
+  dspace_logs:
+  handle_server:
