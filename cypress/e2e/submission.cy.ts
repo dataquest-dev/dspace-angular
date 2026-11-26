@@ -179,6 +179,7 @@ describe('New Submission page', () => {
 
     // Wait for upload to complete before proceeding
     cy.wait('@upload');
+    cy.get('ds-submission-upload-section-file').should('contain', 'dspace-logo.svg');
 
     // This is the POST command that will deposit the submission
     cy.intercept('POST', '**/api/workflow/workflowitems*').as('deposit');
