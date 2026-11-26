@@ -426,6 +426,16 @@ describe('AuthService test', () => {
       expect(hardRedirectService.redirect).toHaveBeenCalledWith(jasmine.stringMatching(new RegExp('reload/[0-9]*(?!\\?)$')));
     });
 
+    it('should send an expired session to the login page under the base href', () => {
+      const browserLocation = { href: '' };
+      (authService as any)._window = { nativeWindow: { location: browserLocation } };
+
+      authService.redirectToLoginWhenTokenExpired();
+
+      // The browser resolves the new href against <base href>, e.g. /repository/
+      expect(new URL(browserLocation.href, 'http://localhost:4000/repository/').href).toBe('http://localhost:4000/repository/login?expired=true');
+    });
+
     describe('impersonate', () => {
       const userId = 'testUserId';
 
