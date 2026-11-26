@@ -51,8 +51,8 @@
                 <tbody>
                   @for (coll of results.collections; track coll) {
                     <tr>
-                      <td><a href="/handle/{{ coll.communityHandle }}" rel="noopener noreferrer" target="_blank">{{ coll.communityLabel }}</a></td>
-                      <td><a href="/handle/{{ coll.handle }}" rel="noopener noreferrer" target="_blank">{{ coll.label }}</a></td>
+                      <td><a href="handle/{{ coll.communityHandle }}" rel="noopener noreferrer" target="_blank">{{ coll.communityLabel }}</a></td>
+                      <td><a href="handle/{{ coll.handle }}" rel="noopener noreferrer" target="_blank">{{ coll.label }}</a></td>
                       <td class="num">{{ coll.nbTotalItems }}</td>
                       <td class="num">{{ coll.allFiltersValue }}</td>
                       @for (filter of results.summary.values | keyvalue; track filter) {
